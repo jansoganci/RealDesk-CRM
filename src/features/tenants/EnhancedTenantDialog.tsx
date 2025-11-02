@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm, type FieldPath } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -25,21 +26,21 @@ import { ContractSettingsStep } from './steps/ContractSettingsStep';
 import { tenantsService } from '../../lib/serviceProxy';
 import type { TenantWithContractData, TenantWithContractResult } from '../../types';
 
-// Validation Schema
-const enhancedTenantSchema = z.object({
+// Validation Schema Factory
+const getEnhancedTenantSchema = (t: (key: string) => string) => z.object({
   // Step 1: Tenant Info
   tenant: z.object({
-    name: z.string().min(1, 'Tenant name is required'),
-    email: z.string().email('Invalid email address').optional().or(z.literal('')),
+    name: z.string().min(1, t('errors.tenant.nameRequired')),
+    email: z.string().email(t('errors.tenant.invalidEmail')).optional().or(z.literal('')),
     phone: z.string().optional(),
     notes: z.string().optional(),
   }),
-  
+
   // Step 2 & 3: Contract Details with Settings
   contract: z.object({
-    property_id: z.string().min(1, 'Property selection is required'),
-    start_date: z.string().min(1, 'Start date is required'),
-    end_date: z.string().min(1, 'End date is required'),
+    property_id: z.string().min(1, t('errors.tenant.propertyRequired')),
+    start_date: z.string().min(1, t('errors.validation.required')),
+    end_date: z.string().min(1, t('errors.validation.required')),
     rent_amount: z.number().nullable().optional(),
     status: z.enum(['Active', 'Inactive', 'Archived']).default('Active'),
     rent_increase_reminder_enabled: z.boolean().default(false),
@@ -54,11 +55,11 @@ const enhancedTenantSchema = z.object({
   }
   return true;
 }, {
-  message: 'End date must be after start date',
+  message: t('tenants.enhanced.errors.endDateBeforeStart'),
   path: ['contract', 'end_date'],
 });
 
-export type TenantWithContractFormData = z.infer<typeof enhancedTenantSchema>;
+export type TenantWithContractFormData = z.infer<ReturnType<typeof getEnhancedTenantSchema>>;
 
 interface EnhancedTenantDialogProps {
   open: boolean;
@@ -67,39 +68,40 @@ interface EnhancedTenantDialogProps {
   preSelectedPropertyId?: string | null;
 }
 
-const STEPS = [
-  {
-    id: 1,
-    title: 'Tenant Information',
-    description: 'Basic tenant details',
-    icon: Users,
-  },
-  {
-    id: 2,
-    title: 'Property & Contract',
-    description: 'Property selection and contract details',
-    icon: FileText,
-  },
-  {
-    id: 3,
-    title: 'Contract Settings',
-    description: 'Reminders and document upload',
-    icon: Settings,
-  },
-];
-
-export const EnhancedTenantDialog = ({ 
-  open, 
-  onOpenChange, 
+export const EnhancedTenantDialog = ({
+  open,
+  onOpenChange,
   onSuccess,
   preSelectedPropertyId = null
 }: EnhancedTenantDialogProps) => {
+  const { t } = useTranslation(['tenants', 'errors']);
   const [currentStep, setCurrentStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
 
+  const STEPS = [
+    {
+      id: 1,
+      title: t('tenants.enhanced.steps.info.title'),
+      description: t('tenants.enhanced.steps.info.description'),
+      icon: Users,
+    },
+    {
+      id: 2,
+      title: t('tenants.enhanced.steps.contract.title'),
+      description: t('tenants.enhanced.steps.contract.description'),
+      icon: FileText,
+    },
+    {
+      id: 3,
+      title: t('tenants.enhanced.steps.settings.title'),
+      description: t('tenants.enhanced.steps.settings.description'),
+      icon: Settings,
+    },
+  ];
+
   const form = useForm<TenantWithContractFormData>({
-    resolver: zodResolver(enhancedTenantSchema),
+    resolver: zodResolver(getEnhancedTenantSchema(t)),
     defaultValues: {
       tenant: {
         name: '',
@@ -220,24 +222,24 @@ export const EnhancedTenantDialog = ({
 
       // Call the service
       const result = await tenantsService.createTenantWithContract(tenantWithContractData);
-      
+
       // Success!
-      toast.success(`Tenant ${result.tenant.name} and contract created successfully!`);
+      toast.success(t('tenants.toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
       onSuccess(result);
       onOpenChange(false);
-      
+
     } catch (error) {
       console.error('Failed to create tenant and contract:', error);
-      
+
       // Check for duplicate active contract conflict
       const err = error as { code?: string; message?: string };
       if (err.code === '23505' || (err.message && err.message.includes('uniq_active_contract_per_property'))) {
-        toast.error('This property already has an active contract.');
+        toast.error(t('tenants.enhanced.errors.duplicateActiveContract'));
         return;
       }
-      
+
       // Show generic error message for other errors
-      toast.error(error instanceof Error ? error.message : 'Failed to create tenant and contract');
+      toast.error(error instanceof Error ? error.message : t('tenants.enhanced.errors.createFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -284,10 +286,10 @@ export const EnhancedTenantDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className={`h-5 w-5 ${COLORS.primary.text}`} />
-            Add Tenant & Contract
+            {t('tenants.addTenantButton')}
           </DialogTitle>
           <DialogDescription>
-            Create a new tenant and contract in a single workflow
+            {t('tenants.enhanced.steps.info.sectionDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -352,11 +354,11 @@ export const EnhancedTenantDialog = ({
             disabled={submitting}
           >
             {isFirstStep ? (
-              'Cancel'
+              t('common.cancel')
             ) : (
               <>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
+                {t('tenants.enhanced.navigation.back')}
               </>
             )}
           </Button>
@@ -379,15 +381,15 @@ export const EnhancedTenantDialog = ({
             className={isLastStep ? `${COLORS.success.bg} hover:${COLORS.success.dark}` : ''}
           >
             {submitting ? (
-              'Creating...'
+              t('tenants.enhanced.navigation.submitting')
             ) : isLastStep ? (
               <>
                 <Check className="h-4 w-4 mr-2" />
-                Create Tenant & Contract
+                {t('tenants.enhanced.navigation.submit')}
               </>
             ) : (
               <>
-                Next: {STEPS[currentStep]?.title}
+                {t('tenants.enhanced.navigation.next')}: {STEPS[currentStep]?.title}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </>
             )}
