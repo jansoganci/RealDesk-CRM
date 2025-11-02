@@ -1,0 +1,17 @@
+{
+  "cancel": "İptal",
+  "saving": "Kaydediliyor...",
+  "loading": "Yükleniyor...",
+  "searchPlaceholder": "Ara...",
+  "filterPlaceholder": "Filtrele",
+  "deleteDialog": {
+    "title": "Öğeyi Sil",
+    "description": "Bu öğeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "cancel": "İptal",
+    "delete": "Sil"
+  },
+  "carousel": {
+    "previous": "Önceki slayt",
+    "next": "Sonraki slayt"
+  }
+}

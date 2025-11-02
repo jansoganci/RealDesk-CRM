@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,17 +29,7 @@ import { photosService } from '../../lib/serviceProxy';
 import { PhotoManagement } from '../../components/properties/PhotoManagement';
 import { PhotoGallery } from '../../components/properties/PhotoGallery';
 import { Images } from 'lucide-react';
-
-const propertySchema = z.object({
-  owner_id: z.string().min(1, 'Owner is required'),
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().optional(),
-  district: z.string().optional(),
-  status: z.enum(['Empty', 'Occupied', 'Inactive']),
-  notes: z.string().optional(),
-});
-
-type PropertyFormData = z.infer<typeof propertySchema>;
+import { getPropertySchema } from './propertySchema';
 
 interface PropertyDialogProps {
   open: boolean;
@@ -55,6 +46,9 @@ export const PropertyDialog = ({
   onSubmit,
   loading = false,
 }: PropertyDialogProps) => {
+  const { t } = useTranslation(['properties', 'common']);
+  const propertySchema = getPropertySchema(t);
+  type PropertyFormData = z.infer<typeof propertySchema>;
   const [owners, setOwners] = useState<PropertyOwner[]>([]);
   const [loadingOwners, setLoadingOwners] = useState(false);
   const [photoManagementOpen, setPhotoManagementOpen] = useState(false);
@@ -116,7 +110,7 @@ export const PropertyDialog = ({
       const data = await ownersService.getAll();
       setOwners(data);
     } catch (error) {
-      console.error('Failed to load owners:', error);
+      console.error(t('properties.toasts.loadOwnersError'), error);
     } finally {
       setLoadingOwners(false);
     }
@@ -129,7 +123,7 @@ export const PropertyDialog = ({
       const data = await photosService.getPhotosByPropertyId(property.id);
       setPhotos(data);
     } catch (error) {
-      console.error('Failed to load photos:', error);
+      console.error(t('properties.toasts.loadPhotosError'), error);
     } finally {
       setLoadingPhotos(false);
     }
@@ -149,18 +143,18 @@ export const PropertyDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{property ? 'Property Details' : 'Add New Property'}</DialogTitle>
+          <DialogTitle>{property ? t('properties.dialog.editTitle') : t('properties.dialog.addTitle')}</DialogTitle>
           <DialogDescription>
             {property
-              ? 'View and manage property information and photos.'
-              : 'Fill in the property details below.'}
+              ? t('properties.dialog.editDescription')
+              : t('properties.dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
         {property && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className={`text-sm font-semibold ${COLORS.gray.text900}`}>Property Photos</h3>
+              <h3 className={`text-sm font-semibold ${COLORS.gray.text900}`}>{t('properties.dialog.propertyPhotosTitle')}</h3>
               <Button
                 type="button"
                 variant="outline"
@@ -169,7 +163,7 @@ export const PropertyDialog = ({
                 disabled={loading}
               >
                 <Images className="h-4 w-4 mr-2" />
-                Manage Photos
+                {t('properties.dialog.managePhotosButton')}
               </Button>
             </div>
             <PhotoGallery
@@ -182,14 +176,14 @@ export const PropertyDialog = ({
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="owner_id">Property Owner *</Label>
+            <Label htmlFor="owner_id">{t('properties.dialog.form.owner')} *</Label>
             <Select
               value={selectedOwnerId || ''}
               onValueChange={(value) => setValue('owner_id', value)}
               disabled={loadingOwners || loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select an owner" />
+                <SelectValue placeholder={t('properties.dialog.form.ownerPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {owners.map((owner) => (
@@ -205,10 +199,10 @@ export const PropertyDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">Address *</Label>
+            <Label htmlFor="address">{t('properties.dialog.form.address')} *</Label>
             <Textarea
               id="address"
-              placeholder="123 Main St, Apt 4B"
+              placeholder={t('properties.dialog.form.addressPlaceholder')}
               {...register('address')}
               disabled={loading}
               rows={2}
@@ -220,20 +214,20 @@ export const PropertyDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="city">City</Label>
+              <Label htmlFor="city">{t('properties.dialog.form.city')}</Label>
               <Input
                 id="city"
-                placeholder="City name"
+                placeholder={t('properties.dialog.form.cityPlaceholder')}
                 {...register('city')}
                 disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="district">District</Label>
+              <Label htmlFor="district">{t('properties.dialog.form.district')}</Label>
               <Input
                 id="district"
-                placeholder="District/neighborhood"
+                placeholder={t('properties.dialog.form.districtPlaceholder')}
                 {...register('district')}
                 disabled={loading}
               />
@@ -241,19 +235,19 @@ export const PropertyDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="status">Status *</Label>
+            <Label htmlFor="status">{t('properties.dialog.form.status')} *</Label>
             <Select
               value={selectedStatus}
               onValueChange={(value) => setValue('status', value as 'Empty' | 'Occupied' | 'Inactive')}
               disabled={loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={t('properties.dialog.form.statusPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Empty">Empty</SelectItem>
-                <SelectItem value="Occupied">Occupied</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
+                <SelectItem value="Empty">{t('properties.status.empty')}</SelectItem>
+                <SelectItem value="Occupied">{t('properties.status.occupied')}</SelectItem>
+                <SelectItem value="Inactive">{t('properties.status.inactive')}</SelectItem>
               </SelectContent>
             </Select>
             {errors.status && (
@@ -262,10 +256,10 @@ export const PropertyDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">{t('properties.dialog.form.notes')}</Label>
             <Textarea
               id="notes"
-              placeholder="Additional information about the property..."
+              placeholder={t('properties.dialog.form.notesPlaceholder')}
               {...register('notes')}
               disabled={loading}
               rows={3}
@@ -279,14 +273,14 @@ export const PropertyDialog = ({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
             >
-              {loading ? 'Saving...' : property ? 'Update Property' : 'Add Property'}
+              {loading ? t('common.saving') : property ? t('properties.dialog.updateButton') : t('properties.dialog.addButton')}
             </Button>
           </DialogFooter>
         </form>

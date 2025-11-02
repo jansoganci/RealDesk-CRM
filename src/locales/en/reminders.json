@@ -1,0 +1,84 @@
+{
+  "pageTitle": "Reminders",
+  "tabs": {
+    "overdue": "Overdue",
+    "upcoming": "Upcoming",
+    "scheduled": "Scheduled",
+    "expired": "Expired",
+    "active": "Active",
+    "completed": "Completed"
+  },
+  "empty": {
+    "globalTitle": "No Active Reminders",
+    "globalDescription": "Enable rent increase reminders when creating or editing contracts to track when to contact property owners about rent increases.",
+    "none": "No reminders found",
+    "allClear": "All Clear!",
+    "overdueDescription": "No overdue reminders",
+    "upcoming": "Nothing Coming Up",
+    "upcomingDescription": "No upcoming reminders",
+    "scheduled": "No Scheduled Reminders",
+    "scheduledDescription": "No reminders are scheduled for the future",
+    "expiredTitle": "No Expired Contracts",
+    "expiredDescription": "No expired contracts with pending reminders"
+  },
+  "sections": {
+    "overdue": {
+      "calloutTitle": "Action Required",
+      "calloutDescription": "You have {{count}} overdue reminders. Contact the property owners about rent increases."
+    },
+    "scheduled": {
+      "calloutTitle": "Scheduled Reminders",
+      "calloutDescription": "These reminders are scheduled for future dates. You'll be notified when it's time to contact the property owner."
+    },
+    "expired": {
+      "calloutTitle": "Expired Contracts",
+      "calloutDescription": "These contracts have ended. Mark as contacted to clear them from reminders."
+    }
+  },
+  "badges": {
+    "contractEnded": "Contract Ended",
+    "urgent": "Urgent - {{days}} days left",
+    "soon": "Soon - {{days}} days left",
+    "upcoming": "{{days}} days left"
+  },
+  "card": {
+    "unknownProperty": "Unknown Property",
+    "tenant": "Tenant: {{name}}",
+    "unknownTenant": "Unknown",
+    "contractEndDate": "Contract End Date",
+    "reminderDate": "Reminder Set For",
+    "noReminderDate": "No date set",
+    "currentRent": "Current Rent",
+    "expectedRent": "Expected New Rent",
+    "currency": "$ {{value}}",
+    "currencyRange": "${{current}} → ${{expected}}",
+    "ownerContact": "Property Owner Contact:",
+    "notes": "Notes:"
+  },
+  "actions": {
+    "markContacted": "Mark as Contacted",
+    "delete": "Delete Reminder",
+    "tryAgain": "Try Again"
+  },
+  "toasts": {
+    "updated": "Reminder updated successfully",
+    "deleted": "Reminder deleted successfully",
+    "loadFailed": "Failed to load reminders",
+    "markedContacted": "Marked as contacted",
+    "updateFailed": "Failed to update reminder"
+  },
+  "dialogs": {
+    "confirmDelete": "Are you sure you want to delete this reminder?",
+    "confirmMark": "Mark this reminder as contacted?",
+    "markTitle": "Mark as Contacted",
+    "markDescription": "Have you contacted the property owner about the rent increase for this property? This will remove the reminder from your list.",
+    "confirm": "Yes, Mark as Contacted"
+  },
+  "errors": {
+    "title": "Error Loading Reminders",
+    "loadDetailed": "Failed to load reminders. Please try again."
+  },
+  "validation": {
+    "required": "This field is required"
+  }
+}

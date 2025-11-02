@@ -1,8 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { COLORS } from '@/config/colors';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { TFunction } from 'i18next';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -28,29 +30,36 @@ import { tenantsService } from '../../lib/serviceProxy';
 import { propertiesService } from '../../lib/serviceProxy';
 import { FileText, X, Bell } from 'lucide-react';
 
-const contractSchema = z.object({
-  tenant_id: z.string().min(1, 'Tenant is required'),
-  property_id: z.string().min(1, 'Property is required'),
-  start_date: z.string().min(1, 'Start date is required'),
-  end_date: z.string().min(1, 'End date is required'),
-  rent_amount: z.string().optional(),
-  status: z.enum(['Active', 'Archived', 'Inactive']),
-  notes: z.string().optional(),
-  rent_increase_reminder_enabled: z.boolean().optional(),
-  rent_increase_reminder_days: z.string().optional(),
-  expected_new_rent: z.string().optional(),
-  reminder_notes: z.string().optional(),
-}).refine((data) => {
-  if (data.start_date && data.end_date) {
-    return new Date(data.end_date) > new Date(data.start_date);
-  }
-  return true;
-}, {
-  message: 'End date must be after start date',
-  path: ['end_date'],
-});
+const createContractFormSchema = (t: TFunction<'contracts'>) =>
+  z
+    .object({
+      tenant_id: z.string().min(1, t('contracts.validation.required')),
+      property_id: z.string().min(1, t('contracts.validation.required')),
+      start_date: z.string().min(1, t('contracts.validation.required')),
+      end_date: z.string().min(1, t('contracts.validation.required')),
+      rent_amount: z.string().optional(),
+      currency: z.string().optional(),
+      status: z.enum(['Active', 'Archived', 'Inactive']),
+      notes: z.string().optional(),
+      rent_increase_reminder_enabled: z.boolean().optional(),
+      rent_increase_reminder_days: z.string().optional(),
+      expected_new_rent: z.string().optional(),
+      reminder_notes: z.string().optional(),
+    })
+    .refine(
+      (data) => {
+        if (data.start_date && data.end_date) {
+          return new Date(data.end_date) > new Date(data.start_date);
+        }
+        return true;
+      },
+      {
+        message: t('contracts.validation.endDateAfterStart'),
+        path: ['end_date'],
+      }
+    );
 
-type ContractFormData = z.infer<typeof contractSchema>;
+type ContractFormData = z.infer<ReturnType<typeof createContractFormSchema>>;
 
 interface ContractDialogProps {
   open: boolean;
@@ -67,6 +76,8 @@ export const ContractDialog = ({
   onSubmit,
   loading = false,
 }: ContractDialogProps) => {
+  const { t } = useTranslation(['contracts', 'common']);
+  const contractSchema = useMemo(() => createContractFormSchema(t), [t]);
   const [tenants, setTenants] = useState<Tenant[]>([]);
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingData, setLoadingData] = useState(false);
@@ -102,6 +113,7 @@ export const ContractDialog = ({
             start_date: contract.start_date || '',
             end_date: contract.end_date || '',
             rent_amount: contract.rent_amount?.toString() || '',
+            currency: contract.currency || 'USD',
             status: contract.status as ContractStatus,
             notes: contract.notes || '',
             rent_increase_reminder_enabled: contract.rent_increase_reminder_enabled || false,
@@ -117,6 +129,7 @@ export const ContractDialog = ({
             start_date: '',
             end_date: '',
             rent_amount: '',
+            currency: 'USD',
             status: 'Active',
             notes: '',
             rent_increase_reminder_enabled: false,
@@ -151,6 +164,7 @@ export const ContractDialog = ({
     const cleanedData = {
       ...data,
       rent_amount: data.rent_amount?.trim() || undefined,
+      currency: data.currency || 'USD',
       notes: data.notes?.trim() || undefined,
       expected_new_rent: data.expected_new_rent?.trim() || undefined,
       reminder_notes: data.reminder_notes?.trim() || undefined,
@@ -165,7 +179,7 @@ export const ContractDialog = ({
     } else {
       setPdfFile(null);
       if (file) {
-        alert('Please select a PDF file');
+        alert(t('contracts.dialog.form.pdfSelectError'));
       }
     }
   };
@@ -180,25 +194,27 @@ export const ContractDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{contract ? 'Edit Contract' : 'Create New Contract'}</DialogTitle>
+          <DialogTitle>
+            {contract ? t('contracts.dialog.editTitle') : t('contracts.dialog.createTitle')}
+          </DialogTitle>
           <DialogDescription>
             {contract
-              ? 'Update the contract information below.'
-              : 'Fill in the contract details to create a new rental agreement.'}
+              ? t('contracts.dialog.editDescription')
+              : t('contracts.dialog.createDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="tenant_id">Tenant *</Label>
+              <Label htmlFor="tenant_id">{t('contracts.dialog.form.tenantLabel')}</Label>
               <Select
                 value={selectedTenantId || ''}
                 onValueChange={(value) => setValue('tenant_id', value)}
                 disabled={loadingData || loading}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a tenant" />
+                  <SelectValue placeholder={t('contracts.dialog.form.tenantPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {tenants.map((tenant) => (
@@ -215,14 +231,14 @@ export const ContractDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="property_id">Property *</Label>
+              <Label htmlFor="property_id">{t('contracts.dialog.form.propertyLabel')}</Label>
               <Select
                 value={selectedPropertyId || ''}
                 onValueChange={(value) => setValue('property_id', value)}
                 disabled={loadingData || loading}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select a property" />
+                  <SelectValue placeholder={t('contracts.dialog.form.propertyPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {properties.map((property) => (
@@ -240,7 +256,7 @@ export const ContractDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="start_date">Start Date *</Label>
+              <Label htmlFor="start_date">{t('contracts.dialog.form.startDateLabel')}</Label>
               <Input
                 id="start_date"
                 type="date"
@@ -253,7 +269,7 @@ export const ContractDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="end_date">End Date *</Label>
+              <Label htmlFor="end_date">{t('contracts.dialog.form.endDateLabel')}</Label>
               <Input
                 id="end_date"
                 type="date"
@@ -268,38 +284,54 @@ export const ContractDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="rent_amount">Monthly Rent Amount</Label>
-              <Input
-                id="rent_amount"
-                type="number"
-                step="0.01"
-                placeholder="1000.00"
-                {...register('rent_amount')}
-                disabled={loading}
-              />
+              <Label htmlFor="rent_amount">{t('contracts.dialog.form.rentAmountLabel')}</Label>
+              <div className="flex gap-2">
+                <Input
+                  id="rent_amount"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('contracts.dialog.form.rentAmountPlaceholder')}
+                  {...register('rent_amount')}
+                  disabled={loading}
+                  className="flex-1"
+                />
+                <Select
+                  value={watch('currency') || 'USD'}
+                  onValueChange={(value) => setValue('currency', value)}
+                  disabled={loading}
+                >
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue placeholder={t('contracts.dialog.form.currencyPlaceholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD</SelectItem>
+                    <SelectItem value="TRY">TRY</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">Status *</Label>
+              <Label htmlFor="status">{t('contracts.dialog.form.statusLabel')}</Label>
               <Select
                 value={selectedStatus}
                 onValueChange={(value) => setValue('status', value as ContractStatus)}
                 disabled={loading}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select status" />
+                  <SelectValue placeholder={t('contracts.dialog.form.statusPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Active">Active</SelectItem>
-                  <SelectItem value="Archived">Archived</SelectItem>
-                  <SelectItem value="Inactive">Inactive</SelectItem>
+                  <SelectItem value="Active">{t('contracts.status.active')}</SelectItem>
+                  <SelectItem value="Archived">{t('contracts.status.archived')}</SelectItem>
+                  <SelectItem value="Inactive">{t('contracts.status.inactive')}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="pdf-upload">Contract PDF (Optional)</Label>
+            <Label htmlFor="pdf-upload">{t('contracts.dialog.form.pdfLabel')}</Label>
             <div className="flex items-center gap-2">
               <div className="flex-1">
                 <Input
@@ -330,15 +362,15 @@ export const ContractDialog = ({
               )}
             </div>
             <p className={`text-xs ${COLORS.muted.textLight}`}>
-              Upload a PDF copy of the signed contract
+              {t('contracts.dialog.form.pdfHelper')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">{t('contracts.dialog.form.notesLabel')}</Label>
             <Textarea
               id="notes"
-              placeholder="Additional contract information..."
+              placeholder={t('contracts.dialog.form.notesPlaceholder')}
               {...register('notes')}
               disabled={loading}
               rows={3}
@@ -351,9 +383,11 @@ export const ContractDialog = ({
                 <Bell className={`h-5 w-5 ${COLORS.warning.text}`} />
                 <div>
                   <Label htmlFor="rent_increase_reminder_enabled" className="text-base font-semibold">
-                    Rent Increase Reminder
+                    {t('contracts.dialog.form.reminderTitle')}
                   </Label>
-                  <p className={`text-xs ${COLORS.muted.textLight}`}>Get reminded to contact owner about rent increase</p>
+                  <p className={`text-xs ${COLORS.muted.textLight}`}>
+                    {t('contracts.dialog.form.reminderDescription')}
+                  </p>
                 </div>
               </div>
               <Switch
@@ -368,32 +402,46 @@ export const ContractDialog = ({
               <div className="space-y-4 pl-7 animate-in fade-in-50">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="rent_increase_reminder_days">Remind me (days before end)</Label>
+                    <Label htmlFor="rent_increase_reminder_days">
+                      {t('contracts.dialog.form.reminderDaysLabel')}
+                    </Label>
                     <Select
                       value={watch('rent_increase_reminder_days') || '90'}
                       onValueChange={(value) => setValue('rent_increase_reminder_days', value)}
                       disabled={loading}
                     >
                       <SelectTrigger>
-                        <SelectValue placeholder="Select days" />
+                        <SelectValue placeholder={t('contracts.dialog.form.reminderDaysPlaceholder')} />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="30">30 days (1 month)</SelectItem>
-                        <SelectItem value="60">60 days (2 months)</SelectItem>
-                        <SelectItem value="90">90 days (3 months)</SelectItem>
-                        <SelectItem value="120">120 days (4 months)</SelectItem>
-                        <SelectItem value="180">180 days (6 months)</SelectItem>
+                        <SelectItem value="30">
+                          {t('contracts.dialog.form.reminderDaysOption.30')}
+                        </SelectItem>
+                        <SelectItem value="60">
+                          {t('contracts.dialog.form.reminderDaysOption.60')}
+                        </SelectItem>
+                        <SelectItem value="90">
+                          {t('contracts.dialog.form.reminderDaysOption.90')}
+                        </SelectItem>
+                        <SelectItem value="120">
+                          {t('contracts.dialog.form.reminderDaysOption.120')}
+                        </SelectItem>
+                        <SelectItem value="180">
+                          {t('contracts.dialog.form.reminderDaysOption.180')}
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="expected_new_rent">Expected New Rent (Optional)</Label>
+                    <Label htmlFor="expected_new_rent">
+                      {t('contracts.dialog.form.expectedRentLabel')}
+                    </Label>
                     <Input
                       id="expected_new_rent"
                       type="number"
                       step="0.01"
-                      placeholder="1200.00"
+                      placeholder={t('contracts.dialog.form.expectedRentPlaceholder')}
                       {...register('expected_new_rent')}
                       disabled={loading}
                     />
@@ -401,10 +449,12 @@ export const ContractDialog = ({
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="reminder_notes">Reminder Notes (Optional)</Label>
+                  <Label htmlFor="reminder_notes">
+                    {t('contracts.dialog.form.reminderNotesLabel')}
+                  </Label>
                   <Textarea
                     id="reminder_notes"
-                    placeholder="e.g., Owner wants 10% increase, market rate is $1200..."
+                    placeholder={t('contracts.dialog.form.reminderNotesPlaceholder')}
                     {...register('reminder_notes')}
                     disabled={loading}
                     rows={2}
@@ -421,14 +471,18 @@ export const ContractDialog = ({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
               disabled={loading || loadingData}
               className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
             >
-              {loading ? 'Saving...' : contract ? 'Update Contract' : 'Create Contract'}
+              {loading
+                ? t('common.saving')
+                : contract
+                ? t('contracts.dialog.updateButton')
+                : t('contracts.dialog.createButton')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { PropertyPhoto } from '../../types';
 import { Button } from '../ui/button';
@@ -30,6 +31,7 @@ interface PhotoGalleryProps {
 }
 
 export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoGalleryProps) => {
+  const { t } = useTranslation('photo');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [photoToDelete, setPhotoToDelete] = useState<PropertyPhoto | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -52,9 +54,9 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       onPhotosChange();
       setDeleteDialogOpen(false);
       setPhotoToDelete(null);
-      toast.success('Photo deleted successfully');
+      toast.success(t('gallery.toast.deleteSuccess'));
     } catch (error) {
-      toast.error('Failed to delete photo');
+      toast.error(t('gallery.toast.deleteError'));
     } finally {
       setDeleting(false);
     }
@@ -77,7 +79,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       );
       onPhotosChange();
     } catch (error) {
-      toast.error('Failed to reorder photos');
+      toast.error(t('gallery.toast.reorderError'));
     } finally {
       setReordering(false);
     }
@@ -100,7 +102,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       );
       onPhotosChange();
     } catch (error) {
-      toast.error('Failed to reorder photos');
+      toast.error(t('gallery.toast.reorderError'));
     } finally {
       setReordering(false);
     }
@@ -122,7 +124,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
   if (loading) {
     return (
       <Card className="p-8 shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
-        <div className={`text-center ${COLORS.muted.textLight}`}>Loading photos...</div>
+        <div className={`text-center ${COLORS.muted.textLight}`}>{t('gallery.loading')}</div>
       </Card>
     );
   }
@@ -135,8 +137,8 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
             <ImageIcon className="h-6 w-6 text-gray-500" />
           </div>
           <div>
-            <p className="font-medium text-gray-900">No photos yet</p>
-            <p className="text-sm text-gray-500 mt-1">Upload photos to showcase this property</p>
+            <p className="font-medium text-gray-900">{t('gallery.emptyState.title')}</p>
+            <p className="text-sm text-gray-500 mt-1">{t('gallery.emptyState.description')}</p>
           </div>
         </div>
       </Card>
@@ -168,7 +170,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                 await photosService.reorderPhotos(photo.property_id, newPhotos.map(p => p.id));
                 onPhotosChange();
               } catch (error) {
-                toast.error('Failed to reorder photos');
+                toast.error(t('gallery.toast.reorderError'));
               } finally {
                 setReordering(false);
                 setDragIndex(null);
@@ -192,12 +194,12 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       size="icon"
                       variant="secondary"
                       className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8 cursor-grab active:cursor-grabbing"
-                      aria-label="Drag to reorder"
+                      aria-label={t('gallery.tooltips.dragToReorder')}
                     >
                       <GripVertical className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Drag to reorder</TooltipContent>
+                  <TooltipContent>{t('gallery.tooltips.dragToReorder')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -207,12 +209,12 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       onClick={() => handleMoveUp(photo, index)}
                       disabled={index === 0 || reordering}
                       className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8"
-                      aria-label="Move up"
+                      aria-label={t('gallery.tooltips.moveUp')}
                     >
                       <MoveUp className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Move up</TooltipContent>
+                  <TooltipContent>{t('gallery.tooltips.moveUp')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -222,12 +224,12 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       onClick={() => handleMoveDown(photo, index)}
                       disabled={index === photos.length - 1 || reordering}
                       className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8"
-                      aria-label="Move down"
+                      aria-label={t('gallery.tooltips.moveDown')}
                     >
                       <MoveDown className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Move down</TooltipContent>
+                  <TooltipContent>{t('gallery.tooltips.moveDown')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
@@ -237,19 +239,19 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       onClick={() => handleDeleteClick(photo)}
                       disabled={reordering}
                       className="min-h-[44px] min-w-[44px] md:h-8 md:w-8"
-                      aria-label="Delete photo"
+                      aria-label={t('gallery.tooltips.delete')}
                     >
                       <Trash2 className="h-4 w-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Delete</TooltipContent>
+                  <TooltipContent>{t('gallery.tooltips.delete')}</TooltipContent>
                 </Tooltip>
               </div>
             </div>
 
             {index === 0 && (
               <div className="absolute top-2 left-2">
-                <Badge className="shadow">Primary</Badge>
+                <Badge className="shadow">{t('gallery.badges.primary')}</Badge>
               </div>
             )}
           </Card>
@@ -260,19 +262,17 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Photo</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this photo? This action cannot be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t('gallery.deleteDialog.title')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('gallery.deleteDialog.description')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t('gallery.deleteDialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={deleting}
-              className={`${COLORS.danger.bg} ${COLORS.danger.hover}`}
+              className="bg-red-600 hover:bg-red-700"
             >
-              {deleting ? 'Deleting...' : 'Delete'}
+              {deleting ? t('common.deleting') : t('gallery.deleteDialog.delete')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

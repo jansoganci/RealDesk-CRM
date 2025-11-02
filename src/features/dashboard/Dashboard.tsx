@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MainLayout } from '../../components/layout/MainLayout';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
@@ -24,6 +25,7 @@ export const Dashboard = () => {
   const [reminders, setReminders] = useState<ReminderWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { t } = useTranslation('dashboard');
 
   useEffect(() => {
     loadStats();
@@ -60,42 +62,42 @@ export const Dashboard = () => {
     <MainLayout title="Dashboard">
       <PageContainer>
         <div>
-          <h2 className={`text-3xl font-bold ${COLORS.gray.text900}`}>Welcome back</h2>
-          <p className={`${COLORS.gray.text600} mt-1`}>Here's what's happening with your properties today</p>
+          <h2 className={`text-3xl font-bold ${COLORS.gray.text900}`}>{t('welcomeBack')}</h2>
+          <p className={`${COLORS.gray.text600} mt-1`}>{t('subtitle')}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <StatCard
-            title="Total Properties"
+            title={t('stats.totalProperties')}
             value={stats.totalProperties}
-            description={stats.totalProperties === 0 ? 'No properties yet' : 'Total properties'}
+            description={stats.totalProperties === 0 ? t('stats.noPropertiesYet') : t('stats.totalPropertiesDescription')}
             icon={<Building2 className={`h-4 w-4 ${COLORS.text.white}`} />}
             iconColor="teal"
             loading={loading}
           />
 
           <StatCard
-            title="Occupied"
+            title={t('stats.occupied')}
             value={stats.occupied}
-            description="Currently rented"
+            description={t('stats.occupiedDescription')}
             icon={<Home className={`h-4 w-4 ${COLORS.text.white}`} />}
             iconColor="green"
             loading={loading}
           />
 
           <StatCard
-            title="Total Tenants"
+            title={t('stats.totalTenants')}
             value={stats.totalTenants}
-            description="Total tenants"
+            description={t('stats.totalTenantsDescription')}
             icon={<Users className={`h-4 w-4 ${COLORS.text.white}`} />}
             iconColor="blue"
             loading={loading}
           />
 
           <StatCard
-            title="Active Contracts"
+            title={t('stats.activeContracts')}
             value={stats.activeContracts}
-            description="Current leases"
+            description={t('stats.activeContractsDescription')}
             icon={<FileText className={`h-4 w-4 ${COLORS.text.white}`} />}
             iconColor="orange"
             loading={loading}
@@ -111,9 +113,9 @@ export const Dashboard = () => {
                     <Bell className={`h-5 w-5 ${COLORS.text.white}`} />
                   </div>
                   <div>
-                    <CardTitle className={COLORS.warning.textDarker}>Rent Increase Reminders</CardTitle>
+                    <CardTitle className={COLORS.warning.textDarker}>{t('reminders.title')}</CardTitle>
                     <CardDescription className={COLORS.warning.textDark}>
-                      {reminders.length} reminder{reminders.length > 1 ? 's' : ''} for upcoming rent increases
+                      {t('reminders.description', { count: reminders.length, s: reminders.length > 1 ? 's' : '' })}
                     </CardDescription>
                   </div>
                 </div>
@@ -123,7 +125,7 @@ export const Dashboard = () => {
                   onClick={() => navigate('/reminders')}
                   className={`${COLORS.warning.borderHover} ${COLORS.warning.hoverBg}`}
                 >
-                  View All <ArrowRight className="h-4 w-4 ml-1" />
+                  {t('reminders.viewAll')} <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
               </div>
             </CardHeader>
@@ -143,7 +145,7 @@ export const Dashboard = () => {
                       <div className={`flex items-center gap-4 text-sm ${COLORS.gray.text600}`}>
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
-                          Ends: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}
+                          {t('reminders.contractEnds')}: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}
                         </span>
                         {reminder.expected_new_rent && (
                           <span className="flex items-center gap-1">
@@ -169,7 +171,7 @@ export const Dashboard = () => {
               })}
               {reminders.length > 3 && (
                 <p className={`text-sm ${COLORS.warning.textDark} text-center pt-2`}>
-                  And {reminders.length - 3} more reminder{reminders.length - 3 > 1 ? 's' : ''}...
+                  {t('reminders.moreReminders', { count: reminders.length - 3, s: reminders.length - 3 > 1 ? 's' : '' })}
                 </p>
               )}
             </CardContent>
@@ -181,22 +183,22 @@ export const Dashboard = () => {
             <CardHeader>
               <div className="flex items-center gap-2">
                 <AlertCircle className={`h-5 w-5 ${COLORS.warning.text}`} />
-                <CardTitle className={COLORS.warning.textDarker}>Contracts Expiring Soon</CardTitle>
+                <CardTitle className={COLORS.warning.textDarker}>{t('contractsExpiringSoon')}</CardTitle>
               </div>
               <CardDescription className={COLORS.warning.textDark}>
-                You have {stats.expiringSoon} contract{stats.expiringSoon > 1 ? 's' : ''} expiring within the next 30 days
+                {t('reminders.contractsExpiringDescription', { count: stats.expiringSoon, s: stats.expiringSoon > 1 ? 's' : '' })}
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className={`text-sm ${COLORS.warning.textDark}`}>Review your contracts page to take action on expiring leases.</p>
+              <p className={`text-sm ${COLORS.warning.textDark}`}>{t('reminders.reviewContracts')}</p>
             </CardContent>
           </Card>
         )}
 
         <Card className={`shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
           <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Get started by adding your first property or owner</CardDescription>
+            <CardTitle>{t('quickActions')}</CardTitle>
+            <CardDescription>{t('getStarted')}</CardDescription>
           </CardHeader>
           <CardContent>
             <p className={`text-sm ${COLORS.gray.text600}`}>Use the navigation menu to manage properties, owners, tenants, and contracts.</p>

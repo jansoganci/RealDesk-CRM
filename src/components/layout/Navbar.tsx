@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell, Globe, CircleDollarSign } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
+import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { remindersService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface NavbarProps {
   title: string;
@@ -12,6 +15,8 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
+  const { i18n } = useTranslation();
+  const { currency, setCurrency } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
   const navigate = useNavigate();
 
@@ -20,6 +25,14 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
     const interval = setInterval(loadReminderCount, 60000);
     return () => clearInterval(interval);
   }, []);
+
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+  };
+
+  const changeCurrency = (cur: string) => {
+    setCurrency(cur);
+  };
 
   const loadReminderCount = async () => {
     try {
@@ -45,19 +58,45 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
           <h1 className={`text-xl font-semibold ${COLORS.gray.text900}`}>{title}</h1>
         </div>
 
-        <Button
-          variant="outline"
-          size="icon"
-          className="relative"
-          onClick={() => navigate('/reminders')}
-        >
-          <Bell className="h-5 w-5" />
-          {reminderCount > 0 && (
-            <Badge className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white`}>
-              {reminderCount > 9 ? '9+' : reminderCount}
-            </Badge>
-          )}
-        </Button>
+        <div className="flex items-center gap-4">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Globe className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage('tr')}>Türkçe</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="icon">
+                <CircleDollarSign className="h-5 w-5" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => changeCurrency('USD')}>USD</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeCurrency('TRY')}>TRY</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
+          <Button
+            variant="outline"
+            size="icon"
+            className="relative"
+            onClick={() => navigate('/reminders')}
+          >
+            <Bell className="h-5 w-5" />
+            {reminderCount > 0 && (
+              <Badge className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white`}>
+                {reminderCount > 9 ? '9+' : reminderCount}
+              </Badge>
+            )}
+          </Button>
+        </div>
       </div>
     </header>
   );

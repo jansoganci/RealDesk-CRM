@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
 import { TenantDialog } from './TenantDialog';
@@ -13,17 +14,13 @@ import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import * as z from 'zod';
 
-const tenantSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  phone: z.string().optional(),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
-  property_id: z.string().optional(),
-  notes: z.string().optional(),
-});
-
-type TenantFormData = z.infer<typeof tenantSchema>;
+import { getTenantSchema } from './tenantSchema';
 
 export const Tenants = () => {
+  const { t } = useTranslation(['tenants', 'common']);
+  const tenantSchema = getTenantSchema(t);
+  type TenantFormData = z.infer<typeof tenantSchema>;
+
   const [tenants, setTenants] = useState<TenantWithProperty[]>([]);
   const [filteredTenants, setFilteredTenants] = useState<TenantWithProperty[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -75,7 +72,7 @@ export const Tenants = () => {
       setTenants(data);
       setFilteredTenants(data);
     } catch (error) {
-      toast.error('Failed to load tenants');
+      toast.error(t('tenants.toasts.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -103,12 +100,12 @@ export const Tenants = () => {
     try {
       setActionLoading(true);
       await tenantsService.delete(tenantToDelete.id);
-      toast.success('Tenant deleted successfully');
+      toast.success(t('tenants.toasts.deleteSuccess'));
       await loadTenants();
       setDeleteDialogOpen(false);
       setTenantToDelete(null);
     } catch (error) {
-      toast.error('Failed to delete tenant');
+      toast.error(t('tenants.toasts.deleteError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -120,16 +117,16 @@ export const Tenants = () => {
       setActionLoading(true);
       if (selectedTenant) {
         await tenantsService.update(selectedTenant.id, data);
-        toast.success('Tenant updated successfully');
+        toast.success(t('tenants.toasts.updateSuccess'));
       } else {
         await tenantsService.create(data);
-        toast.success('Tenant added successfully');
+        toast.success(t('tenants.toasts.addSuccess'));
       }
       await loadTenants();
       setDialogOpen(false);
       setSelectedTenant(null);
     } catch (error) {
-      toast.error(selectedTenant ? 'Failed to update tenant' : 'Failed to add tenant');
+      toast.error(selectedTenant ? t('tenants.toasts.updateError') : t('tenants.toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -137,7 +134,7 @@ export const Tenants = () => {
   };
 
   const handleEnhancedSubmit = async (result: TenantWithContractResult) => {
-    toast.success(`Tenant ${result.tenant.name} and contract created successfully!`);
+    toast.success(t('tenants.toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
     await loadTenants();
     setEnhancedDialogOpen(false);
   };
@@ -150,46 +147,46 @@ export const Tenants = () => {
 
   const getAssignmentBadge = (tenant: TenantWithProperty) => {
     if (tenant.property_id) {
-      return <Badge className={getStatusBadgeClasses('assigned')}>Assigned</Badge>;
+      return <Badge className={getStatusBadgeClasses('assigned')}>{t('tenants.status.assigned')}</Badge>;
     }
-    return <Badge className={getStatusBadgeClasses('unassigned')}>Unassigned</Badge>;
+    return <Badge className={getStatusBadgeClasses('unassigned')}>{t('tenants.status.unassigned')}</Badge>;
   };
 
   return (
     <>
       <ListPageTemplate
-        title="Tenants"
+        title={t('tenants.title')}
         items={filteredTenants}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search tenants..."
+        searchPlaceholder={t('tenants.searchPlaceholder')}
         filterValue={assignmentFilter}
         onFilterChange={setAssignmentFilter}
         filterOptions={[
-          { value: 'all', label: 'All Tenants' },
-          { value: 'assigned', label: 'Assigned' },
-          { value: 'unassigned', label: 'Unassigned' },
+          { value: 'all', label: t('tenants.filters.all') },
+          { value: 'assigned', label: t('tenants.filters.assigned') },
+          { value: 'unassigned', label: t('tenants.filters.unassigned') },
         ]}
-        filterPlaceholder="Filter by status"
+        filterPlaceholder={t('tenants.filterPlaceholder')}
         onAdd={handleAddTenant}
-        addButtonLabel="Add Tenant & Contract"
+        addButtonLabel={t('tenants.addTenantButton')}
         emptyState={{
-          title: searchQuery || assignmentFilter !== 'all' ? 'No tenants found' : 'No tenants yet',
+          title: searchQuery || assignmentFilter !== 'all' ? t('tenants.emptyState.noTenantsFound') : t('tenants.emptyState.noTenantsYet'),
           description: searchQuery || assignmentFilter !== 'all'
-            ? 'Try adjusting your search or filter'
-            : 'Get started by adding your first tenant',
+            ? t('tenants.emptyState.noTenantsFoundDescription')
+            : t('tenants.emptyState.noTenantsYetDescription'),
           icon: <Users className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: 'Add Your First Tenant & Contract',
+          actionLabel: t('tenants.emptyState.addActionLabel'),
           showAction: !searchQuery && assignmentFilter === 'all',
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>Name</TableHead>
-            <TableHead>Contact</TableHead>
-            <TableHead>Property</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t('tenants.table.name')}</TableHead>
+            <TableHead>{t('tenants.table.contact')}</TableHead>
+            <TableHead>{t('tenants.table.property')}</TableHead>
+            <TableHead>{t('tenants.table.status')}</TableHead>
+            <TableHead className="text-right">{t('tenants.table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(tenant) => (
@@ -232,7 +229,7 @@ export const Tenants = () => {
               ) : (
                 <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
                   <UserX className="h-3 w-3" />
-                  <span>No property</span>
+                  <span>{t('tenants.noProperty')}</span>
                 </div>
               )}
             </TableCell>
@@ -291,7 +288,7 @@ export const Tenants = () => {
               ) : (
                 <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
                   <UserX className="h-4 w-4" />
-                  <span>No property assigned</span>
+                  <span>{t('tenants.noPropertyAssigned')}</span>
                 </div>
               )}
             </div>
@@ -308,8 +305,8 @@ export const Tenants = () => {
         )}
         deleteDialog={{
           open: deleteDialogOpen,
-          title: 'Delete Tenant',
-          description: `Are you sure you want to delete ${tenantToDelete?.name}? This action cannot be undone.`,
+          title: t('tenants.deleteDialog.title'),
+          description: t('tenants.deleteDialog.description', { tenantName: tenantToDelete?.name }),
           onConfirm: handleDeleteConfirm,
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,

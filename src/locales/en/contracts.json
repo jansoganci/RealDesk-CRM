@@ -1,0 +1,106 @@
+{
+  "title": "Rental Contracts",
+  "searchPlaceholder": "Search contracts...",
+  "filterPlaceholder": "Filter by status",
+  "filters": {
+    "all": "All Status"
+  },
+  "actions": {
+    "add": "Add Contract",
+    "delete": "Delete",
+    "save": "Save Changes",
+    "createFirst": "Create Your First Contract"
+  },
+  "emptyState": {
+    "title": "No contracts yet",
+    "titleFiltered": "No contracts found",
+    "description": "Get started by creating your first rental contract",
+    "descriptionFiltered": "Try adjusting your search or filter"
+  },
+  "table": {
+    "tenant": "Tenant",
+    "property": "Property",
+    "period": "Period",
+    "rent": "Rent",
+    "status": "Status",
+    "reminder": "Reminder",
+    "actions": "Actions",
+    "datesTo": "to",
+    "unknownTenant": "Unknown Tenant",
+    "unknownProperty": "Unknown Property",
+    "unknown": "Unknown",
+    "perMonth": "{{amount}}/month",
+    "pdfAttached": "PDF attached"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+  "reminder": {
+    "none": "None",
+    "label": "Reminder: {{days}} days before end",
+    "tooltip": "Reminder set for {{days}} days before end",
+    "badge": "{{days}}d"
+  },
+  "dialog": {
+    "deleteTitle": "Delete Contract",
+    "deleteDescription": "Are you sure you want to delete the contract for {{name}}? This action cannot be undone.",
+    "editTitle": "Edit Contract",
+    "createTitle": "Create New Contract",
+    "editDescription": "Update the contract information below.",
+    "createDescription": "Fill in the contract details to create a new rental agreement.",
+    "createButton": "Create Contract",
+    "updateButton": "Update Contract",
+    "form": {
+      "tenantLabel": "Tenant *",
+      "tenantPlaceholder": "Select a tenant",
+      "propertyLabel": "Property *",
+      "propertyPlaceholder": "Select a property",
+      "startDateLabel": "Start Date *",
+      "endDateLabel": "End Date *",
+      "rentAmountLabel": "Monthly Rent Amount",
+      "rentAmountPlaceholder": "1000.00",
+      "currencyPlaceholder": "Select currency",
+      "statusLabel": "Status *",
+      "statusPlaceholder": "Select status",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Additional contract information...",
+      "pdfLabel": "Contract PDF (Optional)",
+      "pdfHelper": "Upload a PDF copy of the signed contract",
+      "reminderTitle": "Rent Increase Reminder",
+      "reminderDescription": "Get reminded to contact owner about rent increase",
+      "reminderDaysLabel": "Remind me (days before end)",
+      "reminderDaysPlaceholder": "Select days",
+      "expectedRentLabel": "Expected New Rent (Optional)",
+      "expectedRentPlaceholder": "1200.00",
+      "reminderNotesLabel": "Reminder Notes (Optional)",
+      "reminderNotesPlaceholder": "e.g., Owner wants 10% increase, market rate is $1200...",
+      "pdfSelectError": "Please select a PDF file",
+      "reminderDaysOption": {
+        "30": "30 days (1 month)",
+        "60": "60 days (2 months)",
+        "90": "90 days (3 months)",
+        "120": "120 days (4 months)",
+        "180": "180 days (6 months)"
+      }
+    }
+  },
+  "toasts": {
+    "deleted": "Contract deleted successfully",
+    "created": "Contract created successfully",
+    "updated": "Contract updated successfully",
+    "pdfUploaded": "Contract PDF uploaded successfully",
+    "pdfUploadPartial": "Contract saved but PDF upload failed"
+  },
+  "errors": {
+    "loadFailed": "Failed to load contracts",
+    "deleteFailed": "Failed to delete contract",
+    "updateFailed": "Failed to update contract",
+    "createFailed": "Failed to create contract"
+  },
+  "validation": {
+    "required": "This field is required",
+    "endDateAfterStart": "End date must be after start date"
+  }
+}

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import useEmblaCarousel, {
   type UseEmblaCarouselType,
@@ -175,12 +176,13 @@ const CarouselItem = React.forwardRef<
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => {
   const { orientation } = useCarousel();
+  const { t } = useTranslation('common');
 
   return (
     <div
       ref={ref}
       role="group"
-      aria-roledescription="slide"
+      aria-label={t('carousel.item')}
       className={cn(
         'min-w-0 shrink-0 grow-0 basis-full',
         orientation === 'horizontal' ? 'pl-4' : 'pt-4',
@@ -197,6 +199,7 @@ const CarouselPrevious = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
   const { orientation, scrollPrev, canScrollPrev } = useCarousel();
+  const { t } = useTranslation('common');
 
   return (
     <Button
@@ -226,6 +229,7 @@ const CarouselNext = React.forwardRef<
   React.ComponentProps<typeof Button>
 >(({ className, variant = 'outline', size = 'icon', ...props }, ref) => {
   const { orientation, scrollNext, canScrollNext } = useCarousel();
+  const { t } = useTranslation('common');
 
   return (
     <Button

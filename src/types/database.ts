@@ -139,6 +139,7 @@ export interface Database {
           start_date: string;
           end_date: string;
           rent_amount: number | null;
+          currency: string | null;
           status: 'Active' | 'Archived' | 'Inactive';
           contract_pdf_path: string | null;
           notes: string | null;
@@ -157,6 +158,7 @@ export interface Database {
           start_date: string;
           end_date: string;
           rent_amount?: number | null;
+          currency?: string | null;
           status?: 'Active' | 'Archived' | 'Inactive';
           contract_pdf_path?: string | null;
           notes?: string | null;
@@ -175,6 +177,7 @@ export interface Database {
           start_date?: string;
           end_date?: string;
           rent_amount?: number | null;
+          currency?: string | null;
           status?: 'Active' | 'Archived' | 'Inactive';
           contract_pdf_path?: string | null;
           notes?: string | null;
@@ -185,6 +188,23 @@ export interface Database {
           reminder_notes?: string | null;
           created_at?: string;
           updated_at?: string;
+        };
+      };
+      user_preferences: {
+        Row: {
+          user_id: string;
+          language: string | null;
+          currency: string | null;
+        };
+        Insert: {
+          user_id: string;
+          language?: string | null;
+          currency?: string | null;
+        };
+        Update: {
+          user_id?: string;
+          language?: string | null;
+          currency?: string | null;
         };
       };
     };

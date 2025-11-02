@@ -1,0 +1,37 @@
+{
+  "upload": {
+    "maxReached": {
+      "title": "Maximum photos reached",
+      "description": "This property already has {{maxFiles}} photos. Delete some photos to upload new ones."
+    },
+    "fileTypes": "JPEG, PNG, WebP up to 5MB",
+    "slotsAvailable": "{{remainingSlots}} of {{maxFiles}} photo slots available"
+  },
+  "gallery": {
+    "loading": "Loading photos...",
+    "emptyState": {
+      "title": "No photos yet",
+      "description": "Upload photos to showcase this property"
+    },
+    "tooltips": {
+      "dragToReorder": "Drag to reorder",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "delete": "Delete"
+    },
+    "badges": {
+      "primary": "Primary"
+    },
+    "deleteDialog": {
+      "title": "Delete Photo",
+      "description": "Are you sure you want to delete this photo? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "toast": {
+      "deleteSuccess": "Photo deleted successfully",
+      "deleteError": "Failed to delete photo",
+      "reorderError": "Failed to reorder photos"
+    }
+  }
+}

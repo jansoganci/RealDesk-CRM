@@ -1,4 +1,5 @@
 import { useState, useCallback, DragEvent } from 'react';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { Button } from '../ui/button';
 import { Card } from '../ui/card';
@@ -21,7 +22,7 @@ export const PhotoUpload = ({
   const [isDragging, setIsDragging] = useState(false);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [error, setError] = useState<string | null>(null);
-
+  const { t } = useTranslation(['photo']);
   const remainingSlots = maxFiles - currentPhotoCount;
 
   const validateFiles = (files: File[]): { valid: File[]; error: string | null } => {
@@ -114,9 +115,11 @@ export const PhotoUpload = ({
         <div className="flex items-start gap-3">
           <AlertCircle className={`h-5 w-5 ${COLORS.warning.text} mt-0.5 flex-shrink-0`} />
           <div>
-            <p className={`font-medium ${COLORS.warning.textDarker}`}>Maximum photos reached</p>
+            <p className={`font-medium ${COLORS.warning.textDarker}`}>
+              {t('upload.maxReached.title')}
+            </p>
             <p className={`text-sm ${COLORS.warning.textDark} mt-1`}>
-              This property already has {maxFiles} photos. Delete some photos to upload new ones.
+              {t('upload.maxReached.description', { maxFiles })}
             </p>
           </div>
         </div>
@@ -161,9 +164,9 @@ export const PhotoUpload = ({
             </p>
           </div>
           <div className={`text-xs ${COLORS.muted.textLight} space-y-1`}>
-            <p>JPEG, PNG, WebP up to 5MB</p>
+            <p>{t('upload.fileTypes')}</p>
             <p>
-              {remainingSlots} of {maxFiles} photo slots available
+              {t('upload.slotsAvailable', { remainingSlots, maxFiles })}
             </p>
           </div>
         </div>

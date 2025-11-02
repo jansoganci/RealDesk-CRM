@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -12,19 +13,13 @@ import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import * as z from 'zod';
-
-const propertySchema = z.object({
-  owner_id: z.string().min(1, 'Owner is required'),
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().optional(),
-  district: z.string().optional(),
-  status: z.enum(['Empty', 'Occupied', 'Inactive']),
-  notes: z.string().optional(),
-});
-
-type PropertyFormData = z.infer<typeof propertySchema>;
+import { getPropertySchema } from './propertySchema';
 
 export const Properties = () => {
+  const { t } = useTranslation(['properties', 'common']);
+  const propertySchema = getPropertySchema(t);
+  type PropertyFormData = z.infer<typeof propertySchema>;
+
   const [properties, setProperties] = useState<PropertyWithOwner[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyWithOwner[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -73,7 +68,7 @@ export const Properties = () => {
       const data = await propertiesService.getAll();
       setProperties(data);
     } catch (error) {
-      toast.error('Failed to load properties');
+      toast.error(t('properties.toasts.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -101,12 +96,12 @@ export const Properties = () => {
     try {
       setActionLoading(true);
       await propertiesService.delete(propertyToDelete.id);
-      toast.success('Property deleted successfully');
+      toast.success(t('properties.toasts.deleteSuccess'));
       await loadProperties();
       setDeleteDialogOpen(false);
       setPropertyToDelete(null);
     } catch (error) {
-      toast.error('Failed to delete property');
+      toast.error(t('properties.toasts.deleteError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -118,16 +113,16 @@ export const Properties = () => {
       setActionLoading(true);
       if (selectedProperty) {
         await propertiesService.update(selectedProperty.id, data);
-        toast.success('Property updated successfully');
+        toast.success(t('properties.toasts.updateSuccess'));
       } else {
         await propertiesService.create(data);
-        toast.success('Property added successfully');
+        toast.success(t('properties.toasts.addSuccess'));
       }
       await loadProperties();
       setDialogOpen(false);
       setSelectedProperty(null);
     } catch (error) {
-      toast.error(selectedProperty ? 'Failed to update property' : 'Failed to add property');
+      toast.error(selectedProperty ? t('properties.toasts.updateError') : t('properties.toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -140,7 +135,7 @@ export const Properties = () => {
   };
 
   const handleTenantCreated = async (result: TenantWithContractResult) => {
-    toast.success(`Tenant ${result.tenant.name} and contract created successfully for property!`);
+    toast.success(t('properties.toasts.addTenantToPropertySuccess', { tenantName: result.tenant.name }));
     await loadProperties();
     setEnhancedTenantDialogOpen(false);
     setSelectedPropertyForTenant(null);
@@ -148,9 +143,9 @@ export const Properties = () => {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      Empty: { label: 'Empty', className: getStatusBadgeClasses('empty') },
-      Occupied: { label: 'Occupied', className: getStatusBadgeClasses('occupied') },
-      Inactive: { label: 'Inactive', className: getStatusBadgeClasses('inactive') },
+      Empty: { label: t('properties.status.empty'), className: getStatusBadgeClasses('empty') },
+      Occupied: { label: t('properties.status.occupied'), className: getStatusBadgeClasses('occupied') },
+      Inactive: { label: t('properties.status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.Empty;
@@ -165,39 +160,39 @@ export const Properties = () => {
   return (
     <>
       <ListPageTemplate
-        title="Properties"
+        title={t('properties.title')}
         items={filteredProperties}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder="Search properties..."
+        searchPlaceholder={t('properties.searchPlaceholder')}
         filterValue={statusFilter}
         onFilterChange={setStatusFilter}
         filterOptions={[
-          { value: 'all', label: 'All Status' },
-          { value: 'Empty', label: 'Empty' },
-          { value: 'Occupied', label: 'Occupied' },
-          { value: 'Inactive', label: 'Inactive' },
+          { value: 'all', label: t('properties.filters.all') },
+          { value: 'Empty', label: t('properties.status.empty') },
+          { value: 'Occupied', label: t('properties.status.occupied') },
+          { value: 'Inactive', label: t('properties.status.inactive') },
         ]}
-        filterPlaceholder="Filter by status"
+        filterPlaceholder={t('properties.filterPlaceholder')}
         onAdd={handleAddProperty}
-        addButtonLabel="Add Property"
+        addButtonLabel={t('properties.addPropertyButton')}
         emptyState={{
-          title: searchQuery || statusFilter !== 'all' ? 'No properties found' : 'No properties yet',
+          title: searchQuery || statusFilter !== 'all' ? t('properties.emptyState.noPropertiesFound') : t('properties.emptyState.noPropertiesYet'),
           description: searchQuery || statusFilter !== 'all'
-            ? 'Try adjusting your search or filter'
-            : 'Get started by adding your first property',
+            ? t('properties.emptyState.noPropertiesFoundDescription')
+            : t('properties.emptyState.noPropertiesYetDescription'),
           icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: 'Add Your First Property',
+          actionLabel: t('properties.emptyState.addActionLabel'),
           showAction: !searchQuery && statusFilter === 'all',
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>Address</TableHead>
-            <TableHead>Location</TableHead>
-            <TableHead>Owner</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>{t('properties.table.address')}</TableHead>
+            <TableHead>{t('properties.table.location')}</TableHead>
+            <TableHead>{t('properties.table.owner')}</TableHead>
+            <TableHead>{t('properties.table.status')}</TableHead>
+            <TableHead className="text-right">{t('properties.table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(property) => (
@@ -213,7 +208,7 @@ export const Properties = () => {
                     {property.photos && property.photos.length > 0 && (
                       <span className={`inline-flex items-center gap-1 text-xs ${COLORS.gray.text500} flex-shrink-0`}>
                         <Images className="h-3 w-3" />
-                        {property.photos.length}
+                        {t('photos', { count: property.photos.length })}
                       </span>
                     )}
                   </div>
@@ -234,7 +229,7 @@ export const Properties = () => {
                   </span>
                 </div>
               ) : (
-                <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
               )}
             </TableCell>
             <TableCell>
@@ -244,7 +239,7 @@ export const Properties = () => {
                   <span className={COLORS.gray.text700}>{property.owner.name}</span>
                 </div>
               ) : (
-                <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
               )}
             </TableCell>
             <TableCell>
@@ -260,7 +255,7 @@ export const Properties = () => {
                     className="text-xs"
                   >
                     <UserPlus className="h-3 w-3 mr-1" />
-                    Add Tenant
+                    {t('properties.addTenantButton')}
                   </Button>
                 )}
                 <TableActionButtons
@@ -316,7 +311,7 @@ export const Properties = () => {
                 <div className="flex items-center gap-2 text-sm">
                   <Images className={`h-4 w-4 ${COLORS.muted.textLight}`} />
                   <span className={COLORS.gray.text600}>
-                    {property.photos.length} photo{property.photos.length !== 1 ? 's' : ''}
+                    {t('photos', { count: property.photos.length })}
                   </span>
                 </div>
               )}
@@ -332,7 +327,7 @@ export const Properties = () => {
                   className="w-full justify-start"
                 >
                   <UserPlus className="h-4 w-4 mr-2" />
-                  Add Tenant
+                  {t('properties.addTenantButton')}
                 </Button>
               )}
               <div className="flex gap-2">
@@ -347,8 +342,8 @@ export const Properties = () => {
         )}
         deleteDialog={{
           open: deleteDialogOpen,
-          title: 'Delete Property',
-          description: `Are you sure you want to delete this property at ${propertyToDelete?.address}? This action cannot be undone and will also delete all associated photos.`,
+          title: t('properties.deleteDialog.title'),
+          description: t('properties.deleteDialog.description', { propertyAddress: propertyToDelete?.address }),
           onConfirm: handleDeleteConfirm,
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,

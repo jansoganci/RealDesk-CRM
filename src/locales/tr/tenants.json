@@ -1,0 +1,71 @@
+{
+  "title": "Kiracılar",
+  "searchPlaceholder": "Kiracı ara...",
+  "filterPlaceholder": "Duruma göre filtrele",
+  "addTenantButton": "Kiracı ve Sözleşme Ekle",
+  "noProperty": "Mülk yok",
+  "noPropertyAssigned": "Mülk atanmamış",
+  "status": {
+    "assigned": "Atanmış",
+    "unassigned": "Atanmamış"
+  },
+  "filters": {
+    "all": "Tüm Kiracılar",
+    "assigned": "Atanmış",
+    "unassigned": "Atanmamış"
+  },
+  "table": {
+    "name": "İsim",
+    "contact": "İletişim",
+    "property": "Mülk",
+    "status": "Durum",
+    "actions": "Eylemler"
+  },
+  "toasts": {
+    "loadError": "Kiracılar yüklenemedi",
+    "deleteSuccess": "Kiracı başarıyla silindi",
+    "deleteError": "Kiracı silinemedi",
+    "updateSuccess": "Kiracı başarıyla güncellendi",
+    "updateError": "Kiracı güncellenemedi",
+    "addSuccess": "Kiracı başarıyla eklendi",
+    "addError": "Kiracı eklenemedi",
+    "addTenantWithContractSuccess": "Kiracı {{tenantName}} ve sözleşme başarıyla oluşturuldu!"
+  },
+  "validations": {
+    "nameRequired": "İsim gereklidir",
+    "invalidEmail": "Geçersiz e-posta adresi"
+  },
+  "emptyState": {
+    "noTenantsFound": "Kiracı bulunamadı",
+    "noTenantsYet": "Henüz kiracı yok",
+    "noTenantsFoundDescription": "Aramanızı veya filtrenizi değiştirmeyi deneyin",
+    "noTenantsYetDescription": "İlk kiracınızı ekleyerek başlayın",
+    "addActionLabel": "İlk Kiracınızı ve Sözleşmenizi Ekleyin"
+  },
+  "deleteDialog": {
+    "title": "Kiracıyı Sil",
+    "description": "{{tenantName}} adlı kiracıyı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "dialog": {
+    "addTitle": "Yeni Kiracı Ekle",
+    "editTitle": "Kiracıyı Düzenle",
+    "addDescription": "Aşağıdaki kiracı ayrıntılarını doldurun.",
+    "editDescription": "Aşağıdaki kiracı bilgilerini güncelleyin.",
+    "form": {
+      "name": "Tam Adı",
+      "namePlaceholder": "John Doe",
+      "phone": "Telefon Numarası",
+      "phonePlaceholder": "+90 555 555 5555",
+      "email": "E-posta",
+      "emailPlaceholder": "john@example.com",
+      "property": "Atanmış Mülk",
+      "propertyPlaceholder": "Bir mülk seçin (isteğe bağlı)",
+      "noProperty": "Mülk Yok (Atanmamış)",
+      "propertyHint": "Bir kiracıyı daha sonra bir mülke atayabilirsiniz",
+      "notes": "Notlar",
+      "notesPlaceholder": "Kiracı hakkında ek bilgi..."
+    },
+    "addButton": "Kiracı Ekle",
+    "updateButton": "Kiracıyı Güncelle"
+  }
+}

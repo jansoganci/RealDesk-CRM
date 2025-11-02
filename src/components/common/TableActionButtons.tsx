@@ -1,4 +1,5 @@
 import { ReactNode, memo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '../ui/button';
 import {
   Tooltip,
@@ -36,6 +37,7 @@ export const TableActionButtons = memo(({
   showDelete = true,
   showView = false,
 }: TableActionButtonsProps) => {
+  const { t } = useTranslation(['components.tableActions']);
   const getButtonClasses = (variant: string) => {
     switch (variant) {
       case 'view':
@@ -60,12 +62,14 @@ export const TableActionButtons = memo(({
                 size="icon"
                 onClick={onView}
                 className={getButtonClasses('view')}
+                aria-label={t('viewDetails')}
+                title={t('viewDetailsTooltip')}
               >
                 <Eye className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>View Details</p>
+              <p>{t('viewDetails')}</p>
             </TooltipContent>
           </Tooltip>
         )}
@@ -78,12 +82,14 @@ export const TableActionButtons = memo(({
                 size="icon"
                 onClick={onEdit}
                 className={getButtonClasses('edit')}
+                aria-label={t('edit')}
+                title={t('editTooltip')}
               >
                 <Pencil className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Edit</p>
+              <p>{t('edit')}</p>
             </TooltipContent>
           </Tooltip>
         )}
@@ -101,7 +107,7 @@ export const TableActionButtons = memo(({
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{action.tooltip}</p>
+              <p>{typeof action.tooltip === 'string' ? action.tooltip : t(action.tooltip)}</p>
             </TooltipContent>
           </Tooltip>
         ))}
@@ -114,12 +120,14 @@ export const TableActionButtons = memo(({
                 size="icon"
                 onClick={onDelete}
                 className={getButtonClasses('delete')}
+                aria-label={t('delete')}
+                title={t('deleteTooltip')}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>Delete</p>
+              <p>{t('delete')}</p>
             </TooltipContent>
           </Tooltip>
         )}

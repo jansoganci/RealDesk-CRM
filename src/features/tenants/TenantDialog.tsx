@@ -23,17 +23,10 @@ import {
   SelectValue,
 } from '../../components/ui/select';
 import { Tenant, Property } from '../../types';
-import { propertiesService } from '../../lib/serviceProxy';
+import { useTranslation } from 'react-i18next';
+import { getTenantSchema } from './tenantSchema';
 
-const tenantSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  phone: z.string().optional(),
-  email: z.string().email('Invalid email address').optional().or(z.literal('')),
-  property_id: z.string().optional(),
-  notes: z.string().optional(),
-});
 
-type TenantFormData = z.infer<typeof tenantSchema>;
 
 interface TenantDialogProps {
   open: boolean;
@@ -50,6 +43,10 @@ export const TenantDialog = ({
   onSubmit,
   loading = false,
 }: TenantDialogProps) => {
+  const { t } = useTranslation();
+  const tenantSchema = getTenantSchema(t);
+  type TenantFormData = z.infer<typeof tenantSchema>;
+
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(false);
 
@@ -119,20 +116,20 @@ export const TenantDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{tenant ? 'Edit Tenant' : 'Add New Tenant'}</DialogTitle>
+          <DialogTitle>{tenant ? t('tenants.dialog.editTitle') : t('tenants.dialog.addTitle')}</DialogTitle>
           <DialogDescription>
             {tenant
-              ? 'Update the tenant information below.'
-              : 'Fill in the tenant details below.'}
+              ? t('tenants.dialog.editDescription')
+              : t('tenants.dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">Full Name *</Label>
+            <Label htmlFor="name">{t('tenants.dialog.form.name')} *</Label>
             <Input
               id="name"
-              placeholder="John Doe"
+              placeholder={t('tenants.dialog.form.namePlaceholder')}
               {...register('name')}
               disabled={loading}
             />
@@ -143,21 +140,21 @@ export const TenantDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="phone">Phone Number</Label>
+              <Label htmlFor="phone">{t('tenants.dialog.form.phone')}</Label>
               <Input
                 id="phone"
-                placeholder="+1 234 567 8900"
+                placeholder={t('tenants.dialog.form.phonePlaceholder')}
                 {...register('phone')}
                 disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('tenants.dialog.form.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="john@example.com"
+                placeholder={t('tenants.dialog.form.emailPlaceholder')}
                 {...register('email')}
                 disabled={loading}
               />
@@ -168,17 +165,17 @@ export const TenantDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="property_id">Assigned Property</Label>
+            <Label htmlFor="property_id">{t('tenants.dialog.form.property')}</Label>
             <Select
               value={selectedPropertyId && selectedPropertyId !== '' ? selectedPropertyId : 'none'}
               onValueChange={(value) => setValue('property_id', value === 'none' ? '' : value)}
               disabled={loadingProperties || loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select a property (optional)" />
+                <SelectValue placeholder={t('tenants.dialog.form.propertyPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">No Property (Unassigned)</SelectItem>
+                <SelectItem value="none">{t('tenants.dialog.form.noProperty')}</SelectItem>
                 {properties
                   .filter(p => p.status !== 'Inactive')
                   .map((property) => (
@@ -189,15 +186,15 @@ export const TenantDialog = ({
               </SelectContent>
             </Select>
             <p className={`text-xs ${COLORS.muted.textLight}`}>
-              You can assign a tenant to a property later
+              {t('tenants.dialog.form.propertyHint')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">Notes</Label>
+            <Label htmlFor="notes">{t('tenants.dialog.form.notes')}</Label>
             <Textarea
               id="notes"
-              placeholder="Additional information about the tenant..."
+              placeholder={t('tenants.dialog.form.notesPlaceholder')}
               {...register('notes')}
               disabled={loading}
               rows={3}
@@ -211,14 +208,14 @@ export const TenantDialog = ({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
             >
-              {loading ? 'Saving...' : tenant ? 'Update Tenant' : 'Add Tenant'}
+              {loading ? t('common.saving') : tenant ? t('tenants.dialog.updateButton') : t('tenants.dialog.addButton')}
             </Button>
           </DialogFooter>
         </form>

@@ -1,0 +1,37 @@
+{
+  "upload": {
+    "maxReached": {
+      "title": "Maksimum fotoğraf sayısına ulaşıldı",
+      "description": "Bu mülk zaten {{maxFiles}} fotoğraf içeriyor. Yeni fotoğraf yüklemek için bazılarını silin."
+    },
+    "fileTypes": "JPEG, PNG, WebP, en fazla 5MB",
+    "slotsAvailable": "{{remainingSlots}} / {{maxFiles}} fotoğraf yükleme hakkı kaldı"
+  },
+  "gallery": {
+    "loading": "Fotoğraflar yükleniyor...",
+    "emptyState": {
+      "title": "Henüz fotoğraf yok",
+      "description": "Bu mülk için fotoğraf yükleyin"
+    },
+    "tooltips": {
+      "dragToReorder": "Sıralamak için sürükleyin",
+      "moveUp": "Yukarı taşı",
+      "moveDown": "Aşağı taşı",
+      "delete": "Sil"
+    },
+    "badges": {
+      "primary": "Ana Fotoğraf"
+    },
+    "deleteDialog": {
+      "title": "Fotoğrafı Sil",
+      "description": "Bu fotoğrafı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "cancel": "İptal",
+      "delete": "Sil"
+    },
+    "toast": {
+      "deleteSuccess": "Fotoğraf başarıyla silindi",
+      "deleteError": "Fotoğraf silinirken hata oluştu",
+      "reorderError": "Fotoğraflar yeniden sıralanırken hata oluştu"
+    }
+  }
+}

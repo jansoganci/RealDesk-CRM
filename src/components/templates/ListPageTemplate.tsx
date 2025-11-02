@@ -1,4 +1,5 @@
 import React, { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
 import { MainLayout } from '../layout/MainLayout';
 import { PageContainer } from '../layout/PageContainer';
 import { Button } from '../ui/button';
@@ -93,6 +94,7 @@ export function ListPageTemplate<T>({
   renderCardContent,
   deleteDialog,
 }: ListPageTemplateProps<T>) {
+  const { t } = useTranslation('common');
   return (
     <MainLayout title={title}>
       <PageContainer>
@@ -101,7 +103,7 @@ export function ListPageTemplate<T>({
             <div className="relative flex-1 max-w-sm">
               <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${COLORS.muted.textLight}`} />
               <Input
-                placeholder={searchPlaceholder}
+                placeholder={searchPlaceholder || t('searchPlaceholder')}
                 value={searchQuery}
                 onChange={(e) => onSearchChange(e.target.value)}
                 className="pl-9"
@@ -110,7 +112,7 @@ export function ListPageTemplate<T>({
             {filterOptions && onFilterChange && filterValue !== undefined && (
               <Select value={filterValue} onValueChange={onFilterChange}>
                 <SelectTrigger className="w-full sm:w-[180px]">
-                  <SelectValue placeholder={filterPlaceholder} />
+                  <SelectValue placeholder={filterPlaceholder || t('filterPlaceholder')} />
                 </SelectTrigger>
                 <SelectContent>
                   {filterOptions.map((option) => (
@@ -132,9 +134,10 @@ export function ListPageTemplate<T>({
         </div>
 
         {loading ? (
-          <Card className={`p-8 shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
-            <div className={`text-center ${COLORS.muted.textLight}`}>Loading...</div>
-          </Card>
+          <div className="flex flex-col items-center justify-center h-32 space-y-2">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+            <p className="text-sm text-gray-500">{t('loading')}</p>
+          </div>
         ) : items.length === 0 ? (
           <EmptyState
             title={emptyState.title}
@@ -184,17 +187,21 @@ export function ListPageTemplate<T>({
         <AlertDialog open={deleteDialog.open} onOpenChange={(open) => !open && deleteDialog.onCancel()}>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>{deleteDialog.title}</AlertDialogTitle>
-              <AlertDialogDescription>{deleteDialog.description}</AlertDialogDescription>
+              <AlertDialogTitle>{deleteDialog.title || t('deleteDialog.title')}</AlertDialogTitle>
+              <AlertDialogDescription>
+                {deleteDialog.description || t('deleteDialog.description')}
+              </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel disabled={deleteDialog.loading}>Cancel</AlertDialogCancel>
+              <AlertDialogCancel onClick={deleteDialog.onCancel}>
+                {t('deleteDialog.cancel')}
+              </AlertDialogCancel>
               <AlertDialogAction
                 onClick={deleteDialog.onConfirm}
                 disabled={deleteDialog.loading}
-                className={`${COLORS.danger.bg} ${COLORS.danger.hover} ${COLORS.text.white}`}
+                className="bg-red-600 hover:bg-red-700"
               >
-                {deleteDialog.loading ? 'Deleting...' : 'Delete'}
+                {deleteDialog.loading ? t('deleting', 'Deleting...') : t('deleteDialog.delete')}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

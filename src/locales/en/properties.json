@@ -1,0 +1,74 @@
+{
+  "title": "Properties",
+  "searchPlaceholder": "Search properties...",
+  "filterPlaceholder": "Filter by status",
+  "addPropertyButton": "Add Property",
+  "addTenantButton": "Add Tenant",
+  "status": {
+    "empty": "Empty",
+    "occupied": "Occupied",
+    "inactive": "Inactive"
+  },
+  "filters": {
+    "all": "All Status"
+  },
+  "table": {
+    "address": "Address",
+    "location": "Location",
+    "owner": "Owner",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "toasts": {
+    "loadError": "Failed to load properties",
+    "deleteSuccess": "Property deleted successfully",
+    "deleteError": "Failed to delete property",
+    "updateSuccess": "Property updated successfully",
+    "updateError": "Failed to update property",
+    "addSuccess": "Property added successfully",
+    "addError": "Failed to add property",
+    "addTenantToPropertySuccess": "Tenant {{tenantName}} and contract created successfully for property!"
+  },
+  "validations": {
+    "ownerRequired": "Owner is required",
+    "addressRequired": "Address is required"
+  },
+  "emptyState": {
+    "noPropertiesFound": "No properties found",
+    "noPropertiesYet": "No properties yet",
+    "noPropertiesFoundDescription": "Try adjusting your search or filter",
+    "noPropertiesYetDescription": "Get started by adding your first property",
+    "addActionLabel": "Add Your First Property"
+  },
+  "photos": "{{count}} photo",
+  "photos_plural": "{{count}} photos",
+  "notAvailable": "N/A",
+  "deleteDialog": {
+    "title": "Delete Property",
+    "description": "Are you sure you want to delete this property at {{propertyAddress}}? This action cannot be undone and will also delete all associated photos."
+  },
+  "dialog": {
+    "addTitle": "Add New Property",
+    "editTitle": "Property Details",
+    "addDescription": "Fill in the property details below.",
+    "editDescription": "View and manage property information and photos.",
+    "propertyPhotosTitle": "Property Photos",
+    "managePhotosButton": "Manage Photos",
+    "form": {
+      "owner": "Property Owner",
+      "ownerPlaceholder": "Select an owner",
+      "address": "Address",
+      "addressPlaceholder": "123 Main St, Apt 4B",
+      "city": "City",
+      "cityPlaceholder": "City name",
+      "district": "District",
+      "districtPlaceholder": "District/neighborhood",
+      "status": "Status",
+      "statusPlaceholder": "Select status",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional information about the property..."
+    },
+    "addButton": "Add Property",
+    "updateButton": "Update Property"
+  }
+}

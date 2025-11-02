@@ -1,0 +1,106 @@
+{
+  "title": "Kira Sözleşmeleri",
+  "searchPlaceholder": "Sözleşme ara...",
+  "filterPlaceholder": "Duruma göre filtrele",
+  "filters": {
+    "all": "Tüm Durumlar"
+  },
+  "actions": {
+    "add": "Sözleşme Ekle",
+    "delete": "Sil",
+    "save": "Değişiklikleri Kaydet",
+    "createFirst": "İlk Sözleşmeni Oluştur"
+  },
+  "emptyState": {
+    "title": "Henüz sözleşme yok",
+    "titleFiltered": "Sözleşme bulunamadı",
+    "description": "İlk kira sözleşmenizi oluşturarak başlayın",
+    "descriptionFiltered": "Aramanızı veya filtrenizi değiştirmeyi deneyin"
+  },
+  "table": {
+    "tenant": "Kiracı",
+    "property": "Mülk",
+    "period": "Dönem",
+    "rent": "Kira",
+    "status": "Durum",
+    "reminder": "Hatırlatma",
+    "actions": "Eylemler",
+    "datesTo": "ile",
+    "unknownTenant": "Bilinmeyen Kiracı",
+    "unknownProperty": "Bilinmeyen Mülk",
+    "unknown": "Bilinmeyen",
+    "perMonth": "{{amount}}/ay",
+    "pdfAttached": "PDF eklendi"
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Pasif",
+    "archived": "Arşivlendi"
+  },
+  "reminder": {
+    "none": "Yok",
+    "label": "Hatırlatma: bitişten {{days}} gün önce",
+    "tooltip": "Hatırlatma bitişten {{days}} gün önce ayarlandı",
+    "badge": "{{days}}gün"
+  },
+  "dialog": {
+    "deleteTitle": "Sözleşmeyi Sil",
+    "deleteDescription": "{{name}} için sözleşmeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "editTitle": "Sözleşmeyi Düzenle",
+    "createTitle": "Yeni Sözleşme Oluştur",
+    "editDescription": "Aşağıdaki sözleşme bilgilerini güncelleyin.",
+    "createDescription": "Yeni bir kira sözleşmesi oluşturmak için bilgileri doldurun.",
+    "createButton": "Sözleşme Oluştur",
+    "updateButton": "Sözleşmeyi Güncelle",
+    "form": {
+      "tenantLabel": "Kiracı *",
+      "tenantPlaceholder": "Bir kiracı seçin",
+      "propertyLabel": "Mülk *",
+      "propertyPlaceholder": "Bir mülk seçin",
+      "startDateLabel": "Başlangıç Tarihi *",
+      "endDateLabel": "Bitiş Tarihi *",
+      "rentAmountLabel": "Aylık Kira Tutarı",
+      "rentAmountPlaceholder": "1000.00",
+      "currencyPlaceholder": "Para birimi seçin",
+      "statusLabel": "Durum *",
+      "statusPlaceholder": "Durum seçin",
+      "notesLabel": "Notlar",
+      "notesPlaceholder": "Sözleşme hakkında ek bilgiler...",
+      "pdfLabel": "Sözleşme PDF'i (Opsiyonel)",
+      "pdfHelper": "İmzalanmış sözleşmenin PDF kopyasını yükleyin",
+      "reminderTitle": "Kira Artışı Hatırlatıcısı",
+      "reminderDescription": "Kira artışı için mülk sahibine ulaşmayı hatırlatın",
+      "reminderDaysLabel": "Bitişten kaç gün önce hatırlatılsın",
+      "reminderDaysPlaceholder": "Gün seçin",
+      "expectedRentLabel": "Beklenen Yeni Kira (Opsiyonel)",
+      "expectedRentPlaceholder": "1200.00",
+      "reminderNotesLabel": "Hatırlatma Notları (Opsiyonel)",
+      "reminderNotesPlaceholder": "Örn. Sahibi %10 artış istiyor, piyasa 1200 TL...",
+      "pdfSelectError": "Lütfen bir PDF dosyası seçin",
+      "reminderDaysOption": {
+        "30": "30 gün (1 ay)",
+        "60": "60 gün (2 ay)",
+        "90": "90 gün (3 ay)",
+        "120": "120 gün (4 ay)",
+        "180": "180 gün (6 ay)"
+      }
+    }
+  },
+  "toasts": {
+    "deleted": "Sözleşme başarıyla silindi",
+    "created": "Sözleşme başarıyla oluşturuldu",
+    "updated": "Sözleşme başarıyla güncellendi",
+    "pdfUploaded": "Sözleşme PDF'i başarıyla yüklendi",
+    "pdfUploadPartial": "Sözleşme kaydedildi ancak PDF yüklemesi başarısız oldu"
+  },
+  "errors": {
+    "loadFailed": "Sözleşmeler yüklenemedi",
+    "deleteFailed": "Sözleşme silinemedi",
+    "updateFailed": "Sözleşme güncellenemedi",
+    "createFailed": "Sözleşme oluşturulamadı"
+  },
+  "validation": {
+    "required": "Bu alan zorunludur",
+    "endDateAfterStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
+  }
+}

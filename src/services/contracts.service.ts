@@ -119,7 +119,7 @@ class ContractsService {
         p_contract_id: id,
         p_new_status: contract.status,
       };
-      const updatedContract = await callRpc<RpcUpdateContractStatusParams, RpcUpdateContractStatusResult>(
+      await callRpc<RpcUpdateContractStatusParams, RpcUpdateContractStatusResult>(
         'rpc_update_contract_status',
         params
       );
@@ -130,7 +130,8 @@ class ContractsService {
         return updateRow('contracts', id, otherFields);
       }
       
-      return updatedContract;
+      // After status update, refetch the contract to get the latest data
+      return this.getById(id);
     }
     
     // For non-status updates, use regular updateRow

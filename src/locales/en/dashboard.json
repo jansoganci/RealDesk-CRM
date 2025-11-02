@@ -1,0 +1,28 @@
+{
+  "welcomeBack": "Welcome back",
+  "subtitle": "Here's what's happening with your properties today",
+  "rentIncreaseReminders": "Rent Increase Reminders",
+  "contractsExpiringSoon": "Contracts Expiring Soon",
+  "quickActions": "Quick Actions",
+  "getStarted": "Get started by adding your first property or owner",
+  "stats": {
+    "totalProperties": "Total Properties",
+    "totalPropertiesDescription": "Total properties",
+    "noPropertiesYet": "No properties yet",
+    "occupied": "Occupied",
+    "occupiedDescription": "Currently rented",
+    "totalTenants": "Total Tenants",
+    "totalTenantsDescription": "Total tenants",
+    "activeContracts": "Active Contracts",
+    "activeContractsDescription": "Current leases"
+  },
+  "reminders": {
+    "title": "Rent Increase Reminders",
+    "description": "{{count}} reminder{{s}} for upcoming rent increases",
+    "viewAll": "View All",
+    "contractEnds": "Ends",
+    "moreReminders": "And {{count}} more reminder{{s}}...",
+    "reviewContracts": "Review your contracts page to take action on expiring leases.",
+    "contractsExpiringDescription": "You have {{count}} contract{{s}} expiring within the next 30 days"
+  }
+}

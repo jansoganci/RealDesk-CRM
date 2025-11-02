@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -17,17 +18,18 @@ export const Login = () => {
   const [isSignUp, setIsSignUp] = useState(false);
   const { signIn, signUp, enableDemoMode } = useAuth();
   const navigate = useNavigate();
+  const { t } = useTranslation(['auth', 'common']);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !password) {
-      toast.error('Please fill in all fields');
+      toast.error(t('login.validation.required'));
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters');
+      toast.error(t('login.validation.passwordLength'));
       return;
     }
 
@@ -35,16 +37,16 @@ export const Login = () => {
     try {
       if (isSignUp) {
         await signUp(email, password);
-        toast.success('Account created successfully! Please sign in.');
+        toast.success(t('login.toast.signUpSuccess'));
         setIsSignUp(false);
         setPassword('');
       } else {
         await signIn(email, password);
-        toast.success('Login successful');
+        toast.success(t('login.toast.loginSuccess'));
         navigate(ROUTES.DASHBOARD);
       }
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : isSignUp ? 'Sign up failed' : 'Login failed');
+      toast.error(error instanceof Error ? error.message : isSignUp ? t('login.toast.signUpError') : t('login.toast.loginError'));
     } finally {
       setLoading(false);
     }
@@ -59,46 +61,46 @@ export const Login = () => {
     // Note: PageContainer intentionally NOT used here - auth pages require full-screen centered layout
     // without navbar/sidebar, which is standard UX for login/signup flows
     <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
-      <Card className="w-full max-w-md mx-4">
-        <CardHeader className="space-y-1 text-center">
-          <div className="flex justify-center mb-4">
-            <div className={`p-3 ${COLORS.primary.bgLight} rounded-full`}>
-              <Building2 className={`h-8 w-8 ${COLORS.primary.text}`} />
-            </div>
+      <Card className="w-full max-w-md mx-auto">
+        <CardHeader className="space-y-1">
+          <div className="flex items-center justify-center mb-4">
+            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.DEFAULT} />
+            <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
-          <CardTitle className="text-2xl font-bold">{APP_NAME}</CardTitle>
-          <CardDescription>
-            {isSignUp ? 'Create a new account to get started' : 'Sign in to your account to continue'}
+          <CardTitle className="text-2xl font-bold text-center">
+            {isSignUp ? t('login.createAccount') : t('login.welcomeBack')}
+          </CardTitle>
+          <CardDescription className="text-center">
+            {isSignUp ? t('login.createAccount') : t('login.welcomeDescription')}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">{t('login.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="you@example.com"
+                placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}
-                autoComplete="email"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password">{t('login.password')}</Label>
+              </div>
               <Input
                 id="password"
                 type="password"
-                placeholder={isSignUp ? 'Create a password (min. 6 characters)' : 'Enter your password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={loading}
-                autoComplete={isSignUp ? 'new-password' : 'current-password'}
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Sign Up' : 'Sign In')}
+            <Button className="w-full" type="submit" disabled={loading}>
+              {loading ? t('common:loading') : isSignUp ? t('login.signUp') : t('login.signIn')}
             </Button>
           </form>
 
@@ -108,35 +110,30 @@ export const Login = () => {
               <Button
                 type="button"
                 variant="outline"
+                className="w-full"
                 onClick={handleDemoMode}
                 disabled={loading}
-                className="w-full border-dashed"
               >
-                🚀 Try Demo Mode
+                {t('login.demoMode')}
               </Button>
               <p className="text-xs text-center mt-2 text-gray-500">
-                Skip login and explore the app with sample data
+                {t('login.demoDescription')}
               </p>
             </div>
           )}
 
           <div className="mt-4 text-center text-sm">
-            <span className={COLORS.gray.text600}>
-              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-            </span>
-            {' '}
-            <Button
-              type="button"
-              variant="link"
-              onClick={() => {
-                setIsSignUp(!isSignUp);
-                setPassword('');
-              }}
-              className="font-medium h-auto p-0"
-              disabled={loading}
-            >
-              {isSignUp ? 'Sign in' : 'Sign up'}
-            </Button>
+            <div className="text-center text-sm">
+              {isSignUp ? t('login.hasAccount') : t('login.noAccount')}{' '}
+              <button
+                type="button"
+                className="underline"
+                onClick={() => setIsSignUp(!isSignUp)}
+                disabled={loading}
+              >
+                {isSignUp ? t('login.signIn') : t('login.signUp')}
+              </button>
+            </div>
           </div>
         </CardContent>
       </Card>

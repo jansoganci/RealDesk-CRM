@@ -7,6 +7,10 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   demoMode: boolean;
+  language: string;
+  currency: string;
+  setLanguage: (language: string) => void;
+  setCurrency: (currency: string) => void;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
@@ -21,22 +25,71 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [demoMode, setDemoMode] = useState(false);
+  const [language, setLanguageState] = useState('en');
+  const [currency, setCurrencyState] = useState('USD');
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const fetchSessionAndPreferences = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
       setSession(session);
       setUser(session?.user ?? null);
+
+      if (session?.user) {
+        const { data: preferences } = await supabase
+          .from('user_preferences')
+          .select('language, currency')
+          .eq('user_id', session.user.id)
+          .single();
+        if (preferences) {
+          setLanguageState(preferences.language || 'en');
+          setCurrencyState(preferences.currency || 'USD');
+        }
+      }
       setLoading(false);
-    });
+    };
+
+    fetchSessionAndPreferences();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (!session) {
+        setLanguageState('en');
+        setCurrencyState('USD');
+      }
       setLoading(false);
     });
 
     return () => subscription.unsubscribe();
   }, []);
+
+  const updateUserPreferences = async (prefs: { language?: string; currency?: string }) => {
+    if (!user) return;
+
+    // First, try to update an existing row
+    const { data, error } = await supabase
+      .from('user_preferences')
+      .update(prefs)
+      .eq('user_id', user.id)
+      .select()
+      .single();
+
+    // If the update didn't find a row (data is null) and there was no error, insert a new one.
+    // A '404 Not Found' is not considered a fatal error by the client, so error will be null.
+    if (!data && !error) {
+      await supabase.from('user_preferences').insert({ ...prefs, user_id: user.id });
+    }
+  };
+
+  const setLanguage = async (newLanguage: string) => {
+    setLanguageState(newLanguage);
+    await updateUserPreferences({ language: newLanguage });
+  };
+
+  const setCurrency = async (newCurrency: string) => {
+    setCurrencyState(newCurrency);
+    await updateUserPreferences({ currency: newCurrency });
+  };
 
   const signIn = async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
@@ -98,7 +151,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, demoMode, signIn, signUp, signOut, enableDemoMode, exitDemoMode }}>
+    <AuthContext.Provider value={{ user, session, loading, demoMode, language, currency, setLanguage, setCurrency, signIn, signUp, signOut, enableDemoMode, exitDemoMode }}>
       {children}
     </AuthContext.Provider>
   );
