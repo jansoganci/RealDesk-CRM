@@ -67,5 +67,108 @@
     },
     "addButton": "Kiracı Ekle",
     "updateButton": "Kiracıyı Güncelle"
+  },
+  "enhanced": {
+    "steps": {
+      "info": {
+        "title": "Kiracı Bilgileri",
+        "description": "Temel kiracı bilgileri",
+        "sectionTitle": "Kiracı Bilgileri",
+        "sectionDescription": "Yeni kiracı için temel bilgileri girin.",
+        "fields": {
+          "name": {
+            "label": "Tam Adı *",
+            "placeholder": "Ahmet Yılmaz"
+          },
+          "phone": {
+            "label": "Telefon Numarası",
+            "placeholder": "+90 555 555 5555"
+          },
+          "email": {
+            "label": "E-posta Adresi",
+            "placeholder": "ahmet@example.com"
+          },
+          "notes": {
+            "label": "Ek Notlar",
+            "placeholder": "Kiracı hakkında ek bilgiler..."
+          }
+        }
+      },
+      "contract": {
+        "title": "Mülk ve Sözleşme",
+        "description": "Mülk seçimi ve sözleşme detayları",
+        "sectionTitle": "Sözleşme Detayları",
+        "sectionDescription": "Kiralama sözleşmesi detaylarını yapılandırın ve mülk seçin.",
+        "fields": {
+          "property": {
+            "label": "Mülk *",
+            "placeholder": "Bir mülk seçin"
+          },
+          "startDate": {
+            "label": "Başlangıç Tarihi *"
+          },
+          "endDate": {
+            "label": "Bitiş Tarihi *"
+          },
+          "rentAmount": {
+            "label": "Aylık Kira Tutarı *",
+            "placeholder": "15000",
+            "currencySymbol": "₺"
+          },
+          "status": {
+            "label": "Sözleşme Durumu",
+            "placeholder": "Durum seçin",
+            "options": {
+              "active": "Aktif",
+              "inactive": "Pasif",
+              "archived": "Arşivlendi"
+            }
+          },
+          "propertyStatus": "Durum: {{status}}"
+        },
+        "loadingProperties": "Mülkler yükleniyor...",
+        "failedToLoadProperties": "Mülkler yüklenemedi"
+      },
+      "settings": {
+        "title": "Sözleşme Ayarları",
+        "description": "Hatırlatıcılar ve belge yükleme",
+        "sectionTitle": "Sözleşme Ayarları ve Yükleme",
+        "sectionDescription": "Ek sözleşme ayarlarını yapılandırın ve sözleşme PDF'ini yükleyin.",
+        "rentIncreaseReminder": {
+          "title": "Kira artışı hatırlatıcılarını etkinleştir",
+          "days": {
+            "label": "Bitiş Öncesi Hatırlatma Günleri",
+            "placeholder": "90"
+          },
+          "newRent": {
+            "label": "Beklenen Yeni Kira (₺)",
+            "placeholder": "18000"
+          },
+          "notes": {
+            "label": "Hatırlatıcı Notları",
+            "placeholder": "Kira artışı hatırlatıcıları için ek notlar..."
+          }
+        },
+        "pdfUpload": {
+          "title": "Sözleşme PDF'i (İsteğe Bağlı)",
+          "description": "İmzalı sözleşme PDF'ini kayıt tutmak için yükleyin.",
+          "chooseFile": "PDF Dosyası Seç",
+          "fileSize": "{{size}} MB",
+          "alertInvalidType": "Lütfen bir PDF dosyası seçin.",
+          "alertSizeExceeded": "Dosya boyutu 10MB'dan az olmalıdır."
+        }
+      }
+    },
+    "navigation": {
+      "back": "Geri",
+      "next": "İleri",
+      "submit": "Kiracı ve Sözleşme Oluştur",
+      "submitting": "Oluşturuluyor..."
+    },
+    "errors": {
+      "duplicateActiveContract": "Bu mülkün zaten aktif bir sözleşmesi var.",
+      "createFailed": "Kiracı ve sözleşme oluşturulamadı",
+      "endDateBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
+    }
   }
 }

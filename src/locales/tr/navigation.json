@@ -10,5 +10,10 @@
   "viewAllTenants": "Tüm kiracıları görüntüle",
   "viewAllReminders": "Tüm hatırlatıcıları görüntüle",
   "openUserMenu": "Kullanıcı menüsünü aç",
-  "userSettings": "Kullanıcı ayarları"
+  "userSettings": "Kullanıcı ayarları",
+  "language": {
+    "label": "Dil",
+    "english": "English",
+    "turkish": "Türkçe"
+  }
 }

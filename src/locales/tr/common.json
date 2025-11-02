@@ -2,6 +2,7 @@
   "cancel": "İptal",
   "saving": "Kaydediliyor...",
   "loading": "Yükleniyor...",
+  "deleting": "Siliniyor...",
   "searchPlaceholder": "Ara...",
   "filterPlaceholder": "Filtrele",
   "deleteDialog": {
@@ -12,6 +13,7 @@
   },
   "carousel": {
     "previous": "Önceki slayt",
-    "next": "Sonraki slayt"
+    "next": "Sonraki slayt",
+    "item": "Slayt {{number}}"
   }
 }

@@ -2,6 +2,7 @@
   "cancel": "Cancel",
   "saving": "Saving...",
   "loading": "Loading...",
+  "deleting": "Deleting...",
   "searchPlaceholder": "Search...",
   "filterPlaceholder": "Filter",
   "deleteDialog": {
@@ -12,6 +13,7 @@
   },
   "carousel": {
     "previous": "Previous slide",
-    "next": "Next slide"
+    "next": "Next slide",
+    "item": "Slide {{number}}"
   }
 }
