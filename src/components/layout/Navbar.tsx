@@ -15,8 +15,8 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
-  const { i18n } = useTranslation();
-  const { currency, setCurrency } = useAuth();
+  const { t, i18n } = useTranslation('navigation');
+  const { language, setLanguage, currency, setCurrency } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
   }, []);
 
   const changeLanguage = (lng: string) => {
-    i18n.changeLanguage(lng);
+    setLanguage(lng);
   };
 
   const changeCurrency = (cur: string) => {
@@ -66,8 +66,14 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => changeLanguage('en')}>English</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => changeLanguage('tr')}>Türkçe</DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage('en')}>
+                {language === 'en' && '✓ '}
+                {t('language.english')}
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => changeLanguage('tr')}>
+                {language === 'tr' && '✓ '}
+                {t('language.turkish')}
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
 
