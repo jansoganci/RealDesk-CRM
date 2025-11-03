@@ -23,6 +23,7 @@ import { Trash2, MoveUp, MoveDown, Image as ImageIcon, X, GripVertical } from 'l
 import { photosService } from '../../lib/serviceProxy';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '../ui/tooltip';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../../lib/errorMapper';
 
 interface PhotoGalleryProps {
   photos: PropertyPhoto[];
@@ -31,7 +32,7 @@ interface PhotoGalleryProps {
 }
 
 export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoGalleryProps) => {
-  const { t } = useTranslation('photo');
+  const { t } = useTranslation(['photo', 'errors']);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [photoToDelete, setPhotoToDelete] = useState<PropertyPhoto | null>(null);
   const [deleting, setDeleting] = useState(false);
@@ -56,7 +57,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       setPhotoToDelete(null);
       toast.success(t('gallery.toast.deleteSuccess'));
     } catch (error) {
-      toast.error(t('gallery.toast.deleteError'));
+      toast.error(getErrorMessage(error, t));
     } finally {
       setDeleting(false);
     }
@@ -79,7 +80,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       );
       onPhotosChange();
     } catch (error) {
-      toast.error(t('gallery.toast.reorderError'));
+      toast.error(getErrorMessage(error, t));
     } finally {
       setReordering(false);
     }
@@ -102,7 +103,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
       );
       onPhotosChange();
     } catch (error) {
-      toast.error(t('gallery.toast.reorderError'));
+      toast.error(getErrorMessage(error, t));
     } finally {
       setReordering(false);
     }
@@ -170,7 +171,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                 await photosService.reorderPhotos(photo.property_id, newPhotos.map(p => p.id));
                 onPhotosChange();
               } catch (error) {
-                toast.error(t('gallery.toast.reorderError'));
+                toast.error(getErrorMessage(error, t));
               } finally {
                 setReordering(false);
                 setDragIndex(null);

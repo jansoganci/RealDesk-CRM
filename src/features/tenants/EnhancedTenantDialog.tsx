@@ -16,6 +16,7 @@ import { Badge } from '../../components/ui/badge';
 import { ArrowLeft, ArrowRight, Check, Users, FileText, Settings } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { toast } from 'sonner';
+import { getErrorMessage } from '../../lib/errorMapper';
 
 // Step Components
 import { TenantInfoStep } from './steps/TenantInfoStep';
@@ -232,14 +233,14 @@ export const EnhancedTenantDialog = ({
       console.error('Failed to create tenant and contract:', error);
 
       // Check for duplicate active contract conflict
-      const err = error as { code?: string; message?: string };
-      if (err.code === '23505' || (err.message && err.message.includes('uniq_active_contract_per_property'))) {
+      const err = error as { code?: string; originalCode?: string; message?: string };
+      if (err.code === '23505' || err.originalCode === '23505' || (err.message && err.message.includes('uniq_active_contract_per_property'))) {
         toast.error(t('tenants.enhanced.errors.duplicateActiveContract'));
         return;
       }
 
-      // Show generic error message for other errors
-      toast.error(error instanceof Error ? error.message : t('tenants.enhanced.errors.createFailed'));
+      // Show localized error message using error mapper
+      toast.error(getErrorMessage(error, t));
     } finally {
       setSubmitting(false);
     }

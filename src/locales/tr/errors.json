@@ -61,6 +61,8 @@
     "deleteFailed": "Sözleşme silinemedi. Lütfen tekrar deneyin.",
     "notFound": "Sözleşme bulunamadı.",
     "invalidDates": "Geçersiz sözleşme tarihleri.",
+    "startDateRequired": "Sözleşme başlangıç tarihi gereklidir.",
+    "endDateRequired": "Sözleşme bitiş tarihi gereklidir.",
     "endBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
   },
   "auth": {

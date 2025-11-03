@@ -61,6 +61,8 @@
     "deleteFailed": "Failed to delete contract. Please try again.",
     "notFound": "Contract not found.",
     "invalidDates": "Invalid contract dates.",
+    "startDateRequired": "Contract start date is required.",
+    "endDateRequired": "Contract end date is required.",
     "endBeforeStart": "End date must be after start date."
   },
   "auth": {

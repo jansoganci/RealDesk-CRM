@@ -15,6 +15,7 @@ import { PropertyPhoto } from '../../types';
 import { photosService } from '../../lib/serviceProxy';
 import { toast } from 'sonner';
 import { Upload, Images } from 'lucide-react';
+import { getErrorMessage } from '../../lib/errorMapper';
 
 interface PhotoManagementProps {
   open: boolean;
@@ -29,7 +30,7 @@ export const PhotoManagement = ({
   propertyId,
   propertyAddress,
 }: PhotoManagementProps) => {
-  const { t } = useTranslation('photo');
+  const { t } = useTranslation(['photo', 'errors']);
   const [photos, setPhotos] = useState<PropertyPhoto[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -49,8 +50,8 @@ export const PhotoManagement = ({
       const data = await photosService.getPhotosByPropertyId(propertyId);
       setPhotos(data);
     } catch (error) {
-      console.error(t('gallery.toast.loadError'), error);
-      toast.error(t('gallery.toast.loadError'));
+      console.error('Load photos error:', error);
+      toast.error(getErrorMessage(error, t));
     } finally {
       setLoading(false);
     }
@@ -82,8 +83,8 @@ export const PhotoManagement = ({
       setSelectedFiles([]);
       await loadPhotos();
     } catch (error) {
-      console.error(t('gallery.toast.uploadError'), error);
-      toast.error(error instanceof Error ? error.message : t('gallery.toast.uploadError'));
+      console.error('Upload error:', error);
+      toast.error(getErrorMessage(error, t));
     } finally {
       setUploading(false);
       setUploadProgress(0);

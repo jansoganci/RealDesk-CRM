@@ -8,6 +8,12 @@ import type {
   RpcPropertyPhotoDeleteResult,
 } from '../types/rpc';
 import { callRpc } from '../lib/rpc';
+import {
+  AppError,
+  ERROR_PHOTO_INVALID_FILE_TYPE,
+  ERROR_PHOTO_FILE_SIZE_EXCEEDED,
+  ERROR_PHOTO_NOT_FOUND,
+} from '../lib/errorCodes';
 
 class PhotosService {
   private readonly BUCKET_NAME = 'property-photos';
@@ -27,11 +33,11 @@ class PhotosService {
 
   async uploadPhoto(propertyId: string, file: File): Promise<PropertyPhoto> {
     if (!this.ALLOWED_TYPES.includes(file.type)) {
-      throw new Error('Invalid file type. Only JPEG, PNG, and WebP images are allowed.');
+      throw new AppError(ERROR_PHOTO_INVALID_FILE_TYPE);
     }
 
     if (file.size > this.MAX_FILE_SIZE) {
-      throw new Error('File size exceeds 5MB limit.');
+      throw new AppError(ERROR_PHOTO_FILE_SIZE_EXCEEDED);
     }
 
     const fileExt = file.name.split('.').pop()?.toLowerCase() || 'jpg';
@@ -72,7 +78,7 @@ class PhotosService {
       .maybeSingle();
     if (metaError) throw metaError;
     const propertyId = (meta as PhotoMeta | null)?.property_id;
-    if (!propertyId) throw new Error('Photo not found');
+    if (!propertyId) throw new AppError(ERROR_PHOTO_NOT_FOUND);
 
     const delArgs: RpcPropertyPhotoDeleteParams = { p_property_id: propertyId, p_photo_id: photoId };
     const filePath = await callRpc<RpcPropertyPhotoDeleteParams, RpcPropertyPhotoDeleteResult>('rpc_property_photo_delete', delArgs);
