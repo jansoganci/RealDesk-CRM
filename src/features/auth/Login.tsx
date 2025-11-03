@@ -81,7 +81,7 @@ export const Login = () => {
               <Input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
+                placeholder={t('login.emailPlaceholder')}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={loading}

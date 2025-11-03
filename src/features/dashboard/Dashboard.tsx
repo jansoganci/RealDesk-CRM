@@ -201,7 +201,7 @@ export const Dashboard = () => {
             <CardDescription>{t('getStarted')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className={`text-sm ${COLORS.gray.text600}`}>Use the navigation menu to manage properties, owners, tenants, and contracts.</p>
+            <p className={`text-sm ${COLORS.gray.text600}`}>{t('navigationTip')}</p>
           </CardContent>
         </Card>
       </PageContainer>

@@ -5,6 +5,7 @@
   "contractsExpiringSoon": "Contracts Expiring Soon",
   "quickActions": "Quick Actions",
   "getStarted": "Get started by adding your first property or owner",
+  "navigationTip": "Use the navigation menu to manage properties, owners, tenants, and contracts.",
   "stats": {
     "totalProperties": "Total Properties",
     "totalPropertiesDescription": "Total properties",

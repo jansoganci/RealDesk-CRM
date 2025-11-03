@@ -1,8 +1,8 @@
 import { supabase } from '../config/supabase';
-import type { 
-  Tenant, 
-  TenantInsert, 
-  TenantUpdate, 
+import type {
+  Tenant,
+  TenantInsert,
+  TenantUpdate,
   TenantWithProperty,
   Contract,
   TenantWithContractData,
@@ -15,6 +15,20 @@ import type {
   RpcRollbackTenantWithContractParams,
 } from '../types/rpc';
 import { callRpc } from '../lib/rpc';
+import {
+  AppError,
+  ERROR_TENANT_NAME_REQUIRED,
+  ERROR_TENANT_PROPERTY_REQUIRED,
+  ERROR_TENANT_INVALID_EMAIL,
+  ERROR_TENANT_INVALID_RESPONSE,
+  ERROR_TENANT_PDF_UPLOAD_FAILED,
+  ERROR_TENANT_NOT_FOUND,
+  ERROR_CONTRACT_START_DATE_REQUIRED,
+  ERROR_CONTRACT_END_DATE_REQUIRED,
+  ERROR_CONTRACT_END_BEFORE_START,
+  ERROR_CONTRACT_NOT_FOUND,
+  ERROR_TENANT_CONTRACT_CREATION_FAILED,
+} from '../lib/errorCodes';
 
 class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
@@ -111,36 +125,36 @@ class TenantsService {
    */
   private validateTenantWithContractData(data: TenantWithContractData): void {
     const { tenant, contract } = data;
-    
+
     if (!tenant.name || tenant.name.trim() === '') {
-      throw new Error('Tenant name is required');
+      throw new AppError(ERROR_TENANT_NAME_REQUIRED);
     }
-    
+
     if (!contract.property_id) {
-      throw new Error('Property selection is required');
+      throw new AppError(ERROR_TENANT_PROPERTY_REQUIRED);
     }
-    
+
     if (!contract.start_date) {
-      throw new Error('Contract start date is required');
+      throw new AppError(ERROR_CONTRACT_START_DATE_REQUIRED);
     }
-    
+
     if (!contract.end_date) {
-      throw new Error('Contract end date is required');
+      throw new AppError(ERROR_CONTRACT_END_DATE_REQUIRED);
     }
-    
+
     // Validate end date is after start date
     const startDate = new Date(contract.start_date);
     const endDate = new Date(contract.end_date);
-    
+
     if (endDate <= startDate) {
-      throw new Error('Contract end date must be after start date');
+      throw new AppError(ERROR_CONTRACT_END_BEFORE_START);
     }
-    
+
     // Validate email format if provided
     if (tenant.email && tenant.email.trim() !== '') {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(tenant.email)) {
-        throw new Error('Invalid email format');
+        throw new AppError(ERROR_TENANT_INVALID_EMAIL);
       }
     }
   }
@@ -173,7 +187,7 @@ class TenantsService {
 
       const resTyped = result as RpcCreateTenantWithContractResult;
       if (!resTyped.tenant_id || !resTyped.contract_id) {
-        throw new Error('Invalid response from database: missing tenant or contract ID');
+        throw new AppError(ERROR_TENANT_INVALID_RESPONSE);
       }
 
       // If PDF file is provided, upload it and persist the path
@@ -194,8 +208,8 @@ class TenantsService {
             } catch (rollbackErr) {
             console.error('Failed to rollback after PDF upload error:', rollbackErr);
           }
-          
-          throw new Error('PDF upload failed. Transaction has been rolled back.');
+
+          throw new AppError(ERROR_TENANT_PDF_UPLOAD_FAILED);
         }
       }
 
@@ -210,11 +224,11 @@ class TenantsService {
       ]);
 
       if (!tenantResult) {
-        throw new Error('Failed to fetch created tenant');
+        throw new AppError(ERROR_TENANT_NOT_FOUND);
       }
 
       if (contractErr || !contractRow) {
-        throw new Error('Failed to fetch created contract');
+        throw new AppError(ERROR_CONTRACT_NOT_FOUND);
       }
 
       return {
@@ -226,18 +240,22 @@ class TenantsService {
       console.error('[Tenant creation failed]', error);
       
       // Preserve error structure for UI handling
+      if (error instanceof AppError) {
+        throw error;
+      }
+
       if (error && typeof error === 'object') {
         const supabaseError = error as { code?: string; message?: string };
-        const structuredError = new Error(supabaseError.message || 'Failed to create tenant and contract');
-        (structuredError as any).code = supabaseError.code;
+        const structuredError = new AppError(ERROR_TENANT_CONTRACT_CREATION_FAILED, supabaseError.message);
+        (structuredError as any).originalCode = supabaseError.code;
         throw structuredError;
       }
-      
+
       // Re-throw with more context for non-structured errors
       if (error instanceof Error) {
         throw error;
       } else {
-        throw new Error('Unknown error occurred during tenant and contract creation');
+        throw new AppError(ERROR_TENANT_CONTRACT_CREATION_FAILED);
       }
     }
   }

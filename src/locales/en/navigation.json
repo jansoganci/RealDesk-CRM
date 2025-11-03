@@ -10,5 +10,10 @@
   "viewAllTenants": "View all tenants",
   "viewAllReminders": "View all reminders",
   "openUserMenu": "Open user menu",
-  "userSettings": "User settings"
+  "userSettings": "User settings",
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "turkish": "Türkçe"
+  }
 }

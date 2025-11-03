@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
+import i18n from '../i18n';
 
 interface AuthContextType {
   user: User | null;
@@ -27,6 +28,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [demoMode, setDemoMode] = useState(false);
   const [language, setLanguageState] = useState('en');
   const [currency, setCurrencyState] = useState('USD');
+
+  // Sync i18n with language state changes
+  useEffect(() => {
+    if (i18n.language !== language) {
+      i18n.changeLanguage(language);
+    }
+  }, [language]);
 
   useEffect(() => {
     const fetchSessionAndPreferences = async () => {

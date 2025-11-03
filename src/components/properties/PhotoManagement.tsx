@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Dialog,
   DialogContent,
@@ -14,6 +15,7 @@ import { PropertyPhoto } from '../../types';
 import { photosService } from '../../lib/serviceProxy';
 import { toast } from 'sonner';
 import { Upload, Images } from 'lucide-react';
+import { getErrorMessage } from '../../lib/errorMapper';
 
 interface PhotoManagementProps {
   open: boolean;
@@ -28,6 +30,7 @@ export const PhotoManagement = ({
   propertyId,
   propertyAddress,
 }: PhotoManagementProps) => {
+  const { t } = useTranslation(['photo', 'errors']);
   const [photos, setPhotos] = useState<PropertyPhoto[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -47,8 +50,8 @@ export const PhotoManagement = ({
       const data = await photosService.getPhotosByPropertyId(propertyId);
       setPhotos(data);
     } catch (error) {
-      console.error('Failed to load photos:', error);
-      toast.error('Failed to load photos');
+      console.error('Load photos error:', error);
+      toast.error(getErrorMessage(error, t));
     } finally {
       setLoading(false);
     }
@@ -75,13 +78,13 @@ export const PhotoManagement = ({
       }
 
       toast.success(
-        `${totalFiles} photo${totalFiles > 1 ? 's' : ''} uploaded successfully`
+        t('gallery.toast.uploadSuccess', { count: totalFiles })
       );
       setSelectedFiles([]);
       await loadPhotos();
     } catch (error) {
-      console.error('Failed to upload photos:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to upload photos');
+      console.error('Upload error:', error);
+      toast.error(getErrorMessage(error, t));
     } finally {
       setUploading(false);
       setUploadProgress(0);
@@ -92,7 +95,7 @@ export const PhotoManagement = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Manage Property Photos</DialogTitle>
+          <DialogTitle>{t('management.title')}</DialogTitle>
           <DialogDescription>
             {propertyAddress}
           </DialogDescription>
@@ -102,11 +105,11 @@ export const PhotoManagement = ({
           <TabsList className="w-full justify-start gap-2">
             <TabsTrigger value="gallery" className="flex items-center gap-2">
               <Images className="h-4 w-4" />
-              Gallery ({photos.length})
+              {t('management.tabs.gallery', { count: photos.length })}
             </TabsTrigger>
             <TabsTrigger value="upload" className="flex items-center gap-2">
               <Upload className="h-4 w-4" />
-              Upload
+              {t('management.tabs.upload')}
             </TabsTrigger>
           </TabsList>
 
@@ -129,7 +132,7 @@ export const PhotoManagement = ({
             {selectedFiles.length > 0 && (
               <div className="flex items-center justify-between pt-4 border-t">
                 <p className="text-sm text-gray-600">
-                  {selectedFiles.length} photo{selectedFiles.length > 1 ? 's' : ''} ready to upload
+                  {t('management.readyToUpload', { count: selectedFiles.length })}
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -138,7 +141,7 @@ export const PhotoManagement = ({
                     onClick={() => setSelectedFiles([])}
                     disabled={uploading}
                   >
-                    Cancel
+                    {t('management.cancel')}
                   </Button>
                   <Button
                     type="button"
@@ -147,8 +150,8 @@ export const PhotoManagement = ({
                     className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
                   >
                     {uploading
-                      ? `Uploading... ${uploadProgress}%`
-                      : `Upload ${selectedFiles.length} Photo${selectedFiles.length > 1 ? 's' : ''}`}
+                      ? t('management.uploading', { progress: uploadProgress })
+                      : t('management.uploadButton', { count: selectedFiles.length })}
                   </Button>
                 </div>
               </div>

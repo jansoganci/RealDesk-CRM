@@ -40,11 +40,11 @@ export const PhotoUpload = ({
     });
 
     if (validFiles.length === 0 && files.length > 0) {
-      return { valid: [], error: 'Invalid file type or size. Only JPEG, PNG, WebP images under 5MB are allowed.' };
+      return { valid: [], error: t('upload.validation.invalidFileType') };
     }
 
     if (validFiles.length > remainingSlots) {
-      return { valid: [], error: `You can only upload ${remainingSlots} more photo${remainingSlots !== 1 ? 's' : ''}. Maximum ${maxFiles} photos per property.` };
+      return { valid: [], error: t('upload.validation.exceededSlots', { remainingSlots, maxFiles }) };
     }
 
     return { valid: validFiles, error: null };
@@ -157,10 +157,10 @@ export const PhotoUpload = ({
           </div>
           <div>
             <p className={`text-sm font-medium ${COLORS.gray.text900}`}>
-              {isDragging ? 'Drop your photos here' : 'Drag and drop photos here'}
+              {isDragging ? t('upload.dropzone.active') : t('upload.dropzone.idle')}
             </p>
             <p className={`text-xs ${COLORS.muted.textLight} mt-1`}>
-              or click to browse
+              {t('upload.dropzone.clickToBrowse')}
             </p>
           </div>
           <div className={`text-xs ${COLORS.muted.textLight} space-y-1`}>
@@ -185,7 +185,7 @@ export const PhotoUpload = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <p className={`text-sm font-medium ${COLORS.gray.text900}`}>
-              Selected Photos ({selectedFiles.length})
+              {t('upload.preview.title', { count: selectedFiles.length })}
             </p>
             <Button
               type="button"
@@ -194,7 +194,7 @@ export const PhotoUpload = ({
               onClick={handleClearAll}
               disabled={uploading}
             >
-              Clear All
+              {t('upload.preview.clearAll')}
             </Button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
