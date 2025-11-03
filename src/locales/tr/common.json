@@ -11,6 +11,10 @@
     "cancel": "İptal",
     "delete": "Sil"
   },
+  "demoMode": {
+    "banner": "🚀 Demo Modu - Örnek verilerle keşfediyorsunuz",
+    "exitDemo": "Demo'dan Çık"
+  },
   "carousel": {
     "previous": "Önceki slayt",
     "next": "Sonraki slayt",

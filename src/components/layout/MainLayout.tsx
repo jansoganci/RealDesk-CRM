@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,6 +15,7 @@ interface MainLayoutProps {
 export const MainLayout = ({ children, title }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { demoMode, exitDemoMode } = useAuth();
+  const { t } = useTranslation('common');
 
   return (
     <div className={`min-h-screen ${COLORS.background.bgGradient}`}>
@@ -27,7 +29,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
               <div className="flex items-center gap-2">
                 <TestTube className="h-4 w-4" />
                 <span className="text-sm font-medium">
-                  🚀 Demo Mode - You're exploring with sample data
+                  {t('demoMode.banner')}
                 </span>
               </div>
               <Button
@@ -37,7 +39,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
                 className="text-white hover:bg-white/20 h-6 px-2"
               >
                 <X className="h-3 w-3" />
-                <span className="sr-only">Exit Demo</span>
+                <span className="sr-only">{t('demoMode.exitDemo')}</span>
               </Button>
             </div>
           </div>

@@ -5,6 +5,7 @@
   "contractsExpiringSoon": "Yakında Sona Erecek Sözleşmeler",
   "quickActions": "Hızlı İşlemler",
   "getStarted": "İlk mülkünüzü veya mülk sahibinizi ekleyerek başlayın",
+  "navigationTip": "Mülkleri, mal sahiplerini, kiracıları ve sözleşmeleri yönetmek için gezinme menüsünü kullanın.",
   "stats": {
     "totalProperties": "Toplam Mülk",
     "totalPropertiesDescription": "Toplam mülk sayısı",

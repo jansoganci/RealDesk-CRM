@@ -11,6 +11,10 @@
     "cancel": "Cancel",
     "delete": "Delete"
   },
+  "demoMode": {
+    "banner": "🚀 Demo Mode - You're exploring with sample data",
+    "exitDemo": "Exit Demo"
+  },
   "carousel": {
     "previous": "Previous slide",
     "next": "Next slide",
