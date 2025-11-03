@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { Label } from '../../../components/ui/label';
 import { Input } from '../../../components/ui/input';
@@ -23,6 +24,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
   form,
   isLoading,
 }) => {
+  const { t } = useTranslation('tenants');
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(false);
 
@@ -44,12 +46,12 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
       setLoadingProperties(true);
       const data = await propertiesService.getAll();
       // Filter to only show empty or occupied properties that can be rented
-      const availableProperties = data.filter(p => 
+      const availableProperties = data.filter(p =>
         p.status === 'Empty' || p.status === 'Occupied'
       );
       setProperties(availableProperties);
     } catch (error) {
-      console.error('Failed to load properties:', error);
+      console.error(t('enhanced.steps.contract.failedToLoadProperties'), error);
     } finally {
       setLoadingProperties(false);
     }
@@ -58,22 +60,26 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Contract Details</h3>
+        <h3 className="text-lg font-semibold">{t('enhanced.steps.contract.sectionTitle')}</h3>
         <p className="text-sm text-gray-600">
-          Configure the rental contract details and select the property.
+          {t('enhanced.steps.contract.sectionDescription')}
         </p>
       </div>
 
       <div className="space-y-4">
         <div className="space-y-2">
-          <Label htmlFor="contract.property_id">Property *</Label>
+          <Label htmlFor="contract.property_id">{t('enhanced.steps.contract.fields.property.label')}</Label>
           <Select
             value={selectedPropertyId || ''}
             onValueChange={(value) => setValue('contract.property_id', value)}
             disabled={loadingProperties || isLoading}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a property" />
+              <SelectValue placeholder={
+                loadingProperties
+                  ? t('enhanced.steps.contract.loadingProperties')
+                  : t('enhanced.steps.contract.fields.property.placeholder')
+              } />
             </SelectTrigger>
             <SelectContent>
               {properties.map((property) => (
@@ -81,7 +87,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
                   <div className="flex flex-col">
                     <span>{property.address}</span>
                     <span className="text-xs text-gray-500">
-                      Status: {property.status}
+                      {t('enhanced.steps.contract.fields.propertyStatus', { status: property.status })}
                     </span>
                   </div>
                 </SelectItem>
@@ -97,7 +103,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="contract.start_date">Start Date *</Label>
+            <Label htmlFor="contract.start_date">{t('enhanced.steps.contract.fields.startDate.label')}</Label>
             <Input
               id="contract.start_date"
               type="date"
@@ -112,7 +118,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contract.end_date">End Date *</Label>
+            <Label htmlFor="contract.end_date">{t('enhanced.steps.contract.fields.endDate.label')}</Label>
             <Input
               id="contract.end_date"
               type="date"
@@ -129,15 +135,15 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="contract.rent_amount">Monthly Rent Amount *</Label>
+            <Label htmlFor="contract.rent_amount">{t('enhanced.steps.contract.fields.rentAmount.label')}</Label>
             <div className="relative">
               <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
-                $
+                {t('enhanced.steps.contract.fields.rentAmount.currencySymbol')}
               </span>
               <Input
                 id="contract.rent_amount"
                 type="number"
-                placeholder="1500"
+                placeholder={t('enhanced.steps.contract.fields.rentAmount.placeholder')}
                 step="0.01"
                 min="0"
                 className="pl-8"
@@ -155,19 +161,19 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="contract.status">Contract Status</Label>
+            <Label htmlFor="contract.status">{t('enhanced.steps.contract.fields.status.label')}</Label>
             <Select
               value={watch('contract.status') || 'Active'}
               onValueChange={(value) => setValue('contract.status', value as 'Active' | 'Inactive' | 'Archived')}
               disabled={isLoading}
             >
               <SelectTrigger>
-                <SelectValue placeholder="Select status" />
+                <SelectValue placeholder={t('enhanced.steps.contract.fields.status.placeholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Active">Active</SelectItem>
-                <SelectItem value="Inactive">Inactive</SelectItem>
-                <SelectItem value="Archived">Archived</SelectItem>
+                <SelectItem value="Active">{t('enhanced.steps.contract.fields.status.options.active')}</SelectItem>
+                <SelectItem value="Inactive">{t('enhanced.steps.contract.fields.status.options.inactive')}</SelectItem>
+                <SelectItem value="Archived">{t('enhanced.steps.contract.fields.status.options.archived')}</SelectItem>
               </SelectContent>
             </Select>
             {errors.contract?.status && (

@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { Label } from '../../../components/ui/label';
 import { Input } from '../../../components/ui/input';
@@ -22,6 +23,7 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
   pdfFile,
   setPdfFile,
 }) => {
+  const { t } = useTranslation('tenants');
   const {
     register,
     setValue,
@@ -35,16 +37,16 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
     const file = event.target.files?.[0];
     if (file) {
       if (file.type !== 'application/pdf') {
-        alert('Please select a PDF file.');
+        alert(t('enhanced.steps.settings.pdfUpload.alertInvalidType'));
         return;
       }
       if (file.size > 10 * 1024 * 1024) { // 10MB limit
-        alert('File size must be less than 10MB.');
+        alert(t('enhanced.steps.settings.pdfUpload.alertSizeExceeded'));
         return;
       }
       setPdfFile(file);
     }
-  }, [setPdfFile]);
+  }, [setPdfFile, t]);
 
   const removePdfFile = useCallback(() => {
     setPdfFile(null);
@@ -58,9 +60,9 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">Contract Settings & Upload</h3>
+        <h3 className="text-lg font-semibold">{t('enhanced.steps.settings.sectionTitle')}</h3>
         <p className="text-sm text-gray-600">
-          Configure additional contract settings and upload the contract PDF.
+          {t('enhanced.steps.settings.sectionDescription')}
         </p>
       </div>
 
@@ -71,16 +73,16 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
             <Checkbox
               id="rent_increase_reminder_enabled"
               checked={!!rentIncreaseEnabled}
-              onCheckedChange={(checked) => 
+              onCheckedChange={(checked) =>
                 setValue('contract.rent_increase_reminder_enabled', !!checked)
               }
               disabled={isLoading}
             />
-            <Label 
+            <Label
               htmlFor="rent_increase_reminder_enabled"
               className="text-sm font-medium"
             >
-              Enable rent increase reminders
+              {t('enhanced.steps.settings.rentIncreaseReminder.title')}
             </Label>
           </div>
 
@@ -89,12 +91,12 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="contract.rent_increase_reminder_days">
-                    Reminder Days Before End
+                    {t('enhanced.steps.settings.rentIncreaseReminder.days.label')}
                   </Label>
                   <Input
                     id="contract.rent_increase_reminder_days"
                     type="number"
-                    placeholder="90"
+                    placeholder={t('enhanced.steps.settings.rentIncreaseReminder.days.placeholder')}
                     min="1"
                     max="365"
                     {...register('contract.rent_increase_reminder_days', {
@@ -111,12 +113,12 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
 
                 <div className="space-y-2">
                   <Label htmlFor="contract.expected_new_rent">
-                    Expected New Rent ($)
+                    {t('enhanced.steps.settings.rentIncreaseReminder.newRent.label')}
                   </Label>
                   <Input
                     id="contract.expected_new_rent"
                     type="number"
-                    placeholder="1650"
+                    placeholder={t('enhanced.steps.settings.rentIncreaseReminder.newRent.placeholder')}
                     step="0.01"
                     min="0"
                     {...register('contract.expected_new_rent', {
@@ -133,10 +135,10 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contract.reminder_notes">Reminder Notes</Label>
+                <Label htmlFor="contract.reminder_notes">{t('enhanced.steps.settings.rentIncreaseReminder.notes.label')}</Label>
                 <Textarea
                   id="contract.reminder_notes"
-                  placeholder="Additional notes for rent increase reminders..."
+                  placeholder={t('enhanced.steps.settings.rentIncreaseReminder.notes.placeholder')}
                   {...register('contract.reminder_notes')}
                   disabled={isLoading}
                   rows={2}
@@ -154,9 +156,9 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
         {/* Contract PDF Upload */}
         <div className="space-y-4 p-4 border rounded-lg">
           <div className="space-y-2">
-            <Label>Contract PDF (Optional)</Label>
+            <Label>{t('enhanced.steps.settings.pdfUpload.title')}</Label>
             <p className="text-sm text-gray-600">
-              Upload a signed contract PDF for record keeping.
+              {t('enhanced.steps.settings.pdfUpload.description')}
             </p>
           </div>
 
@@ -178,7 +180,7 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
                 className="w-full"
               >
                 <Upload className="h-4 w-4 mr-2" />
-                Choose PDF File
+                {t('enhanced.steps.settings.pdfUpload.chooseFile')}
               </Button>
             </div>
           ) : (
@@ -188,7 +190,9 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
                 <div>
                   <p className="text-sm font-medium">{pdfFile.name}</p>
                   <p className="text-xs text-gray-500">
-                    {(pdfFile.size / 1024 / 1024).toFixed(2)} MB
+                    {t('enhanced.steps.settings.pdfUpload.fileSize', {
+                      size: (pdfFile.size / 1024 / 1024).toFixed(2)
+                    })}
                   </p>
                 </div>
               </div>
