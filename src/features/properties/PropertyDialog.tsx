@@ -35,7 +35,7 @@ interface PropertyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   property: Property | null;
-  onSubmit: (data: PropertyFormData) => Promise<void>;
+  onSubmit: (data: any) => Promise<void>;
   loading?: boolean;
 }
 
@@ -49,6 +49,10 @@ export const PropertyDialog = ({
   const { t } = useTranslation(['properties', 'common']);
   const propertySchema = getPropertySchema(t);
   type PropertyFormData = z.infer<typeof propertySchema>;
+  
+  // Type assertion for onSubmit to maintain type safety
+  const typedOnSubmit = onSubmit as (data: PropertyFormData) => Promise<void>;
+  
   const [owners, setOwners] = useState<PropertyOwner[]>([]);
   const [loadingOwners, setLoadingOwners] = useState(false);
   const [photoManagementOpen, setPhotoManagementOpen] = useState(false);
@@ -71,6 +75,7 @@ export const PropertyDialog = ({
 
   const selectedStatus = watch('status');
   const selectedOwnerId = watch('owner_id');
+  const selectedCurrency = watch('currency');
 
   useEffect(() => {
     if (open) {
@@ -84,7 +89,10 @@ export const PropertyDialog = ({
             city: property.city || '',
             district: property.district || '',
             status: property.status as 'Empty' | 'Occupied' | 'Inactive',
+            rent_amount: property.rent_amount || undefined,
+            currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : null) || undefined,
             notes: property.notes || '',
+            listing_url: property.listing_url || '',
           });
         } else {
           setPhotos([]);
@@ -94,7 +102,10 @@ export const PropertyDialog = ({
             city: '',
             district: '',
             status: 'Empty',
+            rent_amount: undefined,
+            currency: undefined,
             notes: '',
+            listing_url: '',
           });
         }
       };
@@ -110,7 +121,7 @@ export const PropertyDialog = ({
       const data = await ownersService.getAll();
       setOwners(data);
     } catch (error) {
-      console.error(t('properties.toasts.loadOwnersError'), error);
+      console.error(t('toasts.loadOwnersError'), error);
     } finally {
       setLoadingOwners(false);
     }
@@ -123,7 +134,7 @@ export const PropertyDialog = ({
       const data = await photosService.getPhotosByPropertyId(property.id);
       setPhotos(data);
     } catch (error) {
-      console.error(t('properties.toasts.loadPhotosError'), error);
+      console.error(t('toasts.loadPhotosError'), error);
     } finally {
       setLoadingPhotos(false);
     }
@@ -134,27 +145,30 @@ export const PropertyDialog = ({
       ...data,
       city: data.city?.trim() || undefined,
       district: data.district?.trim() || undefined,
+      rent_amount: data.rent_amount || undefined,
+      currency: (data.currency === 'USD' || data.currency === 'TRY' ? data.currency : null) || undefined,
       notes: data.notes?.trim() || undefined,
+      listing_url: data.listing_url?.trim() || undefined,
     };
-    await onSubmit(cleanedData);
+    await typedOnSubmit(cleanedData);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{property ? t('properties.dialog.editTitle') : t('properties.dialog.addTitle')}</DialogTitle>
+          <DialogTitle>{property ? t('dialog.editTitle') : t('dialog.addTitle')}</DialogTitle>
           <DialogDescription>
             {property
-              ? t('properties.dialog.editDescription')
-              : t('properties.dialog.addDescription')}
+              ? t('dialog.editDescription')
+              : t('dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
         {property && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className={`text-sm font-semibold ${COLORS.gray.text900}`}>{t('properties.dialog.propertyPhotosTitle')}</h3>
+              <h3 className={`text-sm font-semibold ${COLORS.gray.text900}`}>{t('dialog.propertyPhotosTitle')}</h3>
               <Button
                 type="button"
                 variant="outline"
@@ -163,7 +177,7 @@ export const PropertyDialog = ({
                 disabled={loading}
               >
                 <Images className="h-4 w-4 mr-2" />
-                {t('properties.dialog.managePhotosButton')}
+                {t('dialog.managePhotosButton')}
               </Button>
             </div>
             <PhotoGallery
@@ -176,14 +190,14 @@ export const PropertyDialog = ({
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="owner_id">{t('properties.dialog.form.owner')} *</Label>
+            <Label htmlFor="owner_id">{t('dialog.form.owner')} *</Label>
             <Select
               value={selectedOwnerId || ''}
               onValueChange={(value) => setValue('owner_id', value)}
               disabled={loadingOwners || loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder={t('properties.dialog.form.ownerPlaceholder')} />
+                <SelectValue placeholder={t('dialog.form.ownerPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
                 {owners.map((owner) => (
@@ -199,10 +213,10 @@ export const PropertyDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="address">{t('properties.dialog.form.address')} *</Label>
+            <Label htmlFor="address">{t('dialog.form.address')} *</Label>
             <Textarea
               id="address"
-              placeholder={t('properties.dialog.form.addressPlaceholder')}
+              placeholder={t('dialog.form.addressPlaceholder')}
               {...register('address')}
               disabled={loading}
               rows={2}
@@ -214,20 +228,20 @@ export const PropertyDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="city">{t('properties.dialog.form.city')}</Label>
+              <Label htmlFor="city">{t('dialog.form.city')}</Label>
               <Input
                 id="city"
-                placeholder={t('properties.dialog.form.cityPlaceholder')}
+                placeholder={t('dialog.form.cityPlaceholder')}
                 {...register('city')}
                 disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="district">{t('properties.dialog.form.district')}</Label>
+              <Label htmlFor="district">{t('dialog.form.district')}</Label>
               <Input
                 id="district"
-                placeholder={t('properties.dialog.form.districtPlaceholder')}
+                placeholder={t('dialog.form.districtPlaceholder')}
                 {...register('district')}
                 disabled={loading}
               />
@@ -235,19 +249,19 @@ export const PropertyDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="status">{t('properties.dialog.form.status')} *</Label>
+            <Label htmlFor="status">{t('dialog.form.status')} *</Label>
             <Select
               value={selectedStatus}
               onValueChange={(value) => setValue('status', value as 'Empty' | 'Occupied' | 'Inactive')}
               disabled={loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder={t('properties.dialog.form.statusPlaceholder')} />
+                <SelectValue placeholder={t('dialog.form.statusPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Empty">{t('properties.status.empty')}</SelectItem>
-                <SelectItem value="Occupied">{t('properties.status.occupied')}</SelectItem>
-                <SelectItem value="Inactive">{t('properties.status.inactive')}</SelectItem>
+                <SelectItem value="Empty">{t('status.empty')}</SelectItem>
+                <SelectItem value="Occupied">{t('status.occupied')}</SelectItem>
+                <SelectItem value="Inactive">{t('status.inactive')}</SelectItem>
               </SelectContent>
             </Select>
             {errors.status && (
@@ -255,11 +269,62 @@ export const PropertyDialog = ({
             )}
           </div>
 
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="rent_amount">{t('dialog.form.rentAmount')}</Label>
+              <Input
+                id="rent_amount"
+                type="number"
+                step="0.01"
+                placeholder={t('dialog.form.rentAmountPlaceholder')}
+                {...register('rent_amount', { valueAsNumber: true })}
+                disabled={loading}
+              />
+              {errors.rent_amount && (
+                <p className={`text-sm ${COLORS.danger.text}`}>{errors.rent_amount.message}</p>
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="currency">{t('dialog.form.currency')}</Label>
+              <Select
+                value={selectedCurrency || ''}
+                onValueChange={(value) => setValue('currency', value as 'USD' | 'TRY')}
+                disabled={loading}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={t('dialog.form.currencyPlaceholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="USD">USD</SelectItem>
+                  <SelectItem value="TRY">TRY</SelectItem>
+                </SelectContent>
+              </Select>
+              {errors.currency && (
+                <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
+              )}
+            </div>
+          </div>
+
           <div className="space-y-2">
-            <Label htmlFor="notes">{t('properties.dialog.form.notes')}</Label>
+            <Label htmlFor="listing_url">{t('dialog.form.listingUrl')}</Label>
+            <Input
+              id="listing_url"
+              type="url"
+              placeholder={t('dialog.form.listingUrlPlaceholder')}
+              {...register('listing_url')}
+              disabled={loading}
+            />
+            {errors.listing_url && (
+              <p className={`text-sm ${COLORS.danger.text}`}>{errors.listing_url.message}</p>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">{t('dialog.form.notes')}</Label>
             <Textarea
               id="notes"
-              placeholder={t('properties.dialog.form.notesPlaceholder')}
+              placeholder={t('dialog.form.notesPlaceholder')}
               {...register('notes')}
               disabled={loading}
               rows={3}
@@ -273,14 +338,14 @@ export const PropertyDialog = ({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              {t('common.cancel')}
+              {t('cancel', { ns: 'common' })}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
             >
-              {loading ? t('common.saving') : property ? t('properties.dialog.updateButton') : t('properties.dialog.addButton')}
+              {loading ? t('saving', { ns: 'common' }) : property ? t('dialog.updateButton') : t('dialog.addButton')}
             </Button>
           </DialogFooter>
         </form>

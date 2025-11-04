@@ -37,4 +37,6 @@ export const ROUTES = {
   CONTRACT_DETAIL: '/contracts/:id',
   CONTRACT_NEW: '/contracts/new',
   REMINDERS: '/reminders',
+  INQUIRIES: '/inquiries',
+  CALENDAR: '/calendar',
 } as const;

@@ -1,6 +1,9 @@
+
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
+
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { PropertyDialog } from './PropertyDialog';
@@ -8,7 +11,11 @@ import { EnhancedTenantDialog } from '../tenants/EnhancedTenantDialog';
 import { propertiesService } from '../../lib/serviceProxy';
 import { PropertyWithOwner, TenantWithContractResult } from '../../types';
 import { toast } from 'sonner';
-import { MapPin, Building2, User, Images, UserPlus } from 'lucide-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { formatCurrency, convertCurrency } from '../../lib/currency';
+import { format } from 'date-fns';
+import { getToday, daysDifference } from '../../lib/dates';
+import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -17,6 +24,7 @@ import { getPropertySchema } from './propertySchema';
 
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
+  const { currency } = useAuth();
   const propertySchema = getPropertySchema(t);
   type PropertyFormData = z.infer<typeof propertySchema>;
 
@@ -66,9 +74,17 @@ export const Properties = () => {
     try {
       setLoading(true);
       const data = await propertiesService.getAll();
+      // Debug: Check if listing_url is being fetched
+      if (data.length > 0) {
+        console.log('Sample property data:', {
+          address: data[0].address,
+          hasListingUrl: !!data[0].listing_url,
+          listing_url: data[0].listing_url,
+        });
+      }
       setProperties(data);
     } catch (error) {
-      toast.error(t('properties.toasts.loadError'));
+      toast.error(t('toasts.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -96,12 +112,12 @@ export const Properties = () => {
     try {
       setActionLoading(true);
       await propertiesService.delete(propertyToDelete.id);
-      toast.success(t('properties.toasts.deleteSuccess'));
+      toast.success(t('toasts.deleteSuccess'));
       await loadProperties();
       setDeleteDialogOpen(false);
       setPropertyToDelete(null);
     } catch (error) {
-      toast.error(t('properties.toasts.deleteError'));
+      toast.error(t('toasts.deleteError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -113,16 +129,16 @@ export const Properties = () => {
       setActionLoading(true);
       if (selectedProperty) {
         await propertiesService.update(selectedProperty.id, data);
-        toast.success(t('properties.toasts.updateSuccess'));
+        toast.success(t('toasts.updateSuccess'));
       } else {
         await propertiesService.create(data);
-        toast.success(t('properties.toasts.addSuccess'));
+        toast.success(t('toasts.addSuccess'));
       }
       await loadProperties();
       setDialogOpen(false);
       setSelectedProperty(null);
     } catch (error) {
-      toast.error(selectedProperty ? t('properties.toasts.updateError') : t('properties.toasts.addError'));
+      toast.error(selectedProperty ? t('toasts.updateError') : t('toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -135,7 +151,7 @@ export const Properties = () => {
   };
 
   const handleTenantCreated = async (result: TenantWithContractResult) => {
-    toast.success(t('properties.toasts.addTenantToPropertySuccess', { tenantName: result.tenant.name }));
+    toast.success(t('toasts.addTenantToPropertySuccess', { tenantName: result.tenant.name }));
     await loadProperties();
     setEnhancedTenantDialogOpen(false);
     setSelectedPropertyForTenant(null);
@@ -143,9 +159,9 @@ export const Properties = () => {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      Empty: { label: t('properties.status.empty'), className: getStatusBadgeClasses('empty') },
-      Occupied: { label: t('properties.status.occupied'), className: getStatusBadgeClasses('occupied') },
-      Inactive: { label: t('properties.status.inactive'), className: getStatusBadgeClasses('inactive') },
+      Empty: { label: t('status.empty'), className: getStatusBadgeClasses('empty') },
+      Occupied: { label: t('status.occupied'), className: getStatusBadgeClasses('occupied') },
+      Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
 
     const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.Empty;
@@ -160,39 +176,42 @@ export const Properties = () => {
   return (
     <>
       <ListPageTemplate
-        title={t('properties.title')}
+        title={t('title')}
         items={filteredProperties}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder={t('properties.searchPlaceholder')}
+        searchPlaceholder={t('searchPlaceholder')}
         filterValue={statusFilter}
         onFilterChange={setStatusFilter}
         filterOptions={[
-          { value: 'all', label: t('properties.filters.all') },
-          { value: 'Empty', label: t('properties.status.empty') },
-          { value: 'Occupied', label: t('properties.status.occupied') },
-          { value: 'Inactive', label: t('properties.status.inactive') },
+          { value: 'all', label: t('filters.all') },
+          { value: 'Empty', label: t('status.empty') },
+          { value: 'Occupied', label: t('status.occupied') },
+          { value: 'Inactive', label: t('status.inactive') },
         ]}
-        filterPlaceholder={t('properties.filterPlaceholder')}
+        filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddProperty}
-        addButtonLabel={t('properties.addPropertyButton')}
+        addButtonLabel={t('addPropertyButton')}
         emptyState={{
-          title: searchQuery || statusFilter !== 'all' ? t('properties.emptyState.noPropertiesFound') : t('properties.emptyState.noPropertiesYet'),
+          title: searchQuery || statusFilter !== 'all' ? t('emptyState.noPropertiesFound') : t('emptyState.noPropertiesYet'),
           description: searchQuery || statusFilter !== 'all'
-            ? t('properties.emptyState.noPropertiesFoundDescription')
-            : t('properties.emptyState.noPropertiesYetDescription'),
+            ? t('emptyState.noPropertiesFoundDescription')
+            : t('emptyState.noPropertiesYetDescription'),
           icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('properties.emptyState.addActionLabel'),
+          actionLabel: t('emptyState.addActionLabel'),
           showAction: !searchQuery && statusFilter === 'all',
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>{t('properties.table.address')}</TableHead>
-            <TableHead>{t('properties.table.location')}</TableHead>
-            <TableHead>{t('properties.table.owner')}</TableHead>
-            <TableHead>{t('properties.table.status')}</TableHead>
-            <TableHead className="text-right">{t('properties.table.actions')}</TableHead>
+            <TableHead>{t('properties:table.address')}</TableHead>
+            <TableHead>{t('properties:table.location')}</TableHead>
+            <TableHead>{t('properties:table.owner')}</TableHead>
+            <TableHead>{t('properties:table.tenant')}</TableHead>
+            <TableHead>{t('properties:table.rent')}</TableHead>
+            <TableHead className="whitespace-nowrap">{t('properties:table.contractEndDate')}</TableHead>
+            <TableHead>{t('properties:table.status')}</TableHead>
+            <TableHead className="text-right">{t('properties:table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(property) => (
@@ -210,6 +229,19 @@ export const Properties = () => {
                         <Images className="h-3 w-3" />
                         {t('photos', { count: property.photos.length })}
                       </span>
+                    )}
+                    {property.listing_url && property.listing_url.trim() !== '' && (
+                      <a
+                        href={property.listing_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 transition-colors text-blue-600 hover:text-blue-700 cursor-pointer flex-shrink-0"
+                        title={t('properties:table.viewListing')}
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={t('properties:table.viewListing')}
+                      >
+                        <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                      </a>
                     )}
                   </div>
                   {property.notes && (
@@ -243,6 +275,61 @@ export const Properties = () => {
               )}
             </TableCell>
             <TableCell>
+              {property.status === 'Inactive' ? (
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.inactive')}</span>
+              ) : property.activeTenant ? (
+                <div className="flex items-center gap-2 text-sm">
+                  <User className={`h-3 w-3 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.gray.text700}>{property.activeTenant.name}</span>
+                </div>
+              ) : (
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noTenant')}</span>
+              )}
+            </TableCell>
+            <TableCell>
+              {property.status === 'Inactive' || !property.activeContract?.rent_amount ? (
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noRent')}</span>
+              ) : (
+                <div className="flex items-center gap-2 text-sm">
+                  <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+                  <span className={COLORS.gray.text700}>
+                    {formatCurrency(
+                      convertCurrency(
+                        property.activeContract.rent_amount,
+                        property.activeContract.currency || 'USD',
+                        currency || 'USD'
+                      ),
+                      currency || 'USD'
+                    )}
+                    {t('properties:table.perMonth')}
+                  </span>
+                </div>
+              )}
+            </TableCell>
+            <TableCell>
+              {property.status === 'Inactive' || !property.activeContract?.end_date ? (
+                <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noContract')}</span>
+              ) : (
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+                  <span className={COLORS.gray.text600}>
+                    {format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}
+                  </span>
+                  {(() => {
+                    const today = getToday();
+                    const endDate = new Date(property.activeContract.end_date);
+                    const daysLeft = daysDifference(endDate, today);
+                    if (daysLeft <= 30 && daysLeft >= 0) {
+                      return (
+                        <AlertCircle className={`h-3 w-3 ${COLORS.warning.text} flex-shrink-0`} />
+                      );
+                    }
+                    return null;
+                  })()}
+                </div>
+              )}
+            </TableCell>
+            <TableCell>
               {getStatusBadge(property.status)}
             </TableCell>
             <TableCell className="text-right">
@@ -255,7 +342,7 @@ export const Properties = () => {
                     className="text-xs"
                   >
                     <UserPlus className="h-3 w-3 mr-1" />
-                    {t('properties.addTenantButton')}
+                    {t('addTenantButton')}
                   </Button>
                 )}
                 <TableActionButtons
@@ -277,6 +364,18 @@ export const Properties = () => {
                   <span className={`font-semibold text-base ${COLORS.gray.text900}`}>
                     {property.address}
                   </span>
+                  {property.listing_url && (
+                    <a
+                      href={property.listing_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center p-1.5 rounded-md hover:bg-blue-50 transition-colors text-blue-600 hover:text-blue-700 cursor-pointer"
+                      title={t('properties:table.viewListing')}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLink className="h-4 w-4" />
+                    </a>
+                  )}
                 </div>
                 {property.notes && (
                   <p className={`text-xs ${COLORS.gray.text500} mt-1 line-clamp-2`}>
@@ -304,6 +403,60 @@ export const Properties = () => {
                 <div className="flex items-center gap-2 text-sm">
                   <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
                   <span className={COLORS.gray.text700}>{property.owner.name}</span>
+                </div>
+              )}
+
+              {property.status === 'Inactive' ? (
+                <div className="flex items-center gap-2 text-sm">
+                  <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.muted.textLight}>{t('properties:table.inactive')}</span>
+                </div>
+              ) : property.activeTenant ? (
+                <div className="flex items-center gap-2 text-sm">
+                  <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.gray.text700}>{property.activeTenant.name}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 text-sm">
+                  <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.muted.textLight}>{t('properties:table.noTenant')}</span>
+                </div>
+              )}
+
+              {property.status !== 'Inactive' && property.activeContract?.rent_amount && (
+                <div className="flex items-center gap-2 text-sm">
+                  <DollarSign className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.gray.text700}>
+                    {formatCurrency(
+                      convertCurrency(
+                        property.activeContract.rent_amount,
+                        property.activeContract.currency || 'USD',
+                        currency || 'USD'
+                      ),
+                      currency || 'USD'
+                    )}
+                    {t('properties:table.perMonth')}
+                  </span>
+                </div>
+              )}
+
+              {property.status !== 'Inactive' && property.activeContract?.end_date && (
+                <div className="flex items-center gap-2 text-sm">
+                  <Calendar className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                  <span className={COLORS.gray.text600}>
+                    {t('properties:table.contractEndDate')}: {format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}
+                  </span>
+                  {(() => {
+                    const today = getToday();
+                    const endDate = new Date(property.activeContract.end_date);
+                    const daysLeft = daysDifference(endDate, today);
+                    if (daysLeft <= 30 && daysLeft >= 0) {
+                      return (
+                        <AlertCircle className={`h-4 w-4 ${COLORS.warning.text} flex-shrink-0`} />
+                      );
+                    }
+                    return null;
+                  })()}
                 </div>
               )}
 
@@ -342,8 +495,8 @@ export const Properties = () => {
         )}
         deleteDialog={{
           open: deleteDialogOpen,
-          title: t('properties.deleteDialog.title'),
-          description: t('properties.deleteDialog.description', { propertyAddress: propertyToDelete?.address }),
+          title: t('deleteDialog.title'),
+          description: t('deleteDialog.description', { propertyAddress: propertyToDelete?.address }),
           onConfirm: handleDeleteConfirm,
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,

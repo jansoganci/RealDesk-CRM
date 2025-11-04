@@ -56,7 +56,7 @@ const getEnhancedTenantSchema = (t: (key: string) => string) => z.object({
   }
   return true;
 }, {
-  message: t('tenants.enhanced.errors.endDateBeforeStart'),
+  message: t('enhanced.errors.endDateBeforeStart'),
   path: ['contract', 'end_date'],
 });
 
@@ -75,7 +75,7 @@ export const EnhancedTenantDialog = ({
   onSuccess,
   preSelectedPropertyId = null
 }: EnhancedTenantDialogProps) => {
-  const { t } = useTranslation(['tenants', 'errors']);
+  const { t } = useTranslation(['tenants', 'errors', 'common']);
   const [currentStep, setCurrentStep] = useState(1);
   const [submitting, setSubmitting] = useState(false);
   const [pdfFile, setPdfFile] = useState<File | null>(null);
@@ -83,20 +83,20 @@ export const EnhancedTenantDialog = ({
   const STEPS = [
     {
       id: 1,
-      title: t('tenants.enhanced.steps.info.title'),
-      description: t('tenants.enhanced.steps.info.description'),
+      title: t('enhanced.steps.info.title'),
+      description: t('enhanced.steps.info.description'),
       icon: Users,
     },
     {
       id: 2,
-      title: t('tenants.enhanced.steps.contract.title'),
-      description: t('tenants.enhanced.steps.contract.description'),
+      title: t('enhanced.steps.contract.title'),
+      description: t('enhanced.steps.contract.description'),
       icon: FileText,
     },
     {
       id: 3,
-      title: t('tenants.enhanced.steps.settings.title'),
-      description: t('tenants.enhanced.steps.settings.description'),
+      title: t('enhanced.steps.settings.title'),
+      description: t('enhanced.steps.settings.description'),
       icon: Settings,
     },
   ];
@@ -225,7 +225,7 @@ export const EnhancedTenantDialog = ({
       const result = await tenantsService.createTenantWithContract(tenantWithContractData);
 
       // Success!
-      toast.success(t('tenants.toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
+      toast.success(t('toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
       onSuccess(result);
       onOpenChange(false);
 
@@ -235,7 +235,7 @@ export const EnhancedTenantDialog = ({
       // Check for duplicate active contract conflict
       const err = error as { code?: string; originalCode?: string; message?: string };
       if (err.code === '23505' || err.originalCode === '23505' || (err.message && err.message.includes('uniq_active_contract_per_property'))) {
-        toast.error(t('tenants.enhanced.errors.duplicateActiveContract'));
+        toast.error(t('enhanced.errors.duplicateActiveContract'));
         return;
       }
 
@@ -287,10 +287,10 @@ export const EnhancedTenantDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className={`h-5 w-5 ${COLORS.primary.text}`} />
-            {t('tenants.addTenantButton')}
+            {t('addTenantButton')}
           </DialogTitle>
           <DialogDescription>
-            {t('tenants.enhanced.steps.info.sectionDescription')}
+            {t('enhanced.steps.info.sectionDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -355,11 +355,11 @@ export const EnhancedTenantDialog = ({
             disabled={submitting}
           >
             {isFirstStep ? (
-              t('common.cancel')
+              t('cancel', { ns: 'common' })
             ) : (
               <>
                 <ArrowLeft className="h-4 w-4 mr-2" />
-                {t('tenants.enhanced.navigation.back')}
+                {t('enhanced.navigation.back')}
               </>
             )}
           </Button>
@@ -382,15 +382,15 @@ export const EnhancedTenantDialog = ({
             className={isLastStep ? `${COLORS.success.bg} hover:${COLORS.success.dark}` : ''}
           >
             {submitting ? (
-              t('tenants.enhanced.navigation.submitting')
+              t('enhanced.navigation.submitting')
             ) : isLastStep ? (
               <>
                 <Check className="h-4 w-4 mr-2" />
-                {t('tenants.enhanced.navigation.submit')}
+                {t('enhanced.navigation.submit')}
               </>
             ) : (
               <>
-                {t('tenants.enhanced.navigation.next')}: {STEPS[currentStep]?.title}
+                {t('enhanced.navigation.next')}: {STEPS[currentStep]?.title}
                 <ArrowRight className="h-4 w-4 ml-2" />
               </>
             )}

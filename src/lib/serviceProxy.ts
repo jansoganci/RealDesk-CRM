@@ -1,3 +1,4 @@
+
 /**
  * Service Proxy - Routes between real and mock services based on demo mode
  * This allows seamless switching between production and demo data without changing components
@@ -10,6 +11,8 @@ import { tenantsService as realTenantsService } from '../services/tenants.servic
 import { contractsService as realContractsService } from '../services/contracts.service';
 import { remindersService as realRemindersService } from '../services/reminders.service';
 import { photosService as realPhotosService } from '../services/photos.service';
+import { inquiriesService as realInquiriesService } from '../services/inquiries.service';
+import { meetingsService as realMeetingsService } from '../services/meetings.service';
 
 // Mock services
 import { mockOwnersService } from '../services/mockServices/mockOwners.service';
@@ -17,6 +20,8 @@ import { mockPropertiesService } from '../services/mockServices/mockProperties.s
 import { mockTenantsService } from '../services/mockServices/mockTenants.service';
 import { mockContractsService } from '../services/mockServices/mockContracts.service';
 import { mockRemindersService } from '../services/mockServices/mockReminders.service';
+import { mockInquiriesService } from '../services/mockServices/mockInquiries.service';
+import { mockMeetingsService } from '../services/mockServices/mockMeetings.service';
 
 // Service type definitions using typeof
 export type OwnersServiceType = typeof realOwnersService;
@@ -24,6 +29,8 @@ export type PropertiesServiceType = typeof realPropertiesService;
 export type TenantsServiceType = typeof realTenantsService;
 export type ContractsServiceType = typeof realContractsService;
 export type RemindersServiceType = typeof realRemindersService;
+export type InquiriesServiceType = typeof realInquiriesService;
+export type MeetingsServiceType = typeof realMeetingsService;
 
 /**
  * Check if we're in demo mode by accessing auth context
@@ -126,14 +133,46 @@ export const remindersService = new Proxy(realRemindersService, {
   get(target, prop) {
     const service = isDemoMode() ? mockRemindersService : target;
     const value = (service as any)[prop];
-    
+
     if (typeof value === 'function') {
       return value.bind(service);
     }
-    
+
     return value;
   }
 }) as typeof realRemindersService;
+
+/**
+ * Inquiries Service Proxy
+ */
+export const inquiriesService = new Proxy(realInquiriesService, {
+  get(target, prop) {
+    const service = isDemoMode() ? mockInquiriesService : target;
+    const value = (service as any)[prop];
+
+    if (typeof value === 'function') {
+      return value.bind(service);
+    }
+
+    return value;
+  }
+}) as typeof realInquiriesService;
+
+/**
+ * Meetings Service Proxy
+ */
+export const meetingsService = new Proxy(realMeetingsService, {
+  get(target, prop) {
+    const service = isDemoMode() ? mockMeetingsService : target;
+    const value = (service as any)[prop];
+
+    if (typeof value === 'function') {
+      return value.bind(service);
+    }
+
+    return value;
+  }
+}) as typeof realMeetingsService;
 
 /**
  * Utility function to reset all mock data to original state
@@ -145,7 +184,9 @@ export const resetMockData = () => {
     mockPropertiesService.resetData();
     mockTenantsService.resetData();
     mockContractsService.resetData();
-    
+    mockInquiriesService.resetData();
+    mockMeetingsService.resetData();
+
     console.log('Demo: Mock data reset to original state');
   }
 };
@@ -165,21 +206,25 @@ export const getMockDataStats = async () => {
   if (!isDemoMode()) {
     throw new Error('Mock data stats only available in demo mode');
   }
-  
-  const [ownersStats, propertiesStats, tenantsStats, contractsStats, remindersStats] = await Promise.all([
+
+  const [ownersStats, propertiesStats, tenantsStats, contractsStats, remindersStats, inquiriesStats, meetingsStats] = await Promise.all([
     mockOwnersService.getStats(),
     mockPropertiesService.getStats(),
     mockTenantsService.getStats(),
     mockContractsService.getStats(),
     mockRemindersService.getStats(),
+    mockInquiriesService.getStats(),
+    mockMeetingsService.getStats(),
   ]);
-  
+
   return {
     owners: ownersStats,
     properties: propertiesStats,
     tenants: tenantsStats,
     contracts: contractsStats,
     reminders: remindersStats,
+    inquiries: inquiriesStats,
+    meetings: meetingsStats,
     mode: 'demo',
     timestamp: new Date().toISOString(),
   };

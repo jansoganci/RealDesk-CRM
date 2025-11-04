@@ -26,8 +26,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [demoMode, setDemoMode] = useState(false);
-  const [language, setLanguageState] = useState('en');
-  const [currency, setCurrencyState] = useState('USD');
+  const [language, setLanguageState] = useState('tr');
+  const [currency, setCurrencyState] = useState('TRY');
 
   // Sync i18n with language state changes
   useEffect(() => {
@@ -49,8 +49,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .eq('user_id', session.user.id)
           .single();
         if (preferences) {
-          setLanguageState(preferences.language || 'en');
-          setCurrencyState(preferences.currency || 'USD');
+          setLanguageState(preferences.language || 'tr');
+          setCurrencyState(preferences.currency || 'TRY');
         }
       }
       setLoading(false);
@@ -62,8 +62,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       setSession(session);
       setUser(session?.user ?? null);
       if (!session) {
-        setLanguageState('en');
-        setCurrencyState('USD');
+        setLanguageState('tr');
+        setCurrencyState('TRY');
       }
       setLoading(false);
     });
@@ -73,6 +73,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const updateUserPreferences = async (prefs: { language?: string; currency?: string }) => {
     if (!user) return;
+
+    // Skip database update in demo mode - only update local state
+    if (demoMode) {
+      return;
+    }
 
     // First, try to update an existing row
     const { data, error } = await supabase

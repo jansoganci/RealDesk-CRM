@@ -131,7 +131,11 @@ class ContractsService {
       }
       
       // After status update, refetch the contract to get the latest data
-      return this.getById(id);
+      const updatedContract = await this.getById(id);
+      if (!updatedContract) {
+        throw new Error(`Contract with id ${id} not found after update`);
+      }
+      return updatedContract;
     }
     
     // For non-status updates, use regular updateRow

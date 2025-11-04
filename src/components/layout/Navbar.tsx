@@ -5,7 +5,7 @@ import { Badge } from '../ui/badge';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { remindersService } from '../../lib/serviceProxy';
+import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -18,11 +18,12 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
   const { t, i18n } = useTranslation('navigation');
   const { language, setLanguage, currency, setCurrency } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
+  const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
-    loadReminderCount();
-    const interval = setInterval(loadReminderCount, 60000);
+    loadCounts();
+    const interval = setInterval(loadCounts, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -34,12 +35,16 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
     setCurrency(cur);
   };
 
-  const loadReminderCount = async () => {
+  const loadCounts = async () => {
     try {
-      const reminders = await remindersService.getActiveReminders();
+      const [reminders, unreadMatches] = await Promise.all([
+        remindersService.getActiveReminders(),
+        inquiriesService.getUnreadMatchesCount(),
+      ]);
       setReminderCount(reminders.length);
+      setUnreadMatchesCount(unreadMatches);
     } catch (error) {
-      console.error('Failed to load reminder count:', error);
+      console.error('Failed to load counts:', error);
     }
   };
 
@@ -96,9 +101,9 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
             onClick={() => navigate('/reminders')}
           >
             <Bell className="h-5 w-5" />
-            {reminderCount > 0 && (
+            {(reminderCount + unreadMatchesCount) > 0 && (
               <Badge className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white`}>
-                {reminderCount > 9 ? '9+' : reminderCount}
+                {(reminderCount + unreadMatchesCount) > 9 ? '9+' : (reminderCount + unreadMatchesCount)}
               </Badge>
             )}
           </Button>

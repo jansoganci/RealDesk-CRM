@@ -12,11 +12,13 @@ import {
   Users,
   UserCheck,
   Bell,
+  Search,
   LogOut,
-  X
+  X,
+  Calendar
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { remindersService } from '../../lib/serviceProxy';
+import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
 
 interface SidebarProps {
@@ -29,6 +31,8 @@ const navigationItems = [
   { key: 'properties', href: ROUTES.PROPERTIES, icon: Home },
   { key: 'owners', href: ROUTES.OWNERS, icon: Users },
   { key: 'tenants', href: ROUTES.TENANTS, icon: UserCheck },
+  { key: 'calendar', href: ROUTES.CALENDAR, icon: Calendar },
+  { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
 ];
 
@@ -36,19 +40,24 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { t } = useTranslation('navigation');
   const { signOut, user } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
+  const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
 
   useEffect(() => {
-    loadReminderCount();
-    const interval = setInterval(loadReminderCount, 60000);
+    loadCounts();
+    const interval = setInterval(loadCounts, 60000);
     return () => clearInterval(interval);
   }, []);
 
-  const loadReminderCount = async () => {
+  const loadCounts = async () => {
     try {
-      const reminders = await remindersService.getActiveReminders();
+      const [reminders, unreadMatches] = await Promise.all([
+        remindersService.getActiveReminders(),
+        inquiriesService.getUnreadMatchesCount(),
+      ]);
       setReminderCount(reminders.length);
+      setUnreadMatchesCount(unreadMatches);
     } catch (error) {
-      console.error('Failed to load reminder count:', error);
+      console.error('Failed to load counts:', error);
     }
   };
 
@@ -114,12 +123,25 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 <>
                   <item.icon className="h-5 w-5" />
                   <span className="flex-1">{t(item.key)}</span>
-                  {item.key === 'reminders' && reminderCount > 0 && (
-                    <Badge 
+                  {item.key === 'inquiries' && unreadMatchesCount > 0 && (
+                    <Badge
                       className={cn(
                         "ml-auto h-5 px-2 text-xs",
-                        isActive 
-                          ? `${COLORS.card.bg} ${COLORS.primary.text}` 
+                        isActive
+                          ? `${COLORS.card.bg} ${COLORS.primary.text}`
+                          : `${COLORS.primary.bg} ${COLORS.text.white}`
+                      )}
+                      aria-label={`${unreadMatchesCount} ${t('inquiries')}`}
+                    >
+                      {unreadMatchesCount > 9 ? '9+' : unreadMatchesCount}
+                    </Badge>
+                  )}
+                  {item.key === 'reminders' && reminderCount > 0 && (
+                    <Badge
+                      className={cn(
+                        "ml-auto h-5 px-2 text-xs",
+                        isActive
+                          ? `${COLORS.card.bg} ${COLORS.primary.text}`
                           : `${COLORS.danger.bg} ${COLORS.text.white}`
                       )}
                       aria-label={`${reminderCount} ${t('reminders')}`}

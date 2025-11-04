@@ -1,0 +1,61 @@
+{
+  "welcomeBack": "Tekrar hoş geldiniz",
+  "subtitle": "Bugün mülklerinizde neler olup bittiğini görün",
+  "rentIncreaseReminders": "Kira Artışı Hatırlatıcıları",
+  "contractsExpiringSoon": "Yakında Sona Erecek Sözleşmeler",
+  "quickActions": "Hızlı İşlemler",
+  "getStarted": "İlk mülkünüzü veya mal sahibinizi ekleyerek başlayın",
+  "navigationTip": "Mülkleri, mal sahiplerini, kiracıları ve sözleşmeleri yönetmek için gezinme menüsünü kullanın.",
+  "stats": {
+    "totalProperties": "Toplam Mülk",
+    "totalPropertiesDescription": "Toplam mülk sayısı",
+    "noPropertiesYet": "Henüz mülk yok",
+    "occupied": "Kirada",
+    "occupiedDescription": "Şu anda kiralık",
+    "totalOwners": "Toplam Mal Sahibi",
+    "totalOwnersDescription": "Mal sahipleri",
+    "emptyProperties": "Kiralamaya Hazır Mülkler",
+    "emptyPropertiesDescription": "Kiralamaya hazır",
+    "totalTenants": "Toplam Kiracı",
+    "totalTenantsDescription": "Toplam kiracı sayısı",
+    "unassignedTenants": "Mülke Bağlı Olmayan Kiracılar",
+    "unassignedTenantsDescription": "Ev bekleyen kiracılar",
+    "activeContracts": "Aktif Sözleşmeler",
+    "activeContractsDescription": "Mevcut kira sözleşmeleri",
+    "activeInquiries": "Aktif Talepler",
+    "activeInquiriesDescription": "Müşteri talepleri"
+  },
+  "propertiesSummary": {
+    "title": "Mülk Özeti",
+    "description": "Duruma göre dağılım",
+    "empty": "Kiralamaya Hazır",
+    "occupied": "Kirada",
+    "inactive": "Pasif"
+  },
+  "reminders": {
+    "title": "Kira Artışı Hatırlatıcıları",
+    "description": "Yaklaşan kira artışları için {{count}} hatırlatıcı",
+    "viewAll": "Tümünü Görüntüle",
+    "contractEnds": "Bitiş Tarihi",
+    "moreReminders": "Ve {{count}} hatırlatıcı daha...",
+    "reviewContracts": "Sona ermek üzere olan sözleşmeleriniz için sözleşmeler sayfasını inceleyin.",
+    "contractsExpiringDescription": "Önümüzdeki 30 gün içinde sona erecek {{count}} sözleşmeniz var"
+  },
+  "actionItems": {
+    "title": "Aksiyon Gereken Kayıtlar",
+    "description": "Dikkat edilmesi gereken eksik bilgiler",
+    "properties": {
+      "title": "Mülkler",
+      "noPhotos": "{{count}} fotoğrafsız",
+      "noLocation": "{{count}} konum bilgisi eksik"
+    },
+    "tenants": {
+      "title": "Kiracılar",
+      "noContact": "{{count}} iletişim bilgisi eksik"
+    },
+    "owners": {
+      "title": "Mal Sahipleri",
+      "noContact": "{{count}} iletişim bilgisi eksik"
+    }
+  }
+}

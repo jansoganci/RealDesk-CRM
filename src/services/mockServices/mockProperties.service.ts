@@ -34,7 +34,11 @@ class MockPropertiesService {
         owner: mockPropertyOwners.find(owner => owner.id === property.owner_id),
         photos: mockPhotosData.filter(photo => photo.property_id === property.id),
       }))
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getById(id: string): Promise<PropertyWithOwnerDetails | null> {
@@ -65,6 +69,9 @@ class MockPropertiesService {
       district: property.district ?? null,
       status: property.status ?? 'Empty',
       notes: property.notes ?? null,
+      listing_url: property.listing_url ?? null,
+      currency: property.currency ?? null,
+      rent_amount: property.rent_amount ?? null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -84,6 +91,7 @@ class MockPropertiesService {
     const updatedProperty: Property = {
       ...mockPropertiesData[index],
       ...property,
+      listing_url: property.listing_url ?? mockPropertiesData[index].listing_url ?? null,
       updated_at: new Date().toISOString(),
     };
     
@@ -117,7 +125,11 @@ class MockPropertiesService {
     
     return mockPropertiesData
       .filter(p => p.owner_id === ownerId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getTenantsByPropertyId(propertyId: string): Promise<Tenant[]> {
@@ -125,7 +137,11 @@ class MockPropertiesService {
     
     return mockTenants
       .filter(t => t.property_id === propertyId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async assignTenant(propertyId: string, _tenantId: string): Promise<void> {
@@ -161,13 +177,52 @@ class MockPropertiesService {
     };
   }
 
+  async getPropertiesWithMissingInfo() {
+    await simulateDelay();
+    
+    const missingInfo = {
+      noPhotos: 0,
+      noLocation: 0,
+      total: 0,
+    };
+
+    const propertiesWithMissingInfo = new Set<string>();
+
+    mockPropertiesData.forEach((property) => {
+      const photoCount = mockPhotosData.filter(p => p.property_id === property.id).length;
+      const hasLocation = (property.city && property.city.trim() !== '') || (property.district && property.district.trim() !== '');
+      
+      if (photoCount === 0) {
+        missingInfo.noPhotos++;
+        propertiesWithMissingInfo.add(property.id);
+      }
+      
+      if (!hasLocation) {
+        missingInfo.noLocation++;
+        propertiesWithMissingInfo.add(property.id);
+      }
+    });
+
+    missingInfo.total = propertiesWithMissingInfo.size;
+
+    return missingInfo;
+  }
+
   // Photo management methods
   async getPhotos(propertyId: string): Promise<PropertyPhoto[]> {
     await simulateDelay();
     
     return mockPhotosData
       .filter(photo => photo.property_id === propertyId)
-      .sort((a, b) => a.sort_order - b.sort_order);
+      .sort((a, b) => {
+        const orderA = a.sort_order ?? 0;
+        const orderB = b.sort_order ?? 0;
+        return orderA - orderB;
+      });
+  }
+
+  async getPhotosByPropertyId(propertyId: string): Promise<PropertyPhoto[]> {
+    return this.getPhotos(propertyId);
   }
 
   async addPhoto(photo: PropertyPhotoInsert): Promise<PropertyPhoto> {

@@ -119,6 +119,35 @@ class TenantsService {
     return stats;
   }
 
+  async getTenantsWithMissingInfo() {
+    const { data, error } = await supabase
+      .from('tenants')
+      .select('id, phone, email');
+
+    if (error) throw error;
+
+    const missingInfo = {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    };
+
+    data?.forEach((t) => {
+      const hasPhone = t.phone && t.phone.trim() !== '';
+      const hasEmail = t.email && t.email.trim() !== '';
+      
+      if (!hasPhone) missingInfo.noPhone++;
+      if (!hasEmail) missingInfo.noEmail++;
+      if (!hasPhone && !hasEmail) {
+        missingInfo.noContact++;
+        missingInfo.total++;
+      }
+    });
+
+    return missingInfo;
+  }
+
   /**
    * Validates tenant and contract data before processing
    * @private

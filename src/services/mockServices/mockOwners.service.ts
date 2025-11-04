@@ -16,9 +16,11 @@ const simulateDelay = (ms: number = 300) =>
 class MockOwnersService {
   async getAll(): Promise<PropertyOwner[]> {
     await simulateDelay();
-    return [...mockOwnersData].sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    return [...mockOwnersData].sort((a, b) => {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return dateB - dateA;
+    });
   }
 
   async getById(id: string): Promise<PropertyOwner | null> {
@@ -126,9 +128,36 @@ class MockOwnersService {
     return mockOwnersData.map(owner => ({
       ...owner,
       property_count: mockProperties.filter(p => p.owner_id === owner.id).length,
-    })).sort((a, b) => 
-      new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
-    );
+    })).sort((a, b) => {
+      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      return dateB - dateA;
+    });
+  }
+
+  async getOwnersWithMissingInfo() {
+    await simulateDelay();
+    
+    const missingInfo = {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    };
+
+    mockOwnersData.forEach((o) => {
+      const hasPhone = o.phone && o.phone.trim() !== '';
+      const hasEmail = o.email && o.email.trim() !== '';
+      
+      if (!hasPhone) missingInfo.noPhone++;
+      if (!hasEmail) missingInfo.noEmail++;
+      if (!hasPhone && !hasEmail) {
+        missingInfo.noContact++;
+        missingInfo.total++;
+      }
+    });
+
+    return missingInfo;
   }
 }
 

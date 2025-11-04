@@ -65,4 +65,33 @@ export const ownersService = {
       property_count: owner.properties?.[0]?.count || 0,
     }));
   },
+
+  async getOwnersWithMissingInfo() {
+    const { data, error } = await supabase
+      .from('property_owners')
+      .select('id, phone, email');
+
+    if (error) throw error;
+
+    const missingInfo = {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    };
+
+    data?.forEach((o) => {
+      const hasPhone = o.phone && o.phone.trim() !== '';
+      const hasEmail = o.email && o.email.trim() !== '';
+      
+      if (!hasPhone) missingInfo.noPhone++;
+      if (!hasEmail) missingInfo.noEmail++;
+      if (!hasPhone && !hasEmail) {
+        missingInfo.noContact++;
+        missingInfo.total++;
+      }
+    });
+
+    return missingInfo;
+  },
 };

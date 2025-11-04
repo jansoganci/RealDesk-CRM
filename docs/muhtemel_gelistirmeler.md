@@ -1,16 +1,6 @@
   🚨 KRİTİK EKSİKLER (Acil)
 
-  1. Lead Management System ⭐⭐⭐⭐⭐ -> emlakçıya sor.
-
-  Durum: Tamamen eksik
-  Neden önemli: Emlakçının can damarı - potansiyel müşteriler
-
-  Eklenecekler:
-  - Müşteri adayı yakalama formları
-  - Lead scoring (puan sistemi)
-  - Takip hatırlatmaları
-  - Kaynak takibi (website, tavsiye, ilan vb.)
-  - Lead → görüş → kontrat dönüşüm hunisi
+  
 
   2. Finansal Yönetim ⭐⭐⭐⭐⭐ - Türkiye'de emlakçının problemi değil.
 
@@ -41,15 +31,6 @@
   - SMS bildirimleri -> buna gerek yok.
   - Dokuman şablonları (kira sözleşmeleri, fesih vb.)
   - Kiracı/sahip portali --> bu ne demek? 
-
-  5. Marketing ve İlan Yönetimi ⭐⭐⭐⭐ -> talep gelirse
-
-  Durum: Yok
-  Gerekli:
-  - İlan oluşturma ve yayınlama
-  - Sosyal medya paylaşım otomasyonu
-  - Görüş randevu sistemi -> bu inşa edilebilir. 
-  - Sahibinden.com, Emlak Jet vb. entegrasyonu
 
   📈 ÖNEMLİ EKSİKLER (Orta Vadeli)
 

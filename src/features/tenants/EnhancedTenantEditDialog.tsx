@@ -28,6 +28,7 @@ import type {
   Contract, 
   TenantUpdate, 
   ContractUpdate,
+  ContractStatus,
 } from '../../types';
 
 // Validation Schema (same as creation dialog)
@@ -172,7 +173,7 @@ export const EnhancedTenantEditDialog = ({
         form.setValue('contract.start_date', primary.start_date || '');
         form.setValue('contract.end_date', primary.end_date || '');
         form.setValue('contract.rent_amount', primary.rent_amount);
-        form.setValue('contract.status', primary.status || 'Active');
+        form.setValue('contract.status', (primary.status as ContractStatus) || 'Active');
         form.setValue('contract.rent_increase_reminder_enabled', primary.rent_increase_reminder_enabled || false);
         form.setValue('contract.rent_increase_reminder_days', primary.rent_increase_reminder_days || 90);
         form.setValue('contract.expected_new_rent', primary.expected_new_rent);

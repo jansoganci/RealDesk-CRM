@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { cn } from '@/lib/utils';
 import { COLORS } from '@/config/colors';
 
-type IconColor = 'teal' | 'green' | 'blue' | 'orange';
+type IconColor = 'teal' | 'green' | 'blue' | 'orange' | 'yellow' | 'purple';
 
 interface StatCardProps {
   title: string;
@@ -20,6 +20,8 @@ const iconColorClasses: Record<IconColor, string> = {
   green: COLORS.dashboard.occupied.gradient,
   blue: COLORS.dashboard.tenants.gradient,
   orange: COLORS.dashboard.contracts.gradient,
+  yellow: 'bg-gradient-to-br from-yellow-500 to-yellow-600',
+  purple: 'bg-gradient-to-br from-purple-500 to-purple-600',
 };
 
 export const StatCard = React.memo(({

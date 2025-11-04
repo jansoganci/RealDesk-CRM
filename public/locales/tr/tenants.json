@@ -1,0 +1,174 @@
+{
+  "title": "Kiracılar",
+  "searchPlaceholder": "Kiracı ara...",
+  "filterPlaceholder": "Duruma göre filtrele",
+  "addTenantButton": "Kiracı ve Sözleşme Ekle",
+  "noProperty": "Mülk yok",
+  "noPropertyAssigned": "Mülke bağlı değil",
+  "status": {
+    "assigned": "Mülke Bağlı",
+    "unassigned": "Mülke Bağlı Değil"
+  },
+  "filters": {
+    "all": "Tüm Kiracılar",
+    "assigned": "Mülke Bağlı",
+    "unassigned": "Mülke Bağlı Değil"
+  },
+  "table": {
+    "name": "İsim",
+    "contact": "İletişim",
+    "property": "Mülk",
+    "status": "Durum",
+    "actions": "İşlemler"
+  },
+  "toasts": {
+    "loadError": "Kiracılar yüklenemedi",
+    "deleteSuccess": "Kiracı başarıyla silindi",
+    "deleteError": "Kiracı silinemedi",
+    "updateSuccess": "Kiracı başarıyla güncellendi",
+    "updateError": "Kiracı güncellenemedi",
+    "addSuccess": "Kiracı başarıyla eklendi",
+    "addError": "Kiracı eklenemedi",
+    "addTenantWithContractSuccess": "Kiracı {{tenantName}} ve sözleşme başarıyla oluşturuldu!"
+  },
+  "validations": {
+    "nameRequired": "İsim gereklidir",
+    "invalidEmail": "Geçersiz e-posta adresi"
+  },
+  "emptyState": {
+    "noTenantsFound": "Kiracı bulunamadı",
+    "noTenantsYet": "Henüz kiracı yok",
+    "noTenantsFoundDescription": "Aramanızı veya filtrenizi değiştirmeyi deneyin",
+    "noTenantsYetDescription": "İlk kiracınızı ekleyerek başlayın",
+    "addActionLabel": "İlk Kiracınızı ve Sözleşmenizi Ekleyin"
+  },
+  "deleteDialog": {
+    "title": "Kiracıyı Sil",
+    "description": "{{tenantName}} adlı kiracıyı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "dialog": {
+    "addTitle": "Yeni Kiracı Ekle",
+    "editTitle": "Kiracıyı Düzenle",
+    "addDescription": "Aşağıdaki kiracı ayrıntılarını doldurun.",
+    "editDescription": "Aşağıdaki kiracı bilgilerini güncelleyin.",
+    "form": {
+      "name": "Ad Soyad",
+      "namePlaceholder": "John Doe",
+      "phone": "Telefon Numarası",
+      "phonePlaceholder": "+90 555 555 5555",
+      "email": "E-posta",
+      "emailPlaceholder": "john@example.com",
+      "property": "Bağlı Mülk",
+      "propertyPlaceholder": "Bir mülk seçin (isteğe bağlı)",
+      "noProperty": "Mülk Yok (Bağlı Değil)",
+      "propertyHint": "Bir kiracıyı daha sonra bir mülke bağlayabilirsiniz",
+      "notes": "Notlar",
+      "notesPlaceholder": "Kiracı hakkında ek bilgi..."
+    },
+    "addButton": "Kiracı Ekle",
+    "updateButton": "Kiracıyı Güncelle"
+  },
+  "enhanced": {
+    "steps": {
+      "info": {
+        "title": "Kiracı Bilgileri",
+        "description": "Temel kiracı bilgileri",
+        "sectionTitle": "Kiracı Bilgileri",
+        "sectionDescription": "Yeni kiracı için temel bilgileri girin.",
+        "fields": {
+          "name": {
+            "label": "Tam Adı *",
+            "placeholder": "Ahmet Yılmaz"
+          },
+          "phone": {
+            "label": "Telefon Numarası",
+            "placeholder": "+90 555 555 5555"
+          },
+          "email": {
+            "label": "E-posta Adresi",
+            "placeholder": "ahmet@example.com"
+          },
+          "notes": {
+            "label": "Ek Notlar",
+            "placeholder": "Kiracı hakkında ek bilgiler..."
+          }
+        }
+      },
+      "contract": {
+        "title": "Mülk ve Sözleşme",
+        "description": "Mülk seçimi ve sözleşme detayları",
+        "sectionTitle": "Sözleşme Detayları",
+        "sectionDescription": "Kiralama sözleşmesi detaylarını yapılandırın ve mülk seçin.",
+        "fields": {
+          "property": {
+            "label": "Mülk *",
+            "placeholder": "Bir mülk seçin"
+          },
+          "startDate": {
+            "label": "Başlangıç Tarihi *"
+          },
+          "endDate": {
+            "label": "Bitiş Tarihi *"
+          },
+          "rentAmount": {
+            "label": "Aylık Kira Tutarı *",
+            "placeholder": "15000",
+            "currencySymbol": "₺"
+          },
+          "status": {
+            "label": "Sözleşme Durumu",
+            "placeholder": "Durum seçin",
+            "options": {
+              "active": "Aktif",
+              "inactive": "Pasif",
+              "archived": "Arşivlendi"
+            }
+          },
+          "propertyStatus": "Durum: {{status}}"
+        },
+        "loadingProperties": "Mülkler yükleniyor...",
+        "failedToLoadProperties": "Mülkler yüklenemedi"
+      },
+      "settings": {
+        "title": "Sözleşme Ayarları",
+        "description": "Hatırlatıcılar ve belge yükleme",
+        "sectionTitle": "Sözleşme Ayarları ve Yükleme",
+        "sectionDescription": "Ek sözleşme ayarlarını yapılandırın ve sözleşme PDF'ini yükleyin.",
+        "rentIncreaseReminder": {
+          "title": "Kira artışı hatırlatıcılarını etkinleştir",
+          "days": {
+            "label": "Bitiş Öncesi Hatırlatma Günleri",
+            "placeholder": "90"
+          },
+          "newRent": {
+            "label": "Beklenen Yeni Kira (₺)",
+            "placeholder": "18000"
+          },
+          "notes": {
+            "label": "Hatırlatıcı Notları",
+            "placeholder": "Kira artışı hatırlatıcıları için ek notlar..."
+          }
+        },
+        "pdfUpload": {
+          "title": "Sözleşme PDF'i (İsteğe Bağlı)",
+          "description": "İmzalı sözleşme PDF'ini kayıt tutmak için yükleyin.",
+          "chooseFile": "PDF Dosyası Seç",
+          "fileSize": "{{size}} MB",
+          "alertInvalidType": "Lütfen bir PDF dosyası seçin.",
+          "alertSizeExceeded": "Dosya boyutu 10MB'dan az olmalıdır."
+        }
+      }
+    },
+    "navigation": {
+      "back": "Geri",
+      "next": "İleri",
+      "submit": "Kiracı ve Sözleşme Oluştur",
+      "submitting": "Oluşturuluyor..."
+    },
+    "errors": {
+      "duplicateActiveContract": "Bu mülkün zaten aktif bir sözleşmesi var.",
+      "createFailed": "Kiracı ve sözleşme oluşturulamadı",
+      "endDateBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
+    }
+  }
+}

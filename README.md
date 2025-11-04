@@ -26,6 +26,7 @@ Modern, mobile-first Real Estate Customer Relationship Management (CRM) system b
 - [API & Services](#-api--services)
 - [Development](#-development)
 - [Build & Deployment](#-build--deployment)
+- [Documentation](#-documentation)
 - [Contributing](#-contributing)
 - [License](#-license)
 
@@ -424,7 +425,7 @@ properties (1) ────> (many) contracts (many) <─── (1) tenants
 
 ## 🔌 API & Services
 
-The application uses a service layer pattern:
+The application uses a service layer pattern. For complete API documentation, see [docs/API.md](./docs/API.md).
 
 ### Service Files
 
@@ -434,6 +435,7 @@ The application uses a service layer pattern:
 - `contracts.service.ts` - Contract management
 - `photos.service.ts` - Photo upload and management
 - `reminders.service.ts` - Reminder operations
+- `inquiries.service.ts` - Property inquiry management
 
 ### Service Proxy
 
@@ -446,6 +448,8 @@ The database includes custom RPC functions for complex operations:
 - `create_tenant_with_contract` - Atomic tenant and contract creation
 - Contract validation functions
 - Photo ordering atomic operations
+
+For detailed API documentation including method signatures, parameters, return types, and examples, see [docs/API.md](./docs/API.md).
 
 ## 💻 Development
 
@@ -483,22 +487,18 @@ npm run build
 
 This creates an optimized production build in the `dist` folder.
 
-### Deploy to Supabase
+### Deployment
 
-Supabase provides hosting for static sites:
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
-1. Build the application: `npm run build`
-2. Use Supabase CLI or dashboard to deploy static files
-3. Configure environment variables in Supabase dashboard
+The application can be deployed to:
 
-### Deploy to Other Platforms
-
-The built application is a static site and can be deployed to:
-
-- **Vercel** - Zero-config deployment
+- **Vercel** - Zero-config deployment (recommended)
 - **Netlify** - Automatic deployments
+- **Supabase Hosting** - Integrated with backend
 - **GitHub Pages** - Free hosting for public repos
 - **AWS S3 + CloudFront** - Scalable static hosting
+- **Docker** - Containerized deployment
 - **Any static hosting service**
 
 ### Environment Variables for Production
@@ -510,27 +510,52 @@ VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_anon_key
 ```
 
+For platform-specific deployment guides, troubleshooting, and best practices, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+## 📚 Documentation
+
+Comprehensive documentation is available for developers:
+
+- **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
+- **[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Technical architecture and system design
+- **[docs/API.md](./docs/API.md)** - Complete API documentation for all services
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment guides for various platforms
+- **[docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)** - Contribution guidelines and development workflow
+- **[docs/design_rulebook.md](./docs/design_rulebook.md)** - Design system and UI guidelines
+
+### Quick Links
+
+- **Getting Started**: See [Installation](#installation) section
+- **Architecture**: See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
+- **API Reference**: See [docs/API.md](./docs/API.md)
+- **Deploying**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
+- **Contributing**: See [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+
 ## 🤝 Contributing
 
-Contributions are welcome! Please follow these steps:
+Contributions are welcome! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on:
+
+- Code of conduct
+- Development workflow
+- Coding standards
+- Commit guidelines
+- Pull request process
+
+### Quick Start for Contributors
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+2. Read [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+3. Create a feature branch (`git checkout -b feature/amazing-feature`)
+4. Make your changes following our coding standards
+5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
+6. Push to the branch (`git push origin feature/amazing-feature`)
+7. Open a Pull Request
 
-### Development Guidelines
-
-- Follow TypeScript best practices
-- Write meaningful commit messages
-- Add tests for new features
-- Update documentation as needed
-- Follow the existing code style
+For detailed guidelines, see [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md).
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](./docs/LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 

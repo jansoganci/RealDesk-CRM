@@ -53,7 +53,7 @@ export const Owners = () => {
       setOwners(data);
       setFilteredOwners(data);
     } catch (error) {
-      toast.error(t('owners.toasts.loadError'));
+      toast.error(t('toasts.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -81,12 +81,12 @@ export const Owners = () => {
     try {
       setActionLoading(true);
       await ownersService.delete(ownerToDelete.id);
-      toast.success(t('owners.toasts.deleteSuccess'));
+      toast.success(t('toasts.deleteSuccess'));
       await loadOwners();
       setDeleteDialogOpen(false);
       setOwnerToDelete(null);
     } catch (error) {
-      toast.error(t('owners.toasts.deleteError'));
+      toast.error(t('toasts.deleteError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -98,16 +98,16 @@ export const Owners = () => {
       setActionLoading(true);
       if (selectedOwner) {
         await ownersService.update(selectedOwner.id, data);
-        toast.success(t('owners.toasts.updateSuccess'));
+        toast.success(t('toasts.updateSuccess'));
       } else {
         await ownersService.create(data);
-        toast.success(t('owners.toasts.addSuccess'));
+        toast.success(t('toasts.addSuccess'));
       }
       await loadOwners();
       setDialogOpen(false);
       setSelectedOwner(null);
     } catch (error) {
-      toast.error(selectedOwner ? t('owners.toasts.updateError') : t('owners.toasts.addError'));
+      toast.error(selectedOwner ? t('toasts.updateError') : t('toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -117,30 +117,30 @@ export const Owners = () => {
   return (
     <>
       <ListPageTemplate
-        title={t('owners.title')}
+        title={t('title')}
         items={filteredOwners}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder={t('owners.searchPlaceholder')}
+        searchPlaceholder={t('searchPlaceholder')}
         onAdd={handleAddOwner}
-        addButtonLabel={t('owners.addOwnerButton')}
+        addButtonLabel={t('addOwnerButton')}
         emptyState={{
-          title: searchQuery ? t('owners.emptyState.noOwnersFound') : t('owners.emptyState.noOwnersYet'),
+          title: searchQuery ? t('emptyState.noOwnersFound') : t('emptyState.noOwnersYet'),
           description: searchQuery
-            ? t('owners.emptyState.noOwnersFoundDescription')
-            : t('owners.emptyState.noOwnersYetDescription'),
+            ? t('emptyState.noOwnersFoundDescription')
+            : t('emptyState.noOwnersYetDescription'),
           icon: <User className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('owners.emptyState.addActionLabel'),
+          actionLabel: t('emptyState.addActionLabel'),
           showAction: !searchQuery,
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>{t('owners.table.name')}</TableHead>
-            <TableHead>{t('owners.table.contact')}</TableHead>
-            <TableHead>{t('owners.table.address')}</TableHead>
-            <TableHead className="text-center">{t('owners.table.properties')}</TableHead>
-            <TableHead className="text-right">{t('owners.table.actions')}</TableHead>
+            <TableHead>{t('table.name')}</TableHead>
+            <TableHead>{t('table.contact')}</TableHead>
+            <TableHead>{t('table.address')}</TableHead>
+            <TableHead className="text-center">{t('table.properties')}</TableHead>
+            <TableHead className="text-right">{t('table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(owner) => (
@@ -190,7 +190,7 @@ export const Owners = () => {
                 {owner.name}
               </span>
               <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
-                {t('owners.propertyCount', { count: owner.property_count || 0 })}
+                {t('propertyCount', { count: owner.property_count || 0 })}
               </span>
             </div>
 
@@ -230,8 +230,8 @@ export const Owners = () => {
         )}
         deleteDialog={{
           open: deleteDialogOpen,
-          title: t('owners.deleteDialog.title'),
-          description: t('owners.deleteDialog.description', { ownerName: ownerToDelete?.name }),
+          title: t('deleteDialog.title'),
+          description: t('deleteDialog.description', { ownerName: ownerToDelete?.name }),
           onConfirm: handleDeleteConfirm,
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,

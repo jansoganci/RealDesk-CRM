@@ -1,9 +1,12 @@
+
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 import { useAuth } from '../../contexts/AuthContext';
+import { useMeetingNotifications } from '@/hooks/useMeetingNotifications';
 import { Button } from '../ui/button';
+
 import { X, TestTube } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 
@@ -16,6 +19,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { demoMode, exitDemoMode } = useAuth();
   const { t } = useTranslation('common');
+  useMeetingNotifications(); // Initialize meeting notifications
 
   return (
     <div className={`min-h-screen ${COLORS.background.bgGradient}`}>

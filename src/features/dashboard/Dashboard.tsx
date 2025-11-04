@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { StatCard } from '../../components/dashboard/StatCard';
-import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign } from 'lucide-react';
-import { propertiesService, ownersService, tenantsService, contractsService, remindersService } from '../../lib/serviceProxy';
+import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign, UserCheck, Package, UserPlus, Search } from 'lucide-react';
+import { propertiesService, ownersService, tenantsService, contractsService, remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { ReminderWithDetails } from '../../lib/serviceProxy';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
@@ -17,10 +17,33 @@ export const Dashboard = () => {
   const [stats, setStats] = useState({
     totalProperties: 0,
     occupied: 0,
+    empty: 0,
+    inactive: 0,
     totalOwners: 0,
     totalTenants: 0,
+    unassignedTenants: 0,
     activeContracts: 0,
     expiringSoon: 0,
+    activeInquiries: 0,
+  });
+  const [actionItems, setActionItems] = useState({
+    propertiesMissingInfo: {
+      noPhotos: 0,
+      noLocation: 0,
+      total: 0,
+    },
+    tenantsMissingInfo: {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    },
+    ownersMissingInfo: {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    },
   });
   const [reminders, setReminders] = useState<ReminderWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
@@ -34,22 +57,47 @@ export const Dashboard = () => {
   const loadStats = async () => {
     try {
       setLoading(true);
-      const [propertyStats, owners, tenantStats, contractStats, upcomingReminders] = await Promise.all([
+      const [
+        propertyStats,
+        owners,
+        tenantStats,
+        contractStats,
+        upcomingReminders,
+        propertiesMissingInfo,
+        tenantsMissingInfo,
+        ownersMissingInfo,
+        inquiryStats,
+      ] = await Promise.all([
         propertiesService.getStats(),
         ownersService.getAll(),
         tenantsService.getStats(),
         contractsService.getStats(),
         remindersService.getUpcomingReminders(60),
+        propertiesService.getPropertiesWithMissingInfo(),
+        tenantsService.getTenantsWithMissingInfo(),
+        ownersService.getOwnersWithMissingInfo(),
+        inquiriesService.getStats(),
       ]);
 
       setStats({
         totalProperties: propertyStats.total,
         occupied: propertyStats.occupied,
+        empty: propertyStats.empty,
+        inactive: propertyStats.inactive,
         totalOwners: owners.length,
         totalTenants: tenantStats.total,
+        unassignedTenants: tenantStats.unassigned,
         activeContracts: contractStats.active,
         expiringSoon: contractStats.expiringSoon,
+        activeInquiries: inquiryStats.active,
       });
+
+      setActionItems({
+        propertiesMissingInfo,
+        tenantsMissingInfo,
+        ownersMissingInfo,
+      });
+
       setReminders(upcomingReminders);
     } catch (error) {
       console.error('Failed to load dashboard stats:', error);
@@ -66,7 +114,7 @@ export const Dashboard = () => {
           <p className={`${COLORS.gray.text600} mt-1`}>{t('subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           <StatCard
             title={t('stats.totalProperties')}
             value={stats.totalProperties}
@@ -86,11 +134,38 @@ export const Dashboard = () => {
           />
 
           <StatCard
+            title={t('stats.totalOwners')}
+            value={stats.totalOwners}
+            description={t('stats.totalOwnersDescription')}
+            icon={<UserCheck className={`h-4 w-4 ${COLORS.text.white}`} />}
+            iconColor="teal"
+            loading={loading}
+          />
+
+          <StatCard
+            title={t('stats.emptyProperties')}
+            value={stats.empty}
+            description={t('stats.emptyPropertiesDescription')}
+            icon={<Package className={`h-4 w-4 ${COLORS.text.white}`} />}
+            iconColor="yellow"
+            loading={loading}
+          />
+
+          <StatCard
             title={t('stats.totalTenants')}
             value={stats.totalTenants}
             description={t('stats.totalTenantsDescription')}
             icon={<Users className={`h-4 w-4 ${COLORS.text.white}`} />}
             iconColor="blue"
+            loading={loading}
+          />
+
+          <StatCard
+            title={t('stats.unassignedTenants')}
+            value={stats.unassignedTenants}
+            description={t('stats.unassignedTenantsDescription')}
+            icon={<UserPlus className={`h-4 w-4 ${COLORS.text.white}`} />}
+            iconColor="purple"
             loading={loading}
           />
 
@@ -102,7 +177,45 @@ export const Dashboard = () => {
             iconColor="orange"
             loading={loading}
           />
+
+          <StatCard
+            title={t('stats.activeInquiries')}
+            value={stats.activeInquiries}
+            description={t('stats.activeInquiriesDescription')}
+            icon={<Search className={`h-4 w-4 ${COLORS.text.white}`} />}
+            iconColor="blue"
+            loading={loading}
+          />
         </div>
+
+        <Card className={`shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
+          <CardHeader>
+            <CardTitle>{t('propertiesSummary.title')}</CardTitle>
+            <CardDescription>{t('propertiesSummary.description')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex justify-between items-center">
+                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.empty')}</span>
+                <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white}`}>
+                  {loading ? '-' : stats.empty}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.occupied')}</span>
+                <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white}`}>
+                  {loading ? '-' : stats.occupied}
+                </Badge>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.inactive')}</span>
+                <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white}`}>
+                  {loading ? '-' : stats.inactive}
+                </Badge>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {reminders.length > 0 && (
           <Card className={`shadow-lg ${COLORS.warning.border} ${COLORS.warning.bgGradientBr} backdrop-blur-sm`}>
@@ -191,6 +304,69 @@ export const Dashboard = () => {
             </CardHeader>
             <CardContent>
               <p className={`text-sm ${COLORS.warning.textDark}`}>{t('reminders.reviewContracts')}</p>
+            </CardContent>
+          </Card>
+        )}
+
+        {(actionItems.propertiesMissingInfo.total > 0 ||
+          actionItems.tenantsMissingInfo.total > 0 ||
+          actionItems.ownersMissingInfo.total > 0) && (
+          <Card className={`shadow-lg ${COLORS.warning.border} ${COLORS.warning.bgLight}/50 backdrop-blur-sm`}>
+            <CardHeader>
+              <div className="flex items-center gap-2">
+                <AlertCircle className={`h-5 w-5 ${COLORS.warning.text}`} />
+                <CardTitle className={COLORS.warning.textDarker}>{t('actionItems.title')}</CardTitle>
+              </div>
+              <CardDescription className={COLORS.warning.textDark}>
+                {t('actionItems.description')}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {actionItems.propertiesMissingInfo.total > 0 && (
+                <div>
+                  <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.properties.title')}</p>
+                  <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+                    {actionItems.propertiesMissingInfo.noPhotos > 0 && (
+                      <li className="flex items-center gap-2">
+                        <span>•</span>
+                        <span>{t('actionItems.properties.noPhotos', { count: actionItems.propertiesMissingInfo.noPhotos })}</span>
+                      </li>
+                    )}
+                    {actionItems.propertiesMissingInfo.noLocation > 0 && (
+                      <li className="flex items-center gap-2">
+                        <span>•</span>
+                        <span>{t('actionItems.properties.noLocation', { count: actionItems.propertiesMissingInfo.noLocation })}</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              {actionItems.tenantsMissingInfo.total > 0 && (
+                <div>
+                  <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.tenants.title')}</p>
+                  <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+                    {actionItems.tenantsMissingInfo.noContact > 0 && (
+                      <li className="flex items-center gap-2">
+                        <span>•</span>
+                        <span>{t('actionItems.tenants.noContact', { count: actionItems.tenantsMissingInfo.noContact })}</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
+              {actionItems.ownersMissingInfo.total > 0 && (
+                <div>
+                  <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.owners.title')}</p>
+                  <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+                    {actionItems.ownersMissingInfo.noContact > 0 && (
+                      <li className="flex items-center gap-2">
+                        <span>•</span>
+                        <span>{t('actionItems.owners.noContact', { count: actionItems.ownersMissingInfo.noContact })}</span>
+                      </li>
+                    )}
+                  </ul>
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

@@ -1,5 +1,7 @@
+
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
 import { TenantDialog } from './TenantDialog';
@@ -8,7 +10,8 @@ import { EnhancedTenantEditDialog } from './EnhancedTenantEditDialog';
 import { tenantsService } from '../../lib/serviceProxy';
 import { TenantWithProperty, TenantWithContractResult } from '../../types';
 import { toast } from 'sonner';
-import { Phone, Mail, Building2, UserX, Users } from 'lucide-react';
+import { Phone, Mail, Building2, UserX, Users, CalendarPlus } from 'lucide-react';
+
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -18,6 +21,7 @@ import { getTenantSchema } from './tenantSchema';
 
 export const Tenants = () => {
   const { t } = useTranslation(['tenants', 'common']);
+  const navigate = useNavigate();
   const tenantSchema = getTenantSchema(t);
   type TenantFormData = z.infer<typeof tenantSchema>;
 
@@ -72,7 +76,7 @@ export const Tenants = () => {
       setTenants(data);
       setFilteredTenants(data);
     } catch (error) {
-      toast.error(t('tenants.toasts.loadError'));
+      toast.error(t('toasts.loadError'));
       console.error(error);
     } finally {
       setLoading(false);
@@ -100,12 +104,12 @@ export const Tenants = () => {
     try {
       setActionLoading(true);
       await tenantsService.delete(tenantToDelete.id);
-      toast.success(t('tenants.toasts.deleteSuccess'));
+      toast.success(t('toasts.deleteSuccess'));
       await loadTenants();
       setDeleteDialogOpen(false);
       setTenantToDelete(null);
     } catch (error) {
-      toast.error(t('tenants.toasts.deleteError'));
+      toast.error(t('toasts.deleteError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -117,16 +121,16 @@ export const Tenants = () => {
       setActionLoading(true);
       if (selectedTenant) {
         await tenantsService.update(selectedTenant.id, data);
-        toast.success(t('tenants.toasts.updateSuccess'));
+        toast.success(t('toasts.updateSuccess'));
       } else {
         await tenantsService.create(data);
-        toast.success(t('tenants.toasts.addSuccess'));
+        toast.success(t('toasts.addSuccess'));
       }
       await loadTenants();
       setDialogOpen(false);
       setSelectedTenant(null);
     } catch (error) {
-      toast.error(selectedTenant ? t('tenants.toasts.updateError') : t('tenants.toasts.addError'));
+      toast.error(selectedTenant ? t('toasts.updateError') : t('toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -134,7 +138,7 @@ export const Tenants = () => {
   };
 
   const handleEnhancedSubmit = async (result: TenantWithContractResult) => {
-    toast.success(t('tenants.toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
+    toast.success(t('toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
     await loadTenants();
     setEnhancedDialogOpen(false);
   };
@@ -145,48 +149,52 @@ export const Tenants = () => {
     setSelectedTenant(null);
   };
 
+  const handleScheduleMeeting = (tenant: TenantWithProperty) => {
+    navigate(`/calendar?open_add_meeting=true&tenant_id=${tenant.id}`);
+  };
+
   const getAssignmentBadge = (tenant: TenantWithProperty) => {
     if (tenant.property_id) {
-      return <Badge className={getStatusBadgeClasses('assigned')}>{t('tenants.status.assigned')}</Badge>;
+      return <Badge className={getStatusBadgeClasses('assigned')}>{t('status.assigned')}</Badge>;
     }
-    return <Badge className={getStatusBadgeClasses('unassigned')}>{t('tenants.status.unassigned')}</Badge>;
+    return <Badge className={getStatusBadgeClasses('unassigned')}>{t('status.unassigned')}</Badge>;
   };
 
   return (
     <>
       <ListPageTemplate
-        title={t('tenants.title')}
+        title={t('title')}
         items={filteredTenants}
         loading={loading}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
-        searchPlaceholder={t('tenants.searchPlaceholder')}
+        searchPlaceholder={t('searchPlaceholder')}
         filterValue={assignmentFilter}
         onFilterChange={setAssignmentFilter}
         filterOptions={[
-          { value: 'all', label: t('tenants.filters.all') },
-          { value: 'assigned', label: t('tenants.filters.assigned') },
-          { value: 'unassigned', label: t('tenants.filters.unassigned') },
+          { value: 'all', label: t('filters.all') },
+          { value: 'assigned', label: t('filters.assigned') },
+          { value: 'unassigned', label: t('filters.unassigned') },
         ]}
-        filterPlaceholder={t('tenants.filterPlaceholder')}
+        filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddTenant}
-        addButtonLabel={t('tenants.addTenantButton')}
+        addButtonLabel={t('addTenantButton')}
         emptyState={{
-          title: searchQuery || assignmentFilter !== 'all' ? t('tenants.emptyState.noTenantsFound') : t('tenants.emptyState.noTenantsYet'),
+          title: searchQuery || assignmentFilter !== 'all' ? t('emptyState.noTenantsFound') : t('emptyState.noTenantsYet'),
           description: searchQuery || assignmentFilter !== 'all'
-            ? t('tenants.emptyState.noTenantsFoundDescription')
-            : t('tenants.emptyState.noTenantsYetDescription'),
+            ? t('emptyState.noTenantsFoundDescription')
+            : t('emptyState.noTenantsYetDescription'),
           icon: <Users className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('tenants.emptyState.addActionLabel'),
+          actionLabel: t('emptyState.addActionLabel'),
           showAction: !searchQuery && assignmentFilter === 'all',
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>{t('tenants.table.name')}</TableHead>
-            <TableHead>{t('tenants.table.contact')}</TableHead>
-            <TableHead>{t('tenants.table.property')}</TableHead>
-            <TableHead>{t('tenants.table.status')}</TableHead>
-            <TableHead className="text-right">{t('tenants.table.actions')}</TableHead>
+            <TableHead>{t('table.name')}</TableHead>
+            <TableHead>{t('table.contact')}</TableHead>
+            <TableHead>{t('table.property')}</TableHead>
+            <TableHead>{t('table.status')}</TableHead>
+            <TableHead className="text-right">{t('table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(tenant) => (
@@ -229,20 +237,25 @@ export const Tenants = () => {
               ) : (
                 <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
                   <UserX className="h-3 w-3" />
-                  <span>{t('tenants.noProperty')}</span>
+                  <span>{t('noProperty')}</span>
                 </div>
               )}
             </TableCell>
             <TableCell>
               {getAssignmentBadge(tenant)}
             </TableCell>
-            <TableCell className="text-right">
               <TableActionButtons
                 onEdit={() => handleEditTenant(tenant)}
                 onDelete={() => handleDeleteClick(tenant)}
                 showView={false}
+                customActions={[
+                  {
+                    icon: <CalendarPlus className="h-4 w-4" />,
+                    tooltip: t('scheduleMeeting'),
+                    onClick: () => handleScheduleMeeting(tenant),
+                  },
+                ]}
               />
-            </TableCell>
           </TableRow>
         )}
         renderCardContent={(tenant) => (
@@ -288,7 +301,7 @@ export const Tenants = () => {
               ) : (
                 <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
                   <UserX className="h-4 w-4" />
-                  <span>{t('tenants.noPropertyAssigned')}</span>
+                  <span>{t('noPropertyAssigned')}</span>
                 </div>
               )}
             </div>
@@ -299,14 +312,21 @@ export const Tenants = () => {
                 onEdit={() => handleEditTenant(tenant)}
                 onDelete={() => handleDeleteClick(tenant)}
                 showView={false}
+                customActions={[
+                  {
+                    icon: <CalendarPlus className="h-4 w-4" />,
+                    tooltip: t('scheduleMeeting'),
+                    onClick: () => handleScheduleMeeting(tenant),
+                  },
+                ]}
               />
             </div>
           </div>
         )}
         deleteDialog={{
           open: deleteDialogOpen,
-          title: t('tenants.deleteDialog.title'),
-          description: t('tenants.deleteDialog.description', { tenantName: tenantToDelete?.name }),
+          title: t('deleteDialog.title'),
+          description: t('deleteDialog.description', { tenantName: tenantToDelete?.name }),
           onConfirm: handleDeleteConfirm,
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,

@@ -35,26 +35,15 @@ import {
   AlertDialogTitle,
 } from '../../components/ui/alert-dialog';
 
-interface Reminder extends ReminderWithDetails {
-  contract_id: string;
-  current_rent?: number;
-  property?: {
-    title?: string;
-    [key: string]: any;
-  };
-  end_date?: string | Date;
-  reminder_date?: string | Date;
-  notes?: string;
-  expected_new_rent?: number;
-  days_until_end?: number;
-}
+// ReminderWithDetails already extends Contract and has all needed fields
+// Use ReminderWithDetails directly instead of creating a conflicting interface
 
 export const Reminders = () => {
-  const [reminders, setReminders] = useState<Reminder[]>([]);
+  const [reminders, setReminders] = useState<ReminderWithDetails[]>([]);
   const [loading, setLoading] = useState(true);
   const [errorKey, setErrorKey] = useState<string | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
-  const [selectedReminder, setSelectedReminder] = useState<Reminder | null>(null);
+  const [selectedReminder, setSelectedReminder] = useState<ReminderWithDetails | null>(null);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const { t } = useTranslation(['reminders', 'common']);
 
@@ -71,7 +60,7 @@ export const Reminders = () => {
     } catch (error) {
       console.error('Failed to load reminders:', error);
       setErrorKey('errors.loadDetailed');
-      toast.error(t('reminders.toasts.loadFailed'));
+      toast.error(t('toasts.loadFailed'));
     } finally {
       setLoading(false);
     }
@@ -81,11 +70,11 @@ export const Reminders = () => {
     try {
       setActionLoading(contractId);
       await remindersService.markAsContacted(contractId);
-      toast.success(t('reminders.toasts.markedContacted'));
+      toast.success(t('toasts.markedContacted'));
       loadReminders();
     } catch (error) {
       console.error('Failed to mark as contacted:', error);
-      toast.error(t('reminders.toasts.updateFailed'));
+      toast.error(t('toasts.updateFailed'));
     } finally {
       setActionLoading(null);
       setShowContactDialog(false);
@@ -94,35 +83,35 @@ export const Reminders = () => {
 
   const { overdue: overdueReminders, upcoming: upcomingReminders, scheduled: scheduledReminders, expired: expiredContracts } = remindersService.categorizeReminders(reminders);
 
-  const getReminderBadge = (reminder: Reminder) => {
+  const getReminderBadge = (reminder: ReminderWithDetails) => {
     const urgency = remindersService.getReminderUrgencyCategory(reminder.days_until_end);
     const days = reminder.days_until_end ?? 0;
     
     switch (urgency) {
       case 'expired':
-        return <Badge variant="destructive">{t('reminders.badges.contractEnded')}</Badge>;
+        return <Badge variant="destructive">{t('badges.contractEnded')}</Badge>;
       case 'urgent':
         return (
           <Badge className={COLORS.reminders.overdue}>
-            {t('reminders.badges.urgent', { days })}
+            {t('badges.urgent', { days })}
           </Badge>
         );
       case 'soon':
         return (
           <Badge className={COLORS.warning.dark}>
-            {t('reminders.badges.soon', { days })}
+            {t('badges.soon', { days })}
           </Badge>
         );
       case 'upcoming':
         return (
           <Badge className={COLORS.reminders.upcoming}>
-            {t('reminders.badges.upcoming', { days })}
+            {t('badges.upcoming', { days })}
           </Badge>
         );
     }
   };
 
-  const ReminderCard = ({ reminder }: { reminder: Reminder }) => {
+  const ReminderCard = ({ reminder }: { reminder: ReminderWithDetails }) => {
     const property = reminder.property;
     const owner = property?.owner;
     const tenant = reminder.tenant;
@@ -138,12 +127,12 @@ export const Reminders = () => {
             <div className="space-y-1 flex-1">
               <CardTitle className="text-lg flex items-center gap-2">
                 <Home className={`h-5 w-5 ${COLORS.primary.text}`} />
-                {property?.address || t('reminders.card.unknownProperty')}
+                {property?.address || t('card.unknownProperty')}
               </CardTitle>
               <CardDescription className="flex items-center gap-2 text-sm">
                 <User className="h-4 w-4" />
-                {t('reminders.card.tenant', {
-                  name: tenant?.name ?? t('reminders.card.unknownTenant'),
+                {t('card.tenant', {
+                  name: tenant?.name ?? t('card.unknownTenant'),
                 })}
               </CardDescription>
             </div>
@@ -156,36 +145,36 @@ export const Reminders = () => {
             <div>
               <p className={`${COLORS.muted.textLight} flex items-center gap-1`}>
                 <Calendar className="h-4 w-4" />
-                {t('reminders.card.contractEndDate')}
+                {t('card.contractEndDate')}
               </p>
-              <p className="font-medium">{format(new Date(reminder.end_date), 'MMM dd, yyyy')}</p>
+              <p className="font-medium">{reminder.end_date ? format(new Date(reminder.end_date), 'MMM dd, yyyy') : t('card.noDate')}</p>
             </div>
             <div>
               <p className={`${COLORS.muted.textLight} flex items-center gap-1`}>
                 <Bell className="h-4 w-4" />
-                {t('reminders.card.reminderDate')}
+                {t('card.reminderDate')}
               </p>
               <p className="font-medium">
                 {reminder.reminder_date
                   ? format(new Date(reminder.reminder_date), 'MMM dd, yyyy')
-                  : t('reminders.card.noReminderDate')}
+                  : t('card.noReminderDate')}
               </p>
             </div>
             <div>
               <p className={`${COLORS.muted.textLight} flex items-center gap-1`}>
                 <DollarSign className="h-4 w-4" />
-                {t('reminders.card.currentRent')}
+                {t('card.currentRent')}
               </p>
-              <p className="font-medium">{t('reminders.card.currency', { value: rentAmountDisplay })}</p>
+              <p className="font-medium">{t('card.currency', { value: rentAmountDisplay })}</p>
             </div>
             {expectedRentDisplay && (
               <div>
                 <p className={`${COLORS.muted.textLight} flex items-center gap-1`}>
                   <DollarSign className="h-4 w-4" />
-                  {t('reminders.card.expectedRent')}
+                  {t('card.expectedRent')}
                 </p>
                 <p className={`font-medium ${COLORS.success.text}`}>
-                  {t('reminders.card.currency', { value: expectedRentDisplay })}
+                  {t('card.currency', { value: expectedRentDisplay })}
                 </p>
               </div>
             )}
@@ -193,7 +182,7 @@ export const Reminders = () => {
 
           {owner && (
             <div className="border-t pt-4">
-              <p className="text-sm font-semibold mb-2">{t('reminders.card.ownerContact')}</p>
+              <p className="text-sm font-semibold mb-2">{t('card.ownerContact')}</p>
               <div className="space-y-1 text-sm">
                 <p className="flex items-center gap-2">
                   <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
@@ -223,7 +212,7 @@ export const Reminders = () => {
             <div className="border-t pt-4">
               <p className="text-sm font-semibold mb-1 flex items-center gap-1">
                 <FileText className="h-4 w-4" />
-                {t('reminders.card.notes')}
+                {t('card.notes')}
               </p>
               <p className={`text-sm ${COLORS.gray.text600}`}>{reminder.reminder_notes}</p>
             </div>
@@ -239,7 +228,7 @@ export const Reminders = () => {
               className={`flex-1 ${COLORS.success.bgGradient} ${COLORS.success.bgGradientHover}`}
             >
               <Check className="h-4 w-4 mr-2" />
-              {actionLoading === reminder.id ? t('common.loading') : t('reminders.actions.markContacted')}
+              {actionLoading === reminder.id ? t('loading', { ns: 'common' }) : t('actions.markContacted')}
             </Button>
           </div>
         </CardContent>
@@ -248,7 +237,7 @@ export const Reminders = () => {
   };
 
   const LoadingSkeleton = () => (
-    <MainLayout title={t('reminders.pageTitle')}>
+    <MainLayout title={t('pageTitle')}>
       <PageContainer>
         <div className="space-y-4">
           <div className="grid w-full grid-cols-4 max-w-2xl">
@@ -293,18 +282,18 @@ export const Reminders = () => {
 
   if (errorKey) {
     return (
-      <MainLayout title={t('reminders.pageTitle')}>
+      <MainLayout title={t('pageTitle')}>
         <PageContainer>
           <div className="flex flex-col items-center justify-center h-96 space-y-4">
             <AlertCircle className={`h-16 w-16 ${COLORS.danger.text}`} />
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">{t('reminders.errors.title')}</h3>
+              <h3 className="text-lg font-semibold mb-2">{t('errors.title')}</h3>
               <p className={`text-sm ${COLORS.muted.textLight} mb-4`}>
                 {t(errorKey)}
               </p>
               <Button onClick={loadReminders} variant="outline">
                 <RefreshCw className="h-4 w-4 mr-2" />
-                {t('reminders.actions.tryAgain')}
+                {t('actions.tryAgain')}
               </Button>
             </div>
           </div>
@@ -314,12 +303,12 @@ export const Reminders = () => {
   }
 
   return (
-    <MainLayout title={t('reminders.pageTitle')}>
+    <MainLayout title={t('pageTitle')}>
       <PageContainer>
         {reminders.length === 0 ? (
           <EmptyState
-            title={t('reminders.empty.globalTitle')}
-            description={t('reminders.empty.globalDescription')}
+            title={t('empty.globalTitle')}
+            description={t('empty.globalDescription')}
             icon={<Bell className={`h-16 w-16 ${COLORS.muted.text}`} />}
             showAction={false}
           />
@@ -327,25 +316,25 @@ export const Reminders = () => {
           <Tabs defaultValue={overdueReminders.length > 0 ? "overdue" : upcomingReminders.length > 0 ? "upcoming" : "scheduled"} className="space-y-4">
           <TabsList className="grid w-full grid-cols-4 max-w-2xl">
             <TabsTrigger value="overdue" className="relative">
-              {t('reminders.tabs.overdue')}
+              {t('tabs.overdue')}
               {overdueReminders.length > 0 && (
                 <Badge className={`ml-2 ${COLORS.reminders.overdue} ${COLORS.text.white}`}>{overdueReminders.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger value="upcoming">
-              {t('reminders.tabs.upcoming')}
+              {t('tabs.upcoming')}
               {upcomingReminders.length > 0 && (
                 <Badge className={`ml-2 ${COLORS.reminders.upcoming} ${COLORS.text.white}`}>{upcomingReminders.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger value="scheduled">
-              {t('reminders.tabs.scheduled')}
+              {t('tabs.scheduled')}
               {scheduledReminders.length > 0 && (
                 <Badge className={`ml-2 ${COLORS.reminders.scheduled} ${COLORS.text.white}`}>{scheduledReminders.length}</Badge>
               )}
             </TabsTrigger>
             <TabsTrigger value="expired">
-              {t('reminders.tabs.expired')}
+              {t('tabs.expired')}
               {expiredContracts.length > 0 && (
                 <Badge className={`ml-2 ${COLORS.reminders.expired} ${COLORS.text.white}`}>{expiredContracts.length}</Badge>
               )}
@@ -355,8 +344,8 @@ export const Reminders = () => {
           <TabsContent value="overdue" className="space-y-4">
             {overdueReminders.length === 0 ? (
               <EmptyState
-                title={t('reminders.empty.allClear')}
-                description={t('reminders.empty.overdueDescription')}
+                title={t('empty.allClear')}
+                description={t('empty.overdueDescription')}
                 icon={<Check className={`h-12 w-12 ${COLORS.success.text}`} />}
                 showAction={false}
               />
@@ -367,10 +356,10 @@ export const Reminders = () => {
                     <AlertCircle className={`h-5 w-5 ${COLORS.danger.text} mt-0.5`} />
                     <div>
                       <h3 className={`font-semibold ${COLORS.danger.textDark}`}>
-                        {t('reminders.sections.overdue.calloutTitle')}
+                        {t('sections.overdue.calloutTitle')}
                       </h3>
                       <p className={`text-sm ${COLORS.danger.textDark} mt-1`}>
-                        {t('reminders.sections.overdue.calloutDescription', { count: overdueReminders.length })}
+                        {t('sections.overdue.calloutDescription', { count: overdueReminders.length })}
                       </p>
                     </div>
                   </div>
@@ -387,8 +376,8 @@ export const Reminders = () => {
           <TabsContent value="upcoming" className="space-y-4">
             {upcomingReminders.length === 0 ? (
               <EmptyState
-                title={t('reminders.empty.upcoming')}
-                description={t('reminders.empty.upcomingDescription')}
+                title={t('empty.upcoming')}
+                description={t('empty.upcomingDescription')}
                 icon={<Calendar className={`h-12 w-12 ${COLORS.muted.text}`} />}
                 showAction={false}
               />
@@ -404,8 +393,8 @@ export const Reminders = () => {
           <TabsContent value="scheduled" className="space-y-4">
             {scheduledReminders.length === 0 ? (
               <EmptyState
-                title={t('reminders.empty.scheduled')}
-                description={t('reminders.empty.scheduledDescription')}
+                title={t('empty.scheduled')}
+                description={t('empty.scheduledDescription')}
                 icon={<Bell className={`h-12 w-12 ${COLORS.muted.text}`} />}
                 showAction={false}
               />
@@ -416,10 +405,10 @@ export const Reminders = () => {
                     <Bell className={`h-5 w-5 ${COLORS.info.text} mt-0.5`} />
                     <div>
                       <h3 className={`font-semibold ${COLORS.gray.text900}`}>
-                        {t('reminders.sections.scheduled.calloutTitle')}
+                        {t('sections.scheduled.calloutTitle')}
                       </h3>
                       <p className={`text-sm ${COLORS.gray.text700} mt-1`}>
-                        {t('reminders.sections.scheduled.calloutDescription')}
+                        {t('sections.scheduled.calloutDescription')}
                       </p>
                     </div>
                   </div>
@@ -436,8 +425,8 @@ export const Reminders = () => {
           <TabsContent value="expired" className="space-y-4">
             {expiredContracts.length === 0 ? (
               <EmptyState
-                title={t('reminders.empty.expiredTitle')}
-                description={t('reminders.empty.expiredDescription')}
+                title={t('empty.expiredTitle')}
+                description={t('empty.expiredDescription')}
                 icon={<FileText className={`h-12 w-12 ${COLORS.muted.text}`} />}
                 showAction={false}
               />
@@ -448,10 +437,10 @@ export const Reminders = () => {
                     <AlertCircle className={`h-5 w-5 ${COLORS.gray.text600} mt-0.5`} />
                     <div>
                       <h3 className={`font-semibold ${COLORS.gray.text900}`}>
-                        {t('reminders.sections.expired.calloutTitle')}
+                        {t('sections.expired.calloutTitle')}
                       </h3>
                       <p className={`text-sm ${COLORS.gray.text700} mt-1`}>
-                        {t('reminders.sections.expired.calloutDescription')}
+                        {t('sections.expired.calloutDescription')}
                       </p>
                     </div>
                   </div>
@@ -470,16 +459,16 @@ export const Reminders = () => {
         <AlertDialog open={showContactDialog} onOpenChange={setShowContactDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t('reminders.dialogs.markTitle')}</AlertDialogTitle>
-            <AlertDialogDescription>{t('reminders.dialogs.markDescription')}</AlertDialogDescription>
+            <AlertDialogTitle>{t('dialogs.markTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('dialogs.markDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+            <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => selectedReminder && handleMarkAsContacted(selectedReminder.id)}
               className={`${COLORS.success.bg} hover:${COLORS.success.dark}`}
             >
-              {t('reminders.dialogs.confirm')}
+              {t('dialogs.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

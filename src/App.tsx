@@ -2,12 +2,15 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Login } from './features/auth/Login';
+import { LandingPage } from './features/landing/LandingPage';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Owners } from './features/owners/Owners';
 import { Properties } from './features/properties/Properties';
 import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
 import { Reminders } from './features/reminders/Reminders';
+import { Inquiries } from './features/inquiries/Inquiries';
+import { CalendarPage } from './features/calendar/CalendarPage';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
@@ -17,6 +20,7 @@ function App() {
     <AuthProvider>
       <BrowserRouter>
         <Routes>
+          <Route path={ROUTES.HOME} element={<LandingPage />} />
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route
             path={ROUTES.DASHBOARD}
@@ -66,7 +70,22 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path={ROUTES.HOME} element={<Navigate to={ROUTES.DASHBOARD} replace />} />
+          <Route
+            path={ROUTES.INQUIRIES}
+            element={
+              <ProtectedRoute>
+                <Inquiries />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.CALENDAR}
+            element={
+              <ProtectedRoute>
+                <CalendarPage />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
         <Toaster />
       </BrowserRouter>

@@ -20,12 +20,29 @@ export type Contract = Database['public']['Tables']['contracts']['Row'];
 export type ContractInsert = Database['public']['Tables']['contracts']['Insert'];
 export type ContractUpdate = Database['public']['Tables']['contracts']['Update'];
 
+export type PropertyInquiry = Database['public']['Tables']['property_inquiries']['Row'];
+export type PropertyInquiryInsert = Database['public']['Tables']['property_inquiries']['Insert'];
+export type PropertyInquiryUpdate = Database['public']['Tables']['property_inquiries']['Update'];
+
+export type InquiryMatch = Database['public']['Tables']['inquiry_matches']['Row'];
+export type InquiryMatchInsert = Database['public']['Tables']['inquiry_matches']['Insert'];
+export type InquiryMatchUpdate = Database['public']['Tables']['inquiry_matches']['Update'];
+
 export type PropertyStatus = 'Empty' | 'Occupied' | 'Inactive';
 export type ContractStatus = 'Active' | 'Archived' | 'Inactive';
+export type InquiryStatus = 'active' | 'matched' | 'contacted' | 'closed';
 
 export interface PropertyWithOwner extends Property {
   owner?: PropertyOwner;
   photos?: PropertyPhoto[];
+  activeTenant?: Tenant;
+  activeContract?: {
+    id: string;
+    rent_amount: number | null;
+    currency: string | null;
+    end_date: string;
+    status: ContractStatus;
+  };
 }
 
 export interface PropertyWithOwnerDetails extends Property {
@@ -61,4 +78,22 @@ export interface TenantWithContractData {
 export interface TenantWithContractResult {
   tenant: Tenant;
   contract: Contract;
+}
+
+export interface InquiryWithMatches extends PropertyInquiry {
+  matches?: InquiryMatchWithProperty[];
+}
+
+export interface InquiryMatchWithProperty extends InquiryMatch {
+  property?: Property;
+}
+
+export type Meeting = Database['public']['Tables']['meetings']['Row'];
+export type MeetingInsert = Database['public']['Tables']['meetings']['Insert'];
+export type MeetingUpdate = Database['public']['Tables']['meetings']['Update'];
+
+export interface MeetingWithRelations extends Meeting {
+  tenant?: Tenant;
+  property?: Property;
+  owner?: PropertyOwner;
 }

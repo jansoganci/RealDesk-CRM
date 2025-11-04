@@ -28,7 +28,7 @@ interface OwnerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   owner?: PropertyOwner | null;
-  onSubmit: (data: OwnerFormData) => Promise<void>;
+  onSubmit: (data: any) => Promise<void>;
   loading?: boolean;
 }
 
@@ -36,6 +36,10 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
   const { t } = useTranslation(['owners', 'common']);
   const ownerSchema = getOwnerSchema(t);
   type OwnerFormData = z.infer<typeof ownerSchema>;
+  
+  // Type assertion for onSubmit to maintain type safety
+  const typedOnSubmit = onSubmit as (data: OwnerFormData) => Promise<void>;
+  
   const form = useForm<OwnerFormData>({
     resolver: zodResolver(ownerSchema),
     defaultValues: {
@@ -75,16 +79,16 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
       address: data.address?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
     };
-    await onSubmit(cleanedData);
+    await typedOnSubmit(cleanedData);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{owner ? t('owners.dialog.editTitle') : t('owners.dialog.addTitle')}</DialogTitle>
+          <DialogTitle>{owner ? t('dialog.editTitle') : t('dialog.addTitle')}</DialogTitle>
           <DialogDescription>
-            {owner ? t('owners.dialog.editDescription') : t('owners.dialog.addDescription')}
+            {owner ? t('dialog.editDescription') : t('dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,9 +99,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('owners.dialog.form.name')}</FormLabel>
+                  <FormLabel>{t('dialog.form.name')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('owners.dialog.form.namePlaceholder')} {...field} disabled={loading} />
+                    <Input placeholder={t('dialog.form.namePlaceholder')} {...field} disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -109,9 +113,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('owners.dialog.form.email')}</FormLabel>
+                  <FormLabel>{t('dialog.form.email')}</FormLabel>
                   <FormControl>
-                    <Input type="email" placeholder={t('owners.dialog.form.emailPlaceholder')} {...field} disabled={loading} />
+                    <Input type="email" placeholder={t('dialog.form.emailPlaceholder')} {...field} disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -123,9 +127,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('owners.dialog.form.phone')}</FormLabel>
+                  <FormLabel>{t('dialog.form.phone')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('owners.dialog.form.phonePlaceholder')} {...field} disabled={loading} />
+                    <Input placeholder={t('dialog.form.phonePlaceholder')} {...field} disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -137,9 +141,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
               name="address"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('owners.dialog.form.address')}</FormLabel>
+                  <FormLabel>{t('dialog.form.address')}</FormLabel>
                   <FormControl>
-                    <Input placeholder={t('owners.dialog.form.addressPlaceholder')} {...field} disabled={loading} />
+                    <Input placeholder={t('dialog.form.addressPlaceholder')} {...field} disabled={loading} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -151,10 +155,10 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
               name="notes"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t('owners.dialog.form.notes')}</FormLabel>
+                  <FormLabel>{t('dialog.form.notes')}</FormLabel>
                   <FormControl>
                     <Textarea
-                      placeholder={t('owners.dialog.form.notesPlaceholder')}
+                      placeholder={t('dialog.form.notesPlaceholder')}
                       className="resize-none"
                       rows={3}
                       {...field}
@@ -173,10 +177,10 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
                 onClick={() => onOpenChange(false)}
                 disabled={loading}
               >
-                {t('common.cancel')}
+                {t('cancel', { ns: 'common' })}
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading ? t('common.saving') : owner ? t('owners.dialog.updateButton') : t('owners.dialog.addButton')}
+                {loading ? t('saving', { ns: 'common' }) : owner ? t('dialog.updateButton') : t('dialog.addButton')}
               </Button>
             </div>
           </form>

@@ -28,7 +28,11 @@ class MockContractsService {
         tenant: mockTenants.find(tenant => tenant.id === contract.tenant_id),
         property: mockProperties.find(property => property.id === contract.property_id),
       }))
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getById(id: string): Promise<ContractWithDetails | null> {
@@ -52,7 +56,11 @@ class MockContractsService {
     
     return mockContractsData
       .filter(contract => contract.tenant_id === tenantId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getByPropertyId(propertyId: string): Promise<Contract[]> {
@@ -60,7 +68,11 @@ class MockContractsService {
     
     return mockContractsData
       .filter(contract => contract.property_id === propertyId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getActiveContracts(): Promise<ContractWithDetails[]> {
@@ -73,7 +85,11 @@ class MockContractsService {
         tenant: mockTenants.find(tenant => tenant.id === contract.tenant_id),
         property: mockProperties.find(property => property.id === contract.property_id),
       }))
-      .sort((a, b) => new Date(a.end_date).getTime() - new Date(b.end_date).getTime());
+      .sort((a, b) => {
+        const dateA = a.end_date ? new Date(a.end_date).getTime() : 0;
+        const dateB = b.end_date ? new Date(b.end_date).getTime() : 0;
+        return dateA - dateB;
+      });
   }
 
   async getExpiringContracts(days: number = 30): Promise<ContractWithDetails[]> {
@@ -94,7 +110,11 @@ class MockContractsService {
         tenant: mockTenants.find(tenant => tenant.id === contract.tenant_id),
         property: mockProperties.find(property => property.id === contract.property_id),
       }))
-      .sort((a, b) => new Date(a.end_date).getTime() - new Date(b.end_date).getTime());
+      .sort((a, b) => {
+        const dateA = a.end_date ? new Date(a.end_date).getTime() : 0;
+        const dateB = b.end_date ? new Date(b.end_date).getTime() : 0;
+        return dateA - dateB;
+      });
   }
 
   async create(contract: ContractInsert): Promise<Contract> {
@@ -112,6 +132,7 @@ class MockContractsService {
       expected_new_rent: contract.expected_new_rent ?? null,
       reminder_notes: contract.reminder_notes ?? null,
       notes: contract.notes ?? null,
+      currency: contract.currency ?? null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };
@@ -177,7 +198,11 @@ class MockContractsService {
         tenant: mockTenants.find(tenant => tenant.id === contract.tenant_id),
         property: mockProperties.find(property => property.id === contract.property_id),
       }))
-      .sort((a, b) => new Date(a.end_date).getTime() - new Date(b.end_date).getTime());
+      .sort((a, b) => {
+        const dateA = a.end_date ? new Date(a.end_date).getTime() : 0;
+        const dateB = b.end_date ? new Date(b.end_date).getTime() : 0;
+        return dateA - dateB;
+      });
   }
 
   async markReminderContacted(id: string): Promise<Contract> {

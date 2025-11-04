@@ -9,14 +9,19 @@ i18n
   .use(initReactI18next)
   .init({
     debug: false,
-    fallbackLng: 'en',
+    fallbackLng: 'tr',
+    lng: 'tr', // Force initial language
     interpolation: {
       escapeValue: false, // not needed for react as it escapes by default
     },
-    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors'],
+    react: {
+      useSuspense: false,
+    },
+    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing'],
     defaultNS: 'common',
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
+      allowMultiLoading: false,
     },
   });
 

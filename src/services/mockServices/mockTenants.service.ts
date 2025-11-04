@@ -30,7 +30,11 @@ class MockTenantsService {
         ...tenant,
         property: mockProperties.find(property => property.id === tenant.property_id),
       }))
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getById(id: string): Promise<TenantWithProperty | null> {
@@ -52,7 +56,11 @@ class MockTenantsService {
     
     return mockTenantsData
       .filter(tenant => tenant.property_id === propertyId)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async getUnassigned(): Promise<Tenant[]> {
@@ -60,7 +68,11 @@ class MockTenantsService {
     
     return mockTenantsData
       .filter(tenant => !tenant.property_id)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+      .sort((a, b) => {
+        const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
+        const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
+        return dateB - dateA;
+      });
   }
 
   async create(tenant: TenantInsert): Promise<Tenant> {
@@ -138,6 +150,31 @@ class MockTenantsService {
     };
   }
 
+  async getTenantsWithMissingInfo() {
+    await simulateDelay();
+    
+    const missingInfo = {
+      noPhone: 0,
+      noEmail: 0,
+      noContact: 0,
+      total: 0,
+    };
+
+    mockTenantsData.forEach((t) => {
+      const hasPhone = t.phone && t.phone.trim() !== '';
+      const hasEmail = t.email && t.email.trim() !== '';
+      
+      if (!hasPhone) missingInfo.noPhone++;
+      if (!hasEmail) missingInfo.noEmail++;
+      if (!hasPhone && !hasEmail) {
+        missingInfo.noContact++;
+        missingInfo.total++;
+      }
+    });
+
+    return missingInfo;
+  }
+
   /**
    * Mock implementation of createTenantWithContract
    * Simulates atomic transaction by creating both tenant and contract
@@ -197,6 +234,7 @@ class MockTenantsService {
         expected_new_rent: contractData.expected_new_rent ?? null,
         reminder_notes: contractData.reminder_notes ?? null,
         notes: contractData.notes ?? null,
+        currency: contractData.currency ?? null,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
       };

@@ -1,0 +1,90 @@
+{
+  "title": "Mülkler",
+  "searchPlaceholder": "Mülk ara...",
+  "filterPlaceholder": "Duruma göre filtrele",
+  "addPropertyButton": "Mülk Ekle",
+  "addTenantButton": "Kiracı Ekle",
+  "status": {
+    "empty": "Kiralamaya Hazır",
+    "occupied": "Kirada",
+    "inactive": "Pasif"
+  },
+  "filters": {
+    "all": "Tüm Durumlar"
+  },
+  "table": {
+    "address": "Adres",
+    "location": "Konum",
+    "owner": "Mal Sahibi",
+    "status": "Durum",
+    "tenant": "Kiracı",
+    "rent": "Kira",
+    "contractEndDate": "Bitiş Tarihi",
+    "actions": "İşlemler",
+    "noTenant": "",
+    "noRent": "-",
+    "noContract": "-",
+    "inactive": "Pasif",
+    "perMonth": "/ay",
+    "viewListing": "Sahibinden.com'da Görüntüle"
+  },
+  "toasts": {
+    "loadError": "Mülkler yüklenemedi",
+    "deleteSuccess": "Mülk başarıyla silindi",
+    "deleteError": "Mülk silinemedi",
+    "updateSuccess": "Mülk başarıyla güncellendi",
+    "updateError": "Mülk güncellenemedi",
+    "addSuccess": "Mülk başarıyla eklendi",
+    "addError": "Mülk eklenemedi",
+    "addTenantToPropertySuccess": "Kiracı {{tenantName}} ve sözleşme mülk için başarıyla oluşturuldu!"
+  },
+  "validations": {
+    "ownerRequired": "Mal sahibi gereklidir",
+    "addressRequired": "Adres gereklidir",
+    "invalidUrl": "Lütfen geçerli bir URL girin"
+  },
+  "emptyState": {
+    "noPropertiesFound": "Mülk bulunamadı",
+    "noPropertiesYet": "Henüz mülk yok",
+    "noPropertiesFoundDescription": "Aramanızı veya filtrenizi değiştirmeyi deneyin",
+    "noPropertiesYetDescription": "İlk mülkünüzü ekleyerek başlayın",
+    "addActionLabel": "İlk Mülkünüzü Ekleyin"
+  },
+  "photos": "{{count}} fotoğraf",
+  "photos_plural": "{{count}} fotoğraf",
+  "notAvailable": "Yok",
+  "deleteDialog": {
+    "title": "Mülkü Sil",
+    "description": "{{propertyAddress}} adresindeki bu mülkü silmek istediğinizden emin misiniz? Bu işlem geri alınamaz ve ilişkili tüm fotoğrafları da siler."
+  },
+  "dialog": {
+    "addTitle": "Yeni Mülk Ekle",
+    "editTitle": "Mülk Detayları",
+    "addDescription": "Aşağıdaki mülk detaylarını doldurun.",
+    "editDescription": "Mülk bilgilerini ve fotoğraflarını görüntüleyin ve yönetin.",
+    "propertyPhotosTitle": "Mülk Fotoğrafları",
+    "managePhotosButton": "Fotoğrafları Yönet",
+    "form": {
+      "owner": "Mal Sahibi",
+      "ownerPlaceholder": "Bir mal sahibi seçin",
+      "address": "Adres",
+      "addressPlaceholder": "123 Ana Cadde, Daire 4B",
+      "city": "Şehir",
+      "cityPlaceholder": "Şehir adı girin",
+      "district": "İlçe",
+      "districtPlaceholder": "İlçe/semt girin",
+      "status": "Durum",
+      "statusPlaceholder": "Durum seçin",
+      "rentAmount": "Kira Bedeli",
+      "rentAmountPlaceholder": "Kira bedelini girin",
+      "currency": "Para Birimi",
+      "currencyPlaceholder": "Para birimi seçin",
+      "listingUrl": "İlan Linki",
+      "listingUrlPlaceholder": "https://www.sahibinden.com/...",
+      "notes": "Notlar",
+      "notesPlaceholder": "Mülk hakkında ek bilgiler..."
+    },
+    "addButton": "Mülk Ekle",
+    "updateButton": "Güncelle"
+  }
+}

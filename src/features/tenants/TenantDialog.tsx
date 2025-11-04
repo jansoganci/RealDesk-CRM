@@ -25,14 +25,13 @@ import {
 import { Tenant, Property } from '../../types';
 import { useTranslation } from 'react-i18next';
 import { getTenantSchema } from './tenantSchema';
-
-
+import { propertiesService } from '../../lib/serviceProxy';
 
 interface TenantDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   tenant: Tenant | null;
-  onSubmit: (data: TenantFormData) => Promise<void>;
+  onSubmit: (data: any) => Promise<void>;
   loading?: boolean;
 }
 
@@ -43,9 +42,12 @@ export const TenantDialog = ({
   onSubmit,
   loading = false,
 }: TenantDialogProps) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['tenants', 'common']);
   const tenantSchema = getTenantSchema(t);
   type TenantFormData = z.infer<typeof tenantSchema>;
+  
+  // Update the interface type to match the actual form data
+  const typedOnSubmit = onSubmit as (data: TenantFormData) => Promise<void>;
 
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(false);
@@ -109,27 +111,27 @@ export const TenantDialog = ({
       email: data.email?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
     };
-    await onSubmit(submitData);
+    await typedOnSubmit(submitData);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{tenant ? t('tenants.dialog.editTitle') : t('tenants.dialog.addTitle')}</DialogTitle>
+          <DialogTitle>{tenant ? t('dialog.editTitle') : t('dialog.addTitle')}</DialogTitle>
           <DialogDescription>
             {tenant
-              ? t('tenants.dialog.editDescription')
-              : t('tenants.dialog.addDescription')}
+              ? t('dialog.editDescription')
+              : t('dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name">{t('tenants.dialog.form.name')} *</Label>
+            <Label htmlFor="name">{t('dialog.form.name')} *</Label>
             <Input
               id="name"
-              placeholder={t('tenants.dialog.form.namePlaceholder')}
+              placeholder={t('dialog.form.namePlaceholder')}
               {...register('name')}
               disabled={loading}
             />
@@ -140,21 +142,21 @@ export const TenantDialog = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="phone">{t('tenants.dialog.form.phone')}</Label>
+              <Label htmlFor="phone">{t('dialog.form.phone')}</Label>
               <Input
                 id="phone"
-                placeholder={t('tenants.dialog.form.phonePlaceholder')}
+                placeholder={t('dialog.form.phonePlaceholder')}
                 {...register('phone')}
                 disabled={loading}
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="email">{t('tenants.dialog.form.email')}</Label>
+              <Label htmlFor="email">{t('dialog.form.email')}</Label>
               <Input
                 id="email"
                 type="email"
-                placeholder={t('tenants.dialog.form.emailPlaceholder')}
+                placeholder={t('dialog.form.emailPlaceholder')}
                 {...register('email')}
                 disabled={loading}
               />
@@ -165,17 +167,17 @@ export const TenantDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="property_id">{t('tenants.dialog.form.property')}</Label>
+            <Label htmlFor="property_id">{t('dialog.form.property')}</Label>
             <Select
               value={selectedPropertyId && selectedPropertyId !== '' ? selectedPropertyId : 'none'}
               onValueChange={(value) => setValue('property_id', value === 'none' ? '' : value)}
               disabled={loadingProperties || loading}
             >
               <SelectTrigger>
-                <SelectValue placeholder={t('tenants.dialog.form.propertyPlaceholder')} />
+                <SelectValue placeholder={t('dialog.form.propertyPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="none">{t('tenants.dialog.form.noProperty')}</SelectItem>
+                <SelectItem value="none">{t('dialog.form.noProperty')}</SelectItem>
                 {properties
                   .filter(p => p.status !== 'Inactive')
                   .map((property) => (
@@ -186,15 +188,15 @@ export const TenantDialog = ({
               </SelectContent>
             </Select>
             <p className={`text-xs ${COLORS.muted.textLight}`}>
-              {t('tenants.dialog.form.propertyHint')}
+              {t('dialog.form.propertyHint')}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="notes">{t('tenants.dialog.form.notes')}</Label>
+            <Label htmlFor="notes">{t('dialog.form.notes')}</Label>
             <Textarea
               id="notes"
-              placeholder={t('tenants.dialog.form.notesPlaceholder')}
+              placeholder={t('dialog.form.notesPlaceholder')}
               {...register('notes')}
               disabled={loading}
               rows={3}
@@ -208,14 +210,14 @@ export const TenantDialog = ({
               onClick={() => onOpenChange(false)}
               disabled={loading}
             >
-              {t('common.cancel')}
+              {t('cancel', { ns: 'common' })}
             </Button>
             <Button
               type="submit"
               disabled={loading}
               className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
             >
-              {loading ? t('common.saving') : tenant ? t('tenants.dialog.updateButton') : t('tenants.dialog.addButton')}
+              {loading ? t('saving', { ns: 'common' }) : tenant ? t('dialog.updateButton') : t('dialog.addButton')}
             </Button>
           </DialogFooter>
         </form>
