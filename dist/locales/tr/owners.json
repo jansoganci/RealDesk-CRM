@@ -1,0 +1,58 @@
+{
+  "title": "Mal Sahipleri",
+  "searchPlaceholder": "Mal sahibi ara...",
+  "addOwnerButton": "Mal Sahibi Ekle",
+  "propertyCount": "{{count}} mülk",
+  "table": {
+    "name": "İsim",
+    "contact": "İletişim",
+    "address": "Adres",
+    "properties": "Mülkler",
+    "actions": "İşlemler"
+  },
+  "toasts": {
+    "loadError": "Mal sahipleri yüklenemedi",
+    "deleteSuccess": "Mal sahibi başarıyla silindi",
+    "deleteError": "Mal sahibi silinemedi",
+    "updateSuccess": "Mal sahibi başarıyla güncellendi",
+    "updateError": "Mal sahibi güncellenemedi",
+    "addSuccess": "Mal sahibi başarıyla eklendi",
+    "addError": "Mal sahibi eklenemedi"
+  },
+  "validations": {
+    "nameRequired": "İsim gereklidir",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "phoneRequired": "Telefon gereklidir"
+  },
+  "emptyState": {
+    "noOwnersFound": "Mal sahibi bulunamadı",
+    "noOwnersYet": "Henüz mal sahibi yok",
+    "noOwnersFoundDescription": "Arama terimlerinizi değiştirmeyi deneyin",
+    "noOwnersYetDescription": "İlk mal sahibinizi ekleyerek başlayın",
+    "addActionLabel": "İlk Mal Sahibinizi Ekleyin"
+  },
+  "deleteDialog": {
+    "title": "Mal Sahibini Sil",
+    "description": "{{ownerName}} adlı mal sahibini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "dialog": {
+    "addTitle": "Yeni Mal Sahibi Ekle",
+    "editTitle": "Mal Sahibini Düzenle",
+    "addDescription": "Aşağıya mal sahibi bilgilerini girin.",
+    "editDescription": "Aşağıdan mal sahibi bilgilerini güncelleyin.",
+    "form": {
+      "name": "İsim",
+      "namePlaceholder": "Mal sahibi ismi",
+      "email": "E-posta",
+      "emailPlaceholder": "sahip@ornek.com",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefon numarası",
+      "address": "Adres",
+      "addressPlaceholder": "Mal sahibi adresi",
+      "notes": "Notlar",
+      "notesPlaceholder": "Mal sahibi hakkında ek bilgiler..."
+    },
+    "addButton": "Mal Sahibi Ekle",
+    "updateButton": "Mal Sahibini Güncelle"
+  }
+}

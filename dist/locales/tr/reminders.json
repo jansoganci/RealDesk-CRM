@@ -1,0 +1,84 @@
+{
+  "pageTitle": "Hatırlatmalar",
+  "tabs": {
+    "overdue": "Gecikmiş",
+    "upcoming": "Yaklaşan",
+    "scheduled": "Planlanan",
+    "expired": "Süresi Dolmuş",
+    "active": "Aktif",
+    "completed": "Tamamlandı"
+  },
+  "empty": {
+    "globalTitle": "Aktif Hatırlatma Yok",
+    "globalDescription": "Kira artışı hatırlatmalarını sözleşme oluştururken veya düzenlerken etkinleştirerek mal sahipleriyle ne zaman iletişime geçeceğinizi takip edin.",
+    "none": "Hatırlatma bulunamadı",
+    "allClear": "Tüm Hatırlatmalar Tamamlandı!",
+    "overdueDescription": "Gecikmiş hatırlatma yok",
+    "upcoming": "Yaklaşan Hatırlatma Yok",
+    "upcomingDescription": "Yaklaşan hatırlatma bulunmuyor",
+    "scheduled": "Planlanan Hatırlatma Yok",
+    "scheduledDescription": "Gelecek tarihler için planlanmış hatırlatma bulunmuyor",
+    "expiredTitle": "Süresi Dolmuş Sözleşme Yok",
+    "expiredDescription": "Bekleyen hatırlatması olan süresi dolmuş sözleşme bulunmuyor"
+  },
+  "sections": {
+    "overdue": {
+      "calloutTitle": "Eylem Gerekiyor",
+      "calloutDescription": "{{count}} gecikmiş hatırlatma var. Kira artışı için mal sahibi ile iletişime geçin."
+    },
+    "scheduled": {
+      "calloutTitle": "Planlanan Hatırlatmalar",
+      "calloutDescription": "Bu hatırlatmalar gelecekteki tarihlere planlandı. Mal sahibiyle iletişime geçme zamanı geldiğinde bildirileceksiniz."
+    },
+    "expired": {
+      "calloutTitle": "Süresi Dolmuş Sözleşmeler",
+      "calloutDescription": "Bu sözleşmelerin süresi doldu. Hatırlatmaları temizlemek için iletişime geçildi olarak işaretleyin."
+    }
+  },
+  "badges": {
+    "contractEnded": "Sözleşme Sona Erdi",
+    "urgent": "Acil - {{days}} gün kaldı",
+    "soon": "Yakında - {{days}} gün kaldı",
+    "upcoming": "{{days}} gün kaldı"
+  },
+  "card": {
+    "unknownProperty": "Bilinmeyen Mülk",
+    "tenant": "Kiracı: {{name}}",
+    "unknownTenant": "Bilinmiyor",
+    "contractEndDate": "Sözleşme Bitiş Tarihi",
+    "reminderDate": "Hatırlatma Tarihi",
+    "noReminderDate": "Tarih yok",
+    "currentRent": "Mevcut Kira",
+    "expectedRent": "Beklenen Yeni Kira",
+    "currency": "$ {{value}}",
+    "currencyRange": "${{current}} → ${{expected}}",
+    "ownerContact": "Mal Sahibi İletişim:",
+    "notes": "Notlar:"
+  },
+  "actions": {
+    "markContacted": "İletişime Geçildi Olarak İşaretle",
+    "delete": "Hatırlatmayı Sil",
+    "tryAgain": "Tekrar Dene"
+  },
+  "toasts": {
+    "updated": "Hatırlatma başarıyla güncellendi",
+    "deleted": "Hatırlatma başarıyla silindi",
+    "loadFailed": "Hatırlatmalar yüklenemedi",
+    "markedContacted": "İletişime geçildi olarak işaretlendi",
+    "updateFailed": "Hatırlatma güncellenemedi"
+  },
+  "dialogs": {
+    "confirmDelete": "Bu hatırlatmayı silmek istediğine emin misin?",
+    "confirmMark": "Bu hatırlatmayı iletişime geçildi olarak işaretlemek istiyor musun?",
+    "markTitle": "İletişime Geçildi Olarak İşaretle",
+    "markDescription": "Bu mülk için kira artışı hakkında mal sahibiyle görüştün mü? Bu işlem hatırlatmayı listenden kaldırır.",
+    "confirm": "Evet, İletişime Geçildi Olarak İşaretle"
+  },
+  "errors": {
+    "title": "Hatırlatmalar Yüklenemedi",
+    "loadDetailed": "Hatırlatmalar yüklenemedi. Lütfen tekrar deneyin."
+  },
+  "validation": {
+    "required": "Bu alan zorunludur"
+  }
+}

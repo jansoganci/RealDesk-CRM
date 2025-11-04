@@ -1,0 +1,73 @@
+{
+  "management": {
+    "title": "Mülk Fotoğraflarını Yönet",
+    "tabs": {
+      "gallery": "Galeri ({{count}})",
+      "upload": "Yükle"
+    },
+    "readyToUpload": "{{count}} fotoğraf yüklemeye hazır",
+    "readyToUpload_plural": "{{count}} fotoğraf yüklemeye hazır",
+    "cancel": "İptal",
+    "uploading": "Yükleniyor... {{progress}}%",
+    "uploadButton": "{{count}} Fotoğraf Yükle",
+    "uploadButton_plural": "{{count}} Fotoğraf Yükle"
+  },
+  "upload": {
+    "maxReached": {
+      "title": "Maksimum fotoğraf sayısına ulaşıldı",
+      "description": "Bu mülk zaten {{maxFiles}} fotoğraf içeriyor. Yeni fotoğraf yüklemek için bazılarını silin."
+    },
+    "fileTypes": "JPEG, PNG, WebP, en fazla 5MB",
+    "slotsAvailable": "{{remainingSlots}} / {{maxFiles}} fotoğraf yükleme hakkı kaldı",
+    "dropzone": {
+      "idle": "Fotoğrafları buraya sürükleyip bırakın",
+      "active": "Fotoğrafları buraya bırakın",
+      "clickToBrowse": "veya göz atmak için tıklayın"
+    },
+    "validation": {
+      "invalidFileType": "Geçersiz dosya türü veya boyutu. Yalnızca 5MB'dan küçük JPEG, PNG, WebP resimleri kabul edilir.",
+      "exceededSlots": "Yalnızca {{remainingSlots}} fotoğraf daha yükleyebilirsiniz. Mülk başına maksimum {{maxFiles}} fotoğraf.",
+      "exceededSlots_plural": "Yalnızca {{remainingSlots}} fotoğraf daha yükleyebilirsiniz. Mülk başına maksimum {{maxFiles}} fotoğraf."
+    },
+    "preview": {
+      "title": "Seçilen Fotoğraflar ({{count}})",
+      "remove": "Kaldır",
+      "clearAll": "Hepsini Temizle"
+    }
+  },
+  "gallery": {
+    "loading": "Fotoğraflar yükleniyor...",
+    "emptyState": {
+      "title": "Henüz fotoğraf yok",
+      "description": "Bu mülk için fotoğraf yükleyin"
+    },
+    "tooltips": {
+      "dragToReorder": "Sıralamak için sürükleyin",
+      "moveUp": "Yukarı taşı",
+      "moveDown": "Aşağı taşı",
+      "delete": "Sil",
+      "setPrimary": "Ana fotoğraf olarak ayarla"
+    },
+    "badges": {
+      "primary": "Ana Fotoğraf"
+    },
+    "deleteDialog": {
+      "title": "Fotoğrafı Sil",
+      "description": "Bu fotoğrafı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+      "cancel": "İptal",
+      "delete": "Sil"
+    },
+    "altText": "Mülk fotoğrafı {{number}}",
+    "toast": {
+      "deleteSuccess": "Fotoğraf başarıyla silindi",
+      "deleteError": "Fotoğraf silinirken hata oluştu",
+      "reorderError": "Fotoğraflar yeniden sıralanırken hata oluştu",
+      "uploadSuccess": "{{count}} fotoğraf başarıyla yüklendi",
+      "uploadSuccess_plural": "{{count}} fotoğraf başarıyla yüklendi",
+      "uploadError": "Fotoğraflar yüklenirken hata oluştu",
+      "loadError": "Fotoğraflar yüklenirken hata oluştu",
+      "setPrimarySuccess": "Ana fotoğraf güncellendi",
+      "setPrimaryError": "Ana fotoğraf ayarlanırken hata oluştu"
+    }
+  }
+}

@@ -1,0 +1,87 @@
+{
+  "title": "Müşteri Talepleri",
+  "addNew": "Yeni Müşteri Talebi Ekle",
+  "searchPlaceholder": "Müşteri talebi ara...",
+  "tabs": {
+    "all": "Tümü",
+    "active": "Aktif",
+    "matched": "Eşleşen",
+    "contacted": "İletişime Geçilen",
+    "closed": "Kapalı"
+  },
+  "table": {
+    "name": "İsim",
+    "preferences": "Tercihler",
+    "budget": "Bütçe",
+    "status": "Durum",
+    "actions": "İşlemler",
+    "viewMatches": "Eşleşmeleri Gör"
+  },
+  "status": {
+    "active": "Aktif",
+    "matched": "Eşleşen",
+    "contacted": "İletişime Geçildi",
+    "closed": "Kapalı"
+  },
+  "dialog": {
+    "addTitle": "Yeni Müşteri Talebi Ekle",
+    "editTitle": "Müşteri Talebini Düzenle",
+    "addDescription": "Müşteri talep detaylarını aşağıda doldurun.",
+    "editDescription": "Müşteri talep bilgilerini güncelleyin.",
+    "form": {
+      "name": "İsim",
+      "namePlaceholder": "Müşteri adını girin",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefon numarasını girin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-posta adresini girin",
+      "preferredCity": "Tercih Edilen Şehir",
+      "preferredCityPlaceholder": "Tercih edilen şehri girin",
+      "preferredDistrict": "Tercih Edilen İlçe",
+      "preferredDistrictPlaceholder": "Tercih edilen ilçeyi girin",
+      "minBudget": "Min Bütçe",
+      "minBudgetPlaceholder": "Minimum bütçe",
+      "maxBudget": "Max Bütçe",
+      "maxBudgetPlaceholder": "Maximum bütçe",
+      "notes": "Notlar",
+      "notesPlaceholder": "Müşteri talebi hakkında ek notlar..."
+    },
+    "addButton": "Müşteri Talebi Ekle",
+    "updateButton": "Müşteri Talebini Güncelle"
+  },
+  "matches": {
+    "title": "Eşleşen Mülkler",
+    "description": "{{name}} için eşleşen mülkler",
+    "matchedProperties": "Eşleşen Mülkler",
+    "noMatches": "Eşleşme bulunamadı",
+    "contact": "İletişim",
+    "contacted": "İletişime Geçildi",
+    "markAsContacted": "İletişime Geçildi Olarak İşaretle"
+  },
+  "validations": {
+    "nameRequired": "İsim gereklidir",
+    "phoneRequired": "Telefon gereklidir",
+    "invalidEmail": "Geçersiz e-posta adresi"
+  },
+  "toasts": {
+    "addSuccess": "Müşteri talebi başarıyla eklendi",
+    "updateSuccess": "Müşteri talebi başarıyla güncellendi",
+    "deleteSuccess": "Müşteri talebi başarıyla silindi",
+    "loadError": "Müşteri talepleri yüklenemedi",
+    "addError": "Müşteri talebi eklenemedi",
+    "updateError": "Müşteri talebi güncellenemedi",
+    "deleteError": "Müşteri talebi silinemedi",
+    "loadMatchesError": "Eşleşmeler yüklenemedi",
+    "markContactedSuccess": "Müşteri talebi iletişime geçildi olarak işaretlendi",
+    "markContactedError": "Müşteri talebi iletişime geçildi olarak işaretlenemedi"
+  },
+  "emptyState": {
+    "noInquiriesYet": "Henüz müşteri talebi yok",
+    "noInquiriesYetDescription": "İlk müşteri talebinizi ekleyerek başlayın",
+    "addActionLabel": "İlk Müşteri Talebinizi Ekleyin"
+  },
+  "deleteDialog": {
+    "title": "Müşteri Talebini Sil",
+    "description": "{{inquiryName}} için olan müşteri talebini silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  }
+}

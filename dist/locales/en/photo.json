@@ -1,0 +1,73 @@
+{
+  "management": {
+    "title": "Manage Property Photos",
+    "tabs": {
+      "gallery": "Gallery ({{count}})",
+      "upload": "Upload"
+    },
+    "readyToUpload": "{{count}} photo ready to upload",
+    "readyToUpload_plural": "{{count}} photos ready to upload",
+    "cancel": "Cancel",
+    "uploading": "Uploading... {{progress}}%",
+    "uploadButton": "Upload {{count}} Photo",
+    "uploadButton_plural": "Upload {{count}} Photos"
+  },
+  "upload": {
+    "maxReached": {
+      "title": "Maximum photos reached",
+      "description": "This property already has {{maxFiles}} photos. Delete some photos to upload new ones."
+    },
+    "fileTypes": "JPEG, PNG, WebP up to 5MB",
+    "slotsAvailable": "{{remainingSlots}} of {{maxFiles}} photo slots available",
+    "dropzone": {
+      "idle": "Drag and drop photos here",
+      "active": "Drop your photos here",
+      "clickToBrowse": "or click to browse"
+    },
+    "validation": {
+      "invalidFileType": "Invalid file type or size. Only JPEG, PNG, WebP images under 5MB are allowed.",
+      "exceededSlots": "You can only upload {{remainingSlots}} more photo. Maximum {{maxFiles}} photos per property.",
+      "exceededSlots_plural": "You can only upload {{remainingSlots}} more photos. Maximum {{maxFiles}} photos per property."
+    },
+    "preview": {
+      "title": "Selected Photos ({{count}})",
+      "remove": "Remove",
+      "clearAll": "Clear All"
+    }
+  },
+  "gallery": {
+    "loading": "Loading photos...",
+    "emptyState": {
+      "title": "No photos yet",
+      "description": "Upload photos to showcase this property"
+    },
+    "tooltips": {
+      "dragToReorder": "Drag to reorder",
+      "moveUp": "Move up",
+      "moveDown": "Move down",
+      "delete": "Delete",
+      "setPrimary": "Set as primary photo"
+    },
+    "badges": {
+      "primary": "Primary"
+    },
+    "deleteDialog": {
+      "title": "Delete Photo",
+      "description": "Are you sure you want to delete this photo? This action cannot be undone.",
+      "cancel": "Cancel",
+      "delete": "Delete"
+    },
+    "altText": "Property photo {{number}}",
+    "toast": {
+      "deleteSuccess": "Photo deleted successfully",
+      "deleteError": "Failed to delete photo",
+      "reorderError": "Failed to reorder photos",
+      "uploadSuccess": "{{count}} photo uploaded successfully",
+      "uploadSuccess_plural": "{{count}} photos uploaded successfully",
+      "uploadError": "Failed to upload photos",
+      "loadError": "Failed to load photos",
+      "setPrimarySuccess": "Primary photo updated",
+      "setPrimaryError": "Failed to set primary photo"
+    }
+  }
+}

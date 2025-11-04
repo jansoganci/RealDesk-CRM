@@ -1,0 +1,58 @@
+
+{
+  "title": "Takvim",
+  "addMeetingButton": "Görüşme Ekle",
+  "emptyState": {
+    "noMeetings": "Planlanmış Görüşme Yok",
+    "noMeetingsDescription": "İlk görüşmenizi planlayarak başlayın."
+  },
+  "table": {
+    "title": "Başlık",
+    "startTime": "Başlangıç Zamanı",
+    "relatedTo": "İlgili Kişi veya Mülk",
+    "actions": "İşlemler"
+  },
+  "errors": {
+    "loadMeetings": "Görüşmeler yüklenemedi. Lütfen tekrar deneyin."
+  },
+  "addMeetingDialog": {
+    "title": "Yeni Görüşme Ekle",
+    "form": {
+      "title": "Başlık",
+      "date": "Tarih",
+      "time": "Saat",
+      "pickDate": "Bir tarih seçin",
+      "relatedTo": "İlgili",
+      "selectRelation": "İlişki türü seçin",
+      "tenant": "Kiracı",
+      "owner": "Mal Sahibi",
+      "other": "Diğer",
+      "selectTenant": "Bir kiracı seçin",
+      "selectProperty": "Bir mülk seçin",
+      "selectOwner": "Bir mülk sahibi seçin",
+      "notes": "Notlar"
+    },
+    "defaultTitle": {
+      "tenant": "Kiracı ile görüşme",
+      "property": "Mülk görüntüleme",
+      "owner": "Mülk sahibi ile görüşme"
+    }
+  },
+  "editMeetingDialog": {
+    "title": "Görüşmeyi Düzenle"
+  },
+  "deleteDialog": {
+    "title": "Görüşmeyi Sil?",
+    "description": "\"{{meetingTitle}}\" başlıklı görüşmeyi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  },
+  "toasts": {
+    "createSuccess": "Görüşme başarıyla oluşturuldu.",
+    "createError": "Görüşme oluşturulamadı.",
+    "updateSuccess": "Görüşme başarıyla güncellendi.",
+    "updateError": "Görüşme güncellenemedi.",
+    "deleteSuccess": "Görüşme başarıyla silindi.",
+    "deleteError": "Görüşme silinemedi."
+  },
+  "previousDay": "Önceki Gün",
+  "nextDay": "Sonraki Gün"
+}

@@ -1,0 +1,23 @@
+{
+  "dashboard": "Kontrol Paneli",
+  "properties": "Mülkler",
+  "owners": "Mal Sahipleri",
+  "tenants": "Kiracılar",
+  "calendar": "Takvim",
+  "inquiries": "Talepler",
+  "reminders": "Hatırlatıcılar",
+  "signOut": "Çıkış Yap",
+  "viewAllProperties": "Tüm mülkleri görüntüle",
+  "viewAllOwners": "Tüm mal sahiplerini görüntüle",
+  "viewAllTenants": "Tüm kiracıları görüntüle",
+  "viewAllCalendar": "Tüm takvimi görüntüle",
+  "viewAllInquiries": "Tüm talepleri görüntüle",
+  "viewAllReminders": "Tüm hatırlatıcıları görüntüle",
+  "openUserMenu": "Kullanıcı menüsünü aç",
+  "userSettings": "Kullanıcı ayarları",
+  "language": {
+    "label": "Dil",
+    "english": "English",
+    "turkish": "Türkçe"
+  }
+}

@@ -1,0 +1,58 @@
+
+{
+  "title": "Calendar",
+  "addMeetingButton": "Add Meeting",
+  "emptyState": {
+    "noMeetings": "No Meetings Scheduled",
+    "noMeetingsDescription": "Get started by scheduling your first meeting."
+  },
+  "table": {
+    "title": "Title",
+    "startTime": "Start Time",
+    "relatedTo": "Related To",
+    "actions": "Actions"
+  },
+  "errors": {
+    "loadMeetings": "Failed to load meetings. Please try again."
+  },
+  "addMeetingDialog": {
+    "title": "Add New Meeting",
+    "form": {
+      "title": "Title",
+      "date": "Date",
+      "time": "Time",
+      "pickDate": "Pick a date",
+      "relatedTo": "Related To",
+      "selectRelation": "Select a relation type",
+      "tenant": "Tenant",
+      "owner": "Owner",
+      "other": "Other",
+      "selectTenant": "Select a tenant",
+      "selectProperty": "Select a property",
+      "selectOwner": "Select an owner",
+      "notes": "Notes"
+    },
+    "defaultTitle": {
+      "tenant": "Meeting with tenant",
+      "property": "Property viewing",
+      "owner": "Meeting with owner"
+    }
+  },
+  "editMeetingDialog": {
+    "title": "Edit Meeting"
+  },
+  "deleteDialog": {
+    "title": "Delete Meeting?",
+    "description": "Are you sure you want to delete the meeting \"{{meetingTitle}}\"? This action cannot be undone."
+  },
+  "toasts": {
+    "createSuccess": "Meeting created successfully.",
+    "createError": "Failed to create meeting.",
+    "updateSuccess": "Meeting updated successfully.",
+    "updateError": "Failed to update meeting.",
+    "deleteSuccess": "Meeting deleted successfully.",
+    "deleteError": "Failed to delete meeting."
+  },
+  "previousDay": "Previous Day",
+  "nextDay": "Next Day"
+}

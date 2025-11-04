@@ -1,0 +1,87 @@
+{
+  "title": "Property Inquiries",
+  "addNew": "Add New Inquiry",
+  "searchPlaceholder": "Search inquiries...",
+  "tabs": {
+    "all": "All",
+    "active": "Active",
+    "matched": "Matched",
+    "contacted": "Contacted",
+    "closed": "Closed"
+  },
+  "table": {
+    "name": "Name",
+    "preferences": "Preferences",
+    "budget": "Budget",
+    "status": "Status",
+    "actions": "Actions",
+    "viewMatches": "View Matches"
+  },
+  "status": {
+    "active": "Active",
+    "matched": "Matched",
+    "contacted": "Contacted",
+    "closed": "Closed"
+  },
+  "dialog": {
+    "addTitle": "Add New Inquiry",
+    "editTitle": "Edit Inquiry",
+    "addDescription": "Fill in the customer inquiry details below.",
+    "editDescription": "Update the customer inquiry information.",
+    "form": {
+      "name": "Name",
+      "namePlaceholder": "Enter customer name",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter phone number",
+      "email": "Email",
+      "emailPlaceholder": "Enter email address",
+      "preferredCity": "Preferred City",
+      "preferredCityPlaceholder": "Enter preferred city",
+      "preferredDistrict": "Preferred District",
+      "preferredDistrictPlaceholder": "Enter preferred district",
+      "minBudget": "Min Budget",
+      "minBudgetPlaceholder": "Minimum budget",
+      "maxBudget": "Max Budget",
+      "maxBudgetPlaceholder": "Maximum budget",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional notes about the inquiry..."
+    },
+    "addButton": "Add Inquiry",
+    "updateButton": "Update Inquiry"
+  },
+  "matches": {
+    "title": "Matched Properties",
+    "description": "Properties matching the inquiry for {{name}}",
+    "matchedProperties": "Matched Properties",
+    "noMatches": "No matches found",
+    "contact": "Contact",
+    "contacted": "Contacted",
+    "markAsContacted": "Mark as Contacted"
+  },
+  "validations": {
+    "nameRequired": "Name is required",
+    "phoneRequired": "Phone is required",
+    "invalidEmail": "Invalid email address"
+  },
+  "toasts": {
+    "addSuccess": "Inquiry added successfully",
+    "updateSuccess": "Inquiry updated successfully",
+    "deleteSuccess": "Inquiry deleted successfully",
+    "loadError": "Failed to load inquiries",
+    "addError": "Failed to add inquiry",
+    "updateError": "Failed to update inquiry",
+    "deleteError": "Failed to delete inquiry",
+    "loadMatchesError": "Failed to load matches",
+    "markContactedSuccess": "Inquiry marked as contacted",
+    "markContactedError": "Failed to mark as contacted"
+  },
+  "emptyState": {
+    "noInquiriesYet": "No inquiries yet",
+    "noInquiriesYetDescription": "Get started by adding your first customer inquiry",
+    "addActionLabel": "Add Your First Inquiry"
+  },
+  "deleteDialog": {
+    "title": "Delete Inquiry",
+    "description": "Are you sure you want to delete the inquiry for {{inquiryName}}? This action cannot be undone."
+  }
+}

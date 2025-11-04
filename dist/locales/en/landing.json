@@ -1,0 +1,100 @@
+{
+  "header": {
+    "features": "Features",
+    "benefits": "Benefits",
+    "getStarted": "Get Started"
+  },
+  "hero": {
+    "title": "Manage Your Properties",
+    "titleHighlight": "Like Never Before",
+    "description": "All-in-one platform for property management. Track tenants, contracts, and reminders effortlessly.",
+    "startTrial": "Start Free Trial",
+    "watchDemo": "Watch Demo",
+    "dashboardPreview": "Dashboard Preview"
+  },
+  "features": {
+    "title": "Everything You Need to Succeed",
+    "subtitle": "Powerful features designed specifically for real estate professionals",
+    "properties": {
+      "title": "Properties Management",
+      "description": "Add, edit, and track properties with photo galleries and status tracking. Organize by location and monitor occupancy."
+    },
+    "owners": {
+      "title": "Owners Management",
+      "description": "Comprehensive owner profiles with contact information and property ownership tracking for better relationships."
+    },
+    "tenants": {
+      "title": "Tenants Management",
+      "description": "Detailed tenant profiles, contact management, and property assignment tracking all in one place."
+    },
+    "contracts": {
+      "title": "Contracts Management",
+      "description": "Create and track rental contracts with PDF storage, expiration tracking, and automated rent increase reminders."
+    },
+    "reminders": {
+      "title": "Smart Reminders",
+      "description": "Never miss important dates with contract expiration alerts, rent increase notifications, and visual urgency indicators."
+    },
+    "dashboard": {
+      "title": "Dashboard & Analytics",
+      "description": "Real-time statistics, property occupancy rates, contract overview, and upcoming reminders at a glance."
+    }
+  },
+  "howItWorks": {
+    "title": "How It Works",
+    "subtitle": "Get started in three simple steps",
+    "step1": {
+      "title": "Sign Up",
+      "description": "Create your free account in 30 seconds, no credit card required"
+    },
+    "step2": {
+      "title": "Add Your Properties",
+      "description": "Add properties with photos, assign owners, and set details in minutes"
+    },
+    "step3": {
+      "title": "Start Managing",
+      "description": "Track tenants, contracts, and reminders automatically. Everything in one place"
+    }
+  },
+  "benefits": {
+    "title": "Why Choose Us",
+    "item1": "We remind you before contracts expire",
+    "item2": "All your property data in one place",
+    "item3": "Works on your phone and computer"
+  },
+  "testimonials": {
+    "title": "What Our Clients Say",
+    "subtitle": "Trusted by real estate professionals across Turkey",
+    "testimonial1": {
+      "name": "Ahmet Yılmaz",
+      "title": "Real Estate Agent, Istanbul",
+      "quote": "Emlak CRM has transformed how I manage my properties. The automated reminders saved me from missing contract renewals multiple times. Highly recommended!"
+    },
+    "testimonial2": {
+      "name": "Ayşe Demir",
+      "title": "Property Manager, Ankara",
+      "quote": "I've reduced my admin time by 70% since switching to Emlak CRM. Everything is organized, and I can access it from my phone anywhere."
+    }
+  },
+  "cta": {
+    "title": "Ready to Transform Your Real Estate Business?",
+    "description": "Join hundreds of Turkish real estate professionals who are already managing their properties more efficiently",
+    "startTrial": "Start Free Trial",
+    "scheduleDemo": "Schedule Demo"
+  },
+  "footer": {
+    "tagline": "Modern real estate management for Turkish professionals",
+    "features": "Features",
+    "company": "Company",
+    "properties": "Properties",
+    "owners": "Owners",
+    "tenants": "Tenants",
+    "contracts": "Contracts",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "copyright": "© 2025 Emlak CRM. Built with React, TypeScript, Tailwind CSS, and Supabase."
+  }
+}
+

@@ -1,0 +1,74 @@
+{
+  "general": {
+    "unknown": "An unexpected error occurred. Please try again.",
+    "network": "Network error. Please check your connection.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "notFound": "The requested resource was not found.",
+    "serverError": "Server error. Please try again later."
+  },
+  "validation": {
+    "required": "This field is required",
+    "invalidEmail": "Invalid email format",
+    "invalidPhone": "Invalid phone number format",
+    "invalidDate": "Invalid date format",
+    "invalidUrl": "Invalid URL format",
+    "minLength": "Must be at least {{min}} characters",
+    "maxLength": "Must be at most {{max}} characters",
+    "min": "Must be at least {{min}}",
+    "max": "Must be at most {{max}}",
+    "positive": "Must be a positive number",
+    "integer": "Must be a whole number"
+  },
+  "photo": {
+    "invalidFileType": "Invalid file type. Only JPG, PNG, and WebP images are allowed.",
+    "fileSizeExceeded": "File size exceeds the 5MB limit.",
+    "uploadFailed": "Failed to upload photo. Please try again.",
+    "deleteFailed": "Failed to delete photo. Please try again.",
+    "loadFailed": "Failed to load photos. Please try again.",
+    "notFound": "Photo not found.",
+    "markPrimaryFailed": "Failed to mark photo as primary.",
+    "noFilesSelected": "No files selected for upload."
+  },
+  "tenant": {
+    "nameRequired": "Tenant name is required",
+    "propertyRequired": "Property selection is required",
+    "invalidEmail": "Invalid email format",
+    "invalidPhone": "Invalid phone number format",
+    "createFailed": "Failed to create tenant. Please try again.",
+    "updateFailed": "Failed to update tenant. Please try again.",
+    "deleteFailed": "Failed to delete tenant. Please try again.",
+    "notFound": "Tenant not found.",
+    "invalidResponse": "Invalid response from database. Please contact support.",
+    "pdfUploadFailed": "PDF upload failed. Please try again.",
+    "contractCreationFailed": "Failed to create contract. Please try again."
+  },
+  "property": {
+    "createFailed": "Failed to create property. Please try again.",
+    "updateFailed": "Failed to update property. Please try again.",
+    "deleteFailed": "Failed to delete property. Please try again.",
+    "notFound": "Property not found.",
+    "invalidData": "Invalid property data."
+  },
+  "owner": {
+    "createFailed": "Failed to create owner. Please try again.",
+    "updateFailed": "Failed to update owner. Please try again.",
+    "deleteFailed": "Failed to delete owner. Please try again.",
+    "notFound": "Owner not found."
+  },
+  "contract": {
+    "createFailed": "Failed to create contract. Please try again.",
+    "updateFailed": "Failed to update contract. Please try again.",
+    "deleteFailed": "Failed to delete contract. Please try again.",
+    "notFound": "Contract not found.",
+    "invalidDates": "Invalid contract dates.",
+    "startDateRequired": "Contract start date is required.",
+    "endDateRequired": "Contract end date is required.",
+    "endBeforeStart": "End date must be after start date."
+  },
+  "auth": {
+    "loginFailed": "Login failed. Please check your credentials.",
+    "invalidCredentials": "Invalid email or password.",
+    "sessionExpired": "Your session has expired. Please login again.",
+    "logoutFailed": "Failed to logout. Please try again."
+  }
+}

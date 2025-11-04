@@ -1,0 +1,25 @@
+{
+  "cancel": "İptal",
+  "save": "Kaydet",
+  "saving": "Kaydediliyor...",
+  "today": "Bugün",
+  "loading": "Yükleniyor...",
+  "deleting": "Siliniyor...",
+  "searchPlaceholder": "Ara...",
+  "filterPlaceholder": "Filtrele",
+  "deleteDialog": {
+    "title": "Kayıtı Sil",
+    "description": "Bu kaydı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "cancel": "İptal",
+    "delete": "Sil"
+  },
+  "demoMode": {
+    "banner": "🚀 Demo Modu - Örnek verilerle keşfediyorsunuz",
+    "exitDemo": "Demo'dan Çık"
+  },
+  "carousel": {
+    "previous": "Önceki slayt",
+    "next": "Sonraki slayt",
+    "item": "Slayt {{number}}"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "title": "Tenants",
+  "searchPlaceholder": "Search tenants...",
+  "filterPlaceholder": "Filter by status",
+  "addTenantButton": "Add Tenant & Contract",
+  "noProperty": "No property",
+  "noPropertyAssigned": "No property assigned",
+  "status": {
+    "assigned": "Assigned",
+    "unassigned": "Unassigned"
+  },
+  "filters": {
+    "all": "All Tenants",
+    "assigned": "Assigned",
+    "unassigned": "Unassigned"
+  },
+  "table": {
+    "name": "Name",
+    "contact": "Contact",
+    "property": "Property",
+    "status": "Status",
+    "actions": "Actions"
+  },
+  "toasts": {
+    "loadError": "Failed to load tenants",
+    "deleteSuccess": "Tenant deleted successfully",
+    "deleteError": "Failed to delete tenant",
+    "updateSuccess": "Tenant updated successfully",
+    "updateError": "Failed to update tenant",
+    "addSuccess": "Tenant added successfully",
+    "addError": "Failed to add tenant",
+    "addTenantWithContractSuccess": "Tenant {{tenantName}} and contract created successfully!"
+  },
+  "validations": {
+    "nameRequired": "Name is required",
+    "invalidEmail": "Invalid email address"
+  },
+  "emptyState": {
+    "noTenantsFound": "No tenants found",
+    "noTenantsYet": "No tenants yet",
+    "noTenantsFoundDescription": "Try adjusting your search or filter",
+    "noTenantsYetDescription": "Get started by adding your first tenant",
+    "addActionLabel": "Add Your First Tenant & Contract"
+  },
+  "deleteDialog": {
+    "title": "Delete Tenant",
+    "description": "Are you sure you want to delete {{tenantName}}? This action cannot be undone."
+  },
+  "dialog": {
+    "addTitle": "Add New Tenant",
+    "editTitle": "Edit Tenant",
+    "addDescription": "Fill in the tenant details below.",
+    "editDescription": "Update the tenant information below.",
+    "form": {
+      "name": "Full Name",
+      "namePlaceholder": "John Doe",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+1 234 567 8900",
+      "email": "Email",
+      "emailPlaceholder": "john@example.com",
+      "property": "Assigned Property",
+      "propertyPlaceholder": "Select a property (optional)",
+      "noProperty": "No Property (Unassigned)",
+      "propertyHint": "You can assign a tenant to a property later",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional information about the tenant..."
+    },
+    "addButton": "Add Tenant",
+    "updateButton": "Update Tenant"
+  },
+  "enhanced": {
+    "steps": {
+      "info": {
+        "title": "Tenant Information",
+        "description": "Basic tenant details",
+        "sectionTitle": "Tenant Information",
+        "sectionDescription": "Enter the basic information for the new tenant.",
+        "fields": {
+          "name": {
+            "label": "Full Name *",
+            "placeholder": "John Doe"
+          },
+          "phone": {
+            "label": "Phone Number",
+            "placeholder": "+1 234 567 8900"
+          },
+          "email": {
+            "label": "Email Address",
+            "placeholder": "john@example.com"
+          },
+          "notes": {
+            "label": "Additional Notes",
+            "placeholder": "Any additional information about the tenant..."
+          }
+        }
+      },
+      "contract": {
+        "title": "Property & Contract",
+        "description": "Property selection and contract details",
+        "sectionTitle": "Contract Details",
+        "sectionDescription": "Configure the rental contract details and select the property.",
+        "fields": {
+          "property": {
+            "label": "Property *",
+            "placeholder": "Select a property"
+          },
+          "startDate": {
+            "label": "Start Date *"
+          },
+          "endDate": {
+            "label": "End Date *"
+          },
+          "rentAmount": {
+            "label": "Monthly Rent Amount *",
+            "placeholder": "1500",
+            "currencySymbol": "$"
+          },
+          "status": {
+            "label": "Contract Status",
+            "placeholder": "Select status",
+            "options": {
+              "active": "Active",
+              "inactive": "Inactive",
+              "archived": "Archived"
+            }
+          },
+          "propertyStatus": "Status: {{status}}"
+        },
+        "loadingProperties": "Loading properties...",
+        "failedToLoadProperties": "Failed to load properties"
+      },
+      "settings": {
+        "title": "Contract Settings",
+        "description": "Reminders and document upload",
+        "sectionTitle": "Contract Settings & Upload",
+        "sectionDescription": "Configure additional contract settings and upload the contract PDF.",
+        "rentIncreaseReminder": {
+          "title": "Enable rent increase reminders",
+          "days": {
+            "label": "Reminder Days Before End",
+            "placeholder": "90"
+          },
+          "newRent": {
+            "label": "Expected New Rent ($)",
+            "placeholder": "1650"
+          },
+          "notes": {
+            "label": "Reminder Notes",
+            "placeholder": "Additional notes for rent increase reminders..."
+          }
+        },
+        "pdfUpload": {
+          "title": "Contract PDF (Optional)",
+          "description": "Upload a signed contract PDF for record keeping.",
+          "chooseFile": "Choose PDF File",
+          "fileSize": "{{size}} MB",
+          "alertInvalidType": "Please select a PDF file.",
+          "alertSizeExceeded": "File size must be less than 10MB."
+        }
+      }
+    },
+    "navigation": {
+      "back": "Back",
+      "next": "Next",
+      "submit": "Create Tenant & Contract",
+      "submitting": "Creating..."
+    },
+    "errors": {
+      "duplicateActiveContract": "This property already has an active contract.",
+      "createFailed": "Failed to create tenant and contract",
+      "endDateBeforeStart": "End date must be after start date"
+    }
+  }
+}

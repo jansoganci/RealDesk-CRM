@@ -1,0 +1,23 @@
+{
+  "dashboard": "Dashboard",
+  "properties": "Properties",
+  "owners": "Owners",
+  "tenants": "Tenants",
+  "calendar": "Calendar",
+  "inquiries": "Inquiries",
+  "reminders": "Reminders",
+  "signOut": "Sign Out",
+  "viewAllProperties": "View all properties",
+  "viewAllOwners": "View all owners",
+  "viewAllTenants": "View all tenants",
+  "viewAllCalendar": "View all calendar",
+  "viewAllInquiries": "View all inquiries",
+  "viewAllReminders": "View all reminders",
+  "openUserMenu": "Open user menu",
+  "userSettings": "User settings",
+  "language": {
+    "label": "Language",
+    "english": "English",
+    "turkish": "Türkçe"
+  }
+}
