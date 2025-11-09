@@ -114,13 +114,13 @@ export const Dashboard = () => {
           <p className={`${COLORS.gray.text600} mt-1`}>{t('subtitle')}</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-slide-up">
           <StatCard
             title={t('stats.totalProperties')}
             value={stats.totalProperties}
             description={stats.totalProperties === 0 ? t('stats.noPropertiesYet') : t('stats.totalPropertiesDescription')}
-            icon={<Building2 className={`h-4 w-4 ${COLORS.text.white}`} />}
-            iconColor="teal"
+            icon={<Building2 className={`h-5 w-5 ${COLORS.text.white}`} />}
+            iconColor="navy"
             loading={loading}
           />
 
@@ -128,8 +128,8 @@ export const Dashboard = () => {
             title={t('stats.occupied')}
             value={stats.occupied}
             description={t('stats.occupiedDescription')}
-            icon={<Home className={`h-4 w-4 ${COLORS.text.white}`} />}
-            iconColor="green"
+            icon={<Home className={`h-5 w-5 ${COLORS.text.white}`} />}
+            iconColor="emerald"
             loading={loading}
           />
 
@@ -137,8 +137,8 @@ export const Dashboard = () => {
             title={t('stats.totalOwners')}
             value={stats.totalOwners}
             description={t('stats.totalOwnersDescription')}
-            icon={<UserCheck className={`h-4 w-4 ${COLORS.text.white}`} />}
-            iconColor="teal"
+            icon={<UserCheck className={`h-5 w-5 ${COLORS.text.white}`} />}
+            iconColor="navy"
             loading={loading}
           />
 
@@ -146,8 +146,8 @@ export const Dashboard = () => {
             title={t('stats.emptyProperties')}
             value={stats.empty}
             description={t('stats.emptyPropertiesDescription')}
-            icon={<Package className={`h-4 w-4 ${COLORS.text.white}`} />}
-            iconColor="yellow"
+            icon={<Package className={`h-5 w-5 ${COLORS.text.white}`} />}
+            iconColor="amber"
             loading={loading}
           />
 
@@ -155,7 +155,7 @@ export const Dashboard = () => {
             title={t('stats.totalTenants')}
             value={stats.totalTenants}
             description={t('stats.totalTenantsDescription')}
-            icon={<Users className={`h-4 w-4 ${COLORS.text.white}`} />}
+            icon={<Users className={`h-5 w-5 ${COLORS.text.white}`} />}
             iconColor="blue"
             loading={loading}
           />
@@ -164,7 +164,7 @@ export const Dashboard = () => {
             title={t('stats.unassignedTenants')}
             value={stats.unassignedTenants}
             description={t('stats.unassignedTenantsDescription')}
-            icon={<UserPlus className={`h-4 w-4 ${COLORS.text.white}`} />}
+            icon={<UserPlus className={`h-5 w-5 ${COLORS.text.white}`} />}
             iconColor="purple"
             loading={loading}
           />
@@ -173,8 +173,8 @@ export const Dashboard = () => {
             title={t('stats.activeContracts')}
             value={stats.activeContracts}
             description={t('stats.activeContractsDescription')}
-            icon={<FileText className={`h-4 w-4 ${COLORS.text.white}`} />}
-            iconColor="orange"
+            icon={<FileText className={`h-5 w-5 ${COLORS.text.white}`} />}
+            iconColor="gold"
             loading={loading}
           />
 
@@ -182,34 +182,47 @@ export const Dashboard = () => {
             title={t('stats.activeInquiries')}
             value={stats.activeInquiries}
             description={t('stats.activeInquiriesDescription')}
-            icon={<Search className={`h-4 w-4 ${COLORS.text.white}`} />}
+            icon={<Search className={`h-5 w-5 ${COLORS.text.white}`} />}
             iconColor="blue"
             loading={loading}
           />
         </div>
 
-        <Card className={`shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
+        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-gray-200/50 backdrop-blur-sm bg-white/90 animate-fade-in">
           <CardHeader>
-            <CardTitle>{t('propertiesSummary.title')}</CardTitle>
-            <CardDescription>{t('propertiesSummary.description')}</CardDescription>
+            <CardTitle className="text-slate-900">
+              {t('propertiesSummary.title')}
+            </CardTitle>
+            <CardDescription className="text-slate-600">
+              {t('propertiesSummary.description')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-3">
-              <div className="flex justify-between items-center">
-                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.empty')}</span>
-                <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white}`}>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
+                <span className="text-slate-800 font-semibold flex items-center gap-2">
+                  <Package className="h-4 w-4 text-amber-600" />
+                  {t('propertiesSummary.empty')}
+                </span>
+                <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
                   {loading ? '-' : stats.empty}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center">
-                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.occupied')}</span>
-                <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white}`}>
+              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
+                <span className="text-slate-800 font-semibold flex items-center gap-2">
+                  <Home className="h-4 w-4 text-emerald-600" />
+                  {t('propertiesSummary.occupied')}
+                </span>
+                <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
                   {loading ? '-' : stats.occupied}
                 </Badge>
               </div>
-              <div className="flex justify-between items-center">
-                <span className={`${COLORS.gray.text700} font-medium`}>{t('propertiesSummary.inactive')}</span>
-                <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white}`}>
+              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
+                <span className="text-slate-800 font-semibold flex items-center gap-2">
+                  <Building2 className="h-4 w-4 text-slate-600" />
+                  {t('propertiesSummary.inactive')}
+                </span>
+                <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
                   {loading ? '-' : stats.inactive}
                 </Badge>
               </div>
@@ -218,16 +231,16 @@ export const Dashboard = () => {
         </Card>
 
         {reminders.length > 0 && (
-          <Card className={`shadow-lg ${COLORS.warning.border} ${COLORS.warning.bgGradientBr} backdrop-blur-sm`}>
+          <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-amber-200/50 bg-gradient-to-br from-amber-50 to-yellow-50 backdrop-blur-sm animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <div className={`p-2 ${COLORS.warning.dark} rounded-lg`}>
+                <div className="flex items-center gap-3">
+                  <div className="p-3 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
                     <Bell className={`h-5 w-5 ${COLORS.text.white}`} />
                   </div>
                   <div>
-                    <CardTitle className={COLORS.warning.textDarker}>{t('reminders.title')}</CardTitle>
-                    <CardDescription className={COLORS.warning.textDark}>
+                    <CardTitle className="text-amber-900 font-bold">{t('reminders.title')}</CardTitle>
+                    <CardDescription className="text-amber-700 font-medium">
                       {t('reminders.description', { count: reminders.length, s: reminders.length > 1 ? 's' : '' })}
                     </CardDescription>
                   </div>
@@ -236,7 +249,7 @@ export const Dashboard = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => navigate('/reminders')}
-                  className={`${COLORS.warning.borderHover} ${COLORS.warning.hoverBg}`}
+                  className="border-amber-300 hover:bg-amber-100 hover:border-amber-400 transition-all"
                 >
                   {t('reminders.viewAll')} <ArrowRight className="h-4 w-4 ml-1" />
                 </Button>
@@ -248,20 +261,20 @@ export const Dashboard = () => {
                 return (
                   <div
                     key={reminder.id}
-                    className={`flex items-center justify-between p-3 ${COLORS.card.bg} rounded-lg border ${COLORS.warning.border} hover:shadow-md transition-shadow`}
+                    className="flex items-center justify-between p-4 bg-white rounded-xl border border-amber-200/50 hover:shadow-lg hover:border-amber-300 transition-all duration-200"
                   >
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <Home className={`h-4 w-4 ${COLORS.warning.text}`} />
-                        <p className={`font-medium ${COLORS.gray.text900}`}>{reminder.property?.address}</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Home className="h-4 w-4 text-amber-600" />
+                        <p className="font-semibold text-slate-900">{reminder.property?.address}</p>
                       </div>
-                      <div className={`flex items-center gap-4 text-sm ${COLORS.gray.text600}`}>
+                      <div className="flex items-center gap-4 text-sm text-slate-600">
                         <span className="flex items-center gap-1">
                           <Calendar className="h-3 w-3" />
                           {t('reminders.contractEnds')}: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}
                         </span>
                         {reminder.expected_new_rent && (
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 font-medium text-amber-700">
                             <DollarSign className="h-3 w-3" />
                             ${reminder.rent_amount?.toFixed(0)} → ${reminder.expected_new_rent.toFixed(0)}
                           </span>
@@ -271,10 +284,10 @@ export const Dashboard = () => {
                     <Badge
                       className={
                         urgency === 'urgent'
-                          ? COLORS.danger.bg
+                          ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
                           : urgency === 'soon'
-                          ? COLORS.warning.dark
-                          : COLORS.primary.bg
+                          ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg'
+                          : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg'
                       }
                     >
                       {reminder.days_until_end} days
@@ -292,18 +305,22 @@ export const Dashboard = () => {
         )}
 
         {stats.expiringSoon > 0 && (
-          <Card className={`shadow-lg ${COLORS.warning.border} ${COLORS.warning.bgLight}/50 backdrop-blur-sm`}>
+          <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-amber-200/50 bg-gradient-to-br from-amber-50 to-yellow-50 backdrop-blur-sm animate-fade-in">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <AlertCircle className={`h-5 w-5 ${COLORS.warning.text}`} />
-                <CardTitle className={COLORS.warning.textDarker}>{t('contractsExpiringSoon')}</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
+                  <AlertCircle className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-amber-900 font-bold">{t('contractsExpiringSoon')}</CardTitle>
+                  <CardDescription className="text-amber-700 font-medium">
+                    {t('reminders.contractsExpiringDescription', { count: stats.expiringSoon, s: stats.expiringSoon > 1 ? 's' : '' })}
+                  </CardDescription>
+                </div>
               </div>
-              <CardDescription className={COLORS.warning.textDark}>
-                {t('reminders.contractsExpiringDescription', { count: stats.expiringSoon, s: stats.expiringSoon > 1 ? 's' : '' })}
-              </CardDescription>
             </CardHeader>
             <CardContent>
-              <p className={`text-sm ${COLORS.warning.textDark}`}>{t('reminders.reviewContracts')}</p>
+              <p className="text-sm text-amber-800 font-medium">{t('reminders.reviewContracts')}</p>
             </CardContent>
           </Card>
         )}
@@ -311,15 +328,19 @@ export const Dashboard = () => {
         {(actionItems.propertiesMissingInfo.total > 0 ||
           actionItems.tenantsMissingInfo.total > 0 ||
           actionItems.ownersMissingInfo.total > 0) && (
-          <Card className={`shadow-lg ${COLORS.warning.border} ${COLORS.warning.bgLight}/50 backdrop-blur-sm`}>
+          <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 bg-gradient-to-br from-blue-50 to-slate-50 backdrop-blur-sm animate-fade-in">
             <CardHeader>
-              <div className="flex items-center gap-2">
-                <AlertCircle className={`h-5 w-5 ${COLORS.warning.text}`} />
-                <CardTitle className={COLORS.warning.textDarker}>{t('actionItems.title')}</CardTitle>
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
+                  <AlertCircle className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-slate-900 font-bold">{t('actionItems.title')}</CardTitle>
+                  <CardDescription className="text-slate-700 font-medium">
+                    {t('actionItems.description')}
+                  </CardDescription>
+                </div>
               </div>
-              <CardDescription className={COLORS.warning.textDark}>
-                {t('actionItems.description')}
-              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {actionItems.propertiesMissingInfo.total > 0 && (
@@ -371,13 +392,13 @@ export const Dashboard = () => {
           </Card>
         )}
 
-        <Card className={`shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
+        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-gray-200/50 backdrop-blur-sm bg-white/90 animate-fade-in">
           <CardHeader>
-            <CardTitle>{t('quickActions')}</CardTitle>
-            <CardDescription>{t('getStarted')}</CardDescription>
+            <CardTitle className="text-slate-900 font-bold">{t('quickActions')}</CardTitle>
+            <CardDescription className="text-slate-600 font-medium">{t('getStarted')}</CardDescription>
           </CardHeader>
           <CardContent>
-            <p className={`text-sm ${COLORS.gray.text600}`}>{t('navigationTip')}</p>
+            <p className="text-sm text-slate-600">{t('navigationTip')}</p>
           </CardContent>
         </Card>
       </PageContainer>
