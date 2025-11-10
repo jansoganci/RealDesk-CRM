@@ -86,10 +86,10 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
--- Trigger for rental commissions
+-- Trigger for rental commissions (handles both INSERT and UPDATE)
 DROP TRIGGER IF EXISTS trigger_create_rental_commission ON contracts;
 CREATE TRIGGER trigger_create_rental_commission
-    AFTER INSERT ON contracts
+    AFTER INSERT OR UPDATE ON contracts
     FOR EACH ROW
     EXECUTE FUNCTION create_rental_commission();
 

@@ -86,5 +86,18 @@
     },
     "addButton": "Mülk Ekle",
     "updateButton": "Güncelle"
+  },
+  "markAsSold": {
+    "button": "Satıldı Olarak İşaretle",
+    "title": "Mülkü Satıldı Olarak İşaretle",
+    "description": "{{address}} için satış fiyatını girin. Bu, %4 komisyonunuzu hesaplayacak ve mülkü satıldı olarak işaretleyecektir.",
+    "propertyInfo": "Mülk",
+    "salePrice": "Satış Fiyatı",
+    "currency": "Para Birimi",
+    "yourCommission": "Komisyonunuz (%4)",
+    "commissionRate": "Satış fiyatının %4'ü",
+    "confirmButton": "Satışı Onayla",
+    "successToast": "Mülk satıldı olarak işaretlendi! {{commission}} komisyon Finans'a eklendi.",
+    "errorToast": "Mülk satıldı olarak işaretlenemedi"
   }
 }

@@ -8,14 +8,15 @@ import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
 import { PropertyDialog } from './PropertyDialog';
 import { EnhancedTenantDialog } from '../tenants/EnhancedTenantDialog';
-import { propertiesService } from '../../lib/serviceProxy';
+import { MarkAsSoldDialog } from './MarkAsSoldDialog';
+import { propertiesService, commissionsService } from '../../lib/serviceProxy';
 import { PropertyWithOwner, TenantWithContractResult } from '../../types';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { format } from 'date-fns';
 import { getToday, daysDifference } from '../../lib/dates';
-import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus } from 'lucide-react';
+import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus, TrendingUp } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -39,6 +40,8 @@ export const Properties = () => {
   const [selectedPropertyForTenant, setSelectedPropertyForTenant] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [propertyToDelete, setPropertyToDelete] = useState<PropertyWithOwner | null>(null);
+  const [markAsSoldDialogOpen, setMarkAsSoldDialogOpen] = useState(false);
+  const [propertyToSell, setPropertyToSell] = useState<PropertyWithOwner | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
   useEffect(() => {
@@ -155,6 +158,41 @@ export const Properties = () => {
     await loadProperties();
     setEnhancedTenantDialogOpen(false);
     setSelectedPropertyForTenant(null);
+  };
+
+  const handleMarkAsSoldClick = (property: PropertyWithOwner) => {
+    setPropertyToSell(property);
+    setMarkAsSoldDialogOpen(true);
+  };
+
+  const handleMarkAsSoldConfirm = async (salePrice: number, saleCurrency: string) => {
+    if (!propertyToSell) return;
+
+    try {
+      setActionLoading(true);
+      // Create sale commission (4% of sale price)
+      const commissionId = await commissionsService.createSaleCommission(
+        propertyToSell.id,
+        salePrice,
+        saleCurrency
+      );
+
+      const commission = salePrice * 0.04;
+      toast.success(
+        t('markAsSold.successToast', {
+          commission: formatCurrency(commission, saleCurrency),
+        })
+      );
+
+      await loadProperties();
+      setMarkAsSoldDialogOpen(false);
+      setPropertyToSell(null);
+    } catch (error) {
+      toast.error(t('markAsSold.errorToast'));
+      console.error('Failed to mark property as sold:', error);
+    } finally {
+      setActionLoading(false);
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -345,6 +383,17 @@ export const Properties = () => {
                     {t('addTenantButton')}
                   </Button>
                 )}
+                {property.status !== 'Inactive' && !property.sold_at && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleMarkAsSoldClick(property)}
+                    className="text-xs bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-300 hover:from-amber-100 hover:to-yellow-100 hover:border-amber-400 text-amber-700 hover:text-amber-800"
+                  >
+                    <TrendingUp className="h-3 w-3 mr-1" />
+                    {t('markAsSold.button')}
+                  </Button>
+                )}
                 <TableActionButtons
                   onEdit={() => handleEditProperty(property)}
                   onDelete={() => handleDeleteClick(property)}
@@ -498,6 +547,17 @@ export const Properties = () => {
                   {t('properties.addTenantButton')}
                 </Button>
               )}
+              {property.status !== 'Inactive' && !property.sold_at && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleMarkAsSoldClick(property)}
+                  className="w-full justify-start bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-300 hover:from-amber-100 hover:to-yellow-100 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-semibold transition-all shadow-sm hover:shadow-md"
+                >
+                  <TrendingUp className="h-4 w-4 mr-2" />
+                  {t('markAsSold.button')}
+                </Button>
+              )}
               <div className="flex gap-2">
                 <TableActionButtons
                   onEdit={() => handleEditProperty(property)}
@@ -531,6 +591,14 @@ export const Properties = () => {
         onOpenChange={setEnhancedTenantDialogOpen}
         onSuccess={handleTenantCreated}
         preSelectedPropertyId={selectedPropertyForTenant}
+      />
+
+      <MarkAsSoldDialog
+        open={markAsSoldDialogOpen}
+        onOpenChange={setMarkAsSoldDialogOpen}
+        property={propertyToSell}
+        onConfirm={handleMarkAsSoldConfirm}
+        loading={actionLoading}
       />
     </>
   );

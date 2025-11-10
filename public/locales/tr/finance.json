@@ -1,0 +1,35 @@
+{
+  "title": "Finans",
+  "subtitle": "Kiralamalar ve satışlardan elde edilen komisyon gelirinizi takip edin",
+  "stats": {
+    "totalEarnings": "Toplam Kazanç",
+    "totalEarningsDescription": "Tüm zamanların komisyon kazancı",
+    "rentalCommissions": "Kiralama Komisyonları",
+    "rentalCommissionsDescription": "Kira sözleşmelerinden gelir",
+    "saleCommissions": "Satış Komisyonları",
+    "saleCommissionsDescription": "Mülk satışlarından gelir (%4)"
+  },
+  "commissionHistory": {
+    "title": "Komisyon Geçmişi",
+    "description": "{{count}} komisyon kaydedildi",
+    "filterByType": "Türe göre filtrele",
+    "allTypes": "Tüm Türler",
+    "rentals": "Kiralamalar",
+    "sales": "Satışlar",
+    "loading": "Komisyonlar yükleniyor...",
+    "noCommissionsYet": "Henüz Komisyon Yok",
+    "noCommissionsDescription": "Mülk kiralaması veya satışı yaptığınızda komisyonlar burada görünecektir.",
+    "commission": "Komisyon",
+    "rental": "Kiralama",
+    "sale": "Satış"
+  },
+  "commissionStructure": {
+    "title": "Komisyon Yapısı",
+    "rentalTitle": "Kiralama Komisyonu",
+    "rentalDescription": "Bir mülkü başarıyla kiraladığınızda {{amount}} kazanırsınız",
+    "rentalAmount": "1 aylık kira",
+    "saleTitle": "Satış Komisyonu",
+    "saleDescription": "Bir mülk sattığınızda {{amount}} kazanırsınız",
+    "saleAmount": "satış fiyatının %4'ü"
+  }
+}

@@ -86,5 +86,18 @@
     },
     "addButton": "Add Property",
     "updateButton": "Update Property"
+  },
+  "markAsSold": {
+    "button": "Mark as Sold",
+    "title": "Mark Property as Sold",
+    "description": "Enter the sale price for {{address}}. This will calculate your 4% commission and mark the property as sold.",
+    "propertyInfo": "Property",
+    "salePrice": "Sale Price",
+    "currency": "Currency",
+    "yourCommission": "Your Commission (4%)",
+    "commissionRate": "4% of sale price",
+    "confirmButton": "Confirm Sale",
+    "successToast": "Property marked as sold! Commission of {{commission}} added to Finance.",
+    "errorToast": "Failed to mark property as sold"
   }
 }

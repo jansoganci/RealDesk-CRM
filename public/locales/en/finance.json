@@ -1,0 +1,35 @@
+{
+  "title": "Finance",
+  "subtitle": "Track your commission income from rentals and sales",
+  "stats": {
+    "totalEarnings": "Total Earnings",
+    "totalEarningsDescription": "All-time commission earnings",
+    "rentalCommissions": "Rental Commissions",
+    "rentalCommissionsDescription": "Income from rental contracts",
+    "saleCommissions": "Sale Commissions",
+    "saleCommissionsDescription": "Income from property sales (4%)"
+  },
+  "commissionHistory": {
+    "title": "Commission History",
+    "description": "{{count}} commission{{s}} recorded",
+    "filterByType": "Filter by type",
+    "allTypes": "All Types",
+    "rentals": "Rentals",
+    "sales": "Sales",
+    "loading": "Loading commissions...",
+    "noCommissionsYet": "No Commissions Yet",
+    "noCommissionsDescription": "Commissions will appear here when you rent or sell properties.",
+    "commission": "Commission",
+    "rental": "Rental",
+    "sale": "Sale"
+  },
+  "commissionStructure": {
+    "title": "Commission Structure",
+    "rentalTitle": "Rental Commission",
+    "rentalDescription": "Earn {{amount}} when you successfully rent a property",
+    "rentalAmount": "1 month's rent",
+    "saleTitle": "Sale Commission",
+    "saleDescription": "Earn {{amount}} when you sell a property",
+    "saleAmount": "4% of sale price"
+  }
+}

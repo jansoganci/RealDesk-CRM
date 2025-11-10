@@ -82,49 +82,49 @@ export const Finance = () => {
     if (type === 'rental') {
       return (
         <Badge className="bg-gradient-to-r from-emerald-500 via-emerald-600 to-emerald-700 text-white shadow-md">
-          Rental
+          {t('finance:commissionHistory.rental')}
         </Badge>
       );
     }
     return (
       <Badge className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white shadow-md">
-        Sale
+        {t('finance:commissionHistory.sale')}
       </Badge>
     );
   };
 
   return (
-    <MainLayout title="Finance">
+    <MainLayout title={t('finance:title')}>
       <PageContainer>
         <div>
-          <h2 className="text-3xl font-bold text-slate-900">Agent Earnings</h2>
-          <p className="text-slate-600 mt-1">Track your commission income from rentals and sales</p>
+          <h2 className="text-3xl font-bold text-slate-900">{t('finance:title')}</h2>
+          <p className="text-slate-600 mt-1">{t('finance:subtitle')}</p>
         </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-slide-up">
           <StatCard
-            title="Total Earnings"
+            title={t('finance:stats.totalEarnings')}
             value={formatCurrency(stats.totalEarnings, currency || 'USD')}
-            description="All-time commission earnings"
+            description={t('finance:stats.totalEarningsDescription')}
             icon={<DollarSign className="h-5 w-5 text-white" />}
             iconColor="gold"
             loading={loading}
           />
 
           <StatCard
-            title="Rental Commissions"
+            title={t('finance:stats.rentalCommissions')}
             value={formatCurrency(stats.rentalCommissions, currency || 'USD')}
-            description="Income from rental contracts"
+            description={t('finance:stats.rentalCommissionsDescription')}
             icon={<Home className="h-5 w-5 text-white" />}
             iconColor="emerald"
             loading={loading}
           />
 
           <StatCard
-            title="Sale Commissions"
+            title={t('finance:stats.saleCommissions')}
             value={formatCurrency(stats.saleCommissions, currency || 'USD')}
-            description="Income from property sales (4%)"
+            description={t('finance:stats.saleCommissionsDescription')}
             icon={<Building2 className="h-5 w-5 text-white" />}
             iconColor="navy"
             loading={loading}
@@ -136,9 +136,12 @@ export const Finance = () => {
           <CardHeader>
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
               <div>
-                <CardTitle className="text-slate-900 font-bold">Commission History</CardTitle>
+                <CardTitle className="text-slate-900 font-bold">{t('finance:commissionHistory.title')}</CardTitle>
                 <CardDescription className="text-slate-600 font-medium">
-                  {filteredCommissions.length} commission{filteredCommissions.length !== 1 ? 's' : ''} recorded
+                  {t('finance:commissionHistory.description', {
+                    count: filteredCommissions.length,
+                    s: filteredCommissions.length !== 1 ? 's' : ''
+                  })}
                 </CardDescription>
               </div>
 
@@ -146,12 +149,12 @@ export const Finance = () => {
                 <Filter className="h-4 w-4 text-slate-600" />
                 <Select value={typeFilter} onValueChange={setTypeFilter}>
                   <SelectTrigger className="w-[150px]">
-                    <SelectValue placeholder="Filter by type" />
+                    <SelectValue placeholder={t('finance:commissionHistory.filterByType')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all">All Types</SelectItem>
-                    <SelectItem value="rental">Rentals</SelectItem>
-                    <SelectItem value="sale">Sales</SelectItem>
+                    <SelectItem value="all">{t('finance:commissionHistory.allTypes')}</SelectItem>
+                    <SelectItem value="rental">{t('finance:commissionHistory.rentals')}</SelectItem>
+                    <SelectItem value="sale">{t('finance:commissionHistory.sales')}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -162,14 +165,14 @@ export const Finance = () => {
             {loading ? (
               <div className="flex flex-col items-center justify-center h-32 space-y-2">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-slate-900"></div>
-                <p className="text-sm text-slate-500">Loading commissions...</p>
+                <p className="text-sm text-slate-500">{t('finance:commissionHistory.loading')}</p>
               </div>
             ) : filteredCommissions.length === 0 ? (
               <div className="text-center py-12">
                 <TrendingUp className="h-16 w-16 text-slate-300 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-slate-900 mb-2">No Commissions Yet</h3>
+                <h3 className="text-lg font-semibold text-slate-900 mb-2">{t('finance:commissionHistory.noCommissionsYet')}</h3>
                 <p className="text-slate-600">
-                  Commissions will appear here when you rent or sell properties.
+                  {t('finance:commissionHistory.noCommissionsDescription')}
                 </p>
               </div>
             ) : (
@@ -215,7 +218,7 @@ export const Finance = () => {
                           ? 'bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50'
                           : 'bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50'
                       }`}>
-                        <p className="text-xs text-slate-600 font-medium">Commission</p>
+                        <p className="text-xs text-slate-600 font-medium">{t('finance:commissionHistory.commission')}</p>
                         <p className={`text-2xl font-bold ${
                           commission.type === 'rental' ? 'text-emerald-700' : 'text-amber-700'
                         }`}>
@@ -235,7 +238,7 @@ export const Finance = () => {
           <CardHeader>
             <CardTitle className="text-slate-900 font-bold flex items-center gap-2">
               <TrendingUp className="h-5 w-5 text-blue-700" />
-              Commission Structure
+              {t('finance:commissionStructure.title')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -244,9 +247,11 @@ export const Finance = () => {
                 <Home className="h-4 w-4 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-slate-900">Rental Commission</p>
+                <p className="font-semibold text-slate-900">{t('finance:commissionStructure.rentalTitle')}</p>
                 <p className="text-sm text-slate-600">
-                  Earn <span className="font-bold text-emerald-700">1 month's rent</span> when you successfully rent a property
+                  {t('finance:commissionStructure.rentalDescription', {
+                    amount: t('finance:commissionStructure.rentalAmount')
+                  })}
                 </p>
               </div>
             </div>
@@ -256,9 +261,11 @@ export const Finance = () => {
                 <Building2 className="h-4 w-4 text-white" />
               </div>
               <div>
-                <p className="font-semibold text-slate-900">Sale Commission</p>
+                <p className="font-semibold text-slate-900">{t('finance:commissionStructure.saleTitle')}</p>
                 <p className="text-sm text-slate-600">
-                  Earn <span className="font-bold text-amber-700">4% of sale price</span> when you sell a property
+                  {t('finance:commissionStructure.saleDescription', {
+                    amount: t('finance:commissionStructure.saleAmount')
+                  })}
                 </p>
               </div>
             </div>
