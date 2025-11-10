@@ -109,10 +109,23 @@ BEGIN
     -- Calculate 4% commission
     v_commission_amount := p_sale_price * 0.04;
 
-    -- Get property details
+    -- Get property details (with error handling)
     SELECT address, user_id INTO v_property_address, v_user_id
     FROM properties
     WHERE id = p_property_id;
+
+    -- Check if property exists
+    IF v_property_address IS NULL THEN
+        RAISE EXCEPTION 'Property with id % not found', p_property_id;
+    END IF;
+
+    -- Check if sale commission already exists for this property
+    IF EXISTS (
+        SELECT 1 FROM commissions
+        WHERE property_id = p_property_id AND type = 'sale'
+    ) THEN
+        RAISE EXCEPTION 'Sale commission already exists for property %', p_property_address;
+    END IF;
 
     -- Insert commission
     INSERT INTO commissions (
