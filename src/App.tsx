@@ -11,6 +11,7 @@ import { Contracts } from './features/contracts/Contracts';
 import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
+import { Finance } from './features/finance/Finance';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
@@ -83,6 +84,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <CalendarPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.FINANCE}
+            element={
+              <ProtectedRoute>
+                <Finance />
               </ProtectedRoute>
             }
           />

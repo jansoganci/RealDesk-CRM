@@ -13,6 +13,7 @@ import { remindersService as realRemindersService } from '../services/reminders.
 import { photosService as realPhotosService } from '../services/photos.service';
 import { inquiriesService as realInquiriesService } from '../services/inquiries.service';
 import { meetingsService as realMeetingsService } from '../services/meetings.service';
+import { commissionsService as realCommissionsService } from '../services/commissions.service';
 
 // Mock services
 import { mockOwnersService } from '../services/mockServices/mockOwners.service';
@@ -31,6 +32,7 @@ export type ContractsServiceType = typeof realContractsService;
 export type RemindersServiceType = typeof realRemindersService;
 export type InquiriesServiceType = typeof realInquiriesService;
 export type MeetingsServiceType = typeof realMeetingsService;
+export type CommissionsServiceType = typeof realCommissionsService;
 
 /**
  * Check if we're in demo mode by accessing auth context
@@ -173,6 +175,23 @@ export const meetingsService = new Proxy(realMeetingsService, {
     return value;
   }
 }) as typeof realMeetingsService;
+
+/**
+ * Commissions Service Proxy
+ * Note: No mock service for commissions yet, always uses real service
+ */
+export const commissionsService = new Proxy(realCommissionsService, {
+  get(target, prop) {
+    const service = target; // Always use real service for now
+    const value = (service as any)[prop];
+
+    if (typeof value === 'function') {
+      return value.bind(service);
+    }
+
+    return value;
+  }
+}) as typeof realCommissionsService;
 
 /**
  * Utility function to reset all mock data to original state

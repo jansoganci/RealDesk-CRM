@@ -151,7 +151,7 @@ export function ListPageTemplate<T>({
           <>
             {/* Desktop Table - Hidden on mobile */}
             <div className="hidden md:block">
-              <Card className={`shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur} overflow-hidden`}>
+              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95 overflow-hidden animate-fade-in">
                 <Table>
                   <TableHeader>
                     <TableRow>

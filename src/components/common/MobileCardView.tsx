@@ -34,11 +34,11 @@ export const MobileCardView = <T,>({
   }
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       {items.map((item, index) => (
         <Card
           key={`mobile-card-${index}`}
-          className={`p-4 shadow-sm hover:shadow-md transition-shadow ${COLORS.border.light} ${COLORS.card.bg}`}
+          className="p-5 shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-0.5 border-gray-200/50 backdrop-blur-sm bg-white/95 animate-fade-in"
         >
           {renderCardContent(item, index)}
         </Card>

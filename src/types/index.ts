@@ -97,3 +97,41 @@ export interface MeetingWithRelations extends Meeting {
   property?: Property;
   owner?: PropertyOwner;
 }
+
+// Commission types for finance tracking
+export type CommissionType = 'rental' | 'sale';
+
+export interface Commission {
+  id: string;
+  property_id: string;
+  contract_id?: string | null;
+  type: CommissionType;
+  amount: number;
+  currency: string;
+  property_address: string;
+  notes?: string | null;
+  created_at: string;
+  user_id: string;
+}
+
+export interface CommissionInsert {
+  property_id: string;
+  contract_id?: string | null;
+  type: CommissionType;
+  amount: number;
+  currency?: string;
+  property_address: string;
+  notes?: string | null;
+  user_id: string;
+}
+
+export interface CommissionWithProperty extends Commission {
+  property?: Property;
+}
+
+export interface CommissionStats {
+  totalEarnings: number;
+  rentalCommissions: number;
+  saleCommissions: number;
+  currency: string;
+}

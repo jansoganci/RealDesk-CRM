@@ -39,4 +39,5 @@ export const ROUTES = {
   REMINDERS: '/reminders',
   INQUIRIES: '/inquiries',
   CALENDAR: '/calendar',
+  FINANCE: '/finance',
 } as const;
