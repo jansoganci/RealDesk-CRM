@@ -21,7 +21,6 @@ import {
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { remindersService, inquiriesService } from '../../lib/serviceProxy';
-import { COLORS } from '@/config/colors';
 
 interface SidebarProps {
   isOpen: boolean;
