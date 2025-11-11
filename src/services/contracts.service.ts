@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase';
 import type { Contract, ContractInsert, ContractUpdate, ContractWithDetails } from '../types';
+import { getAuthenticatedUserId } from '../lib/auth';
 import type {
   RpcCreateContractAndUpdatePropertyParams,
   RpcCreateContractAndUpdatePropertyResult,
@@ -100,11 +101,27 @@ class ContractsService {
   }
 
   async create(contract: ContractInsert): Promise<Contract> {
-    return insertRow('contracts', contract);
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into contract data
+    return insertRow('contracts', {
+      ...contract,
+      user_id: userId,
+    });
   }
 
   async createWithStatusUpdate(contract: ContractInsert): Promise<Contract> {
-    const params: RpcCreateContractAndUpdatePropertyParams = { p_contract: contract };
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into contract data for RPC
+    const params: RpcCreateContractAndUpdatePropertyParams = {
+      p_contract: {
+        ...contract,
+        user_id: userId,
+      },
+    };
     const data = await callRpc<RpcCreateContractAndUpdatePropertyParams, RpcCreateContractAndUpdatePropertyResult>(
       'rpc_create_contract_and_update_property',
       params

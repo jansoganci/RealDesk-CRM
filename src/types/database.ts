@@ -14,6 +14,205 @@ export type Database = {
   }
   public: {
     Tables: {
+      commissions: {
+        Row: {
+          amount: number
+          contract_id: string | null
+          created_at: string
+          currency: string
+          id: string
+          notes: string | null
+          property_address: string
+          property_id: string
+          type: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          contract_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          property_address: string
+          property_id: string
+          type: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          contract_id?: string | null
+          created_at?: string
+          currency?: string
+          id?: string
+          notes?: string | null
+          property_address?: string
+          property_id?: string
+          type?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      expense_categories: {
+        Row: {
+          id: string
+          user_id: string | null
+          name: string
+          type: string
+          parent_category: string | null
+          monthly_budget: number | null
+          icon: string | null
+          color: string | null
+          is_default: boolean
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id?: string | null
+          name: string
+          type: string
+          parent_category?: string | null
+          monthly_budget?: number | null
+          icon?: string | null
+          color?: string | null
+          is_default?: boolean
+          is_active?: boolean
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string | null
+          name?: string
+          type?: string
+          parent_category?: string | null
+          monthly_budget?: number | null
+          icon?: string | null
+          color?: string | null
+          is_default?: boolean
+          is_active?: boolean
+          created_at?: string
+        }
+        Relationships: []
+      }
+      financial_transactions: {
+        Row: {
+          id: string
+          user_id: string
+          transaction_date: string
+          type: string
+          category: string
+          subcategory: string | null
+          amount: number
+          currency: string
+          description: string
+          notes: string | null
+          payment_method: string | null
+          payment_status: string
+          property_id: string | null
+          contract_id: string | null
+          commission_id: string | null
+          receipt_url: string | null
+          invoice_number: string | null
+          is_recurring: boolean
+          recurring_frequency: string | null
+          recurring_day: number | null
+          recurring_end_date: string | null
+          parent_transaction_id: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          transaction_date: string
+          type: string
+          category: string
+          subcategory?: string | null
+          amount: number
+          currency?: string
+          description: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_status?: string
+          property_id?: string | null
+          contract_id?: string | null
+          commission_id?: string | null
+          receipt_url?: string | null
+          invoice_number?: string | null
+          is_recurring?: boolean
+          recurring_frequency?: string | null
+          recurring_day?: number | null
+          recurring_end_date?: string | null
+          parent_transaction_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          transaction_date?: string
+          type?: string
+          category?: string
+          subcategory?: string | null
+          amount?: number
+          currency?: string
+          description?: string
+          notes?: string | null
+          payment_method?: string | null
+          payment_status?: string
+          property_id?: string | null
+          contract_id?: string | null
+          commission_id?: string | null
+          receipt_url?: string | null
+          invoice_number?: string | null
+          is_recurring?: boolean
+          recurring_frequency?: string | null
+          recurring_day?: number | null
+          recurring_end_date?: string | null
+          parent_transaction_id?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "financial_transactions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "financial_transactions_commission_id_fkey"
+            columns: ["commission_id"]
+            isOneToOne: false
+            referencedRelation: "commissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       contracts: {
         Row: {
           contract_pdf_path: string | null
@@ -33,6 +232,7 @@ export type Database = {
           status: string
           tenant_id: string
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           contract_pdf_path?: string | null
@@ -52,6 +252,7 @@ export type Database = {
           status?: string
           tenant_id: string
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           contract_pdf_path?: string | null
@@ -71,6 +272,7 @@ export type Database = {
           status?: string
           tenant_id?: string
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -97,6 +299,7 @@ export type Database = {
           matched_at: string | null
           notification_sent: boolean | null
           property_id: string
+          user_id: string
         }
         Insert: {
           contacted?: boolean | null
@@ -105,6 +308,7 @@ export type Database = {
           matched_at?: string | null
           notification_sent?: boolean | null
           property_id: string
+          user_id: string
         }
         Update: {
           contacted?: boolean | null
@@ -113,6 +317,7 @@ export type Database = {
           matched_at?: string | null
           notification_sent?: boolean | null
           property_id?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -207,8 +412,12 @@ export type Database = {
           notes: string | null
           owner_id: string
           rent_amount: number | null
+          sale_price: number | null
+          sold_at: string | null
+          sold_price: number | null
           status: string
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           address: string
@@ -221,8 +430,12 @@ export type Database = {
           notes?: string | null
           owner_id: string
           rent_amount?: number | null
+          sale_price?: number | null
+          sold_at?: string | null
+          sold_price?: number | null
           status?: string
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           address?: string
@@ -235,8 +448,12 @@ export type Database = {
           notes?: string | null
           owner_id?: string
           rent_amount?: number | null
+          sale_price?: number | null
+          sold_at?: string | null
+          sold_price?: number | null
           status?: string
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: [
           {
@@ -262,6 +479,7 @@ export type Database = {
           preferred_district: string | null
           status: string
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string | null
@@ -276,6 +494,7 @@ export type Database = {
           preferred_district?: string | null
           status?: string
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string | null
@@ -290,6 +509,7 @@ export type Database = {
           preferred_district?: string | null
           status?: string
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -303,6 +523,7 @@ export type Database = {
           notes: string | null
           phone: string | null
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           address?: string | null
@@ -313,6 +534,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           address?: string | null
@@ -323,6 +545,7 @@ export type Database = {
           notes?: string | null
           phone?: string | null
           updated_at?: string | null
+          user_id?: string
         }
         Relationships: []
       }
@@ -358,6 +581,78 @@ export type Database = {
           },
         ]
       }
+      recurring_expenses: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          description: string | null
+          category: string
+          amount: number
+          currency: string
+          frequency: string
+          day_of_month: number | null
+          start_date: string
+          end_date: string | null
+          next_due_date: string
+          last_generated_date: string | null
+          payment_method: string | null
+          is_active: boolean
+          auto_create_transaction: boolean
+          reminder_days_before: number | null
+          notes: string | null
+          vendor_name: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          description?: string | null
+          category: string
+          amount: number
+          currency?: string
+          frequency: string
+          day_of_month?: number | null
+          start_date: string
+          end_date?: string | null
+          next_due_date?: string
+          last_generated_date?: string | null
+          payment_method?: string | null
+          is_active?: boolean
+          auto_create_transaction?: boolean
+          reminder_days_before?: number | null
+          notes?: string | null
+          vendor_name?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          user_id?: string
+          name?: string
+          description?: string | null
+          category?: string
+          amount?: number
+          currency?: string
+          frequency?: string
+          day_of_month?: number | null
+          start_date?: string
+          end_date?: string | null
+          next_due_date?: string
+          last_generated_date?: string | null
+          payment_method?: string | null
+          is_active?: boolean
+          auto_create_transaction?: boolean
+          reminder_days_before?: number | null
+          notes?: string | null
+          vendor_name?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       tenants: {
         Row: {
           created_at: string | null
@@ -366,8 +661,8 @@ export type Database = {
           name: string
           notes: string | null
           phone: string | null
-          property_id: string | null
           updated_at: string | null
+          user_id: string
         }
         Insert: {
           created_at?: string | null
@@ -376,8 +671,8 @@ export type Database = {
           name: string
           notes?: string | null
           phone?: string | null
-          property_id?: string | null
           updated_at?: string | null
+          user_id: string
         }
         Update: {
           created_at?: string | null
@@ -386,36 +681,34 @@ export type Database = {
           name?: string
           notes?: string | null
           phone?: string | null
-          property_id?: string | null
           updated_at?: string | null
+          user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "tenants_property_id_fkey"
-            columns: ["property_id"]
-            isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       user_preferences: {
         Row: {
           currency: string | null
+          full_name: string | null
           language: string | null
           meeting_reminder_minutes: number | null
+          phone_number: string | null
           user_id: string
         }
         Insert: {
           currency?: string | null
+          full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
+          phone_number?: string | null
           user_id: string
         }
         Update: {
           currency?: string | null
+          full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
+          phone_number?: string | null
           user_id?: string
         }
         Relationships: []
@@ -432,6 +725,14 @@ export type Database = {
           p_user_id?: string
         }
         Returns: Json
+      }
+      create_sale_commission: {
+        Args: {
+          p_currency?: string
+          p_property_id: string
+          p_sale_price: number
+        }
+        Returns: string
       }
       get_quota: {
         Args: { p_device_id?: string; p_user_id?: string }
@@ -457,6 +758,7 @@ export type Database = {
           status: string
           tenant_id: string
           updated_at: string | null
+          user_id: string
         }
         SetofOptions: {
           from: "*"
@@ -518,6 +820,7 @@ export type Database = {
           status: string
           tenant_id: string
           updated_at: string | null
+          user_id: string
         }
         SetofOptions: {
           from: "*"
@@ -525,6 +828,14 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      calculate_next_due_date: {
+        Args: {
+          current_due_date: string
+          freq: string
+          day_of_month?: number | null
+        }
+        Returns: string | null
       }
     }
     Enums: {

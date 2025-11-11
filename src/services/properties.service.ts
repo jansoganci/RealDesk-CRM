@@ -1,6 +1,7 @@
 import { supabase } from '../config/supabase';
 import type { Property, PropertyInsert, PropertyUpdate, PropertyWithOwner } from '../types';
 import { insertRow, updateRow } from '../lib/db';
+import { getAuthenticatedUserId } from '../lib/auth';
 
 class PropertiesService {
   async getAll(): Promise<PropertyWithOwner[]> {
@@ -112,7 +113,14 @@ class PropertiesService {
   }
 
   async create(property: PropertyInsert): Promise<Property> {
-    const newProperty = await insertRow('properties', property);
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into property data
+    const newProperty = await insertRow('properties', {
+      ...property,
+      user_id: userId,
+    });
 
     // Trigger matching if property is Empty
     if (newProperty.status === 'Empty') {

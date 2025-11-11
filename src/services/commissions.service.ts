@@ -1,5 +1,6 @@
 import { supabase } from '../config/supabase';
 import type { Commission, CommissionInsert, CommissionStats, CommissionWithProperty } from '../types';
+import { getAuthenticatedUserId } from '../lib/auth';
 
 class CommissionsService {
   /**
@@ -123,11 +124,19 @@ class CommissionsService {
 
   /**
    * Create a new commission
+   * Security: Always uses authenticated user's ID, ignoring any user_id in commission parameter
    */
   async create(commission: CommissionInsert): Promise<Commission> {
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id, overriding any provided value for security
     const { data, error } = await supabase
       .from('commissions')
-      .insert(commission)
+      .insert({
+        ...commission,
+        user_id: userId, // Force current user's ID
+      })
       .select()
       .single();
 

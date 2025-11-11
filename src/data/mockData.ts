@@ -6,10 +6,13 @@ import type {
   PropertyPhoto 
 } from '../types';
 
+type TenantWithPropertyId = Tenant & { property_id: string | null };
+
 // Mock Property Owners - Realistic Turkish names and data
 export const mockPropertyOwners: PropertyOwner[] = [
   {
     id: 'owner-1',
+    user_id: 'demo-user',
     name: 'Mehmet Özkan',
     phone: '+90 532 123 4567',
     email: 'mehmet.ozkan@gmail.com',
@@ -20,6 +23,7 @@ export const mockPropertyOwners: PropertyOwner[] = [
   },
   {
     id: 'owner-2',
+    user_id: 'demo-user',
     name: 'Elif Yıldırım',
     phone: '+90 541 987 6543',
     email: 'elif.yildirim@hotmail.com',
@@ -30,6 +34,7 @@ export const mockPropertyOwners: PropertyOwner[] = [
   },
   {
     id: 'owner-3',
+    user_id: 'demo-user',
     name: 'Anadolu İnşaat Ltd. Şti.',
     phone: '+90 212 555 0123',
     email: 'info@anadoluinsaat.com.tr',
@@ -40,6 +45,7 @@ export const mockPropertyOwners: PropertyOwner[] = [
   },
   {
     id: 'owner-4',
+    user_id: 'demo-user',
     name: 'Ayşe ve Hasan Demir',
     phone: '+90 505 444 7788',
     email: 'demirler@outlook.com',
@@ -62,6 +68,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-1',
     created_at: '2023-01-20T11:00:00Z',
     updated_at: '2024-10-15T14:30:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 8500,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-2',
@@ -73,6 +86,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-1',
     created_at: '2023-04-12T14:15:00Z',
     updated_at: '2024-10-22T09:45:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 12000,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-3',
@@ -84,6 +104,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-2',
     created_at: '2023-02-28T16:30:00Z',
     updated_at: '2024-10-18T12:20:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 15000,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-4',
@@ -95,6 +122,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-3',
     created_at: '2023-03-15T10:45:00Z',
     updated_at: '2024-10-12T15:10:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 7800,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-5',
@@ -106,6 +140,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-3',
     created_at: '2023-06-08T09:20:00Z',
     updated_at: '2024-10-20T11:35:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 11000,
+    sale_price: 4500000,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-6',
@@ -117,6 +158,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-4',
     created_at: '2023-05-25T13:10:00Z',
     updated_at: '2024-10-08T17:25:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 7200,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-7',
@@ -128,6 +176,13 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-4',
     created_at: '2023-07-14T12:45:00Z',
     updated_at: '2024-10-25T10:15:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: 9500,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
   {
     id: 'property-8',
@@ -139,11 +194,18 @@ export const mockProperties: Property[] = [
     owner_id: 'owner-2',
     created_at: '2023-08-30T15:30:00Z',
     updated_at: '2024-10-01T14:40:00Z',
+    currency: 'TRY',
+    listing_url: null,
+    rent_amount: null,
+    sale_price: null,
+    sold_at: null,
+    sold_price: null,
+    user_id: 'demo-user',
   },
 ];
 
 // Mock Tenants - Realistic Turkish tenant profiles
-export const mockTenants: Tenant[] = [
+export const mockTenants: TenantWithPropertyId[] = [
   {
     id: 'tenant-1',
     name: 'Ahmet Kaya',
@@ -153,6 +215,7 @@ export const mockTenants: Tenant[] = [
     notes: 'İyi kiracı, ödemeleri zamanında yapar. 2 yıldır bu dairede.',
     created_at: '2023-02-01T10:00:00Z',
     updated_at: '2024-10-15T14:20:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-2',
@@ -163,6 +226,7 @@ export const mockTenants: Tenant[] = [
     notes: 'Genç profesyonel, bankacı. Düzenli ve titiz kiracı.',
     created_at: '2023-03-10T11:30:00Z',
     updated_at: '2024-10-18T12:15:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-3',
@@ -173,6 +237,7 @@ export const mockTenants: Tenant[] = [
     notes: 'Yeni evli çift, sessiz ve saygılı. Daire bakımına özen gösteriyorlar.',
     created_at: '2023-04-05T14:45:00Z',
     updated_at: '2024-10-12T16:30:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-4',
@@ -183,6 +248,7 @@ export const mockTenants: Tenant[] = [
     notes: 'Emekli öğretmen, temiz ve düzenli. Uzun vadeli kiracı.',
     created_at: '2023-06-12T09:20:00Z',
     updated_at: '2024-10-08T17:10:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-5',
@@ -193,6 +259,7 @@ export const mockTenants: Tenant[] = [
     notes: 'IT uzmanı, yeni daire arıyor. Referansları çok iyi.',
     created_at: '2024-09-15T13:15:00Z',
     updated_at: '2024-10-20T11:45:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-6',
@@ -203,6 +270,7 @@ export const mockTenants: Tenant[] = [
     notes: 'Üniversite öğrencisi, aileden garantili. Küçük daire arıyor.',
     created_at: '2024-10-01T16:30:00Z',
     updated_at: '2024-10-22T09:20:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'tenant-7',
@@ -213,6 +281,7 @@ export const mockTenants: Tenant[] = [
     notes: 'Uluslararası şirkette çalışan yabancı. İngilizce konuşuyor.',
     created_at: '2024-10-10T12:00:00Z',
     updated_at: '2024-10-25T14:50:00Z',
+    user_id: 'demo-user',
   },
 ];
 
@@ -225,6 +294,7 @@ export const mockContracts: Contract[] = [
     start_date: '2023-02-01',
     end_date: '2025-01-31',
     rent_amount: 8500,
+    currency: 'TRY',
     status: 'Active',
     notes: 'İki yıllık sözleşme, yıllık %25 artış klozu var.',
     rent_increase_reminder_enabled: true,
@@ -235,6 +305,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: '/demo-contracts/contract-1.pdf',
     created_at: '2023-02-01T10:00:00Z',
     updated_at: '2024-10-15T14:20:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'contract-2',
@@ -243,6 +314,7 @@ export const mockContracts: Contract[] = [
     start_date: '2023-03-15',
     end_date: '2024-03-14',
     rent_amount: 14000,
+    currency: 'TRY',
     status: 'Archived',
     notes: 'Eski sözleşme sona erdi, kiracı yenileme istedi.',
     rent_increase_reminder_enabled: false,
@@ -253,6 +325,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: null,
     created_at: '2023-03-15T11:30:00Z',
     updated_at: '2024-03-14T18:00:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'contract-3',
@@ -261,6 +334,7 @@ export const mockContracts: Contract[] = [
     start_date: '2024-03-15',
     end_date: '2025-03-14',
     rent_amount: 15000,
+    currency: 'TRY',
     status: 'Active',
     notes: 'Yenilenen sözleşme, kira artışı yapıldı.',
     rent_increase_reminder_enabled: true,
@@ -271,6 +345,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: null,
     created_at: '2024-03-15T12:00:00Z',
     updated_at: '2024-10-18T12:15:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'contract-4',
@@ -279,6 +354,7 @@ export const mockContracts: Contract[] = [
     start_date: '2023-04-10',
     end_date: '2025-04-09',
     rent_amount: 7800,
+    currency: 'TRY',
     status: 'Active',
     notes: 'Genç çift için iki yıllık özel anlaşma.',
     rent_increase_reminder_enabled: true,
@@ -289,6 +365,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: null,
     created_at: '2023-04-10T14:45:00Z',
     updated_at: '2024-10-12T16:30:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'contract-5',
@@ -297,6 +374,7 @@ export const mockContracts: Contract[] = [
     start_date: '2023-06-15',
     end_date: '2024-12-14',
     rent_amount: 7200,
+    currency: 'TRY',
     status: 'Active',
     notes: 'Uzun vadeli kiracı için özel indirimli kira.',
     rent_increase_reminder_enabled: true,
@@ -307,6 +385,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: null,
     created_at: '2023-06-15T09:20:00Z',
     updated_at: '2024-10-08T17:10:00Z',
+    user_id: 'demo-user',
   },
   {
     id: 'contract-6',
@@ -315,6 +394,7 @@ export const mockContracts: Contract[] = [
     start_date: '2021-02-01',
     end_date: '2023-01-31',
     rent_amount: 6500,
+    currency: 'TRY',
     status: 'Archived',
     notes: 'Önceki dönem sözleşmesi, artış sonrası yenilendi.',
     rent_increase_reminder_enabled: false,
@@ -325,6 +405,7 @@ export const mockContracts: Contract[] = [
     contract_pdf_path: null,
     created_at: '2021-02-01T10:00:00Z',
     updated_at: '2023-01-31T23:59:00Z',
+    user_id: 'demo-user',
   },
 ];
 

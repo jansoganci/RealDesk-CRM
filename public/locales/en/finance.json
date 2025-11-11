@@ -1,35 +1,186 @@
 {
-  "title": "Finance",
-  "subtitle": "Track your commission income from rentals and sales",
-  "stats": {
-    "totalEarnings": "Total Earnings",
-    "totalEarningsDescription": "All-time commission earnings",
-    "rentalCommissions": "Rental Commissions",
-    "rentalCommissionsDescription": "Income from rental contracts",
-    "saleCommissions": "Sale Commissions",
-    "saleCommissionsDescription": "Income from property sales (4%)"
+  "pageTitle": "Finance Dashboard",
+  "pageDescription": "Track income, expenses, and financial performance",
+
+  "cards": {
+    "totalIncome": "Total Income",
+    "totalExpenses": "Total Expenses",
+    "netProfit": "Net Profit",
+    "pending": "Pending Transactions",
+    "noChange": "0%",
+    "vsLastMonth": "vs last month"
   },
-  "commissionHistory": {
-    "title": "Commission History",
-    "description": "{{count}} commission{{s}} recorded",
-    "filterByType": "Filter by type",
+
+  "charts": {
+    "incomeVsExpenses": "Income vs Expenses Trend",
+    "expenseBreakdown": "Expense Breakdown by Category",
+    "income": "Income",
+    "expense": "Expense",
+    "net": "Net",
+    "noExpenseData": "No expense data available for this period"
+  },
+
+  "sections": {
+    "transactions": "Recent Transactions",
+    "transactionsDescription": "View and manage all financial transactions",
+    "analytics": "Financial Analytics",
+    "analyticsDescription": "Advanced insights and performance metrics"
+  },
+
+  "actions": {
+    "addTransaction": "Add Transaction",
+    "exportCSV": "Export to CSV"
+  },
+
+  "export": {
+    "exportData": "Export",
+    "exportCSV": "Export as CSV",
+    "exportPDF": "Export as PDF",
+    "exportExcel": "Export as Excel",
+    "exportSuccess": "{{format}} export completed successfully",
+    "exportError": "Failed to export data"
+  },
+
+  "automation": {
+    "upcomingBills": "Upcoming Bills",
+    "upcomingBillsDesc": "Next recurring expenses due",
+    "bills": "bills",
+    "noBills": "All bills are paid!",
+    "noBillsDesc": "No bills due in the next {{days}} days",
+    "markAsPaid": "Mark as Paid",
+    "billMarkedPaid": "Bill marked as paid successfully",
+    "markPaidError": "Failed to mark bill as paid",
+    "overdue": "Overdue",
+    "dueSoon": "Due in {{days}} days",
+    "upcoming": "Upcoming",
+    "frequency": "Frequency",
+    "frequencies": {
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    },
+    "runNow": "Run Automation",
+    "transactionsGenerated": "{{count}} recurring transaction(s) generated",
+    "noTransactionsToGenerate": "No recurring transactions to generate",
+    "automationError": "Failed to run automation"
+  },
+
+  "filters": {
+    "selectMonth": "Select month",
+    "allMonths": "All Months",
+    "selectType": "Select type",
     "allTypes": "All Types",
-    "rentals": "Rentals",
-    "sales": "Sales",
-    "loading": "Loading commissions...",
-    "noCommissionsYet": "No Commissions Yet",
-    "noCommissionsDescription": "Commissions will appear here when you rent or sell properties.",
-    "commission": "Commission",
-    "rental": "Rental",
-    "sale": "Sale"
+    "selectCategory": "Select category",
+    "allCategories": "All Categories",
+    "selectStatus": "Select status",
+    "allStatuses": "All Statuses",
+    "clearFilters": "Clear Filters"
   },
-  "commissionStructure": {
-    "title": "Commission Structure",
-    "rentalTitle": "Rental Commission",
-    "rentalDescription": "Earn {{amount}} when you successfully rent a property",
-    "rentalAmount": "1 month's rent",
-    "saleTitle": "Sale Commission",
-    "saleDescription": "Earn {{amount}} when you sell a property",
-    "saleAmount": "4% of sale price"
+
+  "table": {
+    "date": "Date",
+    "type": "Type",
+    "category": "Category",
+    "description": "Description",
+    "amount": "Amount",
+    "status": "Status",
+    "paymentMethod": "Payment Method",
+    "actions": "Actions",
+    "noTransactions": "No transactions found. Add your first transaction to get started."
+  },
+
+  "types": {
+    "income": "Income",
+    "expense": "Expense"
+  },
+
+  "paymentMethods": {
+    "cash": "Cash",
+    "bank_transfer": "Bank Transfer",
+    "credit_card": "Credit Card",
+    "check": "Check"
+  },
+
+  "paymentStatus": {
+    "completed": "Completed",
+    "pending": "Pending",
+    "cancelled": "Cancelled"
+  },
+
+  "dialog": {
+    "addTitle": "Add Transaction",
+    "addDescription": "Create a new financial transaction",
+    "editTitle": "Edit Transaction",
+    "editDescription": "Update transaction details"
+  },
+
+  "fields": {
+    "date": "Transaction Date",
+    "type": "Transaction Type",
+    "selectType": "Select type",
+    "category": "Category",
+    "selectCategory": "Select category",
+    "amount": "Amount",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter transaction description",
+    "notes": "Notes (Optional)",
+    "notesPlaceholder": "Add any additional notes",
+    "paymentMethod": "Payment Method",
+    "selectPaymentMethod": "Select payment method",
+    "paymentStatus": "Payment Status",
+    "selectPaymentStatus": "Select status"
+  },
+
+  "validation": {
+    "dateRequired": "Date is required",
+    "typeRequired": "Type is required",
+    "categoryRequired": "Category is required",
+    "amountPositive": "Amount must be greater than 0",
+    "descriptionRequired": "Description is required"
+  },
+
+  "analytics": {
+    "profitMargin": "Profit Margin",
+    "profitMarginDesc": "Net profit as percentage of total revenue",
+    "expenseRatio": "Expense Ratio",
+    "expenseRatioDesc": "Operating expenses as percentage of revenue",
+    "budgetEfficiency": "Budget Efficiency",
+    "budgetEfficiencyDesc": "How well spending stays within budget",
+    "cashFlowForecast": "30-Day Forecast",
+    "cashFlowForecastDesc": "Projected cash flow for next 30 days",
+    "yearlyTrend": "12-Month Financial Trend",
+    "yearlyTrendDesc": "Year {{year}} revenue, expenses, and profit trends",
+    "revenue": "Revenue",
+    "expenses": "Expenses",
+    "profit": "Profit",
+    "budgetVsActual": "Budget vs Actual Performance",
+    "budgetVsActualDesc": "Comparison of budgeted and actual spending by category",
+    "budgeted": "Budgeted",
+    "actual": "Actual",
+    "categoryDetails": "Category Details",
+    "underBudget": "{{percent}}% under",
+    "onTrack": "On Track",
+    "overBudget": "{{percent}}% over",
+    "topIncomeSources": "Top Income Sources",
+    "topIncomeSourcesDesc": "Highest revenue generating categories",
+    "topExpenseCategories": "Top Expense Categories",
+    "topExpenseCategoriesDesc": "Largest spending categories",
+    "noCategories": "No category data available",
+    "noBudgetData": "No budget data available",
+    "noBudgetDataDesc": "Set monthly budgets in expense categories to see comparisons"
+  },
+
+  "messages": {
+    "loadError": "Failed to load finance data",
+    "createSuccess": "Transaction created successfully",
+    "updateSuccess": "Transaction updated successfully",
+    "deleteSuccess": "Transaction deleted successfully",
+    "saveError": "Failed to save transaction",
+    "deleteError": "Failed to delete transaction",
+    "deleteConfirm": "Are you sure you want to delete this transaction? This action cannot be undone.",
+    "exportSuccess": "Transactions exported successfully",
+    "exportError": "Failed to export transactions"
   }
 }

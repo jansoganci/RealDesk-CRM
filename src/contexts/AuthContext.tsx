@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
@@ -28,6 +28,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [demoMode, setDemoMode] = useState(false);
   const [language, setLanguageState] = useState('tr');
   const [currency, setCurrencyState] = useState('TRY');
+  const ensuredUserPreferencesFor = useRef<string | null>(null);
 
   // Sync i18n with language state changes
   useEffect(() => {
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           .from('user_preferences')
           .select('language, currency')
           .eq('user_id', session.user.id)
-          .single();
+          .maybeSingle();
         if (preferences) {
           setLanguageState(preferences.language || 'tr');
           setCurrencyState(preferences.currency || 'TRY');
@@ -70,6 +71,39 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    const ensureUserPreferences = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      const currentUserId = session?.user?.id;
+
+      if (!currentUserId || demoMode) {
+        return;
+      }
+
+      if (ensuredUserPreferencesFor.current === currentUserId) {
+        return;
+      }
+
+      await supabase
+        .from('user_preferences')
+        .upsert(
+          {
+            user_id: currentUserId,
+            language: 'tr',
+            currency: 'TRY',
+          },
+          {
+            onConflict: 'user_id',
+            ignoreDuplicates: true,
+          }
+        );
+
+      ensuredUserPreferencesFor.current = currentUserId;
+    };
+
+    ensureUserPreferences();
+  }, [demoMode, user?.id]);
 
   const updateUserPreferences = async (prefs: { language?: string; currency?: string }) => {
     if (!user) return;
@@ -128,6 +162,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     // Also exit demo mode when signing out
     setDemoMode(false);
+    ensuredUserPreferencesFor.current = null;
   };
 
   const enableDemoMode = () => {
@@ -161,6 +196,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     
     // Clear global demo mode flag
     (window as any).__DEMO_MODE__ = false;
+    ensuredUserPreferencesFor.current = null;
   };
 
   return (

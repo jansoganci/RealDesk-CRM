@@ -1,6 +1,7 @@
 import { supabase } from '../config/supabase';
 import type { PropertyOwner, PropertyOwnerInsert, PropertyOwnerUpdate } from '../types';
 import { insertRow, updateRow } from '../lib/db';
+import { getAuthenticatedUserId } from '../lib/auth';
 
 interface OwnerWithPropertyCount extends PropertyOwner {
   property_count: number;
@@ -29,7 +30,14 @@ export const ownersService = {
   },
 
   async create(owner: PropertyOwnerInsert) {
-    return insertRow('property_owners', owner);
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into owner data
+    return insertRow('property_owners', {
+      ...owner,
+      user_id: userId,
+    });
   },
 
   async update(id: string, owner: PropertyOwnerUpdate) {

@@ -9,6 +9,7 @@ import type {
   Property,
 } from '../types';
 import { insertRow, updateRow } from '../lib/db';
+import { getAuthenticatedUserId } from '../lib/auth';
 
 class InquiriesService {
   async getAll(): Promise<PropertyInquiry[]> {
@@ -49,7 +50,14 @@ class InquiriesService {
   }
 
   async create(inquiry: PropertyInquiryInsert): Promise<PropertyInquiry> {
-    return insertRow('property_inquiries', inquiry);
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into inquiry data
+    return insertRow('property_inquiries', {
+      ...inquiry,
+      user_id: userId,
+    });
   }
 
   async update(id: string, inquiry: PropertyInquiryUpdate): Promise<PropertyInquiry> {
@@ -185,12 +193,16 @@ class InquiriesService {
 
       if (existingMatch) return; // Match already exists
 
+      // Get user ID to associate with match
+      const userId = await getAuthenticatedUserId();
+
       // Create match
       const matchData: InquiryMatchInsert = {
         inquiry_id: inquiryId,
         property_id: propertyId,
         notification_sent: false,
         contacted: false,
+        user_id: userId,
       };
 
       await insertRow('inquiry_matches', matchData);

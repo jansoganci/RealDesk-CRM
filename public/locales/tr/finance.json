@@ -1,35 +1,186 @@
 {
-  "title": "Finans",
-  "subtitle": "Kiralamalar ve satışlardan elde edilen komisyon gelirinizi takip edin",
-  "stats": {
-    "totalEarnings": "Toplam Kazanç",
-    "totalEarningsDescription": "Tüm zamanların komisyon kazancı",
-    "rentalCommissions": "Kiralama Komisyonları",
-    "rentalCommissionsDescription": "Kira sözleşmelerinden gelir",
-    "saleCommissions": "Satış Komisyonları",
-    "saleCommissionsDescription": "Mülk satışlarından gelir (%4)"
+  "pageTitle": "Finans Panosu",
+  "pageDescription": "Gelir, gider ve finansal performansı takip edin",
+
+  "cards": {
+    "totalIncome": "Toplam Gelir",
+    "totalExpenses": "Toplam Gider",
+    "netProfit": "Net Kar",
+    "pending": "Bekleyen İşlemler",
+    "noChange": "%0",
+    "vsLastMonth": "geçen aya göre"
   },
-  "commissionHistory": {
-    "title": "Komisyon Geçmişi",
-    "description": "{{count}} komisyon kaydedildi",
-    "filterByType": "Türe göre filtrele",
+
+  "charts": {
+    "incomeVsExpenses": "Gelir - Gider Trendi",
+    "expenseBreakdown": "Kategorilere Göre Gider Dağılımı",
+    "income": "Gelir",
+    "expense": "Gider",
+    "net": "Net",
+    "noExpenseData": "Bu dönem için gider verisi bulunmamaktadır"
+  },
+
+  "sections": {
+    "transactions": "Son İşlemler",
+    "transactionsDescription": "Tüm finansal işlemleri görüntüleyin ve yönetin",
+    "analytics": "Finansal Analiz",
+    "analyticsDescription": "Gelişmiş içgörüler ve performans metrikleri"
+  },
+
+  "actions": {
+    "addTransaction": "İşlem Ekle",
+    "exportCSV": "CSV'ye Aktar"
+  },
+
+  "export": {
+    "exportData": "Dışa Aktar",
+    "exportCSV": "CSV olarak aktar",
+    "exportPDF": "PDF olarak aktar",
+    "exportExcel": "Excel olarak aktar",
+    "exportSuccess": "{{format}} dışa aktarma başarılı",
+    "exportError": "Veri dışa aktarılamadı"
+  },
+
+  "automation": {
+    "upcomingBills": "Yaklaşan Faturalar",
+    "upcomingBillsDesc": "Vadesi gelen tekrarlayan giderler",
+    "bills": "fatura",
+    "noBills": "Tüm faturalar ödendi!",
+    "noBillsDesc": "Önümüzdeki {{days}} gün içinde vadesi gelen fatura yok",
+    "markAsPaid": "Ödendi Olarak İşaretle",
+    "billMarkedPaid": "Fatura ödendi olarak işaretlendi",
+    "markPaidError": "Fatura ödendi olarak işaretlenemedi",
+    "overdue": "Vadesi Geçti",
+    "dueSoon": "{{days}} gün içinde",
+    "upcoming": "Yaklaşan",
+    "frequency": "Sıklık",
+    "frequencies": {
+      "daily": "Günlük",
+      "weekly": "Haftalık",
+      "monthly": "Aylık",
+      "quarterly": "3 Aylık",
+      "yearly": "Yıllık"
+    },
+    "runNow": "Otomasyonu Çalıştır",
+    "transactionsGenerated": "{{count}} tekrarlayan işlem oluşturuldu",
+    "noTransactionsToGenerate": "Oluşturulacak tekrarlayan işlem yok",
+    "automationError": "Otomasyon çalıştırılamadı"
+  },
+
+  "filters": {
+    "selectMonth": "Ay seçin",
+    "allMonths": "Tüm Aylar",
+    "selectType": "Tür seçin",
     "allTypes": "Tüm Türler",
-    "rentals": "Kiralamalar",
-    "sales": "Satışlar",
-    "loading": "Komisyonlar yükleniyor...",
-    "noCommissionsYet": "Henüz Komisyon Yok",
-    "noCommissionsDescription": "Mülk kiralaması veya satışı yaptığınızda komisyonlar burada görünecektir.",
-    "commission": "Komisyon",
-    "rental": "Kiralama",
-    "sale": "Satış"
+    "selectCategory": "Kategori seçin",
+    "allCategories": "Tüm Kategoriler",
+    "selectStatus": "Durum seçin",
+    "allStatuses": "Tüm Durumlar",
+    "clearFilters": "Filtreleri Temizle"
   },
-  "commissionStructure": {
-    "title": "Komisyon Yapısı",
-    "rentalTitle": "Kiralama Komisyonu",
-    "rentalDescription": "Bir mülkü başarıyla kiraladığınızda {{amount}} kazanırsınız",
-    "rentalAmount": "1 aylık kira",
-    "saleTitle": "Satış Komisyonu",
-    "saleDescription": "Bir mülk sattığınızda {{amount}} kazanırsınız",
-    "saleAmount": "satış fiyatının %4'ü"
+
+  "table": {
+    "date": "Tarih",
+    "type": "Tür",
+    "category": "Kategori",
+    "description": "Açıklama",
+    "amount": "Tutar",
+    "status": "Durum",
+    "paymentMethod": "Ödeme Yöntemi",
+    "actions": "İşlemler",
+    "noTransactions": "İşlem bulunamadı. Başlamak için ilk işleminizi ekleyin."
+  },
+
+  "types": {
+    "income": "Gelir",
+    "expense": "Gider"
+  },
+
+  "paymentMethods": {
+    "cash": "Nakit",
+    "bank_transfer": "Banka Havalesi",
+    "credit_card": "Kredi Kartı",
+    "check": "Çek"
+  },
+
+  "paymentStatus": {
+    "completed": "Tamamlandı",
+    "pending": "Bekliyor",
+    "cancelled": "İptal Edildi"
+  },
+
+  "dialog": {
+    "addTitle": "İşlem Ekle",
+    "addDescription": "Yeni finansal işlem oluştur",
+    "editTitle": "İşlemi Düzenle",
+    "editDescription": "İşlem detaylarını güncelle"
+  },
+
+  "fields": {
+    "date": "İşlem Tarihi",
+    "type": "İşlem Türü",
+    "selectType": "Tür seçin",
+    "category": "Kategori",
+    "selectCategory": "Kategori seçin",
+    "amount": "Tutar",
+    "description": "Açıklama",
+    "descriptionPlaceholder": "İşlem açıklaması girin",
+    "notes": "Notlar (Opsiyonel)",
+    "notesPlaceholder": "Ek notlar ekleyin",
+    "paymentMethod": "Ödeme Yöntemi",
+    "selectPaymentMethod": "Ödeme yöntemi seçin",
+    "paymentStatus": "Ödeme Durumu",
+    "selectPaymentStatus": "Durum seçin"
+  },
+
+  "validation": {
+    "dateRequired": "Tarih gereklidir",
+    "typeRequired": "Tür gereklidir",
+    "categoryRequired": "Kategori gereklidir",
+    "amountPositive": "Tutar 0'dan büyük olmalıdır",
+    "descriptionRequired": "Açıklama gereklidir"
+  },
+
+  "analytics": {
+    "profitMargin": "Kar Marjı",
+    "profitMarginDesc": "Toplam gelire göre net kar yüzdesi",
+    "expenseRatio": "Gider Oranı",
+    "expenseRatioDesc": "Gelire göre işletme giderleri yüzdesi",
+    "budgetEfficiency": "Bütçe Verimliliği",
+    "budgetEfficiencyDesc": "Harcamaların bütçe içinde kalma performansı",
+    "cashFlowForecast": "30 Günlük Tahmin",
+    "cashFlowForecastDesc": "Önümüzdeki 30 gün için tahmini nakit akışı",
+    "yearlyTrend": "12 Aylık Finansal Trend",
+    "yearlyTrendDesc": "{{year}} yılı gelir, gider ve kar trendleri",
+    "revenue": "Gelir",
+    "expenses": "Giderler",
+    "profit": "Kar",
+    "budgetVsActual": "Bütçe - Gerçekleşen Karşılaştırması",
+    "budgetVsActualDesc": "Kategorilere göre bütçelenen ve gerçekleşen harcamaların karşılaştırması",
+    "budgeted": "Bütçelenen",
+    "actual": "Gerçekleşen",
+    "categoryDetails": "Kategori Detayları",
+    "underBudget": "%{{percent}} altında",
+    "onTrack": "Hedefte",
+    "overBudget": "%{{percent}} üzerinde",
+    "topIncomeSources": "En Yüksek Gelir Kaynakları",
+    "topIncomeSourcesDesc": "En yüksek gelir sağlayan kategoriler",
+    "topExpenseCategories": "En Yüksek Gider Kategorileri",
+    "topExpenseCategoriesDesc": "En fazla harcama yapılan kategoriler",
+    "noCategories": "Kategori verisi bulunmamaktadır",
+    "noBudgetData": "Bütçe verisi bulunmamaktadır",
+    "noBudgetDataDesc": "Karşılaştırmaları görmek için gider kategorilerinde aylık bütçeler belirleyin"
+  },
+
+  "messages": {
+    "loadError": "Finans verileri yüklenemedi",
+    "createSuccess": "İşlem başarıyla oluşturuldu",
+    "updateSuccess": "İşlem başarıyla güncellendi",
+    "deleteSuccess": "İşlem başarıyla silindi",
+    "saveError": "İşlem kaydedilemedi",
+    "deleteError": "İşlem silinemedi",
+    "deleteConfirm": "Bu işlemi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
+    "exportSuccess": "İşlemler başarıyla dışa aktarıldı",
+    "exportError": "İşlemler dışa aktarılamadı"
   }
 }

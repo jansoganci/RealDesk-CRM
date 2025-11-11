@@ -244,6 +244,7 @@ export const Tenants = () => {
             <TableCell>
               {getAssignmentBadge(tenant)}
             </TableCell>
+            <TableCell>
               <TableActionButtons
                 onEdit={() => handleEditTenant(tenant)}
                 onDelete={() => handleDeleteClick(tenant)}
@@ -256,6 +257,7 @@ export const Tenants = () => {
                   },
                 ]}
               />
+            </TableCell>
           </TableRow>
         )}
         renderCardContent={(tenant) => (

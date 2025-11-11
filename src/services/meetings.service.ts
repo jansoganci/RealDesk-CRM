@@ -7,6 +7,7 @@ import {
 } from '@/lib/errorCodes';
 import type { Database } from '@/types/database';
 import type { Meeting, MeetingInsert, MeetingUpdate } from '@/types';
+import { getAuthenticatedUserId } from '@/lib/auth';
 
 const MEETINGS_TABLE = 'meetings';
 
@@ -66,14 +67,12 @@ class MeetingsService {
    * @returns A promise that resolves to the newly created meeting.
    */
   async create(meetingData: MeetingInsert): Promise<Meeting> {
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-    if (authError || !user) {
-        throw new AppError(ERROR_SERVER_ERROR, 'Authentication error: Cannot create meeting.');
-    }
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
 
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .insert({ ...meetingData, user_id: user.id })
+      .insert({ ...meetingData, user_id: userId })
       .select()
       .single();
 

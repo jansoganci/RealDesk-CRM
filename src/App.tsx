@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { Login } from './features/auth/Login';
@@ -12,6 +12,7 @@ import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
+import { Profile } from './features/profile/Profile';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import './App.css';
@@ -92,6 +93,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Finance />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

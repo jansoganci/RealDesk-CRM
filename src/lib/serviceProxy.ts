@@ -14,6 +14,8 @@ import { photosService as realPhotosService } from '../services/photos.service';
 import { inquiriesService as realInquiriesService } from '../services/inquiries.service';
 import { meetingsService as realMeetingsService } from '../services/meetings.service';
 import { commissionsService as realCommissionsService } from '../services/commissions.service';
+import { userPreferencesService as realUserPreferencesService } from '../services/userPreferences.service';
+import * as realFinancialTransactionsService from '../services/financialTransactions.service';
 
 // Mock services
 import { mockOwnersService } from '../services/mockServices/mockOwners.service';
@@ -23,6 +25,8 @@ import { mockContractsService } from '../services/mockServices/mockContracts.ser
 import { mockRemindersService } from '../services/mockServices/mockReminders.service';
 import { mockInquiriesService } from '../services/mockServices/mockInquiries.service';
 import { mockMeetingsService } from '../services/mockServices/mockMeetings.service';
+import { userPreferencesService as mockUserPreferencesService } from '../services/mockServices/userPreferences.service';
+import * as mockFinancialTransactionsService from '../services/mockServices/financialTransactions.service';
 
 // Service type definitions using typeof
 export type OwnersServiceType = typeof realOwnersService;
@@ -33,6 +37,8 @@ export type RemindersServiceType = typeof realRemindersService;
 export type InquiriesServiceType = typeof realInquiriesService;
 export type MeetingsServiceType = typeof realMeetingsService;
 export type CommissionsServiceType = typeof realCommissionsService;
+export type UserPreferencesServiceType = typeof realUserPreferencesService;
+export type FinancialTransactionsServiceType = typeof realFinancialTransactionsService;
 
 /**
  * Check if we're in demo mode by accessing auth context
@@ -192,6 +198,38 @@ export const commissionsService = new Proxy(realCommissionsService, {
     return value;
   }
 }) as typeof realCommissionsService;
+
+/**
+ * User Preferences Service Proxy
+ */
+export const userPreferencesService = new Proxy(realUserPreferencesService, {
+  get(target, prop) {
+    const service = isDemoMode() ? mockUserPreferencesService : target;
+    const value = (service as any)[prop];
+
+    if (typeof value === 'function') {
+      return value.bind(service);
+    }
+
+    return value;
+  }
+}) as typeof realUserPreferencesService;
+
+/**
+ * Financial Transactions Service Proxy
+ */
+export const financialTransactionsService = new Proxy(realFinancialTransactionsService, {
+  get(target, prop) {
+    const service = isDemoMode() ? mockFinancialTransactionsService : target;
+    const value = (service as any)[prop];
+
+    if (typeof value === 'function') {
+      return value.bind(service);
+    }
+
+    return value;
+  }
+}) as typeof realFinancialTransactionsService;
 
 /**
  * Utility function to reset all mock data to original state

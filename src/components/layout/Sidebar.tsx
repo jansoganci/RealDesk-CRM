@@ -16,7 +16,8 @@ import {
   LogOut,
   X,
   Calendar,
-  DollarSign
+  DollarSign,
+  UserCircle
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { remindersService, inquiriesService } from '../../lib/serviceProxy';
@@ -29,13 +30,14 @@ interface SidebarProps {
 
 const navigationItems = [
   { key: 'dashboard', href: ROUTES.DASHBOARD, icon: LayoutDashboard },
-  { key: 'properties', href: ROUTES.PROPERTIES, icon: Home },
   { key: 'owners', href: ROUTES.OWNERS, icon: Users },
+  { key: 'properties', href: ROUTES.PROPERTIES, icon: Home },
   { key: 'tenants', href: ROUTES.TENANTS, icon: UserCheck },
-  { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
   { key: 'calendar', href: ROUTES.CALENDAR, icon: Calendar },
   { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
+  { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
+  { key: 'profile', href: ROUTES.PROFILE, icon: UserCircle },
 ];
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {

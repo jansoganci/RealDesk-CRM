@@ -9,6 +9,7 @@ import type {
   TenantWithContractResult
 } from '../types';
 import { insertRow, updateRow } from '../lib/db';
+import { getAuthenticatedUserId } from '../lib/auth';
 import type {
   RpcCreateTenantWithContractParams,
   RpcCreateTenantWithContractResult,
@@ -34,10 +35,7 @@ class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
     const { data, error } = await supabase
       .from('tenants')
-      .select(`
-        *,
-        property:properties(*)
-      `)
+      .select('*')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -47,10 +45,7 @@ class TenantsService {
   async getById(id: string): Promise<TenantWithProperty | null> {
     const { data, error } = await supabase
       .from('tenants')
-      .select(`
-        *,
-        property:properties(*)
-      `)
+      .select('*')
       .eq('id', id)
       .maybeSingle();
 
@@ -81,7 +76,14 @@ class TenantsService {
   }
 
   async create(tenant: TenantInsert): Promise<Tenant> {
-    return insertRow('tenants', tenant);
+    // Get authenticated user ID with session fallback
+    const userId = await getAuthenticatedUserId();
+
+    // Inject user_id into tenant data
+    return insertRow('tenants', {
+      ...tenant,
+      user_id: userId,
+    });
   }
 
   async update(id: string, tenant: TenantUpdate): Promise<Tenant> {
@@ -97,23 +99,33 @@ class TenantsService {
     if (error) throw error;
   }
 
-  async assignToProperty(tenantId: string, propertyId: string | null): Promise<Tenant> {
-    return this.update(tenantId, { property_id: propertyId });
-  }
+  // DEPRECATED: assignToProperty removed - tenants.property_id column no longer exists
+  // Use contracts table to link tenants to properties
 
   async getStats() {
-    const { data, error } = await supabase
+    // Get all tenants
+    const { data: tenants, error: tenantsError } = await supabase
       .from('tenants')
-      .select('property_id');
+      .select('id');
 
-    if (error) throw error;
+    if (tenantsError) throw tenantsError;
 
-    const tenants = (data || []) as Array<{ property_id: string | null }>;
+    // Get tenants with active contracts
+    const { data: contracts, error: contractsError } = await supabase
+      .from('contracts')
+      .select('tenant_id')
+      .eq('status', 'Active');
+
+    if (contractsError) throw contractsError;
+
+    const tenantsWithContracts = new Set((contracts || []).map(c => c.tenant_id));
+    const totalTenants = tenants?.length || 0;
+    const assignedTenants = tenantsWithContracts.size;
 
     const stats = {
-      total: tenants.length || 0,
-      assigned: tenants.filter(t => t.property_id !== null).length || 0,
-      unassigned: tenants.filter(t => t.property_id === null).length || 0,
+      total: totalTenants,
+      assigned: assignedTenants,
+      unassigned: totalTenants - assignedTenants,
     };
 
     return stats;

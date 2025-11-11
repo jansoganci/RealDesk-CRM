@@ -40,4 +40,5 @@ export const ROUTES = {
   INQUIRIES: '/inquiries',
   CALENDAR: '/calendar',
   FINANCE: '/finance',
+  PROFILE: '/profile',
 } as const;
