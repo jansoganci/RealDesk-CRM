@@ -29,7 +29,8 @@ import { photosService } from '../../lib/serviceProxy';
 import { PhotoManagement } from '../../components/properties/PhotoManagement';
 import { PhotoGallery } from '../../components/properties/PhotoGallery';
 import { Images } from 'lucide-react';
-import { getPropertySchema } from './propertySchema';
+import { getRentalPropertySchema, getSalePropertySchema } from './propertySchemas';
+import { PropertyTypeSelector } from './PropertyTypeSelector';
 
 interface PropertyDialogProps {
   open: boolean;
@@ -47,12 +48,20 @@ export const PropertyDialog = ({
   loading = false,
 }: PropertyDialogProps) => {
   const { t } = useTranslation(['properties', 'common']);
-  const propertySchema = getPropertySchema(t);
+
+  // Property type state - default to 'rental' for new properties
+  const [propertyType, setPropertyType] = useState<'rental' | 'sale'>('rental');
+
+  // Use conditional schema based on property type
+  const propertySchema = propertyType === 'rental'
+    ? getRentalPropertySchema(t)
+    : getSalePropertySchema(t);
+
   type PropertyFormData = z.infer<typeof propertySchema>;
-  
+
   // Type assertion for onSubmit to maintain type safety
   const typedOnSubmit = onSubmit as (data: PropertyFormData) => Promise<void>;
-  
+
   const [owners, setOwners] = useState<PropertyOwner[]>([]);
   const [loadingOwners, setLoadingOwners] = useState(false);
   const [photoManagementOpen, setPhotoManagementOpen] = useState(false);
@@ -69,8 +78,9 @@ export const PropertyDialog = ({
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      status: 'Empty',
-    },
+      property_type: propertyType,
+      status: propertyType === 'rental' ? 'Empty' : 'Available',
+    } as any,
   });
 
   const selectedStatus = watch('status');
@@ -83,30 +93,57 @@ export const PropertyDialog = ({
         await loadOwners();
         if (property) {
           loadPhotos();
-          reset({
-            owner_id: property.owner_id || '',
-            address: property.address || '',
-            city: property.city || '',
-            district: property.district || '',
-            status: property.status as 'Empty' | 'Occupied' | 'Inactive',
-            rent_amount: property.rent_amount || undefined,
-            currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : null) || undefined,
-            notes: property.notes || '',
-            listing_url: property.listing_url || '',
-          });
+          // Set property type from existing property
+          const existingType = (property as any).property_type || 'rental';
+          setPropertyType(existingType);
+
+          // Reset form with existing property data
+          if (existingType === 'rental') {
+            reset({
+              property_type: 'rental',
+              owner_id: property.owner_id || '',
+              address: property.address || '',
+              city: property.city || '',
+              district: property.district || '',
+              status: property.status as any,
+              rent_amount: property.rent_amount || undefined,
+              currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : 'USD') as 'USD' | 'TRY',
+              notes: property.notes || '',
+              listing_url: property.listing_url || '',
+            } as any);
+          } else {
+            reset({
+              property_type: 'sale',
+              owner_id: property.owner_id || '',
+              address: property.address || '',
+              city: property.city || '',
+              district: property.district || '',
+              status: property.status as any,
+              sale_price: (property as any).sale_price || undefined,
+              currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : 'USD') as 'USD' | 'TRY',
+              buyer_name: (property as any).buyer_name || '',
+              buyer_phone: (property as any).buyer_phone || '',
+              buyer_email: (property as any).buyer_email || '',
+              offer_amount: (property as any).offer_amount || undefined,
+              notes: property.notes || '',
+              listing_url: property.listing_url || '',
+            } as any);
+          }
         } else {
           setPhotos([]);
+          setPropertyType('rental'); // Reset to rental for new properties
           reset({
+            property_type: 'rental',
             owner_id: '',
             address: '',
             city: '',
             district: '',
             status: 'Empty',
             rent_amount: undefined,
-            currency: undefined,
+            currency: 'USD',
             notes: '',
             listing_url: '',
-          });
+          } as any);
         }
       };
       initForm();
@@ -114,6 +151,20 @@ export const PropertyDialog = ({
       setPhotoManagementOpen(false);
     }
   }, [open, property, reset]);
+
+  // Update form when property type changes (only for new properties)
+  useEffect(() => {
+    if (!property && open) {
+      // Reset form with new property type defaults
+      if (propertyType === 'rental') {
+        setValue('property_type', 'rental' as any);
+        setValue('status', 'Empty' as any);
+      } else {
+        setValue('property_type', 'sale' as any);
+        setValue('status', 'Available' as any);
+      }
+    }
+  }, [propertyType, property, open, setValue]);
 
   const loadOwners = async () => {
     try {
@@ -145,8 +196,6 @@ export const PropertyDialog = ({
       ...data,
       city: data.city?.trim() || undefined,
       district: data.district?.trim() || undefined,
-      rent_amount: data.rent_amount || undefined,
-      currency: (data.currency === 'USD' || data.currency === 'TRY' ? data.currency : null) || undefined,
       notes: data.notes?.trim() || undefined,
       listing_url: data.listing_url?.trim() || undefined,
     };
@@ -189,6 +238,18 @@ export const PropertyDialog = ({
         )}
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+          {/* Property Type Selector - Only show for new properties */}
+          {!property && (
+            <div className="space-y-2">
+              <Label>{t('dialog.form.propertyType')} *</Label>
+              <PropertyTypeSelector
+                value={propertyType}
+                onChange={setPropertyType}
+                disabled={loading}
+              />
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="owner_id">{t('dialog.form.owner')} *</Label>
             <Select
@@ -248,20 +309,34 @@ export const PropertyDialog = ({
             </div>
           </div>
 
+          {/* Conditional Status Field based on Property Type */}
           <div className="space-y-2">
-            <Label htmlFor="status">{t('dialog.form.status')} *</Label>
+            <Label htmlFor="status">
+              {propertyType === 'rental' ? t('dialog.form.rentalStatus') : t('dialog.form.saleStatus')} *
+            </Label>
             <Select
               value={selectedStatus}
-              onValueChange={(value) => setValue('status', value as 'Empty' | 'Occupied' | 'Inactive')}
+              onValueChange={(value) => setValue('status', value as any)}
               disabled={loading}
             >
               <SelectTrigger>
                 <SelectValue placeholder={t('dialog.form.statusPlaceholder')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Empty">{t('status.empty')}</SelectItem>
-                <SelectItem value="Occupied">{t('status.occupied')}</SelectItem>
-                <SelectItem value="Inactive">{t('status.inactive')}</SelectItem>
+                {propertyType === 'rental' ? (
+                  <>
+                    <SelectItem value="Empty">{t('status.rental.empty')}</SelectItem>
+                    <SelectItem value="Occupied">{t('status.rental.occupied')}</SelectItem>
+                    <SelectItem value="Inactive">{t('status.rental.inactive')}</SelectItem>
+                  </>
+                ) : (
+                  <>
+                    <SelectItem value="Available">{t('status.sale.available')}</SelectItem>
+                    <SelectItem value="Under Offer">{t('status.sale.underOffer')}</SelectItem>
+                    <SelectItem value="Sold">{t('status.sale.sold')}</SelectItem>
+                    <SelectItem value="Inactive">{t('status.sale.inactive')}</SelectItem>
+                  </>
+                )}
               </SelectContent>
             </Select>
             {errors.status && (
@@ -269,42 +344,137 @@ export const PropertyDialog = ({
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="rent_amount">{t('dialog.form.rentAmount')}</Label>
-              <Input
-                id="rent_amount"
-                type="number"
-                step="0.01"
-                placeholder={t('dialog.form.rentAmountPlaceholder')}
-                {...register('rent_amount', { valueAsNumber: true })}
-                disabled={loading}
-              />
-              {errors.rent_amount && (
-                <p className={`text-sm ${COLORS.danger.text}`}>{errors.rent_amount.message}</p>
-              )}
-            </div>
+          {/* Conditional Price Fields based on Property Type */}
+          {propertyType === 'rental' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="rent_amount">{t('dialog.form.rentAmount')} *</Label>
+                <Input
+                  id="rent_amount"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('dialog.form.rentAmountPlaceholder')}
+                  {...register('rent_amount' as any, { valueAsNumber: true })}
+                  disabled={loading}
+                />
+                {errors.rent_amount && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors.rent_amount as any).message}</p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="currency">{t('dialog.form.currency')}</Label>
-              <Select
-                value={selectedCurrency || ''}
-                onValueChange={(value) => setValue('currency', value as 'USD' | 'TRY')}
-                disabled={loading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder={t('dialog.form.currencyPlaceholder')} />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USD">USD</SelectItem>
-                  <SelectItem value="TRY">TRY</SelectItem>
-                </SelectContent>
-              </Select>
-              {errors.currency && (
-                <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="currency">{t('dialog.form.currency')} *</Label>
+                <Select
+                  value={selectedCurrency || ''}
+                  onValueChange={(value) => setValue('currency', value as 'USD' | 'TRY')}
+                  disabled={loading}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder={t('dialog.form.currencyPlaceholder')} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="USD">USD</SelectItem>
+                    <SelectItem value="TRY">TRY</SelectItem>
+                  </SelectContent>
+                </Select>
+                {errors.currency && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="sale_price">{t('dialog.form.salePrice')} *</Label>
+                  <Input
+                    id="sale_price"
+                    type="number"
+                    step="0.01"
+                    placeholder={t('dialog.form.salePricePlaceholder')}
+                    {...register('sale_price' as any, { valueAsNumber: true })}
+                    disabled={loading}
+                  />
+                  {errors.sale_price && (
+                    <p className={`text-sm ${COLORS.danger.text}`}>{(errors.sale_price as any).message}</p>
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="currency">{t('dialog.form.currency')} *</Label>
+                  <Select
+                    value={selectedCurrency || ''}
+                    onValueChange={(value) => setValue('currency', value as 'USD' | 'TRY')}
+                    disabled={loading}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder={t('dialog.form.currencyPlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="USD">USD</SelectItem>
+                      <SelectItem value="TRY">TRY</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  {errors.currency && (
+                    <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
+                  )}
+                </div>
+              </div>
+
+              {/* Buyer Information Section - Only for Sale Properties */}
+              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
+                <h4 className="text-sm font-semibold text-gray-700">{t('dialog.form.buyerInfo')}</h4>
+
+                <div className="space-y-2">
+                  <Label htmlFor="buyer_name">{t('dialog.form.buyerName')}</Label>
+                  <Input
+                    id="buyer_name"
+                    placeholder={t('dialog.form.buyerNamePlaceholder')}
+                    {...register('buyer_name' as any)}
+                    disabled={loading}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="buyer_phone">{t('dialog.form.buyerPhone')}</Label>
+                    <Input
+                      id="buyer_phone"
+                      placeholder={t('dialog.form.buyerPhonePlaceholder')}
+                      {...register('buyer_phone' as any)}
+                      disabled={loading}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="buyer_email">{t('dialog.form.buyerEmail')}</Label>
+                    <Input
+                      id="buyer_email"
+                      type="email"
+                      placeholder={t('dialog.form.buyerEmailPlaceholder')}
+                      {...register('buyer_email' as any)}
+                      disabled={loading}
+                    />
+                    {errors.buyer_email && (
+                      <p className={`text-sm ${COLORS.danger.text}`}>{(errors.buyer_email as any).message}</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="offer_amount">{t('dialog.form.offerAmount')}</Label>
+                  <Input
+                    id="offer_amount"
+                    type="number"
+                    step="0.01"
+                    placeholder={t('dialog.form.offerAmountPlaceholder')}
+                    {...register('offer_amount' as any, { valueAsNumber: true })}
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+            </>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="listing_url">{t('dialog.form.listingUrl')}</Label>
