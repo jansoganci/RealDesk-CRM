@@ -1,0 +1,67 @@
+{
+  "pageTitle": "Profile Settings",
+  "pageDescription": "Manage your account preferences and settings",
+  "sections": {
+    "account": "Account Information",
+    "preferences": "Preferences",
+    "security": "Security"
+  },
+  "fields": {
+    "email": "Email Address",
+    "userId": "User ID",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Enter your full name",
+    "phoneNumber": "Phone Number",
+    "phoneNumberPlaceholder": "Enter your phone number",
+    "language": "Language",
+    "languagePlaceholder": "Select language",
+    "currency": "Currency",
+    "currencyPlaceholder": "Select currency",
+    "meetingReminder": "Meeting Reminders",
+    "meetingReminderPlaceholder": "Select reminder time",
+    "meetingReminderDescription": "Get notified before meetings",
+    "notSet": "Not set",
+    "notAvailable": "N/A"
+  },
+  "languages": {
+    "en": "English",
+    "tr": "Turkish"
+  },
+  "currencies": {
+    "USD": "US Dollar (USD)",
+    "TRY": "Turkish Lira (TRY)",
+    "EUR": "Euro (EUR)"
+  },
+  "reminderMinutes": {
+    "30": "30 minutes before",
+    "60": "1 hour before",
+    "90": "90 minutes before"
+  },
+  "actions": {
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "changePassword": "Change Password"
+  },
+  "messages": {
+    "saveSuccess": "Profile updated successfully",
+    "saveError": "Failed to update profile",
+    "loadError": "Failed to load profile data"
+  },
+  "validation": {
+    "fullNameMin": "Name must be at least 2 characters",
+    "fullNameMax": "Name must not exceed 255 characters",
+    "phoneInvalid": "Invalid phone number format",
+    "phoneMin": "Phone number must be at least 7 characters",
+    "phoneMax": "Phone number must not exceed 20 characters",
+    "languageRequired": "Language is required",
+    "currencyRequired": "Currency is required",
+    "reminderRequired": "Meeting reminder is required",
+    "reminderInvalid": "Invalid reminder time"
+  },
+  "security": {
+    "changePasswordTitle": "Change Password",
+    "changePasswordDescription": "Update your account password",
+    "comingSoon": "Coming soon"
+  }
+}

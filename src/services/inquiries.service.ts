@@ -293,13 +293,18 @@ class InquiriesService {
   }
 
   async getStats() {
+    // Select all columns to avoid query syntax issues, then filter what we need
     const { data, error } = await supabase
       .from('property_inquiries')
-      .select('status, inquiry_type');
+      .select('*');
 
     if (error) throw error;
 
-    const inquiries = ((data || []) as unknown) as Array<{ status: string; inquiry_type: string }>;
+    // Extract only the fields we need
+    const inquiries = (data || []).map(i => ({
+      status: i.status,
+      inquiry_type: i.inquiry_type,
+    })) as Array<{ status: string; inquiry_type: string }>;
 
     const stats = {
       total: inquiries.length || 0,

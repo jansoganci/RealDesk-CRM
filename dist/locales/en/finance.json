@@ -20,12 +20,6 @@
     "noExpenseData": "No expense data available for this period"
   },
 
-  "tabs": {
-    "overview": "Overview",
-    "transactions": "Transactions",
-    "analytics": "Analytics"
-  },
-
   "sections": {
     "transactions": "Recent Transactions",
     "transactionsDescription": "View and manage all financial transactions",
@@ -102,58 +96,6 @@
     "expense": "Expense"
   },
 
-  "categories": {
-    "income": {
-      "Rental Commissions": "Rental Commissions",
-      "Sale Commissions": "Sale Commissions",
-      "Monthly Rent": "Monthly Rent",
-      "Property Management Fees": "Property Management Fees",
-      "Consultation Fees": "Consultation Fees",
-      "Referral Fees": "Referral Fees",
-      "Late Fees": "Late Fees",
-      "Other Income": "Other Income"
-    },
-    "expense": {
-      "Office Rent": "Office Rent",
-      "Electricity": "Electricity",
-      "Water": "Water",
-      "Internet & Phone": "Internet & Phone",
-      "Office Supplies": "Office Supplies",
-      "Software & Subscriptions": "Software & Subscriptions",
-      "Digital Marketing": "Digital Marketing",
-      "Print Advertising": "Print Advertising",
-      "Social Media Ads": "Social Media Ads",
-      "Website Maintenance": "Website Maintenance",
-      "Photography & Videography": "Photography & Videography",
-      "Signage & Branding": "Signage & Branding",
-      "Salaries & Wages": "Salaries & Wages",
-      "Employee Benefits": "Employee Benefits",
-      "Contractor Payments": "Contractor Payments",
-      "Training & Development": "Training & Development",
-      "Fuel": "Fuel",
-      "Vehicle Maintenance": "Vehicle Maintenance",
-      "Vehicle Insurance": "Vehicle Insurance",
-      "Parking & Tolls": "Parking & Tolls",
-      "Mileage": "Mileage",
-      "Legal Fees": "Legal Fees",
-      "Accounting Fees": "Accounting Fees",
-      "Consulting": "Consulting",
-      "Licenses & Permits": "Licenses & Permits",
-      "Property Maintenance": "Property Maintenance",
-      "Repairs": "Repairs",
-      "Property Insurance": "Property Insurance",
-      "Property Taxes": "Property Taxes",
-      "HOA Fees": "HOA Fees",
-      "Income Tax": "Income Tax",
-      "Business Taxes": "Business Taxes",
-      "VAT/Sales Tax": "VAT/Sales Tax",
-      "Bank Fees": "Bank Fees",
-      "Insurance (General)": "Insurance (General)",
-      "Meals & Entertainment": "Meals & Entertainment",
-      "Other Expenses": "Other Expenses"
-    }
-  },
-
   "paymentMethods": {
     "cash": "Cash",
     "bank_transfer": "Bank Transfer",
@@ -180,7 +122,6 @@
     "selectType": "Select type",
     "category": "Category",
     "selectCategory": "Select category",
-    "noCategoriesAvailable": "No categories available for this type",
     "amount": "Amount",
     "description": "Description",
     "descriptionPlaceholder": "Enter transaction description",

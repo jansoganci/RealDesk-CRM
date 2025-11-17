@@ -2,6 +2,11 @@
   "title": "Property Inquiries",
   "addNew": "Add New Inquiry",
   "searchPlaceholder": "Search inquiries...",
+  "typeFilter": {
+    "all": "All Inquiries",
+    "rental": "Rentals",
+    "sale": "Sales"
+  },
   "tabs": {
     "all": "All",
     "active": "Active",
@@ -29,6 +34,7 @@
     "addDescription": "Fill in the customer inquiry details below.",
     "editDescription": "Update the customer inquiry information.",
     "form": {
+      "inquiryType": "Inquiry Type",
       "name": "Name",
       "namePlaceholder": "Enter customer name",
       "phone": "Phone",
@@ -39,10 +45,14 @@
       "preferredCityPlaceholder": "Enter preferred city",
       "preferredDistrict": "Preferred District",
       "preferredDistrictPlaceholder": "Enter preferred district",
-      "minBudget": "Min Budget",
-      "minBudgetPlaceholder": "Minimum budget",
-      "maxBudget": "Max Budget",
-      "maxBudgetPlaceholder": "Maximum budget",
+      "minRentBudget": "Min Monthly Rent",
+      "minRentBudgetPlaceholder": "Minimum monthly rent",
+      "maxRentBudget": "Max Monthly Rent",
+      "maxRentBudgetPlaceholder": "Maximum monthly rent",
+      "minSaleBudget": "Min Purchase Price",
+      "minSaleBudgetPlaceholder": "Minimum purchase price",
+      "maxSaleBudget": "Max Purchase Price",
+      "maxSaleBudgetPlaceholder": "Maximum purchase price",
       "notes": "Notes",
       "notesPlaceholder": "Additional notes about the inquiry..."
     },

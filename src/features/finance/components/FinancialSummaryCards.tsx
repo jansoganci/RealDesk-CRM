@@ -5,7 +5,6 @@ import {
   TrendingUp,
   TrendingDown,
   DollarSign,
-  CreditCard,
   PiggyBank,
   Clock,
 } from 'lucide-react';

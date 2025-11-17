@@ -4,13 +4,10 @@ import { useTranslation } from "react-i18next"
 import { useAuth } from "@/contexts/AuthContext"
 import {
   Building2,
-  Users,
   FileText,
   Bell,
-  Home,
   Zap,
   ArrowRight,
-  CheckCircle2,
   Globe,
   UserPlus,
   LayoutDashboard,

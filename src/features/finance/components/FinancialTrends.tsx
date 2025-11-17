@@ -1,16 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Skeleton } from '../../../components/ui/skeleton';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from 'recharts';
+import { Line } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import type { YearlySummary } from '../../../types/financial';
 
@@ -58,12 +49,86 @@ export const FinancialTrends = ({
   }
 
   // Prepare data for chart
-  const chartData = yearlySummary.months.map(month => ({
-    month: formatMonth(month.month),
-    [t('finance:analytics.revenue')]: month.total_income,
-    [t('finance:analytics.expenses')]: month.total_expense,
-    [t('finance:analytics.profit')]: month.net_income,
-  }));
+  const chartData = {
+    labels: yearlySummary.months.map(month => formatMonth(month.month)),
+    datasets: [
+      {
+        label: t('finance:analytics.revenue'),
+        data: yearlySummary.months.map(month => month.total_income),
+        borderColor: '#10b981',
+        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      {
+        label: t('finance:analytics.expenses'),
+        data: yearlySummary.months.map(month => month.total_expense),
+        borderColor: '#ef4444',
+        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+      },
+      {
+        label: t('finance:analytics.profit'),
+        data: yearlySummary.months.map(month => month.net_income),
+        borderColor: '#3b82f6',
+        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        fill: true,
+        tension: 0.4,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        borderDash: [5, 5],
+      },
+    ],
+  };
+
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top' as const,
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#6b7280',
+          font: {
+            size: 12,
+          },
+        },
+      },
+      y: {
+        grid: {
+          color: '#e5e7eb',
+          borderDash: [3, 3],
+        },
+        ticks: {
+          color: '#6b7280',
+          font: {
+            size: 12,
+          },
+          callback: (value: any) => formatCurrency(value),
+        },
+      },
+    },
+  };
 
   return (
     <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
@@ -94,70 +159,9 @@ export const FinancialTrends = ({
         </div>
       </CardHeader>
       <CardContent>
-        <ResponsiveContainer width="100%" height={400}>
-          <AreaChart data={chartData}>
-            <defs>
-              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#10b981" stopOpacity={0.1} />
-              </linearGradient>
-              <linearGradient id="colorExpenses" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#ef4444" stopOpacity={0.1} />
-              </linearGradient>
-              <linearGradient id="colorProfit" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
-                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0.1} />
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-            <XAxis
-              dataKey="month"
-              stroke="#6b7280"
-              style={{ fontSize: '12px' }}
-            />
-            <YAxis
-              stroke="#6b7280"
-              style={{ fontSize: '12px' }}
-              tickFormatter={value => formatCurrency(value)}
-            />
-            <Tooltip
-              formatter={(value: number) => formatCurrency(value)}
-              contentStyle={{
-                backgroundColor: 'white',
-                border: '1px solid #e5e7eb',
-                borderRadius: '8px',
-                boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-              }}
-            />
-            <Legend />
-            <Area
-              type="monotone"
-              dataKey={t('finance:analytics.revenue')}
-              stroke="#10b981"
-              fillOpacity={1}
-              fill="url(#colorRevenue)"
-              strokeWidth={2}
-            />
-            <Area
-              type="monotone"
-              dataKey={t('finance:analytics.expenses')}
-              stroke="#ef4444"
-              fillOpacity={1}
-              fill="url(#colorExpenses)"
-              strokeWidth={2}
-            />
-            <Area
-              type="monotone"
-              dataKey={t('finance:analytics.profit')}
-              stroke="#3b82f6"
-              fillOpacity={1}
-              fill="url(#colorProfit)"
-              strokeWidth={2}
-              strokeDasharray="5 5"
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+        <div className="h-96">
+          <Line data={chartData} options={chartOptions} />
+        </div>
       </CardContent>
     </Card>
   );

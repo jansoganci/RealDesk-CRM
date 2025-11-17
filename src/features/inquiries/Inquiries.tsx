@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
 import { AnimatedTabs } from '../../components/ui/animated-tabs';
 import { InquiryDialog } from './InquiryDialog';
 import { InquiryMatchesDialog } from './InquiryMatchesDialog';
@@ -26,7 +25,7 @@ export const Inquiries = () => {
   const [filteredInquiries, setFilteredInquiries] = useState<PropertyInquiry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [inquiryTypeFilter, setInquiryTypeFilter] = useState<'all' | 'rental' | 'sale'>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [matchesDialogOpen, setMatchesDialogOpen] = useState(false);
@@ -165,7 +164,7 @@ export const Inquiries = () => {
     return statusColors[status as keyof typeof statusColors] || `${COLORS.status.inactive.bg} ${COLORS.text.white}`;
   };
 
-  const renderDesktopRow = (inquiry: PropertyInquiry, index: number) => (
+  const renderDesktopRow = (inquiry: PropertyInquiry) => (
     <TableRow key={inquiry.id}>
       <TableCell>
         <div className="space-y-1">
@@ -245,7 +244,7 @@ export const Inquiries = () => {
     </TableRow>
   );
 
-  const renderMobileCard = (inquiry: PropertyInquiry, index: number) => (
+  const renderMobileCard = (inquiry: PropertyInquiry) => (
     <div key={inquiry.id} className={`p-4 rounded-lg border ${COLORS.gray.border200} space-y-3`}>
       <div className="flex items-start justify-between">
         <div className="space-y-1 flex-1">

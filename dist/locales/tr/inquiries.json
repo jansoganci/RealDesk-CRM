@@ -2,6 +2,11 @@
   "title": "Müşteri Talepleri",
   "addNew": "Yeni Müşteri Talebi Ekle",
   "searchPlaceholder": "Müşteri talebi ara...",
+  "typeFilter": {
+    "all": "Tüm Talepler",
+    "rental": "Kiralık",
+    "sale": "Satılık"
+  },
   "tabs": {
     "all": "Tümü",
     "active": "Aktif",
@@ -29,6 +34,7 @@
     "addDescription": "Müşteri talep detaylarını aşağıda doldurun.",
     "editDescription": "Müşteri talep bilgilerini güncelleyin.",
     "form": {
+      "inquiryType": "Talep Tipi",
       "name": "İsim",
       "namePlaceholder": "Müşteri adını girin",
       "phone": "Telefon",
@@ -39,10 +45,14 @@
       "preferredCityPlaceholder": "Tercih edilen şehri girin",
       "preferredDistrict": "Tercih Edilen İlçe",
       "preferredDistrictPlaceholder": "Tercih edilen ilçeyi girin",
-      "minBudget": "Min Bütçe",
-      "minBudgetPlaceholder": "Minimum bütçe",
-      "maxBudget": "Max Bütçe",
-      "maxBudgetPlaceholder": "Maximum bütçe",
+      "minRentBudget": "Min Aylık Kira",
+      "minRentBudgetPlaceholder": "Minimum aylık kira",
+      "maxRentBudget": "Max Aylık Kira",
+      "maxRentBudgetPlaceholder": "Maximum aylık kira",
+      "minSaleBudget": "Min Alış Fiyatı",
+      "minSaleBudgetPlaceholder": "Minimum alış fiyatı",
+      "maxSaleBudget": "Max Alış Fiyatı",
+      "maxSaleBudgetPlaceholder": "Maximum alış fiyatı",
       "notes": "Notlar",
       "notesPlaceholder": "Müşteri talebi hakkında ek notlar..."
     },

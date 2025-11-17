@@ -21,5 +21,10 @@
     "previous": "Önceki slayt",
     "next": "Sonraki slayt",
     "item": "Slayt {{number}}"
+  },
+  "actions": {
+    "cancel": "İptal",
+    "save": "Kaydet",
+    "refresh": "Yenile"
   }
 }

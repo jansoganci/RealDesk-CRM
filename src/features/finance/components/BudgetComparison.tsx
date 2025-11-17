@@ -2,17 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Skeleton } from '../../../components/ui/skeleton';
 import { Badge } from '../../../components/ui/badge';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  Cell,
-} from 'recharts';
+import { Bar } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { AlertTriangle, CheckCircle2, TrendingUp } from 'lucide-react';
 import type { BudgetVsActual } from '../../../types/financial';
@@ -78,24 +68,81 @@ export const BudgetComparison = ({
   const topCategories = budgetComparison.slice(0, 8);
 
   // Prepare data for chart
-  const chartData = topCategories.map(item => ({
-    category: item.category.length > 15 ? item.category.substring(0, 15) + '...' : item.category,
-    [t('finance:analytics.budgeted')]: item.budgeted,
-    [t('finance:analytics.actual')]: item.actual,
-    status: item.status,
-  }));
+  const chartData = {
+    labels: topCategories.map(item =>
+      item.category.length > 15 ? item.category.substring(0, 15) + '...' : item.category
+    ),
+    datasets: [
+      {
+        label: t('finance:analytics.budgeted'),
+        data: topCategories.map(item => item.budgeted),
+        backgroundColor: '#94a3b8',
+        borderRadius: 8,
+      },
+      {
+        label: t('finance:analytics.actual'),
+        data: topCategories.map(item => item.actual),
+        backgroundColor: topCategories.map(item => {
+          switch (item.status) {
+            case 'under':
+              return '#10b981';
+            case 'on_track':
+              return '#3b82f6';
+            case 'over':
+              return '#ef4444';
+            default:
+              return '#6b7280';
+          }
+        }),
+        borderRadius: 8,
+      },
+    ],
+  };
 
-  const getBarColor = (status: string) => {
-    switch (status) {
-      case 'under':
-        return '#10b981'; // Green
-      case 'on_track':
-        return '#3b82f6'; // Blue
-      case 'over':
-        return '#ef4444'; // Red
-      default:
-        return '#6b7280'; // Gray
-    }
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top' as const,
+      },
+      tooltip: {
+        callbacks: {
+          label: (context: any) => {
+            return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+          },
+        },
+      },
+    },
+    scales: {
+      x: {
+        grid: {
+          display: false,
+        },
+        ticks: {
+          color: '#6b7280',
+          font: {
+            size: 11,
+          },
+          maxRotation: 45,
+          minRotation: 45,
+        },
+      },
+      y: {
+        grid: {
+          color: '#e5e7eb',
+          borderDash: [3, 3],
+        },
+        ticks: {
+          color: '#6b7280',
+          font: {
+            size: 12,
+          },
+          callback: (value: any) => formatCurrency(value),
+        },
+      },
+    },
   };
 
   const getStatusBadge = (status: string, percentage: number) => {
@@ -143,44 +190,9 @@ export const BudgetComparison = ({
       <CardContent>
         <div className="space-y-6">
           {/* Chart */}
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-              <XAxis
-                dataKey="category"
-                stroke="#6b7280"
-                style={{ fontSize: '11px' }}
-                angle={-45}
-                textAnchor="end"
-                height={80}
-              />
-              <YAxis
-                stroke="#6b7280"
-                style={{ fontSize: '12px' }}
-                tickFormatter={value => formatCurrency(value)}
-              />
-              <Tooltip
-                formatter={(value: number) => formatCurrency(value)}
-                contentStyle={{
-                  backgroundColor: 'white',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                }}
-              />
-              <Legend />
-              <Bar
-                dataKey={t('finance:analytics.budgeted')}
-                fill="#94a3b8"
-                radius={[8, 8, 0, 0]}
-              />
-              <Bar dataKey={t('finance:analytics.actual')} radius={[8, 8, 0, 0]}>
-                {chartData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={getBarColor(entry.status)} />
-                ))}
-              </Bar>
-            </BarChart>
-          </ResponsiveContainer>
+          <div className="h-72">
+            <Bar data={chartData} options={chartOptions} />
+          </div>
 
           {/* Category List */}
           <div className="space-y-3">

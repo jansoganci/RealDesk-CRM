@@ -5,7 +5,6 @@
   InquiryMatch,
   InquiryWithMatches,
   InquiryMatchWithProperty,
-  Property,
 } from '../../types';
 
 // Mock data stores
@@ -153,65 +152,6 @@ class MockInquiriesService {
 
   async checkMatchesForPropertyUpdate(propertyId: string): Promise<void> {
     await this.checkMatchesForNewProperty(propertyId);
-  }
-
-  private async matchInquiryToProperty(
-    property: Property,
-    activeInquiries: PropertyInquiry[]
-  ): Promise<string[]> {
-    // Status check
-    if (property.status !== 'Empty') {
-      return [];
-    }
-
-    const matchedInquiryIds: string[] = [];
-
-    for (const inquiry of activeInquiries) {
-      let matches = true;
-
-      // City match (exact, case-insensitive)
-      if (inquiry.preferred_city && property.city) {
-        if (
-          inquiry.preferred_city.toLowerCase().trim() !==
-          property.city.toLowerCase().trim()
-        ) {
-          matches = false;
-          continue;
-        }
-      }
-
-      // District match (optional, if specified, exact)
-      if (inquiry.preferred_district && property.district) {
-        if (
-          inquiry.preferred_district.toLowerCase().trim() !==
-          property.district.toLowerCase().trim()
-        ) {
-          matches = false;
-          continue;
-        }
-      }
-
-      // Budget check (if both are present)
-      if (inquiry.min_budget || inquiry.max_budget) {
-        const propertyRent = property.rent_amount;
-        if (propertyRent) {
-          if (inquiry.min_budget && propertyRent < inquiry.min_budget) {
-            matches = false;
-            continue;
-          }
-          if (inquiry.max_budget && propertyRent > inquiry.max_budget) {
-            matches = false;
-            continue;
-          }
-        }
-      }
-
-      if (matches) {
-        matchedInquiryIds.push(inquiry.id);
-      }
-    }
-
-    return matchedInquiryIds;
   }
 
   async markAsContacted(inquiryId: string): Promise<void> {

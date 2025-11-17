@@ -4,9 +4,23 @@
   "filterPlaceholder": "Duruma göre filtrele",
   "addPropertyButton": "Mülk Ekle",
   "addTenantButton": "Kiracı Ekle",
+  "typeFilter": {
+    "all": "Tüm Mülkler",
+    "rental": "Kiralık",
+    "sale": "Satılık"
+  },
   "status": {
-    "empty": "Kiralamaya Hazır",
-    "occupied": "Kirada",
+    "rental": {
+      "empty": "Kiralamaya Hazır",
+      "occupied": "Kirada",
+      "inactive": "Pasif"
+    },
+    "sale": {
+      "available": "Satılabilir",
+      "underOffer": "Teklif Altında",
+      "sold": "Satıldı",
+      "inactive": "Pasif"
+    },
     "inactive": "Pasif"
   },
   "filters": {
@@ -19,10 +33,12 @@
     "status": "Durum",
     "tenant": "Kiracı",
     "rent": "Kira",
+    "price": "Fiyat",
     "contractEndDate": "Bitiş Tarihi",
     "actions": "İşlemler",
     "noTenant": "",
     "noRent": "-",
+    "noPrice": "-",
     "noContract": "-",
     "inactive": "Pasif",
     "perMonth": "/ay",
@@ -41,7 +57,10 @@
   "validations": {
     "ownerRequired": "Mal sahibi gereklidir",
     "addressRequired": "Adres gereklidir",
-    "invalidUrl": "Lütfen geçerli bir URL girin"
+    "rentAmountPositive": "Kira bedeli sıfırdan büyük olmalıdır",
+    "salePricePositive": "Satış fiyatı sıfırdan büyük olmalıdır",
+    "invalidUrl": "Lütfen geçerli bir URL girin",
+    "invalidEmail": "Lütfen geçerli bir e-posta adresi girin"
   },
   "emptyState": {
     "noPropertiesFound": "Mülk bulunamadı",
@@ -67,6 +86,11 @@
     "form": {
       "owner": "Mal Sahibi",
       "ownerPlaceholder": "Bir mal sahibi seçin",
+      "propertyType": "Mülk Tipi",
+      "rentalTypeLabel": "Kiralık",
+      "saleTypeLabel": "Satılık",
+      "rentalStatus": "Kiralık Durumu",
+      "saleStatus": "Satılık Durumu",
       "address": "Adres",
       "addressPlaceholder": "123 Ana Cadde, Daire 4B",
       "city": "Şehir",
@@ -75,10 +99,21 @@
       "districtPlaceholder": "İlçe/semt girin",
       "status": "Durum",
       "statusPlaceholder": "Durum seçin",
-      "rentAmount": "Kira Bedeli",
-      "rentAmountPlaceholder": "Kira bedelini girin",
+      "rentAmount": "Aylık Kira",
+      "rentAmountPlaceholder": "Aylık kira bedelini girin",
+      "salePrice": "Satış Fiyatı",
+      "salePricePlaceholder": "Satış fiyatını girin",
       "currency": "Para Birimi",
       "currencyPlaceholder": "Para birimi seçin",
+      "buyerInfo": "Alıcı Bilgileri",
+      "buyerName": "Alıcı Adı",
+      "buyerNamePlaceholder": "Alıcı adını girin",
+      "buyerPhone": "Alıcı Telefonu",
+      "buyerPhonePlaceholder": "Alıcı telefonunu girin",
+      "buyerEmail": "Alıcı E-postası",
+      "buyerEmailPlaceholder": "Alıcı e-postasını girin",
+      "offerAmount": "Teklif Tutarı",
+      "offerAmountPlaceholder": "Teklif tutarını girin (varsa)",
       "listingUrl": "İlan Linki",
       "listingUrlPlaceholder": "https://www.sahibinden.com/...",
       "notes": "Notlar",
@@ -86,5 +121,18 @@
     },
     "addButton": "Mülk Ekle",
     "updateButton": "Güncelle"
+  },
+  "markAsSold": {
+    "button": "Satıldı Olarak İşaretle",
+    "title": "Mülkü Satıldı Olarak İşaretle",
+    "description": "{{address}} için satış fiyatını girin. Bu, %4 komisyonunuzu hesaplayacak ve mülkü satıldı olarak işaretleyecektir.",
+    "propertyInfo": "Mülk",
+    "salePrice": "Satış Fiyatı",
+    "currency": "Para Birimi",
+    "yourCommission": "Komisyonunuz (%4)",
+    "commissionRate": "Satış fiyatının %4'ü",
+    "confirmButton": "Satışı Onayla",
+    "successToast": "Mülk satıldı olarak işaretlendi! {{commission}} komisyon Finans'a eklendi.",
+    "errorToast": "Mülk satıldı olarak işaretlenemedi"
   }
 }

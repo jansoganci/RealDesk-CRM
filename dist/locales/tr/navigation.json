@@ -3,13 +3,16 @@
   "properties": "Mülkler",
   "owners": "Mal Sahipleri",
   "tenants": "Kiracılar",
+  "finance": "Finans",
   "calendar": "Takvim",
   "inquiries": "Talepler",
   "reminders": "Hatırlatıcılar",
+  "profile": "Profil",
   "signOut": "Çıkış Yap",
   "viewAllProperties": "Tüm mülkleri görüntüle",
   "viewAllOwners": "Tüm mal sahiplerini görüntüle",
   "viewAllTenants": "Tüm kiracıları görüntüle",
+  "viewAllFinance": "Tüm finansları görüntüle",
   "viewAllCalendar": "Tüm takvimi görüntüle",
   "viewAllInquiries": "Tüm talepleri görüntüle",
   "viewAllReminders": "Tüm hatırlatıcıları görüntüle",
@@ -17,7 +20,7 @@
   "userSettings": "Kullanıcı ayarları",
   "language": {
     "label": "Dil",
-    "english": "English",
+    "english": "İngilizce",
     "turkish": "Türkçe"
   }
 }

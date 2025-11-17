@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Skeleton } from '../../../components/ui/skeleton';
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import { Doughnut } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { TopCategory } from '../../../types/financial';
@@ -57,6 +57,38 @@ export const TopCategories = ({
     const Icon = icon;
     const hasData = categories && categories.length > 0;
 
+    // Prepare chart data
+    const chartData = {
+      labels: categories.map(c => c.category),
+      datasets: [
+        {
+          data: categories.map(c => c.amount),
+          backgroundColor: COLORS.slice(0, categories.length),
+          borderWidth: 0,
+        },
+      ],
+    };
+
+    const chartOptions = {
+      responsive: true,
+      maintainAspectRatio: false,
+      cutout: '60%',
+      plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+          callbacks: {
+            label: (context: any) => {
+              const label = context.label || '';
+              const value = context.parsed || 0;
+              return `${label}: ${formatCurrency(value)}`;
+            },
+          },
+        },
+      },
+    };
+
     return (
       <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
         <CardHeader>
@@ -83,36 +115,9 @@ export const TopCategories = ({
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Donut Chart */}
               <div className="w-full md:w-1/2">
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={categories}
-                      cx="50%"
-                      cy="50%"
-                      innerRadius={60}
-                      outerRadius={90}
-                      fill="#8884d8"
-                      dataKey="amount"
-                      paddingAngle={2}
-                    >
-                      {categories.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <Tooltip
-                      formatter={(value: number) => formatCurrency(value)}
-                      contentStyle={{
-                        backgroundColor: 'white',
-                        border: '1px solid #e5e7eb',
-                        borderRadius: '8px',
-                        boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
-                      }}
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                <div className="h-48">
+                  <Doughnut data={chartData} options={chartOptions} />
+                </div>
               </div>
 
               {/* Legend */}

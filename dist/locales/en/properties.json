@@ -4,9 +4,23 @@
   "filterPlaceholder": "Filter by status",
   "addPropertyButton": "Add Property",
   "addTenantButton": "Add Tenant",
+  "typeFilter": {
+    "all": "All Properties",
+    "rental": "Rentals",
+    "sale": "For Sale"
+  },
   "status": {
-    "empty": "Empty",
-    "occupied": "Occupied",
+    "rental": {
+      "empty": "Empty",
+      "occupied": "Occupied",
+      "inactive": "Inactive"
+    },
+    "sale": {
+      "available": "Available",
+      "underOffer": "Under Offer",
+      "sold": "Sold",
+      "inactive": "Inactive"
+    },
     "inactive": "Inactive"
   },
   "filters": {
@@ -19,10 +33,12 @@
     "status": "Status",
     "tenant": "Tenant",
     "rent": "Rent",
+    "price": "Price",
     "contractEndDate": "End Date",
     "actions": "Actions",
     "noTenant": "",
     "noRent": "-",
+    "noPrice": "-",
     "noContract": "-",
     "inactive": "Inactive",
     "perMonth": "/month",
@@ -41,7 +57,10 @@
   "validations": {
     "ownerRequired": "Owner is required",
     "addressRequired": "Address is required",
-    "invalidUrl": "Please enter a valid URL"
+    "rentAmountPositive": "Rent amount must be greater than zero",
+    "salePricePositive": "Sale price must be greater than zero",
+    "invalidUrl": "Please enter a valid URL",
+    "invalidEmail": "Please enter a valid email address"
   },
   "emptyState": {
     "noPropertiesFound": "No properties found",
@@ -67,6 +86,11 @@
     "form": {
       "owner": "Property Owner",
       "ownerPlaceholder": "Select an owner",
+      "propertyType": "Property Type",
+      "rentalTypeLabel": "Rental",
+      "saleTypeLabel": "Sale",
+      "rentalStatus": "Rental Status",
+      "saleStatus": "Sale Status",
       "address": "Address",
       "addressPlaceholder": "123 Main St, Apt 4B",
       "city": "City",
@@ -75,10 +99,21 @@
       "districtPlaceholder": "District/neighborhood",
       "status": "Status",
       "statusPlaceholder": "Select status",
-      "rentAmount": "Rent Amount",
-      "rentAmountPlaceholder": "Enter rent amount",
+      "rentAmount": "Monthly Rent",
+      "rentAmountPlaceholder": "Enter monthly rent amount",
+      "salePrice": "Sale Price",
+      "salePricePlaceholder": "Enter sale price",
       "currency": "Currency",
       "currencyPlaceholder": "Select currency",
+      "buyerInfo": "Buyer Information",
+      "buyerName": "Buyer Name",
+      "buyerNamePlaceholder": "Enter buyer name",
+      "buyerPhone": "Buyer Phone",
+      "buyerPhonePlaceholder": "Enter buyer phone",
+      "buyerEmail": "Buyer Email",
+      "buyerEmailPlaceholder": "Enter buyer email",
+      "offerAmount": "Offer Amount",
+      "offerAmountPlaceholder": "Enter offer amount (if applicable)",
       "listingUrl": "Listing URL",
       "listingUrlPlaceholder": "https://www.sahibinden.com/...",
       "notes": "Notes",
@@ -86,5 +121,18 @@
     },
     "addButton": "Add Property",
     "updateButton": "Update Property"
+  },
+  "markAsSold": {
+    "button": "Mark as Sold",
+    "title": "Mark Property as Sold",
+    "description": "Enter the sale price for {{address}}. This will calculate your 4% commission and mark the property as sold.",
+    "propertyInfo": "Property",
+    "salePrice": "Sale Price",
+    "currency": "Currency",
+    "yourCommission": "Your Commission (4%)",
+    "commissionRate": "4% of sale price",
+    "confirmButton": "Confirm Sale",
+    "successToast": "Property marked as sold! Commission of {{commission}} added to Finance.",
+    "errorToast": "Failed to mark property as sold"
   }
 }

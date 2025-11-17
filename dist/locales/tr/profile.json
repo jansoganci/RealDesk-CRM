@@ -1,0 +1,67 @@
+{
+  "pageTitle": "Profil Ayarları",
+  "pageDescription": "Hesap tercihlerinizi ve ayarlarınızı yönetin",
+  "sections": {
+    "account": "Hesap Bilgileri",
+    "preferences": "Tercihler",
+    "security": "Güvenlik"
+  },
+  "fields": {
+    "email": "E-posta Adresi",
+    "userId": "Kullanıcı ID",
+    "fullName": "Ad Soyad",
+    "fullNamePlaceholder": "Adınızı ve soyadınızı girin",
+    "phoneNumber": "Telefon Numarası",
+    "phoneNumberPlaceholder": "Telefon numaranızı girin",
+    "language": "Dil",
+    "languagePlaceholder": "Dil seçin",
+    "currency": "Para Birimi",
+    "currencyPlaceholder": "Para birimi seçin",
+    "meetingReminder": "Toplantı Hatırlatıcıları",
+    "meetingReminderPlaceholder": "Hatırlatma zamanı seçin",
+    "meetingReminderDescription": "Toplantılardan önce bildirim alın",
+    "notSet": "Ayarlanmadı",
+    "notAvailable": "Mevcut değil"
+  },
+  "languages": {
+    "en": "İngilizce",
+    "tr": "Türkçe"
+  },
+  "currencies": {
+    "USD": "Amerikan Doları (USD)",
+    "TRY": "Türk Lirası (TRY)",
+    "EUR": "Euro (EUR)"
+  },
+  "reminderMinutes": {
+    "30": "30 dakika önce",
+    "60": "1 saat önce",
+    "90": "90 dakika önce"
+  },
+  "actions": {
+    "save": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor...",
+    "cancel": "İptal",
+    "changePassword": "Şifre Değiştir"
+  },
+  "messages": {
+    "saveSuccess": "Profil başarıyla güncellendi",
+    "saveError": "Profil güncellenemedi",
+    "loadError": "Profil verileri yüklenemedi"
+  },
+  "validation": {
+    "fullNameMin": "İsim en az 2 karakter olmalıdır",
+    "fullNameMax": "İsim 255 karakteri geçmemelidir",
+    "phoneInvalid": "Geçersiz telefon numarası formatı",
+    "phoneMin": "Telefon numarası en az 7 karakter olmalıdır",
+    "phoneMax": "Telefon numarası 20 karakteri geçmemelidir",
+    "languageRequired": "Dil gereklidir",
+    "currencyRequired": "Para birimi gereklidir",
+    "reminderRequired": "Toplantı hatırlatıcısı gereklidir",
+    "reminderInvalid": "Geçersiz hatırlatma zamanı"
+  },
+  "security": {
+    "changePasswordTitle": "Şifre Değiştir",
+    "changePasswordDescription": "Hesap şifrenizi güncelleyin",
+    "comingSoon": "Yakında"
+  }
+}

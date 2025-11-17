@@ -667,24 +667,21 @@ export const getCategoryBreakdown = async (
 export const getMonthlyTrends = async (
   months: number = 6
 ): Promise<MonthlyTrend[]> => {
-  const trends: MonthlyTrend[] = [];
   const today = new Date();
 
-  for (let i = months - 1; i >= 0; i--) {
-    const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+  // Get all monthly summaries in parallel (much faster!)
+  const monthPromises = Array.from({ length: months }, (_, i) => {
+    const date = new Date(today.getFullYear(), today.getMonth() - (months - 1 - i), 1);
     const month = date.toISOString().slice(0, 7); // YYYY-MM
-
-    const summary = await getMonthlySummary(month);
-
-    trends.push({
+    return getMonthlySummary(month).then(summary => ({
       month,
       income: summary.total_income,
       expense: summary.total_expense,
       net: summary.net_income,
-    });
-  }
+    }));
+  });
 
-  return trends;
+  return Promise.all(monthPromises);
 };
 
 /**
@@ -1006,13 +1003,14 @@ export const getYearlySummary = async (
 ): Promise<YearlySummary> => {
   const targetYear = year || new Date().getFullYear();
 
-  // Get monthly summaries for all 12 months
-  const months: MonthlySummary[] = [];
-  for (let month = 1; month <= 12; month++) {
+  // Get monthly summaries for all 12 months in parallel (much faster!)
+  const monthPromises = Array.from({ length: 12 }, (_, i) => {
+    const month = i + 1;
     const monthStr = `${targetYear}-${month.toString().padStart(2, '0')}`;
-    const summary = await getMonthlySummary(monthStr);
-    months.push(summary);
-  }
+    return getMonthlySummary(monthStr);
+  });
+
+  const months = await Promise.all(monthPromises);
 
   // Calculate totals
   const total_income = months.reduce((sum, m) => sum + m.total_income, 0);

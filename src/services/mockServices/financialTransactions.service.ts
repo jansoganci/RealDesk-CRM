@@ -704,24 +704,21 @@ class MockFinancialTransactionsService {
   async getMonthlyTrends(months: number = 6): Promise<MonthlyTrend[]> {
     await this.delay(100);
 
-    const trends: MonthlyTrend[] = [];
     const today = new Date();
 
-    for (let i = months - 1; i >= 0; i--) {
-      const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+    // Get all monthly summaries in parallel (much faster!)
+    const monthPromises = Array.from({ length: months }, (_, i) => {
+      const date = new Date(today.getFullYear(), today.getMonth() - (months - 1 - i), 1);
       const month = date.toISOString().slice(0, 7);
-
-      const summary = await this.getMonthlySummary(month);
-
-      trends.push({
+      return this.getMonthlySummary(month).then(summary => ({
         month,
         income: summary.total_income,
         expense: summary.total_expense,
         net: summary.net_income,
-      });
-    }
+      }));
+    });
 
-    return trends;
+    return Promise.all(monthPromises);
   }
 
   async getUpcomingRecurringExpenses(
@@ -821,7 +818,7 @@ class MockFinancialTransactionsService {
   async calculateNextDueDate(
     currentDate: string,
     frequency: 'monthly' | 'quarterly' | 'yearly',
-    dayOfMonth?: number | null
+    _dayOfMonth?: number | null
   ): Promise<string> {
     await this.delay(100);
 
@@ -994,12 +991,14 @@ class MockFinancialTransactionsService {
 
     const targetYear = year || new Date().getFullYear();
 
-    const months: MonthlySummary[] = [];
-    for (let month = 1; month <= 12; month++) {
+    // Get monthly summaries for all 12 months in parallel (much faster!)
+    const monthPromises = Array.from({ length: 12 }, (_, i) => {
+      const month = i + 1;
       const monthStr = `${targetYear}-${month.toString().padStart(2, '0')}`;
-      const summary = await this.getMonthlySummary(monthStr);
-      months.push(summary);
-    }
+      return this.getMonthlySummary(monthStr);
+    });
+
+    const months = await Promise.all(monthPromises);
 
     const total_income = months.reduce((sum, m) => sum + m.total_income, 0);
     const total_expense = months.reduce((sum, m) => sum + m.total_expense, 0);

@@ -117,6 +117,19 @@ export const TransactionDialog = ({
   const selectedType = form.watch('type');
   const filteredCategories = categories.filter(c => c.type === selectedType);
 
+  // Debug: Log categories when dialog opens or categories change
+  useEffect(() => {
+    if (open) {
+      console.log('🔍 DEBUG TransactionDialog - Dialog opened:');
+      console.log('  - categories prop:', categories);
+      console.log('  - categories length:', categories.length);
+      console.log('  - selectedType:', selectedType);
+      console.log('  - filteredCategories:', filteredCategories);
+      console.log('  - filteredCategories length:', filteredCategories.length);
+      console.log('  - All category types:', categories.map(c => ({ name: c.name, type: c.type })));
+    }
+  }, [open, categories, selectedType, filteredCategories]);
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
@@ -204,11 +217,22 @@ export const TransactionDialog = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {filteredCategories.map(cat => (
-                          <SelectItem key={cat.id} value={cat.name}>
-                            {cat.name}
-                          </SelectItem>
-                        ))}
+                        {filteredCategories.length === 0 ? (
+                          <div className="px-2 py-1.5 text-sm text-gray-500">
+                            {t('finance:fields.noCategoriesAvailable')}
+                          </div>
+                        ) : (
+                          filteredCategories.map(cat => {
+                            // Translate category name using i18n
+                            const categoryKey = `finance:categories.${selectedType}.${cat.name}`;
+                            const translatedName = t(categoryKey, { defaultValue: cat.name });
+                            return (
+                              <SelectItem key={cat.id} value={cat.name}>
+                                {translatedName}
+                              </SelectItem>
+                            );
+                          })
+                        )}
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -302,10 +326,10 @@ export const TransactionDialog = ({
                           {t('finance:paymentMethods.cash')}
                         </SelectItem>
                         <SelectItem value="bank_transfer">
-                          {t('finance:paymentMethods.bankTransfer')}
+                          {t('finance:paymentMethods.bank_transfer')}
                         </SelectItem>
                         <SelectItem value="credit_card">
-                          {t('finance:paymentMethods.creditCard')}
+                          {t('finance:paymentMethods.credit_card')}
                         </SelectItem>
                         <SelectItem value="check">
                           {t('finance:paymentMethods.check')}

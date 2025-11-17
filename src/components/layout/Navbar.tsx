@@ -15,8 +15,8 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
-  const { t, i18n } = useTranslation('navigation');
-  const { language, setLanguage, currency, setCurrency } = useAuth();
+  const { t } = useTranslation('navigation');
+  const { language, setLanguage, setCurrency } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
   const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
   const navigate = useNavigate();

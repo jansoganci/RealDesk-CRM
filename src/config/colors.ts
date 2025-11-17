@@ -8,6 +8,8 @@ export const COLORS = {
     darker: 'blue-800',
     bg: 'bg-blue-600',
     bgLight: 'bg-blue-50',
+    bgGradient: 'bg-gradient-to-r from-blue-600 to-blue-700',
+    bgGradientHover: 'hover:from-blue-700 hover:to-blue-800',
     text: 'text-blue-600',
     textLight: 'text-blue-500',
     border: 'border-blue-300',
@@ -108,6 +110,7 @@ export const COLORS = {
     hex: '#f9fafb',
     bg: 'bg-gray-50',
     bgGray: 'bg-gray-50',
+    bgGradient: 'bg-gradient-to-b from-gray-50 to-white',
   },
 
   card: {
@@ -171,36 +174,43 @@ export const COLORS = {
       bg: 'bg-orange-500',
       text: 'text-white',
       border: 'border-orange-300',
+      gradient: 'bg-gradient-to-r from-orange-500 to-orange-600',
     },
     occupied: {
       bg: 'bg-blue-500',
       text: 'text-white',
       border: 'border-blue-300',
+      gradient: 'bg-gradient-to-r from-blue-500 to-blue-600',
     },
     active: {
       bg: 'bg-emerald-600',
       text: 'text-white',
       border: 'border-emerald-300',
+      gradient: 'bg-gradient-to-r from-emerald-500 to-emerald-600',
     },
     inactive: {
       bg: 'bg-gray-600',
       text: 'text-white',
       border: 'border-gray-300',
+      gradient: 'bg-gradient-to-r from-gray-600 to-gray-700',
     },
     archived: {
       bg: 'bg-gray-600',
       text: 'text-white',
       border: 'border-gray-300',
+      gradient: 'bg-gradient-to-r from-gray-600 to-gray-700',
     },
     assigned: {
       bg: 'bg-emerald-600',
       text: 'text-white',
       border: 'border-emerald-300',
+      gradient: 'bg-gradient-to-r from-emerald-500 to-emerald-600',
     },
     unassigned: {
       bg: 'bg-gray-600',
       text: 'text-white',
       border: 'border-gray-300',
+      gradient: 'bg-gradient-to-r from-gray-600 to-gray-700',
     },
   },
 
@@ -209,18 +219,22 @@ export const COLORS = {
     properties: {
       bg: 'bg-blue-600',
       shadow: 'shadow-lg shadow-blue-600/20',
+      gradient: 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800',
     },
     occupied: {
       bg: 'bg-emerald-600',
       shadow: 'shadow-lg shadow-emerald-600/20',
+      gradient: 'bg-gradient-to-br from-emerald-600 via-emerald-700 to-emerald-800',
     },
     tenants: {
       bg: 'bg-blue-600',
       shadow: 'shadow-lg shadow-blue-600/20',
+      gradient: 'bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800',
     },
     contracts: {
       bg: 'bg-orange-500',
       shadow: 'shadow-lg shadow-orange-500/20',
+      gradient: 'bg-gradient-to-br from-orange-500 via-orange-600 to-orange-700',
     },
   },
 

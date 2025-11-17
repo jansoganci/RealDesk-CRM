@@ -5,7 +5,6 @@ import {
   TrendingUp,
   TrendingDown,
   Target,
-  DollarSign,
   PieChart,
   Activity,
 } from 'lucide-react';
