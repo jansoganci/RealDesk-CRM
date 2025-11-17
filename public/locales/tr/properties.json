@@ -4,9 +4,21 @@
   "filterPlaceholder": "Duruma göre filtrele",
   "addPropertyButton": "Mülk Ekle",
   "addTenantButton": "Kiracı Ekle",
+  "typeFilter": {
+    "all": "Tüm Mülkler",
+    "rental": "Kiralık",
+    "sale": "Satılık"
+  },
   "status": {
-    "empty": "Kiralamaya Hazır",
-    "occupied": "Kirada",
+    "rental": {
+      "empty": "Kiralamaya Hazır",
+      "occupied": "Kirada"
+    },
+    "sale": {
+      "available": "Satılabilir",
+      "underOffer": "Teklif Altında",
+      "sold": "Satıldı"
+    },
     "inactive": "Pasif"
   },
   "filters": {
@@ -19,10 +31,12 @@
     "status": "Durum",
     "tenant": "Kiracı",
     "rent": "Kira",
+    "price": "Fiyat",
     "contractEndDate": "Bitiş Tarihi",
     "actions": "İşlemler",
     "noTenant": "",
     "noRent": "-",
+    "noPrice": "-",
     "noContract": "-",
     "inactive": "Pasif",
     "perMonth": "/ay",
@@ -41,7 +55,10 @@
   "validations": {
     "ownerRequired": "Mal sahibi gereklidir",
     "addressRequired": "Adres gereklidir",
-    "invalidUrl": "Lütfen geçerli bir URL girin"
+    "rentAmountPositive": "Kira bedeli sıfırdan büyük olmalıdır",
+    "salePricePositive": "Satış fiyatı sıfırdan büyük olmalıdır",
+    "invalidUrl": "Lütfen geçerli bir URL girin",
+    "invalidEmail": "Lütfen geçerli bir e-posta adresi girin"
   },
   "emptyState": {
     "noPropertiesFound": "Mülk bulunamadı",
@@ -67,6 +84,7 @@
     "form": {
       "owner": "Mal Sahibi",
       "ownerPlaceholder": "Bir mal sahibi seçin",
+      "propertyType": "Mülk Tipi",
       "address": "Adres",
       "addressPlaceholder": "123 Ana Cadde, Daire 4B",
       "city": "Şehir",
@@ -75,10 +93,21 @@
       "districtPlaceholder": "İlçe/semt girin",
       "status": "Durum",
       "statusPlaceholder": "Durum seçin",
-      "rentAmount": "Kira Bedeli",
-      "rentAmountPlaceholder": "Kira bedelini girin",
+      "rentAmount": "Aylık Kira",
+      "rentAmountPlaceholder": "Aylık kira bedelini girin",
+      "salePrice": "Satış Fiyatı",
+      "salePricePlaceholder": "Satış fiyatını girin",
       "currency": "Para Birimi",
       "currencyPlaceholder": "Para birimi seçin",
+      "buyerInfo": "Alıcı Bilgileri",
+      "buyerName": "Alıcı Adı",
+      "buyerNamePlaceholder": "Alıcı adını girin",
+      "buyerPhone": "Alıcı Telefonu",
+      "buyerPhonePlaceholder": "Alıcı telefonunu girin",
+      "buyerEmail": "Alıcı E-postası",
+      "buyerEmailPlaceholder": "Alıcı e-postasını girin",
+      "offerAmount": "Teklif Tutarı",
+      "offerAmountPlaceholder": "Teklif tutarını girin (varsa)",
       "listingUrl": "İlan Linki",
       "listingUrlPlaceholder": "https://www.sahibinden.com/...",
       "notes": "Notlar",

@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { StatCard } from '../../components/dashboard/StatCard';
-import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign, UserCheck, Package, UserPlus, Search } from 'lucide-react';
+import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign, UserCheck, Package, UserPlus, Search, TrendingUp, ShoppingCart } from 'lucide-react';
 import { propertiesService, ownersService, tenantsService, contractsService, remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { ReminderWithDetails } from '../../lib/serviceProxy';
 import { format } from 'date-fns';
@@ -25,6 +25,21 @@ export const Dashboard = () => {
     activeContracts: 0,
     expiringSoon: 0,
     activeInquiries: 0,
+    rental: {
+      total: 0,
+      empty: 0,
+      occupied: 0,
+      inactive: 0,
+    },
+    sale: {
+      total: 0,
+      available: 0,
+      underOffer: 0,
+      sold: 0,
+      inactive: 0,
+    },
+    rentalInquiries: 0,
+    saleInquiries: 0,
   });
   const [actionItems, setActionItems] = useState({
     propertiesMissingInfo: {
@@ -90,6 +105,10 @@ export const Dashboard = () => {
         activeContracts: contractStats.active,
         expiringSoon: contractStats.expiringSoon,
         activeInquiries: inquiryStats.active,
+        rental: propertyStats.rental || { total: 0, empty: 0, occupied: 0, inactive: 0 },
+        sale: propertyStats.sale || { total: 0, available: 0, underOffer: 0, sold: 0, inactive: 0 },
+        rentalInquiries: inquiryStats.rental?.active || 0,
+        saleInquiries: inquiryStats.sale?.active || 0,
       });
 
       setActionItems({
@@ -188,6 +207,99 @@ export const Dashboard = () => {
           />
         </div>
 
+        {/* Rental Properties Stats */}
+        <div>
+          <h3 className={`text-xl font-bold ${COLORS.gray.text900} mb-4`}>{t('propertiesSummary.rentalPropertiesTitle')}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up">
+            <StatCard
+              title={t('stats.rentalProperties')}
+              value={stats.rental.total}
+              description={t('stats.rentalPropertiesDescription')}
+              icon={<Home className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="blue"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.rentalEmpty')}
+              value={stats.rental.empty}
+              description={t('stats.rentalEmptyDescription')}
+              icon={<Package className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="amber"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.rentalOccupied')}
+              value={stats.rental.occupied}
+              description={t('stats.rentalOccupiedDescription')}
+              icon={<Home className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="emerald"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.rentalInquiries')}
+              value={stats.rentalInquiries}
+              description={t('stats.rentalInquiriesDescription')}
+              icon={<Search className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="blue"
+              loading={loading}
+            />
+          </div>
+        </div>
+
+        {/* Sale Properties Stats */}
+        <div>
+          <h3 className={`text-xl font-bold ${COLORS.gray.text900} mb-4`}>{t('propertiesSummary.salePropertiesTitle')}</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up">
+            <StatCard
+              title={t('stats.saleProperties')}
+              value={stats.sale.total}
+              description={t('stats.salePropertiesDescription')}
+              icon={<Building2 className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="gold"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.saleAvailable')}
+              value={stats.sale.available}
+              description={t('stats.saleAvailableDescription')}
+              icon={<TrendingUp className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="emerald"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.saleUnderOffer')}
+              value={stats.sale.underOffer}
+              description={t('stats.saleUnderOfferDescription')}
+              icon={<ShoppingCart className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="amber"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.saleSold')}
+              value={stats.sale.sold}
+              description={t('stats.saleSoldDescription')}
+              icon={<DollarSign className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="emerald"
+              loading={loading}
+            />
+
+            <StatCard
+              title={t('stats.saleInquiries')}
+              value={stats.saleInquiries}
+              description={t('stats.saleInquiriesDescription')}
+              icon={<Search className={`h-5 w-5 ${COLORS.text.white}`} />}
+              iconColor="gold"
+              loading={loading}
+            />
+          </div>
+        </div>
+
         <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-gray-200/50 backdrop-blur-sm bg-white/90 animate-fade-in">
           <CardHeader>
             <CardTitle className="text-slate-900">
@@ -198,33 +310,88 @@ export const Dashboard = () => {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
-                <span className="text-slate-800 font-semibold flex items-center gap-2">
-                  <Package className="h-4 w-4 text-amber-600" />
-                  {t('propertiesSummary.empty')}
-                </span>
-                <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                  {loading ? '-' : stats.empty}
-                </Badge>
+            <div className="space-y-6">
+              {/* Rental Properties Section */}
+              <div>
+                <h4 className={`text-sm font-semibold ${COLORS.gray.text700} mb-3 flex items-center gap-2`}>
+                  <Home className="h-4 w-4 text-blue-600" />
+                  {t('propertiesSummary.rentalPropertiesTitle')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <Package className="h-4 w-4 text-amber-600" />
+                      {t('propertiesSummary.rentalEmpty')}
+                    </span>
+                    <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.rental.empty}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <Home className="h-4 w-4 text-emerald-600" />
+                      {t('propertiesSummary.rentalOccupied')}
+                    </span>
+                    <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.rental.occupied}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <Building2 className="h-4 w-4 text-slate-600" />
+                      {t('propertiesSummary.rentalInactive')}
+                    </span>
+                    <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.rental.inactive}
+                    </Badge>
+                  </div>
+                </div>
               </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
-                <span className="text-slate-800 font-semibold flex items-center gap-2">
-                  <Home className="h-4 w-4 text-emerald-600" />
-                  {t('propertiesSummary.occupied')}
-                </span>
-                <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                  {loading ? '-' : stats.occupied}
-                </Badge>
-              </div>
-              <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
-                <span className="text-slate-800 font-semibold flex items-center gap-2">
-                  <Building2 className="h-4 w-4 text-slate-600" />
-                  {t('propertiesSummary.inactive')}
-                </span>
-                <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                  {loading ? '-' : stats.inactive}
-                </Badge>
+
+              {/* Sale Properties Section */}
+              <div>
+                <h4 className={`text-sm font-semibold ${COLORS.gray.text700} mb-3 flex items-center gap-2`}>
+                  <Building2 className="h-4 w-4 text-amber-600" />
+                  {t('propertiesSummary.salePropertiesTitle')}
+                </h4>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-emerald-600" />
+                      {t('propertiesSummary.saleAvailable')}
+                    </span>
+                    <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.sale.available}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <ShoppingCart className="h-4 w-4 text-amber-600" />
+                      {t('propertiesSummary.saleUnderOffer')}
+                    </span>
+                    <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.sale.underOffer}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <DollarSign className="h-4 w-4 text-green-600" />
+                      {t('propertiesSummary.saleSold')}
+                    </span>
+                    <Badge className={`bg-gradient-to-r from-green-500 to-emerald-600 ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.sale.sold}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
+                    <span className="text-slate-800 font-medium flex items-center gap-2">
+                      <Building2 className="h-4 w-4 text-slate-600" />
+                      {t('propertiesSummary.saleInactive')}
+                    </span>
+                    <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
+                      {loading ? '-' : stats.sale.inactive}
+                    </Badge>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>

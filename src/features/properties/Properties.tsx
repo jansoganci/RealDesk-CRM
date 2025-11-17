@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
+import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
 
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -16,12 +17,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { format } from 'date-fns';
 import { getToday, daysDifference } from '../../lib/dates';
-import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus, TrendingUp } from 'lucide-react';
+import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus, TrendingUp, Home } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import * as z from 'zod';
-import { getPropertySchema } from './propertySchema';
+import { getPropertySchema } from './propertySchemas';
 
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
@@ -32,6 +33,7 @@ export const Properties = () => {
   const [properties, setProperties] = useState<PropertyWithOwner[]>([]);
   const [filteredProperties, setFilteredProperties] = useState<PropertyWithOwner[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'rental' | 'sale'>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -50,10 +52,15 @@ export const Properties = () => {
 
   useEffect(() => {
     filterProperties();
-  }, [searchQuery, statusFilter, properties]);
+  }, [searchQuery, propertyTypeFilter, statusFilter, properties]);
 
   const filterProperties = () => {
     let filtered = [...properties];
+
+    // Filter by property type
+    if (propertyTypeFilter !== 'all') {
+      filtered = filtered.filter((property: any) => property.property_type === propertyTypeFilter);
+    }
 
     if (searchQuery.trim() !== '') {
       const query = searchQuery.toLowerCase();
@@ -197,8 +204,14 @@ export const Properties = () => {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      Empty: { label: t('status.empty'), className: getStatusBadgeClasses('empty') },
-      Occupied: { label: t('status.occupied'), className: getStatusBadgeClasses('occupied') },
+      // Rental statuses
+      Empty: { label: t('status.rental.empty'), className: getStatusBadgeClasses('empty') },
+      Occupied: { label: t('status.rental.occupied'), className: getStatusBadgeClasses('occupied') },
+      // Sale statuses
+      Available: { label: t('status.sale.available'), className: 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md' },
+      'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md' },
+      Sold: { label: t('status.sale.sold'), className: 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md' },
+      // Shared status
       Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
 
@@ -211,8 +224,61 @@ export const Properties = () => {
     );
   };
 
+  // Helper function to get status filter options based on property type
+  const getStatusFilterOptions = () => {
+    const allOption = { value: 'all', label: t('filters.all') };
+
+    if (propertyTypeFilter === 'rental') {
+      return [
+        allOption,
+        { value: 'Empty', label: t('status.rental.empty') },
+        { value: 'Occupied', label: t('status.rental.occupied') },
+        { value: 'Inactive', label: t('status.inactive') },
+      ];
+    } else if (propertyTypeFilter === 'sale') {
+      return [
+        allOption,
+        { value: 'Available', label: t('status.sale.available') },
+        { value: 'Under Offer', label: t('status.sale.underOffer') },
+        { value: 'Sold', label: t('status.sale.sold') },
+        { value: 'Inactive', label: t('status.inactive') },
+      ];
+    } else {
+      // All properties - show all statuses
+      return [
+        allOption,
+        { value: 'Empty', label: t('status.rental.empty') },
+        { value: 'Occupied', label: t('status.rental.occupied') },
+        { value: 'Available', label: t('status.sale.available') },
+        { value: 'Under Offer', label: t('status.sale.underOffer') },
+        { value: 'Sold', label: t('status.sale.sold') },
+        { value: 'Inactive', label: t('status.inactive') },
+      ];
+    }
+  };
+
   return (
     <>
+      {/* Property Type Filter Tabs */}
+      <div className="mb-6">
+        <Tabs value={propertyTypeFilter} onValueChange={(value) => setPropertyTypeFilter(value as 'all' | 'rental' | 'sale')}>
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="all" className="flex items-center gap-2">
+              <Building2 className="h-4 w-4" />
+              {t('typeFilter.all')}
+            </TabsTrigger>
+            <TabsTrigger value="rental" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              {t('typeFilter.rental')}
+            </TabsTrigger>
+            <TabsTrigger value="sale" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              {t('typeFilter.sale')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       <ListPageTemplate
         title={t('title')}
         items={filteredProperties}
@@ -222,12 +288,7 @@ export const Properties = () => {
         searchPlaceholder={t('searchPlaceholder')}
         filterValue={statusFilter}
         onFilterChange={setStatusFilter}
-        filterOptions={[
-          { value: 'all', label: t('filters.all') },
-          { value: 'Empty', label: t('status.empty') },
-          { value: 'Occupied', label: t('status.occupied') },
-          { value: 'Inactive', label: t('status.inactive') },
-        ]}
+        filterOptions={getStatusFilterOptions()}
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddProperty}
         addButtonLabel={t('addPropertyButton')}
@@ -246,7 +307,7 @@ export const Properties = () => {
             <TableHead>{t('properties:table.location')}</TableHead>
             <TableHead>{t('properties:table.owner')}</TableHead>
             <TableHead>{t('properties:table.tenant')}</TableHead>
-            <TableHead>{t('properties:table.rent')}</TableHead>
+            <TableHead>{t('properties:table.price')}</TableHead>
             <TableHead className="whitespace-nowrap">{t('properties:table.contractEndDate')}</TableHead>
             <TableHead>{t('properties:table.status')}</TableHead>
             <TableHead className="text-right">{t('properties:table.actions')}</TableHead>
@@ -325,24 +386,61 @@ export const Properties = () => {
               )}
             </TableCell>
             <TableCell>
-              {property.status === 'Inactive' || !property.activeContract?.rent_amount ? (
-                <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noRent')}</span>
-              ) : (
-                <div className="flex items-center gap-2 text-sm">
-                  <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span className={COLORS.gray.text700}>
-                    {formatCurrency(
-                      convertCurrency(
-                        property.activeContract.rent_amount,
-                        property.activeContract.currency || 'USD',
-                        currency || 'USD'
-                      ),
-                      currency || 'USD'
-                    )}
-                    {t('properties:table.perMonth')}
-                  </span>
-                </div>
-              )}
+              {(() => {
+                const propertyTyped = property as any;
+                const isRental = propertyTyped.property_type === 'rental';
+                const isSale = propertyTyped.property_type === 'sale';
+
+                if (property.status === 'Inactive') {
+                  return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+                }
+
+                if (isRental) {
+                  // Show rental price
+                  if (!property.activeContract?.rent_amount) {
+                    return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noRent')}</span>;
+                  }
+                  return (
+                    <div className="flex items-center gap-2 text-sm">
+                      <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+                      <span className={COLORS.gray.text700}>
+                        {formatCurrency(
+                          convertCurrency(
+                            property.activeContract.rent_amount,
+                            property.activeContract.currency || 'USD',
+                            currency || 'USD'
+                          ),
+                          currency || 'USD'
+                        )}
+                        {t('properties:table.perMonth')}
+                      </span>
+                    </div>
+                  );
+                } else if (isSale) {
+                  // Show sale price
+                  const salePrice = propertyTyped.sale_price;
+                  if (!salePrice) {
+                    return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+                  }
+                  return (
+                    <div className="flex items-center gap-2 text-sm">
+                      <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+                      <span className={COLORS.gray.text700}>
+                        {formatCurrency(
+                          convertCurrency(
+                            salePrice,
+                            propertyTyped.currency || 'USD',
+                            currency || 'USD'
+                          ),
+                          currency || 'USD'
+                        )}
+                      </span>
+                    </div>
+                  );
+                }
+
+                return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+              })()}
             </TableCell>
             <TableCell>
               {property.status === 'Inactive' || !property.activeContract?.end_date ? (
@@ -480,24 +578,53 @@ export const Properties = () => {
                 </div>
               )}
 
-              {property.status !== 'Inactive' && property.activeContract?.rent_amount && (
-                <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200/50 shadow-sm">
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="h-4 w-4 text-amber-600" />
-                    <span className="text-sm text-slate-600 font-medium">Monthly Rent:</span>
-                  </div>
-                  <span className="font-bold text-amber-700">
-                    {formatCurrency(
-                      convertCurrency(
-                        property.activeContract.rent_amount,
-                        property.activeContract.currency || 'USD',
-                        currency || 'USD'
-                      ),
-                      currency || 'USD'
-                    )}
-                  </span>
-                </div>
-              )}
+              {property.status !== 'Inactive' && (() => {
+                const propertyTyped = property as any;
+                const isRental = propertyTyped.property_type === 'rental';
+                const isSale = propertyTyped.property_type === 'sale';
+
+                if (isRental && property.activeContract?.rent_amount) {
+                  return (
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200/50 shadow-sm">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-blue-600" />
+                        <span className="text-sm text-slate-600 font-medium">Monthly Rent:</span>
+                      </div>
+                      <span className="font-bold text-blue-700">
+                        {formatCurrency(
+                          convertCurrency(
+                            property.activeContract.rent_amount,
+                            property.activeContract.currency || 'USD',
+                            currency || 'USD'
+                          ),
+                          currency || 'USD'
+                        )}
+                      </span>
+                    </div>
+                  );
+                } else if (isSale && propertyTyped.sale_price) {
+                  return (
+                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200/50 shadow-sm">
+                      <div className="flex items-center gap-2">
+                        <DollarSign className="h-4 w-4 text-amber-600" />
+                        <span className="text-sm text-slate-600 font-medium">Sale Price:</span>
+                      </div>
+                      <span className="font-bold text-amber-700">
+                        {formatCurrency(
+                          convertCurrency(
+                            propertyTyped.sale_price,
+                            propertyTyped.currency || 'USD',
+                            currency || 'USD'
+                          ),
+                          currency || 'USD'
+                        )}
+                      </span>
+                    </div>
+                  );
+                }
+
+                return null;
+              })()}
 
               {property.status !== 'Inactive' && property.activeContract?.end_date && (
                 <div className="flex items-center gap-2 text-sm">

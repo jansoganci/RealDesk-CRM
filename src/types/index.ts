@@ -28,9 +28,40 @@ export type InquiryMatch = Database['public']['Tables']['inquiry_matches']['Row'
 export type InquiryMatchInsert = Database['public']['Tables']['inquiry_matches']['Insert'];
 export type InquiryMatchUpdate = Database['public']['Tables']['inquiry_matches']['Update'];
 
-export type PropertyStatus = 'Empty' | 'Occupied' | 'Inactive';
+// Property type definitions
+export type PropertyType = 'rental' | 'sale';
+export type RentalPropertyStatus = 'Empty' | 'Occupied' | 'Inactive';
+export type SalePropertyStatus = 'Available' | 'Under Offer' | 'Sold' | 'Inactive';
+export type PropertyStatus = RentalPropertyStatus | SalePropertyStatus;
+
+// Inquiry type definitions
+export type InquiryType = 'rental' | 'sale';
+
+// Other status types
 export type ContractStatus = 'Active' | 'Archived' | 'Inactive';
 export type InquiryStatus = 'active' | 'matched' | 'contacted' | 'closed';
+
+// Type-specific property interfaces
+export interface RentalProperty extends Omit<Property, 'property_type' | 'status'> {
+  property_type: 'rental';
+  status: RentalPropertyStatus;
+  rent_amount: number;
+  currency: string;
+}
+
+export interface SaleProperty extends Omit<Property, 'property_type' | 'status'> {
+  property_type: 'sale';
+  status: SalePropertyStatus;
+  sale_price: number;
+  currency: string;
+  sold_at?: string | null;
+  sold_price?: number | null;
+  buyer_name?: string | null;
+  buyer_phone?: string | null;
+  buyer_email?: string | null;
+  offer_date?: string | null;
+  offer_amount?: number | null;
+}
 
 export interface PropertyWithOwner extends Property {
   owner?: PropertyOwner;
@@ -43,6 +74,16 @@ export interface PropertyWithOwner extends Property {
     end_date: string;
     status: ContractStatus;
   };
+}
+
+export interface RentalPropertyWithOwner extends PropertyWithOwner {
+  property_type: 'rental';
+  status: RentalPropertyStatus;
+}
+
+export interface SalePropertyWithOwner extends PropertyWithOwner {
+  property_type: 'sale';
+  status: SalePropertyStatus;
 }
 
 export interface PropertyWithOwnerDetails extends Property {
@@ -78,6 +119,19 @@ export interface TenantWithContractData {
 export interface TenantWithContractResult {
   tenant: Tenant;
   contract: Contract;
+}
+
+// Type-specific inquiry interfaces
+export interface RentalInquiry extends Omit<PropertyInquiry, 'inquiry_type'> {
+  inquiry_type: 'rental';
+  min_rent_budget: number | null;
+  max_rent_budget: number | null;
+}
+
+export interface SaleInquiry extends Omit<PropertyInquiry, 'inquiry_type'> {
+  inquiry_type: 'sale';
+  min_sale_budget: number | null;
+  max_sale_budget: number | null;
 }
 
 export interface InquiryWithMatches extends PropertyInquiry {

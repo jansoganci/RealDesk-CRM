@@ -26,6 +26,36 @@ class InquiriesService {
     return (data || []) as PropertyInquiry[];
   }
 
+  async getRentalInquiries(): Promise<PropertyInquiry[]> {
+    const { data, error } = await supabase
+      .from('property_inquiries')
+      .select('*')
+      .eq('inquiry_type', 'rental')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching rental inquiries:', error);
+      throw error;
+    }
+
+    return (data || []) as PropertyInquiry[];
+  }
+
+  async getSaleInquiries(): Promise<PropertyInquiry[]> {
+    const { data, error } = await supabase
+      .from('property_inquiries')
+      .select('*')
+      .eq('inquiry_type', 'sale')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching sale inquiries:', error);
+      throw error;
+    }
+
+    return (data || []) as PropertyInquiry[];
+  }
+
   async getById(id: string): Promise<InquiryWithMatches | null> {
     const { data, error } = await supabase
       .from('property_inquiries')
@@ -113,19 +143,26 @@ class InquiriesService {
     property: Property,
     activeInquiries: PropertyInquiry[]
   ): Promise<string[]> {
-    // 1. Status check
-    if (property.status !== 'Empty') {
+    // Filter inquiries by property type first
+    const typeMatchedInquiries = activeInquiries.filter(
+      (inquiry: any) => inquiry.inquiry_type === property.property_type
+    );
+
+    // Status check - only match available properties
+    if (property.property_type === 'rental' && property.status !== 'Empty') {
+      return [];
+    }
+    if (property.property_type === 'sale' && property.status !== 'Available') {
       return [];
     }
 
     const matchedInquiryIds: string[] = [];
 
-    for (const inquiry of activeInquiries) {
+    for (const inquiry of typeMatchedInquiries) {
       let matches = true;
 
-      // 2. City match (exact, case-insensitive)
+      // City match (exact, case-insensitive)
       if (inquiry.preferred_city) {
-        // If inquiry has city preference, property must have city and they must match
         if (!property.city) {
           matches = false;
           continue;
@@ -139,9 +176,8 @@ class InquiriesService {
         }
       }
 
-      // 3. District match (optional, if specified, exact)
+      // District match (optional, if specified, exact)
       if (inquiry.preferred_district) {
-        // If inquiry has district preference, property must have district and they must match
         if (!property.district) {
           matches = false;
           continue;
@@ -155,21 +191,46 @@ class InquiriesService {
         }
       }
 
-      // 4. Budget check (if inquiry has budget constraints)
-      if (inquiry.min_budget || inquiry.max_budget) {
-        const propertyRent = property.rent_amount;
-        // If inquiry has budget constraints but property has no rent amount, don't match
-        if (!propertyRent) {
-          matches = false;
-          continue;
+      // Budget check based on property type
+      if (property.property_type === 'rental') {
+        // Rental budget logic
+        const minBudget = (inquiry as any).min_rent_budget;
+        const maxBudget = (inquiry as any).max_rent_budget;
+
+        if (minBudget || maxBudget) {
+          const propertyRent = property.rent_amount;
+          if (!propertyRent) {
+            matches = false;
+            continue;
+          }
+          if (minBudget && propertyRent < minBudget) {
+            matches = false;
+            continue;
+          }
+          if (maxBudget && propertyRent > maxBudget) {
+            matches = false;
+            continue;
+          }
         }
-        if (inquiry.min_budget && propertyRent < inquiry.min_budget) {
-          matches = false;
-          continue;
-        }
-        if (inquiry.max_budget && propertyRent > inquiry.max_budget) {
-          matches = false;
-          continue;
+      } else if (property.property_type === 'sale') {
+        // Sale budget logic
+        const minBudget = (inquiry as any).min_sale_budget;
+        const maxBudget = (inquiry as any).max_sale_budget;
+
+        if (minBudget || maxBudget) {
+          const propertySalePrice = property.sale_price;
+          if (!propertySalePrice) {
+            matches = false;
+            continue;
+          }
+          if (minBudget && propertySalePrice < minBudget) {
+            matches = false;
+            continue;
+          }
+          if (maxBudget && propertySalePrice > maxBudget) {
+            matches = false;
+            continue;
+          }
         }
       }
 
@@ -234,29 +295,51 @@ class InquiriesService {
   async getStats() {
     const { data, error } = await supabase
       .from('property_inquiries')
-      .select('status');
+      .select('status, inquiry_type');
 
     if (error) throw error;
 
-    const inquiries = (data || []) as Array<{ status: string }>;
+    const inquiries = (data || []) as Array<{ status: string; inquiry_type: string }>;
 
     const stats = {
       total: inquiries.length || 0,
+      // Legacy stats (for backward compatibility)
       active: inquiries.filter((i) => i.status === 'active').length || 0,
       matched: inquiries.filter((i) => i.status === 'matched').length || 0,
       contacted: inquiries.filter((i) => i.status === 'contacted').length || 0,
       closed: inquiries.filter((i) => i.status === 'closed').length || 0,
+      // Rental inquiry stats
+      rental: {
+        total: inquiries.filter((i) => i.inquiry_type === 'rental').length || 0,
+        active: inquiries.filter((i) => i.inquiry_type === 'rental' && i.status === 'active').length || 0,
+        matched: inquiries.filter((i) => i.inquiry_type === 'rental' && i.status === 'matched').length || 0,
+        contacted: inquiries.filter((i) => i.inquiry_type === 'rental' && i.status === 'contacted').length || 0,
+        closed: inquiries.filter((i) => i.inquiry_type === 'rental' && i.status === 'closed').length || 0,
+      },
+      // Sale inquiry stats
+      sale: {
+        total: inquiries.filter((i) => i.inquiry_type === 'sale').length || 0,
+        active: inquiries.filter((i) => i.inquiry_type === 'sale' && i.status === 'active').length || 0,
+        matched: inquiries.filter((i) => i.inquiry_type === 'sale' && i.status === 'matched').length || 0,
+        contacted: inquiries.filter((i) => i.inquiry_type === 'sale' && i.status === 'contacted').length || 0,
+        closed: inquiries.filter((i) => i.inquiry_type === 'sale' && i.status === 'closed').length || 0,
+      },
     };
 
     return stats;
   }
 
-  async getActiveInquiries(): Promise<PropertyInquiry[]> {
-    const { data, error } = await supabase
+  async getActiveInquiries(type?: 'rental' | 'sale'): Promise<PropertyInquiry[]> {
+    let query = supabase
       .from('property_inquiries')
       .select('*')
-      .eq('status', 'active')
-      .order('created_at', { ascending: false });
+      .eq('status', 'active');
+
+    if (type) {
+      query = query.eq('inquiry_type', type);
+    }
+
+    const { data, error } = await query.order('created_at', { ascending: false });
 
     if (error) throw error;
 
