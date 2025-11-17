@@ -7,7 +7,7 @@ import { InquiryMatchesDialog } from './InquiryMatchesDialog';
 import { inquiriesService } from '../../lib/serviceProxy';
 import { PropertyInquiry, InquiryWithMatches } from '../../types';
 import { toast } from 'sonner';
-import { Phone, Mail, MapPin, DollarSign, Eye, Inbox } from 'lucide-react';
+import { Phone, Mail, MapPin, DollarSign, Eye, Inbox, Home, TrendingUp } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -24,6 +24,7 @@ export const Inquiries = () => {
   const [inquiries, setInquiries] = useState<PropertyInquiry[]>([]);
   const [filteredInquiries, setFilteredInquiries] = useState<PropertyInquiry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [inquiryTypeFilter, setInquiryTypeFilter] = useState<'all' | 'rental' | 'sale'>('all');
   const [statusFilter, setStatusFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -46,6 +47,11 @@ export const Inquiries = () => {
 
     let filtered = inquiries;
 
+    // Filter by inquiry type
+    if (inquiryTypeFilter !== 'all') {
+      filtered = filtered.filter((inquiry: any) => inquiry.inquiry_type === inquiryTypeFilter);
+    }
+
     // Filter by status
     if (statusFilter !== 'all') {
       filtered = filtered.filter((inquiry) => inquiry.status === statusFilter);
@@ -64,7 +70,7 @@ export const Inquiries = () => {
     }
 
     setFilteredInquiries(filtered);
-  }, [searchQuery, statusFilter, inquiries]);
+  }, [searchQuery, inquiryTypeFilter, statusFilter, inquiries]);
 
   const loadInquiries = async () => {
     try {
@@ -189,18 +195,26 @@ export const Inquiries = () => {
         )}
       </TableCell>
       <TableCell>
-        {inquiry.min_budget || inquiry.max_budget ? (
-          <div className="flex items-center gap-1">
-            <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-            <span>
-              {inquiry.min_budget && `${inquiry.min_budget}`}
-              {inquiry.min_budget && inquiry.max_budget && ' - '}
-              {inquiry.max_budget && `${inquiry.max_budget}`}
-            </span>
-          </div>
-        ) : (
-          <span className={COLORS.gray.text500}>-</span>
-        )}
+        {(() => {
+          const inquiryTyped = inquiry as any;
+          const isRental = inquiryTyped.inquiry_type === 'rental';
+          const minBudget = isRental ? inquiryTyped.min_rent_budget : inquiryTyped.min_sale_budget;
+          const maxBudget = isRental ? inquiryTyped.max_rent_budget : inquiryTyped.max_sale_budget;
+
+          if (minBudget || maxBudget) {
+            return (
+              <div className="flex items-center gap-1">
+                <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
+                <span>
+                  {minBudget && `${minBudget}`}
+                  {minBudget && maxBudget && ' - '}
+                  {maxBudget && `${maxBudget}`}
+                </span>
+              </div>
+            );
+          }
+          return <span className={COLORS.gray.text500}>-</span>;
+        })()}
       </TableCell>
       <TableCell>
         <Badge className={getStatusBadge(inquiry.status)}>
@@ -259,14 +273,24 @@ export const Inquiries = () => {
         </div>
       )}
 
-      {(inquiry.min_budget || inquiry.max_budget) && (
-        <div className={`text-sm ${COLORS.gray.text600} flex items-center gap-1`}>
-          <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-          {inquiry.min_budget && `${inquiry.min_budget}`}
-          {inquiry.min_budget && inquiry.max_budget && ' - '}
-          {inquiry.max_budget && `${inquiry.max_budget}`}
-        </div>
-      )}
+      {(() => {
+        const inquiryTyped = inquiry as any;
+        const isRental = inquiryTyped.inquiry_type === 'rental';
+        const minBudget = isRental ? inquiryTyped.min_rent_budget : inquiryTyped.min_sale_budget;
+        const maxBudget = isRental ? inquiryTyped.max_rent_budget : inquiryTyped.max_sale_budget;
+
+        if (minBudget || maxBudget) {
+          return (
+            <div className={`text-sm ${COLORS.gray.text600} flex items-center gap-1`}>
+              <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
+              {minBudget && `${minBudget}`}
+              {minBudget && maxBudget && ' - '}
+              {maxBudget && `${maxBudget}`}
+            </div>
+          );
+        }
+        return null;
+      })()}
 
       <div className="flex items-center gap-2 pt-2">
         {(inquiry.status === 'matched' || inquiry.status === 'contacted') && (
@@ -290,6 +314,26 @@ export const Inquiries = () => {
 
   return (
     <>
+      {/* Inquiry Type Filter */}
+      <div className="mb-6">
+        <Tabs value={inquiryTypeFilter} onValueChange={(value) => setInquiryTypeFilter(value as 'all' | 'rental' | 'sale')}>
+          <TabsList className="grid w-full max-w-md grid-cols-3">
+            <TabsTrigger value="all" className="flex items-center gap-2">
+              <Inbox className="h-4 w-4" />
+              {t('typeFilter.all')}
+            </TabsTrigger>
+            <TabsTrigger value="rental" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              {t('typeFilter.rental')}
+            </TabsTrigger>
+            <TabsTrigger value="sale" className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4" />
+              {t('typeFilter.sale')}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+
       <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full">
         <TabsList className="mb-4">
           <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
