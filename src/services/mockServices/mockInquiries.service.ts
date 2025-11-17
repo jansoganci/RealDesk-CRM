@@ -1,4 +1,4 @@
-import type {
+ import type {
   PropertyInquiry,
   PropertyInquiryInsert,
   PropertyInquiryUpdate,
@@ -23,6 +23,7 @@ let mockInquiriesData: PropertyInquiry[] = [
     notes: 'Looking for a 3+1 apartment',
     created_at: new Date('2025-01-01').toISOString(),
     updated_at: new Date('2025-01-01').toISOString(),
+    user_id: 'mock-user-id',
   },
   {
     id: 'inquiry-2',
@@ -37,6 +38,7 @@ let mockInquiriesData: PropertyInquiry[] = [
     notes: 'Prefers ground floor',
     created_at: new Date('2025-01-03').toISOString(),
     updated_at: new Date('2025-01-03').toISOString(),
+    user_id: 'mock-user-id',
   },
 ];
 
@@ -48,6 +50,7 @@ let mockMatchesData: InquiryMatch[] = [
     matched_at: new Date('2025-01-04').toISOString(),
     notification_sent: false,
     contacted: false,
+    user_id: 'mock-user-id',
   },
 ];
 
@@ -97,6 +100,7 @@ class MockInquiriesService {
       notes: inquiry.notes ?? null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
+      user_id: inquiry.user_id || 'mock-user-id', // Ensure user_id is present
     };
 
     mockInquiriesData.push(newInquiry);
@@ -302,6 +306,7 @@ class MockInquiriesService {
         notes: 'Looking for a 3+1 apartment',
         created_at: new Date('2025-01-01').toISOString(),
         updated_at: new Date('2025-01-01').toISOString(),
+        user_id: 'mock-user-id',
       },
       {
         id: 'inquiry-2',
@@ -316,6 +321,7 @@ class MockInquiriesService {
         notes: 'Prefers ground floor',
         created_at: new Date('2025-01-03').toISOString(),
         updated_at: new Date('2025-01-03').toISOString(),
+        user_id: 'mock-user-id',
       },
     ];
 
@@ -327,6 +333,7 @@ class MockInquiriesService {
         matched_at: new Date('2025-01-04').toISOString(),
         notification_sent: false,
         contacted: false,
+        user_id: 'mock-user-id',
       },
     ];
   }

@@ -8,20 +8,14 @@ export default {
     './src/**/*.{ts,tsx}',
   ],
   safelist: [
-    // Luxury Navy & Gold gradient classes
-    'via-slate-800',
-    'via-slate-900',
-    'via-amber-600',
-    'via-amber-700',
+    // Modern Blue & Emerald gradient classes (minimal gradient use)
+    'via-blue-600',
     'via-emerald-600',
-    'from-slate-800',
-    'from-slate-900',
-    'from-amber-500',
-    'from-amber-600',
+    'from-blue-500',
+    'from-blue-600',
     'from-emerald-500',
-    'to-slate-900',
-    'to-blue-900',
-    'to-amber-700',
+    'from-emerald-600',
+    'to-blue-700',
     'to-emerald-700',
     'from-transparent',
     'to-transparent',
@@ -78,12 +72,11 @@ export default {
         },
       },
       boxShadow: {
-        // Luxury shadow system
-        'luxury': '0 10px 30px -5px rgba(15, 23, 42, 0.2), 0 4px 6px -2px rgba(15, 23, 42, 0.05)',
-        'luxury-lg': '0 20px 40px -10px rgba(15, 23, 42, 0.25), 0 10px 15px -3px rgba(15, 23, 42, 0.1)',
-        'gold': '0 10px 30px -5px rgba(217, 119, 6, 0.3), 0 4px 6px -2px rgba(217, 119, 6, 0.1)',
-        'gold-lg': '0 20px 40px -10px rgba(217, 119, 6, 0.4), 0 10px 15px -3px rgba(217, 119, 6, 0.15)',
+        // Modern shadow system
+        'luxury': '0 10px 30px -5px rgba(37, 99, 235, 0.2), 0 4px 6px -2px rgba(37, 99, 235, 0.05)',
+        'luxury-lg': '0 20px 40px -10px rgba(37, 99, 235, 0.25), 0 10px 15px -3px rgba(37, 99, 235, 0.1)',
         'emerald': '0 10px 30px -5px rgba(5, 150, 105, 0.3), 0 4px 6px -2px rgba(5, 150, 105, 0.1)',
+        'emerald-lg': '0 20px 40px -10px rgba(5, 150, 105, 0.4), 0 10px 15px -3px rgba(5, 150, 105, 0.15)',
         'card': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
         'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
       },

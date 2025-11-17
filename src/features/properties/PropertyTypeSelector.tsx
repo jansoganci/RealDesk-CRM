@@ -1,4 +1,5 @@
 import { Home, Building2 } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 
 interface PropertyTypeSelectorProps {
@@ -12,6 +13,8 @@ export const PropertyTypeSelector = ({
   onChange,
   disabled = false,
 }: PropertyTypeSelectorProps) => {
+  const { t } = useTranslation('properties');
+  
   return (
     <div className="grid grid-cols-2 gap-3 p-1 bg-gray-100 rounded-lg">
       <button
@@ -29,7 +32,7 @@ export const PropertyTypeSelector = ({
         `}
       >
         <Home className="h-5 w-5" />
-        <span>Rental</span>
+        <span>{t('dialog.form.rentalTypeLabel')}</span>
       </button>
       <button
         type="button"
@@ -46,7 +49,7 @@ export const PropertyTypeSelector = ({
         `}
       >
         <Building2 className="h-5 w-5" />
-        <span>Sale</span>
+        <span>{t('dialog.form.saleTypeLabel')}</span>
       </button>
     </div>
   );

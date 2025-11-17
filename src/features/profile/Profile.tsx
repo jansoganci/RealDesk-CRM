@@ -132,18 +132,6 @@ export const Profile = () => {
   return (
     <MainLayout title={t('profile:pageTitle')}>
       <PageContainer>
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900">
-            {t('profile:pageTitle')}
-          </h1>
-          <p className="text-gray-600 mt-1">
-            {t('profile:pageDescription')}
-          </p>
-        </div>
-      </div>
-
       {/* Success Alert */}
       {saveSuccess && (
         <Alert className="bg-green-50 border-green-200">
@@ -160,7 +148,7 @@ export const Profile = () => {
         <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow">
           <CardHeader className="border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
+              <div className="p-2.5 bg-orange-500 rounded-xl shadow-lg shadow-orange-500/20">
                 <UserCircle className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -174,7 +162,7 @@ export const Profile = () => {
             {/* User Avatar */}
             <div className="flex items-center gap-4">
               <Avatar className="h-20 w-20 border-4 border-gray-100 shadow-md">
-                <AvatarFallback className="text-2xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 text-white">
+                <AvatarFallback className="text-2xl font-bold bg-blue-600 text-white">
                   {getUserInitials()}
                 </AvatarFallback>
               </Avatar>
@@ -228,7 +216,7 @@ export const Profile = () => {
         <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow">
           <CardHeader className="border-b border-gray-100">
             <div className="flex items-center gap-3">
-              <div className="p-2.5 bg-gradient-to-br from-slate-900 to-slate-700 rounded-xl shadow-md">
+              <div className="p-2.5 bg-blue-600 rounded-xl shadow-md">
                 <Settings2 className="h-5 w-5 text-white" />
               </div>
               <div>
@@ -400,7 +388,7 @@ export const Profile = () => {
                   <Button
                     type="submit"
                     disabled={loading}
-                    className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-slate-800 hover:to-slate-700 text-white shadow-lg hover:shadow-xl transition-all"
+                    className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg hover:shadow-xl transition-all"
                   >
                     {loading ? (
                       <>

@@ -1,5 +1,6 @@
 import { ReactNode } from 'react';
 import { Card } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 import { COLORS } from '@/config/colors';
 
 interface MobileCardViewProps<T> {
@@ -19,9 +20,9 @@ export const MobileCardView = <T,>({
         {[...Array(3)].map((_, index) => (
           <Card key={index} className={`p-4 shadow-sm ${COLORS.border.light} ${COLORS.card.bg}`}>
             <div className="space-y-3">
-              <div className="h-5 bg-gray-200 animate-pulse rounded w-3/4" />
-              <div className="h-4 bg-gray-200 animate-pulse rounded w-1/2" />
-              <div className="h-4 bg-gray-200 animate-pulse rounded w-2/3" />
+              <Skeleton className="h-5 w-3/4" />
+              <Skeleton className="h-4 w-1/2" />
+              <Skeleton className="h-4 w-2/3" />
             </div>
           </Card>
         ))}

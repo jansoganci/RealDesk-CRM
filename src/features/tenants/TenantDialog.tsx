@@ -74,7 +74,7 @@ export const TenantDialog = ({
             name: tenant.name || '',
             phone: tenant.phone || '',
             email: tenant.email || '',
-            property_id: tenant.property_id || '',
+            property_id: '', // Tenants don't have property_id directly - they're related via contracts
             notes: tenant.notes || '',
           });
         } else {
@@ -215,7 +215,7 @@ export const TenantDialog = ({
             <Button
               type="submit"
               disabled={loading}
-              className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+              className={`${COLORS.primary.bg} ${COLORS.primary.hover} ${COLORS.text.white}`}
             >
               {loading ? t('saving', { ns: 'common' }) : tenant ? t('dialog.updateButton') : t('dialog.addButton')}
             </Button>

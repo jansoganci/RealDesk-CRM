@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Skeleton } from '../../../components/ui/skeleton';
 import {
   AreaChart,
   Area,
@@ -41,12 +42,12 @@ export const FinancialTrends = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
         <CardHeader>
-          <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+          <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
-          <div className="h-96 bg-gray-100 rounded animate-pulse" />
+          <Skeleton className="h-96 w-full rounded" />
         </CardContent>
       </Card>
     );

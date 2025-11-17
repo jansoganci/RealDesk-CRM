@@ -194,14 +194,15 @@ export const EnhancedTenantDialog = ({
       const formData = form.getValues();
       
       // Prepare data for service
+      // user_id is injected automatically by the RPC function on the database side
       const tenantWithContractData: TenantWithContractData = {
         tenant: {
           name: formData.tenant.name,
           email: formData.tenant.email || null,
           phone: formData.tenant.phone || null,
           notes: formData.tenant.notes || null,
-          property_id: formData.contract.property_id, // Assign tenant to property
-        },
+          // property_id is not part of TenantInsert - tenants are related to properties via contracts
+        } as any,
         contract: {
           tenant_id: '', // Will be set by the service
           property_id: formData.contract.property_id,
@@ -217,7 +218,7 @@ export const EnhancedTenantDialog = ({
           rent_increase_reminder_contacted: false,
           expected_new_rent: formData.contract.expected_new_rent,
           reminder_notes: formData.contract.reminder_notes || null,
-        },
+        } as any,
         pdfFile: pdfFile || undefined,
       };
 
@@ -379,7 +380,7 @@ export const EnhancedTenantDialog = ({
             type="button"
             onClick={isLastStep ? handleSubmit : handleNext}
             disabled={submitting}
-            className={isLastStep ? `${COLORS.success.bg} hover:${COLORS.success.dark}` : ''}
+            className={isLastStep ? `${COLORS.success.bg} ${COLORS.success.hover}` : ''}
           >
             {submitting ? (
               t('enhanced.navigation.submitting')

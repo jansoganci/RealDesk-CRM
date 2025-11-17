@@ -49,7 +49,7 @@ export interface RentalProperty extends Omit<Property, 'property_type' | 'status
   currency: string;
 }
 
-export interface SaleProperty extends Omit<Property, 'property_type' | 'status'> {
+export interface SaleProperty extends Omit<Property, 'property_type' | 'status' | 'sold_at' | 'sold_price'> {
   property_type: 'sale';
   status: SalePropertyStatus;
   sale_price: number;

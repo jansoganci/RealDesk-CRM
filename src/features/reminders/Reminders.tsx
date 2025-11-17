@@ -4,7 +4,7 @@ import { PageContainer } from '../../components/layout/PageContainer';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { AnimatedTabs } from '../../components/ui/animated-tabs';
 import {
   AlertCircle,
   Bell,
@@ -45,6 +45,8 @@ export const Reminders = () => {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [selectedReminder, setSelectedReminder] = useState<ReminderWithDetails | null>(null);
   const [showContactDialog, setShowContactDialog] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>('');
+  const [tabInitialized, setTabInitialized] = useState(false);
   const { t } = useTranslation(['reminders', 'common']);
 
   useEffect(() => {
@@ -82,6 +84,24 @@ export const Reminders = () => {
   };
 
   const { overdue: overdueReminders, upcoming: upcomingReminders, scheduled: scheduledReminders, expired: expiredContracts } = remindersService.categorizeReminders(reminders);
+
+  // Set default tab based on available reminders (only once on initial load)
+  useEffect(() => {
+    if (!tabInitialized && reminders.length > 0) {
+      if (overdueReminders.length > 0) {
+        setActiveTab('overdue');
+      } else if (upcomingReminders.length > 0) {
+        setActiveTab('upcoming');
+      } else if (scheduledReminders.length > 0) {
+        setActiveTab('scheduled');
+      } else if (expiredContracts.length > 0) {
+        setActiveTab('expired');
+      } else {
+        setActiveTab('overdue');
+      }
+      setTabInitialized(true);
+    }
+  }, [reminders.length, overdueReminders.length, upcomingReminders.length, scheduledReminders.length, expiredContracts.length, tabInitialized]);
 
   const getReminderBadge = (reminder: ReminderWithDetails) => {
     const urgency = remindersService.getReminderUrgencyCategory(reminder.days_until_end);
@@ -225,7 +245,7 @@ export const Reminders = () => {
                 setShowContactDialog(true);
               }}
               disabled={actionLoading === reminder.id}
-              className={`flex-1 ${COLORS.success.bgGradient} ${COLORS.success.bgGradientHover}`}
+              className={`flex-1 ${COLORS.success.bg} ${COLORS.success.hover} ${COLORS.text.white}`}
             >
               <Check className="h-4 w-4 mr-2" />
               {actionLoading === reminder.id ? t('loading', { ns: 'common' }) : t('actions.markContacted')}
@@ -313,35 +333,36 @@ export const Reminders = () => {
             showAction={false}
           />
         ) : (
-          <Tabs defaultValue={overdueReminders.length > 0 ? "overdue" : upcomingReminders.length > 0 ? "upcoming" : "scheduled"} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-4 max-w-2xl">
-            <TabsTrigger value="overdue" className="relative">
-              {t('tabs.overdue')}
-              {overdueReminders.length > 0 && (
-                <Badge className={`ml-2 ${COLORS.reminders.overdue} ${COLORS.text.white}`}>{overdueReminders.length}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="upcoming">
-              {t('tabs.upcoming')}
-              {upcomingReminders.length > 0 && (
-                <Badge className={`ml-2 ${COLORS.reminders.upcoming} ${COLORS.text.white}`}>{upcomingReminders.length}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="scheduled">
-              {t('tabs.scheduled')}
-              {scheduledReminders.length > 0 && (
-                <Badge className={`ml-2 ${COLORS.reminders.scheduled} ${COLORS.text.white}`}>{scheduledReminders.length}</Badge>
-              )}
-            </TabsTrigger>
-            <TabsTrigger value="expired">
-              {t('tabs.expired')}
-              {expiredContracts.length > 0 && (
-                <Badge className={`ml-2 ${COLORS.reminders.expired} ${COLORS.text.white}`}>{expiredContracts.length}</Badge>
-              )}
-            </TabsTrigger>
-          </TabsList>
+          <div className="space-y-4">
+            <AnimatedTabs
+              tabs={[
+                { 
+                  id: 'overdue', 
+                  label: `${t('tabs.overdue')}${overdueReminders.length > 0 ? ` (${overdueReminders.length})` : ''}`,
+                  icon: <AlertCircle className="h-4 w-4" />
+                },
+                { 
+                  id: 'upcoming', 
+                  label: `${t('tabs.upcoming')}${upcomingReminders.length > 0 ? ` (${upcomingReminders.length})` : ''}`,
+                  icon: <Calendar className="h-4 w-4" />
+                },
+                { 
+                  id: 'scheduled', 
+                  label: `${t('tabs.scheduled')}${scheduledReminders.length > 0 ? ` (${scheduledReminders.length})` : ''}`,
+                  icon: <Bell className="h-4 w-4" />
+                },
+                { 
+                  id: 'expired', 
+                  label: `${t('tabs.expired')}${expiredContracts.length > 0 ? ` (${expiredContracts.length})` : ''}`,
+                  icon: <FileText className="h-4 w-4" />
+                },
+              ]}
+              defaultTab={activeTab || undefined}
+              onChange={(tabId) => setActiveTab(tabId)}
+            />
 
-          <TabsContent value="overdue" className="space-y-4">
+            {(activeTab === 'overdue' || !activeTab) && (
+              <div className="space-y-4">
             {overdueReminders.length === 0 ? (
               <EmptyState
                 title={t('empty.allClear')}
@@ -371,9 +392,11 @@ export const Reminders = () => {
                 </div>
               </>
             )}
-          </TabsContent>
+            </div>
+            )}
 
-          <TabsContent value="upcoming" className="space-y-4">
+            {activeTab === 'upcoming' && (
+              <div className="space-y-4">
             {upcomingReminders.length === 0 ? (
               <EmptyState
                 title={t('empty.upcoming')}
@@ -388,9 +411,11 @@ export const Reminders = () => {
                 ))}
               </div>
             )}
-          </TabsContent>
+            </div>
+            )}
 
-          <TabsContent value="scheduled" className="space-y-4">
+            {activeTab === 'scheduled' && (
+              <div className="space-y-4">
             {scheduledReminders.length === 0 ? (
               <EmptyState
                 title={t('empty.scheduled')}
@@ -420,9 +445,11 @@ export const Reminders = () => {
                 </div>
               </>
             )}
-          </TabsContent>
+            </div>
+            )}
 
-          <TabsContent value="expired" className="space-y-4">
+            {activeTab === 'expired' && (
+              <div className="space-y-4">
             {expiredContracts.length === 0 ? (
               <EmptyState
                 title={t('empty.expiredTitle')}
@@ -452,8 +479,9 @@ export const Reminders = () => {
                 </div>
               </>
             )}
-          </TabsContent>
-        </Tabs>
+            </div>
+            )}
+          </div>
         )}
 
         <AlertDialog open={showContactDialog} onOpenChange={setShowContactDialog}>
@@ -466,7 +494,7 @@ export const Reminders = () => {
             <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => selectedReminder && handleMarkAsContacted(selectedReminder.id)}
-              className={`${COLORS.success.bg} hover:${COLORS.success.dark}`}
+              className={`${COLORS.success.bg} ${COLORS.success.hover}`}
             >
               {t('dialogs.confirm')}
             </AlertDialogAction>

@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { ChevronLeft, ChevronRight, Plus, User, Home, Building2 } from 'lucide-react';
 import { AddMeetingDialog } from '@/components/calendar/AddMeetingDialog'; // Assuming this exists
+import { CalendarSkeleton } from '@/components/common/skeletons';
 import { cn } from '@/lib/utils';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
@@ -176,7 +177,16 @@ export const CalendarPage = () => {
           {/* Calendar View */}
           <div className="flex-1 overflow-y-auto">
             {loading ? (
-              <div className="text-center py-10 text-gray-500">{t('common:loading')}...</div>
+              <>
+                {/* Mobile: Day View Skeleton */}
+                <div className="md:hidden">
+                  <CalendarSkeleton view="day" meetingCount={3} />
+                </div>
+                {/* Desktop: Week View Skeleton */}
+                <div className="hidden md:block">
+                  <CalendarSkeleton view="week" meetingCount={2} />
+                </div>
+              </>
             ) : (
               <>
                 {/* Mobile: Day View */}

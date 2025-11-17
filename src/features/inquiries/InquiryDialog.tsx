@@ -312,7 +312,7 @@ export const InquiryDialog = ({
             <Button
               type="submit"
               disabled={loading}
-              className={`${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+              className={`${COLORS.primary.bg} ${COLORS.primary.hover} ${COLORS.text.white}`}
             >
               {loading
                 ? t('saving', { ns: 'common' })

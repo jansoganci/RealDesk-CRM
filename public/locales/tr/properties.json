@@ -12,12 +12,14 @@
   "status": {
     "rental": {
       "empty": "Kiralamaya Hazır",
-      "occupied": "Kirada"
+      "occupied": "Kirada",
+      "inactive": "Pasif"
     },
     "sale": {
       "available": "Satılabilir",
       "underOffer": "Teklif Altında",
-      "sold": "Satıldı"
+      "sold": "Satıldı",
+      "inactive": "Pasif"
     },
     "inactive": "Pasif"
   },
@@ -85,6 +87,10 @@
       "owner": "Mal Sahibi",
       "ownerPlaceholder": "Bir mal sahibi seçin",
       "propertyType": "Mülk Tipi",
+      "rentalTypeLabel": "Kiralık",
+      "saleTypeLabel": "Satılık",
+      "rentalStatus": "Kiralık Durumu",
+      "saleStatus": "Satılık Durumu",
       "address": "Adres",
       "addressPlaceholder": "123 Ana Cadde, Daire 4B",
       "city": "Şehir",

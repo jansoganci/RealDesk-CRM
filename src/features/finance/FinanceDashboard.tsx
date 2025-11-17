@@ -289,13 +289,7 @@ export const FinanceDashboard = () => {
     <MainLayout title={t('finance:pageTitle')}>
       <PageContainer>
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              {t('finance:pageTitle')}
-            </h1>
-            <p className="text-gray-600 mt-1">{t('finance:pageDescription')}</p>
-          </div>
+        <div className="flex items-center justify-end mb-6">
           <div className="flex gap-3">
             <Button
               variant="outline"
@@ -317,7 +311,7 @@ export const FinanceDashboard = () => {
             </Button>
             <Button
               onClick={handleAddTransaction}
-              className="gap-2 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 hover:from-slate-800 hover:to-slate-700"
+              className="gap-2"
             >
               <Plus className="h-4 w-4" />
               {t('finance:actions.addTransaction')}

@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Skeleton } from '../../../components/ui/skeleton';
 import {
   TrendingUp,
   TrendingDown,
@@ -58,13 +59,16 @@ export const FinancialSummaryCards = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100 animate-pulse">
+          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-3">
-              <div className="h-4 w-24 bg-gray-200 rounded" />
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-8 w-8 rounded-lg" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="h-8 w-32 bg-gray-200 rounded mb-2" />
-              <div className="h-3 w-20 bg-gray-200 rounded" />
+              <Skeleton className="h-8 w-32 mb-2" />
+              <Skeleton className="h-3 w-20" />
             </CardContent>
           </Card>
         ))}
@@ -78,7 +82,7 @@ export const FinancialSummaryCards = ({
       value: currentMonth ? formatCurrency(currentMonth.total_income) : formatCurrency(0),
       change: incomeChange,
       icon: TrendingUp,
-      iconBg: 'from-green-500 to-green-600',
+      iconBg: 'bg-emerald-600',
       iconColor: 'text-white',
     },
     {
@@ -86,7 +90,7 @@ export const FinancialSummaryCards = ({
       value: currentMonth ? formatCurrency(currentMonth.total_expense) : formatCurrency(0),
       change: expenseChange,
       icon: TrendingDown,
-      iconBg: 'from-red-500 to-red-600',
+      iconBg: 'bg-red-600',
       iconColor: 'text-white',
     },
     {
@@ -95,8 +99,8 @@ export const FinancialSummaryCards = ({
       change: netChange,
       icon: currentMonth && currentMonth.net_income >= 0 ? PiggyBank : DollarSign,
       iconBg: currentMonth && currentMonth.net_income >= 0
-        ? 'from-blue-500 to-blue-600'
-        : 'from-amber-500 to-amber-600',
+        ? 'bg-blue-600'
+        : 'bg-amber-600',
       iconColor: 'text-white',
     },
     {
@@ -104,7 +108,7 @@ export const FinancialSummaryCards = ({
       value: pendingTransactions.toString(),
       change: null,
       icon: Clock,
-      iconBg: 'from-gray-500 to-gray-600',
+      iconBg: 'bg-gray-600',
       iconColor: 'text-white',
     },
   ];
@@ -122,7 +126,7 @@ export const FinancialSummaryCards = ({
                 {card.title}
               </CardTitle>
               <div
-                className={`p-2 rounded-lg bg-gradient-to-br ${card.iconBg} shadow-md`}
+                className={`p-2 rounded-lg ${card.iconBg} shadow-md`}
               >
                 <card.icon className={`h-4 w-4 ${card.iconColor}`} />
               </div>

@@ -10,6 +10,7 @@ import {
 } from '../../../components/ui/table';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
+import { Skeleton } from '../../../components/ui/skeleton';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -103,9 +104,9 @@ export const TransactionsTable = ({
     return (
       <div className="space-y-3">
         {[1, 2, 3, 4, 5].map(i => (
-          <div
+          <Skeleton
             key={i}
-            className="h-16 bg-gray-100 rounded-lg animate-pulse"
+            className="h-16 w-full rounded-lg"
           />
         ))}
       </div>

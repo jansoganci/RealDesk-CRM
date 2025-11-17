@@ -72,6 +72,9 @@ class MockPropertiesService {
       listing_url: property.listing_url ?? null,
       currency: property.currency ?? null,
       rent_amount: property.rent_amount ?? null,
+      sale_price: property.sale_price ?? null,
+      sold_at: property.sold_at ?? null,
+      sold_price: property.sold_price ?? null,
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     };

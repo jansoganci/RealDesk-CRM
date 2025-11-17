@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Skeleton } from '../../../components/ui/skeleton';
 import {
   TrendingUp,
   TrendingDown,
@@ -40,13 +41,16 @@ export const FinancialRatiosComponent = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100 animate-pulse">
+          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-3">
-              <div className="h-4 w-28 bg-gray-200 rounded" />
+              <div className="flex items-center justify-between">
+                <Skeleton className="h-4 w-28" />
+                <Skeleton className="h-8 w-8 rounded-lg" />
+              </div>
             </CardHeader>
             <CardContent>
-              <div className="h-10 w-24 bg-gray-200 rounded mb-2" />
-              <div className="h-3 w-32 bg-gray-200 rounded" />
+              <Skeleton className="h-10 w-24 mb-2" />
+              <Skeleton className="h-3 w-32" />
             </CardContent>
           </Card>
         ))}
@@ -66,10 +70,10 @@ export const FinancialRatiosComponent = ({
       icon: TrendingUp,
       iconBg:
         ratios.profit_margin >= 20
-          ? 'from-green-500 to-green-600'
+          ? 'bg-emerald-600'
           : ratios.profit_margin >= 10
-          ? 'from-blue-500 to-blue-600'
-          : 'from-amber-500 to-amber-600',
+          ? 'bg-blue-600'
+          : 'bg-amber-600',
       trend: ratios.profit_margin >= 0 ? 'up' : 'down',
       trendColor: ratios.profit_margin >= 0 ? 'text-green-600' : 'text-red-600',
     },
@@ -80,10 +84,10 @@ export const FinancialRatiosComponent = ({
       icon: PieChart,
       iconBg:
         ratios.expense_ratio <= 50
-          ? 'from-green-500 to-green-600'
+          ? 'bg-emerald-600'
           : ratios.expense_ratio <= 70
-          ? 'from-amber-500 to-amber-600'
-          : 'from-red-500 to-red-600',
+          ? 'bg-amber-600'
+          : 'bg-red-600',
       trend: ratios.expense_ratio <= 60 ? 'down' : 'up',
       trendColor: ratios.expense_ratio <= 60 ? 'text-green-600' : 'text-red-600',
     },
@@ -94,10 +98,10 @@ export const FinancialRatiosComponent = ({
       icon: Target,
       iconBg:
         ratios.budget_efficiency >= 10
-          ? 'from-green-500 to-green-600'
+          ? 'bg-emerald-600'
           : ratios.budget_efficiency >= 0
-          ? 'from-blue-500 to-blue-600'
-          : 'from-red-500 to-red-600',
+          ? 'bg-blue-600'
+          : 'bg-red-600',
       trend: ratios.budget_efficiency >= 0 ? 'up' : 'down',
       trendColor: ratios.budget_efficiency >= 0 ? 'text-green-600' : 'text-red-600',
     },
@@ -108,8 +112,8 @@ export const FinancialRatiosComponent = ({
       icon: Activity,
       iconBg:
         ratios.cash_flow_forecast_30d >= 0
-          ? 'from-green-500 to-green-600'
-          : 'from-red-500 to-red-600',
+          ? 'bg-emerald-600'
+          : 'bg-red-600',
       trend: ratios.cash_flow_forecast_30d >= 0 ? 'up' : 'down',
       trendColor:
         ratios.cash_flow_forecast_30d >= 0 ? 'text-green-600' : 'text-red-600',
@@ -129,7 +133,7 @@ export const FinancialRatiosComponent = ({
                 {kpi.title}
               </CardTitle>
               <div
-                className={`p-2.5 rounded-lg bg-gradient-to-br ${kpi.iconBg} shadow-md`}
+                className={`p-2.5 rounded-lg ${kpi.iconBg} shadow-md`}
               >
                 <kpi.icon className="h-4 w-4 text-white" />
               </div>

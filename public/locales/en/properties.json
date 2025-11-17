@@ -12,12 +12,14 @@
   "status": {
     "rental": {
       "empty": "Empty",
-      "occupied": "Occupied"
+      "occupied": "Occupied",
+      "inactive": "Inactive"
     },
     "sale": {
       "available": "Available",
       "underOffer": "Under Offer",
-      "sold": "Sold"
+      "sold": "Sold",
+      "inactive": "Inactive"
     },
     "inactive": "Inactive"
   },
@@ -85,6 +87,10 @@
       "owner": "Property Owner",
       "ownerPlaceholder": "Select an owner",
       "propertyType": "Property Type",
+      "rentalTypeLabel": "Rental",
+      "saleTypeLabel": "Sale",
+      "rentalStatus": "Rental Status",
+      "saleStatus": "Sale Status",
       "address": "Address",
       "addressPlaceholder": "123 Main St, Apt 4B",
       "city": "City",

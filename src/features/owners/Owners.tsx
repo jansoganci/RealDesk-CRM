@@ -100,7 +100,8 @@ export const Owners = () => {
         await ownersService.update(selectedOwner.id, data);
         toast.success(t('toasts.updateSuccess'));
       } else {
-        await ownersService.create(data);
+        // user_id is injected automatically by the service
+        await ownersService.create(data as any);
         toast.success(t('toasts.addSuccess'));
       }
       await loadOwners();
@@ -125,6 +126,7 @@ export const Owners = () => {
         searchPlaceholder={t('searchPlaceholder')}
         onAdd={handleAddOwner}
         addButtonLabel={t('addOwnerButton')}
+        skeletonColumnCount={5}
         emptyState={{
           title: searchQuery ? t('emptyState.noOwnersFound') : t('emptyState.noOwnersYet'),
           description: searchQuery

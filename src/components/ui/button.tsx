@@ -11,7 +11,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-primary text-primary-foreground shadow hover:bg-primary/90',
+          'bg-blue-600 text-white shadow hover:bg-blue-700',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
         outline: cn(
@@ -21,9 +21,9 @@ const buttonVariants = cva(
           'hover:bg-gray-50 hover:text-foreground hover:border-gray-400'
         ),
         secondary:
-          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/80',
-        ghost: 'hover:bg-accent hover:text-accent-foreground',
-        link: 'text-primary underline-offset-4 hover:underline',
+          'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',
+        ghost: 'hover:bg-orange-500 hover:text-white',
+        link: 'text-blue-600 underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-11 px-4 py-2 md:h-9',
@@ -55,31 +55,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {/* Top neon line - visible when neon=true OR variant=outline */}
-        {(neon || variant === 'outline') && (
-          <span
-            className={cn(
-              'absolute h-px opacity-0 transition-all duration-500 ease-in-out inset-x-0 inset-y-0 bg-gradient-to-r w-3/4 mx-auto from-transparent',
-              `via-${COLORS.primary.DEFAULT}`,
-              'to-transparent pointer-events-none',
-              variant === 'outline' ? 'group-hover:opacity-60' : 'group-hover:opacity-100'
-            )}
-            aria-hidden="true"
-          />
-        )}
-        
-        {/* Bottom neon line - visible when neon=true OR variant=outline */}
-        {(neon || variant === 'outline') && (
-          <span
-            className={cn(
-              'absolute group-hover:opacity-30 transition-all duration-500 ease-in-out inset-x-0 h-px -bottom-px bg-gradient-to-r w-3/4 mx-auto from-transparent',
-              `via-${COLORS.primary.DEFAULT}`,
-              'to-transparent pointer-events-none'
-            )}
-            aria-hidden="true"
-          />
-        )}
-        
         {/* Content wrapper for proper z-index and alignment */}
         <span className="relative inline-flex items-center gap-2">
           {children}

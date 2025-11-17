@@ -145,14 +145,14 @@ class InquiriesService {
   ): Promise<string[]> {
     // Filter inquiries by property type first
     const typeMatchedInquiries = activeInquiries.filter(
-      (inquiry: any) => inquiry.inquiry_type === property.property_type
+      (inquiry: any) => inquiry.inquiry_type === (property as any).property_type
     );
 
     // Status check - only match available properties
-    if (property.property_type === 'rental' && property.status !== 'Empty') {
+    if ((property as any).property_type === 'rental' && property.status !== 'Empty') {
       return [];
     }
-    if (property.property_type === 'sale' && property.status !== 'Available') {
+    if ((property as any).property_type === 'sale' && property.status !== 'Available') {
       return [];
     }
 
@@ -192,7 +192,7 @@ class InquiriesService {
       }
 
       // Budget check based on property type
-      if (property.property_type === 'rental') {
+      if ((property as any).property_type === 'rental') {
         // Rental budget logic
         const minBudget = (inquiry as any).min_rent_budget;
         const maxBudget = (inquiry as any).max_rent_budget;
@@ -212,7 +212,7 @@ class InquiriesService {
             continue;
           }
         }
-      } else if (property.property_type === 'sale') {
+      } else if ((property as any).property_type === 'sale') {
         // Sale budget logic
         const minBudget = (inquiry as any).min_sale_budget;
         const maxBudget = (inquiry as any).max_sale_budget;
@@ -299,7 +299,7 @@ class InquiriesService {
 
     if (error) throw error;
 
-    const inquiries = (data || []) as Array<{ status: string; inquiry_type: string }>;
+    const inquiries = ((data || []) as unknown) as Array<{ status: string; inquiry_type: string }>;
 
     const stats = {
       total: inquiries.length || 0,

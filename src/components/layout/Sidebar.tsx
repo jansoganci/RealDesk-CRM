@@ -88,9 +88,9 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className="flex items-center justify-between p-5 border-b border-gray-200/50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 shadow-lg">
+        <div className="flex items-center justify-between p-5 border-b border-gray-200/50 bg-blue-600 shadow-lg">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
+            <div className="p-2.5 bg-orange-500 rounded-xl shadow-lg shadow-orange-500/20">
               <Building2 className="h-5 w-5 text-white" />
             </div>
             <span className="font-bold text-white text-lg tracking-tight">{APP_NAME}</span>
@@ -115,7 +115,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 cn(
                   'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200',
                   isActive
-                    ? 'bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 text-white shadow-gold transform scale-[1.02]'
+                    ? 'bg-blue-600 text-white shadow-md transform scale-[1.02]'
                     : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:shadow-md'
                 )
               }
@@ -131,8 +131,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       className={cn(
                         'ml-auto h-5 px-2.5 text-xs font-bold shadow-md',
                         isActive
-                          ? 'bg-white text-amber-700'
-                          : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white'
+                          ? 'bg-white text-blue-700'
+                          : 'bg-blue-600 text-white'
                       )}
                       aria-label={`${unreadMatchesCount} ${t('inquiries')}`}
                     >
@@ -144,8 +144,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       className={cn(
                         'ml-auto h-5 px-2.5 text-xs font-bold shadow-md',
                         isActive
-                          ? 'bg-white text-amber-700'
-                          : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
+                          ? 'bg-white text-blue-700'
+                          : 'bg-red-600 text-white'
                       )}
                       aria-label={`${reminderCount} ${t('reminders')}`}
                     >
@@ -158,10 +158,10 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-gray-200/50 bg-gradient-to-br from-slate-50 to-gray-50">
+        <div className="p-4 border-t border-gray-200/50 bg-gray-50">
           <div className="flex items-center gap-3 mb-3 px-3 py-3 bg-white rounded-xl border border-gray-200/50 shadow-sm">
             <div
-              className="h-9 w-9 rounded-full bg-gradient-to-br from-slate-800 via-slate-900 to-blue-900 flex items-center justify-center shadow-lg"
+              className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center shadow-lg"
               aria-label={t('userSettings')}
             >
               <span className="text-sm font-bold text-white">

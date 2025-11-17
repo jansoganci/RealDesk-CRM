@@ -93,12 +93,12 @@ export const InquiryMatchesDialog = ({
               <Badge
                 className={
                   inquiry.status === 'active'
-                    ? `${COLORS.success.bgGradient} ${COLORS.text.white}`
+                    ? `${COLORS.success.bg} ${COLORS.text.white}`
                     : inquiry.status === 'matched'
-                    ? `${COLORS.primary.bgGradient} ${COLORS.text.white}`
+                    ? `${COLORS.primary.bg} ${COLORS.text.white}`
                     : inquiry.status === 'contacted'
-                    ? `${COLORS.warning.bgGradient} ${COLORS.text.white}`
-                    : `${COLORS.status.inactive.gradient} ${COLORS.text.white}`
+                    ? `${COLORS.warning.bg} ${COLORS.text.white}`
+                    : `${COLORS.status.inactive.bg} ${COLORS.text.white}`
                 }
               >
                 {t(`status.${inquiry.status}`)}
@@ -181,13 +181,13 @@ export const InquiryMatchesDialog = ({
                         <div className="flex items-center gap-2 mt-3">
                           <a
                             href={`tel:${inquiry.phone}`}
-                            className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md ${COLORS.primary.bg} hover:${COLORS.primary.dark} ${COLORS.text.white} transition-colors`}
+                            className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md ${COLORS.primary.bg} ${COLORS.primary.hover} transition-colors`}
                           >
                             <Phone className="h-4 w-4" />
                             {t('matches.contact')}
                           </a>
                           {match.contacted && (
-                            <Badge className={`${COLORS.success.bgGradient} ${COLORS.text.white}`}>
+                            <Badge className={`${COLORS.success.bg} ${COLORS.text.white}`}>
                               <Check className="h-3 w-3 mr-1" />
                               {t('matches.contacted')}
                             </Badge>
@@ -216,7 +216,7 @@ export const InquiryMatchesDialog = ({
               type="button"
               onClick={handleMarkAsContacted}
               disabled={loading}
-              className={`${COLORS.success.bg} hover:${COLORS.success.dark} ${COLORS.text.white}`}
+              className={`${COLORS.success.bg} ${COLORS.success.hover}`}
             >
               <Check className="h-4 w-4 mr-2" />
               {t('matches.markAsContacted')}

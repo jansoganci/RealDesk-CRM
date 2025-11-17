@@ -357,8 +357,8 @@ export const PropertyDialog = ({
                   {...register('rent_amount' as any, { valueAsNumber: true })}
                   disabled={loading}
                 />
-                {errors.rent_amount && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors.rent_amount as any).message}</p>
+                {(errors as any).rent_amount && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).rent_amount.message}</p>
                 )}
               </div>
 
@@ -395,8 +395,8 @@ export const PropertyDialog = ({
                     {...register('sale_price' as any, { valueAsNumber: true })}
                     disabled={loading}
                   />
-                  {errors.sale_price && (
-                    <p className={`text-sm ${COLORS.danger.text}`}>{(errors.sale_price as any).message}</p>
+                  {(errors as any).sale_price && (
+                    <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).sale_price.message}</p>
                   )}
                 </div>
 
@@ -418,59 +418,6 @@ export const PropertyDialog = ({
                   {errors.currency && (
                     <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
                   )}
-                </div>
-              </div>
-
-              {/* Buyer Information Section - Only for Sale Properties */}
-              <div className="space-y-4 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h4 className="text-sm font-semibold text-gray-700">{t('dialog.form.buyerInfo')}</h4>
-
-                <div className="space-y-2">
-                  <Label htmlFor="buyer_name">{t('dialog.form.buyerName')}</Label>
-                  <Input
-                    id="buyer_name"
-                    placeholder={t('dialog.form.buyerNamePlaceholder')}
-                    {...register('buyer_name' as any)}
-                    disabled={loading}
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="buyer_phone">{t('dialog.form.buyerPhone')}</Label>
-                    <Input
-                      id="buyer_phone"
-                      placeholder={t('dialog.form.buyerPhonePlaceholder')}
-                      {...register('buyer_phone' as any)}
-                      disabled={loading}
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="buyer_email">{t('dialog.form.buyerEmail')}</Label>
-                    <Input
-                      id="buyer_email"
-                      type="email"
-                      placeholder={t('dialog.form.buyerEmailPlaceholder')}
-                      {...register('buyer_email' as any)}
-                      disabled={loading}
-                    />
-                    {errors.buyer_email && (
-                      <p className={`text-sm ${COLORS.danger.text}`}>{(errors.buyer_email as any).message}</p>
-                    )}
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="offer_amount">{t('dialog.form.offerAmount')}</Label>
-                  <Input
-                    id="offer_amount"
-                    type="number"
-                    step="0.01"
-                    placeholder={t('dialog.form.offerAmountPlaceholder')}
-                    {...register('offer_amount' as any, { valueAsNumber: true })}
-                    disabled={loading}
-                  />
                 </div>
               </div>
             </>

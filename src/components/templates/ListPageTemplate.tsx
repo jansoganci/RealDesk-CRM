@@ -30,6 +30,7 @@ import {
 import { Card } from '../ui/card';
 import { EmptyState } from '../common/EmptyState';
 import { MobileCardView } from '../common/MobileCardView';
+import { TableSkeleton } from '../common/skeletons';
 import { Search, Plus } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 
@@ -73,6 +74,8 @@ export interface ListPageTemplateProps<T> {
   renderTableRow: (item: T, index: number) => ReactNode;
   renderCardContent?: (item: T, index: number) => ReactNode;
   deleteDialog?: DeleteDialogConfig;
+  skeletonColumnCount?: number; // Optional: Number of columns for skeleton (default: 5)
+  headerContent?: ReactNode; // Optional: Content to render above search/filter row
 }
 
 export function ListPageTemplate<T>({
@@ -93,11 +96,14 @@ export function ListPageTemplate<T>({
   renderTableRow,
   renderCardContent,
   deleteDialog,
+  skeletonColumnCount = 5,
+  headerContent,
 }: ListPageTemplateProps<T>) {
   const { t } = useTranslation('common');
   return (
     <MainLayout title={title}>
       <PageContainer>
+        {headerContent && <div className="mb-6">{headerContent}</div>}
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="relative flex-1 max-w-sm">
@@ -134,10 +140,26 @@ export function ListPageTemplate<T>({
         </div>
 
         {loading ? (
-          <div className="flex flex-col items-center justify-center h-32 space-y-2">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
-            <p className="text-sm text-gray-500">{t('loading')}</p>
-          </div>
+          <>
+            {/* Desktop Table Skeleton - Hidden on mobile */}
+            <div className="hidden md:block">
+              <TableSkeleton 
+                columnCount={skeletonColumnCount} 
+                rowCount={5}
+                showHeader={true}
+              />
+            </div>
+            {/* Mobile Card Skeleton - Hidden on desktop */}
+            {renderCardContent && (
+              <div className="md:hidden">
+                <MobileCardView
+                  items={[]}
+                  renderCardContent={renderCardContent}
+                  loading={true}
+                />
+              </div>
+            )}
+          </>
         ) : items.length === 0 ? (
           <EmptyState
             title={emptyState.title}

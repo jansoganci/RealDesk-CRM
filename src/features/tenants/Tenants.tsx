@@ -61,9 +61,9 @@ export const Tenants = () => {
     }
 
     if (assignmentFilter === 'assigned') {
-      filtered = filtered.filter((tenant) => tenant.property_id !== null);
+      filtered = filtered.filter((tenant) => tenant.property != null);
     } else if (assignmentFilter === 'unassigned') {
-      filtered = filtered.filter((tenant) => tenant.property_id === null);
+      filtered = filtered.filter((tenant) => tenant.property == null);
     }
 
     setFilteredTenants(filtered);
@@ -123,7 +123,8 @@ export const Tenants = () => {
         await tenantsService.update(selectedTenant.id, data);
         toast.success(t('toasts.updateSuccess'));
       } else {
-        await tenantsService.create(data);
+        // user_id is injected automatically by the service
+        await tenantsService.create(data as any);
         toast.success(t('toasts.addSuccess'));
       }
       await loadTenants();
@@ -154,7 +155,7 @@ export const Tenants = () => {
   };
 
   const getAssignmentBadge = (tenant: TenantWithProperty) => {
-    if (tenant.property_id) {
+    if (tenant.property) {
       return <Badge className={getStatusBadgeClasses('assigned')}>{t('status.assigned')}</Badge>;
     }
     return <Badge className={getStatusBadgeClasses('unassigned')}>{t('status.unassigned')}</Badge>;
@@ -179,6 +180,7 @@ export const Tenants = () => {
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddTenant}
         addButtonLabel={t('addTenantButton')}
+        skeletonColumnCount={5}
         emptyState={{
           title: searchQuery || assignmentFilter !== 'all' ? t('emptyState.noTenantsFound') : t('emptyState.noTenantsYet'),
           description: searchQuery || assignmentFilter !== 'all'

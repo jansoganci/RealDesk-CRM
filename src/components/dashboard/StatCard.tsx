@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
+import { Skeleton } from '../ui/skeleton';
 import { cn } from '@/lib/utils';
 import { COLORS } from '@/config/colors';
 
@@ -61,20 +62,40 @@ export const StatCard = React.memo(({
       )}
     >
       <CardHeader className="flex flex-row items-center gap-3 space-y-0 pb-2">
-        <div className={cn(
-          'p-2.5 rounded-xl transition-transform duration-300 group-hover:scale-110',
-          colorConfig.gradient,
-          colorConfig.shadow
-        )}>
-          {icon}
-        </div>
-        <CardTitle className="text-sm font-semibold text-slate-700">{title}</CardTitle>
+        {loading ? (
+          <>
+            <Skeleton className="h-10 w-10 rounded-xl" />
+            <CardTitle className="flex-1">
+              <Skeleton className="h-4 w-24" />
+            </CardTitle>
+          </>
+        ) : (
+          <>
+            <div className={cn(
+              'p-2.5 rounded-xl transition-transform duration-300 group-hover:scale-110',
+              colorConfig.gradient,
+              colorConfig.shadow
+            )}>
+              {icon}
+            </div>
+            <CardTitle className="text-sm font-semibold text-slate-700">{title}</CardTitle>
+          </>
+        )}
       </CardHeader>
       <CardContent>
-        <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent">
-          {loading ? '-' : value}
-        </div>
-        <p className={`text-xs ${COLORS.gray.text600} mt-1.5 leading-relaxed`}>{description}</p>
+        {loading ? (
+          <>
+            <Skeleton className="h-9 w-20 mb-2" />
+            <Skeleton className="h-3 w-full" />
+          </>
+        ) : (
+          <>
+            <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent">
+              {value}
+            </div>
+            <p className={`text-xs ${COLORS.gray.text600} mt-1.5 leading-relaxed`}>{description}</p>
+          </>
+        )}
       </CardContent>
     </Card>
   );

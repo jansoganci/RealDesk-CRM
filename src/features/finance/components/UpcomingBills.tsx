@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Skeleton } from '../../../components/ui/skeleton';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { Calendar, AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
@@ -97,14 +98,14 @@ export const UpcomingBills = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
         <CardHeader>
-          <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+          <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {[1, 2, 3].map(i => (
-              <div key={i} className="h-24 bg-gray-100 rounded animate-pulse" />
+              <Skeleton key={i} className="h-24 w-full rounded" />
             ))}
           </div>
         </CardContent>
@@ -117,7 +118,7 @@ export const UpcomingBills = ({
       <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg shadow-md bg-gradient-to-br from-green-500 to-green-600">
+            <div className="p-2.5 rounded-lg shadow-md bg-emerald-600">
               <CheckCircle2 className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -159,7 +160,7 @@ export const UpcomingBills = ({
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg shadow-md bg-gradient-to-br from-blue-500 to-blue-600">
+            <div className="p-2.5 rounded-lg shadow-md bg-blue-600">
               <Calendar className="h-5 w-5 text-white" />
             </div>
             <div>
@@ -227,7 +228,7 @@ export const UpcomingBills = ({
                       size="sm"
                       onClick={() => handleMarkAsPaid(bill.recurring_expense.id)}
                       disabled={markingPaid === bill.recurring_expense.id}
-                      className="bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
                     >
                       {markingPaid === bill.recurring_expense.id ? (
                         <span>{t('common:actions.processing')}</span>

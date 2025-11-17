@@ -144,10 +144,10 @@ class PropertiesService {
 
   async create(property: PropertyInsert): Promise<Property> {
     // Validate that required fields match property_type
-    if (property.property_type === 'rental' && !property.rent_amount) {
+    if ((property as any).property_type === 'rental' && !property.rent_amount) {
       throw new Error('Rent amount is required for rental properties');
     }
-    if (property.property_type === 'sale' && !property.sale_price) {
+    if ((property as any).property_type === 'sale' && !property.sale_price) {
       throw new Error('Sale price is required for sale properties');
     }
 
@@ -163,8 +163,8 @@ class PropertiesService {
     // Trigger matching for rental properties that are Empty
     // or sale properties that are Available
     const shouldTriggerMatching =
-      (newProperty.property_type === 'rental' && newProperty.status === 'Empty') ||
-      (newProperty.property_type === 'sale' && newProperty.status === 'Available');
+      ((newProperty as any).property_type === 'rental' && newProperty.status === 'Empty') ||
+      ((newProperty as any).property_type === 'sale' && newProperty.status === 'Available');
 
     if (shouldTriggerMatching) {
       // Import at call time to avoid circular dependency
@@ -181,12 +181,12 @@ class PropertiesService {
 
     // Trigger matching if status changed to Empty (rental) or Available (sale)
     const rentalNowEmpty =
-      updatedProperty.property_type === 'rental' &&
+      (updatedProperty as any).property_type === 'rental' &&
       oldProperty?.status !== 'Empty' &&
       updatedProperty.status === 'Empty';
 
     const saleNowAvailable =
-      updatedProperty.property_type === 'sale' &&
+      (updatedProperty as any).property_type === 'sale' &&
       oldProperty?.status !== 'Available' &&
       updatedProperty.status === 'Available';
 
@@ -215,7 +215,7 @@ class PropertiesService {
 
     if (error) throw error;
 
-    const properties = (data || []) as Array<{ status: string; property_type: string }>;
+    const properties = ((data || []) as unknown) as Array<{ status: string; property_type: string }>;
 
     const stats = {
       total: properties.length || 0,

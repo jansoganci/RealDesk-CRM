@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
+import { Skeleton } from '../../../components/ui/skeleton';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useAuth } from '../../../contexts/AuthContext';
 import { TrendingUp, TrendingDown } from 'lucide-react';
@@ -34,12 +35,12 @@ export const TopCategories = ({
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[1, 2].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100">
+          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
             <CardHeader>
-              <div className="h-6 w-48 bg-gray-200 rounded animate-pulse" />
+              <Skeleton className="h-6 w-48" />
             </CardHeader>
             <CardContent>
-              <div className="h-64 bg-gray-100 rounded animate-pulse" />
+              <Skeleton className="h-64 w-full rounded" />
             </CardContent>
           </Card>
         ))}
@@ -63,8 +64,8 @@ export const TopCategories = ({
             <div
               className={`p-2.5 rounded-lg shadow-md ${
                 icon === TrendingUp
-                  ? 'bg-gradient-to-br from-green-500 to-green-600'
-                  : 'bg-gradient-to-br from-red-500 to-red-600'
+                  ? 'bg-emerald-600'
+                  : 'bg-red-600'
               }`}
             >
               <Icon className="h-5 w-5 text-white" />

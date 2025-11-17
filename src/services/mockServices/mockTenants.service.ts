@@ -14,7 +14,8 @@ import {
 } from '../../data/mockData';
 
 // In-memory data stores for mock service
-let mockTenantsData = [...mockTenants];
+// Convert mock data to Tenant type by removing property_id (tenants are related via contracts)
+let mockTenantsData: Tenant[] = mockTenants.map(({ property_id, ...tenant }) => tenant as Tenant);
 const mockContractsData = [...mockContracts];
 
 // Simulate network delay for realistic UX
@@ -26,10 +27,20 @@ class MockTenantsService {
     await simulateDelay();
     
     return mockTenantsData
-      .map(tenant => ({
-        ...tenant,
-        property: mockProperties.find(property => property.id === tenant.property_id),
-      }))
+      .map(tenant => {
+        // Find the active contract for this tenant
+        const activeContract = mockContractsData.find(
+          c => c.tenant_id === tenant.id && c.status === 'Active'
+        );
+        const property = activeContract 
+          ? mockProperties.find(p => p.id === activeContract.property_id)
+          : undefined;
+        
+        return {
+          ...tenant,
+          property,
+        };
+      })
       .sort((a, b) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
@@ -43,7 +54,13 @@ class MockTenantsService {
     const tenant = mockTenantsData.find(t => t.id === id);
     if (!tenant) return null;
     
-    const property = mockProperties.find(p => p.id === tenant.property_id);
+    // Find the active contract for this tenant
+    const activeContract = mockContractsData.find(
+      c => c.tenant_id === tenant.id && c.status === 'Active'
+    );
+    const property = activeContract 
+      ? mockProperties.find(p => p.id === activeContract.property_id)
+      : undefined;
     
     return {
       ...tenant,
@@ -54,8 +71,13 @@ class MockTenantsService {
   async getByPropertyId(propertyId: string): Promise<Tenant[]> {
     await simulateDelay();
     
+    // Find all tenants with active contracts for this property
+    const tenantIdsWithContracts = mockContractsData
+      .filter(c => c.property_id === propertyId && c.status === 'Active')
+      .map(c => c.tenant_id);
+    
     return mockTenantsData
-      .filter(tenant => tenant.property_id === propertyId)
+      .filter(tenant => tenantIdsWithContracts.includes(tenant.id))
       .sort((a, b) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
@@ -66,8 +88,15 @@ class MockTenantsService {
   async getUnassigned(): Promise<Tenant[]> {
     await simulateDelay();
     
+    // Find tenants without active contracts
+    const tenantsWithActiveContracts = new Set(
+      mockContractsData
+        .filter(c => c.status === 'Active')
+        .map(c => c.tenant_id)
+    );
+    
     return mockTenantsData
-      .filter(tenant => !tenant.property_id)
+      .filter(tenant => !tenantsWithActiveContracts.has(tenant.id))
       .sort((a, b) => {
         const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
         const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
@@ -81,7 +110,6 @@ class MockTenantsService {
     const newTenant: Tenant = {
       ...tenant,
       id: `tenant-${Date.now()}`,
-      property_id: tenant.property_id ?? null,
       phone: tenant.phone ?? null,
       email: tenant.email ?? null,
       notes: tenant.notes ?? null,
@@ -130,17 +158,33 @@ class MockTenantsService {
     mockTenantsData.splice(index, 1);
   }
 
-  async assignToProperty(tenantId: string, propertyId: string | null): Promise<Tenant> {
+  async assignToProperty(tenantId: string, _propertyId: string | null): Promise<Tenant> {
     await simulateDelay();
     
-    return this.update(tenantId, { property_id: propertyId });
+    // In the new model, tenants are assigned via contracts, not directly
+    // This method is kept for backward compatibility but doesn't modify tenant directly
+    // The assignment should be done via contract creation/update
+    // _propertyId parameter is unused but kept for API compatibility
+    const tenant = mockTenantsData.find(t => t.id === tenantId);
+    if (!tenant) {
+      throw new Error('Tenant not found');
+    }
+    
+    // Return the tenant as-is (assignment is handled via contracts)
+    return tenant;
   }
 
   async getStats() {
     await simulateDelay();
     
     const total = mockTenantsData.length;
-    const assigned = mockTenantsData.filter(t => t.property_id !== null).length;
+    // Count tenants with active contracts (assigned)
+    const tenantsWithActiveContracts = new Set(
+      mockContractsData
+        .filter(c => c.status === 'Active')
+        .map(c => c.tenant_id)
+    );
+    const assigned = mockTenantsData.filter(t => tenantsWithActiveContracts.has(t.id)).length;
     const unassigned = total - assigned;
     
     return {
@@ -207,10 +251,10 @@ class MockTenantsService {
 
     try {
       // Step 1: Create the tenant
+      // Note: property_id is not part of Tenant - tenants are related to properties via contracts
       const newTenant: Tenant = {
         ...tenantData,
         id: `tenant-${Date.now()}`,
-        property_id: contractData.property_id ?? null, // Assign tenant to property
         phone: tenantData.phone ?? null,
         email: tenantData.email ?? null,
         notes: tenantData.notes ?? null,
@@ -265,7 +309,8 @@ class MockTenantsService {
 
   // Helper method to reset mock data to original state
   resetData(): void {
-    mockTenantsData = [...mockTenants];
+    // Convert mock data to Tenant type by removing property_id
+    mockTenantsData = mockTenants.map(({ property_id, ...tenant }) => tenant as Tenant);
   }
 }
 

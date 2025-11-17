@@ -1,9 +1,8 @@
 
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
-import { Tabs, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { AnimatedTabs } from '../../components/ui/animated-tabs';
 
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
@@ -17,7 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { format } from 'date-fns';
 import { getToday, daysDifference } from '../../lib/dates';
-import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, CalendarPlus, TrendingUp, Home } from 'lucide-react';
+import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, TrendingUp, Home } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -141,7 +140,8 @@ export const Properties = () => {
         await propertiesService.update(selectedProperty.id, data);
         toast.success(t('toasts.updateSuccess'));
       } else {
-        await propertiesService.create(data);
+        // user_id is injected automatically by the service
+        await propertiesService.create(data as any);
         toast.success(t('toasts.addSuccess'));
       }
       await loadProperties();
@@ -178,7 +178,7 @@ export const Properties = () => {
     try {
       setActionLoading(true);
       // Create sale commission (4% of sale price)
-      const commissionId = await commissionsService.createSaleCommission(
+      await commissionsService.createSaleCommission(
         propertyToSell.id,
         salePrice,
         saleCurrency
@@ -208,9 +208,9 @@ export const Properties = () => {
       Empty: { label: t('status.rental.empty'), className: getStatusBadgeClasses('empty') },
       Occupied: { label: t('status.rental.occupied'), className: getStatusBadgeClasses('occupied') },
       // Sale statuses
-      Available: { label: t('status.sale.available'), className: 'bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-md' },
-      'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-gradient-to-r from-orange-500 to-amber-500 text-white shadow-md' },
-      Sold: { label: t('status.sale.sold'), className: 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white shadow-md' },
+      Available: { label: t('status.sale.available'), className: 'bg-emerald-600 text-white shadow-md' },
+      'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-orange-500 text-white shadow-md' },
+      Sold: { label: t('status.sale.sold'), className: 'bg-purple-600 text-white shadow-md' },
       // Shared status
       Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
@@ -259,26 +259,6 @@ export const Properties = () => {
 
   return (
     <>
-      {/* Property Type Filter Tabs */}
-      <div className="mb-6">
-        <Tabs value={propertyTypeFilter} onValueChange={(value) => setPropertyTypeFilter(value as 'all' | 'rental' | 'sale')}>
-          <TabsList className="grid w-full max-w-md grid-cols-3">
-            <TabsTrigger value="all" className="flex items-center gap-2">
-              <Building2 className="h-4 w-4" />
-              {t('typeFilter.all')}
-            </TabsTrigger>
-            <TabsTrigger value="rental" className="flex items-center gap-2">
-              <Home className="h-4 w-4" />
-              {t('typeFilter.rental')}
-            </TabsTrigger>
-            <TabsTrigger value="sale" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              {t('typeFilter.sale')}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-
       <ListPageTemplate
         title={t('title')}
         items={filteredProperties}
@@ -292,6 +272,30 @@ export const Properties = () => {
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddProperty}
         addButtonLabel={t('addPropertyButton')}
+        skeletonColumnCount={8}
+        headerContent={
+          <AnimatedTabs
+            tabs={[
+              { 
+                id: 'all', 
+                label: t('typeFilter.all'),
+                icon: <Building2 className="h-4 w-4" />
+              },
+              { 
+                id: 'rental', 
+                label: t('typeFilter.rental'),
+                icon: <Home className="h-4 w-4" />
+              },
+              { 
+                id: 'sale', 
+                label: t('typeFilter.sale'),
+                icon: <TrendingUp className="h-4 w-4" />
+              },
+            ]}
+            defaultTab={propertyTypeFilter}
+            onChange={(tabId) => setPropertyTypeFilter(tabId as 'all' | 'rental' | 'sale')}
+          />
+        }
         emptyState={{
           title: searchQuery || statusFilter !== 'all' ? t('emptyState.noPropertiesFound') : t('emptyState.noPropertiesYet'),
           description: searchQuery || statusFilter !== 'all'
@@ -486,7 +490,7 @@ export const Properties = () => {
                     variant="outline"
                     size="sm"
                     onClick={() => handleMarkAsSoldClick(property)}
-                    className="text-xs bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-300 hover:from-amber-100 hover:to-yellow-100 hover:border-amber-400 text-amber-700 hover:text-amber-800"
+                    className="text-xs bg-amber-50 border-amber-300 hover:bg-amber-100 hover:border-amber-400 text-amber-700 hover:text-amber-800"
                   >
                     <TrendingUp className="h-3 w-3 mr-1" />
                     {t('markAsSold.button')}
@@ -507,7 +511,7 @@ export const Properties = () => {
             <div className="flex items-start justify-between gap-3">
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2.5 mb-1.5">
-                  <div className="p-1.5 bg-gradient-to-br from-slate-800 via-slate-900 to-blue-900 rounded-lg shadow-lg">
+                  <div className="p-1.5 bg-blue-600 rounded-lg shadow-lg">
                     <Building2 className="h-4 w-4 text-white" />
                   </div>
                   <span className="font-bold text-base text-slate-900 truncate">
@@ -538,7 +542,7 @@ export const Properties = () => {
             </div>
 
             {/* Property Details Grid */}
-            <div className="space-y-3 bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl p-4 border border-gray-200/50">
+            <div className="space-y-3 bg-gray-50 rounded-xl p-4 border border-gray-200/50">
               {(property.city || property.district) && (
                 <div className="flex items-center gap-2.5 text-sm">
                   <MapPin className="h-4 w-4 text-slate-600 flex-shrink-0" />
@@ -585,7 +589,7 @@ export const Properties = () => {
 
                 if (isRental && property.activeContract?.rent_amount) {
                   return (
-                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg border border-blue-200/50 shadow-sm">
+                    <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200/50 shadow-sm">
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4 text-blue-600" />
                         <span className="text-sm text-slate-600 font-medium">Monthly Rent:</span>
@@ -604,7 +608,7 @@ export const Properties = () => {
                   );
                 } else if (isSale && propertyTyped.sale_price) {
                   return (
-                    <div className="flex items-center justify-between p-3 bg-gradient-to-r from-amber-50 to-yellow-50 rounded-lg border border-amber-200/50 shadow-sm">
+                    <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200/50 shadow-sm">
                       <div className="flex items-center gap-2">
                         <DollarSign className="h-4 w-4 text-amber-600" />
                         <span className="text-sm text-slate-600 font-medium">Sale Price:</span>
@@ -639,7 +643,7 @@ export const Properties = () => {
                     if (daysLeft <= 30 && daysLeft >= 0) {
                       return (
                         <div className="ml-auto">
-                          <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md text-xs">
+                          <Badge className="bg-red-600 text-white shadow-md text-xs">
                             <AlertCircle className="h-3 w-3 mr-1" />
                             {daysLeft} days left
                           </Badge>
@@ -679,7 +683,7 @@ export const Properties = () => {
                   variant="outline"
                   size="sm"
                   onClick={() => handleMarkAsSoldClick(property)}
-                  className="w-full justify-start bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-300 hover:from-amber-100 hover:to-yellow-100 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="w-full justify-start bg-amber-50 border-amber-300 hover:bg-amber-100 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   <TrendingUp className="h-4 w-4 mr-2" />
                   {t('markAsSold.button')}
@@ -703,30 +707,30 @@ export const Properties = () => {
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,
         }}
-      />
+        />
 
-      <PropertyDialog
+        <PropertyDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
         property={selectedProperty}
         onSubmit={handleSubmit}
         loading={actionLoading}
-      />
+        />
 
-      <EnhancedTenantDialog
+        <EnhancedTenantDialog
         open={enhancedTenantDialogOpen}
         onOpenChange={setEnhancedTenantDialogOpen}
         onSuccess={handleTenantCreated}
         preSelectedPropertyId={selectedPropertyForTenant}
-      />
+        />
 
-      <MarkAsSoldDialog
+        <MarkAsSoldDialog
         open={markAsSoldDialogOpen}
         onOpenChange={setMarkAsSoldDialogOpen}
         property={propertyToSell}
         onConfirm={handleMarkAsSoldConfirm}
         loading={actionLoading}
-      />
-    </>
-  );
-};
+        />
+      </>
+    );
+  };

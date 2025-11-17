@@ -144,7 +144,8 @@ export const Contracts = () => {
         contract = await contractsService.update(selectedContract.id, contractData);
         toast.success(t('contracts.toasts.updated'));
       } else {
-        contract = await contractsService.createWithStatusUpdate(contractData);
+        // user_id is injected automatically by the service
+        contract = await contractsService.createWithStatusUpdate(contractData as any);
         toast.success(t('contracts.toasts.created'));
       }
 
@@ -217,6 +218,7 @@ export const Contracts = () => {
         filterPlaceholder={t('contracts.filterPlaceholder')}
         onAdd={handleAddContract}
         addButtonLabel={t('contracts.actions.add')}
+        skeletonColumnCount={7}
         emptyState={{
           title:
             searchQuery || statusFilter !== 'all'

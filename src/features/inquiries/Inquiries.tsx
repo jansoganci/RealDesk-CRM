@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '../../components/ui/tabs';
+import { AnimatedTabs } from '../../components/ui/animated-tabs';
 import { InquiryDialog } from './InquiryDialog';
 import { InquiryMatchesDialog } from './InquiryMatchesDialog';
 import { inquiriesService } from '../../lib/serviceProxy';
@@ -140,7 +141,8 @@ export const Inquiries = () => {
         await inquiriesService.update(selectedInquiry.id, data);
         toast.success(t('toasts.updateSuccess'));
       } else {
-        await inquiriesService.create(data);
+        // user_id is injected automatically by the service
+        await inquiriesService.create(data as any);
         toast.success(t('toasts.addSuccess'));
       }
       setDialogOpen(false);
@@ -155,12 +157,12 @@ export const Inquiries = () => {
 
   const getStatusBadge = (status: string) => {
     const statusColors = {
-      active: `${COLORS.success.bgGradient} ${COLORS.text.white}`,
-      matched: `${COLORS.primary.bgGradient} ${COLORS.text.white}`,
-      contacted: `${COLORS.warning.bgGradient} ${COLORS.text.white}`,
-      closed: `${COLORS.status.inactive.gradient} ${COLORS.text.white}`,
+      active: `${COLORS.success.bg} ${COLORS.text.white}`,
+      matched: `${COLORS.primary.bg} ${COLORS.text.white}`,
+      contacted: `${COLORS.warning.bg} ${COLORS.text.white}`,
+      closed: `${COLORS.status.inactive.bg} ${COLORS.text.white}`,
     };
-    return statusColors[status as keyof typeof statusColors] || `${COLORS.status.inactive.gradient} ${COLORS.text.white}`;
+    return statusColors[status as keyof typeof statusColors] || `${COLORS.status.inactive.bg} ${COLORS.text.white}`;
   };
 
   const renderDesktopRow = (inquiry: PropertyInquiry, index: number) => (
@@ -314,37 +316,7 @@ export const Inquiries = () => {
 
   return (
     <>
-      {/* Inquiry Type Filter */}
-      <div className="mb-6">
-        <Tabs value={inquiryTypeFilter} onValueChange={(value) => setInquiryTypeFilter(value as 'all' | 'rental' | 'sale')}>
-          <TabsList className="grid w-full max-w-md grid-cols-3">
-            <TabsTrigger value="all" className="flex items-center gap-2">
-              <Inbox className="h-4 w-4" />
-              {t('typeFilter.all')}
-            </TabsTrigger>
-            <TabsTrigger value="rental" className="flex items-center gap-2">
-              <Home className="h-4 w-4" />
-              {t('typeFilter.rental')}
-            </TabsTrigger>
-            <TabsTrigger value="sale" className="flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
-              {t('typeFilter.sale')}
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-      </div>
-
-      <Tabs value={statusFilter} onValueChange={setStatusFilter} className="w-full">
-        <TabsList className="mb-4">
-          <TabsTrigger value="all">{t('tabs.all')}</TabsTrigger>
-          <TabsTrigger value="active">{t('tabs.active')}</TabsTrigger>
-          <TabsTrigger value="matched">{t('tabs.matched')}</TabsTrigger>
-          <TabsTrigger value="contacted">{t('tabs.contacted')}</TabsTrigger>
-          <TabsTrigger value="closed">{t('tabs.closed')}</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={statusFilter} className="mt-0">
-          <ListPageTemplate
+      <ListPageTemplate
             title={t('title')}
             items={filteredInquiries}
             loading={loading}
@@ -353,6 +325,30 @@ export const Inquiries = () => {
             searchPlaceholder={t('searchPlaceholder')}
             onAdd={handleAddInquiry}
             addButtonLabel={t('addNew')}
+            skeletonColumnCount={5}
+            headerContent={
+              <AnimatedTabs
+                tabs={[
+                  { 
+                    id: 'all', 
+                    label: t('typeFilter.all'),
+                    icon: <Inbox className="h-4 w-4" />
+                  },
+                  { 
+                    id: 'rental', 
+                    label: t('typeFilter.rental'),
+                    icon: <Home className="h-4 w-4" />
+                  },
+                  { 
+                    id: 'sale', 
+                    label: t('typeFilter.sale'),
+                    icon: <TrendingUp className="h-4 w-4" />
+                  },
+                ]}
+                defaultTab={inquiryTypeFilter}
+                onChange={(tabId) => setInquiryTypeFilter(tabId as 'all' | 'rental' | 'sale')}
+              />
+            }
             renderTableHeaders={() => (
               <>
                 <TableHead>{t('table.name')}</TableHead>
@@ -382,8 +378,6 @@ export const Inquiries = () => {
               loading: actionLoading,
             }}
           />
-        </TabsContent>
-      </Tabs>
 
       <InquiryDialog
         open={dialogOpen}

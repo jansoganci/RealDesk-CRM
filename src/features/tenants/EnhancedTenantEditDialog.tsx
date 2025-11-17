@@ -180,7 +180,7 @@ export const EnhancedTenantEditDialog = ({
         form.setValue('contract.reminder_notes', primary.reminder_notes || '');
       } else {
         // No contract exists - set default values for new contract
-        form.setValue('contract.property_id', tenant.property_id || '');
+        form.setValue('contract.property_id', tenant.property?.id || '');
         form.setValue('contract.start_date', '');
         form.setValue('contract.end_date', '');
         form.setValue('contract.rent_amount', null);
@@ -252,12 +252,12 @@ export const EnhancedTenantEditDialog = ({
       const formData = form.getValues();
       
       // Update tenant
+      // property_id is not part of TenantUpdate - tenants are related to properties via contracts
       const tenantUpdateData: TenantUpdate = {
         name: formData.tenant.name,
         email: formData.tenant.email || null,
         phone: formData.tenant.phone || null,
         notes: formData.tenant.notes || null,
-        property_id: formData.contract.property_id, // Update property assignment
       };
       
       await tenantsService.update(tenant.id, tenantUpdateData);
@@ -298,7 +298,8 @@ export const EnhancedTenantEditDialog = ({
           reminder_notes: formData.contract.reminder_notes || null,
         };
         
-        await contractsService.create(contractInsertData);
+        // user_id is injected automatically by the service
+        await contractsService.create(contractInsertData as any);
       }
       
       // Handle PDF upload if provided
@@ -495,7 +496,7 @@ export const EnhancedTenantEditDialog = ({
             type="button"
             onClick={isLastStep ? handleSubmit : handleNext}
             disabled={submitting}
-            className={isLastStep ? `${COLORS.success.bg} hover:${COLORS.success.dark}` : ''}
+            className={isLastStep ? `${COLORS.success.bg} ${COLORS.success.hover}` : ''}
           >
             {submitting ? (
               'Saving...'
