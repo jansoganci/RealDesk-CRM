@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { useForm } from 'react-hook-form';
@@ -17,7 +17,8 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { PropertyInquiry } from '../../types';
-import { getInquirySchema } from './inquirySchema';
+import { getRentalInquirySchema, getSaleInquirySchema } from '../properties/propertySchemas';
+import { InquiryTypeSelector } from './InquiryTypeSelector';
 
 interface InquiryDialogProps {
   open: boolean;
@@ -35,9 +36,14 @@ export const InquiryDialog = ({
   loading = false,
 }: InquiryDialogProps) => {
   const { t } = useTranslation(['inquiries', 'common']);
-  const inquirySchema = getInquirySchema(t);
+  const [inquiryType, setInquiryType] = useState<'rental' | 'sale'>('rental');
+
+  // Conditional schema based on inquiry type
+  const inquirySchema = inquiryType === 'rental'
+    ? getRentalInquirySchema(t)
+    : getSaleInquirySchema(t);
   type InquiryFormData = z.infer<typeof inquirySchema>;
-  
+
   // Type assertion for onSubmit to maintain type safety
   const typedOnSubmit = onSubmit as (data: InquiryFormData) => Promise<void>;
 
@@ -53,30 +59,66 @@ export const InquiryDialog = ({
   useEffect(() => {
     if (open) {
       if (inquiry) {
-        reset({
-          name: inquiry.name || '',
-          phone: inquiry.phone || '',
-          email: inquiry.email || '',
-          preferred_city: inquiry.preferred_city || '',
-          preferred_district: inquiry.preferred_district || '',
-          min_budget: inquiry.min_budget || undefined,
-          max_budget: inquiry.max_budget || undefined,
-          notes: inquiry.notes || '',
-        });
+        // Detect inquiry type from existing inquiry
+        const existingType = (inquiry as any).inquiry_type || 'rental';
+        setInquiryType(existingType);
+
+        // Reset form with type-specific data
+        if (existingType === 'rental') {
+          reset({
+            name: inquiry.name || '',
+            phone: inquiry.phone || '',
+            email: inquiry.email || '',
+            preferred_city: inquiry.preferred_city || '',
+            preferred_district: inquiry.preferred_district || '',
+            min_rent_budget: (inquiry as any).min_rent_budget || undefined,
+            max_rent_budget: (inquiry as any).max_rent_budget || undefined,
+            inquiry_type: 'rental',
+            notes: inquiry.notes || '',
+          } as any);
+        } else {
+          reset({
+            name: inquiry.name || '',
+            phone: inquiry.phone || '',
+            email: inquiry.email || '',
+            preferred_city: inquiry.preferred_city || '',
+            preferred_district: inquiry.preferred_district || '',
+            min_sale_budget: (inquiry as any).min_sale_budget || undefined,
+            max_sale_budget: (inquiry as any).max_sale_budget || undefined,
+            inquiry_type: 'sale',
+            notes: inquiry.notes || '',
+          } as any);
+        }
       } else {
-        reset({
-          name: '',
-          phone: '',
-          email: '',
-          preferred_city: '',
-          preferred_district: '',
-          min_budget: undefined,
-          max_budget: undefined,
-          notes: '',
-        });
+        // New inquiry - use current inquiry type
+        if (inquiryType === 'rental') {
+          reset({
+            name: '',
+            phone: '',
+            email: '',
+            preferred_city: '',
+            preferred_district: '',
+            min_rent_budget: undefined,
+            max_rent_budget: undefined,
+            inquiry_type: 'rental',
+            notes: '',
+          } as any);
+        } else {
+          reset({
+            name: '',
+            phone: '',
+            email: '',
+            preferred_city: '',
+            preferred_district: '',
+            min_sale_budget: undefined,
+            max_sale_budget: undefined,
+            inquiry_type: 'sale',
+            notes: '',
+          } as any);
+        }
       }
     }
-  }, [open, inquiry, reset]);
+  }, [open, inquiry, inquiryType, reset]);
 
   const handleFormSubmit = async (data: InquiryFormData) => {
     const cleanedData = {
@@ -84,8 +126,6 @@ export const InquiryDialog = ({
       email: data.email?.trim() || undefined,
       preferred_city: data.preferred_city?.trim() || undefined,
       preferred_district: data.preferred_district?.trim() || undefined,
-      min_budget: data.min_budget || undefined,
-      max_budget: data.max_budget || undefined,
       notes: data.notes?.trim() || undefined,
     };
     await typedOnSubmit(cleanedData);
@@ -106,6 +146,18 @@ export const InquiryDialog = ({
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+          {/* Inquiry Type Selector - only shown for new inquiries */}
+          {!inquiry && (
+            <div className="space-y-2">
+              <Label>{t('dialog.form.inquiryType')} *</Label>
+              <InquiryTypeSelector
+                value={inquiryType}
+                onChange={setInquiryType}
+                disabled={loading}
+              />
+            </div>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="name">{t('dialog.form.name')} *</Label>
             <Input
@@ -170,37 +222,72 @@ export const InquiryDialog = ({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="min_budget">{t('dialog.form.minBudget')}</Label>
-              <Input
-                id="min_budget"
-                type="number"
-                step="0.01"
-                placeholder={t('dialog.form.minBudgetPlaceholder')}
-                {...register('min_budget', { valueAsNumber: true })}
-                disabled={loading}
-              />
-              {errors.min_budget && (
-                <p className={`text-sm ${COLORS.danger.text}`}>{errors.min_budget.message}</p>
-              )}
-            </div>
+          {/* Conditional Budget Fields based on Inquiry Type */}
+          {inquiryType === 'rental' ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="min_rent_budget">{t('dialog.form.minRentBudget')}</Label>
+                <Input
+                  id="min_rent_budget"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('dialog.form.minRentBudgetPlaceholder')}
+                  {...register('min_rent_budget' as any, { valueAsNumber: true })}
+                  disabled={loading}
+                />
+                {(errors as any).min_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_rent_budget.message}</p>
+                )}
+              </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="max_budget">{t('dialog.form.maxBudget')}</Label>
-              <Input
-                id="max_budget"
-                type="number"
-                step="0.01"
-                placeholder={t('dialog.form.maxBudgetPlaceholder')}
-                {...register('max_budget', { valueAsNumber: true })}
-                disabled={loading}
-              />
-              {errors.max_budget && (
-                <p className={`text-sm ${COLORS.danger.text}`}>{errors.max_budget.message}</p>
-              )}
+              <div className="space-y-2">
+                <Label htmlFor="max_rent_budget">{t('dialog.form.maxRentBudget')}</Label>
+                <Input
+                  id="max_rent_budget"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('dialog.form.maxRentBudgetPlaceholder')}
+                  {...register('max_rent_budget' as any, { valueAsNumber: true })}
+                  disabled={loading}
+                />
+                {(errors as any).max_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_rent_budget.message}</p>
+                )}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="min_sale_budget">{t('dialog.form.minSaleBudget')}</Label>
+                <Input
+                  id="min_sale_budget"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('dialog.form.minSaleBudgetPlaceholder')}
+                  {...register('min_sale_budget' as any, { valueAsNumber: true })}
+                  disabled={loading}
+                />
+                {(errors as any).min_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_sale_budget.message}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="max_sale_budget">{t('dialog.form.maxSaleBudget')}</Label>
+                <Input
+                  id="max_sale_budget"
+                  type="number"
+                  step="0.01"
+                  placeholder={t('dialog.form.maxSaleBudgetPlaceholder')}
+                  {...register('max_sale_budget' as any, { valueAsNumber: true })}
+                  disabled={loading}
+                />
+                {(errors as any).max_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_sale_budget.message}</p>
+                )}
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             <Label htmlFor="notes">{t('dialog.form.notes')}</Label>
