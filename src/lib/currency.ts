@@ -36,11 +36,6 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
       if (data.rates && data.rates.TRY && data.rates.EUR) {
         // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
         const eurInTry = data.rates.TRY / data.rates.EUR;
-        console.log('✅ Exchange rates fetched from Frankfurter.dev:', {
-          TRY: data.rates.TRY,
-          EUR_USD: data.rates.EUR,
-          EUR_TRY: eurInTry,
-        });
         return {
           USD: 1,
           TRY: data.rates.TRY,
@@ -66,11 +61,6 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
       if (data.rates && typeof data.rates.TRY === 'number' && typeof data.rates.EUR === 'number') {
         // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
         const eurInTry = data.rates.TRY / data.rates.EUR;
-        console.log('✅ Exchange rates fetched from ExchangeRate-API.com:', {
-          TRY: data.rates.TRY,
-          EUR_USD: data.rates.EUR,
-          EUR_TRY: eurInTry,
-        });
         return {
           USD: 1,
           TRY: data.rates.TRY,
@@ -96,11 +86,6 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
       if (data.success && data.rates && data.rates.TRY && data.rates.EUR) {
         // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
         const eurInTry = data.rates.TRY / data.rates.EUR;
-        console.log('✅ Exchange rates fetched from exchangerate.host:', {
-          TRY: data.rates.TRY,
-          EUR_USD: data.rates.EUR,
-          EUR_TRY: eurInTry,
-        });
         return {
           USD: 1,
           TRY: data.rates.TRY,
@@ -160,7 +145,6 @@ export async function initializeExchangeRates(): Promise<void> {
       }
 
       // No valid cache - fetch from API immediately
-      console.log('Fetching fresh exchange rates from API...');
       exchangeRates = await fetchExchangeRates();
       
       // Save to cache
@@ -170,7 +154,6 @@ export async function initializeExchangeRates(): Promise<void> {
           timestamp: Date.now(),
         };
         localStorage.setItem(EXCHANGE_RATES_CACHE_KEY, JSON.stringify(cacheData));
-        console.log('Exchange rates fetched and cached:', exchangeRates);
       } catch (error) {
         console.warn('Failed to save exchange rates cache:', error);
       }

@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { Badge } from '../../components/ui/badge';
-import { TenantDialog } from './TenantDialog';
 import { EnhancedTenantDialog } from './EnhancedTenantDialog';
 import { EnhancedTenantEditDialog } from './EnhancedTenantEditDialog';
 import { tenantsService } from '../../lib/serviceProxy';
@@ -15,22 +14,16 @@ import { Phone, Mail, Building2, UserX, Users, CalendarPlus } from 'lucide-react
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
-import * as z from 'zod';
-
-import { getTenantSchema } from './tenantSchema';
 
 export const Tenants = () => {
   const { t } = useTranslation(['tenants', 'common']);
   const navigate = useNavigate();
-  const tenantSchema = getTenantSchema(t);
-  type TenantFormData = z.infer<typeof tenantSchema>;
 
   const [tenants, setTenants] = useState<TenantWithProperty[]>([]);
   const [filteredTenants, setFilteredTenants] = useState<TenantWithProperty[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [assignmentFilter, setAssignmentFilter] = useState<string>('all');
   const [loading, setLoading] = useState(true);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [enhancedDialogOpen, setEnhancedDialogOpen] = useState(false);
   const [enhancedEditDialogOpen, setEnhancedEditDialogOpen] = useState(false);
   const [selectedTenant, setSelectedTenant] = useState<TenantWithProperty | null>(null);
@@ -110,28 +103,6 @@ export const Tenants = () => {
       setTenantToDelete(null);
     } catch (error) {
       toast.error(t('toasts.deleteError'));
-      console.error(error);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleSubmit = async (data: TenantFormData) => {
-    try {
-      setActionLoading(true);
-      if (selectedTenant) {
-        await tenantsService.update(selectedTenant.id, data);
-        toast.success(t('toasts.updateSuccess'));
-      } else {
-        // user_id is injected automatically by the service
-        await tenantsService.create(data as any);
-        toast.success(t('toasts.addSuccess'));
-      }
-      await loadTenants();
-      setDialogOpen(false);
-      setSelectedTenant(null);
-    } catch (error) {
-      toast.error(selectedTenant ? t('toasts.updateError') : t('toasts.addError'));
       console.error(error);
     } finally {
       setActionLoading(false);
@@ -344,14 +315,6 @@ export const Tenants = () => {
           onCancel: () => setDeleteDialogOpen(false),
           loading: actionLoading,
         }}
-      />
-
-      <TenantDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        tenant={selectedTenant}
-        onSubmit={handleSubmit}
-        loading={actionLoading}
       />
 
       <EnhancedTenantDialog

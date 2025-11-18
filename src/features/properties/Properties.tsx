@@ -58,7 +58,7 @@ export const Properties = () => {
 
     // Filter by property type
     if (propertyTypeFilter !== 'all') {
-      filtered = filtered.filter((property: any) => property.property_type === propertyTypeFilter);
+      filtered = filtered.filter((property) => property.property_type === propertyTypeFilter);
     }
 
     if (searchQuery.trim() !== '') {
@@ -83,14 +83,6 @@ export const Properties = () => {
     try {
       setLoading(true);
       const data = await propertiesService.getAll();
-      // Debug: Check if listing_url is being fetched
-      if (data.length > 0) {
-        console.log('Sample property data:', {
-          address: data[0].address,
-          hasListingUrl: !!data[0].listing_url,
-          listing_url: data[0].listing_url,
-        });
-      }
       setProperties(data);
     } catch (error) {
       toast.error(t('toasts.loadError'));
@@ -141,7 +133,7 @@ export const Properties = () => {
         toast.success(t('toasts.updateSuccess'));
       } else {
         // user_id is injected automatically by the service
-        await propertiesService.create(data as any);
+        await propertiesService.create(data);
         toast.success(t('toasts.addSuccess'));
       }
       await loadProperties();
@@ -420,9 +412,8 @@ export const Properties = () => {
             </TableCell>
             <TableCell>
               {(() => {
-                const propertyTyped = property as any;
-                const isRental = propertyTyped.property_type === 'rental';
-                const isSale = propertyTyped.property_type === 'sale';
+                const isRental = property.property_type === 'rental';
+                const isSale = property.property_type === 'sale';
 
                 if (property.status === 'Inactive') {
                   return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
@@ -595,9 +586,8 @@ export const Properties = () => {
               )}
 
               {property.status !== 'Inactive' && (() => {
-                const propertyTyped = property as any;
-                const isRental = propertyTyped.property_type === 'rental';
-                const isSale = propertyTyped.property_type === 'sale';
+                const isRental = property.property_type === 'rental';
+                const isSale = property.property_type === 'sale';
 
                 if (isRental && property.activeContract?.rent_amount) {
                   return (

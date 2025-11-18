@@ -117,19 +117,6 @@ export const TransactionDialog = ({
   const selectedType = form.watch('type');
   const filteredCategories = categories.filter(c => c.type === selectedType);
 
-  // Debug: Log categories when dialog opens or categories change
-  useEffect(() => {
-    if (open) {
-      console.log('🔍 DEBUG TransactionDialog - Dialog opened:');
-      console.log('  - categories prop:', categories);
-      console.log('  - categories length:', categories.length);
-      console.log('  - selectedType:', selectedType);
-      console.log('  - filteredCategories:', filteredCategories);
-      console.log('  - filteredCategories length:', filteredCategories.length);
-      console.log('  - All category types:', categories.map(c => ({ name: c.name, type: c.type })));
-    }
-  }, [open, categories, selectedType, filteredCategories]);
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">

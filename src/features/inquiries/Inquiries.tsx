@@ -7,7 +7,7 @@ import { InquiryMatchesDialog } from './InquiryMatchesDialog';
 import { inquiriesService } from '../../lib/serviceProxy';
 import { PropertyInquiry, InquiryWithMatches } from '../../types';
 import { toast } from 'sonner';
-import { Phone, Mail, MapPin, DollarSign, Eye, Inbox, Home, TrendingUp } from 'lucide-react';
+import { Phone, Mail, MapPin, DollarSign, Eye, Inbox, Home, TrendingUp, Loader2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -34,6 +34,7 @@ export const Inquiries = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [inquiryToDelete, setInquiryToDelete] = useState<PropertyInquiry | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
+  const [matchesLoading, setMatchesLoading] = useState<string | null>(null);
 
   useEffect(() => {
     loadInquiries();
@@ -49,7 +50,7 @@ export const Inquiries = () => {
 
     // Filter by inquiry type
     if (inquiryTypeFilter !== 'all') {
-      filtered = filtered.filter((inquiry: any) => inquiry.inquiry_type === inquiryTypeFilter);
+      filtered = filtered.filter((inquiry) => inquiry.inquiry_type === inquiryTypeFilter);
     }
 
     // Filter by status
@@ -101,12 +102,15 @@ export const Inquiries = () => {
 
   const handleViewMatches = async (inquiry: PropertyInquiry) => {
     try {
+      setMatchesLoading(inquiry.id);
       const inquiryWithMatches = await inquiriesService.getById(inquiry.id);
       setSelectedInquiryForMatches(inquiryWithMatches);
       setMatchesDialogOpen(true);
     } catch (error) {
       toast.error(t('toasts.loadError'));
       console.error(error);
+    } finally {
+      setMatchesLoading(null);
     }
   };
 
@@ -141,7 +145,7 @@ export const Inquiries = () => {
         toast.success(t('toasts.updateSuccess'));
       } else {
         // user_id is injected automatically by the service
-        await inquiriesService.create(data as any);
+        await inquiriesService.create(data);
         toast.success(t('toasts.addSuccess'));
       }
       setDialogOpen(false);
@@ -197,10 +201,9 @@ export const Inquiries = () => {
       </TableCell>
       <TableCell>
         {(() => {
-          const inquiryTyped = inquiry as any;
-          const isRental = inquiryTyped.inquiry_type === 'rental';
-          const minBudget = isRental ? inquiryTyped.min_rent_budget : inquiryTyped.min_sale_budget;
-          const maxBudget = isRental ? inquiryTyped.max_rent_budget : inquiryTyped.max_sale_budget;
+          const isRental = inquiry.inquiry_type === 'rental';
+          const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
+          const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
 
           if (minBudget || maxBudget) {
             return (
@@ -229,9 +232,14 @@ export const Inquiries = () => {
               variant="outline"
               size="sm"
               onClick={() => handleViewMatches(inquiry)}
+              disabled={matchesLoading === inquiry.id}
               className="flex items-center gap-1"
             >
-              <Eye className="h-4 w-4" />
+              {matchesLoading === inquiry.id ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
               {t('table.viewMatches')}
             </Button>
           )}
@@ -275,10 +283,9 @@ export const Inquiries = () => {
       )}
 
       {(() => {
-        const inquiryTyped = inquiry as any;
-        const isRental = inquiryTyped.inquiry_type === 'rental';
-        const minBudget = isRental ? inquiryTyped.min_rent_budget : inquiryTyped.min_sale_budget;
-        const maxBudget = isRental ? inquiryTyped.max_rent_budget : inquiryTyped.max_sale_budget;
+        const isRental = inquiry.inquiry_type === 'rental';
+        const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
+        const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
 
         if (minBudget || maxBudget) {
           return (
@@ -299,9 +306,14 @@ export const Inquiries = () => {
             variant="outline"
             size="sm"
             onClick={() => handleViewMatches(inquiry)}
+            disabled={matchesLoading === inquiry.id}
             className="flex items-center gap-1 flex-1"
           >
-            <Eye className="h-4 w-4" />
+            {matchesLoading === inquiry.id ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              <Eye className="h-4 w-4" />
+            )}
             {t('table.viewMatches')}
           </Button>
         )}
