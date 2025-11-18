@@ -72,12 +72,12 @@
 │                            ↓                                 │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │              Service Proxy Layer                      │  │
-│  │  (Routes between real services and mock services)    │  │
+│  │  (Central export point for all services)             │  │
 │  └──────────────────────────────────────────────────────┘  │
 │                            ↓                                 │
 │  ┌──────────────────────────────────────────────────────┐  │
 │  │              Service Layer                            │  │
-│  │  (Business logic and API calls)                      │  │
+│  │  (Business logic and Supabase API calls)             │  │
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
@@ -165,16 +165,12 @@ emlak-crm/
 │   │   ├── reminders.service.ts         # Reminders
 │   │   ├── tenants.service.ts           # Tenant management
 │   │   ├── userPreferences.service.ts   # User settings
-│   │   └── mockServices/        # Mock services for demo mode
-│   │       ├── mockOwners.service.ts
-│   │       ├── mockProperties.service.ts
-│   │       ├── mockTenants.service.ts
-│   │       ├── mockContracts.service.ts
-│   │       ├── mockReminders.service.ts
-│   │       ├── mockInquiries.service.ts
-│   │       ├── mockMeetings.service.ts
-│   │       ├── userPreferences.service.ts
-│   │       └── financialTransactions.service.ts
+│   │   └── finance/             # Financial services
+│   │       ├── index.ts                 # Finance exports
+│   │       ├── analytics.service.ts     # Financial analytics
+│   │       ├── categories.service.ts    # Expense categories
+│   │       ├── recurring.service.ts     # Recurring expenses
+│   │       └── transactions.service.ts  # Transaction CRUD
 │   │
 │   ├── types/                   # TypeScript type definitions
 │   │   ├── database.ts          # Auto-generated Supabase types
@@ -526,32 +522,24 @@ update_photo_ordering(
 
 ## Service Layer Architecture
 
-### Service Proxy Pattern
+### Service Proxy
 
-The application uses a sophisticated **Service Proxy Pattern** to enable seamless switching between real Supabase services and mock services for demo mode.
+The application uses a **Service Proxy** as a central export point for all services, providing a clean import interface for components.
 
 **File**: `src/lib/serviceProxy.ts`
 
-#### How It Works
-
-1. **Demo Mode Detection**: Checks `window.__DEMO_MODE__` flag
-2. **Proxy Interception**: Uses JavaScript Proxy to intercept service calls
-3. **Dynamic Routing**: Routes to mock or real service based on mode
-4. **Method Binding**: Ensures `this` context is correct for methods
-
 ```typescript
-export const propertiesService = new Proxy(realPropertiesService, {
-  get(target, prop) {
-    const service = isDemoMode() ? mockPropertiesService : target;
-    const value = (service as any)[prop];
+// Direct service exports
+export { ownersService } from '../services/owners.service';
+export { propertiesService } from '../services/properties.service';
+export { tenantsService } from '../services/tenants.service';
+export { contractsService } from '../services/contracts.service';
+// ... etc
+```
 
-    if (typeof value === 'function') {
-      return value.bind(service);
-    }
-
-    return value;
-  }
-}) as typeof realPropertiesService;
+Components import services from the proxy instead of individual service files:
+```typescript
+import { propertiesService, tenantsService } from '@/lib/serviceProxy';
 ```
 
 ### Service Pattern

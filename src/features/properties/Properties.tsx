@@ -412,8 +412,9 @@ export const Properties = () => {
             </TableCell>
             <TableCell>
               {(() => {
-                const isRental = property.property_type === 'rental';
-                const isSale = property.property_type === 'sale';
+                const propertyTyped = property as any;
+                const isRental = propertyTyped.property_type === 'rental';
+                const isSale = propertyTyped.property_type === 'sale';
 
                 if (property.status === 'Inactive') {
                   return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
@@ -586,8 +587,9 @@ export const Properties = () => {
               )}
 
               {property.status !== 'Inactive' && (() => {
-                const isRental = property.property_type === 'rental';
-                const isSale = property.property_type === 'sale';
+                const propertyTyped = property as any;
+                const isRental = propertyTyped.property_type === 'rental';
+                const isSale = propertyTyped.property_type === 'sale';
 
                 if (isRental && property.activeContract?.rent_amount) {
                   return (

@@ -14,7 +14,7 @@ export { inquiriesService } from '../services/inquiries.service';
 export { meetingsService } from '../services/meetings.service';
 export { commissionsService } from '../services/commissions.service';
 export { userPreferencesService } from '../services/userPreferences.service';
-export * as financialTransactionsService from '../services/financialTransactions.service';
+export * as financialTransactionsService from '../services/finance';
 
 
 // Re-export types that components depend on
