@@ -9,13 +9,11 @@ import type {
   ExpenseCategory,
   FinancialRatios,
   YearlySummary,
-  BudgetVsActual,
-  TopCategory,
 } from '../../../types/financial';
 
 export const useFinanceData = (filters: TransactionFilters) => {
   const { t } = useTranslation(['finance']);
-  
+
   // Core data state
   const [dashboard, setDashboard] = useState<FinancialDashboard | null>(null);
   const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
@@ -25,9 +23,6 @@ export const useFinanceData = (filters: TransactionFilters) => {
   // Analytics state
   const [ratios, setRatios] = useState<FinancialRatios | null>(null);
   const [yearlySummary, setYearlySummary] = useState<YearlySummary | null>(null);
-  const [budgetComparison, setBudgetComparison] = useState<BudgetVsActual[]>([]);
-  const [topIncome, setTopIncome] = useState<TopCategory[]>([]);
-  const [topExpense, setTopExpense] = useState<TopCategory[]>([]);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
   // Load core data (dashboard, categories, transactions)
@@ -69,25 +64,13 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const currentMonth = new Date().toISOString().slice(0, 7);
       const currentYear = new Date().getFullYear();
 
-      const [
-        ratiosData,
-        yearlyData,
-        budgetData,
-        topIncomeData,
-        topExpenseData,
-      ] = await Promise.all([
+      const [ratiosData, yearlyData] = await Promise.all([
         financialTransactionsService.getFinancialRatios(currentMonth),
         financialTransactionsService.getYearlySummary(currentYear),
-        financialTransactionsService.getBudgetVsActual(currentMonth),
-        financialTransactionsService.getTopCategories('income', 5, currentMonth),
-        financialTransactionsService.getTopCategories('expense', 5, currentMonth),
       ]);
 
       setRatios(ratiosData);
       setYearlySummary(yearlyData);
-      setBudgetComparison(budgetData);
-      setTopIncome(topIncomeData);
-      setTopExpense(topExpenseData);
     } catch (error) {
       console.error('Error loading analytics:', error);
       toast.error(t('finance:messages.loadError'));
@@ -113,14 +96,11 @@ export const useFinanceData = (filters: TransactionFilters) => {
     categories,
     ratios,
     yearlySummary,
-    budgetComparison,
-    topIncome,
-    topExpense,
-    
+
     // Loading states
     loading,
     analyticsLoading,
-    
+
     // Actions
     loadData,
     loadTransactions,

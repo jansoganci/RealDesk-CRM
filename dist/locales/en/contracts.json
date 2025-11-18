@@ -1,6 +1,6 @@
 {
   "title": "Rental Contracts",
-  "searchPlaceholder": "Search contracts...",
+  "searchPlaceholder": "Search by tenant, property...",
   "filterPlaceholder": "Filter by status",
   "filters": {
     "all": "All Status"

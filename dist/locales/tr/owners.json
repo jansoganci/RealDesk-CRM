@@ -1,6 +1,6 @@
 {
   "title": "Mal Sahipleri",
-  "searchPlaceholder": "Mal sahibi ara...",
+  "searchPlaceholder": "İsim, telefon, e-posta ile ara...",
   "addOwnerButton": "Mal Sahibi Ekle",
   "propertyCount": "{{count}} mülk",
   "table": {

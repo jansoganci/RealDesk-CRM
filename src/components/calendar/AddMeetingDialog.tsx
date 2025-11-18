@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -126,7 +127,7 @@ export const AddMeetingDialog = ({
       form.reset();
     } catch (error) {
       console.error('Failed to create meeting', error);
-      // TODO: Show toast notification
+      toast.error(t('toasts.createError'));
     } finally {
       setIsSubmitting(false);
     }

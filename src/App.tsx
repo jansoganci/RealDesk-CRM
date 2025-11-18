@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
@@ -15,9 +16,16 @@ import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
+import { initializeExchangeRates } from './lib/currency';
 import './App.css';
 
 function App() {
+  // Initialize exchange rates on app start
+  useEffect(() => {
+    initializeExchangeRates().catch(err => {
+      console.warn('Failed to initialize exchange rates on app start:', err);
+    });
+  }, []);
   return (
     <AuthProvider>
       <BrowserRouter>

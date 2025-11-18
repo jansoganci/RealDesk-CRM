@@ -1,0 +1,103 @@
+{
+  "button": "Quick Add",
+  "title": "Quick Add Property",
+  "description": "Enter owner, property, and tenant information in one go",
+  "sections": {
+    "owner": "1. Owner",
+    "property": "2. Property Details",
+    "tenant": "3. Tenant (Optional)"
+  },
+  "ownerMode": {
+    "select": "Select existing owner",
+    "create": "Create new owner"
+  },
+  "fields": {
+    "owner": "Owner",
+    "ownerName": "Full Name",
+    "ownerPhone": "Phone",
+    "ownerEmail": "Email",
+    "address": "Address",
+    "city": "City",
+    "district": "District",
+    "propertyType": "Property Type",
+    "status": "Status",
+    "rentAmount": "Rent Amount",
+    "salePrice": "Sale Price",
+    "currency": "Currency",
+    "listingUrl": "Listing URL",
+    "notes": "Notes",
+    "addTenant": "Add tenant to this property",
+    "tenantName": "Tenant Name",
+    "tenantPhone": "Tenant Phone",
+    "tenantEmail": "Tenant Email",
+    "contractStart": "Contract Start",
+    "contractEnd": "Contract End",
+    "contractRent": "Rent Amount"
+  },
+  "placeholders": {
+    "selectOwner": "Select an owner",
+    "ownerName": "e.g. John Smith",
+    "ownerPhone": "e.g. +1 555 123 4567",
+    "ownerEmail": "e.g. john@email.com",
+    "address": "e.g. 123 Main Street",
+    "city": "e.g. New York",
+    "district": "e.g. Manhattan",
+    "rentAmount": "e.g. 2500",
+    "salePrice": "e.g. 500000",
+    "listingUrl": "e.g. https://...",
+    "notes": "Notes about the property...",
+    "tenantName": "e.g. Jane Doe",
+    "tenantPhone": "e.g. +1 555 987 6543",
+    "tenantEmail": "e.g. jane@email.com"
+  },
+  "propertyTypes": {
+    "rental": "Rental",
+    "sale": "Sale"
+  },
+  "statuses": {
+    "Empty": "Empty",
+    "Occupied": "Occupied",
+    "Inactive": "Inactive",
+    "Available": "Available",
+    "Under Offer": "Under Offer",
+    "Sold": "Sold"
+  },
+  "currencies": {
+    "TRY": "TRY",
+    "USD": "USD",
+    "EUR": "EUR"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "createAll": "Create All",
+    "creating": "Creating..."
+  },
+  "messages": {
+    "success": "Property created successfully",
+    "successWithTenant": "Property and tenant created successfully",
+    "error": "Failed to create",
+    "ownerCreated": "New owner created",
+    "partialSuccess": "Property created but tenant could not be added"
+  },
+  "validation": {
+    "ownerRequired": "Select an owner or create a new one",
+    "ownerNameRequired": "Owner name is required",
+    "ownerNameMin": "Name must be at least 2 characters",
+    "addressRequired": "Address is required",
+    "addressMin": "Address must be at least 3 characters",
+    "propertyTypeRequired": "Select a property type",
+    "statusRequired": "Select a status",
+    "rentAmountRequired": "Rent amount is required",
+    "rentAmountPositive": "Rent amount must be positive",
+    "salePriceRequired": "Sale price is required",
+    "salePricePositive": "Sale price must be positive",
+    "currencyRequired": "Select a currency",
+    "tenantNameRequired": "Tenant name is required",
+    "tenantNameMin": "Tenant name must be at least 2 characters",
+    "contractStartRequired": "Contract start date is required",
+    "contractEndRequired": "Contract end date is required",
+    "contractEndAfterStart": "End date must be after start date",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Invalid phone number"
+  }
+}

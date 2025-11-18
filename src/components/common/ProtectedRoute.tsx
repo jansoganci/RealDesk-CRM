@@ -7,7 +7,7 @@ interface ProtectedRouteProps {
 }
 
 export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { user, loading, demoMode } = useAuth();
+  const { user, loading } = useAuth();
 
   if (loading) {
     return (
@@ -17,8 +17,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  // Allow access if user is authenticated OR in demo mode
-  if (!user && !demoMode) {
+  if (!user) {
     return <Navigate to={ROUTES.LOGIN} replace />;
   }
 

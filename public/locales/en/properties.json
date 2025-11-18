@@ -1,6 +1,6 @@
 {
   "title": "Properties",
-  "searchPlaceholder": "Search properties...",
+  "searchPlaceholder": "Search by address, owner, city...",
   "filterPlaceholder": "Filter by status",
   "addPropertyButton": "Add Property",
   "addTenantButton": "Add Tenant",

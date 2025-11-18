@@ -424,26 +424,11 @@ export const Reminders = () => {
                 showAction={false}
               />
             ) : (
-              <>
-                <div className={`${COLORS.info.bgLight} border ${COLORS.border.DEFAULT_class} rounded-lg p-4 shadow-md`}>
-                  <div className="flex items-start gap-3">
-                    <Bell className={`h-5 w-5 ${COLORS.info.text} mt-0.5`} />
-                    <div>
-                      <h3 className={`font-semibold ${COLORS.gray.text900}`}>
-                        {t('sections.scheduled.calloutTitle')}
-                      </h3>
-                      <p className={`text-sm ${COLORS.gray.text700} mt-1`}>
-                        {t('sections.scheduled.calloutDescription')}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-2">
-                  {scheduledReminders.map((reminder) => (
-                    <ReminderCard key={reminder.id} reminder={reminder} />
-                  ))}
-                </div>
-              </>
+              <div className="grid gap-4 md:grid-cols-2">
+                {scheduledReminders.map((reminder) => (
+                  <ReminderCard key={reminder.id} reminder={reminder} />
+                ))}
+              </div>
             )}
             </div>
             )}

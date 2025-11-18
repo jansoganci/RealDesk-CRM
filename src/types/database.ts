@@ -411,6 +411,7 @@ export type Database = {
           listing_url: string | null
           notes: string | null
           owner_id: string
+          property_type: string
           rent_amount: number | null
           sale_price: number | null
           sold_at: string | null
@@ -429,6 +430,7 @@ export type Database = {
           listing_url?: string | null
           notes?: string | null
           owner_id: string
+          property_type?: string
           rent_amount?: number | null
           sale_price?: number | null
           sold_at?: string | null
@@ -447,6 +449,7 @@ export type Database = {
           listing_url?: string | null
           notes?: string | null
           owner_id?: string
+          property_type?: string
           rent_amount?: number | null
           sale_price?: number | null
           sold_at?: string | null
@@ -470,8 +473,13 @@ export type Database = {
           created_at: string | null
           email: string | null
           id: string
+          inquiry_type: string
           max_budget: number | null
+          max_rent_budget: number | null
+          max_sale_budget: number | null
           min_budget: number | null
+          min_rent_budget: number | null
+          min_sale_budget: number | null
           name: string
           notes: string | null
           phone: string
@@ -485,8 +493,13 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id?: string
+          inquiry_type?: string
           max_budget?: number | null
+          max_rent_budget?: number | null
+          max_sale_budget?: number | null
           min_budget?: number | null
+          min_rent_budget?: number | null
+          min_sale_budget?: number | null
           name: string
           notes?: string | null
           phone: string
@@ -500,8 +513,13 @@ export type Database = {
           created_at?: string | null
           email?: string | null
           id?: string
+          inquiry_type?: string
           max_budget?: number | null
+          max_rent_budget?: number | null
+          max_sale_budget?: number | null
           min_budget?: number | null
+          min_rent_budget?: number | null
+          min_sale_budget?: number | null
           name?: string
           notes?: string | null
           phone?: string
@@ -688,6 +706,7 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          commission_rate: number | null
           currency: string | null
           full_name: string | null
           language: string | null
@@ -696,6 +715,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          commission_rate?: number | null
           currency?: string | null
           full_name?: string | null
           language?: string | null
@@ -704,6 +724,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          commission_rate?: number | null
           currency?: string | null
           full_name?: string | null
           language?: string | null

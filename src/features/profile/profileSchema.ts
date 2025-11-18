@@ -30,5 +30,12 @@ export const getProfileSchema = (t: TFunction) => {
         message: t('profile.validation.reminderInvalid', 'Invalid reminder time'),
       }
     ),
+    commission_rate: z.number({
+      required_error: t('profile.validation.commissionRateRequired', 'Commission rate is required'),
+    }).min(0.1, {
+      message: t('profile.validation.commissionRateMin', 'Commission rate must be at least 0.1%'),
+    }).max(20, {
+      message: t('profile.validation.commissionRateMax', 'Commission rate must not exceed 20%'),
+    }),
   });
 };

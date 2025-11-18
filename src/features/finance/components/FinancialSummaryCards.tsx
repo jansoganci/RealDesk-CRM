@@ -52,7 +52,7 @@ export const FinancialSummaryCards = ({
     ? calculateChange(currentMonth.net_income, previousMonth.net_income)
     : 0;
 
-  const pendingTransactions = 0; // TODO: Calculate from transactions
+  const pendingTransactions = dashboard?.pending_transactions_count ?? 0;
 
   if (loading) {
     return (

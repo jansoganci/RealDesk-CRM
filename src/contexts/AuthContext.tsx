@@ -7,16 +7,15 @@ interface AuthContextType {
   user: User | null;
   session: Session | null;
   loading: boolean;
-  demoMode: boolean;
   language: string;
   currency: string;
+  meetingReminderMinutes: number;
+  commissionRate: number;
   setLanguage: (language: string) => void;
   setCurrency: (currency: string) => void;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
-  enableDemoMode: () => void;
-  exitDemoMode: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -25,9 +24,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [demoMode, setDemoMode] = useState(false);
   const [language, setLanguageState] = useState('tr');
   const [currency, setCurrencyState] = useState('TRY');
+  const [meetingReminderMinutes, setMeetingReminderMinutesState] = useState(30);
+  const [commissionRate, setCommissionRateState] = useState(4.0);
   const ensuredUserPreferencesFor = useRef<string | null>(null);
 
   // Sync i18n with language state changes
@@ -46,12 +46,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (session?.user) {
         const { data: preferences } = await supabase
           .from('user_preferences')
-          .select('language, currency')
+          .select('language, currency, meeting_reminder_minutes, commission_rate')
           .eq('user_id', session.user.id)
           .maybeSingle();
         if (preferences) {
           setLanguageState(preferences.language || 'tr');
           setCurrencyState(preferences.currency || 'TRY');
+          setMeetingReminderMinutesState(preferences.meeting_reminder_minutes || 30);
+          setCommissionRateState(preferences.commission_rate || 4.0);
         }
       }
       setLoading(false);
@@ -65,6 +67,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (!session) {
         setLanguageState('tr');
         setCurrencyState('TRY');
+        setMeetingReminderMinutesState(30);
+        setCommissionRateState(4.0);
       }
       setLoading(false);
     });
@@ -77,7 +81,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data: { session } } = await supabase.auth.getSession();
       const currentUserId = session?.user?.id;
 
-      if (!currentUserId || demoMode) {
+      if (!currentUserId) {
         return;
       }
 
@@ -103,15 +107,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     };
 
     ensureUserPreferences();
-  }, [demoMode, user?.id]);
+  }, [user?.id]);
 
   const updateUserPreferences = async (prefs: { language?: string; currency?: string }) => {
     if (!user) return;
-
-    // Skip database update in demo mode - only update local state
-    if (demoMode) {
-      return;
-    }
 
     // First, try to update an existing row
     const { data, error } = await supabase
@@ -159,48 +158,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const signOut = async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    
-    // Also exit demo mode when signing out
-    setDemoMode(false);
-    ensuredUserPreferencesFor.current = null;
-  };
 
-  const enableDemoMode = () => {
-    setDemoMode(true);
-    setLoading(false);
-    
-    // Set global demo mode flag for service proxy
-    (window as any).__DEMO_MODE__ = true;
-    
-    // Create a mock user object for demo mode
-    const mockUser = {
-      id: 'demo-user-id',
-      email: 'demo@example.com',
-      user_metadata: {
-        full_name: 'Demo User'
-      },
-      app_metadata: {},
-      aud: 'authenticated',
-      created_at: new Date().toISOString(),
-      role: 'authenticated',
-      updated_at: new Date().toISOString(),
-    } as User;
-    
-    setUser(mockUser);
-  };
-
-  const exitDemoMode = () => {
-    setDemoMode(false);
-    setUser(null);
-    setSession(null);
-    
-    // Clear global demo mode flag
-    (window as any).__DEMO_MODE__ = false;
     ensuredUserPreferencesFor.current = null;
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, demoMode, language, currency, setLanguage, setCurrency, signIn, signUp, signOut, enableDemoMode, exitDemoMode }}>
+    <AuthContext.Provider value={{ user, session, loading, language, currency, meetingReminderMinutes, commissionRate, setLanguage, setCurrency, signIn, signUp, signOut }}>
       {children}
     </AuthContext.Provider>
   );

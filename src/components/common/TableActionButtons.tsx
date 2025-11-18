@@ -1,6 +1,5 @@
 import { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '../ui/button';
 import {
   Tooltip,
   TooltipContent,
@@ -8,7 +7,6 @@ import {
   TooltipTrigger,
 } from '../ui/tooltip';
 import { Pencil, Trash2, Eye } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 
 interface ActionButton {
   icon?: ReactNode;
@@ -38,35 +36,32 @@ export const TableActionButtons = memo(({
   showView = false,
 }: TableActionButtonsProps) => {
   const { t } = useTranslation(['components.tableActions']);
-  const getButtonClasses = (variant: string) => {
-    switch (variant) {
-      case 'view':
-        return `hover:${COLORS.success.bgLight} hover:${COLORS.success.text} hover:${COLORS.success.border}`;
-      case 'edit':
-        return `hover:${COLORS.primary.bgLight} hover:${COLORS.primary.text} hover:${COLORS.primary.border}`;
-      case 'delete':
-        return `${COLORS.danger.borderLight} ${COLORS.danger.text} hover:${COLORS.danger.bgLight} hover:${COLORS.danger.textDark} hover:${COLORS.danger.borderHover}`;
-      default:
-        return '';
-    }
-  };
+  
+  // M3 Standard: Square buttons with minimal hover
+  // Mobile/Tablet: 44px for touch targets, Desktop: 40px for mouse
+
+  // View button - Gray border
+  const viewButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+
+  // Edit button - Light blue border
+  const editButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-blue-300 bg-transparent text-gray-700 hover:bg-blue-50 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+
+  // Delete button - Red border
+  const deleteButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-red-300 bg-transparent text-gray-700 hover:bg-red-50 hover:border-red-400 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
     <TooltipProvider>
-      <div className="flex justify-end gap-2">
+      <div className="flex justify-end gap-1.5">
         {showView && onView && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
+              <button
                 onClick={onView}
-                className={getButtonClasses('view')}
+                className={viewButtonClasses}
                 aria-label={t('viewDetails')}
-                title={t('viewDetailsTooltip')}
               >
-                <Eye className="h-4 w-4" />
-              </Button>
+                <Eye className="h-6 w-6" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>{t('viewDetails')}</p>
@@ -77,16 +72,13 @@ export const TableActionButtons = memo(({
         {showEdit && onEdit && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
+              <button
                 onClick={onEdit}
-                className={getButtonClasses('edit')}
+                className={editButtonClasses}
                 aria-label={t('edit')}
-                title={t('editTooltip')}
               >
-                <Pencil className="h-4 w-4" />
-              </Button>
+                <Pencil className="h-6 w-6" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>{t('edit')}</p>
@@ -97,14 +89,13 @@ export const TableActionButtons = memo(({
         {customActions.map((action, index) => (
           <Tooltip key={index}>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
+              <button
                 onClick={action.onClick}
-                className={action.className || getButtonClasses(action.variant || 'custom')}
+                className={action.className || viewButtonClasses}
+                aria-label={typeof action.tooltip === 'string' ? action.tooltip : t(action.tooltip)}
               >
                 {action.icon}
-              </Button>
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>{typeof action.tooltip === 'string' ? action.tooltip : t(action.tooltip)}</p>
@@ -115,16 +106,13 @@ export const TableActionButtons = memo(({
         {showDelete && onDelete && (
           <Tooltip>
             <TooltipTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
+              <button
                 onClick={onDelete}
-                className={getButtonClasses('delete')}
+                className={deleteButtonClasses}
                 aria-label={t('delete')}
-                title={t('deleteTooltip')}
               >
-                <Trash2 className="h-4 w-4" />
-              </Button>
+                <Trash2 className="h-6 w-6" />
+              </button>
             </TooltipTrigger>
             <TooltipContent>
               <p>{t('delete')}</p>

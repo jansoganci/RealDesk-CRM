@@ -1,0 +1,103 @@
+{
+  "button": "Hızlı Ekle",
+  "title": "Hızlı Mülk Ekle",
+  "description": "Mal sahibi, mülk ve kiracı bilgilerini tek seferde girin",
+  "sections": {
+    "owner": "1. Mal Sahibi",
+    "property": "2. Mülk Bilgileri",
+    "tenant": "3. Kiracı (Opsiyonel)"
+  },
+  "ownerMode": {
+    "select": "Mevcut mal sahibi seç",
+    "create": "Yeni mal sahibi oluştur"
+  },
+  "fields": {
+    "owner": "Mal Sahibi",
+    "ownerName": "Ad Soyad",
+    "ownerPhone": "Telefon",
+    "ownerEmail": "E-posta",
+    "address": "Adres",
+    "city": "Şehir",
+    "district": "İlçe",
+    "propertyType": "Mülk Tipi",
+    "status": "Durum",
+    "rentAmount": "Kira Bedeli",
+    "salePrice": "Satış Fiyatı",
+    "currency": "Para Birimi",
+    "listingUrl": "İlan URL",
+    "notes": "Notlar",
+    "addTenant": "Bu mülke kiracı ekle",
+    "tenantName": "Kiracı Adı",
+    "tenantPhone": "Kiracı Telefon",
+    "tenantEmail": "Kiracı E-posta",
+    "contractStart": "Sözleşme Başlangıcı",
+    "contractEnd": "Sözleşme Bitişi",
+    "contractRent": "Kira Bedeli"
+  },
+  "placeholders": {
+    "selectOwner": "Mal sahibi seçin",
+    "ownerName": "Örn: Ahmet Yılmaz",
+    "ownerPhone": "Örn: 0532 123 4567",
+    "ownerEmail": "Örn: ahmet@email.com",
+    "address": "Örn: Atatürk Cad. No: 123",
+    "city": "Örn: İstanbul",
+    "district": "Örn: Kadıköy",
+    "rentAmount": "Örn: 15000",
+    "salePrice": "Örn: 2500000",
+    "listingUrl": "Örn: https://sahibinden.com/...",
+    "notes": "Mülk hakkında notlar...",
+    "tenantName": "Örn: Mehmet Demir",
+    "tenantPhone": "Örn: 0533 987 6543",
+    "tenantEmail": "Örn: mehmet@email.com"
+  },
+  "propertyTypes": {
+    "rental": "Kiralık",
+    "sale": "Satılık"
+  },
+  "statuses": {
+    "Empty": "Boş",
+    "Occupied": "Dolu",
+    "Inactive": "Pasif",
+    "Available": "Müsait",
+    "Under Offer": "Teklif Altında",
+    "Sold": "Satıldı"
+  },
+  "currencies": {
+    "TRY": "TRY",
+    "USD": "USD",
+    "EUR": "EUR"
+  },
+  "actions": {
+    "cancel": "İptal",
+    "createAll": "Tümünü Oluştur",
+    "creating": "Oluşturuluyor..."
+  },
+  "messages": {
+    "success": "Mülk başarıyla oluşturuldu",
+    "successWithTenant": "Mülk ve kiracı başarıyla oluşturuldu",
+    "error": "Oluşturma başarısız oldu",
+    "ownerCreated": "Yeni mal sahibi oluşturuldu",
+    "partialSuccess": "Mülk oluşturuldu ancak kiracı eklenemedi"
+  },
+  "validation": {
+    "ownerRequired": "Mal sahibi seçin veya yeni oluşturun",
+    "ownerNameRequired": "Mal sahibi adı gerekli",
+    "ownerNameMin": "Ad en az 2 karakter olmalı",
+    "addressRequired": "Adres gerekli",
+    "addressMin": "Adres en az 3 karakter olmalı",
+    "propertyTypeRequired": "Mülk tipi seçin",
+    "statusRequired": "Durum seçin",
+    "rentAmountRequired": "Kira bedeli gerekli",
+    "rentAmountPositive": "Kira bedeli pozitif olmalı",
+    "salePriceRequired": "Satış fiyatı gerekli",
+    "salePricePositive": "Satış fiyatı pozitif olmalı",
+    "currencyRequired": "Para birimi seçin",
+    "tenantNameRequired": "Kiracı adı gerekli",
+    "tenantNameMin": "Kiracı adı en az 2 karakter olmalı",
+    "contractStartRequired": "Sözleşme başlangıç tarihi gerekli",
+    "contractEndRequired": "Sözleşme bitiş tarihi gerekli",
+    "contractEndAfterStart": "Bitiş tarihi başlangıçtan sonra olmalı",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "invalidPhone": "Geçersiz telefon numarası"
+  }
+}

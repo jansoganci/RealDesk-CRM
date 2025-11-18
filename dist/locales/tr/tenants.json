@@ -1,10 +1,13 @@
 {
   "title": "Kiracılar",
-  "searchPlaceholder": "Kiracı ara...",
+  "searchPlaceholder": "İsim, telefon, e-posta ile ara...",
   "filterPlaceholder": "Duruma göre filtrele",
   "addTenantButton": "Kiracı ve Sözleşme Ekle",
   "noProperty": "Mülk yok",
   "noPropertyAssigned": "Mülke bağlı değil",
+  "callTenant": "Kiracıyı ara",
+  "emailTenant": "Kiracıya e-posta gönder",
+  "scheduleMeeting": "Toplantı planla",
   "status": {
     "assigned": "Mülke Bağlı",
     "unassigned": "Mülke Bağlı Değil"

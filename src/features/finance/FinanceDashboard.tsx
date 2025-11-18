@@ -11,7 +11,6 @@ import { FinanceAnalytics } from './components/FinanceAnalytics';
 import { TransactionDialog } from './components/TransactionDialog';
 import { useFinanceData } from './hooks/useFinanceData';
 import { useFinanceActions } from './hooks/useFinanceActions';
-import { useFinanceAutomation } from './hooks/useFinanceAutomation';
 import type { FinancialTransaction, TransactionFilters } from '../../types/financial';
 
 type TabValue = 'overview' | 'transactions' | 'analytics';
@@ -52,20 +51,10 @@ export const FinanceDashboard = () => {
     transactions: financeData.transactions,
     filters,
   });
-  const automation = useFinanceAutomation({
-    onDataChange: async () => {
-      await financeData.loadData();
-      await financeData.loadTransactions();
-    },
-  });
 
   // Load initial data
   useEffect(() => {
     financeData.loadData();
-    // Run automation in background (non-blocking)
-    automation.runAutomation().catch(err => {
-      console.error('Automation failed (non-critical):', err);
-    });
   }, []);
 
   // Reload transactions when filters change
@@ -103,27 +92,12 @@ export const FinanceDashboard = () => {
     setSelectedTransaction(null);
   };
 
-  const handleRefresh = () => {
-    financeData.loadData();
-    if (activeTab === 'analytics' && analyticsLoaded) {
-      financeData.loadAnalytics();
-    }
-  };
-
   return (
     <MainLayout title={t('finance:pageTitle')}>
       <PageContainer>
-        {/* Header */}
-        <FinanceHeader
-          onAddTransaction={handleAddTransaction}
-          onRefresh={handleRefresh}
-          onRunAutomation={() => automation.runAutomation(true)}
-          loading={financeData.loading}
-          runningAutomation={automation.runningAutomation}
-        />
-
-        {/* Tab Navigation */}
-        <div className="space-y-6">
+        {/* Header with Tabs and Buttons in same row */}
+        <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+          {/* Left: Tabs */}
           <AnimatedTabs
             tabs={[
               {
@@ -146,6 +120,17 @@ export const FinanceDashboard = () => {
             onChange={(tabId) => setActiveTab(tabId as TabValue)}
           />
 
+          {/* Right: Action Buttons */}
+          <FinanceHeader
+            onAddTransaction={handleAddTransaction}
+            onExport={financeActions.handleExport}
+            loading={financeData.loading}
+          />
+        </div>
+
+        {/* Tab Content */}
+        <div className="space-y-6">
+
           {/* Overview Tab */}
           {activeTab === 'overview' && (
             <div className="mt-6">
@@ -164,7 +149,6 @@ export const FinanceDashboard = () => {
                 categories={financeData.categories}
                 filters={filters}
                 onFiltersChange={setFilters}
-                onExport={financeActions.handleExport}
                 onEdit={handleEditTransaction}
                 onDelete={financeActions.handleDeleteTransaction}
                 loading={financeData.loading}
@@ -178,9 +162,6 @@ export const FinanceDashboard = () => {
               <FinanceAnalytics
                 ratios={financeData.ratios}
                 yearlySummary={financeData.yearlySummary}
-                budgetComparison={financeData.budgetComparison}
-                topIncome={financeData.topIncome}
-                topExpense={financeData.topExpense}
                 loading={financeData.analyticsLoading}
                 onBillPaid={async () => {
                   await financeData.loadData();

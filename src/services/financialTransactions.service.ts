@@ -668,11 +668,28 @@ export const getMonthlyTrends = async (
   months: number = 6
 ): Promise<MonthlyTrend[]> => {
   const today = new Date();
+  const currentYear = today.getFullYear();
+  const currentMonth = today.getMonth(); // 0-indexed (0 = January, 10 = November)
 
   // Get all monthly summaries in parallel (much faster!)
   const monthPromises = Array.from({ length: months }, (_, i) => {
-    const date = new Date(today.getFullYear(), today.getMonth() - (months - 1 - i), 1);
-    const month = date.toISOString().slice(0, 7); // YYYY-MM
+    // Calculate the month offset from current month
+    // i=0 should be (months-1) months ago, i=(months-1) should be current month
+    const monthOffset = months - 1 - i;
+
+    // Calculate year and month
+    let targetMonth = currentMonth - monthOffset;
+    let targetYear = currentYear;
+
+    // Handle year rollover for negative months
+    while (targetMonth < 0) {
+      targetMonth += 12;
+      targetYear -= 1;
+    }
+
+    // Format as YYYY-MM
+    const month = `${targetYear}-${String(targetMonth + 1).padStart(2, '0')}`;
+
     return getMonthlySummary(month).then(summary => ({
       month,
       income: summary.total_income,
@@ -753,6 +770,7 @@ export const getFinancialDashboard = async (): Promise<FinancialDashboard> => {
     expenseBreakdown,
     trends,
     upcomingExpenses,
+    pendingCountResult,
   ] = await Promise.all([
     getMonthlySummary(currentMonth),
     getMonthlySummary(previousMonth),
@@ -761,7 +779,13 @@ export const getFinancialDashboard = async (): Promise<FinancialDashboard> => {
     getCategoryBreakdown(currentMonth + '-01', currentMonthEnd, 'expense'),
     getMonthlyTrends(6),
     getUpcomingRecurringExpenses(30),
+    supabase
+      .from('financial_transactions')
+      .select('*', { count: 'exact', head: true })
+      .eq('payment_status', 'pending'),
   ]);
+
+  const pendingTransactionsCount = pendingCountResult.count ?? 0;
 
   const ytdIncome = yearToDateTransactions
     .filter(t => t.type === 'income')
@@ -783,6 +807,7 @@ export const getFinancialDashboard = async (): Promise<FinancialDashboard> => {
     expense_by_category: expenseBreakdown,
     monthly_trends: trends,
     upcoming_expenses: upcomingExpenses,
+    pending_transactions_count: pendingTransactionsCount,
   };
 };
 

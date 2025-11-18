@@ -23,6 +23,7 @@ import {
 import { DollarSign, TrendingUp } from 'lucide-react';
 import { PropertyWithOwner } from '../../types';
 import { formatCurrency } from '../../lib/currency';
+import { useAuth } from '../../contexts/AuthContext';
 
 interface MarkAsSoldDialogProps {
   open: boolean;
@@ -50,6 +51,7 @@ export const MarkAsSoldDialog = ({
   loading = false,
 }: MarkAsSoldDialogProps) => {
   const { t } = useTranslation(['properties', 'common']);
+  const { commissionRate } = useAuth();
   const {
     register,
     handleSubmit,
@@ -81,7 +83,7 @@ export const MarkAsSoldDialog = ({
   const calculateCommission = () => {
     const price = parseFloat(salePrice || '0');
     if (isNaN(price) || price <= 0) return 0;
-    return price * 0.04; // 4% commission
+    return price * (commissionRate / 100);
   };
 
   return (

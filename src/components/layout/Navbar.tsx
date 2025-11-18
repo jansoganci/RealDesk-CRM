@@ -1,13 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Menu, Bell, Globe, CircleDollarSign } from 'lucide-react';
+import { Menu, Bell } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '../ui/dropdown-menu';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
-import { useAuth } from '../../contexts/AuthContext';
 
 interface NavbarProps {
   title: string;
@@ -16,7 +14,6 @@ interface NavbarProps {
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
   const { t } = useTranslation('navigation');
-  const { language, setLanguage, setCurrency } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
   const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
   const navigate = useNavigate();
@@ -26,14 +23,6 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
     const interval = setInterval(loadCounts, 60000);
     return () => clearInterval(interval);
   }, []);
-
-  const changeLanguage = (lng: string) => {
-    setLanguage(lng);
-  };
-
-  const changeCurrency = (cur: string) => {
-    setCurrency(cur);
-  };
 
   const loadCounts = async () => {
     try {
@@ -63,50 +52,21 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
           <h1 className={`text-xl font-semibold ${COLORS.gray.text900}`}>{title}</h1>
         </div>
 
-        <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <Globe className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => changeLanguage('en')}>
-                {language === 'en' && '✓ '}
-                {t('language.english')}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => changeLanguage('tr')}>
-                {language === 'tr' && '✓ '}
-                {t('language.turkish')}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="icon">
-                <CircleDollarSign className="h-5 w-5" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => changeCurrency('USD')}>USD</DropdownMenuItem>
-              <DropdownMenuItem onClick={() => changeCurrency('TRY')}>TRY</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-
-          <Button
-            variant="outline"
-            size="icon"
-            className="relative"
+        <div className="flex items-center gap-2">
+          {/* Notifications Button - Square (like StatCard icons) */}
+          {/* Mobile/Tablet: 44px for touch targets, Desktop: 40px for mouse */}
+          <button
+            className="h-11 w-11 md:h-10 md:w-10 relative flex items-center justify-center rounded-md border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             onClick={() => navigate('/reminders')}
+            aria-label={t('notifications')}
           >
-            <Bell className="h-5 w-5" />
+            <Bell className="h-6 w-6" />
             {(reminderCount + unreadMatchesCount) > 0 && (
-              <Badge className={`absolute -top-2 -right-2 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white`}>
+              <Badge className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white rounded-full`}>
                 {(reminderCount + unreadMatchesCount) > 9 ? '9+' : (reminderCount + unreadMatchesCount)}
               </Badge>
             )}
-          </Button>
+          </button>
         </div>
       </div>
     </header>

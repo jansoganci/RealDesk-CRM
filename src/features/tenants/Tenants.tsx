@@ -283,20 +283,7 @@ export const Tenants = () => {
 
             {/* Body */}
             <div className="space-y-2">
-              {tenant.phone && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-                  <span className={COLORS.gray.text600}>{tenant.phone}</span>
-                </div>
-              )}
-              
-              {tenant.email && (
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <Mail className={`h-4 w-4 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span className={`${COLORS.gray.text600} truncate`}>{tenant.email}</span>
-                </div>
-              )}
-
+              {/* Property Info */}
               {tenant.property ? (
                 <div className="flex items-center gap-2 text-sm min-w-0">
                   <Building2 className={`h-4 w-4 ${COLORS.primary.text} flex-shrink-0`} />
@@ -308,6 +295,28 @@ export const Tenants = () => {
                   <span>{t('noPropertyAssigned')}</span>
                 </div>
               )}
+
+              {/* Contact Actions - Clickable Icons */}
+              <div className="flex items-center gap-2">
+                {tenant.phone && (
+                  <a
+                    href={`tel:${tenant.phone}`}
+                    className="h-11 w-11 flex items-center justify-center rounded-md border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 transition-colors"
+                    aria-label={t('callTenant')}
+                  >
+                    <Phone className="h-5 w-5" />
+                  </a>
+                )}
+                {tenant.email && (
+                  <a
+                    href={`mailto:${tenant.email}`}
+                    className="h-11 w-11 flex items-center justify-center rounded-md border border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-400 transition-colors"
+                    aria-label={t('emailTenant')}
+                  >
+                    <Mail className="h-5 w-5" />
+                  </a>
+                )}
+              </div>
             </div>
 
             {/* Footer - Actions */}

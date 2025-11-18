@@ -1,8 +1,9 @@
 {
   "title": "Property Owners",
-  "searchPlaceholder": "Search owners...",
+  "searchPlaceholder": "Search by name, phone, email...",
   "addOwnerButton": "Add Owner",
-  "propertyCount": "{{count}} propert{{count === 1 ? 'y' : 'ies'}}",
+  "propertyCount": "{{count}} properties",
+  "propertyCount_one": "{{count}} property",
   "table": {
     "name": "Name",
     "contact": "Contact",

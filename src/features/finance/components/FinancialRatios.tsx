@@ -4,8 +4,6 @@ import { Skeleton } from '../../../components/ui/skeleton';
 import {
   TrendingUp,
   TrendingDown,
-  Target,
-  PieChart,
   Activity,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
@@ -38,8 +36,8 @@ export const FinancialRatiosComponent = ({
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[1, 2, 3, 4].map(i => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {[1, 2].map(i => (
           <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -77,34 +75,6 @@ export const FinancialRatiosComponent = ({
       trendColor: ratios.profit_margin >= 0 ? 'text-green-600' : 'text-red-600',
     },
     {
-      title: t('finance:analytics.expenseRatio'),
-      value: formatPercentage(ratios.expense_ratio),
-      description: t('finance:analytics.expenseRatioDesc'),
-      icon: PieChart,
-      iconBg:
-        ratios.expense_ratio <= 50
-          ? 'bg-emerald-600'
-          : ratios.expense_ratio <= 70
-          ? 'bg-amber-600'
-          : 'bg-red-600',
-      trend: ratios.expense_ratio <= 60 ? 'down' : 'up',
-      trendColor: ratios.expense_ratio <= 60 ? 'text-green-600' : 'text-red-600',
-    },
-    {
-      title: t('finance:analytics.budgetEfficiency'),
-      value: formatPercentage(ratios.budget_efficiency),
-      description: t('finance:analytics.budgetEfficiencyDesc'),
-      icon: Target,
-      iconBg:
-        ratios.budget_efficiency >= 10
-          ? 'bg-emerald-600'
-          : ratios.budget_efficiency >= 0
-          ? 'bg-blue-600'
-          : 'bg-red-600',
-      trend: ratios.budget_efficiency >= 0 ? 'up' : 'down',
-      trendColor: ratios.budget_efficiency >= 0 ? 'text-green-600' : 'text-red-600',
-    },
-    {
       title: t('finance:analytics.cashFlowForecast'),
       value: formatCurrency(ratios.cash_flow_forecast_30d),
       description: t('finance:analytics.cashFlowForecastDesc'),
@@ -120,7 +90,7 @@ export const FinancialRatiosComponent = ({
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
       {kpis.map((kpi, index) => (
         <Card
           key={index}

@@ -84,5 +84,18 @@
       "title": "Mal Sahipleri",
       "noContact": "{{count}} iletişim bilgisi eksik"
     }
+  },
+  "exchangeRates": {
+    "title": "Döviz Kurları",
+    "description": "Güncel kurlar (USD bazlı)",
+    "refreshButton": "Yenile",
+    "refreshing": "Yenileniyor...",
+    "lastUpdated": "Son güncelleme",
+    "justNow": "Az önce",
+    "minutesAgo": "{{minutes}} dk önce",
+    "hoursAgo": "{{hours}} saat önce",
+    "daysAgo": "{{days}} gün önce",
+    "refreshSuccess": "Kurlar başarıyla güncellendi",
+    "refreshError": "Kurlar güncellenemedi"
   }
 }

@@ -1,10 +1,13 @@
 {
   "title": "Tenants",
-  "searchPlaceholder": "Search tenants...",
+  "searchPlaceholder": "Search by name, phone, email...",
   "filterPlaceholder": "Filter by status",
   "addTenantButton": "Add Tenant & Contract",
   "noProperty": "No property",
   "noPropertyAssigned": "No property assigned",
+  "callTenant": "Call tenant",
+  "emailTenant": "Email tenant",
+  "scheduleMeeting": "Schedule meeting",
   "status": {
     "assigned": "Assigned",
     "unassigned": "Unassigned"

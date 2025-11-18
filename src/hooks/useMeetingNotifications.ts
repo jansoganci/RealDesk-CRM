@@ -7,12 +7,12 @@ import { formatDistanceToNow } from 'date-fns';
 const NOTIFICATION_CHECK_INTERVAL = 60 * 1000; // 1 minute
 
 export const useMeetingNotifications = () => {
-  const { user } = useAuth();
+  const { user, meetingReminderMinutes } = useAuth();
   const [permission, setPermission] = useState(Notification.permission);
   const notifiedMeetingIds = useRef(new Set<string>());
 
-  // TODO: Fetch this preference from AuthContext/user_preferences
-  const reminderMinutes = 30; 
+  // Use user's meeting reminder preference from AuthContext
+  const reminderMinutes = meetingReminderMinutes; 
 
   useEffect(() => {
     if (!user) return;

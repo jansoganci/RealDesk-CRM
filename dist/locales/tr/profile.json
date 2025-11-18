@@ -20,6 +20,8 @@
     "meetingReminder": "Toplantı Hatırlatıcıları",
     "meetingReminderPlaceholder": "Hatırlatma zamanı seçin",
     "meetingReminderDescription": "Toplantılardan önce bildirim alın",
+    "commissionRate": "Komisyon Oranı",
+    "commissionRateDescription": "Satış işlemlerinde uygulanacak varsayılan komisyon oranı",
     "notSet": "Ayarlanmadı",
     "notAvailable": "Mevcut değil"
   },
@@ -57,11 +59,27 @@
     "languageRequired": "Dil gereklidir",
     "currencyRequired": "Para birimi gereklidir",
     "reminderRequired": "Toplantı hatırlatıcısı gereklidir",
-    "reminderInvalid": "Geçersiz hatırlatma zamanı"
+    "reminderInvalid": "Geçersiz hatırlatma zamanı",
+    "commissionRateRequired": "Komisyon oranı gereklidir",
+    "commissionRateMin": "Komisyon oranı en az %0.1 olmalıdır",
+    "commissionRateMax": "Komisyon oranı %20'yi geçmemelidir"
   },
   "security": {
     "changePasswordTitle": "Şifre Değiştir",
     "changePasswordDescription": "Hesap şifrenizi güncelleyin",
     "comingSoon": "Yakında"
+  },
+  "exchangeRates": {
+    "title": "Döviz Kurları",
+    "description": "Güncel döviz kurları (USD bazlı)",
+    "refreshButton": "Kurları Yenile",
+    "refreshing": "Yenileniyor...",
+    "lastUpdated": "Son Güncelleme",
+    "justNow": "Az önce",
+    "minutesAgo": "{{minutes}} dakika önce",
+    "hoursAgo": "{{hours}} saat önce",
+    "daysAgo": "{{days}} gün önce",
+    "refreshSuccess": "Döviz kurları başarıyla güncellendi",
+    "refreshError": "Döviz kurları güncellenemedi"
   }
 }

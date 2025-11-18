@@ -28,9 +28,10 @@ import { ownersService } from '../../lib/serviceProxy';
 import { photosService } from '../../lib/serviceProxy';
 import { PhotoManagement } from '../../components/properties/PhotoManagement';
 import { PhotoGallery } from '../../components/properties/PhotoGallery';
-import { Images } from 'lucide-react';
+import { Images, TrendingUp } from 'lucide-react';
 import { getRentalPropertySchema, getSalePropertySchema } from './propertySchemas';
 import { PropertyTypeSelector } from './PropertyTypeSelector';
+import { PropertyWithOwner } from '../../types';
 
 interface PropertyDialogProps {
   open: boolean;
@@ -38,6 +39,7 @@ interface PropertyDialogProps {
   property: Property | null;
   onSubmit: (data: any) => Promise<void>;
   loading?: boolean;
+  onMarkAsSold?: (property: PropertyWithOwner) => void;
 }
 
 export const PropertyDialog = ({
@@ -46,6 +48,7 @@ export const PropertyDialog = ({
   property,
   onSubmit,
   loading = false,
+  onMarkAsSold,
 }: PropertyDialogProps) => {
   const { t } = useTranslation(['properties', 'common']);
 
@@ -192,13 +195,42 @@ export const PropertyDialog = ({
   };
 
   const handleFormSubmit = async (data: PropertyFormData) => {
-    const cleanedData = {
-      ...data,
+    const isRental = (data as any).property_type === 'rental';
+    const isSale = (data as any).property_type === 'sale';
+
+    // Clean common fields
+    const cleanedData: any = {
+      property_type: data.property_type,
+      owner_id: data.owner_id,
+      address: data.address,
+      status: data.status,
       city: data.city?.trim() || undefined,
       district: data.district?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
       listing_url: data.listing_url?.trim() || undefined,
+      currency: data.currency,
     };
+
+    // Property type specific fields
+    if (isRental) {
+      cleanedData.rent_amount = (data as any).rent_amount || undefined;
+      // Remove sale-specific fields for rental properties
+      cleanedData.sale_price = undefined;
+      cleanedData.buyer_name = undefined;
+      cleanedData.buyer_phone = undefined;
+      cleanedData.buyer_email = undefined;
+      cleanedData.offer_amount = undefined;
+    } else if (isSale) {
+      cleanedData.sale_price = (data as any).sale_price || undefined;
+      // Clean buyer fields - empty strings become undefined
+      cleanedData.buyer_name = (data as any).buyer_name?.trim() || undefined;
+      cleanedData.buyer_phone = (data as any).buyer_phone?.trim() || undefined;
+      cleanedData.buyer_email = (data as any).buyer_email?.trim() || undefined;
+      cleanedData.offer_amount = (data as any).offer_amount || undefined;
+      // Remove rental-specific fields for sale properties
+      cleanedData.rent_amount = undefined;
+    }
+
     await typedOnSubmit(cleanedData);
   };
 
@@ -343,6 +375,26 @@ export const PropertyDialog = ({
               <p className={`text-sm ${COLORS.danger.text}`}>{errors.status.message}</p>
             )}
           </div>
+
+          {/* Mark as Sold Button - Only for sale properties with Available status */}
+          {property && 
+           propertyType === 'sale' && 
+           selectedStatus === 'Available' && 
+           !(property as any).sold_at && 
+           onMarkAsSold && (
+            <div className="pt-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => onMarkAsSold(property as PropertyWithOwner)}
+                disabled={loading}
+                className="w-full bg-amber-50 border-amber-300 hover:bg-amber-100 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-semibold"
+              >
+                <TrendingUp className="h-4 w-4 mr-2" />
+                {t('markAsSold.button')}
+              </Button>
+            </div>
+          )}
 
           {/* Conditional Price Fields based on Property Type */}
           {propertyType === 'rental' ? (

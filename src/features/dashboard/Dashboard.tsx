@@ -6,14 +6,20 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { Button } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { StatCard } from '../../components/dashboard/StatCard';
-import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign, UserCheck, Package, UserPlus, Search, TrendingUp, ShoppingCart } from 'lucide-react';
+import { Building2, Chrome as Home, Users, FileText, CircleAlert as AlertCircle, Bell, ArrowRight, Calendar, DollarSign, UserCheck, Package, UserPlus, Search, TrendingUp, RefreshCw } from 'lucide-react';
 import { propertiesService, ownersService, tenantsService, contractsService, remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { ReminderWithDetails } from '../../lib/serviceProxy';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 import { COLORS } from '@/config/colors';
+import { refreshExchangeRates, getCurrentExchangeRates, getExchangeRatesTimestamp, initializeExchangeRates } from '../../lib/currency';
+import { toast } from 'sonner';
+import { QuickAddButton } from '../quick-add';
 
 export const Dashboard = () => {
+  const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
+  const [lastUpdated, setLastUpdated] = useState<number | null>(null);
+  const [refreshingRates, setRefreshingRates] = useState(false);
   const [stats, setStats] = useState({
     totalProperties: 0,
     occupied: 0,
@@ -67,7 +73,44 @@ export const Dashboard = () => {
 
   useEffect(() => {
     loadStats();
+    loadExchangeRates();
   }, []);
+
+  const loadExchangeRates = async () => {
+    await initializeExchangeRates();
+    setExchangeRates(getCurrentExchangeRates());
+    setLastUpdated(getExchangeRatesTimestamp());
+  };
+
+  const handleRefreshRates = async () => {
+    setRefreshingRates(true);
+    try {
+      await refreshExchangeRates();
+      setExchangeRates(getCurrentExchangeRates());
+      setLastUpdated(getExchangeRatesTimestamp());
+      toast.success(t('exchangeRates.refreshSuccess'));
+    } catch (error) {
+      console.error('Failed to refresh exchange rates:', error);
+      toast.error(t('exchangeRates.refreshError'));
+    } finally {
+      setRefreshingRates(false);
+    }
+  };
+
+  const formatLastUpdated = (timestamp: number | null): string => {
+    if (!timestamp) return t('exchangeRates.justNow');
+    
+    const now = Date.now();
+    const diff = now - timestamp;
+    const minutes = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (minutes < 1) return t('exchangeRates.justNow');
+    if (minutes < 60) return t('exchangeRates.minutesAgo', { minutes });
+    if (hours < 24) return t('exchangeRates.hoursAgo', { hours });
+    return t('exchangeRates.daysAgo', { days });
+  };
 
   const loadStats = async () => {
     try {
@@ -128,6 +171,71 @@ export const Dashboard = () => {
   return (
     <MainLayout title="Dashboard">
       <PageContainer>
+        {/* Exchange Rates - Horizontal Bar (Full Width) */}
+        <Card className="mb-6 shadow-sm border border-gray-200 bg-white">
+          <CardContent className="py-3 px-4">
+            <div className="flex items-center justify-between gap-6">
+              {/* Left: Title */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                <DollarSign className="h-4 w-4 text-gray-600" />
+                <span className="text-sm font-medium text-gray-900">
+                  {t('exchangeRates.title')}
+                </span>
+              </div>
+
+              {/* Center: Rates */}
+              <div className="flex items-center gap-4 flex-1 justify-center">
+                <div className="text-center">
+                  <div className="text-xs text-gray-500 mb-0.5">USD</div>
+                  <div className="text-base font-semibold text-gray-900">1.00</div>
+                </div>
+                <div className="w-px h-8 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500 mb-0.5">TRY</div>
+                  <div className="text-base font-semibold text-gray-900">
+                    {exchangeRates.TRY?.toFixed(2) || '42.30'}
+                  </div>
+                </div>
+                <div className="w-px h-8 bg-gray-200"></div>
+                <div className="text-center">
+                  <div className="text-xs text-gray-500 mb-0.5">EUR</div>
+                  <div className="text-base font-semibold text-gray-900">
+                    {exchangeRates.EUR?.toFixed(2) || '49.09'}
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Last Updated & Refresh */}
+              <div className="flex items-center gap-3 flex-shrink-0">
+                {lastUpdated && (
+                  <span className="text-xs text-gray-400 hidden sm:inline">
+                    {t('exchangeRates.lastUpdated')}: {formatLastUpdated(lastUpdated)}
+                  </span>
+                )}
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRefreshRates}
+                  disabled={refreshingRates}
+                  className="h-7 w-7 p-0 hover:bg-gray-100"
+                  title={t('exchangeRates.refreshButton')}
+                >
+                  {refreshingRates ? (
+                    <RefreshCw className="h-3.5 w-3.5 animate-spin text-gray-600" />
+                  ) : (
+                    <RefreshCw className="h-3.5 w-3.5 text-gray-600" />
+                  )}
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Add Button */}
+        <div className="flex justify-end mb-6">
+          <QuickAddButton onSuccess={loadStats} />
+        </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 animate-slide-up">
           <StatCard
             title={t('stats.totalProperties')}
@@ -202,195 +310,86 @@ export const Dashboard = () => {
           />
         </div>
 
-        {/* Rental Properties Stats */}
-        <div>
-          <h3 className={`text-xl font-bold ${COLORS.gray.text900} mb-4`}>{t('propertiesSummary.rentalPropertiesTitle')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up">
-            <StatCard
-              title={t('stats.rentalProperties')}
-              value={stats.rental.total}
-              description={t('stats.rentalPropertiesDescription')}
-              icon={<Home className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="blue"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.rentalEmpty')}
-              value={stats.rental.empty}
-              description={t('stats.rentalEmptyDescription')}
-              icon={<Package className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="amber"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.rentalOccupied')}
-              value={stats.rental.occupied}
-              description={t('stats.rentalOccupiedDescription')}
-              icon={<Home className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="emerald"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.rentalInquiries')}
-              value={stats.rentalInquiries}
-              description={t('stats.rentalInquiriesDescription')}
-              icon={<Search className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="blue"
-              loading={loading}
-            />
-          </div>
-        </div>
-
-        {/* Sale Properties Stats */}
-        <div>
-          <h3 className={`text-xl font-bold ${COLORS.gray.text900} mb-4`}>{t('propertiesSummary.salePropertiesTitle')}</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 animate-slide-up">
-            <StatCard
-              title={t('stats.saleProperties')}
-              value={stats.sale.total}
-              description={t('stats.salePropertiesDescription')}
-              icon={<Building2 className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="gold"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.saleAvailable')}
-              value={stats.sale.available}
-              description={t('stats.saleAvailableDescription')}
-              icon={<TrendingUp className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="emerald"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.saleUnderOffer')}
-              value={stats.sale.underOffer}
-              description={t('stats.saleUnderOfferDescription')}
-              icon={<ShoppingCart className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="amber"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.saleSold')}
-              value={stats.sale.sold}
-              description={t('stats.saleSoldDescription')}
-              icon={<DollarSign className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="emerald"
-              loading={loading}
-            />
-
-            <StatCard
-              title={t('stats.saleInquiries')}
-              value={stats.saleInquiries}
-              description={t('stats.saleInquiriesDescription')}
-              icon={<Search className={`h-5 w-5 ${COLORS.text.white}`} />}
-              iconColor="gold"
-              loading={loading}
-            />
-          </div>
-        </div>
-
-        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-gray-200/50 backdrop-blur-sm bg-white/90 animate-fade-in">
-          <CardHeader>
-            <CardTitle className="text-slate-900">
-              {t('propertiesSummary.title')}
-            </CardTitle>
-            <CardDescription className="text-slate-600">
-              {t('propertiesSummary.description')}
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              {/* Rental Properties Section */}
-              <div>
-                <h4 className={`text-sm font-semibold ${COLORS.gray.text700} mb-3 flex items-center gap-2`}>
-                  <Home className="h-4 w-4 text-blue-600" />
-                  {t('propertiesSummary.rentalPropertiesTitle')}
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <Package className="h-4 w-4 text-amber-600" />
-                      {t('propertiesSummary.rentalEmpty')}
-                    </span>
-                    <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.rental.empty}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <Home className="h-4 w-4 text-emerald-600" />
-                      {t('propertiesSummary.rentalOccupied')}
-                    </span>
-                    <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.rental.occupied}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-slate-600" />
-                      {t('propertiesSummary.rentalInactive')}
-                    </span>
-                    <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.rental.inactive}
-                    </Badge>
-                  </div>
+        {/* Properties by Type - Compact View */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          {/* Rental Properties - Compact */}
+          <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 backdrop-blur-sm bg-gradient-to-br from-blue-50 to-slate-50 animate-fade-in">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-blue-600 rounded-lg shadow-md">
+                  <Home className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-bold text-slate-900">
+                    {t('propertiesSummary.rentalPropertiesTitle')}
+                  </CardTitle>
+                  <CardDescription className="text-sm text-slate-600">
+                    {t('stats.rentalPropertiesDescription')}
+                  </CardDescription>
                 </div>
               </div>
-
-              {/* Sale Properties Section */}
-              <div>
-                <h4 className={`text-sm font-semibold ${COLORS.gray.text700} mb-3 flex items-center gap-2`}>
-                  <Building2 className="h-4 w-4 text-amber-600" />
-                  {t('propertiesSummary.salePropertiesTitle')}
-                </h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <TrendingUp className="h-4 w-4 text-emerald-600" />
-                      {t('propertiesSummary.saleAvailable')}
-                    </span>
-                    <Badge className={`${COLORS.status.occupied.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.sale.available}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <ShoppingCart className="h-4 w-4 text-amber-600" />
-                      {t('propertiesSummary.saleUnderOffer')}
-                    </span>
-                    <Badge className={`${COLORS.status.empty.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.sale.underOffer}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <DollarSign className="h-4 w-4 text-green-600" />
-                      {t('propertiesSummary.saleSold')}
-                    </span>
-                    <Badge className={`bg-gradient-to-r from-green-500 to-emerald-600 ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.sale.sold}
-                    </Badge>
-                  </div>
-                  <div className="flex justify-between items-center p-3 rounded-lg bg-gradient-to-r from-slate-50 to-gray-50 border border-slate-200/50 transition-all hover:shadow-md">
-                    <span className="text-slate-800 font-medium flex items-center gap-2">
-                      <Building2 className="h-4 w-4 text-slate-600" />
-                      {t('propertiesSummary.saleInactive')}
-                    </span>
-                    <Badge className={`${COLORS.status.inactive.gradient} ${COLORS.text.white} shadow-md px-3 py-1`}>
-                      {loading ? '-' : stats.sale.inactive}
-                    </Badge>
-                  </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-white/70 border border-blue-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.rentalProperties')}</div>
+                  <div className="text-2xl font-bold text-slate-900">{loading ? '-' : stats.rental.total}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-emerald-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.rentalOccupied')}</div>
+                  <div className="text-2xl font-bold text-emerald-700">{loading ? '-' : stats.rental.occupied}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-amber-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.rentalEmpty')}</div>
+                  <div className="text-2xl font-bold text-amber-700">{loading ? '-' : stats.rental.empty}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-blue-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.rentalInquiries')}</div>
+                  <div className="text-2xl font-bold text-blue-700">{loading ? '-' : stats.rentalInquiries}</div>
                 </div>
               </div>
-            </div>
-          </CardContent>
-        </Card>
+            </CardContent>
+          </Card>
+
+          {/* Sale Properties - Compact */}
+          <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-amber-200/50 backdrop-blur-sm bg-gradient-to-br from-amber-50 to-yellow-50 animate-fade-in">
+            <CardHeader className="pb-3">
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-amber-600 rounded-lg shadow-md">
+                  <TrendingUp className="h-5 w-5 text-white" />
+                </div>
+                <div>
+                  <CardTitle className="text-lg font-bold text-slate-900">
+                    {t('propertiesSummary.salePropertiesTitle')}
+                  </CardTitle>
+                  <CardDescription className="text-sm text-slate-600">
+                    {t('stats.salePropertiesDescription')}
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-white/70 border border-amber-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.saleProperties')}</div>
+                  <div className="text-2xl font-bold text-slate-900">{loading ? '-' : stats.sale.total}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-emerald-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.saleAvailable')}</div>
+                  <div className="text-2xl font-bold text-emerald-700">{loading ? '-' : stats.sale.available}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-amber-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.saleSold')}</div>
+                  <div className="text-2xl font-bold text-green-700">{loading ? '-' : stats.sale.sold}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-white/70 border border-amber-200/50">
+                  <div className="text-xs text-slate-600 mb-1">{t('stats.saleInquiries')}</div>
+                  <div className="text-2xl font-bold text-amber-700">{loading ? '-' : stats.saleInquiries}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {reminders.length > 0 && (
           <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-amber-200/50 bg-gradient-to-br from-amber-50 to-yellow-50 backdrop-blur-sm animate-fade-in">

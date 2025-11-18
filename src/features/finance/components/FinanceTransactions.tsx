@@ -1,6 +1,5 @@
 import { FinanceFiltersBar } from './FinanceFiltersBar';
 import { TransactionsTable } from './TransactionsTable';
-import type { ExportFormat } from './FinanceFiltersBar';
 import type {
   FinancialTransaction,
   TransactionFilters,
@@ -13,7 +12,6 @@ interface FinanceTransactionsProps {
   categories: ExpenseCategory[];
   filters: TransactionFilters;
   onFiltersChange: (filters: TransactionFilters) => void;
-  onExport: (format: ExportFormat) => Promise<void>;
   onEdit: (transaction: FinancialTransaction) => void;
   onDelete: (id: string) => Promise<void>;
   loading: boolean;
@@ -24,7 +22,6 @@ export const FinanceTransactions = ({
   categories,
   filters,
   onFiltersChange,
-  onExport,
   onEdit,
   onDelete,
   loading,
@@ -38,7 +35,6 @@ export const FinanceTransactions = ({
         filters={filters}
         onFiltersChange={onFiltersChange}
         categories={categories}
-        onExport={onExport}
         loading={loading}
       />
 

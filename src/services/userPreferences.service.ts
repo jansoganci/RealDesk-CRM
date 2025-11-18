@@ -32,6 +32,7 @@ class UserPreferencesService {
         meeting_reminder_minutes: 30,
         full_name: null,
         phone_number: null,
+        commission_rate: 4.0,
       };
     }
 

@@ -16,7 +16,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { format } from 'date-fns';
 import { getToday, daysDifference } from '../../lib/dates';
-import { MapPin, Building2, User, Images, UserPlus, DollarSign, Calendar, AlertCircle, ExternalLink, TrendingUp, Home } from 'lucide-react';
+import { MapPin, Building2, User, Images, DollarSign, Calendar, AlertCircle, ExternalLink, TrendingUp, Home } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -25,7 +25,7 @@ import { getPropertySchema } from './propertySchemas';
 
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
-  const { currency } = useAuth();
+  const { currency, commissionRate } = useAuth();
   const propertySchema = getPropertySchema(t);
   type PropertyFormData = z.infer<typeof propertySchema>;
 
@@ -184,7 +184,7 @@ export const Properties = () => {
         saleCurrency
       );
 
-      const commission = salePrice * 0.04;
+      const commission = salePrice * (commissionRate / 100);
       toast.success(
         t('markAsSold.successToast', {
           commission: formatCurrency(commission, saleCurrency),
@@ -307,84 +307,113 @@ export const Properties = () => {
         }}
         renderTableHeaders={() => (
           <>
-            <TableHead>{t('properties:table.address')}</TableHead>
-            <TableHead>{t('properties:table.location')}</TableHead>
-            <TableHead>{t('properties:table.owner')}</TableHead>
-            <TableHead>{t('properties:table.tenant')}</TableHead>
-            <TableHead>{t('properties:table.price')}</TableHead>
-            <TableHead className="whitespace-nowrap">{t('properties:table.contractEndDate')}</TableHead>
+            {/* Address - Always visible */}
+            <TableHead>
+              <div className="flex items-center gap-2">
+                <Building2 className={`h-4 w-4 ${COLORS.primary.text}`} />
+                <span>{t('properties:table.address')}</span>
+              </div>
+            </TableHead>
+            {/* Location - Hidden on tablet, visible on laptop+ */}
+            <TableHead className="hidden lg:table-cell">
+              <div className="flex items-center gap-2">
+                <MapPin className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                <span>{t('properties:table.location')}</span>
+              </div>
+            </TableHead>
+            {/* Owner - Always visible */}
+            <TableHead>
+              <div className="flex items-center gap-2">
+                <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                <span>{t('properties:table.owner')}</span>
+              </div>
+            </TableHead>
+            {/* Tenant - Hidden on tablet/laptop, visible on desktop */}
+            <TableHead className="hidden xl:table-cell">
+              <div className="flex items-center gap-2">
+                <User className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                <span>{t('properties:table.tenant')}</span>
+              </div>
+            </TableHead>
+            {/* Price - Always visible */}
+            <TableHead>
+              <div className="flex items-center gap-2">
+                <DollarSign className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                <span>{t('properties:table.price')}</span>
+              </div>
+            </TableHead>
+            {/* Contract End - Hidden on tablet, visible on laptop+ */}
+            <TableHead className="hidden lg:table-cell whitespace-nowrap">
+              <div className="flex items-center gap-2">
+                <Calendar className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+                <span>{t('properties:table.contractEndDate')}</span>
+              </div>
+            </TableHead>
+            {/* Status - Always visible */}
             <TableHead>{t('properties:table.status')}</TableHead>
+            {/* Actions - Always visible */}
             <TableHead className="text-right">{t('properties:table.actions')}</TableHead>
           </>
         )}
         renderTableRow={(property) => (
           <TableRow>
             <TableCell>
-              <div className="flex items-start gap-2 min-w-0">
-                <Building2 className={`h-4 w-4 ${COLORS.primary.text} mt-0.5 flex-shrink-0`} />
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <span className={`font-medium truncate max-w-[200px] md:max-w-none`}>
-                      {property.address}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 min-w-0">
+                  <span className={`font-medium truncate max-w-[200px] md:max-w-none`}>
+                    {property.address}
+                  </span>
+                  {property.photos && property.photos.length > 0 && (
+                    <span className={`inline-flex items-center gap-1 text-xs ${COLORS.gray.text500} flex-shrink-0`}>
+                      <Images className="h-3 w-3" />
+                      {t('photos', { count: property.photos.length })}
                     </span>
-                    {property.photos && property.photos.length > 0 && (
-                      <span className={`inline-flex items-center gap-1 text-xs ${COLORS.gray.text500} flex-shrink-0`}>
-                        <Images className="h-3 w-3" />
-                        {t('photos', { count: property.photos.length })}
-                      </span>
-                    )}
-                    {property.listing_url && property.listing_url.trim() !== '' && (
-                      <a
-                        href={property.listing_url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 transition-colors text-blue-600 hover:text-blue-700 cursor-pointer flex-shrink-0"
-                        title={t('properties:table.viewListing')}
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={t('properties:table.viewListing')}
-                      >
-                        <ExternalLink className="h-4 w-4 flex-shrink-0" />
-                      </a>
-                    )}
-                  </div>
-                  {property.notes && (
-                    <div className={`text-xs ${COLORS.gray.text500} mt-1 line-clamp-1`}>
-                      {property.notes}
-                    </div>
+                  )}
+                  {property.listing_url && property.listing_url.trim() !== '' && (
+                    <a
+                      href={property.listing_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 transition-colors text-blue-600 hover:text-blue-700 cursor-pointer flex-shrink-0"
+                      title={t('properties:table.viewListing')}
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={t('properties:table.viewListing')}
+                    >
+                      <ExternalLink className="h-4 w-4 flex-shrink-0" />
+                    </a>
                   )}
                 </div>
+                {property.notes && (
+                  <div className={`text-xs ${COLORS.gray.text500} mt-1 line-clamp-1`}>
+                    {property.notes}
+                  </div>
+                )}
               </div>
             </TableCell>
-            <TableCell>
+            {/* Location - Hidden on tablet, visible on laptop+ */}
+            <TableCell className="hidden lg:table-cell">
               {property.city || property.district ? (
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <MapPin className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span className={`${COLORS.gray.text600} truncate max-w-[150px] md:max-w-none`}>
-                    {[property.city, property.district].filter(Boolean).join(', ')}
-                  </span>
-                </div>
+                <span className={`${COLORS.gray.text600} text-sm truncate max-w-[150px] md:max-w-none block`}>
+                  {[property.city, property.district].filter(Boolean).join(', ')}
+                </span>
               ) : (
                 <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
               )}
             </TableCell>
+            {/* Owner - Always visible */}
             <TableCell>
               {property.owner ? (
-                <div className="flex items-center gap-2 text-sm">
-                  <User className={`h-3 w-3 ${COLORS.muted.textLight}`} />
-                  <span className={COLORS.gray.text700}>{property.owner.name}</span>
-                </div>
+                <span className={`${COLORS.gray.text700} text-sm`}>{property.owner.name}</span>
               ) : (
                 <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
               )}
             </TableCell>
-            <TableCell>
+            {/* Tenant - Hidden on tablet/laptop, visible on desktop */}
+            <TableCell className="hidden xl:table-cell">
               {property.status === 'Inactive' ? (
                 <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.inactive')}</span>
               ) : property.activeTenant ? (
-                <div className="flex items-center gap-2 text-sm">
-                  <User className={`h-3 w-3 ${COLORS.muted.textLight}`} />
-                  <span className={COLORS.gray.text700}>{property.activeTenant.name}</span>
-                </div>
+                <span className={`${COLORS.gray.text700} text-sm`}>{property.activeTenant.name}</span>
               ) : (
                 <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noTenant')}</span>
               )}
@@ -405,20 +434,17 @@ export const Properties = () => {
                     return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noRent')}</span>;
                   }
                   return (
-                    <div className="flex items-center gap-2 text-sm">
-                      <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                      <span className={COLORS.gray.text700}>
-                        {formatCurrency(
-                          convertCurrency(
-                            property.activeContract.rent_amount,
-                            property.activeContract.currency || 'USD',
-                            currency || 'USD'
-                          ),
+                    <span className={`${COLORS.gray.text700} text-sm`}>
+                      {formatCurrency(
+                        convertCurrency(
+                          property.activeContract.rent_amount,
+                          property.activeContract.currency || 'USD',
                           currency || 'USD'
-                        )}
-                        {t('properties:table.perMonth')}
-                      </span>
-                    </div>
+                        ),
+                        currency || 'USD'
+                      )}
+                      {t('properties:table.perMonth')}
+                    </span>
                   );
                 } else if (isSale) {
                   // Show sale price
@@ -427,31 +453,28 @@ export const Properties = () => {
                     return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
                   }
                   return (
-                    <div className="flex items-center gap-2 text-sm">
-                      <DollarSign className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                      <span className={COLORS.gray.text700}>
-                        {formatCurrency(
-                          convertCurrency(
-                            salePrice,
-                            propertyTyped.currency || 'USD',
-                            currency || 'USD'
-                          ),
+                    <span className={`${COLORS.gray.text700} text-sm`}>
+                      {formatCurrency(
+                        convertCurrency(
+                          salePrice,
+                          propertyTyped.currency || 'USD',
                           currency || 'USD'
-                        )}
-                      </span>
-                    </div>
+                        ),
+                        currency || 'USD'
+                      )}
+                    </span>
                   );
                 }
 
                 return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
               })()}
             </TableCell>
-            <TableCell>
+            {/* Contract End - Hidden on tablet, visible on laptop+ */}
+            <TableCell className="hidden lg:table-cell">
               {property.status === 'Inactive' || !property.activeContract?.end_date ? (
                 <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noContract')}</span>
               ) : (
                 <div className="flex items-center gap-2 text-sm">
-                  <Calendar className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
                   <span className={COLORS.gray.text600}>
                     {format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}
                   </span>
@@ -469,6 +492,7 @@ export const Properties = () => {
                 </div>
               )}
             </TableCell>
+            {/* Status - Always visible */}
             <TableCell>
               {getStatusBadge(property.status)}
             </TableCell>
@@ -476,24 +500,12 @@ export const Properties = () => {
               <div className="flex items-center justify-end gap-2">
                 {property.status === 'Empty' && (
                   <Button
-                    variant="outline"
+                    variant="secondary"
                     size="sm"
                     onClick={() => handleAddTenantToProperty(property.id)}
-                    className="text-xs"
+                    className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
                   >
-                    <UserPlus className="h-3 w-3 mr-1" />
-                    {t('addTenantButton')}
-                  </Button>
-                )}
-                {property.status !== 'Inactive' && !property.sold_at && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleMarkAsSoldClick(property)}
-                    className="text-xs bg-amber-50 border-amber-300 hover:bg-amber-100 hover:border-amber-400 text-amber-700 hover:text-amber-800"
-                  >
-                    <TrendingUp className="h-3 w-3 mr-1" />
-                    {t('markAsSold.button')}
+                    + Tenant
                   </Button>
                 )}
                 <TableActionButtons
@@ -669,24 +681,12 @@ export const Properties = () => {
             <div className="flex flex-col gap-2.5 pt-1">
               {property.status === 'Empty' && (
                 <Button
-                  variant="outline"
-                  size="sm"
+                  variant="secondary"
+                  size="default"
                   onClick={() => handleAddTenantToProperty(property.id)}
-                  className="w-full justify-start border-emerald-300 hover:bg-emerald-50 hover:border-emerald-400 text-emerald-700 hover:text-emerald-800 font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="w-full justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all shadow-md hover:shadow-lg"
                 >
-                  <UserPlus className="h-4 w-4 mr-2" />
-                  {t('properties.addTenantButton')}
-                </Button>
-              )}
-              {property.status !== 'Inactive' && !property.sold_at && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handleMarkAsSoldClick(property)}
-                  className="w-full justify-start bg-amber-50 border-amber-300 hover:bg-amber-100 hover:border-amber-400 text-amber-700 hover:text-amber-800 font-semibold transition-all shadow-sm hover:shadow-md"
-                >
-                  <TrendingUp className="h-4 w-4 mr-2" />
-                  {t('markAsSold.button')}
+                  + {t('addTenantButton')}
                 </Button>
               )}
               <div className="flex gap-2">
@@ -715,6 +715,7 @@ export const Properties = () => {
         property={selectedProperty}
         onSubmit={handleSubmit}
         loading={actionLoading}
+        onMarkAsSold={(property) => handleMarkAsSoldClick(property)}
         />
 
         <EnhancedTenantDialog

@@ -17,6 +17,7 @@
     "income": "Income",
     "expense": "Expense",
     "net": "Net",
+    "total": "Total",
     "noExpenseData": "No expense data available for this period"
   },
 

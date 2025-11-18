@@ -25,6 +25,7 @@
   "actions": {
     "cancel": "İptal",
     "save": "Kaydet",
+    "saving": "Kaydediliyor...",
     "refresh": "Yenile"
   }
 }

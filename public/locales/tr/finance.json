@@ -17,6 +17,7 @@
     "income": "Gelir",
     "expense": "Gider",
     "net": "Net",
+    "total": "Toplam",
     "noExpenseData": "Bu dönem için gider verisi bulunmamaktadır"
   },
 

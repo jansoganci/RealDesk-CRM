@@ -84,5 +84,18 @@
       "title": "Owners",
       "noContact": "{{count}} missing contact info"
     }
+  },
+  "exchangeRates": {
+    "title": "Exchange Rates",
+    "description": "Current rates (USD base)",
+    "refreshButton": "Refresh",
+    "refreshing": "Refreshing...",
+    "lastUpdated": "Last updated",
+    "justNow": "Just now",
+    "minutesAgo": "{{minutes}} min ago",
+    "hoursAgo": "{{hours}} hrs ago",
+    "daysAgo": "{{days}} days ago",
+    "refreshSuccess": "Rates updated successfully",
+    "refreshError": "Failed to update rates"
   }
 }

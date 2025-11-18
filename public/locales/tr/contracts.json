@@ -1,6 +1,6 @@
 {
   "title": "Kira Sözleşmeleri",
-  "searchPlaceholder": "Sözleşme ara...",
+  "searchPlaceholder": "Kiracı, mülk ile ara...",
   "filterPlaceholder": "Duruma göre filtrele",
   "filters": {
     "all": "Tüm Durumlar"

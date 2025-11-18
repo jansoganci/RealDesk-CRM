@@ -17,7 +17,14 @@
     "income": "Gelir",
     "expense": "Gider",
     "net": "Net",
+    "total": "Toplam",
     "noExpenseData": "Bu dönem için gider verisi bulunmamaktadır"
+  },
+
+  "tabs": {
+    "overview": "Genel Bakış",
+    "transactions": "İşlemler",
+    "analytics": "Analitik"
   },
 
   "sections": {
@@ -96,6 +103,58 @@
     "expense": "Gider"
   },
 
+  "categories": {
+    "income": {
+      "Rental Commissions": "Kira Komisyonu",
+      "Sale Commissions": "Satış Komisyonu",
+      "Monthly Rent": "Aylık Kira",
+      "Property Management Fees": "Emlak Yönetim Ücreti",
+      "Consultation Fees": "Danışmanlık Ücreti",
+      "Referral Fees": "Yönlendirme Ücreti",
+      "Late Fees": "Gecikme Ücreti",
+      "Other Income": "Diğer Gelir"
+    },
+    "expense": {
+      "Office Rent": "Ofis Kirası",
+      "Electricity": "Elektrik",
+      "Water": "Su",
+      "Internet & Phone": "İnternet ve Telefon",
+      "Office Supplies": "Ofis Malzemeleri",
+      "Software & Subscriptions": "Yazılım ve Abonelikler",
+      "Digital Marketing": "Dijital Pazarlama",
+      "Print Advertising": "Baskı Reklam",
+      "Social Media Ads": "Sosyal Medya Reklamları",
+      "Website Maintenance": "Web Sitesi Bakımı",
+      "Photography & Videography": "Fotoğraf ve Video",
+      "Signage & Branding": "Tabela ve Markalama",
+      "Salaries & Wages": "Maaş ve Ücretler",
+      "Employee Benefits": "Çalışan Yardımları",
+      "Contractor Payments": "Müteahhit Ödemeleri",
+      "Training & Development": "Eğitim ve Geliştirme",
+      "Fuel": "Yakıt",
+      "Vehicle Maintenance": "Araç Bakımı",
+      "Vehicle Insurance": "Araç Sigortası",
+      "Parking & Tolls": "Park ve Geçiş Ücretleri",
+      "Mileage": "Kilometre",
+      "Legal Fees": "Hukuki Ücretler",
+      "Accounting Fees": "Muhasebe Ücretleri",
+      "Consulting": "Danışmanlık",
+      "Licenses & Permits": "Lisanslar ve İzinler",
+      "Property Maintenance": "Emlak Bakımı",
+      "Repairs": "Onarımlar",
+      "Property Insurance": "Emlak Sigortası",
+      "Property Taxes": "Emlak Vergileri",
+      "HOA Fees": "Site Yönetim Ücretleri",
+      "Income Tax": "Gelir Vergisi",
+      "Business Taxes": "İşletme Vergileri",
+      "VAT/Sales Tax": "KDV/Satış Vergisi",
+      "Bank Fees": "Banka Ücretleri",
+      "Insurance (General)": "Sigorta (Genel)",
+      "Meals & Entertainment": "Yemek ve Eğlence",
+      "Other Expenses": "Diğer Giderler"
+    }
+  },
+
   "paymentMethods": {
     "cash": "Nakit",
     "bank_transfer": "Banka Havalesi",
@@ -122,6 +181,7 @@
     "selectType": "Tür seçin",
     "category": "Kategori",
     "selectCategory": "Kategori seçin",
+    "noCategoriesAvailable": "Bu tür için kategori bulunmamaktadır",
     "amount": "Tutar",
     "description": "Açıklama",
     "descriptionPlaceholder": "İşlem açıklaması girin",

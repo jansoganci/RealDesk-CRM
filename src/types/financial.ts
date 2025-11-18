@@ -311,6 +311,7 @@ export interface FinancialDashboard {
   expense_by_category: CategoryBreakdown[];
   monthly_trends: MonthlyTrend[]; // Last 6 months
   upcoming_expenses: UpcomingRecurringExpense[];
+  pending_transactions_count: number; // Count of transactions with payment_status = 'pending'
 }
 
 // =====================================================

@@ -1,6 +1,6 @@
 {
   "title": "Mülkler",
-  "searchPlaceholder": "Mülk ara...",
+  "searchPlaceholder": "Adres, mal sahibi, şehir ile ara...",
   "filterPlaceholder": "Duruma göre filtrele",
   "addPropertyButton": "Mülk Ekle",
   "addTenantButton": "Kiracı Ekle",

@@ -20,6 +20,8 @@
     "meetingReminder": "Meeting Reminders",
     "meetingReminderPlaceholder": "Select reminder time",
     "meetingReminderDescription": "Get notified before meetings",
+    "commissionRate": "Commission Rate",
+    "commissionRateDescription": "Default commission rate for sale transactions",
     "notSet": "Not set",
     "notAvailable": "N/A"
   },
@@ -57,11 +59,27 @@
     "languageRequired": "Language is required",
     "currencyRequired": "Currency is required",
     "reminderRequired": "Meeting reminder is required",
-    "reminderInvalid": "Invalid reminder time"
+    "reminderInvalid": "Invalid reminder time",
+    "commissionRateRequired": "Commission rate is required",
+    "commissionRateMin": "Commission rate must be at least 0.1%",
+    "commissionRateMax": "Commission rate must not exceed 20%"
   },
   "security": {
     "changePasswordTitle": "Change Password",
     "changePasswordDescription": "Update your account password",
     "comingSoon": "Coming soon"
+  },
+  "exchangeRates": {
+    "title": "Exchange Rates",
+    "description": "Current exchange rates (USD base)",
+    "refreshButton": "Refresh Rates",
+    "refreshing": "Refreshing...",
+    "lastUpdated": "Last Updated",
+    "justNow": "Just now",
+    "minutesAgo": "{{minutes}} minutes ago",
+    "hoursAgo": "{{hours}} hours ago",
+    "daysAgo": "{{days}} days ago",
+    "refreshSuccess": "Exchange rates updated successfully",
+    "refreshError": "Failed to update exchange rates"
   }
 }

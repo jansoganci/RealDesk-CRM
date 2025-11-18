@@ -16,7 +16,7 @@ export const Login = () => {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
-  const { signIn, signUp, enableDemoMode } = useAuth();
+  const { signIn, signUp } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
 
@@ -50,11 +50,6 @@ export const Login = () => {
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleDemoMode = () => {
-    enableDemoMode();
-    navigate(ROUTES.DASHBOARD);
   };
 
   return (
@@ -103,24 +98,6 @@ export const Login = () => {
               {loading ? t('common:loading') : isSignUp ? t('login.signUp') : t('login.signIn')}
             </Button>
           </form>
-
-          {/* Demo Mode Button - Only show on sign in mode */}
-          {!isSignUp && (
-            <div className="mt-4">
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full"
-                onClick={handleDemoMode}
-                disabled={loading}
-              >
-                {t('login.demoMode')}
-              </Button>
-              <p className="text-xs text-center mt-2 text-gray-500">
-                {t('login.demoDescription')}
-              </p>
-            </div>
-          )}
 
           <div className="mt-4 text-center text-sm">
             <div className="text-center text-sm">

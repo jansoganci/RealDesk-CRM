@@ -45,10 +45,12 @@ export function AnimatedTabs({
           key={tab.id}
           onClick={() => handleTabChange(tab.id)}
           className={cn(
-            "relative rounded-md px-3 py-1.5 text-sm font-medium",
-            "text-foreground outline-ring transition",
+            "relative rounded-md px-3 py-1.5 text-sm font-medium border transition-colors",
+            "text-foreground outline-ring",
             "focus-visible:outline-2 focus-visible:outline-offset-2",
-            activeTab === tab.id ? "" : "hover:text-foreground/60"
+            activeTab === tab.id 
+              ? "border-blue-300" 
+              : "border-gray-300 hover:text-foreground/60 hover:border-gray-400"
           )}
           style={{
             WebkitTapHighlightColor: "transparent",
