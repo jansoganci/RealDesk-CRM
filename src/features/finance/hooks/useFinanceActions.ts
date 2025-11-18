@@ -9,7 +9,7 @@ import type {
   CreateFinancialTransactionInput,
   UpdateFinancialTransactionInput,
 } from '../../../types/financial';
-import type { ExportFormat } from '../components/FinanceFiltersBar';
+import type { ExportFormat } from '../components/FinanceHeader';
 
 interface UseFinanceActionsProps {
   onDataChange: () => Promise<void>;

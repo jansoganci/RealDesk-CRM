@@ -20,7 +20,7 @@ export const FinanceHeader = ({
   const [exportMenuOpen, setExportMenuOpen] = useState(false);
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 md:gap-3">
       {/* Export Button with Dropdown */}
       <div className="relative">
         <div className="flex">
@@ -28,18 +28,19 @@ export const FinanceHeader = ({
             variant="outline"
             onClick={() => onExport('csv')}
             disabled={loading}
-            className="gap-2 whitespace-nowrap rounded-r-none"
+            className="gap-1.5 md:gap-2 whitespace-nowrap rounded-r-none px-2 md:px-4 h-8 md:h-10 text-xs md:text-sm"
           >
-            <Download className="h-4 w-4" />
+            <Download className="h-3.5 w-3.5 md:h-4 md:w-4" />
+            <span className="sm:hidden">{t('finance:export.exportShort')}</span>
             <span className="hidden sm:inline">{t('finance:export.exportData')}</span>
           </Button>
           <Button
             variant="outline"
             onClick={() => setExportMenuOpen(!exportMenuOpen)}
             disabled={loading}
-            className="px-2 rounded-l-none border-l-0"
+            className="px-1.5 md:px-2 rounded-l-none border-l-0 h-8 md:h-10"
           >
-            <ChevronDown className="h-4 w-4" />
+            <ChevronDown className="h-3.5 w-3.5 md:h-4 md:w-4" />
           </Button>
         </div>
 
@@ -91,10 +92,10 @@ export const FinanceHeader = ({
       </div>
 
       {/* Add Transaction Button */}
-      <Button onClick={onAddTransaction} className="gap-2">
-        <Plus className="h-4 w-4" />
+      <Button onClick={onAddTransaction} className="gap-1.5 md:gap-2 px-2 md:px-4 h-8 md:h-10 text-xs md:text-sm">
+        <Plus className="h-3.5 w-3.5 md:h-4 md:w-4" />
+        <span className="sm:hidden">{t('finance:actions.addTransactionShort')}</span>
         <span className="hidden sm:inline">{t('finance:actions.addTransaction')}</span>
-        <span className="sm:hidden">+</span>
       </Button>
     </div>
   );

@@ -232,6 +232,17 @@
     "noBudgetDataDesc": "Karşılaştırmaları görmek için gider kategorilerinde aylık bütçeler belirleyin"
   },
 
+  "performance": {
+    "title": "Performans Özeti",
+    "totalCommission": "Toplam Komisyon",
+    "dealsCount": "İşlem Sayısı",
+    "averagePerDeal": "İşlem Başı Ortalama",
+    "bestMonth": "En İyi Ay",
+    "rentalVsSale": "Kira - Satış Dağılımı",
+    "rental": "Kira",
+    "sale": "Satış"
+  },
+
   "messages": {
     "loadError": "Finans verileri yüklenemedi",
     "createSuccess": "İşlem başarıyla oluşturuldu",

@@ -1,6 +1,11 @@
 import { supabase } from '../config/supabase';
-import type { Commission, CommissionInsert, CommissionStats, CommissionWithProperty } from '../types';
+import type { Commission, CommissionInsert, CommissionStats, CommissionWithProperty, PerformanceSummary, MonthlyCommissionData } from '../types';
 import { getAuthenticatedUserId } from '../lib/auth';
+
+const MONTH_NAMES_TR = [
+  'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
+  'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'
+];
 
 class CommissionsService {
   /**
@@ -221,6 +226,73 @@ class CommissionsService {
     });
 
     return monthlyData;
+  }
+
+  /**
+   * Get performance summary for a year
+   */
+  async getPerformanceSummary(year: number, currency: string = 'TRY'): Promise<PerformanceSummary> {
+    const startDate = new Date(year, 0, 1).toISOString();
+    const endDate = new Date(year, 11, 31, 23, 59, 59).toISOString();
+
+    const commissions = await this.getByDateRange(startDate, endDate);
+    const filteredCommissions = commissions.filter((c) => c.currency === currency);
+
+    // Calculate totals
+    const dealsCount = filteredCommissions.length;
+    const totalCommission = filteredCommissions.reduce((sum, c) => sum + c.amount, 0);
+    const averagePerDeal = dealsCount > 0 ? totalCommission / dealsCount : 0;
+
+    // Calculate rental vs sale percentages
+    const rentalTotal = filteredCommissions
+      .filter((c) => c.type === 'rental')
+      .reduce((sum, c) => sum + c.amount, 0);
+    const saleTotal = filteredCommissions
+      .filter((c) => c.type === 'sale')
+      .reduce((sum, c) => sum + c.amount, 0);
+
+    const rentalPercentage = totalCommission > 0 ? (rentalTotal / totalCommission) * 100 : 0;
+    const salePercentage = totalCommission > 0 ? (saleTotal / totalCommission) * 100 : 0;
+
+    // Find best month
+    const monthlyData = await this.getMonthlyBreakdown(year, currency);
+    let bestMonth: PerformanceSummary['bestMonth'] = null;
+
+    monthlyData.forEach((data) => {
+      if (data.earnings > 0 && (!bestMonth || data.earnings > bestMonth.amount)) {
+        bestMonth = {
+          month: data.month,
+          monthName: MONTH_NAMES_TR[data.month - 1],
+          amount: data.earnings,
+        };
+      }
+    });
+
+    return {
+      year,
+      dealsCount,
+      totalCommission,
+      averagePerDeal,
+      bestMonth,
+      rentalPercentage,
+      salePercentage,
+      currency,
+    };
+  }
+
+  /**
+   * Get monthly commission data for charts
+   */
+  async getMonthlyCommissionData(year: number, currency: string = 'TRY'): Promise<MonthlyCommissionData[]> {
+    const monthlyBreakdown = await this.getMonthlyBreakdown(year, currency);
+
+    return monthlyBreakdown.map((data) => ({
+      month: data.month,
+      monthName: MONTH_NAMES_TR[data.month - 1],
+      total: data.earnings,
+      rental: data.rentalEarnings,
+      sale: data.saleEarnings,
+    }));
   }
 }
 

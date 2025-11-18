@@ -232,6 +232,17 @@
     "noBudgetDataDesc": "Set monthly budgets in expense categories to see comparisons"
   },
 
+  "performance": {
+    "title": "Performance Summary",
+    "totalCommission": "Total Commission",
+    "dealsCount": "Total Deals",
+    "averagePerDeal": "Average Per Deal",
+    "bestMonth": "Best Month",
+    "rentalVsSale": "Rental vs Sale Split",
+    "rental": "Rental",
+    "sale": "Sale"
+  },
+
   "messages": {
     "loadError": "Failed to load finance data",
     "createSuccess": "Transaction created successfully",

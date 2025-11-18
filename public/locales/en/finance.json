@@ -36,11 +36,13 @@
 
   "actions": {
     "addTransaction": "Add Transaction",
+    "addTransactionShort": "Transaction",
     "exportCSV": "Export to CSV"
   },
 
   "export": {
     "exportData": "Export",
+    "exportShort": "Export",
     "exportCSV": "Export as CSV",
     "exportPDF": "Export as PDF",
     "exportExcel": "Export as Excel",
@@ -230,6 +232,24 @@
     "noCategories": "No category data available",
     "noBudgetData": "No budget data available",
     "noBudgetDataDesc": "Set monthly budgets in expense categories to see comparisons"
+  },
+
+  "performance": {
+    "title": "Performance Summary",
+    "totalCommission": "Total Commission",
+    "dealsCount": "Total Deals",
+    "averagePerDeal": "Average Per Deal",
+    "bestMonth": "Best Month",
+    "rentalVsSale": "Rental vs Sale Split",
+    "rental": "Rental",
+    "sale": "Sale"
+  },
+
+  "commissionTrends": {
+    "title": "Monthly Commission Trends",
+    "rental": "Rental Commission",
+    "sale": "Sale Commission",
+    "noData": "No commission data available"
   },
 
   "messages": {

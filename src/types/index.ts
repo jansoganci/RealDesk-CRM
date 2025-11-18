@@ -189,3 +189,26 @@ export interface CommissionStats {
   saleCommissions: number;
   currency: string;
 }
+
+export interface PerformanceSummary {
+  year: number;
+  dealsCount: number;
+  totalCommission: number;
+  averagePerDeal: number;
+  bestMonth: {
+    month: number;
+    monthName: string;
+    amount: number;
+  } | null;
+  rentalPercentage: number;
+  salePercentage: number;
+  currency: string;
+}
+
+export interface MonthlyCommissionData {
+  month: number;
+  monthName: string;
+  total: number;
+  rental: number;
+  sale: number;
+}

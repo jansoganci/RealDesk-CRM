@@ -36,11 +36,13 @@
 
   "actions": {
     "addTransaction": "İşlem Ekle",
+    "addTransactionShort": "İşlem",
     "exportCSV": "CSV'ye Aktar"
   },
 
   "export": {
     "exportData": "Dışa Aktar",
+    "exportShort": "Aktar",
     "exportCSV": "CSV olarak aktar",
     "exportPDF": "PDF olarak aktar",
     "exportExcel": "Excel olarak aktar",
@@ -230,6 +232,24 @@
     "noCategories": "Kategori verisi bulunmamaktadır",
     "noBudgetData": "Bütçe verisi bulunmamaktadır",
     "noBudgetDataDesc": "Karşılaştırmaları görmek için gider kategorilerinde aylık bütçeler belirleyin"
+  },
+
+  "performance": {
+    "title": "Performans Özeti",
+    "totalCommission": "Toplam Komisyon",
+    "dealsCount": "İşlem Sayısı",
+    "averagePerDeal": "İşlem Başı Ortalama",
+    "bestMonth": "En İyi Ay",
+    "rentalVsSale": "Kira - Satış Dağılımı",
+    "rental": "Kira",
+    "sale": "Satış"
+  },
+
+  "commissionTrends": {
+    "title": "Aylık Komisyon Trendleri",
+    "rental": "Kira Komisyonu",
+    "sale": "Satış Komisyonu",
+    "noData": "Komisyon verisi bulunmamaktadır"
   },
 
   "messages": {

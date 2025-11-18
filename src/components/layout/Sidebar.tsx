@@ -159,25 +159,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </nav>
 
         <div className="p-4 border-t border-gray-200/50 bg-gray-50">
-          <div className="flex items-center gap-3 mb-3 px-3 py-3 bg-white rounded-xl border border-gray-200/50 shadow-sm">
-            <div
-              className="h-9 w-9 rounded-full bg-blue-600 flex items-center justify-center shadow-lg"
-              aria-label={t('userSettings')}
-            >
-              <span className="text-sm font-bold text-white">
-                {user?.email?.[0].toUpperCase()}
-              </span>
-            </div>
-            <div className="flex-1 min-w-0">
-              <p
-                className="text-sm font-semibold text-slate-900 truncate"
-                title={user?.email}
-                aria-label={`${t('userSettings')}: ${user?.email}`}
-              >
-                {user?.email}
-              </p>
-            </div>
-          </div>
           <Button
             variant="outline"
             className="w-full justify-start gap-2 border-slate-300 hover:bg-slate-100 hover:border-slate-400 text-slate-700 hover:text-slate-900 font-semibold transition-all shadow-sm hover:shadow-md"

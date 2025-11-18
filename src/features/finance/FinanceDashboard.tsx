@@ -95,25 +95,25 @@ export const FinanceDashboard = () => {
   return (
     <MainLayout title={t('finance:pageTitle')}>
       <PageContainer>
-        {/* Header with Tabs and Buttons in same row */}
-        <div className="flex items-center justify-between gap-4 mb-6 flex-wrap">
+        {/* Header with Tabs and Buttons */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4 mb-6">
           {/* Left: Tabs */}
           <AnimatedTabs
             tabs={[
               {
                 id: 'overview',
                 label: t('finance:tabs.overview'),
-                icon: <LayoutDashboard className="h-4 w-4" />,
+                icon: <LayoutDashboard className="h-3.5 w-3.5 md:h-4 md:w-4" />,
               },
               {
                 id: 'transactions',
                 label: t('finance:tabs.transactions'),
-                icon: <Receipt className="h-4 w-4" />,
+                icon: <Receipt className="h-3.5 w-3.5 md:h-4 md:w-4" />,
               },
               {
                 id: 'analytics',
                 label: t('finance:tabs.analytics'),
-                icon: <BarChart3 className="h-4 w-4" />,
+                icon: <BarChart3 className="h-3.5 w-3.5 md:h-4 md:w-4" />,
               },
             ]}
             defaultTab={activeTab}
@@ -136,6 +136,7 @@ export const FinanceDashboard = () => {
             <div className="mt-6">
               <FinanceOverview
                 dashboard={financeData.dashboard}
+                performanceSummary={financeData.performanceSummary}
                 loading={financeData.loading}
               />
             </div>
@@ -162,6 +163,7 @@ export const FinanceDashboard = () => {
               <FinanceAnalytics
                 ratios={financeData.ratios}
                 yearlySummary={financeData.yearlySummary}
+                monthlyCommissions={financeData.monthlyCommissions}
                 loading={financeData.analyticsLoading}
                 onBillPaid={async () => {
                   await financeData.loadData();

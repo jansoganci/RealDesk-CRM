@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import { financialTransactionsService } from '../../../lib/serviceProxy';
+import { financialTransactionsService, commissionsService } from '../../../lib/serviceProxy';
 import type {
   FinancialDashboard,
   FinancialTransaction,
@@ -10,6 +10,7 @@ import type {
   FinancialRatios,
   YearlySummary,
 } from '../../../types/financial';
+import type { PerformanceSummary, MonthlyCommissionData } from '../../../types';
 
 export const useFinanceData = (filters: TransactionFilters) => {
   const { t } = useTranslation(['finance']);
@@ -25,19 +26,27 @@ export const useFinanceData = (filters: TransactionFilters) => {
   const [yearlySummary, setYearlySummary] = useState<YearlySummary | null>(null);
   const [analyticsLoading, setAnalyticsLoading] = useState(false);
 
-  // Load core data (dashboard, categories, transactions)
+  // Performance summary state
+  const [performanceSummary, setPerformanceSummary] = useState<PerformanceSummary | null>(null);
+  const [monthlyCommissions, setMonthlyCommissions] = useState<MonthlyCommissionData[]>([]);
+
+  // Load core data (dashboard, categories, transactions, performance)
   const loadData = useCallback(async () => {
     setLoading(true);
     try {
-      const [dashboardData, categoriesData, transactionsData] = await Promise.all([
+      const currentYear = new Date().getFullYear();
+
+      const [dashboardData, categoriesData, transactionsData, performanceData] = await Promise.all([
         financialTransactionsService.getFinancialDashboard(),
         financialTransactionsService.getCategories(),
         financialTransactionsService.getTransactions(filters),
+        commissionsService.getPerformanceSummary(currentYear, 'TRY'),
       ]);
 
       setDashboard(dashboardData);
       setCategories(categoriesData);
       setTransactions(transactionsData);
+      setPerformanceSummary(performanceData);
     } catch (error) {
       console.error('Error loading finance data:', error);
       toast.error(t('finance:messages.loadError'));
@@ -64,13 +73,15 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const currentMonth = new Date().toISOString().slice(0, 7);
       const currentYear = new Date().getFullYear();
 
-      const [ratiosData, yearlyData] = await Promise.all([
+      const [ratiosData, yearlyData, commissionsData] = await Promise.all([
         financialTransactionsService.getFinancialRatios(currentMonth),
         financialTransactionsService.getYearlySummary(currentYear),
+        commissionsService.getMonthlyCommissionData(currentYear, 'TRY'),
       ]);
 
       setRatios(ratiosData);
       setYearlySummary(yearlyData);
+      setMonthlyCommissions(commissionsData);
     } catch (error) {
       console.error('Error loading analytics:', error);
       toast.error(t('finance:messages.loadError'));
@@ -96,6 +107,8 @@ export const useFinanceData = (filters: TransactionFilters) => {
     categories,
     ratios,
     yearlySummary,
+    performanceSummary,
+    monthlyCommissions,
 
     // Loading states
     loading,

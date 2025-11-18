@@ -89,17 +89,18 @@ export const FinanceFiltersBar = ({
     filters.start_date?.slice(0, 7) || currentMonth;
 
   return (
-    <div className="bg-white p-4 rounded-lg border border-gray-200 shadow-sm">
-      <div className="flex flex-wrap gap-3 items-center">
+    <div className="bg-white p-3 md:p-4 rounded-lg border border-gray-200 shadow-sm">
+      {/* Mobile: 2x2 grid, Desktop: flex row */}
+      <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 md:items-center">
         {/* Month Filter */}
-        <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-gray-500" />
+        <div className="flex items-center gap-2 col-span-2 md:col-span-1">
+          <Filter className="h-4 w-4 text-gray-500 hidden md:block" />
           <Select
             value={selectedMonth}
             onValueChange={handleMonthChange}
             disabled={loading}
           >
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-full md:w-[180px] h-9 md:h-10 text-xs md:text-sm">
               <SelectValue placeholder={t('finance:filters.selectMonth')} />
             </SelectTrigger>
             <SelectContent>
@@ -119,7 +120,7 @@ export const FinanceFiltersBar = ({
           onValueChange={handleTypeChange}
           disabled={loading}
         >
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-full md:w-[140px] h-9 md:h-10 text-xs md:text-sm">
             <SelectValue placeholder={t('finance:filters.selectType')} />
           </SelectTrigger>
           <SelectContent>
@@ -135,7 +136,7 @@ export const FinanceFiltersBar = ({
           onValueChange={handleCategoryChange}
           disabled={loading}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full md:w-[180px] h-9 md:h-10 text-xs md:text-sm">
             <SelectValue placeholder={t('finance:filters.selectCategory')} />
           </SelectTrigger>
           <SelectContent>
@@ -158,7 +159,7 @@ export const FinanceFiltersBar = ({
           onValueChange={handleStatusChange}
           disabled={loading}
         >
-          <SelectTrigger className="w-[140px]">
+          <SelectTrigger className="w-full md:w-[140px] h-9 md:h-10 text-xs md:text-sm">
             <SelectValue placeholder={t('finance:filters.selectStatus')} />
           </SelectTrigger>
           <SelectContent>
@@ -182,9 +183,9 @@ export const FinanceFiltersBar = ({
             size="sm"
             onClick={clearFilters}
             disabled={loading}
-            className="gap-2"
+            className="gap-1.5 md:gap-2 col-span-2 md:col-span-1 h-9 md:h-10 text-xs md:text-sm"
           >
-            <X className="h-4 w-4" />
+            <X className="h-3.5 w-3.5 md:h-4 md:w-4" />
             {t('finance:filters.clearFilters')}
           </Button>
         )}
