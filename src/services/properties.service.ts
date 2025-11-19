@@ -142,7 +142,7 @@ class PropertiesService {
     return (data || []) as Property[];
   }
 
-  async create(property: PropertyInsert): Promise<Property> {
+  async create(property: Omit<PropertyInsert, 'user_id'>): Promise<Property> {
     // Validate that required fields match property_type
     if (property.property_type === 'rental' && !property.rent_amount) {
       throw new Error('Rent amount is required for rental properties');

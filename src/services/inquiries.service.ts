@@ -79,7 +79,7 @@ class InquiriesService {
     } as InquiryWithMatches;
   }
 
-  async create(inquiry: PropertyInquiryInsert): Promise<PropertyInquiry> {
+  async create(inquiry: Omit<PropertyInquiryInsert, 'user_id'>): Promise<PropertyInquiry> {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
 

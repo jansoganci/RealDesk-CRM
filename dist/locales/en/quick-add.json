@@ -1,5 +1,6 @@
 {
   "button": "Quick Add",
+  "buttonShort": "Add",
   "title": "Quick Add Property",
   "description": "Enter owner, property, and tenant information in one go",
   "sections": {

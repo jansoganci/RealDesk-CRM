@@ -26,6 +26,8 @@
     "cancel": "İptal",
     "save": "Kaydet",
     "saving": "Kaydediliyor...",
-    "refresh": "Yenile"
+    "refresh": "Yenile",
+    "edit": "Düzenle",
+    "delete": "Sil"
   }
 }

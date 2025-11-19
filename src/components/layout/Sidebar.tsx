@@ -41,7 +41,7 @@ const navigationItems = [
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { t } = useTranslation('navigation');
-  const { signOut, user } = useAuth();
+  const { signOut } = useAuth();
   const [reminderCount, setReminderCount] = useState(0);
   const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
 

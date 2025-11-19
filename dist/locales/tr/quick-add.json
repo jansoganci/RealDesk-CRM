@@ -1,5 +1,6 @@
 {
   "button": "Hızlı Ekle",
+  "buttonShort": "Ekle",
   "title": "Hızlı Mülk Ekle",
   "description": "Mal sahibi, mülk ve kiracı bilgilerini tek seferde girin",
   "sections": {
