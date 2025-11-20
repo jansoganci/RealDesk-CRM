@@ -102,5 +102,68 @@
   "validation": {
     "required": "This field is required",
     "endDateAfterStart": "End date must be after start date"
+  },
+  "create": {
+    "title": "Create New Contract",
+    "subtitle": "Fill in the rental contract information",
+    "sections": {
+      "owner": "Owner Information",
+      "tenant": "Tenant Information",
+      "property": "Property Information",
+      "contract": "Contract Details"
+    },
+    "fields": {
+      "owner_name": "Owner Full Name",
+      "owner_tc": "TC Identity Number",
+      "owner_iban": "IBAN",
+      "owner_phone": "Phone",
+      "owner_email": "Email (Optional)",
+      "tenant_name": "Tenant Full Name",
+      "tenant_tc": "TC Identity Number",
+      "tenant_phone": "Phone",
+      "tenant_email": "Email (Optional)",
+      "tenant_address": "Current Address",
+      "mahalle": "Neighborhood",
+      "cadde_sokak": "Street/Avenue",
+      "bina_no": "Building No",
+      "daire_no": "Apartment No (Optional)",
+      "ilce": "District",
+      "il": "City",
+      "property_type": "Property Type",
+      "use_purpose": "Purpose of Use",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "rent_amount": "Monthly Rent (TRY)",
+      "deposit": "Deposit (TRY)",
+      "payment_day": "Payment Day",
+      "payment_method": "Payment Method",
+      "special_conditions": "Special Conditions"
+    },
+    "placeholders": {
+      "owner_name": "John Doe",
+      "owner_tc": "12345678901",
+      "owner_iban": "TR123456789012345678901234",
+      "owner_phone": "0539 217 47 82",
+      "tenant_name": "Jane Smith",
+      "mahalle": "Moda Neighborhood",
+      "cadde_sokak": "Atatürk Avenue",
+      "bina_no": "123",
+      "daire_no": "5",
+      "ilce": "Kadıköy",
+      "il": "Istanbul"
+    },
+    "propertyTypes": {
+      "apartment": "Apartment",
+      "house": "House",
+      "commercial": "Commercial"
+    },
+    "buttons": {
+      "submit": "Create Contract",
+      "cancel": "Cancel",
+      "reset": "Reset Form"
+    },
+    "preview": {
+      "fullAddress": "Full Address Preview"
+    }
   }
 }

@@ -102,5 +102,68 @@
   "validation": {
     "required": "Bu alan zorunludur",
     "endDateAfterStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
+  },
+  "create": {
+    "title": "Yeni Sözleşme Oluştur",
+    "subtitle": "Kira sözleşmesi bilgilerini doldurun",
+    "sections": {
+      "owner": "Ev Sahibi Bilgileri",
+      "tenant": "Kiracı Bilgileri",
+      "property": "Mülk Bilgileri",
+      "contract": "Sözleşme Detayları"
+    },
+    "fields": {
+      "owner_name": "Ev Sahibi Adı Soyadı",
+      "owner_tc": "TC Kimlik No",
+      "owner_iban": "IBAN",
+      "owner_phone": "Telefon",
+      "owner_email": "Email (Opsiyonel)",
+      "tenant_name": "Kiracı Adı Soyadı",
+      "tenant_tc": "TC Kimlik No",
+      "tenant_phone": "Telefon",
+      "tenant_email": "Email (Opsiyonel)",
+      "tenant_address": "Mevcut Adresi",
+      "mahalle": "Mahalle",
+      "cadde_sokak": "Cadde/Sokak",
+      "bina_no": "Bina No",
+      "daire_no": "Daire No (Opsiyonel)",
+      "ilce": "İlçe",
+      "il": "İl",
+      "property_type": "Mülk Tipi",
+      "use_purpose": "Kullanım Amacı",
+      "start_date": "Başlangıç Tarihi",
+      "end_date": "Bitiş Tarihi",
+      "rent_amount": "Aylık Kira (TRY)",
+      "deposit": "Depozito (TRY)",
+      "payment_day": "Ödeme Günü",
+      "payment_method": "Ödeme Yöntemi",
+      "special_conditions": "Özel Şartlar"
+    },
+    "placeholders": {
+      "owner_name": "Ali Yılmaz",
+      "owner_tc": "12345678901",
+      "owner_iban": "TR123456789012345678901234",
+      "owner_phone": "0539 217 47 82",
+      "tenant_name": "Ayşe Demir",
+      "mahalle": "Moda Mahallesi",
+      "cadde_sokak": "Atatürk Caddesi",
+      "bina_no": "123",
+      "daire_no": "5",
+      "ilce": "Kadıköy",
+      "il": "İstanbul"
+    },
+    "propertyTypes": {
+      "apartment": "Daire",
+      "house": "Müstakil Ev",
+      "commercial": "İşyeri"
+    },
+    "buttons": {
+      "submit": "Sözleşme Oluştur",
+      "cancel": "İptal",
+      "reset": "Formu Temizle"
+    },
+    "preview": {
+      "fullAddress": "Tam Adres Önizleme"
+    }
   }
 }

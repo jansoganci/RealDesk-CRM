@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Building2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import { supabase } from '../../config/supabase';
 
 export const Login = () => {
   const [email, setEmail] = useState('');
@@ -42,8 +43,32 @@ export const Login = () => {
         setPassword('');
       } else {
         await signIn(email, password);
+        
+        // Wait for auth state to sync (critical for iOS Safari/PWA)
+        // Check session directly to ensure it's available before navigation
+        let sessionConfirmed = false;
+        let attempts = 0;
+        const maxAttempts = 10;
+        
+        while (!sessionConfirmed && attempts < maxAttempts) {
+          const { data: { session } } = await supabase.auth.getSession();
+          if (session?.user) {
+            sessionConfirmed = true;
+            break;
+          }
+          // Small delay to allow auth state to sync (especially on iOS)
+          await new Promise(resolve => setTimeout(resolve, 100));
+          attempts++;
+        }
+        
+        if (!sessionConfirmed) {
+          // Fallback: force navigation even if session check failed
+          // The ProtectedRoute will handle auth state checking with additional verification
+        }
+        
         toast.success(t('login.toast.loginSuccess'));
-        navigate(ROUTES.DASHBOARD);
+        // Use replace to prevent back navigation to login page
+        navigate(ROUTES.DASHBOARD, { replace: true });
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : isSignUp ? t('login.toast.signUpError') : t('login.toast.loginError'));

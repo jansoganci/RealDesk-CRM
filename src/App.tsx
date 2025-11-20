@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Login } from './features/auth/Login';
 import { LandingPage } from './features/landing/LandingPage';
 import { Dashboard } from './features/dashboard/Dashboard';
@@ -9,6 +10,7 @@ import { Owners } from './features/owners/Owners';
 import { Properties } from './features/properties/Properties';
 import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
+import ContractCreate from './features/contracts/ContractCreate';
 import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
@@ -27,8 +29,9 @@ function App() {
     });
   }, []);
   return (
-    <AuthProvider>
-      <BrowserRouter>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
         <Routes>
           <Route path={ROUTES.HOME} element={<LandingPage />} />
           <Route path={ROUTES.LOGIN} element={<Login />} />
@@ -61,6 +64,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Contracts />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contracts/create"
+            element={
+              <ProtectedRoute>
+                <ContractCreate />
               </ProtectedRoute>
             }
           />
@@ -116,6 +127,7 @@ function App() {
         <Toaster />
       </BrowserRouter>
     </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

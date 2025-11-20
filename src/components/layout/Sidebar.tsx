@@ -17,7 +17,8 @@ import {
   X,
   Calendar,
   DollarSign,
-  UserCircle
+  UserCircle,
+  FileText
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { remindersService, inquiriesService } from '../../lib/serviceProxy';
@@ -32,6 +33,7 @@ const navigationItems = [
   { key: 'owners', href: ROUTES.OWNERS, icon: Users },
   { key: 'properties', href: ROUTES.PROPERTIES, icon: Home },
   { key: 'tenants', href: ROUTES.TENANTS, icon: UserCheck },
+  { key: 'contracts', href: ROUTES.CONTRACTS, icon: FileText },
   { key: 'calendar', href: ROUTES.CALENDAR, icon: Calendar },
   { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },

@@ -212,3 +212,6 @@ export interface MonthlyCommissionData {
   rental: number;
   sale: number;
 }
+
+// Contract Management types
+export * from './contract.types';

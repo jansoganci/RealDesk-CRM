@@ -5,3 +5,7 @@
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
+/locales/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+

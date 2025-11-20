@@ -19,3 +19,9 @@ export * as financialTransactionsService from '../services/finance';
 
 // Re-export types that components depend on
 export type { ReminderWithDetails } from '../services/reminders.service';
+
+// Contract Management Services (V1)
+export { encrypt, decrypt, hashTC, isValidTC, isValidIBAN, generateEncryptionKey } from '../services/encryption.service';
+export { normalizePhone, formatPhoneForDisplay, isValidPhone, detectPhoneFormat } from '../services/phone.service';
+export { normalizeAddress, generateFullAddress, parseAddress, isValidAddress, addressesMatch, getShortAddress } from '../services/address.service';
+export type { AddressComponents } from '../services/address.service';

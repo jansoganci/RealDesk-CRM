@@ -22,6 +22,12 @@ i18n
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
       allowMultiLoading: false,
+      // Disable caching for translation files to ensure latest versions load
+      reloadInterval: false,
+      // Force no-cache for translation files (bypasses browser and PWA cache)
+      requestOptions: {
+        cache: 'no-store',
+      },
     },
   });
 
