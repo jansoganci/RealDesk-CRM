@@ -11,6 +11,7 @@ import { Properties } from './features/properties/Properties';
 import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
 import ContractCreate from './features/contracts/ContractCreate';
+import { ContractImportPage } from './features/contracts/import/ContractImportPage';
 import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
@@ -72,6 +73,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ContractCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contracts/import"
+            element={
+              <ProtectedRoute>
+                <ContractImportPage />
               </ProtectedRoute>
             }
           />

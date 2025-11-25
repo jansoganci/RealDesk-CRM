@@ -213,3 +213,56 @@ export interface CreateContractAtomicParams {
   };
   user_id_param: string;
 }
+
+// ============================================================================
+// PDF Generation Types
+// ============================================================================
+
+export interface ContractPdfData {
+  // Sözleşme
+  contractNumber: string;
+  contractDate: string;           // "01/01/2025" formatında
+  
+  // Mülk Bilgileri
+  mahalle: string;
+  ilce: string;
+  il: string;
+  sokak: string;
+  binaNo: string;
+  daireNo: string;
+  propertyType: string;           // "Daire", "Dükkan", etc.
+  propertyUsage: string;          // "Mesken", "İşyeri", etc.
+  
+  // Kiraya Veren (Mal Sahibi)
+  ownerName: string;
+  ownerPhone?: string;
+  ownerIBAN: string;
+  
+  // Kiracı
+  tenantName: string;
+  tenantTC?: string;              // Tahliye taahhütnamesi için
+  tenantAddress: string;
+  tenantPhone: string;
+  
+  // Kira Detayları
+  monthlyRentNumber: number;      // 15000
+  monthlyRentText: string;        // "ONBEŞBİN"
+  yearlyRentNumber: number;       // 180000
+  yearlyRentText: string;         // "YÜZSEKSENBİN"
+  
+  // Tarihler
+  startDate: string;              // "01 Ocak 2025"
+  endDate: string;                // "01 Ocak 2026"
+  paymentDay: string;             // "1" veya "5" etc.
+  
+  // Depozito
+  depositAmount: number;          // 30000
+  depositText: string;            // "OTUZBİN"
+  
+  // Demirbaş
+  fixtures: string;               // "Kombi, Klima, Ankastre Set..."
+  
+  // Tahliye Taahhütnamesi
+  evictionDate: string;           // "01 Ocak 2026"
+  commitmentDate: string;         // "01 Ocak 2025"
+}

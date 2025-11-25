@@ -17,7 +17,8 @@ ADD COLUMN IF NOT EXISTS iban_encrypted text;
 
 ALTER TABLE tenants
 ADD COLUMN IF NOT EXISTS tc_encrypted text,
-ADD COLUMN IF NOT EXISTS tc_hash text;
+ADD COLUMN IF NOT EXISTS tc_hash text,
+ADD COLUMN IF NOT EXISTS address text;
 
 -- ============================================================================
 -- 3. Modify properties table for component-based address

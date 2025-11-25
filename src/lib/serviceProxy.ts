@@ -25,3 +25,14 @@ export { encrypt, decrypt, hashTC, isValidTC, isValidIBAN, generateEncryptionKey
 export { normalizePhone, formatPhoneForDisplay, isValidPhone, detectPhoneFormat } from '../services/phone.service';
 export { normalizeAddress, generateFullAddress, parseAddress, isValidAddress, addressesMatch, getShortAddress } from '../services/address.service';
 export type { AddressComponents } from '../services/address.service';
+
+// Contract Management Services (V2)
+export { createContractWithEntities, getContractWithDetails } from '../services/contractCreation.service';
+
+// Contract Management Services (V3 - Duplicate Detection)
+export { checkDuplicateName, checkDataChanges, checkMultipleContracts } from '../services/duplicateCheck.service';
+export type { DuplicateNameCheck, DataChangesCheck, MultipleContractsCheck } from '../services/duplicateCheck.service';
+
+// Text Extraction Service
+export { extractTextFromFile, extractTextFromFileViaProxy, parseContractFromText } from '../services/textExtraction.service';
+export type { ExtractTextRequest, ExtractTextResponse, ExtractTextError } from '../services/textExtraction.service';

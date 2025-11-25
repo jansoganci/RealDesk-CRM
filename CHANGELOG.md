@@ -7,20 +7,79 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-11-24
+
 ### Added
-- Property Inquiries System - Lead management and property matching
-- Multi-currency support (USD, TRY) for properties and contracts
-- Listing URL field for properties
-- Enhanced contract validation RPC functions
-- User preferences table with RLS policies
+- **Legacy Contract Import** - Complete import wizard for existing PDF/DOCX contracts
+  - OCR-based text extraction using Flavius API
+  - Smart data parsing for Turkish contracts
+  - Side-by-side PDF preview and form editing
+  - Graceful degradation for failed extractions
+  - Auto-linking to existing owners/tenants/properties
+  - Accessible via `/contracts/import` route
+
+- **Finance Management System** - Comprehensive financial tracking
+  - Income and expense tracking with categorization
+  - Multi-currency support (TRY, USD, EUR) with live exchange rates
+  - Recurring expenses management
+  - Budget tracking per category
+  - Financial analytics and reports
+  - Receipt upload to Supabase Storage
+  - Property and contract linkage
+
+- **Calendar & Meetings** - Schedule and track appointments
+  - Meeting scheduling with date and time
+  - Property and tenant associations
+  - Calendar view interface
+  - Location tracking
+  - Client contact information
+
+- **Commissions Tracking** - Sales and rental commission management
+  - Track sale and rental commissions
+  - Multi-currency support
+  - Property and contract linkage
+  - Commission history
+
+- **PDF Auto-Generation** - Generate contract PDFs automatically
+  - Turkish rental contract template
+  - html2pdf.js integration
+  - Turkish font support (Roboto with Turkish characters)
+  - Auto-save to Supabase Storage
+  - Download to browser
+
+- **PDF Download/Upload Buttons** - Direct PDF management from contracts list
+  - Download existing contract PDFs
+  - Upload PDFs for contracts without files
+  - Signed URL generation for secure access
+
+- **Exchange Rate Integration** - Real-time currency conversion
+  - Live USD/EUR exchange rates
+  - Manual refresh capability
+  - Timestamp tracking
+  - Currency preference per user
+
+- **Quick Add Button** - Rapid entity creation from any page
+  - Quick add for properties, owners, tenants
+  - Accessible from dashboard and main pages
+
+- **Property Inquiries System** - Lead management and property matching
+- **Listing URL field** - External listing links for properties
+- **Enhanced contract validation** - RPC functions for data validation
+- **User preferences table** - Store user settings with RLS policies
 
 ### Changed
-- Updated database schema for better property matching
-- Improved contract creation workflow
+- **Contract Import UX** - Consolidated import flow with better mobile support
+- **PDF handling** - Switched from public to signed URLs for private bucket access
+- **Currency display** - Dynamic conversion based on user preferences
+- **Dashboard layout** - Added exchange rates bar and quick actions
+- **Navigation** - Added prominent import banner on contracts page
 
 ### Fixed
-- Security issues in RLS policies
-- Photo ordering atomic operations
+- **PDF download 404 error** - Fixed bucket access using signed URLs instead of public URLs
+- **Security issues** - Enhanced RLS policies across all tables
+- **Photo ordering** - Atomic operations for concurrent updates
+- **Turkish character rendering** - Proper font support in generated PDFs
+- **Contract creation flow** - Improved validation and error handling
 
 ## [1.0.0] - 2025-01-05
 

@@ -1,135 +1,79 @@
 
-import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { TableCell, TableHead, TableRow } from '../../components/ui/table';
-import { Badge } from '../../components/ui/badge';
+import { TableHead } from '../../components/ui/table';
 import { EnhancedTenantDialog } from './EnhancedTenantDialog';
 import { EnhancedTenantEditDialog } from './EnhancedTenantEditDialog';
-import { tenantsService } from '../../lib/serviceProxy';
-import { TenantWithProperty, TenantWithContractResult } from '../../types';
-import { toast } from 'sonner';
-import { Phone, Mail, Building2, UserX, Users, CalendarPlus } from 'lucide-react';
+import { TenantWithProperty } from '../../types';
+import { useTenantsData } from './hooks/useTenantsData';
+import { useTenantFilters } from './hooks/useTenantFilters';
+import { useTenantDialogs } from './hooks/useTenantDialogs';
+import { useTenantActions } from './hooks/useTenantActions';
+import { TenantTableRow } from './components/TenantTableRow';
+import { TenantCard } from './components/TenantCard';
+import { Users } from 'lucide-react';
 
-import { COLORS, getStatusBadgeClasses } from '@/config/colors';
-import { TableActionButtons } from '../../components/common/TableActionButtons';
+import { COLORS } from '@/config/colors';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 
 export const Tenants = () => {
   const { t } = useTranslation(['tenants', 'common']);
-  const navigate = useNavigate();
 
-  const [tenants, setTenants] = useState<TenantWithProperty[]>([]);
-  const [filteredTenants, setFilteredTenants] = useState<TenantWithProperty[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [assignmentFilter, setAssignmentFilter] = useState<string>('all');
-  const [loading, setLoading] = useState(true);
-  const [enhancedDialogOpen, setEnhancedDialogOpen] = useState(false);
-  const [enhancedEditDialogOpen, setEnhancedEditDialogOpen] = useState(false);
-  const [selectedTenant, setSelectedTenant] = useState<TenantWithProperty | null>(null);
-  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
-  const [tenantToDelete, setTenantToDelete] = useState<TenantWithProperty | null>(null);
-  const [actionLoading, setActionLoading] = useState(false);
+  // Tenants data hook
+  const { tenants, loading, refreshData: loadTenants } = useTenantsData();
 
-  useEffect(() => {
-    loadTenants();
-  }, []);
+  // Tenant filters hook
+  const {
+    filteredTenants,
+    searchQuery,
+    setSearchQuery,
+    assignmentFilter,
+    setAssignmentFilter,
+  } = useTenantFilters({ tenants });
 
-  useEffect(() => {
-    filterTenants();
-  }, [searchQuery, assignmentFilter, tenants]);
+  // Tenant dialogs hook
+  const {
+    isCreateOpen,
+    openCreate,
+    closeCreate,
+    isEditOpen,
+    selectedTenant,
+    openEdit,
+    closeEdit,
+    isDeleteDialogOpen,
+    tenantToDelete,
+    openDeleteDialog,
+    closeDeleteDialog,
+  } = useTenantDialogs();
 
-  const filterTenants = () => {
-    let filtered = [...tenants];
-
-    if (searchQuery.trim() !== '') {
-      const query = searchQuery.toLowerCase();
-      filtered = filtered.filter(
-        (tenant) =>
-          tenant.name.toLowerCase().includes(query) ||
-          tenant.phone?.toLowerCase().includes(query) ||
-          tenant.email?.toLowerCase().includes(query) ||
-          tenant.property?.address.toLowerCase().includes(query)
-      );
-    }
-
-    if (assignmentFilter === 'assigned') {
-      filtered = filtered.filter((tenant) => tenant.property != null);
-    } else if (assignmentFilter === 'unassigned') {
-      filtered = filtered.filter((tenant) => tenant.property == null);
-    }
-
-    setFilteredTenants(filtered);
-  };
-
-  const loadTenants = async () => {
-    try {
-      setLoading(true);
-      const data = await tenantsService.getAll();
-      setTenants(data);
-      setFilteredTenants(data);
-    } catch (error) {
-      toast.error(t('toasts.loadError'));
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // Tenant actions hook
+  const {
+    handleDeleteConfirm: handleDeleteConfirmAction,
+    handleEnhancedSubmit,
+    handleEnhancedEditSuccess,
+    handleScheduleMeeting,
+    isLoading: actionLoading,
+  } = useTenantActions({
+    refreshData: loadTenants,
+    onCloseCreate: closeCreate,
+    onCloseEdit: closeEdit,
+    onCloseDelete: closeDeleteDialog,
+  });
 
   const handleAddTenant = () => {
-    setSelectedTenant(null);
-    setEnhancedDialogOpen(true);
+    openCreate();
   };
 
   const handleEditTenant = (tenant: TenantWithProperty) => {
-    setSelectedTenant(tenant);
-    setEnhancedEditDialogOpen(true); // Use enhanced edit dialog instead
+    openEdit(tenant);
   };
 
   const handleDeleteClick = (tenant: TenantWithProperty) => {
-    setTenantToDelete(tenant);
-    setDeleteDialogOpen(true);
+    openDeleteDialog(tenant);
   };
 
   const handleDeleteConfirm = async () => {
     if (!tenantToDelete) return;
-
-    try {
-      setActionLoading(true);
-      await tenantsService.delete(tenantToDelete.id);
-      toast.success(t('toasts.deleteSuccess'));
-      await loadTenants();
-      setDeleteDialogOpen(false);
-      setTenantToDelete(null);
-    } catch (error) {
-      toast.error(t('toasts.deleteError'));
-      console.error(error);
-    } finally {
-      setActionLoading(false);
-    }
-  };
-
-  const handleEnhancedSubmit = async (result: TenantWithContractResult) => {
-    toast.success(t('toasts.addTenantWithContractSuccess', { tenantName: result.tenant.name }));
-    await loadTenants();
-    setEnhancedDialogOpen(false);
-  };
-
-  const handleEnhancedEditSuccess = async () => {
-    await loadTenants();
-    setEnhancedEditDialogOpen(false);
-    setSelectedTenant(null);
-  };
-
-  const handleScheduleMeeting = (tenant: TenantWithProperty) => {
-    navigate(`/calendar?open_add_meeting=true&tenant_id=${tenant.id}`);
-  };
-
-  const getAssignmentBadge = (tenant: TenantWithProperty) => {
-    if (tenant.property) {
-      return <Badge className={getStatusBadgeClasses('assigned')}>{t('status.assigned')}</Badge>;
-    }
-    return <Badge className={getStatusBadgeClasses('unassigned')}>{t('status.unassigned')}</Badge>;
+    await handleDeleteConfirmAction(tenantToDelete);
   };
 
   return (
@@ -171,162 +115,41 @@ export const Tenants = () => {
           </>
         )}
         renderTableRow={(tenant) => (
-          <TableRow>
-            <TableCell>
-              <div>
-                <div className="font-medium">{tenant.name}</div>
-                {tenant.notes && (
-                  <div className={`text-xs ${COLORS.muted.textLight} mt-1 line-clamp-1`}>
-                    {tenant.notes}
-                  </div>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>
-              <div className="space-y-1">
-                {tenant.phone && (
-                  <div className="flex items-center gap-2 text-sm">
-                    <Phone className={`h-3 w-3 ${COLORS.muted.textLight}`} />
-                    <span className={`${COLORS.gray.text600}`}>{tenant.phone}</span>
-                  </div>
-                )}
-                {tenant.email && (
-                  <div className="flex items-center gap-2 text-sm min-w-0">
-                    <Mail className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                    <span className={`${COLORS.gray.text600} truncate max-w-[150px] md:max-w-[250px]`}>{tenant.email}</span>
-                  </div>
-                )}
-                {!tenant.phone && !tenant.email && (
-                  <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>
-              {tenant.property ? (
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <Building2 className={`h-3 w-3 ${COLORS.primary.text} flex-shrink-0`} />
-                  <span className={`${COLORS.gray.text700} truncate max-w-[150px] md:max-w-[250px]`}>{tenant.property.address}</span>
-                </div>
-              ) : (
-                <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
-                  <UserX className="h-3 w-3" />
-                  <span>{t('noProperty')}</span>
-                </div>
-              )}
-            </TableCell>
-            <TableCell>
-              {getAssignmentBadge(tenant)}
-            </TableCell>
-            <TableCell>
-              <TableActionButtons
-                onEdit={() => handleEditTenant(tenant)}
-                onDelete={() => handleDeleteClick(tenant)}
-                showView={false}
-                customActions={[
-                  {
-                    icon: <CalendarPlus className="h-4 w-4" />,
-                    tooltip: t('scheduleMeeting'),
-                    onClick: () => handleScheduleMeeting(tenant),
-                  },
-                ]}
-              />
-            </TableCell>
-          </TableRow>
+          <TenantTableRow
+            tenant={tenant}
+            onEdit={handleEditTenant}
+            onDelete={handleDeleteClick}
+            onScheduleMeeting={handleScheduleMeeting}
+          />
         )}
         renderCardContent={(tenant) => (
-          <div className="space-y-3">
-            {/* Header */}
-            <div className="flex items-start justify-between gap-2">
-              <div className="flex-1">
-                <span className={`font-semibold text-base ${COLORS.gray.text900}`}>
-                  {tenant.name}
-                </span>
-                {tenant.notes && (
-                  <p className={`text-xs ${COLORS.gray.text500} mt-1 line-clamp-2`}>
-                    {tenant.notes}
-                  </p>
-                )}
-              </div>
-              <div className="flex-shrink-0">
-                {getAssignmentBadge(tenant)}
-              </div>
-            </div>
-
-            {/* Body */}
-            <div className="space-y-2">
-              {/* Property Info */}
-              {tenant.property ? (
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <Building2 className={`h-4 w-4 ${COLORS.primary.text} flex-shrink-0`} />
-                  <span className={`${COLORS.gray.text700} truncate`}>{tenant.property.address}</span>
-                </div>
-              ) : (
-                <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight}`}>
-                  <UserX className="h-4 w-4" />
-                  <span>{t('noPropertyAssigned')}</span>
-                </div>
-              )}
-
-              {/* Contact Actions - Clickable Icons */}
-              <div className="flex items-center gap-2">
-                {tenant.phone && (
-                  <a
-                    href={`tel:${tenant.phone}`}
-                    className="h-11 w-11 flex items-center justify-center rounded-md border border-emerald-300 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:border-emerald-400 transition-colors"
-                    aria-label={t('callTenant')}
-                  >
-                    <Phone className="h-5 w-5" />
-                  </a>
-                )}
-                {tenant.email && (
-                  <a
-                    href={`mailto:${tenant.email}`}
-                    className="h-11 w-11 flex items-center justify-center rounded-md border border-blue-300 bg-blue-50 text-blue-700 hover:bg-blue-100 hover:border-blue-400 transition-colors"
-                    aria-label={t('emailTenant')}
-                  >
-                    <Mail className="h-5 w-5" />
-                  </a>
-                )}
-              </div>
-            </div>
-
-            {/* Footer - Actions */}
-            <div className="flex gap-2 pt-2 border-t">
-              <TableActionButtons
-                onEdit={() => handleEditTenant(tenant)}
-                onDelete={() => handleDeleteClick(tenant)}
-                showView={false}
-                customActions={[
-                  {
-                    icon: <CalendarPlus className="h-4 w-4" />,
-                    tooltip: t('scheduleMeeting'),
-                    onClick: () => handleScheduleMeeting(tenant),
-                  },
-                ]}
-              />
-            </div>
-          </div>
+          <TenantCard
+            tenant={tenant}
+            onEdit={handleEditTenant}
+            onDelete={handleDeleteClick}
+            onScheduleMeeting={handleScheduleMeeting}
+          />
         )}
         deleteDialog={{
-          open: deleteDialogOpen,
+          open: isDeleteDialogOpen,
           title: t('deleteDialog.title'),
           description: t('deleteDialog.description', { tenantName: tenantToDelete?.name }),
           onConfirm: handleDeleteConfirm,
-          onCancel: () => setDeleteDialogOpen(false),
+          onCancel: closeDeleteDialog,
           loading: actionLoading,
         }}
       />
 
       <EnhancedTenantDialog
-        open={enhancedDialogOpen}
-        onOpenChange={setEnhancedDialogOpen}
+        open={isCreateOpen}
+        onOpenChange={(open) => (open ? openCreate() : closeCreate())}
         onSuccess={handleEnhancedSubmit}
       />
 
       {selectedTenant && (
         <EnhancedTenantEditDialog
-          open={enhancedEditDialogOpen}
-          onOpenChange={setEnhancedEditDialogOpen}
+          open={isEditOpen}
+          onOpenChange={(open) => (open ? openEdit(selectedTenant) : closeEdit())}
           tenant={selectedTenant}
           onSuccess={handleEnhancedEditSuccess}
         />

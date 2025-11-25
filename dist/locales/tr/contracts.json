@@ -108,9 +108,13 @@
     "subtitle": "Kira sözleşmesi bilgilerini doldurun",
     "sections": {
       "owner": "Ev Sahibi Bilgileri",
+      "ownerDescription": "Mülk sahibinin bilgilerini giriniz",
       "tenant": "Kiracı Bilgileri",
+      "tenantDescription": "Kiracının bilgilerini giriniz",
       "property": "Mülk Bilgileri",
-      "contract": "Sözleşme Detayları"
+      "propertyDescription": "Kiralanacak mülkün adres bilgileri",
+      "contract": "Sözleşme Detayları",
+      "contractDescription": "Sözleşme detayları"
     },
     "fields": {
       "owner_name": "Ev Sahibi Adı Soyadı",
@@ -143,14 +147,17 @@
       "owner_name": "Ali Yılmaz",
       "owner_tc": "12345678901",
       "owner_iban": "TR123456789012345678901234",
-      "owner_phone": "0539 217 47 82",
+      "owner_phone": "0555 123 45 67",
       "tenant_name": "Ayşe Demir",
+      "tenant_address": "Kiracının mevcut adresi",
       "mahalle": "Moda Mahallesi",
       "cadde_sokak": "Atatürk Caddesi",
       "bina_no": "123",
       "daire_no": "5",
       "ilce": "Kadıköy",
-      "il": "İstanbul"
+      "il": "İstanbul",
+      "payment_method": "Banka Transferi",
+      "special_conditions": "Özel şartlar veya notlar..."
     },
     "propertyTypes": {
       "apartment": "Daire",
@@ -159,6 +166,7 @@
     },
     "buttons": {
       "submit": "Sözleşme Oluştur",
+      "submitting": "Oluşturuluyor...",
       "cancel": "İptal",
       "reset": "Formu Temizle"
     },

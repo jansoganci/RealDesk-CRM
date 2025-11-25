@@ -205,11 +205,15 @@ class ContractsService {
   }
 
   async getContractPdfUrl(filePath: string): Promise<string> {
-    const { data } = supabase.storage
+    // Use createSignedUrl for private bucket (expires in 1 hour)
+    const { data, error } = await supabase.storage
       .from('contract-pdfs')
-      .getPublicUrl(filePath);
+      .createSignedUrl(filePath, 3600); // 3600 seconds = 1 hour
 
-    return data.publicUrl;
+    if (error) throw error;
+    if (!data?.signedUrl) throw new Error('Failed to create signed URL');
+
+    return data.signedUrl;
   }
 
   async getStats() {

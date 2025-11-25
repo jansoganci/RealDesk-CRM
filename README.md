@@ -2,7 +2,7 @@
 
 Modern, mobile-first Real Estate Customer Relationship Management (CRM) system built for Turkish real estate agents. Manage properties, owners, tenants, contracts, and reminders with an intuitive, responsive interface optimized for mobile devices.
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)
 ![React](https://img.shields.io/badge/React-18.3-blue.svg)
@@ -57,12 +57,15 @@ Modern, mobile-first Real Estate Customer Relationship Management (CRM) system b
 
 - **📄 Contracts Management**
   - Rental contract creation and management
+  - Auto-generated contract PDFs with Turkish template
   - Contract PDF upload and storage
+  - Legacy contract import from PDF/DOCX (OCR-based extraction)
   - Start/end date tracking
-  - Rent amount management
+  - Rent amount management with multi-currency support
   - Contract status (Active, Archived, Inactive)
   - Rent increase reminders
   - Expiration warnings (30 days before expiry)
+  - Download/upload PDFs directly from list
 
 - **🔔 Reminders System**
   - Contract expiration reminders
@@ -75,6 +78,37 @@ Modern, mobile-first Real Estate Customer Relationship Management (CRM) system b
   - Occupancy rates
   - Contract overview
   - Quick insights and metrics
+  - Real-time currency exchange rates (USD/EUR/TRY)
+  - Quick add button for rapid entity creation
+
+- **💰 Finance Management**
+  - Income and expense tracking
+  - Multi-currency support (TRY, USD, EUR)
+  - Expense categorization with custom categories
+  - Recurring expenses management
+  - Budget tracking per category
+  - Financial analytics and reports
+  - Receipt upload and storage
+  - Property and contract linkage
+
+- **📅 Calendar & Meetings**
+  - Meeting and appointment scheduling
+  - Property viewings management
+  - Tenant and client associations
+  - Location tracking
+  - Calendar view interface
+
+- **💼 Commissions Tracking**
+  - Sales commission tracking
+  - Rental commission management
+  - Multi-currency support
+  - Commission history and reports
+
+- **🔍 Property Inquiries**
+  - Lead management system
+  - Property matching algorithm
+  - Client requirements tracking
+  - Inquiry status management
 
 ### User Experience
 
@@ -114,6 +148,8 @@ Modern, mobile-first Real Estate Customer Relationship Management (CRM) system b
 - **Zod 3.23** - Schema validation
 - **Sonner** - Toast notifications
 - **date-fns 3.6** - Date utilities
+- **html2pdf.js** - PDF generation
+- **i18next** - Internationalization (TR/EN)
 
 ### Backend & Database
 
@@ -232,6 +268,12 @@ The project includes the following migrations:
 - `20250103000000_add_contract_validation_rpcs.sql`
 - `20251030120000_add_contract_create_rpc.sql`
 - `20251030123000_photo_ordering_atomic.sql`
+- `20251102*.sql` - Multi-currency support
+- `20251104*.sql` - Meetings table
+- `20251110*.sql` - User preferences updates
+- `20251111*.sql` - Financial system
+- `20250105*.sql` - Property inquiries and commissions
+- `20251120*.sql` - Contract management enhancements
 
 ### Running the Application
 
@@ -298,12 +340,16 @@ emlak-crm/
 │   │   └── AuthContext.tsx # Authentication context
 │   ├── features/           # Feature modules
 │   │   ├── auth/           # Authentication
+│   │   ├── calendar/       # Calendar and meetings
 │   │   ├── contracts/      # Contracts management
+│   │   │   └── import/     # Legacy contract import
 │   │   ├── dashboard/      # Dashboard
-│   │   ├── owners/        # Owners management
+│   │   ├── finance/        # Financial tracking
+│   │   ├── inquiries/      # Property inquiries
+│   │   ├── owners/         # Owners management
 │   │   ├── properties/     # Properties management
 │   │   ├── reminders/      # Reminders system
-│   │   └── tenants/       # Tenants management
+│   │   └── tenants/        # Tenants management
 │   ├── hooks/              # Custom React hooks
 │   ├── lib/                # Utility functions
 │   │   ├── dates.ts       # Date utilities
@@ -358,9 +404,12 @@ This eliminates the need to navigate between separate pages, creating a streamli
 
 ### Contract PDF Management
 
-- Upload contract PDFs
+- **Auto-generated PDFs** - Turkish rental contract template with html2pdf.js
+- **PDF Upload** - Upload existing contract PDFs
+- **PDF Download** - Download contracts with signed URLs
+- **Legacy Import** - Import existing contracts from PDF/DOCX with OCR
+- **Turkish Font Support** - Proper rendering of Turkish characters (İ, Ş, Ğ, Ü, Ö, Ç)
 - Store in Supabase Storage
-- View and download contracts
 - Secure access with RLS policies
 
 ### Mobile-First Design
@@ -407,6 +456,13 @@ The application follows a mobile-first approach with the following optimizations
 - **property_photos** - Property photo references
 - **tenants** - Tenant profiles
 - **contracts** - Rental contracts with relationships
+- **meetings** - Calendar appointments and property viewings
+- **property_inquiries** - Lead management and property matching
+- **commissions** - Sales and rental commission tracking
+- **financial_transactions** - Income and expense tracking
+- **expense_categories** - Financial categorization system
+- **recurring_expenses** - Recurring financial obligations
+- **user_preferences** - User settings and preferences
 
 ### Key Relationships
 
@@ -433,9 +489,15 @@ The application uses a service layer pattern. For complete API documentation, se
 - `owners.service.ts` - Owner management
 - `tenants.service.ts` - Tenant operations
 - `contracts.service.ts` - Contract management
+- `contractPdf.service.ts` - PDF generation and management
+- `textExtraction.service.ts` - OCR text extraction from PDFs
 - `photos.service.ts` - Photo upload and management
 - `reminders.service.ts` - Reminder operations
 - `inquiries.service.ts` - Property inquiry management
+- `meetings.service.ts` - Calendar and meeting management
+- `commissions.service.ts` - Commission tracking
+- `financialTransactions.service.ts` - Financial tracking
+- `userPreferences.service.ts` - User settings management
 
 ### Service Proxy
 
