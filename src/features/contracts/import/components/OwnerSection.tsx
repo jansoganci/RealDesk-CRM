@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -16,21 +17,23 @@ interface OwnerSectionProps {
  * Displays form fields for property owner information
  */
 export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSectionProps) {
+  const { t } = useTranslation('contracts');
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">🏠 Ev Sahibi Bilgileri</CardTitle>
+        <CardTitle className="text-lg">{t('import.sections.owner')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="owner_name">
-            İsim Soyisim <span className="text-red-500">*</span>
+            {t('create.fields.owner_name')} <span className="text-red-500">*</span>
           </Label>
           <Input
             id="owner_name"
             value={formData.owner_name}
             onChange={(e) => onFieldUpdate('owner_name', e.target.value)}
-            placeholder={formData.owner_name ? "" : "Bulunamadı - lütfen girin"}
+            placeholder={formData.owner_name ? "" : t('import.placeholders.notFound')}
             className={cn(fieldErrors.owner_name && "border-red-500")}
           />
           {fieldErrors.owner_name && (
@@ -44,7 +47,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="owner_tc">
-              TC Kimlik No <span className="text-red-500">*</span>
+              {t('create.fields.owner_tc')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="owner_tc"
@@ -60,7 +63,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
           </div>
 
           <div>
-            <Label htmlFor="owner_phone">Telefon</Label>
+            <Label htmlFor="owner_phone">{t('create.fields.owner_phone')}</Label>
             <Input
               id="owner_phone"
               value={formData.owner_phone}
@@ -72,7 +75,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="owner_email">Email</Label>
+            <Label htmlFor="owner_email">{t('create.fields.owner_email')}</Label>
             <Input
               id="owner_email"
               type="email"
@@ -83,7 +86,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
           </div>
 
           <div>
-            <Label htmlFor="owner_iban">IBAN</Label>
+            <Label htmlFor="owner_iban">{t('create.fields.owner_iban')}</Label>
             <Input
               id="owner_iban"
               value={formData.owner_iban}

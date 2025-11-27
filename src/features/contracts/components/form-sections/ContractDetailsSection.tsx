@@ -53,7 +53,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                   {form.watch('start_date') ? (
                     format(form.watch('start_date'), 'PPP', { locale: tr })
                   ) : (
-                    <span>Tarih seçiniz</span>
+                    <span>{t('create.datePicker.selectDate')}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -88,7 +88,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                   {form.watch('end_date') ? (
                     format(form.watch('end_date'), 'PPP', { locale: tr })
                   ) : (
-                    <span>Tarih seçiniz</span>
+                    <span>{t('create.datePicker.selectDate')}</span>
                   )}
                 </Button>
               </PopoverTrigger>
@@ -112,7 +112,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
         {/* Quick Duration Buttons */}
         {form.watch('start_date') && (
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-gray-600 self-center mr-2">Hızlı süre seçimi:</span>
+            <span className="text-sm text-gray-600 self-center mr-2">{t('create.datePicker.quickDuration')}</span>
             <Button
               type="button"
               variant="outline"
@@ -124,7 +124,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 form.setValue('end_date', end);
               }}
             >
-              6 Ay
+              {t('create.datePicker.sixMonths')}
             </Button>
             <Button
               type="button"
@@ -137,7 +137,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 form.setValue('end_date', end);
               }}
             >
-              1 Yıl
+              {t('create.datePicker.oneYear')}
             </Button>
             <Button
               type="button"
@@ -150,7 +150,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 form.setValue('end_date', end);
               }}
             >
-              2 Yıl
+              {t('create.datePicker.twoYears')}
             </Button>
             <Button
               type="button"
@@ -163,7 +163,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 form.setValue('end_date', end);
               }}
             >
-              3 Yıl
+              {t('create.datePicker.threeYears')}
             </Button>
           </div>
         )}
@@ -207,7 +207,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
 
         {/* Payment Details */}
         <Separator />
-        <h4 className="text-sm font-medium">Ödeme Detayları (Opsiyonel)</h4>
+        <h4 className="text-sm font-medium">{t('create.sections.paymentDetailsOptional')}</h4>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>

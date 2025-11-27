@@ -35,4 +35,4 @@ export type { DuplicateNameCheck, DataChangesCheck, MultipleContractsCheck } fro
 
 // Text Extraction Service
 export { extractTextFromFile, extractTextFromFileViaProxy, parseContractFromText } from '../services/textExtraction.service';
-export type { ExtractTextRequest, ExtractTextResponse, ExtractTextError } from '../services/textExtraction.service';
+export type { ExtractTextRequest, ExtractTextResponse, ExtractTextError, ParsedContractData } from '../services/textExtraction.service';

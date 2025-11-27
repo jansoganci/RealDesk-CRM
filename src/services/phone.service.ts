@@ -19,6 +19,8 @@
  * normalizePhone('+90-539-217-47-82')   // '5392174782'
  */
 export function normalizePhone(phone: string): string {
+  if (!phone) return '';
+
   // Remove all non-digit characters
   let cleaned = phone.replace(/\D/g, '');
 

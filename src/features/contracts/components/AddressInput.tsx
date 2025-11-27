@@ -1,16 +1,31 @@
 /**
  * Address Input Component
  * Component-based address input with real-time preview
+ * Includes active contract warning for duplicate detection
  */
 
-import { useMemo } from 'react';
+import { useMemo, useEffect, useRef } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'sonner';
+import { format, parseISO } from 'date-fns';
+import { AlertTriangle } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { generateFullAddress } from '@/lib/serviceProxy';
+import { usePropertyActiveContract } from '../hooks/usePropertyActiveContract';
 import type { ContractFormData } from '../schemas/contractForm.schema';
+
+// Helper function to format date for display
+const formatDisplayDate = (dateString: string): string => {
+  try {
+    return format(parseISO(dateString), 'dd.MM.yyyy');
+  } catch {
+    return dateString;
+  }
+};
 
 interface AddressInputProps {
   form: UseFormReturn<ContractFormData>;
@@ -18,6 +33,8 @@ interface AddressInputProps {
 
 export function AddressInput({ form }: AddressInputProps) {
   const { t } = useTranslation('contracts');
+  const { activeContract, checkAddress, clearWarning } = usePropertyActiveContract();
+  const toastShownRef = useRef<string | null>(null);
 
   const { watch, setValue } = form;
 
@@ -28,6 +45,29 @@ export function AddressInput({ form }: AddressInputProps) {
   const daire_no = watch('daire_no');
   const ilce = watch('ilce');
   const il = watch('il');
+
+  // Check for active contract when address fields change
+  useEffect(() => {
+    // Only check if all required fields are filled
+    if (mahalle && cadde_sokak && bina_no && ilce && il) {
+      checkAddress({ mahalle, cadde_sokak, bina_no, daire_no, ilce, il });
+    } else {
+      clearWarning();
+    }
+  }, [mahalle, cadde_sokak, bina_no, daire_no, ilce, il, checkAddress, clearWarning]);
+
+  // Show toast when active contract is detected (only once per contract)
+  useEffect(() => {
+    if (activeContract && toastShownRef.current !== activeContract.id) {
+      toastShownRef.current = activeContract.id;
+      toast.warning(t('activeContractWarning.toastTitle'), {
+        description: t('activeContractWarning.toastDescription', { tenant: activeContract.tenant_name }),
+        duration: 5000,
+      });
+    } else if (!activeContract) {
+      toastShownRef.current = null;
+    }
+  }, [activeContract, t]);
 
   // Generate full address preview
   const fullAddressPreview = useMemo(() => {
@@ -49,6 +89,33 @@ export function AddressInput({ form }: AddressInputProps) {
 
   return (
     <div className="space-y-4">
+      {/* Active Contract Warning Banner */}
+      {activeContract && (
+        <Alert variant="warning" className="mb-4">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle className="font-semibold">
+            {t('activeContractWarning.bannerTitle')}
+          </AlertTitle>
+          <AlertDescription>
+            <p className="mb-2">{t('activeContractWarning.bannerMessage')}</p>
+            <ul className="list-disc list-inside space-y-1 text-sm">
+              <li>
+                <span className="font-medium">{t('activeContractWarning.tenant')}:</span>{' '}
+                {activeContract.tenant_name}
+              </li>
+              <li>
+                <span className="font-medium">{t('activeContractWarning.period')}:</span>{' '}
+                {formatDisplayDate(activeContract.start_date)} - {formatDisplayDate(activeContract.end_date)}
+              </li>
+              <li>
+                <span className="font-medium">{t('activeContractWarning.rent')}:</span>{' '}
+                {activeContract.rent_amount.toLocaleString()} {activeContract.currency}/ay
+              </li>
+            </ul>
+          </AlertDescription>
+        </Alert>
+      )}
+
       {/* Mahalle */}
       <div>
         <Label htmlFor="mahalle">
@@ -191,7 +258,7 @@ export function AddressInput({ form }: AddressInputProps) {
         </Label>
         <Input
           id="use_purpose"
-          placeholder="Mesken / İşyeri"
+          placeholder={t('create.placeholders.usePurpose')}
           {...form.register('use_purpose')}
         />
         {form.formState.errors.use_purpose && (

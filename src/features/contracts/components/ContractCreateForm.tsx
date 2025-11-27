@@ -44,7 +44,7 @@ export function ContractCreateForm() {
 
   const onSubmit = async (data: ContractFormData) => {
     if (!user?.id) {
-      toast.error('Kullanıcı oturumu bulunamadı');
+      toast.error(t('create.toasts.noSession'));
       return;
     }
 
@@ -64,35 +64,35 @@ export function ContractCreateForm() {
       // ========================================================================
       // V2: Call RPC function to create contract with auto-entity creation
       // ========================================================================
-      toast.info('Sözleşme oluşturuluyor...', { duration: 2000 });
+      toast.info(t('create.toasts.creating'), { duration: 2000 });
 
       const result = await createContractWithEntities(data, user.id);
 
       // Build success message with creation flags
       const messages: string[] = [];
       if (result.created_owner) {
-        messages.push('✓ Yeni ev sahibi oluşturuldu');
+        messages.push(t('create.toasts.ownerCreated'));
       } else {
-        messages.push('✓ Mevcut ev sahibi kullanıldı');
+        messages.push(t('create.toasts.ownerUsed'));
       }
 
       if (result.created_tenant) {
-        messages.push('✓ Yeni kiracı oluşturuldu');
+        messages.push(t('create.toasts.tenantCreated'));
       } else {
-        messages.push('✓ Mevcut kiracı kullanıldı');
+        messages.push(t('create.toasts.tenantUsed'));
       }
 
       if (result.created_property) {
-        messages.push('✓ Yeni mülk oluşturuldu');
+        messages.push(t('create.toasts.propertyCreated'));
       } else {
-        messages.push('✓ Mevcut mülk kullanıldı');
+        messages.push(t('create.toasts.propertyUsed'));
       }
 
-      messages.push('✓ Sözleşme oluşturuldu');
+      messages.push(t('create.toasts.contractCreated'));
 
       toast.success(messages.join('\n'), {
         duration: 6000,
-        description: 'Tüm işlemler başarıyla tamamlandı!'
+        description: t('create.toasts.allCompleted')
       });
 
       // ========================================================================
@@ -105,7 +105,7 @@ export function ContractCreateForm() {
     } catch (error) {
       console.error('Contract creation error:', error);
       toast.error(t('errors.createFailed'), {
-        description: error instanceof Error ? error.message : 'Bilinmeyen hata'
+        description: error instanceof Error ? error.message : t('create.toasts.unknownError')
       });
     } finally {
       setIsSubmitting(false);

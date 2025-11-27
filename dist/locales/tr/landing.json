@@ -94,6 +94,7 @@
     "contact": "İletişim",
     "privacy": "Gizlilik",
     "terms": "Şartlar",
+    "cookies": "Çerezler",
     "copyright": "© 2025 Emlak CRM. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir."
   }
 }

@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UploadStep } from './components/UploadStep';
 import { ExtractingStep } from './components/ExtractingStep';
 import { ReviewStep } from './components/ReviewStep';
@@ -19,6 +20,7 @@ type ImportStep = 'upload' | 'extracting' | 'review' | 'success';
 export const ContractImportPage = () => {
   const [currentStep, setCurrentStep] = useState<ImportStep>('upload');
   const importState = useContractImport();
+  const { t } = useTranslation('contracts');
 
   const handleReset = () => {
     setCurrentStep('upload');
@@ -26,15 +28,15 @@ export const ContractImportPage = () => {
   };
 
   return (
-    <MainLayout title="Eski Sözleşme Aktarma">
+    <MainLayout title={t('import.title')}>
       <PageContainer>
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            📥 Eski Sözleşme Aktarma
+            {t('import.title')}
           </h1>
           <p className="text-gray-600">
-            PDF veya Word dosyanızdan sözleşme bilgilerini otomatik olarak çıkarıp sisteme aktarın
+            {t('import.subtitle')}
           </p>
         </div>
 
@@ -42,15 +44,15 @@ export const ContractImportPage = () => {
       {currentStep !== 'upload' && (
         <div className="mb-8 flex items-center gap-2 text-sm text-gray-600">
           <span className={currentStep === 'extracting' || currentStep === 'review' || currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
-            1. Yükle
+            {t('import.progress.upload')}
           </span>
           <span>→</span>
           <span className={currentStep === 'review' || currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
-            2. İncele
+            {t('import.progress.review')}
           </span>
           <span>→</span>
           <span className={currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
-            3. Tamamla
+            {t('import.progress.complete')}
           </span>
         </div>
       )}

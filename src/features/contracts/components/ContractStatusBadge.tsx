@@ -1,4 +1,4 @@
-import { Badge } from '../../components/ui/badge';
+import { Badge } from '@/components/ui/badge';
 import { FileText } from 'lucide-react';
 import { getStatusBadgeClasses, COLORS } from '@/config/colors';
 import { useTranslation } from 'react-i18next';

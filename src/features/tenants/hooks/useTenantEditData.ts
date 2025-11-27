@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { UseFormReturn, UseFormSetValue } from 'react-hook-form';
+import { UseFormSetValue } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { contractsService } from '../../../lib/serviceProxy';
 import type { TenantWithProperty, Contract, ContractStatus } from '../../../types';
@@ -13,7 +14,6 @@ import type { TenantEditFormData } from '../schemas/tenantEditSchema';
 interface UseTenantEditDataOptions {
   open: boolean;
   tenant: TenantWithProperty;
-  form: UseFormReturn<TenantEditFormData>;
   setValue: UseFormSetValue<TenantEditFormData>;
 }
 
@@ -30,9 +30,9 @@ interface UseTenantEditDataReturn {
 export function useTenantEditData({
   open,
   tenant,
-  form,
   setValue,
 }: UseTenantEditDataOptions): UseTenantEditDataReturn {
+  const { t } = useTranslation('tenants');
   const [loading, setLoading] = useState(false);
   const [primaryContract, setPrimaryContract] = useState<Contract | null>(null);
 
@@ -83,11 +83,11 @@ export function useTenantEditData({
       
     } catch (error) {
       console.error('Failed to load tenant and contract data:', error);
-      toast.error('Failed to load tenant and contract data');
+      toast.error(t('edit.loadDataFailed'));
     } finally {
       setLoading(false);
     }
-  }, [tenant, setValue]);
+  }, [tenant, setValue, t]);
 
   // Load data when dialog opens
   useEffect(() => {

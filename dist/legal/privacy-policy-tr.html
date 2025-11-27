@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gizlilik Politikası - Emlak CRM</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
+    <div class="min-h-screen">
+        <!-- Header -->
+        <header class="bg-white border-b border-gray-200 shadow-sm">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                <div class="flex items-center justify-between">
+                    <a href="/" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                        Emlak CRM
+                    </a>
+                    <div class="flex items-center gap-4">
+                        <a href="privacy-policy-en.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">English</a>
+                        <a href="/" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Ana Sayfaya Dön</a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
+                <h1 class="text-4xl font-bold text-gray-900 mb-4">Gizlilik Politikası</h1>
+                <p class="text-gray-600 mb-8">Son Güncelleme: 25 Ocak 2025</p>
+
+                <div class="prose prose-lg max-w-none space-y-8">
+                    <!-- Introduction -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Giriş</h2>
+                        <p class="text-gray-700 leading-relaxed">
+                            Emlak CRM ("Biz", "Bizim", "Platform") olarak, kullanıcılarımızın gizliliğini korumayı taahhüt ediyoruz. 
+                            Bu Gizlilik Politikası, kişisel verilerinizin nasıl toplandığını, kullanıldığını, saklandığını ve korunduğunu açıklar.
+                        </p>
+                        <p class="text-gray-700 leading-relaxed mt-4">
+                            Bu platformu kullanarak, bu politikanın şartlarını kabul etmiş olursunuz. 
+                            Politikamızla ilgili herhangi bir sorunuz varsa, lütfen bizimle iletişime geçin.
+                        </p>
+                    </section>
+
+                    <!-- Data Collection -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Toplanan Veriler</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Platformumuz aşağıdaki kişisel verileri toplar:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li><strong>Kimlik Bilgileri:</strong> Ad, soyad, TC Kimlik Numarası (şifrelenmiş)</li>
+                            <li><strong>İletişim Bilgileri:</strong> Telefon numarası, e-posta adresi</li>
+                            <li><strong>Finansal Bilgiler:</strong> IBAN (şifrelenmiş), kira tutarları, komisyon bilgileri</li>
+                            <li><strong>Konum Bilgileri:</strong> Adres, il, ilçe, mahalle bilgileri</li>
+                            <li><strong>Sözleşme Bilgileri:</strong> Kira sözleşmeleri, tarihler, ödeme bilgileri</li>
+                            <li><strong>Kimlik Doğrulama Verileri:</strong> E-posta adresi, şifre (Supabase Auth tarafından güvenli şekilde saklanır)</li>
+                            <li><strong>Kullanım Verileri:</strong> Platform kullanım istatistikleri, oturum bilgileri</li>
+                        </ul>
+                    </section>
+
+                    <!-- Data Usage -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Verilerin Kullanımı</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Toplanan veriler aşağıdaki amaçlarla kullanılır:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li>Emlak yönetimi hizmetlerinin sağlanması</li>
+                            <li>Kiracı ve mal sahibi bilgilerinin yönetimi</li>
+                            <li>Sözleşme oluşturma ve takibi</li>
+                            <li>Otomatik hatırlatıcıların gönderilmesi</li>
+                            <li>Finansal işlemlerin kayıt altına alınması</li>
+                            <li>Platform güvenliğinin sağlanması</li>
+                            <li>Yasal yükümlülüklerin yerine getirilmesi</li>
+                            <li>Hizmet iyileştirmeleri ve analiz</li>
+                        </ul>
+                    </section>
+
+                    <!-- Data Storage -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Veri Saklama ve Güvenlik</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Verileriniz aşağıdaki güvenlik önlemleriyle korunur:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li><strong>Şifreleme:</strong> Hassas veriler (TC Kimlik No, IBAN) AES-256-GCM şifreleme ile korunur</li>
+                            <li><strong>Güvenli Depolama:</strong> Veriler Supabase (PostgreSQL) veritabanında saklanır</li>
+                            <li><strong>Row Level Security (RLS):</strong> Her kullanıcı yalnızca kendi verilerine erişebilir</li>
+                            <li><strong>HTTPS:</strong> Tüm veri aktarımları şifrelenmiş bağlantılar üzerinden yapılır</li>
+                            <li><strong>Düzenli Yedeklemeler:</strong> Veriler düzenli olarak yedeklenir</li>
+                            <li><strong>Erişim Kontrolü:</strong> Verilere erişim sıkı bir şekilde kontrol edilir</li>
+                        </ul>
+                    </section>
+
+                    <!-- Third Party Services -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Üçüncü Taraf Hizmetleri</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Platformumuz aşağıdaki üçüncü taraf hizmetleri kullanır:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li><strong>Supabase:</strong> Veritabanı, kimlik doğrulama ve dosya depolama hizmetleri (Veri İşleyici)</li>
+                            <li><strong>Döviz Kuru API'leri:</strong> Döviz kurlarının güncellenmesi için</li>
+                        </ul>
+                        <p class="text-gray-700 leading-relaxed mt-4">
+                            Bu hizmet sağlayıcılar, verilerinizi yalnızca hizmetlerimizi sağlamak amacıyla işler ve 
+                            kendi gizlilik politikalarına tabidirler. Supabase ile Veri İşleme Sözleşmesi (DPA) imzalanmıştır.
+                        </p>
+                    </section>
+
+                    <!-- User Rights -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Kullanıcı Hakları (KVKK)</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            KVKK (Kişisel Verilerin Korunması Kanunu) kapsamında aşağıdaki haklara sahipsiniz:
+                        </p>
+                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
+                            <li><strong>Bilgi Alma Hakkı:</strong> Kişisel verilerinizin işlenip işlenmediğini öğrenme</li>
+                            <li><strong>Erişim Hakkı:</strong> İşlenen kişisel verileriniz hakkında bilgi talep etme</li>
+                            <li><strong>Düzeltme Hakkı:</strong> Yanlış veya eksik verilerin düzeltilmesini isteme</li>
+                            <li><strong>Silme Hakkı:</strong> Kişisel verilerinizin silinmesini isteme</li>
+                            <li><strong>İtiraz Hakkı:</strong> Verilerinizin işlenmesine itiraz etme</li>
+                            <li><strong>Veri Taşınabilirliği:</strong> Verilerinizi başka bir platforma aktarma</li>
+                        </ul>
+                        <p class="text-gray-700 leading-relaxed mt-4">
+                            Bu haklarınızı kullanmak için lütfen bizimle iletişime geçin.
+                        </p>
+                    </section>
+
+                    <!-- Data Retention -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">7. Veri Saklama Süresi</h2>
+                        <p class="text-gray-700 leading-relaxed">
+                            Kişisel verileriniz, hesabınız aktif olduğu sürece saklanır. Hesabınızı sildiğinizde, 
+                            verileriniz 30 gün içinde kalıcı olarak silinir. Yasal yükümlülükler gereği saklanması 
+                            gereken veriler, ilgili yasal süre boyunca saklanmaya devam eder.
+                        </p>
+                    </section>
+
+                    <!-- Cookies -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Çerezler</h2>
+                        <p class="text-gray-700 leading-relaxed">
+                            Platformumuz, kimlik doğrulama ve oturum yönetimi için çerezler kullanır. 
+                            Detaylı bilgi için <a href="cookie-policy-tr.html" class="text-blue-600 hover:text-blue-700 underline">Çerez Politikamızı</a> inceleyebilirsiniz.
+                        </p>
+                    </section>
+
+                    <!-- Changes -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">9. Politika Değişiklikleri</h2>
+                        <p class="text-gray-700 leading-relaxed">
+                            Bu Gizlilik Politikasını zaman zaman güncelleyebiliriz. Önemli değişikliklerde, 
+                            size e-posta veya platform içi bildirim ile haber vereceğiz. Değişiklikler, 
+                            yayınlandığı tarihten itibaren geçerlidir.
+                        </p>
+                    </section>
+
+                    <!-- Contact -->
+                    <section>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">10. İletişim</h2>
+                        <p class="text-gray-700 leading-relaxed mb-4">
+                            Gizlilik politikamız hakkında sorularınız veya veri haklarınızı kullanmak istiyorsanız, 
+                            lütfen bizimle iletişime geçin:
+                        </p>
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                            <p class="text-gray-700"><strong>E-posta:</strong> privacy@emlakcrm.com</p>
+                            <p class="text-gray-700 mt-2"><strong>KVKK Başvuru:</strong> kvkk@emlakcrm.com</p>
+                            <p class="text-gray-700 mt-2"><strong>Adres:</strong> [Şirket Adresi]</p>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Footer -->
+                <div class="mt-12 pt-8 border-t border-gray-200">
+                    <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
+                        <p class="text-sm text-gray-500">© 2025 Emlak CRM. Tüm hakları saklıdır.</p>
+                        <div class="flex gap-6">
+                            <a href="terms-of-service-tr.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Kullanım Koşulları</a>
+                            <a href="cookie-policy-tr.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Çerez Politikası</a>
+                            <a href="/" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Ana Sayfa</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+

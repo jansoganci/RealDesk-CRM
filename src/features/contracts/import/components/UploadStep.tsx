@@ -4,6 +4,7 @@
  */
 
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { FileText, Upload } from 'lucide-react';
 import { toast } from 'sonner';
@@ -15,6 +16,7 @@ interface UploadStepProps {
 }
 
 export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
+  const { t } = useTranslation('contracts');
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
 
@@ -25,8 +27,8 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
-      toast.error('Geçersiz dosya türü', {
-        description: 'Sadece PDF veya Word (.docx) dosyası yükleyebilirsiniz'
+      toast.error(t('import.upload.invalidFileType'), {
+        description: t('import.upload.invalidFileTypeDescription')
       });
       return false;
     }
@@ -34,8 +36,10 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
     // Validate file size (10 MB)
     const maxSize = 10 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error('Dosya çok büyük', {
-        description: `Dosya boyutu: ${(file.size / 1024 / 1024).toFixed(1)} MB. Maksimum: 10 MB`
+      toast.error(t('import.upload.fileTooLarge'), {
+        description: t('import.upload.fileTooLargeDescription', {
+          size: (file.size / 1024 / 1024).toFixed(1)
+        })
       });
       return false;
     }
@@ -111,13 +115,13 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
         {/* Primary Text */}
         <p className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2 text-center px-4">
           {isDragging
-            ? "Dosyayı buraya bırakın"
-            : "PDF dosyanızı buraya sürükleyin"}
+            ? t('import.upload.dropHere')
+            : t('import.upload.dragHere')}
         </p>
 
         {/* Secondary Text */}
         <p className="text-lg md:text-xl text-gray-500 mb-8 text-center px-4">
-          veya bilgisayarınızdan seçin
+          {t('import.upload.orSelect')}
         </p>
 
         {/* Big Button */}
@@ -130,7 +134,7 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
           }}
         >
           <Upload className="mr-2 h-5 w-5" />
-          Bilgisayardan Seç
+          {t('import.upload.selectFromComputer')}
         </Button>
       </div>
 
@@ -146,10 +150,10 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
       {/* Help Text */}
       <div className="mt-8 text-center space-y-2">
         <p className="text-sm text-gray-500">
-          PDF veya Word dosyası yükleyebilirsiniz (Maks 10 MB)
+          {t('import.upload.helpText')}
         </p>
         <p className="text-xs text-gray-400">
-          Sistem otomatik olarak ev sahibi, kiracı ve sözleşme bilgilerini çıkaracak
+          {t('import.upload.autoExtract')}
         </p>
       </div>
     </div>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extraction PoC Test</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 { color: #2563eb; margin-bottom: 10px; }
+    .subtitle { color: #666; margin-bottom: 30px; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 600; }
+    input[type="text"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 14px;
+      box-sizing: border-box;
+    }
+    input:focus { border-color: #2563eb; outline: none; }
+    button {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      border: none;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 10px;
+    }
+    button:hover { opacity: 0.9; }
+    button:disabled { background: #ccc; cursor: not-allowed; }
+    .result {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+    .result.success { background: #dcfce7; border: 1px solid #22c55e; display: block; }
+    .result.error { background: #fee2e2; border: 1px solid #ef4444; display: block; }
+    .result h3 { margin-top: 0; }
+    .metadata { font-size: 13px; color: #666; margin-bottom: 15px; }
+    .metadata span {
+      display: inline-block;
+      background: #f0f0f0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-right: 8px;
+      margin-bottom: 4px;
+    }
+    .text-preview {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 8px;
+      max-height: 400px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+    .note {
+      background: #fef3c7;
+      border: 1px solid #f59e0b;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    .loading::after {
+      content: '';
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid #fff;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-left: 10px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Extraction PoC Test</h1>
+    <p class="subtitle">DOCX ve PDF dosyalarından metin çıkarma testi (Auth-free)</p>
+
+    <div class="note">
+      ⚠️ <strong>Test Modu:</strong> Auth devre dışı. Sadece extraction test ediliyor.
+    </div>
+
+    <div class="form-group">
+      <label>Supabase URL</label>
+      <input type="text" id="supabaseUrl" placeholder="https://xxx.supabase.co" />
+    </div>
+
+    <div class="form-group">
+      <label>Dosya Seçin (DOCX veya PDF)</label>
+      <input type="file" id="fileInput" accept=".docx,.pdf" />
+    </div>
+
+    <button id="testBtn" onclick="testExtraction()">🚀 Test Et</button>
+
+    <div id="result" class="result">
+      <h3 id="resultTitle"></h3>
+      <div id="metadata" class="metadata"></div>
+      <div id="textPreview" class="text-preview"></div>
+    </div>
+  </div>
+
+  <script>
+    // Load saved URL
+    document.getElementById('supabaseUrl').value = localStorage.getItem('test_supabaseUrl') || '';
+
+    async function testExtraction() {
+      const supabaseUrl = document.getElementById('supabaseUrl').value.trim();
+      const fileInput = document.getElementById('fileInput');
+      const file = fileInput.files[0];
+
+      if (!supabaseUrl) {
+        alert('Lütfen Supabase URL girin');
+        return;
+      }
+
+      if (!file) {
+        alert('Lütfen bir dosya seçin');
+        return;
+      }
+
+      // Save URL
+      localStorage.setItem('test_supabaseUrl', supabaseUrl);
+
+      const btn = document.getElementById('testBtn');
+      const result = document.getElementById('result');
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="loading">Test ediliyor...</span>';
+      result.className = 'result';
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const response = await fetch(`${supabaseUrl}/functions/v1/extract-contract-data-v2`, {
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          result.className = 'result success';
+          document.getElementById('resultTitle').textContent = '✅ Başarılı!';
+
+          const meta = data.metadata || {};
+          document.getElementById('metadata').innerHTML = `
+            <span>📄 ${meta.filename}</span>
+            <span>📦 ${(meta.fileSize / 1024).toFixed(1)} KB</span>
+            <span>📝 ${meta.fileType?.toUpperCase()}</span>
+            <span>⏱️ ${meta.extractionTime} ms</span>
+            <span>📊 ${meta.textLength} karakter</span>
+            <span>🔍 ${data.method}</span>
+            ${meta.ocrApplied ? '<span>🤖 OCR Kullanıldı</span>' : ''}
+          `;
+
+          const previewText = data.text.length > 5000
+            ? data.text.substring(0, 5000) + '\n\n... (5000 karakterden sonrası kırpıldı)'
+            : data.text;
+          document.getElementById('textPreview').textContent = previewText || '(Metin çıkarılamadı)';
+        } else {
+          result.className = 'result error';
+          document.getElementById('resultTitle').textContent = '❌ Hata!';
+          document.getElementById('metadata').innerHTML = '';
+          document.getElementById('textPreview').textContent = data.error || JSON.stringify(data, null, 2);
+        }
+      } catch (error) {
+        result.className = 'result error';
+        document.getElementById('resultTitle').textContent = '❌ Bağlantı Hatası!';
+        document.getElementById('metadata').innerHTML = '';
+        document.getElementById('textPreview').textContent = error.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = '🚀 Test Et';
+      }
+    }
+  </script>
+</body>
+</html>

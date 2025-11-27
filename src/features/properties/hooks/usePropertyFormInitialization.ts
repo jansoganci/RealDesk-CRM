@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { UseFormReset, UseFormSetValue, FieldValues } from 'react-hook-form';
+import { UseFormReset, UseFormSetValue, FieldValues, Path } from 'react-hook-form';
 import { Property } from '@/types';
 
 interface UsePropertyFormInitializationOptions<T extends FieldValues> {
@@ -88,11 +88,11 @@ export function usePropertyFormInitialization<T extends FieldValues>({
     if (!property && open) {
       // Reset form with new property type defaults
       if (propertyType === 'rental') {
-        setValue('property_type', 'rental' as any);
-        setValue('status', 'Empty' as any);
+        setValue('property_type' as Path<T>, 'rental' as any);
+        setValue('status' as Path<T>, 'Empty' as any);
       } else {
-        setValue('property_type', 'sale' as any);
-        setValue('status', 'Available' as any);
+        setValue('property_type' as Path<T>, 'sale' as any);
+        setValue('status' as Path<T>, 'Available' as any);
       }
     }
   }, [propertyType, property, open, setValue]);

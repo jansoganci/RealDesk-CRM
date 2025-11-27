@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { FileText, Loader2 } from 'lucide-react';
 import { extractTextFromFileViaProxy, parseContractFromText } from '@/lib/serviceProxy';
@@ -27,7 +28,7 @@ export const PDFExtractButton = ({
   size = 'default',
   className = '',
 }: PDFExtractButtonProps) => {
-  // const { t } = useTranslation(['dashboard', 'common']);
+  const { t } = useTranslation('contracts');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [extractedText, setExtractedText] = useState('');
@@ -49,14 +50,14 @@ export const PDFExtractButton = ({
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
-      toast.error('Sadece PDF ve EPUB dosyaları desteklenir.');
+      toast.error(t('pdfExtract.invalidFileType'));
       return;
     }
 
     // Validate file size (100 MB)
     const maxSize = 100 * 1024 * 1024;
     if (file.size > maxSize) {
-      toast.error('Dosya boyutu çok büyük. Maksimum 100 MB.');
+      toast.error(t('pdfExtract.fileTooLarge'));
       return;
     }
 
@@ -74,7 +75,7 @@ export const PDFExtractButton = ({
       const result = await extractTextFromFileViaProxy(file);
 
       if (!result.text || result.text.length === 0) {
-        throw new Error('PDF\'den metin çıkarılamadı. Dosya boş olabilir veya taranmış bir belge olabilir.');
+        throw new Error(t('pdfExtract.extractionFailed'));
       }
 
       setExtractedText(result.text);
@@ -84,7 +85,9 @@ export const PDFExtractButton = ({
       setParsedData(parsed);
 
       toast.success(
-        `Metin başarıyla çıkarıldı! ${result.token_count ? `${result.token_count} token` : ''}`
+        t('pdfExtract.success', {
+          tokens: result.token_count ? `${result.token_count} ${t('pdfExtract.tokens')}` : ''
+        })
       );
 
       // Callback
@@ -94,7 +97,7 @@ export const PDFExtractButton = ({
       toast.error(
         error instanceof Error
           ? error.message
-          : 'PDF işlenirken bir hata oluştu.'
+          : t('pdfExtract.processingError')
       );
       setDialogOpen(false);
     } finally {
@@ -139,14 +142,14 @@ export const PDFExtractButton = ({
         size={size}
         disabled={extracting}
         className={`bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm ${className}`}
-        title="PDF'den metin çıkar"
+        title={t('pdfExtract.buttonTitle')}
       >
         {extracting ? (
           <Loader2 className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4 animate-spin" />
         ) : (
           <FileText className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
         )}
-        <span className="hidden sm:inline">PDF Çıkar</span>
+        <span className="hidden sm:inline">{t('pdfExtract.buttonText')}</span>
         <span className="sm:hidden">PDF</span>
       </Button>
 
@@ -155,7 +158,7 @@ export const PDFExtractButton = ({
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <FileText className="h-5 w-5 text-blue-600" />
-              PDF Metin Çıkarma Sonucu
+              {t('pdfExtract.dialogTitle')}
             </DialogTitle>
             <DialogDescription>
               {fileInfo && (
@@ -172,47 +175,47 @@ export const PDFExtractButton = ({
             {extracting ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                <span className="ml-3 text-gray-600">PDF işleniyor...</span>
+                <span className="ml-3 text-gray-600">{t('pdfExtract.processing')}</span>
               </div>
             ) : (
               <>
                 {parsedData && Object.keys(parsedData).length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-gray-900">Çıkarılan Bilgiler:</h4>
+                    <h4 className="font-semibold text-sm text-gray-900">{t('pdfExtract.extractedInfo')}</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {parsedData.tenantName && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Kiracı</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.tenant')}</div>
                           <div className="text-sm font-medium">{parsedData.tenantName}</div>
                         </div>
                       )}
                       {parsedData.ownerName && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Mal Sahibi</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.owner')}</div>
                           <div className="text-sm font-medium">{parsedData.ownerName}</div>
                         </div>
                       )}
                       {parsedData.rentAmount && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Kira Bedeli</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.rentAmount')}</div>
                           <div className="text-sm font-medium">{parsedData.rentAmount.toLocaleString('tr-TR')} ₺</div>
                         </div>
                       )}
                       {parsedData.deposit && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Depozito</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.deposit')}</div>
                           <div className="text-sm font-medium">{parsedData.deposit.toLocaleString('tr-TR')} ₺</div>
                         </div>
                       )}
                       {parsedData.startDate && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Başlangıç</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.startDate')}</div>
                           <div className="text-sm font-medium">{parsedData.startDate}</div>
                         </div>
                       )}
                       {parsedData.endDate && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">Bitiş</div>
+                          <div className="text-xs text-gray-600">{t('pdfExtract.endDate')}</div>
                           <div className="text-sm font-medium">{parsedData.endDate}</div>
                         </div>
                       )}
@@ -223,16 +226,16 @@ export const PDFExtractButton = ({
                 {extractedText && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-sm text-gray-900">Çıkarılan Metin:</h4>
+                      <h4 className="font-semibold text-sm text-gray-900">{t('pdfExtract.extractedText')}</h4>
                       <Badge variant="outline" className="text-xs">
-                        {extractedText.length} karakter
+                        {t('pdfExtract.characters', { count: extractedText.length })}
                       </Badge>
                     </div>
                     <Textarea
                       value={extractedText}
                       readOnly
                       className="min-h-[200px] font-mono text-xs"
-                      placeholder="Çıkarılan metin burada görünecek..."
+                      placeholder={t('pdfExtract.textPlaceholder')}
                     />
                   </div>
                 )}
@@ -242,17 +245,17 @@ export const PDFExtractButton = ({
 
           <DialogFooter>
             <Button variant="outline" onClick={handleClose} disabled={extracting}>
-              Kapat
+              {t('pdfExtract.close')}
             </Button>
             {extractedText && (
               <Button
                 onClick={() => {
                   navigator.clipboard.writeText(extractedText);
-                  toast.success('Metin panoya kopyalandı!');
+                  toast.success(t('pdfExtract.copiedToClipboard'));
                 }}
                 variant="default"
               >
-                Kopyala
+                {t('pdfExtract.copy')}
               </Button>
             )}
           </DialogFooter>

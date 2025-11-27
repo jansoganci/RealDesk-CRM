@@ -3,6 +3,7 @@
  * Shows success confirmation after contract import
  */
 
+import { useTranslation } from 'react-i18next';
 import { CheckCircle, FileCheck, User, Building, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -24,11 +25,12 @@ interface SuccessStepProps {
 
 export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('contracts');
 
   if (!createdData) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-500">Veri bulunamadı</p>
+        <p className="text-gray-500">{t('import.noData')}</p>
       </div>
     );
   }
@@ -51,10 +53,10 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
 
       {/* Success Message */}
       <h2 className="text-4xl font-bold text-gray-900 mb-2">
-        Tebrikler! 🎉
+        {t('import.success.title')}
       </h2>
       <p className="text-xl text-gray-600 mb-12">
-        Sözleşme başarıyla kaydedildi
+        {t('import.success.description')}
       </p>
 
       {/* Summary Card */}
@@ -62,7 +64,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
         <CardContent className="pt-6">
           <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
             <FileCheck className="h-5 w-5 text-green-600" />
-            Oluşturulan Kayıtlar
+            {t('import.success.createdRecords')}
           </h3>
 
           <div className="space-y-3">
@@ -73,13 +75,13 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">
-                  Ev Sahibi: {createdData.owner_name}
+                  {t('import.success.owner')}: {createdData.owner_name}
                 </p>
                 <p className={cn(
                   "text-sm",
                   createdData.created_owner ? "text-green-600" : "text-blue-600"
                 )}>
-                  {createdData.created_owner ? '✓ Yeni oluşturuldu' : '✓ Mevcut kullanıldı'}
+                  {createdData.created_owner ? t('create.toasts.ownerCreated') : t('create.toasts.ownerUsed')}
                 </p>
               </div>
             </div>
@@ -91,13 +93,13 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">
-                  Kiracı: {createdData.tenant_name}
+                  {t('import.success.tenant')}: {createdData.tenant_name}
                 </p>
                 <p className={cn(
                   "text-sm",
                   createdData.created_tenant ? "text-green-600" : "text-blue-600"
                 )}>
-                  {createdData.created_tenant ? '✓ Yeni oluşturuldu' : '✓ Mevcut kullanıldı'}
+                  {createdData.created_tenant ? t('create.toasts.tenantCreated') : t('create.toasts.tenantUsed')}
                 </p>
               </div>
             </div>
@@ -109,13 +111,13 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">
-                  Mülk: {createdData.property_address}
+                  {t('import.success.property')}: {createdData.property_address}
                 </p>
                 <p className={cn(
                   "text-sm",
                   createdData.created_property ? "text-green-600" : "text-blue-600"
                 )}>
-                  {createdData.created_property ? '✓ Yeni oluşturuldu' : '✓ Mevcut kullanıldı'}
+                  {createdData.created_property ? t('create.toasts.propertyCreated') : t('create.toasts.propertyUsed')}
                 </p>
               </div>
             </div>
@@ -127,10 +129,10 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">
-                  PDF Dosyası
+                  {t('import.success.pdfFile')}
                 </p>
                 <p className="text-sm text-green-600">
-                  ✓ Başarıyla kaydedildi
+                  {t('import.success.pdfSaved')}
                 </p>
               </div>
             </div>
@@ -148,7 +150,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
           className="flex-1 h-14 text-base border-2 border-blue-300 hover:bg-blue-50 hover:border-blue-500"
         >
           <FileCheck className="mr-2 h-5 w-5" />
-          Başka Sözleşme Aktar
+          {t('import.success.createAnother')}
         </Button>
 
         {/* View Contracts */}
@@ -157,16 +159,14 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
           size="lg"
           className="flex-1 h-14 text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
         >
-          Sözleşmeleri Görüntüle
+          {t('import.success.viewContract')}
           <ArrowRight className="ml-2 h-5 w-5" />
         </Button>
       </div>
 
       {/* Help Text */}
-      <p className="mt-8 text-sm text-gray-500 text-center">
-        Sözleşme ve ilişkili kayıtlar başarıyla sisteme eklendi.
-        <br />
-        Artık tüm bilgilere Sözleşmeler sayfasından erişebilirsiniz.
+      <p className="mt-8 text-sm text-gray-500 text-center whitespace-pre-line">
+        {t('import.success.helpText')}
       </p>
     </div>
   );

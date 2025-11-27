@@ -34,8 +34,6 @@ export const Inquiries = () => {
     setSearchQuery,
     inquiryTypeFilter,
     setInquiryTypeFilter,
-    statusFilter,
-    setStatusFilter,
   } = useInquiryFilters(inquiries);
 
   // Dialog hook

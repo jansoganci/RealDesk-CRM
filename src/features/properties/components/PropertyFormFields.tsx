@@ -58,7 +58,7 @@ export function PropertyFormFields({
           rows={2}
         />
         {errors.address && (
-          <p className={`text-sm ${COLORS.danger.text}`}>{errors.address.message}</p>
+          <p className={`text-sm ${COLORS.danger.text}`}>{errors.address.message as string}</p>
         )}
       </div>
 
@@ -116,7 +116,7 @@ export function PropertyFormFields({
           </SelectContent>
         </Select>
         {errors.status && (
-          <p className={`text-sm ${COLORS.danger.text}`}>{errors.status.message}</p>
+          <p className={`text-sm ${COLORS.danger.text}`}>{errors.status.message as string}</p>
         )}
       </div>
 
@@ -154,7 +154,7 @@ export function PropertyFormFields({
               disabled={loading}
             />
             {errors.rent_amount && (
-              <p className={`text-sm ${COLORS.danger.text}`}>{errors.rent_amount.message}</p>
+              <p className={`text-sm ${COLORS.danger.text}`}>{errors.rent_amount.message as string}</p>
             )}
           </div>
 
@@ -174,7 +174,7 @@ export function PropertyFormFields({
               </SelectContent>
             </Select>
             {errors.currency && (
-              <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
+              <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message as string}</p>
             )}
           </div>
         </div>
@@ -191,7 +191,7 @@ export function PropertyFormFields({
               disabled={loading}
             />
             {errors.sale_price && (
-              <p className={`text-sm ${COLORS.danger.text}`}>{errors.sale_price.message}</p>
+              <p className={`text-sm ${COLORS.danger.text}`}>{errors.sale_price.message as string}</p>
             )}
           </div>
 
@@ -211,7 +211,7 @@ export function PropertyFormFields({
               </SelectContent>
             </Select>
             {errors.currency && (
-              <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message}</p>
+              <p className={`text-sm ${COLORS.danger.text}`}>{errors.currency.message as string}</p>
             )}
           </div>
         </div>
@@ -228,7 +228,7 @@ export function PropertyFormFields({
           disabled={loading}
         />
         {errors.listing_url && (
-          <p className={`text-sm ${COLORS.danger.text}`}>{errors.listing_url.message}</p>
+          <p className={`text-sm ${COLORS.danger.text}`}>{errors.listing_url.message as string}</p>
         )}
       </div>
 

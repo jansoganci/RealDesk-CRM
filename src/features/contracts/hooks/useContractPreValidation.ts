@@ -12,6 +12,7 @@
  */
 
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import {
   hashTC,
   normalizePhone,
@@ -46,6 +47,7 @@ export interface UseContractPreValidationReturn {
 // ============================================================================
 
 export function useContractPreValidation(): UseContractPreValidationReturn {
+  const { t } = useTranslation('contracts');
 
   const validateBeforeSubmit = async (
     data: ContractFormData,
@@ -58,7 +60,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     const tenantTcHash = await hashTC(data.tenant_tc);
 
     // Step 2: Check owner duplicate names
-    toast.info('Ev sahibi kontrol ediliyor...');
+    toast.info(t('validation.checkingOwner'));
     const ownerDuplicate = await checkDuplicateName(
       data.owner_name,
       ownerTcHash,
@@ -71,7 +73,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     }
 
     // Step 3: Check tenant duplicate names
-    toast.info('Kiracı kontrol ediliyor...');
+    toast.info(t('validation.checkingTenant'));
     const tenantDuplicate = await checkDuplicateName(
       data.tenant_name,
       tenantTcHash,
@@ -96,7 +98,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
 
     if (ownerChanges.hasChanges && ownerChanges.message) {
       const confirmed = await showConfirmation(
-        'Ev Sahibi Bilgileri Değişti',
+        t('validation.ownerDataChanged'),
         ownerChanges.message
       );
       if (!confirmed) {
@@ -118,7 +120,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
 
     if (tenantChanges.hasChanges && tenantChanges.message) {
       const confirmed = await showConfirmation(
-        'Kiracı Bilgileri Değişti',
+        t('validation.tenantDataChanged'),
         tenantChanges.message
       );
       if (!confirmed) {
@@ -131,7 +133,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
 
     if (multipleContracts.hasMultiple && multipleContracts.message) {
       const confirmed = await showConfirmation(
-        'Birden Fazla Aktif Sözleşme',
+        t('validation.multipleContracts'),
         multipleContracts.message
       );
       if (!confirmed) {

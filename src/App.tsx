@@ -4,6 +4,9 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Login } from './features/auth/Login';
+import { Register } from './features/auth/Register';
+import { ForgotPassword } from './features/auth/ForgotPassword';
+import { ResetPassword } from './features/auth/ResetPassword';
 import { LandingPage } from './features/landing/LandingPage';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Owners } from './features/owners/Owners';
@@ -11,6 +14,7 @@ import { Properties } from './features/properties/Properties';
 import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
 import ContractCreate from './features/contracts/ContractCreate';
+import ContractEdit from './features/contracts/ContractEdit';
 import { ContractImportPage } from './features/contracts/import/ContractImportPage';
 import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
@@ -36,6 +40,9 @@ function App() {
         <Routes>
           <Route path={ROUTES.HOME} element={<LandingPage />} />
           <Route path={ROUTES.LOGIN} element={<Login />} />
+          <Route path={ROUTES.REGISTER} element={<Register />} />
+          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
           <Route
             path={ROUTES.DASHBOARD}
             element={
@@ -73,6 +80,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <ContractCreate />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/contracts/:id/edit"
+            element={
+              <ProtectedRoute>
+                <ContractEdit />
               </ProtectedRoute>
             }
           />

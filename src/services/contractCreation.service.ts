@@ -87,9 +87,27 @@ export async function createContractWithEntities(
     // ========================================================================
     // Prepare contract data
     // ========================================================================
+    // Helper to convert date string (dd.mm.yyyy or Date) to ISO format (yyyy-mm-dd)
+    const toISODate = (date: string | Date): string => {
+      if (date instanceof Date) {
+        return date.toISOString().split('T')[0];
+      }
+      // Handle Turkish date format: "dd.mm.yyyy" or "dd/mm/yyyy"
+      if (typeof date === 'string') {
+        const parts = date.split(/[.\/]/);
+        if (parts.length === 3) {
+          const [day, month, year] = parts;
+          return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        }
+        // Already in ISO format or other format
+        return date;
+      }
+      return String(date);
+    };
+
     const contractData = {
-      start_date: formData.start_date.toISOString().split('T')[0],
-      end_date: formData.end_date.toISOString().split('T')[0],
+      start_date: toISODate(formData.start_date),
+      end_date: toISODate(formData.end_date),
       rent_amount: formData.rent_amount,
       deposit: formData.deposit
     };
@@ -98,20 +116,24 @@ export async function createContractWithEntities(
     // Prepare contract details (optional)
     // ========================================================================
     // Calculate contract duration in months
-    const startDate = new Date(formData.start_date);
-    const endDate = new Date(formData.end_date);
+    // Parse date from string if needed
+    const parseDate = (date: string | Date): Date => {
+      if (date instanceof Date) return date;
+      if (typeof date === 'string') {
+        const parts = date.split(/[.\/]/);
+        if (parts.length === 3) {
+          const [day, month, year] = parts;
+          return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+        }
+      }
+      return new Date(date);
+    };
+    const startDate = parseDate(formData.start_date);
+    const endDate = parseDate(formData.end_date);
     const monthsDiff = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
 
     const contractDetailsData = formData.payment_day_of_month
       ? {
-          // Tenant info (for PDF)
-          tenant_tc_no: formData.tenant_tc,
-          tenant_permanent_address: formData.tenant_address,
-
-          // Owner info (for PDF)
-          owner_tc_no: formData.owner_tc,
-          owner_iban_number: formData.owner_iban || null,
-
           // Financial details
           deposit_amount: formData.deposit || null,
           deposit_currency: 'TRY',

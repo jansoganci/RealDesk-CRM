@@ -481,13 +481,33 @@ export const LandingPage = () => {
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
+                  <a
+                    href={`/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 transition-colors"
+                  >
                     {t("footer.privacy")}
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-blue-400 transition-colors">
+                  <a
+                    href={`/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 transition-colors"
+                  >
                     {t("footer.terms")}
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href={`/legal/cookie-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    {t("footer.cookies")}
                   </a>
                 </li>
               </ul>

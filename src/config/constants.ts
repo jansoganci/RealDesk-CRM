@@ -23,6 +23,9 @@ export const ITEMS_PER_PAGE = 20;
 export const ROUTES = {
   HOME: '/',
   LOGIN: '/login',
+  REGISTER: '/register',
+  FORGOT_PASSWORD: '/forgot-password',
+  RESET_PASSWORD: '/reset-password',
   DASHBOARD: '/dashboard',
   PROPERTIES: '/properties',
   PROPERTY_DETAIL: '/properties/:id',

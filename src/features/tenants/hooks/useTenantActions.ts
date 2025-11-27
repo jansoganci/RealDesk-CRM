@@ -54,7 +54,7 @@ export function useTenantActions({
   );
 
   const handleEnhancedSubmit = useCallback(
-    async (result: TenantWithContractResult) => {
+    async (_result: TenantWithContractResult) => {
       await refreshData();
       onCloseCreate?.();
     },

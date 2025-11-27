@@ -104,10 +104,12 @@ class ContractsService {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
 
-    // Inject user_id into contract data
+    // Inject user_id and auto-enable 30-day contract expiry reminders
     return insertRow('contracts', {
       ...contract,
       user_id: userId,
+      rent_increase_reminder_enabled: contract.rent_increase_reminder_enabled ?? true,
+      rent_increase_reminder_days: contract.rent_increase_reminder_days ?? 30,
     });
   }
 
@@ -115,11 +117,13 @@ class ContractsService {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
 
-    // Inject user_id into contract data for RPC
+    // Inject user_id and auto-enable 30-day contract expiry reminders for RPC
     const params: RpcCreateContractAndUpdatePropertyParams = {
       p_contract: {
         ...contract,
         user_id: userId,
+        rent_increase_reminder_enabled: contract.rent_increase_reminder_enabled ?? true,
+        rent_increase_reminder_days: contract.rent_increase_reminder_days ?? 30,
       },
     };
     const data = await callRpc<RpcCreateContractAndUpdatePropertyParams, RpcCreateContractAndUpdatePropertyResult>(

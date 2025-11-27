@@ -173,5 +173,28 @@
     "preview": {
       "fullAddress": "Tam Adres Önizleme"
     }
+  },
+  "activeContractWarning": {
+    "toastTitle": "Aktif Sözleşme Tespit Edildi",
+    "toastDescription": "Bu mülkün zaten {{tenant}} ile aktif bir sözleşmesi var.",
+    "bannerTitle": "DİKKAT: Aktif Sözleşme Mevcut",
+    "bannerMessage": "Bu mülkün zaten aktif bir sözleşmesi var:",
+    "tenant": "Kiracı",
+    "period": "Dönem",
+    "rent": "Kira"
+  },
+  "edit": {
+    "title": "Sözleşmeyi Düzenle",
+    "subtitle": "Sözleşme bilgilerini güncelleyin",
+    "loading": "Sözleşme bilgileri yükleniyor...",
+    "errorTitle": "Yükleme Hatası",
+    "errorNotFound": "Sözleşme bulunamadı",
+    "backToList": "Sözleşmelere Dön",
+    "warning": "Dikkat: Yapılan değişiklikler ev sahibi, kiracı ve mülk bilgilerini de güncelleyecektir. PDF otomatik olarak yeniden oluşturulacaktır.",
+    "buttons": {
+      "submit": "Değişiklikleri Kaydet",
+      "submitting": "Kaydediliyor...",
+      "cancel": "İptal"
+    }
   }
 }

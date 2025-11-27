@@ -20,11 +20,12 @@ import {
 import { Form } from '../../components/ui/form';
 import { Button } from '../../components/ui/button';
 import { Separator } from '../../components/ui/separator';
-import { Save, Loader2 } from 'lucide-react';
+import { Save, Loader2, FileText, ScrollText, Cookie, ExternalLink } from 'lucide-react';
 
 export const Profile = () => {
-  const { t } = useTranslation(['profile', 'common']);
+  const { t, i18n } = useTranslation(['profile', 'common']);
   const { user } = useAuth();
+  const language = i18n.language === 'tr' ? 'tr' : 'en';
 
   // Profile form hook
   const { form, normalizeLanguage, normalizeCurrency } = useProfileForm();
@@ -110,6 +111,68 @@ export const Profile = () => {
               onRefreshRates={handleRefreshRates}
               formatLastUpdated={formatLastUpdated}
             />
+
+            <Separator />
+
+            {/* Legal Documents Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">
+                {t('profile:legal.title')}
+              </h3>
+
+              <div className="space-y-2">
+                {/* Privacy Policy */}
+                <a
+                  href={`/legal/privacy-policy-${language}.html`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <FileText className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                    <div>
+                      <div className="font-medium">{t('profile:legal.privacy.title')}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('profile:legal.privacy.description')}</div>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-gray-400" />
+                </a>
+
+                {/* Terms of Service */}
+                <a
+                  href={`/legal/terms-of-service-${language}.html`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <ScrollText className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                    <div>
+                      <div className="font-medium">{t('profile:legal.terms.title')}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('profile:legal.terms.description')}</div>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-gray-400" />
+                </a>
+
+                {/* Cookie Policy */}
+                <a
+                  href={`/legal/cookie-policy-${language}.html`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <Cookie className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                    <div>
+                      <div className="font-medium">{t('profile:legal.cookies.title')}</div>
+                      <div className="text-sm text-gray-500 dark:text-gray-400">{t('profile:legal.cookies.description')}</div>
+                    </div>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-gray-400" />
+                </a>
+              </div>
+            </div>
           </CardContent>
         </Card>
       </PageContainer>

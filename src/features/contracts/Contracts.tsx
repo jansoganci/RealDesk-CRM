@@ -5,7 +5,7 @@ import { useContractsPdfActions } from './hooks/useContractsPdfActions';
 import { ContractPdfActionButtons } from './components/ContractPdfActionButtons';
 import { ContractStatusBadge } from './components/ContractStatusBadge';
 import { ContractImportBanner } from './components/ContractImportBanner';
-import { TableCell, TableHead, TableRow } from '../../components/ui/table';
+import { TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { FileText, AlertCircle, Bell, Calendar, DollarSign } from 'lucide-react';
 import { format } from 'date-fns';
 import { COLORS } from '@/config/colors';

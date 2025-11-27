@@ -84,9 +84,8 @@ export function useContractsActions({
     window.location.href = '/contracts/create';
   }, []);
 
-  const handleEditContract = useCallback((_contract: ContractWithDetails) => {
-    // TODO: Navigate to edit page or show edit modal
-    toast.info('Edit functionality coming soon');
+  const handleEditContract = useCallback((contract: ContractWithDetails) => {
+    window.location.href = `/contracts/${contract.id}/edit`;
   }, []);
 
   return {

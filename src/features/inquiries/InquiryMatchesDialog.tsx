@@ -118,15 +118,30 @@ export const InquiryMatchesDialog = ({
                   </span>
                 </div>
               )}
-              {(inquiry.min_budget || inquiry.max_budget) && (
-                <div className="flex items-center gap-1">
-                  <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-                  <span className={COLORS.gray.text700}>
-                    {inquiry.min_budget && `${inquiry.min_budget}`}
-                    {inquiry.min_budget && inquiry.max_budget && ' - '}
-                    {inquiry.max_budget && `${inquiry.max_budget}`}
-                  </span>
-                </div>
+              {/* Budget display based on inquiry type */}
+              {inquiry.inquiry_type === 'rental' ? (
+                (inquiry.min_rent_budget || inquiry.max_rent_budget) && (
+                  <div className="flex items-center gap-1">
+                    <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
+                    <span className={COLORS.gray.text700}>
+                      {inquiry.min_rent_budget && `${inquiry.min_rent_budget.toLocaleString()}`}
+                      {inquiry.min_rent_budget && inquiry.max_rent_budget && ' - '}
+                      {inquiry.max_rent_budget && `${inquiry.max_rent_budget.toLocaleString()}`}
+                      {' '}{t('matches.perMonth')}
+                    </span>
+                  </div>
+                )
+              ) : (
+                (inquiry.min_sale_budget || inquiry.max_sale_budget) && (
+                  <div className="flex items-center gap-1">
+                    <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
+                    <span className={COLORS.gray.text700}>
+                      {inquiry.min_sale_budget && `${inquiry.min_sale_budget.toLocaleString()}`}
+                      {inquiry.min_sale_budget && inquiry.max_sale_budget && ' - '}
+                      {inquiry.max_sale_budget && `${inquiry.max_sale_budget.toLocaleString()}`}
+                    </span>
+                  </div>
+                )
               )}
             </div>
           </div>

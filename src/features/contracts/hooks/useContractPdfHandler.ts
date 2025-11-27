@@ -6,6 +6,7 @@
  */
 
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
@@ -75,6 +76,7 @@ function preparePdfData(
 
     // Owner
     ownerName: formData.owner_name,
+    ownerTC: formData.owner_tc,
     ownerPhone: formData.owner_phone,
     ownerIBAN: formData.owner_iban || '',
 
@@ -167,24 +169,24 @@ function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
 /**
  * Handle upload errors with appropriate toast messages
  */
-function handleUploadError(error: unknown): void {
+function handleUploadError(error: unknown, t: (key: string) => string): void {
   console.error('PDF storage upload failed:', error);
 
   const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
   if (errorMessage.includes('storage_quota')) {
-    toast.warning('Depolama alanı dolu', {
-      description: 'PDF indirilecek ancak sisteme kaydedilemedi. Lütfen yönetici ile iletişime geçin.',
+    toast.warning(t('pdf.errors.storageQuota'), {
+      description: t('pdf.errors.storageQuotaDescription'),
       duration: 8000
     });
   } else if (errorMessage.includes('timeout')) {
-    toast.warning('Yavaş internet bağlantısı', {
-      description: 'PDF indirilecek ancak sisteme kaydedilemedi. Lütfen daha sonra manuel yükleyin.',
+    toast.warning(t('pdf.errors.timeout'), {
+      description: t('pdf.errors.timeoutDescription'),
       duration: 8000
     });
   } else {
-    toast.warning('PDF sisteme kaydedilemedi', {
-      description: 'PDF indirilecek. İsterseniz daha sonra kontrat listesinden manuel yükleyebilirsiniz.',
+    toast.warning(t('pdf.errors.uploadFailed'), {
+      description: t('pdf.errors.uploadFailedDescription'),
       duration: 8000
     });
   }
@@ -193,15 +195,15 @@ function handleUploadError(error: unknown): void {
 /**
  * Show final success message based on upload result
  */
-function showFinalSuccessMessage(storageSaveSucceeded: boolean): void {
+function showFinalSuccessMessage(storageSaveSucceeded: boolean, t: (key: string) => string): void {
   if (storageSaveSucceeded) {
-    toast.success('Sözleşme ve PDF başarıyla oluşturuldu!', {
-      description: 'PDF sisteme kaydedildi ve cihazınıza indirildi. İsterseniz kontrat listesinden tekrar indirebilirsiniz.',
+    toast.success(t('pdf.success.createdAndSaved'), {
+      description: t('pdf.success.createdAndSavedDescription'),
       duration: 6000
     });
   } else {
-    toast.success('Sözleşme oluşturuldu, PDF indirildi', {
-      description: 'PDF sisteme kaydedilemedi. Lütfen indirilen dosyayı kontrat listesinden manuel yükleyin.',
+    toast.success(t('pdf.success.createdDownloaded'), {
+      description: t('pdf.success.createdDownloadedDescription'),
       duration: 8000
     });
   }
@@ -213,6 +215,7 @@ function showFinalSuccessMessage(storageSaveSucceeded: boolean): void {
 
 export function useContractPdfHandler(): UseContractPdfHandlerReturn {
   const [isProcessing, setIsProcessing] = useState(false);
+  const { t } = useTranslation('contracts');
 
   const generateAndUploadPdf = async (
     formData: ContractFormData,
@@ -221,7 +224,7 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
     setIsProcessing(true);
 
     try {
-      toast.info('PDF sözleşme hazırlanıyor...', { duration: 2000 });
+      toast.info(t('pdf.generating'), { duration: 2000 });
 
       // STEP 1: Prepare PDF data
       const pdfData = preparePdfData(formData, contractResult.contract_id);
@@ -239,21 +242,21 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       let storageFilePath = '';
 
       try {
-        toast.info('PDF sisteme kaydediliyor...', { duration: 2000 });
+        toast.info(t('pdf.uploading'), { duration: 2000 });
 
         storageFilePath = await uploadPdfToStorage(pdfBlob, contractResult.contract_id);
         storageSaveSucceeded = true;
 
         console.log('PDF saved to storage:', storageFilePath);
       } catch (uploadError) {
-        handleUploadError(uploadError);
+        handleUploadError(uploadError, t);
       }
 
       // STEP 5: Download to user's browser (always attempt, even if storage failed)
       const downloadTriggered = downloadPdfToBrowser(pdfBlob, contractResult.contract_id);
 
       // STEP 6: Show appropriate success message
-      showFinalSuccessMessage(storageSaveSucceeded);
+      showFinalSuccessMessage(storageSaveSucceeded, t);
 
       setIsProcessing(false);
 
@@ -266,8 +269,8 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
     } catch (pdfError) {
       console.error('PDF generation failed:', pdfError);
 
-      toast.error('PDF oluşturulamadı', {
-        description: 'Sözleşme başarıyla kaydedildi. PDF\'i daha sonra kontrat listesinden oluşturabilir veya manuel yükleyebilirsiniz.',
+      toast.error(t('pdf.errors.generationFailed'), {
+        description: t('pdf.errors.generationFailedDescription'),
         duration: 8000
       });
 

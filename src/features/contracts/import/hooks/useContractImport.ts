@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 import {
   extractTextFromFileViaProxy,
   parseContractFromText,
@@ -24,6 +25,7 @@ interface ImportState {
 }
 
 export const useContractImport = () => {
+  const { t } = useTranslation('contracts');
   const { user } = useAuth();
   const [state, setState] = useState<ImportState>({
     file: null,
@@ -36,11 +38,11 @@ export const useContractImport = () => {
   });
 
   const handleFileUpload = async (file: File) => {
-    setState(prev => ({ ...prev, file, progress: 0, status: 'Dosya yükleniyor...' }));
+    setState(prev => ({ ...prev, file, progress: 0, status: t('import.uploading') }));
 
     try {
       // Step 1: Upload and extract text (33%)
-      setState(prev => ({ ...prev, progress: 33, status: 'PDF okunuyor...' }));
+      setState(prev => ({ ...prev, progress: 33, status: t('import.reading') }));
 
       const result = await extractTextFromFileViaProxy(file);
 
@@ -51,7 +53,7 @@ export const useContractImport = () => {
       setState(prev => ({ ...prev, extractedText: result.text }));
 
       // Step 2: Parse contract data (66%)
-      setState(prev => ({ ...prev, progress: 66, status: 'Veriler çıkarılıyor...' }));
+      setState(prev => ({ ...prev, progress: 66, status: t('import.dataExtracting') }));
 
       await new Promise(resolve => setTimeout(resolve, 500)); // Brief pause for UX
 
@@ -61,19 +63,19 @@ export const useContractImport = () => {
       setState(prev => ({
         ...prev,
         progress: 100,
-        status: 'Hazır!',
+        status: t('import.ready'),
         parsedData: parsed
       }));
 
-      toast.success('PDF başarıyla okundu!', {
-        description: `${Object.keys(parsed).length} alan çıkarıldı`
+      toast.success(t('import.toasts.success'), {
+        description: t('import.toasts.successDescription', { count: Object.keys(parsed).length })
       });
 
     } catch (error) {
       console.error('Text extraction failed:', error);
 
-      toast.error('PDF okunamadı', {
-        description: error instanceof Error ? error.message : 'Bilinmeyen hata. Manuel olarak girebilirsiniz.'
+      toast.error(t('import.toasts.readFailed'), {
+        description: error instanceof Error ? error.message : t('import.toasts.readFailedDescription')
       });
 
       // Set empty parsed data to allow manual entry
@@ -82,14 +84,14 @@ export const useContractImport = () => {
         extractedText: '',
         parsedData: {},
         progress: 0,
-        status: 'Hata'
+        status: t('import.error')
       }));
     }
   };
 
   const submitContract = async (formData: any) => {
     if (!user) {
-      toast.error('Oturum açmanız gerekiyor');
+      toast.error(t('import.toasts.noSession'));
       return false;
     }
 
@@ -109,8 +111,8 @@ export const useContractImport = () => {
         } catch (uploadError) {
           console.error('PDF upload failed:', uploadError);
           // Don't fail the whole operation - PDF is optional
-          toast.warning('PDF kaydedilemedi', {
-            description: 'Sözleşme oluşturuldu ama PDF sisteme yüklenemedi.'
+          toast.warning(t('import.toasts.pdfUploadFailed'), {
+            description: t('import.toasts.pdfUploadFailedDescription')
           });
         }
       }
@@ -128,8 +130,8 @@ export const useContractImport = () => {
 
       setState(prev => ({ ...prev, submitting: false }));
 
-      toast.error('Sözleşme kaydedilemedi', {
-        description: error instanceof Error ? error.message : 'Bilinmeyen hata'
+      toast.error(t('import.toasts.saveFailed'), {
+        description: error instanceof Error ? error.message : t('create.toasts.unknownError')
       });
 
       return false;

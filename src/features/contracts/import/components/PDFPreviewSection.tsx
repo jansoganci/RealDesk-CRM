@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
@@ -8,10 +9,12 @@ interface PDFPreviewSectionProps {
 }
 
 export function PDFPreviewSection({ uploadedFile, extractedText }: PDFPreviewSectionProps) {
+  const { t } = useTranslation('contracts');
+
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold flex items-center gap-2">
-        📄 Yüklenen Dosya
+        {t('import.sections.uploadedFile')}
       </h3>
 
       {uploadedFile && (
@@ -37,7 +40,7 @@ export function PDFPreviewSection({ uploadedFile, extractedText }: PDFPreviewSec
         <Accordion type="single" collapsible>
           <AccordionItem value="raw-text">
             <AccordionTrigger className="text-sm">
-              Çıkarılan Metin ({extractedText.length} karakter)
+              {t('import.extractedText', { count: extractedText.length })}
             </AccordionTrigger>
             <AccordionContent>
               <Textarea

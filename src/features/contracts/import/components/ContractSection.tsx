@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -16,16 +17,18 @@ interface ContractSectionProps {
  * Displays form fields for contract details
  */
 export function ContractSection({ formData, fieldErrors, onFieldUpdate }: ContractSectionProps) {
+  const { t } = useTranslation('contracts');
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">📋 Sözleşme Detayları</CardTitle>
+        <CardTitle className="text-lg">{t('import.sections.contract')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="start_date">
-              Başlangıç Tarihi <span className="text-red-500">*</span>
+              {t('create.fields.start_date')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="start_date"
@@ -41,7 +44,7 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
 
           <div>
             <Label htmlFor="end_date">
-              Bitiş Tarihi <span className="text-red-500">*</span>
+              {t('create.fields.end_date')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="end_date"
@@ -59,7 +62,7 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="rent_amount">
-              Kira Bedeli (₺) <span className="text-red-500">*</span>
+              {t('create.fields.rent_amount')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="rent_amount"
@@ -75,7 +78,7 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
           </div>
 
           <div>
-            <Label htmlFor="deposit">Depozito (₺)</Label>
+            <Label htmlFor="deposit">{t('create.fields.deposit')}</Label>
             <Input
               id="deposit"
               type="number"
@@ -87,12 +90,12 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
         </div>
 
         <div>
-          <Label htmlFor="special_conditions">Özel Şartlar</Label>
+          <Label htmlFor="special_conditions">{t('import.sections.specialConditions')}</Label>
           <Textarea
             id="special_conditions"
             value={formData.special_conditions}
             onChange={(e) => onFieldUpdate('special_conditions', e.target.value)}
-            placeholder="Sözleşmeye eklenecek özel şartlar..."
+            placeholder={t('import.placeholders.specialConditions')}
             rows={3}
           />
         </div>

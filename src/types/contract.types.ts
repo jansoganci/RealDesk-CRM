@@ -235,12 +235,13 @@ export interface ContractPdfData {
   
   // Kiraya Veren (Mal Sahibi)
   ownerName: string;
+  ownerTC?: string;               // TC Kimlik No (PDF için gerekli)
   ownerPhone?: string;
   ownerIBAN: string;
-  
+
   // Kiracı
   tenantName: string;
-  tenantTC?: string;              // Tahliye taahhütnamesi için
+  tenantTC?: string;              // TC Kimlik No (PDF için gerekli)
   tenantAddress: string;
   tenantPhone: string;
   

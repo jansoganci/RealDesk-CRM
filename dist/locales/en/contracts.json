@@ -165,5 +165,28 @@
     "preview": {
       "fullAddress": "Full Address Preview"
     }
+  },
+  "activeContractWarning": {
+    "toastTitle": "Active Contract Detected",
+    "toastDescription": "This property already has an active contract with {{tenant}}.",
+    "bannerTitle": "WARNING: Active Contract Exists",
+    "bannerMessage": "This property already has an active contract:",
+    "tenant": "Tenant",
+    "period": "Period",
+    "rent": "Rent"
+  },
+  "edit": {
+    "title": "Edit Contract",
+    "subtitle": "Update contract information",
+    "loading": "Loading contract details...",
+    "errorTitle": "Loading Error",
+    "errorNotFound": "Contract not found",
+    "backToList": "Back to Contracts",
+    "warning": "Note: Changes will also update owner, tenant, and property information. The PDF will be regenerated automatically.",
+    "buttons": {
+      "submit": "Save Changes",
+      "submitting": "Saving...",
+      "cancel": "Cancel"
+    }
   }
 }

@@ -4,6 +4,7 @@
  * Side-by-side layout: PDF preview + Editable form
  */
 
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Loader2 } from 'lucide-react';
 import { PDFPreviewSection } from './PDFPreviewSection';
@@ -33,6 +34,7 @@ export const ReviewStep = ({
   onCancel,
   isSubmitting
 }: ReviewStepProps) => {
+  const { t } = useTranslation('contracts');
   // Form state hook
   const { formData, updateField } = useReviewFormState(parsedData);
 
@@ -72,9 +74,9 @@ export const ReviewStep = ({
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center gap-2 mb-6">
             <CheckCircle className="h-6 w-6 text-green-600" />
-            <h3 className="text-xl font-semibold">Çıkarılan Bilgiler</h3>
+            <h3 className="text-xl font-semibold">{t('import.sections.extractedData')}</h3>
             <span className="text-sm text-gray-500">
-              ({extractedCount}/{totalFields} alan dolu)
+              {t('import.fieldsFilled', { extracted: extractedCount, total: totalFields })}
             </span>
           </div>
 
@@ -118,12 +120,12 @@ export const ReviewStep = ({
               {isSubmitting ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Kaydediliyor...
+                  {t('import.saving')}
                 </>
               ) : (
                 <>
                   <CheckCircle className="mr-2 h-5 w-5" />
-                  ✅ Onayla ve Kaydet
+                  {t('import.confirmAndSave')}
                 </>
               )}
             </Button>
@@ -134,7 +136,7 @@ export const ReviewStep = ({
               onClick={onCancel}
               disabled={isSubmitting}
             >
-              İptal
+              {t('create.buttons.cancel')}
             </Button>
           </div>
         </div>

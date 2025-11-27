@@ -1,17 +1,17 @@
+import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { getProfileSchema } from '../profileSchema';
 import type { UseFormReturn } from 'react-hook-form';
 import type * as z from 'zod';
-import type { getProfileSchema as GetProfileSchemaType } from '../profileSchema';
 
 /**
  * Profile Form Hook
  * Handles form initialization, default values, and normalization functions
  */
 
-type ProfileFormData = z.infer<ReturnType<GetProfileSchemaType>>;
+type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>;
 
 interface UseProfileFormReturn {
   form: UseFormReturn<ProfileFormData>;
@@ -40,14 +40,17 @@ export function useProfileForm(): UseProfileFormReturn {
     },
   });
 
-  const normalizeLanguage = (
-    lang: string | null | undefined
-  ): ProfileFormData['language'] => (lang === 'tr' || lang === 'en' ? lang : 'tr');
+  const normalizeLanguage = useCallback(
+    (lang: string | null | undefined): ProfileFormData['language'] =>
+      lang === 'tr' || lang === 'en' ? lang : 'tr',
+    []
+  );
 
-  const normalizeCurrency = (
-    value: string | null | undefined
-  ): ProfileFormData['currency'] =>
-    value === 'TRY' || value === 'USD' || value === 'EUR' ? value : 'TRY';
+  const normalizeCurrency = useCallback(
+    (value: string | null | undefined): ProfileFormData['currency'] =>
+      value === 'TRY' || value === 'USD' || value === 'EUR' ? value : 'TRY',
+    []
+  );
 
   return {
     form,

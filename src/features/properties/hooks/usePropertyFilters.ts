@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import type { PropertyWithOwner } from '@/types';
 
 export function usePropertyFilters(properties: PropertyWithOwner[]) {

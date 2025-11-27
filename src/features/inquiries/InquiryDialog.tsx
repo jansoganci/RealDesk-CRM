@@ -17,7 +17,7 @@ import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { PropertyInquiry } from '../../types';
-import { getRentalInquirySchema, getSaleInquirySchema } from '../properties/propertySchemas';
+import { getRentalInquirySchema, getSaleInquirySchema } from './inquirySchema';
 import { InquiryTypeSelector } from './InquiryTypeSelector';
 
 interface InquiryDialogProps {

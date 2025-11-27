@@ -81,5 +81,20 @@
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Exchange rates updated successfully",
     "refreshError": "Failed to update exchange rates"
+  },
+  "legal": {
+    "title": "Legal Documents",
+    "privacy": {
+      "title": "Privacy Policy",
+      "description": "Learn how your personal data is protected"
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "description": "Review platform usage conditions"
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "description": "Information about cookie usage"
+    }
   }
 }

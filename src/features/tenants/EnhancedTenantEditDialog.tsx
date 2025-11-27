@@ -104,7 +104,6 @@ export const EnhancedTenantEditDialog = ({
   const { loading, primaryContract } = useTenantEditData({
     open,
     tenant,
-    form,
     setValue: form.setValue,
   });
 

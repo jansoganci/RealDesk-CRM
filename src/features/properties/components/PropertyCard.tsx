@@ -16,14 +16,12 @@ import {
   ExternalLink 
 } from 'lucide-react';
 import { getStatusBadgeClasses } from '@/config/colors';
-import type { PropertyWithOwner, PropertyStatus } from '@/types';
+import type { PropertyWithOwner } from '@/types';
 
 interface PropertyCardProps {
   property: PropertyWithOwner;
   onEdit: (property: PropertyWithOwner) => void;
-  onCommission: (property: PropertyWithOwner) => void;
-  onDelete: (id: string) => void;
-  onStatusChange: (id: string, status: PropertyStatus) => void;
+  onDelete: () => void;
   onAddTenant?: (propertyId: string) => void;
   currency?: string;
 }
@@ -31,9 +29,7 @@ interface PropertyCardProps {
 export function PropertyCard({
   property,
   onEdit,
-  onCommission,
   onDelete,
-  onStatusChange,
   onAddTenant,
   currency = 'USD',
 }: PropertyCardProps) {
@@ -235,7 +231,7 @@ export function PropertyCard({
         <div className="flex gap-2">
           <TableActionButtons
             onEdit={() => onEdit(property)}
-            onDelete={() => onDelete(property.id)}
+            onDelete={onDelete}
             showView={false}
           />
         </div>

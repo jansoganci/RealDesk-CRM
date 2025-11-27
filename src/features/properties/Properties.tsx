@@ -42,10 +42,6 @@ export const Properties = () => {
     editingProperty,
     openEdit,
     closeEdit,
-    isCommissionOpen,
-    commissionProperty,
-    openCommission,
-    closeCommission,
     isTenantDialogOpen,
     selectedPropertyForTenant,
     openTenantDialog,
@@ -67,10 +63,6 @@ export const Properties = () => {
     setSearchQuery,
     statusFilter,
     setStatusFilter,
-    cityFilter,
-    setCityFilter,
-    ownerFilter,
-    setOwnerFilter,
   } = usePropertyFilters(properties);
 
   // Apply property type filter on top of other filters
@@ -101,10 +93,7 @@ export const Properties = () => {
   // Actions hook
   const {
     handleCreate,
-    handleUpdate,
     handleDelete,
-    handleStatusChange,
-    handleRefresh,
     isLoading: actionLoading,
   } = usePropertyActions(loadProperties, {
     onCloseCreate: closeCreate,
@@ -223,11 +212,7 @@ export const Properties = () => {
           <PropertyCard
             property={property}
             onEdit={handleEditProperty}
-            onCommission={(property) => {
-              // Commission dialog can be opened here if needed
-            }}
-            onDelete={(id) => handleDeleteClick(property)}
-            onStatusChange={handleStatusChange}
+            onDelete={() => handleDeleteClick(property)}
             onAddTenant={handleAddTenantToProperty}
             currency={currency}
           />

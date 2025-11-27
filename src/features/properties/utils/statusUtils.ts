@@ -1,4 +1,3 @@
-import { Badge } from '@/components/ui/badge';
 import { getStatusBadgeClasses } from '@/config/colors';
 
 export interface StatusBadgeConfig {

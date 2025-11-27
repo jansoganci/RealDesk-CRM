@@ -81,5 +81,20 @@
     "daysAgo": "{{days}} gün önce",
     "refreshSuccess": "Döviz kurları başarıyla güncellendi",
     "refreshError": "Döviz kurları güncellenemedi"
+  },
+  "legal": {
+    "title": "Yasal Belgeler",
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "description": "Kişisel verilerinizin nasıl korunduğunu öğrenin"
+    },
+    "terms": {
+      "title": "Kullanım Şartları",
+      "description": "Platform kullanım koşullarını inceleyin"
+    },
+    "cookies": {
+      "title": "Çerez Politikası",
+      "description": "Çerez kullanımı hakkında bilgi alın"
+    }
   }
 }

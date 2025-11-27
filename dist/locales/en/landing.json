@@ -94,6 +94,7 @@
     "contact": "Contact",
     "privacy": "Privacy",
     "terms": "Terms",
+    "cookies": "Cookies",
     "copyright": "© 2025 Emlak CRM. Built with React, TypeScript, Tailwind CSS, and Supabase."
   }
 }

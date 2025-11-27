@@ -101,7 +101,23 @@
   },
   "validation": {
     "required": "This field is required",
-    "endDateAfterStart": "End date must be after start date"
+    "endDateAfterStart": "End date must be after start date",
+    "invalidTC": "Invalid TC Identity number",
+    "tcLength": "TC Identity number must be 11 digits",
+    "invalidIBAN": "Invalid IBAN",
+    "invalidPhone": "Invalid phone number",
+    "invalidEmail": "Invalid email address",
+    "rentPositive": "Rent amount must be positive",
+    "depositPositive": "Deposit amount must be positive",
+    "duplicateOwner": "Owner with this TC number already exists",
+    "duplicateTenant": "Tenant with this TC number already exists",
+    "duplicateProperty": "Property at this address already exists",
+    "activeContractExists": "Active contract exists for this property",
+    "checkingOwner": "Checking owner...",
+    "checkingTenant": "Checking tenant...",
+    "ownerDataChanged": "Owner Data Changed",
+    "tenantDataChanged": "Tenant Data Changed",
+    "multipleContracts": "Multiple Active Contracts"
   },
   "create": {
     "title": "Create New Contract",
@@ -110,7 +126,16 @@
       "owner": "Owner Information",
       "tenant": "Tenant Information",
       "property": "Property Information",
-      "contract": "Contract Details"
+      "contract": "Contract Details",
+      "paymentDetailsOptional": "Payment Details (Optional)"
+    },
+    "datePicker": {
+      "selectDate": "Select date",
+      "quickDuration": "Quick duration:",
+      "sixMonths": "6 Months",
+      "oneYear": "1 Year",
+      "twoYears": "2 Years",
+      "threeYears": "3 Years"
     },
     "fields": {
       "owner_name": "Owner Full Name",
@@ -150,7 +175,8 @@
       "bina_no": "123",
       "daire_no": "5",
       "ilce": "Kadıköy",
-      "il": "Istanbul"
+      "il": "Istanbul",
+      "usePurpose": "Residential / Commercial"
     },
     "propertyTypes": {
       "apartment": "Apartment",
@@ -159,11 +185,241 @@
     },
     "buttons": {
       "submit": "Create Contract",
+      "submitting": "Creating...",
       "cancel": "Cancel",
       "reset": "Reset Form"
     },
     "preview": {
       "fullAddress": "Full Address Preview"
+    },
+    "toasts": {
+      "noSession": "User session not found",
+      "creating": "Creating contract...",
+      "ownerCreated": "✓ New owner created",
+      "ownerUsed": "✓ Existing owner used",
+      "tenantCreated": "✓ New tenant created",
+      "tenantUsed": "✓ Existing tenant used",
+      "propertyCreated": "✓ New property created",
+      "propertyUsed": "✓ Existing property used",
+      "contractCreated": "✓ Contract created",
+      "allCompleted": "All operations completed successfully!",
+      "unknownError": "Unknown error"
     }
+  },
+  "activeContractWarning": {
+    "toastTitle": "Active Contract Detected",
+    "toastDescription": "This property already has an active contract with {{tenant}}.",
+    "bannerTitle": "WARNING: Active Contract Exists",
+    "bannerMessage": "This property already has an active contract:",
+    "tenant": "Tenant",
+    "period": "Period",
+    "rent": "Rent"
+  },
+  "edit": {
+    "title": "Edit Contract",
+    "subtitle": "Update contract information",
+    "loading": "Loading contract details...",
+    "errorTitle": "Loading Error",
+    "errorNotFound": "Contract not found",
+    "backToList": "Back to Contracts",
+    "warning": "Note: Changes will also update owner, tenant, and property information. The PDF will be regenerated automatically.",
+    "buttons": {
+      "submit": "Save Changes",
+      "submitting": "Saving...",
+      "cancel": "Cancel"
+    },
+    "toasts": {
+      "updating": "Updating contract...",
+      "ownerUpdated": "✓ Owner information updated",
+      "tenantUpdated": "✓ Tenant information updated",
+      "propertyUpdated": "✓ Property information updated",
+      "contractUpdated": "✓ Contract updated",
+      "successDescription": "All updates completed successfully!",
+      "regeneratingPdf": "Regenerating PDF...",
+      "noSession": "User session not found",
+      "unknownError": "Unknown error"
+    }
+  },
+  "pdf": {
+    "generating": "Preparing PDF contract...",
+    "uploading": "Saving PDF to system...",
+    "toasts": {
+      "generating": "Generating PDF...",
+      "generated": "PDF generated successfully",
+      "uploading": "Uploading PDF...",
+      "uploaded": "PDF uploaded successfully",
+      "generateFailed": "Failed to generate PDF",
+      "uploadFailed": "Failed to upload PDF"
+    },
+    "errors": {
+      "storageQuota": "Storage quota exceeded",
+      "storageQuotaDescription": "PDF will be downloaded but could not be saved to system. Please contact administrator.",
+      "timeout": "Slow internet connection",
+      "timeoutDescription": "PDF will be downloaded but could not be saved to system. Please upload manually later.",
+      "uploadFailed": "PDF could not be saved to system",
+      "uploadFailedDescription": "PDF will be downloaded. You can upload it manually from the contracts list later.",
+      "generationFailed": "Failed to generate PDF",
+      "generationFailedDescription": "Contract saved successfully. You can generate the PDF later from the contracts list or upload manually."
+    },
+    "success": {
+      "createdAndSaved": "Contract and PDF created successfully!",
+      "createdAndSavedDescription": "PDF saved to system and downloaded to your device. You can download it again from the contracts list.",
+      "createdDownloaded": "Contract created, PDF downloaded",
+      "createdDownloadedDescription": "PDF could not be saved to system. Please upload the downloaded file manually from the contracts list."
+    },
+    "actions": {
+      "opening": "Opening PDF...",
+      "downloadFailed": "Failed to download PDF",
+      "invalidFileType": "Only PDF files can be uploaded",
+      "fileTooLarge": "File size cannot exceed 10MB",
+      "fileSize": "File size: {{size}} MB",
+      "uploading": "Uploading PDF...",
+      "uploadSuccess": "PDF uploaded successfully!",
+      "uploadSuccessDescription": "Contract PDF saved to system",
+      "uploadFailed": "Failed to upload PDF",
+      "download": "Download PDF",
+      "upload": "Upload PDF"
+    }
+  },
+  "import": {
+    "title": "Import Legacy Contract",
+    "subtitle": "Automatically extract contract information from your PDF or Word file",
+    "description": "Extract contract information from PDF or DOCX file",
+    "dropzone": {
+      "title": "Upload File",
+      "description": "Drag and drop a PDF or DOCX file, or click to select",
+      "accept": "PDF, DOCX"
+    },
+    "processing": "Processing file...",
+    "extracting": "Extracting text...",
+    "parsing": "Parsing contract information...",
+    "uploading": "Uploading file...",
+    "reading": "Reading PDF...",
+    "dataExtracting": "Extracting data...",
+    "ready": "Ready!",
+    "error": "Error",
+    "progress": {
+      "upload": "1. Upload",
+      "review": "2. Review",
+      "complete": "3. Complete",
+      "completed": "{{progress}}% completed"
+    },
+    "progressSteps": {
+      "uploaded": "PDF Uploaded",
+      "extracting": "Extracting Text",
+      "ready": "Ready"
+    },
+    "sections": {
+      "owner": "Owner Information",
+      "tenant": "Tenant Information",
+      "property": "Property Information",
+      "contract": "Contract Details",
+      "extractedData": "Extracted Information",
+      "specialConditions": "Special Conditions",
+      "uploadedFile": "Uploaded File"
+    },
+    "foundAddress": "Found address",
+    "fieldsFilled": "({{extracted}}/{{total}} fields filled)",
+    "saving": "Saving...",
+    "confirmAndSave": "Confirm and Save",
+    "noData": "No data found",
+    "waitMessage": "Please wait, this may take a few seconds...",
+    "extractedText": "Extracted Text ({{count}} characters)",
+    "toasts": {
+      "extractionSuccess": "Text extracted successfully",
+      "extractionFailed": "Failed to extract text",
+      "parsingSuccess": "Contract information parsed successfully",
+      "parsingFailed": "Failed to parse contract information",
+      "unsupportedFormat": "Unsupported file format",
+      "fileTooLarge": "File too large (maximum 10MB)",
+      "success": "PDF read successfully!",
+      "successDescription": "{{count}} fields extracted",
+      "readFailed": "Failed to read PDF",
+      "readFailedDescription": "Unknown error. You can enter data manually.",
+      "noSession": "Please sign in",
+      "pdfUploadFailed": "Failed to save PDF",
+      "pdfUploadFailedDescription": "Contract created but PDF could not be uploaded to system.",
+      "saveFailed": "Failed to save contract"
+    },
+    "upload": {
+      "dropHere": "Drop file here",
+      "dragHere": "Drag your PDF file here",
+      "orSelect": "or select from your computer",
+      "selectFromComputer": "Select from Computer",
+      "helpText": "You can upload PDF or Word files (Max 10 MB)",
+      "autoExtract": "System will automatically extract owner, tenant and contract information",
+      "invalidFileType": "Invalid file type",
+      "invalidFileTypeDescription": "You can only upload PDF or Word (.docx) files",
+      "fileTooLarge": "File too large",
+      "fileTooLargeDescription": "File size: {{size}} MB. Maximum: 10 MB"
+    },
+    "banner": {
+      "title": "Import Legacy Contracts",
+      "description": "Upload your PDF or Word files, system will automatically extract the information",
+      "button": "Import Legacy Contract"
+    },
+    "alerts": {
+      "extractedSuccess": "Successfully extracted!",
+      "extractedDescription": "{{count}} fields were automatically filled from the PDF. Please review and correct if needed.",
+      "fewFieldsExtracted": "Some information not found",
+      "fewFieldsDescription": "Few fields could be extracted from the PDF. Please fill in the missing fields manually."
+    },
+    "success": {
+      "title": "Congratulations!",
+      "description": "Contract saved successfully",
+      "createdRecords": "Created Records",
+      "owner": "Owner",
+      "tenant": "Tenant",
+      "property": "Property",
+      "pdfFile": "PDF File",
+      "pdfSaved": "Successfully saved",
+      "createAnother": "Import Another Contract",
+      "viewContract": "View Contracts",
+      "helpText": "Contract and related records have been successfully added to the system.\nYou can now access all information from the Contracts page."
+    },
+    "placeholders": {
+      "notFound": "Not found - please enter",
+      "fullAddress": "Full address...",
+      "neighborhood": "e.g. Central Neighborhood",
+      "street": "e.g. Main Street",
+      "district": "District",
+      "city": "City",
+      "specialConditions": "Special conditions to be added to the contract..."
+    },
+    "fields": {
+      "extracted": "Extracted Information",
+      "confidence": "Confidence Level",
+      "review": "Please review the extracted information"
+    },
+    "buttons": {
+      "import": "Import",
+      "cancel": "Cancel",
+      "retry": "Retry"
+    }
+  },
+  "pdfExtract": {
+    "buttonTitle": "Extract text from PDF",
+    "buttonText": "PDF Extract",
+    "invalidFileType": "Only PDF and EPUB files are supported.",
+    "fileTooLarge": "File size too large. Maximum 100 MB.",
+    "extractionFailed": "Could not extract text from PDF. The file may be empty or a scanned document.",
+    "processingError": "An error occurred while processing the PDF.",
+    "success": "Text extracted successfully! {{tokens}}",
+    "tokens": "tokens",
+    "copiedToClipboard": "Text copied to clipboard!",
+    "dialogTitle": "PDF Text Extraction Result",
+    "processing": "Processing PDF...",
+    "extractedInfo": "Extracted Information:",
+    "extractedText": "Extracted Text:",
+    "textPlaceholder": "Extracted text will appear here...",
+    "copy": "Copy",
+    "close": "Close",
+    "tenant": "Tenant",
+    "owner": "Owner",
+    "rentAmount": "Rent Amount",
+    "deposit": "Deposit",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "characters": "{{count}} characters"
   }
 }

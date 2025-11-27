@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { propertiesService } from '@/lib/serviceProxy';
-import type { PropertyWithOwner, PropertyOwner, PropertyStatus } from '@/types';
+import type { PropertyWithOwner, PropertyStatus } from '@/types';
 import * as z from 'zod';
 
 interface UsePropertyActionsOptions {

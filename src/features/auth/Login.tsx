@@ -1,77 +1,64 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Label } from '../../components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
-import { Building2 } from 'lucide-react';
+import { Building2, Loader2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { supabase } from '../../config/supabase';
+import { getLoginSchema, LoginFormData } from './authSchemas';
 
 export const Login = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
-  const { signIn, signUp } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const loginSchema = getLoginSchema(t);
 
-    if (!email || !password) {
-      toast.error(t('login.validation.required'));
-      return;
-    }
+  const form = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
 
-    if (password.length < 6) {
-      toast.error(t('login.validation.passwordLength'));
-      return;
-    }
-
+  const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
     try {
-      if (isSignUp) {
-        await signUp(email, password);
-        toast.success(t('login.toast.signUpSuccess'));
-        setIsSignUp(false);
-        setPassword('');
-      } else {
-        await signIn(email, password);
-        
-        // Wait for auth state to sync (critical for iOS Safari/PWA)
-        // Check session directly to ensure it's available before navigation
-        let sessionConfirmed = false;
-        let attempts = 0;
-        const maxAttempts = 10;
-        
-        while (!sessionConfirmed && attempts < maxAttempts) {
-          const { data: { session } } = await supabase.auth.getSession();
-          if (session?.user) {
-            sessionConfirmed = true;
-            break;
-          }
-          // Small delay to allow auth state to sync (especially on iOS)
-          await new Promise(resolve => setTimeout(resolve, 100));
-          attempts++;
+      await signIn(data.email, data.password);
+
+      // Wait for auth state to sync (critical for iOS Safari/PWA)
+      // Check session directly to ensure it's available before navigation
+      let sessionConfirmed = false;
+      let attempts = 0;
+      const maxAttempts = 10;
+
+      while (!sessionConfirmed && attempts < maxAttempts) {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (session?.user) {
+          sessionConfirmed = true;
+          break;
         }
-        
-        if (!sessionConfirmed) {
-          // Fallback: force navigation even if session check failed
-          // The ProtectedRoute will handle auth state checking with additional verification
-        }
-        
-        toast.success(t('login.toast.loginSuccess'));
-        // Use replace to prevent back navigation to login page
-        navigate(ROUTES.DASHBOARD, { replace: true });
+        // Small delay to allow auth state to sync (especially on iOS)
+        await new Promise(resolve => setTimeout(resolve, 100));
+        attempts++;
       }
+
+      toast.success(t('toast.loginSuccess'));
+      // Use replace to prevent back navigation to login page
+      navigate(ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : isSignUp ? t('login.toast.signUpError') : t('login.toast.loginError'));
+      const errorMessage = error instanceof Error ? error.message : t('errors.generic');
+      toast.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -81,61 +68,95 @@ export const Login = () => {
     // Note: PageContainer intentionally NOT used here - auth pages require full-screen centered layout
     // without navbar/sidebar, which is standard UX for login/signup flows
     <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.DEFAULT} />
+            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.hex} />
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            {isSignUp ? t('login.createAccount') : t('login.welcomeBack')}
+            {t('login.title')}
           </CardTitle>
           <CardDescription className="text-center">
-            {isSignUp ? t('login.createAccount') : t('login.welcomeDescription')}
+            {t('login.subtitle')}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">{t('login.email')}</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder={t('login.emailPlaceholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                disabled={loading}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('login.email')}</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="email"
+                        placeholder={t('login.emailPlaceholder')}
+                        disabled={loading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password">{t('login.password')}</Label>
-              </div>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={loading}
-              />
-            </div>
-            <Button className="w-full" type="submit" disabled={loading}>
-              {loading ? t('common:loading') : isSignUp ? t('login.signUp') : t('login.signIn')}
-            </Button>
-          </form>
 
-          <div className="mt-4 text-center text-sm">
-            <div className="text-center text-sm">
-              {isSignUp ? t('login.hasAccount') : t('login.noAccount')}{' '}
-              <button
-                type="button"
-                className="underline"
-                onClick={() => setIsSignUp(!isSignUp)}
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <div className="flex items-center justify-between">
+                      <FormLabel>{t('login.password')}</FormLabel>
+                      <Link
+                        to={ROUTES.FORGOT_PASSWORD}
+                        className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                      >
+                        {t('login.forgotPassword')}
+                      </Link>
+                    </div>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder={t('login.passwordPlaceholder')}
+                        disabled={loading}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Button
+                className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+                type="submit"
                 disabled={loading}
               >
-                {isSignUp ? t('login.signIn') : t('login.signUp')}
-              </button>
-            </div>
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('common:loading')}
+                  </>
+                ) : (
+                  t('login.signIn')
+                )}
+              </Button>
+            </form>
+          </Form>
+
+          <div className="mt-6 text-center text-sm">
+            <span className={COLORS.text.secondary}>
+              {t('login.noAccount')}{' '}
+            </span>
+            <Link
+              to={ROUTES.REGISTER}
+              className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+            >
+              {t('login.registerLink')}
+            </Link>
           </div>
         </CardContent>
       </Card>

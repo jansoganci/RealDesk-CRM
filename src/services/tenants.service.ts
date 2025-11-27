@@ -35,11 +35,27 @@ class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
     const { data, error } = await supabase
       .from('tenants')
-      .select('*')
+      .select(`
+        *,
+        contracts(
+          id,
+          status,
+          property:properties(id, address, city, district, il, ilce)
+        )
+      `)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return (data || []) as TenantWithProperty[];
+
+    // Transform: Active contract'tan property'yi çıkar
+    return (data || []).map((tenant: any) => {
+      const activeContract = tenant.contracts?.find((c: any) => c.status === 'Active');
+      const { contracts: _, ...tenantData } = tenant;
+      return {
+        ...tenantData,
+        property: activeContract?.property || null,
+      } as TenantWithProperty;
+    });
   }
 
   async getById(id: string): Promise<TenantWithProperty | null> {

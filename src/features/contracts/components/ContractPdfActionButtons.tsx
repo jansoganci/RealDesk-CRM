@@ -1,5 +1,6 @@
-import { Button } from '../../components/ui/button';
-import { TableActionButtons } from '../../components/common/TableActionButtons';
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { TableActionButtons } from '@/components/common/TableActionButtons';
 import { FileDown, Upload, Loader2 } from 'lucide-react';
 import type { ContractWithDetails } from '../../../types';
 
@@ -29,6 +30,7 @@ export function ContractPdfActionButtons({
   onEdit,
   onDelete,
 }: ContractPdfActionButtonsProps) {
+  const { t } = useTranslation('contracts');
   const hasPdf = !!contract.contract_pdf_path;
   const isUploading = uploadingContractId === contract.id;
 
@@ -42,7 +44,7 @@ export function ContractPdfActionButtons({
           onClick={() => onDownload(contract)}
           disabled={actionLoading || pdfActionLoading}
           className="h-8 px-2"
-          title="PDF İndir"
+          title={t('pdf.actions.download')}
         >
           <FileDown className="h-4 w-4" />
         </Button>
@@ -54,7 +56,7 @@ export function ContractPdfActionButtons({
           onClick={() => onUpload(contract.id)}
           disabled={actionLoading || isUploading}
           className="h-8 px-2"
-          title="PDF Yükle"
+          title={t('pdf.actions.upload')}
         >
           {isUploading ? (
             <Loader2 className="h-4 w-4 animate-spin" />

@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { tenantsService, contractsService } from '../../../lib/serviceProxy';
 import type { TenantWithProperty, Contract, TenantUpdate, ContractUpdate } from '../../../types';
@@ -38,6 +39,7 @@ export function useTenantEditSubmission({
   onSuccess,
   onOpenChange,
 }: UseTenantEditSubmissionOptions): UseTenantEditSubmissionReturn {
+  const { t } = useTranslation('tenants');
   const [submitting, setSubmitting] = useState(false);
 
   const handleSubmit = useCallback(async () => {
@@ -107,18 +109,18 @@ export function useTenantEditSubmission({
           await contractsService.uploadContractPdfAndPersist(pdfFile, primaryContract.id);
         } catch (uploadError) {
           console.error('PDF upload failed:', uploadError);
-          toast.error('Tenant and contract updated, but PDF upload failed');
+          toast.error(t('edit.pdfUploadFailed'));
         }
       }
-      
+
       // Success!
-      toast.success(`Tenant ${formData.tenant.name} updated successfully!`);
+      toast.success(t('edit.updateSuccess', { name: formData.tenant.name }));
       onSuccess();
       onOpenChange(false);
-      
+
     } catch (error) {
       console.error('Failed to update tenant and contract:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update tenant and contract');
+      toast.error(error instanceof Error ? error.message : t('edit.updateFailed'));
     } finally {
       setSubmitting(false);
     }
@@ -130,6 +132,7 @@ export function useTenantEditSubmission({
     validateCurrentStep,
     onSuccess,
     onOpenChange,
+    t,
   ]);
 
   return {

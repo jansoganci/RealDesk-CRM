@@ -3,6 +3,7 @@
  * Shows progress animation while extracting text from PDF
  */
 
+import { useTranslation } from 'react-i18next';
 import { Loader2, FileText, Search, CheckCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -12,6 +13,8 @@ interface ExtractingStepProps {
 }
 
 export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
+  const { t } = useTranslation('contracts');
+
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-6">
       {/* Big Animated Spinner */}
@@ -32,7 +35,7 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
 
       {/* Progress Percentage */}
       <p className="text-xl text-gray-600 mb-12">
-        {progress}% tamamlandı
+        {t('import.progress.completed', { progress })}
       </p>
 
       {/* Visual Progress Steps */}
@@ -63,7 +66,7 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
               progress >= 33 ? "text-blue-600" : "text-gray-500"
             )}
           >
-            PDF Yüklendi
+            {t('import.progressSteps.uploaded')}
           </span>
         </div>
 
@@ -93,7 +96,7 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
               progress >= 66 ? "text-blue-600" : "text-gray-500"
             )}
           >
-            Metin Çıkarılıyor
+            {t('import.progressSteps.extracting')}
           </span>
         </div>
 
@@ -123,14 +126,14 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
               progress >= 100 ? "text-green-600" : "text-gray-500"
             )}
           >
-            Hazır
+            {t('import.progressSteps.ready')}
           </span>
         </div>
       </div>
 
       {/* Wait message */}
       <p className="mt-12 text-sm text-gray-500">
-        Lütfen bekleyin, bu işlem birkaç saniye sürebilir...
+        {t('import.waitMessage')}
       </p>
     </div>
   );

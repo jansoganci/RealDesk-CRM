@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,17 +19,19 @@ interface PropertySectionProps {
  * Displays form fields for property information
  */
 export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpdate }: PropertySectionProps) {
+  const { t } = useTranslation('contracts');
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">🏘️ Mülk Bilgileri</CardTitle>
+        <CardTitle className="text-lg">{t('import.sections.property')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {parsedData.propertyAddress && (
           <Alert className="border-blue-200 bg-blue-50">
             <Info className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
-              <strong>Bulunan adres:</strong> {parsedData.propertyAddress}
+              <strong>{t('import.foundAddress')}:</strong> {parsedData.propertyAddress}
             </AlertDescription>
           </Alert>
         )}
@@ -36,13 +39,13 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="mahalle">
-              Mahalle <span className="text-red-500">*</span>
+              {t('create.fields.mahalle')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="mahalle"
               value={formData.mahalle}
               onChange={(e) => onFieldUpdate('mahalle', e.target.value)}
-              placeholder="Örn: Merkez Mahallesi"
+              placeholder={t('import.placeholders.neighborhood')}
               className={cn(fieldErrors.mahalle && "border-red-500")}
             />
             {fieldErrors.mahalle && (
@@ -51,19 +54,19 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
           </div>
 
           <div>
-            <Label htmlFor="cadde_sokak">Cadde/Sokak</Label>
+            <Label htmlFor="cadde_sokak">{t('create.fields.cadde_sokak')}</Label>
             <Input
               id="cadde_sokak"
               value={formData.cadde_sokak}
               onChange={(e) => onFieldUpdate('cadde_sokak', e.target.value)}
-              placeholder="Örn: Atatürk Caddesi"
+              placeholder={t('import.placeholders.street')}
             />
           </div>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div>
-            <Label htmlFor="bina_no">Bina No</Label>
+            <Label htmlFor="bina_no">{t('create.fields.bina_no')}</Label>
             <Input
               id="bina_no"
               value={formData.bina_no}
@@ -73,7 +76,7 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
           </div>
 
           <div>
-            <Label htmlFor="daire_no">Daire No</Label>
+            <Label htmlFor="daire_no">{t('create.fields.daire_no')}</Label>
             <Input
               id="daire_no"
               value={formData.daire_no}
@@ -84,13 +87,13 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
 
           <div>
             <Label htmlFor="ilce">
-              İlçe <span className="text-red-500">*</span>
+              {t('create.fields.ilce')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="ilce"
               value={formData.ilce}
               onChange={(e) => onFieldUpdate('ilce', e.target.value)}
-              placeholder="Kadıköy"
+              placeholder={t('import.placeholders.district')}
               className={cn(fieldErrors.ilce && "border-red-500")}
             />
             {fieldErrors.ilce && (
@@ -100,13 +103,13 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
 
           <div>
             <Label htmlFor="il">
-              İl <span className="text-red-500">*</span>
+              {t('create.fields.il')} <span className="text-red-500">*</span>
             </Label>
             <Input
               id="il"
               value={formData.il}
               onChange={(e) => onFieldUpdate('il', e.target.value)}
-              placeholder="İstanbul"
+              placeholder={t('import.placeholders.city')}
               className={cn(fieldErrors.il && "border-red-500")}
             />
             {fieldErrors.il && (
