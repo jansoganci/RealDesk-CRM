@@ -101,7 +101,23 @@
   },
   "validation": {
     "required": "Bu alan zorunludur",
-    "endDateAfterStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
+    "endDateAfterStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır",
+    "invalidTC": "Geçersiz TC Kimlik numarası",
+    "tcLength": "TC Kimlik numarası 11 haneli olmalıdır",
+    "invalidIBAN": "Geçersiz IBAN",
+    "invalidPhone": "Geçersiz telefon numarası",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "rentPositive": "Kira tutarı pozitif olmalıdır",
+    "depositPositive": "Depozito tutarı pozitif olmalıdır",
+    "duplicateOwner": "Bu TC numarasıyla kayıtlı ev sahibi mevcut",
+    "duplicateTenant": "Bu TC numarasıyla kayıtlı kiracı mevcut",
+    "duplicateProperty": "Bu adreste kayıtlı mülk mevcut",
+    "activeContractExists": "Bu mülkte aktif sözleşme mevcut",
+    "checkingOwner": "Ev sahibi kontrol ediliyor...",
+    "checkingTenant": "Kiracı kontrol ediliyor...",
+    "ownerDataChanged": "Ev Sahibi Bilgileri Değişti",
+    "tenantDataChanged": "Kiracı Bilgileri Değişti",
+    "multipleContracts": "Birden Fazla Aktif Sözleşme"
   },
   "create": {
     "title": "Yeni Sözleşme Oluştur",
@@ -114,7 +130,16 @@
       "property": "Mülk Bilgileri",
       "propertyDescription": "Kiralanacak mülkün adres bilgileri",
       "contract": "Sözleşme Detayları",
-      "contractDescription": "Sözleşme detayları"
+      "contractDescription": "Sözleşme detayları",
+      "paymentDetailsOptional": "Ödeme Detayları (Opsiyonel)"
+    },
+    "datePicker": {
+      "selectDate": "Tarih seçiniz",
+      "quickDuration": "Hızlı süre seçimi:",
+      "sixMonths": "6 Ay",
+      "oneYear": "1 Yıl",
+      "twoYears": "2 Yıl",
+      "threeYears": "3 Yıl"
     },
     "fields": {
       "owner_name": "Ev Sahibi Adı Soyadı",
@@ -157,7 +182,8 @@
       "ilce": "Kadıköy",
       "il": "İstanbul",
       "payment_method": "Banka Transferi",
-      "special_conditions": "Özel şartlar veya notlar..."
+      "special_conditions": "Özel şartlar veya notlar...",
+      "usePurpose": "Mesken / İşyeri"
     },
     "propertyTypes": {
       "apartment": "Daire",
@@ -172,6 +198,19 @@
     },
     "preview": {
       "fullAddress": "Tam Adres Önizleme"
+    },
+    "toasts": {
+      "noSession": "Kullanıcı oturumu bulunamadı",
+      "creating": "Sözleşme oluşturuluyor...",
+      "ownerCreated": "✓ Yeni ev sahibi oluşturuldu",
+      "ownerUsed": "✓ Mevcut ev sahibi kullanıldı",
+      "tenantCreated": "✓ Yeni kiracı oluşturuldu",
+      "tenantUsed": "✓ Mevcut kiracı kullanıldı",
+      "propertyCreated": "✓ Yeni mülk oluşturuldu",
+      "propertyUsed": "✓ Mevcut mülk kullanıldı",
+      "contractCreated": "✓ Sözleşme oluşturuldu",
+      "allCompleted": "Tüm işlemler başarıyla tamamlandı!",
+      "unknownError": "Bilinmeyen hata"
     }
   },
   "activeContractWarning": {
@@ -195,6 +234,199 @@
       "submit": "Değişiklikleri Kaydet",
       "submitting": "Kaydediliyor...",
       "cancel": "İptal"
+    },
+    "toasts": {
+      "updating": "Sözleşme güncelleniyor...",
+      "ownerUpdated": "✓ Ev sahibi bilgileri güncellendi",
+      "tenantUpdated": "✓ Kiracı bilgileri güncellendi",
+      "propertyUpdated": "✓ Mülk bilgileri güncellendi",
+      "contractUpdated": "✓ Sözleşme güncellendi",
+      "successDescription": "Tüm güncellemeler başarıyla tamamlandı!",
+      "regeneratingPdf": "PDF yeniden oluşturuluyor...",
+      "noSession": "Kullanıcı oturumu bulunamadı",
+      "unknownError": "Bilinmeyen hata"
     }
+  },
+  "pdf": {
+    "generating": "PDF sözleşme hazırlanıyor...",
+    "uploading": "PDF sisteme kaydediliyor...",
+    "toasts": {
+      "generating": "PDF oluşturuluyor...",
+      "generated": "PDF başarıyla oluşturuldu",
+      "uploading": "PDF yükleniyor...",
+      "uploaded": "PDF başarıyla yüklendi",
+      "generateFailed": "PDF oluşturulamadı",
+      "uploadFailed": "PDF yüklenemedi"
+    },
+    "errors": {
+      "storageQuota": "Depolama alanı dolu",
+      "storageQuotaDescription": "PDF indirilecek ancak sisteme kaydedilemedi. Lütfen yönetici ile iletişime geçin.",
+      "timeout": "Yavaş internet bağlantısı",
+      "timeoutDescription": "PDF indirilecek ancak sisteme kaydedilemedi. Lütfen daha sonra manuel yükleyin.",
+      "uploadFailed": "PDF sisteme kaydedilemedi",
+      "uploadFailedDescription": "PDF indirilecek. İsterseniz daha sonra kontrat listesinden manuel yükleyebilirsiniz.",
+      "generationFailed": "PDF oluşturulamadı",
+      "generationFailedDescription": "Sözleşme başarıyla kaydedildi. PDF'i daha sonra kontrat listesinden oluşturabilir veya manuel yükleyebilirsiniz."
+    },
+    "success": {
+      "createdAndSaved": "Sözleşme ve PDF başarıyla oluşturuldu!",
+      "createdAndSavedDescription": "PDF sisteme kaydedildi ve cihazınıza indirildi. İsterseniz kontrat listesinden tekrar indirebilirsiniz.",
+      "createdDownloaded": "Sözleşme oluşturuldu, PDF indirildi",
+      "createdDownloadedDescription": "PDF sisteme kaydedilemedi. Lütfen indirilen dosyayı kontrat listesinden manuel yükleyin."
+    },
+    "actions": {
+      "opening": "PDF açılıyor...",
+      "downloadFailed": "PDF indirilemedi",
+      "invalidFileType": "Sadece PDF dosyası yükleyebilirsiniz",
+      "fileTooLarge": "Dosya boyutu 10MB'dan büyük olamaz",
+      "fileSize": "Dosya boyutu: {{size}} MB",
+      "uploading": "PDF yükleniyor...",
+      "uploadSuccess": "PDF başarıyla yüklendi!",
+      "uploadSuccessDescription": "Sözleşme PDF'i sisteme kaydedildi",
+      "uploadFailed": "PDF yüklenemedi",
+      "download": "PDF İndir",
+      "upload": "PDF Yükle"
+    }
+  },
+  "import": {
+    "title": "📥 Eski Sözleşme Aktarma",
+    "subtitle": "PDF veya Word dosyanızdan sözleşme bilgilerini otomatik olarak çıkarıp sisteme aktarın",
+    "description": "PDF veya DOCX dosyasından sözleşme bilgilerini çıkarın",
+    "dropzone": {
+      "title": "Dosya Yükle",
+      "description": "PDF veya DOCX dosyasını sürükleyip bırakın veya seçin",
+      "accept": "PDF, DOCX"
+    },
+    "processing": "Dosya işleniyor...",
+    "extracting": "Metin çıkarılıyor...",
+    "parsing": "Sözleşme bilgileri ayrıştırılıyor...",
+    "uploading": "Dosya yükleniyor...",
+    "reading": "PDF okunuyor...",
+    "dataExtracting": "Veriler çıkarılıyor...",
+    "ready": "Hazır!",
+    "error": "Hata",
+    "progress": {
+      "upload": "1. Yükle",
+      "review": "2. İncele",
+      "complete": "3. Tamamla",
+      "completed": "{{progress}}% tamamlandı"
+    },
+    "progressSteps": {
+      "uploaded": "PDF Yüklendi",
+      "extracting": "Metin Çıkarılıyor",
+      "ready": "Hazır"
+    },
+    "sections": {
+      "owner": "🏠 Ev Sahibi Bilgileri",
+      "tenant": "👤 Kiracı Bilgileri",
+      "property": "🏘️ Mülk Bilgileri",
+      "contract": "📋 Sözleşme Detayları",
+      "extractedData": "Çıkarılan Bilgiler",
+      "specialConditions": "Özel Şartlar",
+      "uploadedFile": "📄 Yüklenen Dosya"
+    },
+    "foundAddress": "Bulunan adres",
+    "fieldsFilled": "({{extracted}}/{{total}} alan dolu)",
+    "saving": "Kaydediliyor...",
+    "confirmAndSave": "✅ Onayla ve Kaydet",
+    "noData": "Veri bulunamadı",
+    "waitMessage": "Lütfen bekleyin, bu işlem birkaç saniye sürebilir...",
+    "extractedText": "Çıkarılan Metin ({{count}} karakter)",
+    "toasts": {
+      "extractionSuccess": "Metin başarıyla çıkarıldı",
+      "extractionFailed": "Metin çıkarılamadı",
+      "parsingSuccess": "Sözleşme bilgileri başarıyla ayrıştırıldı",
+      "parsingFailed": "Sözleşme bilgileri ayrıştırılamadı",
+      "unsupportedFormat": "Desteklenmeyen dosya formatı",
+      "fileTooLarge": "Dosya çok büyük (maksimum 10MB)",
+      "success": "PDF başarıyla okundu!",
+      "successDescription": "{{count}} alan çıkarıldı",
+      "readFailed": "PDF okunamadı",
+      "readFailedDescription": "Bilinmeyen hata. Manuel olarak girebilirsiniz.",
+      "noSession": "Oturum açmanız gerekiyor",
+      "pdfUploadFailed": "PDF kaydedilemedi",
+      "pdfUploadFailedDescription": "Sözleşme oluşturuldu ama PDF sisteme yüklenemedi.",
+      "saveFailed": "Sözleşme kaydedilemedi"
+    },
+    "upload": {
+      "dropHere": "Dosyayı buraya bırakın",
+      "dragHere": "PDF dosyanızı buraya sürükleyin",
+      "orSelect": "veya bilgisayarınızdan seçin",
+      "selectFromComputer": "Bilgisayardan Seç",
+      "helpText": "PDF veya Word dosyası yükleyebilirsiniz (Maks 10 MB)",
+      "autoExtract": "Sistem otomatik olarak ev sahibi, kiracı ve sözleşme bilgilerini çıkaracak",
+      "invalidFileType": "Geçersiz dosya türü",
+      "invalidFileTypeDescription": "Sadece PDF veya Word (.docx) dosyası yükleyebilirsiniz",
+      "fileTooLarge": "Dosya çok büyük",
+      "fileTooLargeDescription": "Dosya boyutu: {{size}} MB. Maksimum: 10 MB"
+    },
+    "banner": {
+      "title": "Eski Sözleşmeleri Sisteme Aktarın",
+      "description": "PDF veya Word dosyalarınızı yükleyin, sistem otomatik olarak bilgileri çıkarsın",
+      "button": "Eski Sözleşme Aktar"
+    },
+    "alerts": {
+      "extractedSuccess": "Başarıyla çıkarıldı!",
+      "extractedDescription": "{{count}} alan PDF'den otomatik olarak dolduruldu. Lütfen kontrol edip gerekirse düzeltin.",
+      "fewFieldsExtracted": "Bazı bilgiler bulunamadı",
+      "fewFieldsDescription": "PDF'den az sayıda bilgi çıkarılabildi. Lütfen eksik alanları manuel olarak doldurun."
+    },
+    "success": {
+      "title": "Tebrikler! 🎉",
+      "description": "Sözleşme başarıyla kaydedildi",
+      "createdRecords": "Oluşturulan Kayıtlar",
+      "owner": "Ev Sahibi",
+      "tenant": "Kiracı",
+      "property": "Mülk",
+      "pdfFile": "PDF Dosyası",
+      "pdfSaved": "✓ Başarıyla kaydedildi",
+      "createAnother": "Başka Sözleşme Aktar",
+      "viewContract": "Sözleşmeleri Görüntüle",
+      "helpText": "Sözleşme ve ilişkili kayıtlar başarıyla sisteme eklendi.\nArtık tüm bilgilere Sözleşmeler sayfasından erişebilirsiniz."
+    },
+    "placeholders": {
+      "notFound": "Bulunamadı - lütfen girin",
+      "fullAddress": "Tam adres...",
+      "neighborhood": "Örn: Merkez Mahallesi",
+      "street": "Örn: Atatürk Caddesi",
+      "district": "Kadıköy",
+      "city": "İstanbul",
+      "specialConditions": "Sözleşmeye eklenecek özel şartlar..."
+    },
+    "fields": {
+      "extracted": "Çıkarılan Bilgiler",
+      "confidence": "Güven Oranı",
+      "review": "Lütfen çıkarılan bilgileri kontrol edin"
+    },
+    "buttons": {
+      "import": "İçe Aktar",
+      "cancel": "İptal",
+      "retry": "Tekrar Dene"
+    }
+  },
+  "pdfExtract": {
+    "buttonTitle": "PDF'den metin çıkar",
+    "buttonText": "PDF Çıkar",
+    "invalidFileType": "Sadece PDF ve EPUB dosyaları desteklenir.",
+    "fileTooLarge": "Dosya boyutu çok büyük. Maksimum 100 MB.",
+    "extractionFailed": "PDF'den metin çıkarılamadı. Dosya boş olabilir veya taranmış bir belge olabilir.",
+    "processingError": "PDF işlenirken bir hata oluştu.",
+    "success": "Metin başarıyla çıkarıldı! {{tokens}}",
+    "tokens": "token",
+    "copiedToClipboard": "Metin panoya kopyalandı!",
+    "dialogTitle": "PDF Metin Çıkarma Sonucu",
+    "processing": "PDF işleniyor...",
+    "extractedInfo": "Çıkarılan Bilgiler:",
+    "extractedText": "Çıkarılan Metin:",
+    "textPlaceholder": "Çıkarılan metin burada görünecek...",
+    "copy": "Kopyala",
+    "close": "Kapat",
+    "tenant": "Kiracı",
+    "owner": "Mal Sahibi",
+    "rentAmount": "Kira Bedeli",
+    "deposit": "Depozito",
+    "startDate": "Başlangıç",
+    "endDate": "Bitiş",
+    "characters": "{{count}} karakter"
   }
 }

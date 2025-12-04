@@ -173,5 +173,11 @@
       "createFailed": "Failed to create tenant and contract",
       "endDateBeforeStart": "End date must be after start date"
     }
+  },
+  "edit": {
+    "loadDataFailed": "Failed to load tenant and contract data",
+    "pdfUploadFailed": "Tenant and contract updated, but PDF upload failed",
+    "updateSuccess": "{{name}} updated successfully!",
+    "updateFailed": "Failed to update tenant and contract"
   }
 }

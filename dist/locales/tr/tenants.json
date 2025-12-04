@@ -173,5 +173,11 @@
       "createFailed": "Kiracı ve sözleşme oluşturulamadı",
       "endDateBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır"
     }
+  },
+  "edit": {
+    "loadDataFailed": "Kiracı ve sözleşme verileri yüklenemedi",
+    "pdfUploadFailed": "Kiracı ve sözleşme güncellendi, ancak PDF yüklemesi başarısız oldu",
+    "updateSuccess": "{{name}} başarıyla güncellendi!",
+    "updateFailed": "Kiracı ve sözleşme güncellenemedi"
   }
 }
