@@ -22,3 +22,33 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Build outputs
+dist/
+*.tsbuildinfo
+
+# Test files
+test-*.html
+test-*.pdf
+test-*.docx
+extract_text_response.json
+photo_*.jpg
+
+# Environment files (already have .env, but add variations)
+.env.local
+.env.production
+.env.development
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files (you have some, but add more)
+*.swp
+*.swo
+*~
+
+# Cloudflare
+.wrangler/
