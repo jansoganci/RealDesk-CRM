@@ -20,7 +20,7 @@ i18n
     ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing', 'calendar', 'finance', 'inquiries', 'profile'],
     defaultNS: 'common',
     backend: {
-      loadPath: '/locales/{{lng}}/{{ns}}.json',
+      loadPath: '/locales/{{lng}}/{{ns}}.json?v=1.1',
       allowMultiLoading: false,
       // Disable caching for translation files to ensure latest versions load
       reloadInterval: false,

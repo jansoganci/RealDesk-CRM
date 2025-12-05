@@ -1,7 +1,7 @@
 {
-  "name": "Real Estate CRM",
-  "short_name": "Emlak CRM",
-  "description": "Real Estate CRM Management System",
+  "name": "emlakcrm",
+  "short_name": "emlakcrm",
+  "description": "emlakcrm Management System",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
@@ -10,17 +10,16 @@
   "version": "1.0.0",
   "icons": [
     {
-      "src": "/vite.svg",
+      "src": "/icons/favicon.png",
       "sizes": "192x192",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/vite.svg",
+      "src": "/icons/favicon.png",
       "sizes": "512x512",
-      "type": "image/svg+xml",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ]
 }
-

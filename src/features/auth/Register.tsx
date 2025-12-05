@@ -11,7 +11,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Checkbox } from '../../components/ui/checkbox';
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
-import { Building2, Loader2, Info } from 'lucide-react';
+import { Loader2, Info } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { getRegisterSchema, RegisterFormData } from './authSchemas';
 
@@ -58,7 +58,6 @@ export const Register = () => {
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.hex} />
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
           <CardTitle className="text-2xl font-bold text-center">

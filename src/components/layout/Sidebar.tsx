@@ -6,7 +6,6 @@ import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import {
-  Building2,
   LayoutDashboard,
   Home,
   Users,
@@ -92,9 +91,6 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       >
         <div className="flex items-center justify-between p-5 border-b border-gray-200/50 bg-blue-600 shadow-lg">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-orange-500 rounded-xl shadow-lg shadow-orange-500/20">
-              <Building2 className="h-5 w-5 text-white" />
-            </div>
             <span className="font-bold text-white text-lg tracking-tight">{APP_NAME}</span>
           </div>
           <Button
