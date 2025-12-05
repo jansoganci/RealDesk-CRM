@@ -19,8 +19,12 @@ export const LandingHeader = () => {
   const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
-  const changeLanguage = (lng: string) => {
-    setLanguage(lng)
+  const changeLanguage = async (lng: string) => {
+    try {
+      await setLanguage(lng)
+    } catch (error) {
+      console.error('Failed to change language:', error)
+    }
   }
 
   return (
@@ -116,4 +120,3 @@ export const LandingHeader = () => {
     </header>
   )
 }
-

@@ -1,9 +1,12 @@
 // FinalCTA – last push to sign up / start.
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
+import { useNavigate } from "react-router-dom"
+import { ROUTES } from "@/config/constants"
 
 export const FinalCTA = () => {
   const { t } = useTranslation('landing')
+  const navigate = useNavigate()
 
   return (
     <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 bg-white text-center">
@@ -13,7 +16,11 @@ export const FinalCTA = () => {
         </h2>
         
         <div className="flex flex-col items-center gap-4">
-            <Button size="lg" className="text-lg px-12 py-8 h-auto">
+            <Button 
+              size="lg" 
+              className="text-lg px-12 py-8 h-auto"
+              onClick={() => navigate(ROUTES.LOGIN)}
+            >
                 {t('finalCta.cta')}
             </Button>
             <p className="text-sm text-gray-500">
