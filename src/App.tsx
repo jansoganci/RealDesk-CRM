@@ -7,7 +7,12 @@ import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
 import { ForgotPassword } from './features/auth/ForgotPassword';
 import { ResetPassword } from './features/auth/ResetPassword';
+import { EmailConfirmation } from './features/auth/EmailConfirmation';
+import { EmailChanged } from './features/auth/EmailChanged';
+import PricingPage from './features/billing/PricingPage';
+import { BillingSubscribe } from './features/billing/BillingSubscribe';
 import { LandingPage } from './features/landing/LandingPage';
+import { PublicPricingPage } from './features/landing/PublicPricingPage';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Owners } from './features/owners/Owners';
 import { Properties } from './features/properties/Properties';
@@ -43,6 +48,17 @@ function App() {
           <Route path={ROUTES.REGISTER} element={<Register />} />
           <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
           <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+          <Route path={ROUTES.CONFIRM_EMAIL} element={<EmailConfirmation />} />
+          <Route path={ROUTES.EMAIL_CHANGED} element={<EmailChanged />} />
+          <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
+          <Route
+            path={ROUTES.BILLING_SUBSCRIBE}
+            element={
+              <ProtectedRoute>
+                <BillingSubscribe />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path={ROUTES.DASHBOARD}
             element={

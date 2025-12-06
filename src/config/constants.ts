@@ -26,6 +26,9 @@ export const ROUTES = {
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
   RESET_PASSWORD: '/reset-password',
+  CONFIRM_EMAIL: '/confirm-email',
+  EMAIL_CHANGED: '/email-changed',
+  PRICING: '/pricing',
   DASHBOARD: '/dashboard',
   PROPERTIES: '/properties',
   PROPERTY_DETAIL: '/properties/:id',
@@ -45,4 +48,5 @@ export const ROUTES = {
   CALENDAR: '/calendar',
   FINANCE: '/finance',
   PROFILE: '/profile',
+  BILLING_SUBSCRIBE: '/billing/subscribe',
 } as const;

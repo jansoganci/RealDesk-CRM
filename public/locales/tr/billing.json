@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "Emlak CRM için planını seç",
+    "subtitle": "14 gün boyunca tüm özellikleri deneyin, kredi kartı gerektirmez."
+  },
+  "billingPeriod": {
+    "monthly": "Aylık",
+    "yearly": "Yıllık",
+    "yearlySavings": "2 ay ücretsiz"
+  },
+  "plans": {
+    "starter": {
+      "name": "Başlangıç",
+      "description": "Solo emlak ajanları için ideal"
+    },
+    "pro": {
+      "name": "Profesyonel",
+      "description": "Küçük emlak ofisleri için"
+    },
+    "office": {
+      "name": "Ofis Plus",
+      "description": "Büyük ekipler için"
+    }
+  },
+  "features": {
+    "maxListings": {
+      "starter": "Maksimum 50 ilan",
+      "pro": "Maksimum 200 ilan",
+      "office": "Sınırsız ilan"
+    },
+    "basicReminders": "Temel hatırlatıcılar",
+    "advancedReminders": "Gelişmiş hatırlatıcılar",
+    "allReminders": "Tüm hatırlatıcılar",
+    "singleUser": "Tek kullanıcı",
+    "teamMembers": {
+      "pro": "5 ekip üyesi",
+      "office": "Sınırsız ekip üyesi"
+    },
+    "basicContractManagement": "Temel kontrat yönetimi",
+    "fullContractManagement": "Tam kontrat yönetimi",
+    "advancedContractManagement": "Gelişmiş kontrat yönetimi",
+    "pdfContractGeneration": "PDF kontrat oluşturma",
+    "customPdfTemplates": "Özel PDF şablonları",
+    "prioritySupport": "Öncelikli destek"
+  },
+  "popular": "Popüler",
+  "cta": {
+    "selectPlan": "Planı Seç"
+  },
+  "price": {
+    "monthly": "/ay",
+    "yearly": "/yıl",
+    "yearlyDiscount": "yerine"
+  }
+}
+

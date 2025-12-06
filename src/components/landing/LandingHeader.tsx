@@ -55,6 +55,14 @@ export const LandingHeader = () => {
 
           <Button 
             variant="ghost" 
+            onClick={() => navigate(ROUTES.PRICING)}
+            className="font-medium text-gray-600 hover:text-black hover:bg-gray-50"
+          >
+            {tNav('pricing', 'Fiyatlar')}
+          </Button>
+
+          <Button 
+            variant="ghost" 
             onClick={() => navigate(ROUTES.LOGIN)}
             className="font-medium text-gray-600 hover:text-black hover:bg-gray-50"
           >
@@ -102,6 +110,13 @@ export const LandingHeader = () => {
                </Button>
              </div>
           </div>
+          <Button 
+            variant="outline" 
+            onClick={() => navigate(ROUTES.PRICING)}
+            className="w-full justify-center"
+          >
+            {tNav('pricing', 'Fiyatlar')}
+          </Button>
           <Button 
             variant="outline" 
             onClick={() => navigate(ROUTES.LOGIN)}

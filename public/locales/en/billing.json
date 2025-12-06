@@ -1,0 +1,56 @@
+{
+  "header": {
+    "title": "Choose your plan for Emlak CRM",
+    "subtitle": "Try all features for 14 days, no credit card required."
+  },
+  "billingPeriod": {
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlySavings": "2 months free"
+  },
+  "plans": {
+    "starter": {
+      "name": "Starter",
+      "description": "Perfect for solo real estate agents"
+    },
+    "pro": {
+      "name": "Professional",
+      "description": "For small real estate offices"
+    },
+    "office": {
+      "name": "Office Plus",
+      "description": "For large teams"
+    }
+  },
+  "features": {
+    "maxListings": {
+      "starter": "Up to 50 listings",
+      "pro": "Up to 200 listings",
+      "office": "Unlimited listings"
+    },
+    "basicReminders": "Basic reminders",
+    "advancedReminders": "Advanced reminders",
+    "allReminders": "All reminders",
+    "singleUser": "Single user",
+    "teamMembers": {
+      "pro": "5 team members",
+      "office": "Unlimited team members"
+    },
+    "basicContractManagement": "Basic contract management",
+    "fullContractManagement": "Full contract management",
+    "advancedContractManagement": "Advanced contract management",
+    "pdfContractGeneration": "PDF contract generation",
+    "customPdfTemplates": "Custom PDF templates",
+    "prioritySupport": "Priority support"
+  },
+  "popular": "Popular",
+  "cta": {
+    "selectPlan": "Select this plan"
+  },
+  "price": {
+    "monthly": "/month",
+    "yearly": "/year",
+    "yearlyDiscount": "instead of"
+  }
+}
+

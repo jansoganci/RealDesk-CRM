@@ -19,6 +19,8 @@ export const ResetPassword = () => {
   const [loading, setLoading] = useState(false);
   const [passwordUpdated, setPasswordUpdated] = useState(false);
   const [isValidSession, setIsValidSession] = useState<boolean | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { updatePassword } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
@@ -67,14 +69,27 @@ export const ResetPassword = () => {
 
   const onSubmit = async (data: ResetPasswordFormData) => {
     setLoading(true);
-    try {
-      await updatePassword(data.password);
+    setSuccessMessage(null);
+    setErrorMessage(null);
+
+    if (data.password !== data.confirmPassword) {
+      setErrorMessage('Şifreler eşleşmiyor.');
+      setLoading(false);
+      return;
+    }
+
+    const result = await updatePassword(data.password);
+
+    if (!result.success) {
+      setErrorMessage(`Şifre güncellenemedi: ${result.error}`);
+      setLoading(false);
+    } else {
+      setSuccessMessage('Şifren başarıyla güncellendi. Şimdi giriş yapabilirsin.');
       setPasswordUpdated(true);
-      toast.success(t('toast.passwordUpdated'));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : t('errors.generic');
-      toast.error(errorMessage);
-    } finally {
+      toast.success('Şifren başarıyla güncellendi. Şimdi giriş yapabilirsin.');
+      setTimeout(() => {
+        navigate(ROUTES.LOGIN, { replace: true });
+      }, 2500);
       setLoading(false);
     }
   };
@@ -179,6 +194,18 @@ export const ResetPassword = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {successMessage && (
+            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+              <p className="text-sm text-emerald-800">{successMessage}</p>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
+              <p className="text-sm text-red-800">{errorMessage}</p>
+            </div>
+          )}
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -243,6 +270,15 @@ export const ResetPassword = () => {
               </Button>
             </form>
           </Form>
+
+          <div className="mt-6 text-center">
+            <Link
+              to={ROUTES.LOGIN}
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline"
+            >
+              {t('forgotPassword.backToLogin')}
+            </Link>
+          </div>
         </CardContent>
       </Card>
     </div>

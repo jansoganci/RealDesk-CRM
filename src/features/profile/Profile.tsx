@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import { useProfileData } from './hooks/useProfileData';
@@ -19,13 +19,30 @@ import {
 } from '../../components/ui/card';
 import { Form } from '../../components/ui/form';
 import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
 import { Separator } from '../../components/ui/separator';
-import { Save, Loader2, FileText, ScrollText, Cookie, ExternalLink } from 'lucide-react';
+import { Save, Loader2, FileText, ScrollText, Cookie, ExternalLink, Mail } from 'lucide-react';
+import { ReauthModal } from '../../components/common/ReauthModal';
 
 export const Profile = () => {
   const { t, i18n } = useTranslation(['profile', 'common']);
-  const { user } = useAuth();
+  const { user, changeEmail, updatePassword, reauthenticate } = useAuth();
   const language = i18n.language === 'tr' ? 'tr' : 'en';
+
+  // Change email state
+  const [newEmail, setNewEmail] = useState('');
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailSuccessMessage, setEmailSuccessMessage] = useState<string | null>(null);
+  const [emailErrorMessage, setEmailErrorMessage] = useState<string | null>(null);
+  const [showReauthForEmail, setShowReauthForEmail] = useState(false);
+
+  // Change password state
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [passwordSuccessMessage, setPasswordSuccessMessage] = useState<string | null>(null);
+  const [passwordErrorMessage, setPasswordErrorMessage] = useState<string | null>(null);
 
   // Profile form hook
   const { form, normalizeLanguage, normalizeCurrency } = useProfileForm();
@@ -50,6 +67,85 @@ export const Profile = () => {
   useEffect(() => {
     loadPreferences();
   }, [loadPreferences]);
+
+  // Handle email change (called after successful reauthentication)
+  const handleChangeEmail = async () => {
+    setEmailSuccessMessage(null);
+    setEmailErrorMessage(null);
+
+    if (!newEmail.trim()) {
+      setEmailErrorMessage('Lütfen yeni e-posta adresini gir.');
+      return;
+    }
+
+    setEmailLoading(true);
+
+    const result = await changeEmail(newEmail.trim());
+
+    if (!result.success) {
+      setEmailErrorMessage(`E-posta güncellenemedi: ${result.error ?? 'Bilinmeyen hata'}`);
+    } else {
+      setEmailSuccessMessage('Onay linki yeni e-posta adresine gönderildi. Lütfen e-postanı kontrol et.');
+      setNewEmail('');
+    }
+
+    setEmailLoading(false);
+  };
+
+  // Handle email change button click (opens reauth modal)
+  const handleEmailChangeClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailSuccessMessage(null);
+    setEmailErrorMessage(null);
+
+    if (!newEmail.trim()) {
+      setEmailErrorMessage('Lütfen yeni e-posta adresini gir.');
+      return;
+    }
+
+    setShowReauthForEmail(true);
+  };
+
+  // Handle password change
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordSuccessMessage(null);
+    setPasswordErrorMessage(null);
+
+    if (!currentPassword.trim() || !newPassword.trim() || !confirmNewPassword.trim()) {
+      setPasswordErrorMessage('Lütfen tüm şifre alanlarını doldur.');
+      return;
+    }
+
+    if (newPassword !== confirmNewPassword) {
+      setPasswordErrorMessage('Yeni şifreler eşleşmiyor.');
+      return;
+    }
+
+    setPasswordLoading(true);
+
+    // 1) Reauth with current password
+    const reauthResult = await reauthenticate(currentPassword);
+    if (!reauthResult.success) {
+      setPasswordLoading(false);
+      setPasswordErrorMessage(reauthResult.error ?? 'Şifre doğrulanamadı. Lütfen tekrar dene.');
+      return;
+    }
+
+    // 2) Update password
+    const updateResult = await updatePassword(newPassword);
+    setPasswordLoading(false);
+
+    if (!updateResult.success) {
+      setPasswordErrorMessage(updateResult.error ?? 'Şifre güncellenemedi. Lütfen tekrar dene.');
+      return;
+    }
+
+    setPasswordSuccessMessage('Şifren başarıyla güncellendi.');
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+  };
 
   return (
     <MainLayout title={t('profile:pageTitle')}>
@@ -87,6 +183,134 @@ export const Profile = () => {
           <CardContent className="space-y-6">
             {/* Profile Header */}
             <ProfileHeader user={user} form={form} />
+
+            <Separator />
+
+            {/* Change Email Section */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-1">E-posta adresini değiştir</h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  Yeni e-posta adresini gir, onay linki bu adrese gönderilecektir.
+                  <br />
+                  <span className="text-xs text-gray-500">
+                    Enter your new email address. A confirmation link will be sent to this address.
+                  </span>
+                </p>
+              </div>
+
+              {emailSuccessMessage && (
+                <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                  <p className="text-sm text-emerald-800">{emailSuccessMessage}</p>
+                </div>
+              )}
+
+              {emailErrorMessage && (
+                <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                  <p className="text-sm text-red-800">{emailErrorMessage}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleEmailChangeClick} className="space-y-3">
+                <div className="flex gap-2">
+                  <Input
+                    type="email"
+                    placeholder="Yeni e-posta adresi"
+                    value={newEmail}
+                    onChange={(e) => setNewEmail(e.target.value)}
+                    disabled={emailLoading}
+                    className="flex-1"
+                  />
+                  <Button
+                    type="submit"
+                    disabled={emailLoading}
+                    size="sm"
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    {emailLoading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Gönderiliyor...
+                      </>
+                    ) : (
+                      <>
+                        <Mail className="mr-2 h-4 w-4" />
+                        Gönder
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </form>
+            </div>
+
+            <Separator />
+
+            {/* Change Password Section */}
+            <div className="space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-1">Şifreni değiştir</h3>
+                <p className="text-sm text-gray-600 mb-2">
+                  Mevcut şifreni ve yeni şifreni girerek hesabının şifresini güncelleyebilirsin.
+                  <br />
+                  <span className="text-xs text-gray-500">
+                    Enter your current and new password to update your account password.
+                  </span>
+                </p>
+              </div>
+
+              {passwordSuccessMessage && (
+                <div className="p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+                  <p className="text-sm text-emerald-800">{passwordSuccessMessage}</p>
+                </div>
+              )}
+
+              {passwordErrorMessage && (
+                <div className="p-3 rounded-lg bg-red-50 border border-red-200">
+                  <p className="text-sm text-red-800">{passwordErrorMessage}</p>
+                </div>
+              )}
+
+              <form onSubmit={handleChangePassword} className="space-y-3">
+                <Input
+                  type="password"
+                  placeholder="Mevcut şifre"
+                  value={currentPassword}
+                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  disabled={passwordLoading}
+                />
+                <Input
+                  type="password"
+                  placeholder="Yeni şifre"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  disabled={passwordLoading}
+                />
+                <Input
+                  type="password"
+                  placeholder="Yeni şifre (tekrar)"
+                  value={confirmNewPassword}
+                  onChange={(e) => setConfirmNewPassword(e.target.value)}
+                  disabled={passwordLoading}
+                />
+                <Button
+                  type="submit"
+                  disabled={passwordLoading}
+                  size="sm"
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  {passwordLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Güncelleniyor...
+                    </>
+                  ) : (
+                    'Şifreyi Güncelle'
+                  )}
+                </Button>
+              </form>
+            </div>
+
+            <Separator />
 
             {/* Form Section */}
             <Form {...form}>
@@ -175,6 +399,13 @@ export const Profile = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Reauthentication Modal for Email Change */}
+        <ReauthModal
+          isOpen={showReauthForEmail}
+          onClose={() => setShowReauthForEmail(false)}
+          onSuccess={handleChangeEmail}
+        />
       </PageContainer>
     </MainLayout>
   );

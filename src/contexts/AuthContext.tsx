@@ -14,10 +14,16 @@ interface AuthContextType {
   setLanguage: (language: string) => void;
   setCurrency: (currency: string) => void;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<{ requiresEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
-  updatePassword: (newPassword: string) => Promise<void>;
+  updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
+  requestPasswordReset: (email: string) => Promise<{ success: boolean; error?: string }>;
+  changeEmail: (newEmail: string) => Promise<{ success: boolean; error?: string }>;
+  reauthenticate: (password: string) => Promise<{ success: boolean; error?: string }>;
+  resendConfirmationEmail: (email: string) => Promise<void>;
+  isEmailConfirmed: () => boolean;
+  signInWithGoogle: () => Promise<{ success: boolean; error?: string }>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -63,9 +69,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     fetchSessionAndPreferences();
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+      
+      // Handle email confirmation events
+      if (event === 'SIGNED_UP') {
+        // User just signed up - email confirmation email was sent
+        // Don't set session yet, wait for email confirmation
+      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+        // User's email was confirmed - session is now available
+        // Preferences will be loaded in the next effect
+      }
+      
       if (!session) {
         setLanguageState('tr');
         setCurrencyState('TRY');
@@ -149,12 +165,21 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
+      options: {
+        emailRedirectTo: `${window.location.origin}/confirm-email`,
+      },
     });
 
     if (error) throw error;
+
+    // Check if email confirmation is required
+    // When email confirmation is enabled, Supabase returns user but no session
+    const requiresEmailConfirmation = !data.session && !!data.user;
+
+    return { requiresEmailConfirmation };
   };
 
   const signOut = async () => {
@@ -172,16 +197,120 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw error;
   };
 
-  const updatePassword = async (newPassword: string) => {
+  const updatePassword = async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
+    });
+
+    if (error) {
+      console.error('Password update error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const requestPasswordReset = async (email: string): Promise<{ success: boolean; error?: string }> => {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+
+    if (error) {
+      console.error('Password reset request error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const changeEmail = async (newEmail: string): Promise<{ success: boolean; error?: string }> => {
+    const { error } = await supabase.auth.updateUser(
+      { email: newEmail },
+      { emailRedirectTo: `${window.location.origin}/email-changed` }
+    );
+
+    if (error) {
+      console.error('Email change error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const reauthenticate = async (password: string): Promise<{ success: boolean; error?: string }> => {
+    // Get current user's email from state or fetch it
+    let email = user?.email;
+
+    if (!email) {
+      const { data, error: userError } = await supabase.auth.getUser();
+
+      if (userError || !data.user?.email) {
+        console.error('[Auth] reauthenticate getUser error:', userError);
+        return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
+      }
+
+      email = data.user.email;
+    }
+
+    if (!email) {
+      return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
+    }
+
+    // Verify password by attempting to sign in
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error('[Auth] reauthenticate error:', error);
+      return { success: false, error: error.message };
+    }
+
+    return { success: true };
+  };
+
+  const resendConfirmationEmail = async (email: string) => {
+    const { error } = await supabase.auth.resend({
+      type: 'signup',
+      email,
+      options: {
+        emailRedirectTo: `${window.location.origin}/confirm-email`,
+      },
     });
 
     if (error) throw error;
   };
 
+  const isEmailConfirmed = (): boolean => {
+    // Check if user exists and email is confirmed
+    // In Supabase, user.email_confirmed_at is set when email is confirmed
+    return user?.email_confirmed_at !== null && user?.email_confirmed_at !== undefined;
+  };
+
+  const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: window.location.origin,
+        },
+      });
+
+      if (error) {
+        console.error('[Auth] signInWithGoogle error:', error);
+        return { success: false, error: error.message };
+      }
+
+      return { success: true };
+    } catch (error: any) {
+      console.error('[Auth] signInWithGoogle exception:', error);
+      return { success: false, error: error.message ?? 'Unknown error' };
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, session, loading, language, currency, meetingReminderMinutes, commissionRate, setLanguage, setCurrency, signIn, signUp, signOut, resetPassword, updatePassword }}>
+    <AuthContext.Provider value={{ user, session, loading, language, currency, meetingReminderMinutes, commissionRate, setLanguage, setCurrency, signIn, signUp, signOut, resetPassword, updatePassword, requestPasswordReset, changeEmail, reauthenticate, resendConfirmationEmail, isEmailConfirmed, signInWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

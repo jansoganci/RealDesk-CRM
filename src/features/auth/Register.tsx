@@ -8,7 +8,6 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
-import { Checkbox } from '../../components/ui/checkbox';
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, Info } from 'lucide-react';
@@ -17,7 +16,11 @@ import { getRegisterSchema, RegisterFormData } from './authSchemas';
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
-  const { signUp } = useAuth();
+  const [emailSent, setEmailSent] = useState(false);
+  const [userEmail, setUserEmail] = useState<string>('');
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
+  const { signUp, resendConfirmationEmail } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['auth', 'common']);
   const language = i18n.language || 'tr';
@@ -30,16 +33,32 @@ export const Register = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      acceptTerms: false,
+      acceptTerms: true, // Set to true to pass schema validation, but we use local state for actual validation
     },
   });
 
   const onSubmit = async (data: RegisterFormData) => {
+    // Validate terms acceptance
+    if (!acceptTerms) {
+      setTermsError(t('auth.termsRequired', 'You must accept the terms to continue.'));
+      return;
+    }
+    setTermsError(null);
+
     setLoading(true);
     try {
-      await signUp(data.email, data.password);
-      toast.success(t('toast.signUpSuccess'));
-      navigate(ROUTES.LOGIN, { replace: true });
+      const result = await signUp(data.email, data.password);
+      
+      if (result.requiresEmailConfirmation) {
+        // Email confirmation required - show message
+        setUserEmail(data.email);
+        setEmailSent(true);
+        toast.success(t('toast.emailConfirmationSent'));
+      } else {
+        // No email confirmation needed (shouldn't happen if enabled, but handle gracefully)
+        toast.success(t('toast.signUpSuccess'));
+        navigate(ROUTES.LOGIN, { replace: true });
+      }
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('errors.generic');
       // Check for specific error messages
@@ -52,6 +71,80 @@ export const Register = () => {
       setLoading(false);
     }
   };
+
+  const handleResendEmail = async () => {
+    if (!userEmail) return;
+    
+    setLoading(true);
+    try {
+      await resendConfirmationEmail(userEmail);
+      toast.success(t('toast.emailConfirmationResent'));
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('errors.generic');
+      toast.error(errorMessage);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Show email confirmation message if email was sent
+  if (emailSent) {
+    return (
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="space-y-1">
+            <div className="flex items-center justify-center mb-4">
+              <span className="text-2xl font-bold">{APP_NAME}</span>
+            </div>
+            <CardTitle className="text-2xl font-bold text-center">
+              {t('emailConfirmation.title')}
+            </CardTitle>
+            <CardDescription className="text-center">
+              {t('emailConfirmation.subtitle')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200">
+              <Info className="h-5 w-5 mt-0.5 text-blue-600 shrink-0" />
+              <div className="space-y-2">
+                <p className="text-sm text-blue-900 font-medium">
+                  {t('emailConfirmation.message', { email: userEmail })}
+                </p>
+                <p className="text-xs text-blue-700">
+                  {t('emailConfirmation.checkSpam')}
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3">
+              <Button
+                onClick={handleResendEmail}
+                disabled={loading}
+                variant="outline"
+                className="w-full"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    {t('common:loading')}
+                  </>
+                ) : (
+                  t('emailConfirmation.resendEmail')
+                )}
+              </Button>
+
+              <Link
+                to={ROUTES.LOGIN}
+                className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              >
+                {t('emailConfirmation.backToLogin')}
+              </Link>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
@@ -136,50 +229,49 @@ export const Register = () => {
               </div>
 
               {/* Terms acceptance checkbox */}
-              <FormField
-                control={form.control}
-                name="acceptTerms"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={loading}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel className="text-sm font-normal cursor-pointer">
-                        {t('register.acceptTerms')}{' '}
-                        <a
-                          href={`/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-700 hover:underline"
-                        >
-                          {t('register.termsOfService')}
-                        </a>{' '}
-                        {t('register.and')}{' '}
-                        <a
-                          href={`/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-blue-600 hover:text-blue-700 hover:underline"
-                        >
-                          {t('register.privacyPolicy')}
-                        </a>
-                        {language === 'tr' && t('register.acceptTermsSuffix')}
-                      </FormLabel>
-                      <FormMessage />
-                    </div>
-                  </FormItem>
-                )}
-              />
+              <div className="flex items-start gap-2 mt-4">
+                <input
+                  id="acceptTerms"
+                  type="checkbox"
+                  checked={acceptTerms}
+                  onChange={(e) => {
+                    setAcceptTerms(e.target.checked);
+                    setTermsError(null);
+                  }}
+                  disabled={loading}
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                />
+                <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+                  {t('auth.termsLabel', 'By creating an account, I accept the')}{' '}
+                  <a
+                    href={`/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                  >
+                    {t('auth.termsLink', 'Terms of Service')}
+                  </a>{' '}
+                  {t('auth.termsAnd', 'and')}{' '}
+                  <a
+                    href={`/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                  >
+                    {t('auth.privacyLink', 'Privacy Policy')}
+                  </a>.
+                </label>
+              </div>
+              {termsError && (
+                <p className="mt-2 text-xs text-red-500">
+                  {termsError}
+                </p>
+              )}
 
               <Button
                 className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
                 type="submit"
-                disabled={loading}
+                disabled={loading || !acceptTerms}
               >
                 {loading ? (
                   <>

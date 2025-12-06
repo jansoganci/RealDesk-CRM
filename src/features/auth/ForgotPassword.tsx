@@ -17,7 +17,9 @@ import { getForgotPasswordSchema, ForgotPasswordFormData } from './authSchemas';
 export const ForgotPassword = () => {
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const { resetPassword } = useAuth();
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const { requestPasswordReset } = useAuth();
   const { t } = useTranslation(['auth', 'common']);
 
   const forgotPasswordSchema = getForgotPasswordSchema(t);
@@ -31,16 +33,20 @@ export const ForgotPassword = () => {
 
   const onSubmit = async (data: ForgotPasswordFormData) => {
     setLoading(true);
-    try {
-      await resetPassword(data.email);
+    setSuccessMessage(null);
+    setErrorMessage(null);
+
+    const result = await requestPasswordReset(data.email);
+
+    if (!result.success) {
+      setErrorMessage(`Şifre sıfırlama e-postası gönderilemedi: ${result.error}`);
+    } else {
+      setSuccessMessage('Şifre sıfırlama bağlantısı e-posta adresine gönderildi.');
       setEmailSent(true);
       toast.success(t('toast.resetEmailSent'));
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : t('errors.generic');
-      toast.error(errorMessage);
-    } finally {
-      setLoading(false);
     }
+
+    setLoading(false);
   };
 
   // Success state after email is sent
@@ -102,6 +108,18 @@ export const ForgotPassword = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {successMessage && (
+            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
+              <p className="text-sm text-emerald-800">{successMessage}</p>
+            </div>
+          )}
+
+          {errorMessage && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
+              <p className="text-sm text-red-800">{errorMessage}</p>
+            </div>
+          )}
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField

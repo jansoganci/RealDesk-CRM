@@ -6,18 +6,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
 import { toast } from 'sonner';
-import { ROUTES, APP_NAME } from '../../config/constants';
+import { ROUTES } from '../../config/constants';
 import { Loader2 } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 import { supabase } from '../../config/supabase';
 import { getLoginSchema, LoginFormData } from './authSchemas';
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
-  const { signIn } = useAuth();
+  const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
 
@@ -64,23 +62,42 @@ export const Login = () => {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    const result = await signInWithGoogle();
+    if (!result.success) {
+      toast.error(result.error ?? t('errors.generic'));
+    }
+  };
+
   return (
-    // Note: PageContainer intentionally NOT used here - auth pages require full-screen centered layout
-    // without navbar/sidebar, which is standard UX for login/signup flows
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
-      <Card className="w-full max-w-md mx-4">
-        <CardHeader className="space-y-1">
-          <div className="flex items-center justify-center mb-4">
-            <span className="text-2xl font-bold">{APP_NAME}</span>
-          </div>
-          <CardTitle className="text-2xl font-bold text-center">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 px-4">
+      <div className="w-full max-w-5xl grid md:grid-cols-2 gap-0 overflow-hidden rounded-3xl shadow-2xl bg-slate-900/40 backdrop-blur">
+        {/* Left Panel - Marketing / Sign Up */}
+        <div className="hidden md:flex flex-col justify-center gap-4 bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 text-white p-10">
+          <h2 className="text-3xl font-bold">
+            {t('auth.newHereTitle', 'New here?')}
+          </h2>
+          <p className="text-sm text-indigo-100 max-w-sm">
+            {t('auth.newHereSubtitle', 'Join today and organize all your properties, tenants and contracts from one simple dashboard.')}
+          </p>
+          <Button
+            variant="outline"
+            className="mt-4 bg-white/10 hover:bg-white/20 border-white text-white w-fit"
+            onClick={() => navigate(ROUTES.REGISTER)}
+          >
+            {t('auth.newHereCta', 'Create an account')}
+          </Button>
+        </div>
+
+        {/* Right Panel - Login Form */}
+        <div className="bg-white dark:bg-slate-950 px-6 py-8 md:px-10 md:py-12">
+          <h1 className="text-2xl md:text-3xl font-semibold mb-2 text-slate-900 dark:text-slate-50">
             {t('login.title')}
-          </CardTitle>
-          <CardDescription className="text-center">
-            {t('login.subtitle')}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+            {t('auth.loginSubtitle', 'Enter your credentials to access your Emlak CRM workspace.')}
+          </p>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -111,7 +128,7 @@ export const Login = () => {
                       <FormLabel>{t('login.password')}</FormLabel>
                       <Link
                         to={ROUTES.FORGOT_PASSWORD}
-                        className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                        className="text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400"
                       >
                         {t('login.forgotPassword')}
                       </Link>
@@ -130,7 +147,7 @@ export const Login = () => {
               />
 
               <Button
-                className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
                 type="submit"
                 disabled={loading}
               >
@@ -146,19 +163,45 @@ export const Login = () => {
             </form>
           </Form>
 
-          <div className="mt-6 text-center text-sm">
-            <span className={COLORS.text.secondary}>
+          {/* Divider */}
+          <div className="mt-6 flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <span>{t('auth.orContinueWith', 'or continue with')}</span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          </div>
+
+          {/* Google Sign In Button */}
+          <div className="mt-4 flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+            >
+              <img
+                src="/icons/google-icon.png"
+                alt="Google"
+                className="h-5 w-5"
+              />
+              <span>{t('auth.googleSignIn', 'Sign in with Google')}</span>
+            </Button>
+          </div>
+
+          {/* Mobile Sign Up Link */}
+          <div className="mt-6 text-center text-sm md:hidden">
+            <span className="text-slate-600 dark:text-slate-400">
               {t('login.noAccount')}{' '}
             </span>
             <Link
               to={ROUTES.REGISTER}
-              className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+              className="font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400"
             >
               {t('login.registerLink')}
             </Link>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };

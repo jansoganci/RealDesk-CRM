@@ -5,82 +5,40 @@
     "getStarted": "Başla"
   },
   "hero": {
-    "title": "Emlak Yönetimi",
-    "titleHighlight": "Artık Çok Daha Kolay",
-    "description": "Hepsi bir arada emlak yönetim platformu. Kiracıları, sözleşmeleri ve hatırlatıcıları kolayca takip edin.",
-    "startTrial": "Ücretsiz Deneyin",
-    "watchDemo": "Demo İzle",
-    "dashboardPreview": "Dashboard Önizleme"
+    "title": "Emlak işiniz, tek bir yerde.",
+    "subtitle": "Kaostan kurtulun. Portföyünüzü, sözleşmelerinizi ve müşterilerinizi tek bir yerden yönetin.",
+    "cta": "Ücretsiz Başla",
+    "placeholder": "Dashboard Ekran Görüntüsü"
   },
-  "features": {
-    "title": "Başarı İçin İhtiyacınız Olan Her Şey",
-    "subtitle": "Emlak profesyonelleri için özel olarak tasarlanmış güçlü özellikler",
-    "properties": {
-      "title": "Emlak Yönetimi",
-      "description": "Fotoğraf galerileri ve durum takibi ile emlak ekleyin, düzenleyin ve takip edin. Konuma göre düzenleyin ve doluluk oranlarını izleyin."
-    },
-    "owners": {
-      "title": "Mal Sahibi Yönetimi",
-      "description": "Daha iyi ilişkiler için iletişim bilgileri ve emlak sahipliği takibi ile kapsamlı mal sahibi profilleri."
-    },
-    "tenants": {
-      "title": "Kiracı Yönetimi",
-      "description": "Detaylı kiracı profilleri, iletişim yönetimi ve emlak atama takibi tek bir yerde."
-    },
-    "contracts": {
-      "title": "Sözleşme Yönetimi",
-      "description": "PDF depolama, sona erme takibi ve otomatik kira artışı hatırlatıcıları ile kira sözleşmeleri oluşturun ve takip edin."
-    },
-    "reminders": {
-      "title": "Akıllı Hatırlatıcılar",
-      "description": "Sözleşme sona erme uyarıları, kira artışı bildirimleri ve görsel aciliyet göstergeleri ile önemli tarihleri kaçırmayın."
-    },
-    "dashboard": {
-      "title": "Dashboard ve Analitik",
-      "description": "Gerçek zamanlı istatistikler, emlak doluluk oranları, sözleşme özeti ve yaklaşan hatırlatıcılar bir bakışta."
-    }
+  "problem": {
+    "title": "Her şey bir yere dağılmış durumda.",
+    "item1": "WhatsApp mesajları arasında kaybolan müşteri talepleri",
+    "item2": "Excel dosyalarında unutulan kira artış tarihleri",
+    "item3": "Fotoğraflar galeride, sözleşmeler klasörde...",
+    "placeholder": "Kaos Görseli"
   },
-  "howItWorks": {
-    "title": "Nasıl Çalışır",
-    "subtitle": "Üç basit adımda başlayın",
-    "step1": {
-      "title": "Kayıt Olun",
-      "description": "30 saniyede ücretsiz hesabınızı oluşturun, kredi kartı gerekmez"
-    },
-    "step2": {
-      "title": "Emlaklarınızı Ekleyin",
-      "description": "Fotoğraflarla emlak ekleyin, mal sahipleri atayın ve detayları dakikalar içinde belirleyin"
-    },
-    "step3": {
-      "title": "Yönetmeye Başlayın",
-      "description": "Kiracıları, sözleşmeleri ve hatırlatıcıları otomatik olarak takip edin. Her şey tek bir yerde"
-    }
+  "pivot": {
+    "title": "Biz onları birleştiriyoruz.",
+    "description": "emlakcrm, tüm bu dağınık parçaları tek bir profesyonel sistemde toplar. Artık aramak yok, kaybetmek yok.",
+    "placeholder": "Birleşim Animasyonu"
   },
-  "benefits": {
-    "title": "Neden Bizi Seçmelisiniz",
-    "item1": "Sözleşmeler bitmeden önce size haber veriyoruz",
-    "item2": "Tüm emlak bilgileriniz tek yerde",
-    "item3": "Telefonunuzda ve bilgisayarınızda çalışır"
+  "featureProperties": {
+    "title": "Tüm portföyünüz tek ekranda.",
+    "description": "İlanlarınız, kiracılarınız ve mülk sahipleriniz. Hepsi parmaklarınızın ucunda, her an erişilebilir.",
+    "placeholder": "Emlak Listesi Arayüzü"
   },
-  "testimonials": {
-    "title": "Müşterilerimiz Ne Diyor",
-    "subtitle": "Türkiye genelinde emlak profesyonelleri tarafından güveniliyor",
-    "testimonial1": {
-      "name": "Ahmet Yılmaz",
-      "title": "Gayrimenkul Danışmanı, İstanbul",
-      "quote": "Emlak CRM, emlaklarımı nasıl yönettiğimi tamamen değiştirdi. Otomatik hatırlatıcılar sayesinde sözleşme yenileme tarihlerini kaçırmaktan kurtuldum. Kesinlikle öneriyorum!"
-    },
-    "testimonial2": {
-      "name": "Ayşe Demir",
-      "title": "Emlak Yöneticisi, Ankara",
-      "quote": "Emlak CRM'ye geçtikten sonra yönetim süremi %70 azalttım. Her şey organize ve telefonumdan her yerden erişebiliyorum."
-    }
+  "featureReminders": {
+    "title": "Önemli tarihleri bir daha kaçırmayın.",
+    "description": "Kira artışları, sözleşme bitişleri ve randevular. Sistem sizi zamanında uyarır."
   },
-  "cta": {
-    "title": "Emlak İşinizi Dönüştürmeye Hazır mısınız?",
-    "description": "Emlaklarını daha verimli yöneten yüzlerce Türk emlak profesyoneline katılın",
-    "startTrial": "Ücretsiz Deneyin",
-    "scheduleDemo": "Demo Planla"
+  "result": {
+    "title": "Daha az kaos, daha çok başarı.",
+    "description": "İşinizin kontrolünü elinize alın. Profesyonel görünün, daha fazla müşteri yönetin."
+  },
+  "finalCta": {
+    "title": "Kontrolü ele almaya hazır mısınız?",
+    "cta": "Ücretsiz Başlayın",
+    "reassurance": "14 gün ücretsiz, kredi kartı gerekmez."
   },
   "footer": {
     "tagline": "Türk profesyonelleri için modern emlak yönetimi",
@@ -95,7 +53,42 @@
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "cookies": "Çerezler",
-    "copyright": "© 2025 Emlak CRM. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir."
+    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir."
+  },
+  "mockups": {
+    "summary": {
+      "propertiesLabel": "MÜLKLER",
+      "tenantsLabel": "KİRACILAR",
+      "contractsLabel": "SÖZLEŞMELER"
+    },
+    "status": {
+      "active": "Aktif",
+      "pending": "Beklemede",
+      "review": "İncelemede"
+    },
+    "reminders": {
+      "title": "HATIRLATMALAR",
+      "subtitle": "3 kritik güncelleme",
+      "actionRequired": "Eylem Gerekli",
+      "urgent": "Acil",
+      "soon": "Yakında",
+      "today": "Bugün",
+      "item1": {
+        "title": "Sözleşme Bitişi",
+        "detail": "Daire 12 • Mehmet Yılmaz",
+        "time": "3 gün içinde bitiyor"
+      },
+      "item2": {
+        "title": "Kira Artışı",
+        "detail": "Apt #5 • %65.0 Oran",
+        "time": "20 gün kaldı"
+      },
+      "item3": {
+        "title": "Yer Gösterme",
+        "detail": "Kadıköy Daire • 14:30",
+        "time": "2 saat içinde"
+      }
+    },
+    "generatedBy": "EmlakCRM tarafından oluşturuldu"
   }
 }
-
