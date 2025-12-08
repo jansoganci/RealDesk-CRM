@@ -235,7 +235,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                             </div>
                         )}
 
-                        <form onSubmit={handleEmailChangeClick} className="space-y-3">
+                        <div className="space-y-3">
                             <div className="flex gap-2">
                                 <Input
                                     type="email"
@@ -246,7 +246,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                                     className="flex-1"
                                 />
                                 <Button
-                                    type="submit"
+                                    onClick={handleEmailChangeClick}
                                     disabled={emailLoading}
                                     size="sm"
                                     className="bg-blue-600 hover:bg-blue-700"
@@ -264,7 +264,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                                     )}
                                 </Button>
                             </div>
-                        </form>
+                        </div>
                     </div>
 
                     <div className="border-t border-slate-200" />
@@ -289,7 +289,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                             </div>
                         )}
 
-                        <form onSubmit={handleChangePassword} className="space-y-3">
+                        <div className="space-y-3">
                             <Input
                                 type="password"
                                 placeholder={t('security.changePassword.currentPassword')}
@@ -312,7 +312,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                                 disabled={passwordLoading}
                             />
                             <Button
-                                type="submit"
+                                onClick={handleChangePassword}
                                 disabled={passwordLoading}
                                 size="sm"
                                 className="w-full bg-blue-600 hover:bg-blue-700"
@@ -326,7 +326,7 @@ export function AccountSecurityCard({ user, form, loading, onSave }: AccountSecu
                                     t('security.changePassword.button')
                                 )}
                             </Button>
-                        </form>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
