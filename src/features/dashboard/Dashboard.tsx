@@ -218,9 +218,9 @@ export const Dashboard = () => {
                     <div className="p-2.5 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
                       <AlertCircle className="h-5 w-5 text-white" />
                     </div>
-                    <div>
+                    <div className="space-y-1">
                       <CardTitle className="text-amber-900 font-bold">{t('contractsExpiringSoon')}</CardTitle>
-                      <CardDescription className="text-amber-700 font-medium">
+                      <CardDescription className="text-amber-700 font-medium text-xs md:text-sm">
                         {t('reminders.contractsExpiringDescription', { count: stats.expiringSoon, s: stats.expiringSoon > 1 ? 's' : '' })}
                       </CardDescription>
                     </div>

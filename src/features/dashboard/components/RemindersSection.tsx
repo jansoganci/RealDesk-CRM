@@ -23,14 +23,14 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
   return (
     <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-amber-200/50 bg-gradient-to-br from-amber-50 to-yellow-50 backdrop-blur-sm animate-fade-in">
       <CardHeader>
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-3 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
-              <Bell className={`h-5 w-5 ${COLORS.text.white}`} />
+            <div className="p-2.5 md:p-3 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
+              <Bell className={`h-4 w-4 md:h-5 md:w-5 ${COLORS.text.white}`} />
             </div>
-            <div>
-              <CardTitle className="text-amber-900 font-bold">{t('reminders.title')}</CardTitle>
-              <CardDescription className="text-amber-700 font-medium">
+            <div className="space-y-1">
+              <CardTitle className="text-amber-900 font-bold text-base md:text-lg">{t('reminders.title')}</CardTitle>
+              <CardDescription className="text-amber-700 font-medium text-xs md:text-sm">
                 {t('reminders.description', { count: reminders.length, s: reminders.length > 1 ? 's' : '' })}
               </CardDescription>
             </div>
@@ -39,33 +39,35 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
             variant="outline"
             size="sm"
             onClick={() => navigate('/reminders')}
-            className="border-amber-300 hover:bg-amber-100 hover:border-amber-400 transition-all"
+            className="border-amber-300 hover:bg-amber-100 hover:border-amber-400 transition-all self-start sm:self-auto px-3 md:px-4"
           >
-            {t('reminders.viewAll')} <ArrowRight className="h-4 w-4 ml-1" />
+            <span className="hidden sm:inline">{t('reminders.viewAll')}</span>
+            <span className="sm:hidden text-xs">{t('reminders.viewAll')}</span>
+            <ArrowRight className="h-3 w-3 md:h-4 md:w-4 ml-1" />
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-2 md:space-y-3">
         {reminders.slice(0, 3).map((reminder) => {
           const urgency = remindersService.getReminderUrgencyCategory(reminder.days_until_end);
           return (
             <div
               key={reminder.id}
-              className="flex items-center justify-between p-4 bg-white rounded-xl border border-amber-200/50 hover:shadow-lg hover:border-amber-300 transition-all duration-200"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 md:p-4 bg-white rounded-xl border border-amber-200/50 hover:shadow-lg hover:border-amber-300 transition-all duration-200"
             >
               <div className="flex-1">
-                <div className="flex items-center gap-2 mb-2">
-                  <Home className="h-4 w-4 text-amber-600" />
-                  <p className="font-semibold text-slate-900">{reminder.property?.address}</p>
+                <div className="flex items-center gap-2 mb-1.5 md:mb-2">
+                  <Home className="h-3.5 w-3.5 md:h-4 md:w-4 text-amber-600 flex-shrink-0" />
+                  <p className="font-semibold text-slate-900 text-sm md:text-base line-clamp-1">{reminder.property?.address}</p>
                 </div>
-                <div className="flex items-center gap-4 text-sm text-slate-600">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs md:text-sm text-slate-600">
                   <span className="flex items-center gap-1">
-                    <Calendar className="h-3 w-3" />
-                    {t('reminders.contractEnds')}: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}
+                    <Calendar className="h-3 w-3 flex-shrink-0" />
+                    <span className="truncate">{t('reminders.contractEnds')}: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}</span>
                   </span>
                   {reminder.expected_new_rent && (
                     <span className="flex items-center gap-1 font-medium text-amber-700">
-                      <DollarSign className="h-3 w-3" />
+                      <DollarSign className="h-3 w-3 flex-shrink-0" />
                       ${reminder.rent_amount?.toFixed(0)} → ${reminder.expected_new_rent.toFixed(0)}
                     </span>
                   )}
@@ -74,10 +76,10 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
               <Badge
                 className={
                   urgency === 'urgent'
-                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg'
+                    ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                     : urgency === 'soon'
-                    ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg'
-                    : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg'
+                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
+                      : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                 }
               >
                 {reminder.days_until_end} days
