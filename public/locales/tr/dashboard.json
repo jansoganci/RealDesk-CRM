@@ -97,5 +97,21 @@
     "daysAgo": "{{days}} gün önce",
     "refreshSuccess": "Kurlar başarıyla güncellendi",
     "refreshError": "Kurlar güncellenemedi"
+  },
+  "onboarding": {
+    "title": "Başlangıç",
+    "description": "Başlamak için bu görevleri tamamlayın",
+    "addProperty": "Takip etmeye başlamak için ilk mülkünü ekle",
+    "completeProfile": "Emlak ofisi profilini tamamla"
+  },
+  "welcome": {
+    "title": "emlakcrm'e Hoş Geldiniz! 🎉",
+    "description": "İlk mülkünüzü ekleyerek ve profilinizi ayarlayarak başlayın. Süreç boyunca size rehberlik edeceğiz.",
+    "addProperty": "İlk Mülkünüzü Ekleyin",
+    "addPropertyDesc": "Gayrimenkul portföyünüzü yönetmeye başlayın",
+    "completeProfile": "Profilinizi Tamamlayın",
+    "completeProfileDesc": "Emlak ofisi bilgilerinizi ayarlayın",
+    "quickTip": "İpucu",
+    "quickTipDesc": "Bir mülk ekledikten sonra, sözleşmeler oluşturabilir, kiracıları takip edebilir ve tüm gayrimenkul işlemlerinizi tek bir yerden yönetebilirsiniz."
   }
 }

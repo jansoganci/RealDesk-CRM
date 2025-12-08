@@ -72,16 +72,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
+
       // Handle email confirmation events
-      if (event === 'SIGNED_UP') {
-        // User just signed up - email confirmation email was sent
-        // Don't set session yet, wait for email confirmation
-      } else if (event === 'TOKEN_REFRESHED' && session?.user) {
+      if (event === 'TOKEN_REFRESHED' && session?.user) {
         // User's email was confirmed - session is now available
         // Preferences will be loaded in the next effect
       }
-      
+
       if (!session) {
         setLanguageState('tr');
         setCurrencyState('TRY');

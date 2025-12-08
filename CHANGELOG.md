@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.1] - 2025-12-07
+
+### Legal & Compliance
+- **Terms of Service Update** - Comprehensive update for EN/TR versions
+  - Added subscription, billing, and cancellation policies
+  - Updated definitions for "Free Trial" and "Paid Plans"
+  - Clarified territorial scope and governing law (Turkey)
+  - Updated legal entity to Jans Trade, LLC
+- **Privacy Policy Update** - Alignment with KVKK and GDPR
+  - Added specific clauses for Google OAuth data collection
+  - Clarified client-side encryption (AES-GCM) for sensitive data (TC, IBAN)
+  - Updated data processor list (Supabase, Google)
+  - Added international data transfer disclosures
+- **Cookie Policy Update**
+  - Confirmed usage of only strictly necessary cookies (Auth, Language)
+  - Explicit declaration of "No Analytics Tracking" status
+  - Added Google OAuth cookie disclosure
+
 ## [1.1.0] - 2025-11-24
 
 ### Added

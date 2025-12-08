@@ -2,7 +2,7 @@
 
 Modern, mobile-first Real Estate Customer Relationship Management (CRM) system built for Turkish real estate agents. Manage properties, owners, tenants, contracts, and reminders with an intuitive, responsive interface optimized for mobile devices.
 
-![Version](https://img.shields.io/badge/version-1.1.0-blue.svg)
+![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)
 ![React](https://img.shields.io/badge/React-18.3-blue.svg)

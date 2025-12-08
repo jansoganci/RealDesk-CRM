@@ -65,9 +65,31 @@
     "commissionRateMax": "Commission rate must not exceed 20%"
   },
   "security": {
-    "changePasswordTitle": "Change Password",
-    "changePasswordDescription": "Update your account password",
-    "comingSoon": "Coming soon"
+    "title": "Account Security",
+    "description": "Manage your email and password",
+    "changeEmail": {
+      "title": "Change Email Address",
+      "description": "Enter your new email address. A confirmation link will be sent.",
+      "placeholder": "New email address",
+      "button": "Send Confirmation",
+      "sending": "Sending...",
+      "success": "Confirmation link sent to your new email. Please check your inbox.",
+      "errorEmpty": "Please enter a new email address",
+      "errorFailed": "Failed to update email"
+    },
+    "changePassword": {
+      "title": "Change Password",
+      "description": "Update your account password for security",
+      "currentPassword": "Current password",
+      "newPassword": "New password",
+      "confirmPassword": "Confirm new password",
+      "button": "Update Password",
+      "updating": "Updating...",
+      "success": "Password updated successfully",
+      "errorEmpty": "Please fill in all password fields",
+      "errorMismatch": "New passwords do not match",
+      "errorFailed": "Failed to verify password. Please try again."
+    }
   },
   "exchangeRates": {
     "title": "Exchange Rates",

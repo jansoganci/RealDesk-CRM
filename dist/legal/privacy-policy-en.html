@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,20 +10,25 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
     </style>
 </head>
+
 <body class="bg-gray-50 text-gray-900">
     <div class="min-h-screen">
         <!-- Header -->
         <header class="bg-white border-b border-gray-200 shadow-sm">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div class="flex items-center justify-between">
-                    <a href="/" class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
+                    <a href="/"
+                        class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
                         Real Estate CRM
                     </a>
                     <div class="flex items-center gap-4">
-                        <a href="privacy-policy-tr.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Türkçe</a>
+                        <a href="privacy-policy-tr.html"
+                            class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Türkçe</a>
                         <a href="/" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Back to Home</a>
                     </div>
                 </div>
@@ -33,19 +39,22 @@
         <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
                 <h1 class="text-4xl font-bold text-gray-900 mb-4">Privacy Policy</h1>
-                <p class="text-gray-600 mb-8">Last Updated: January 25, 2025</p>
+                <p class="text-gray-600 mb-8">Last Updated: December 07, 2025</p>
 
                 <div class="prose prose-lg max-w-none space-y-8">
                     <!-- Introduction -->
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
                         <p class="text-gray-700 leading-relaxed">
-                            Real Estate CRM ("We", "Us", "Platform") is committed to protecting the privacy of our users. 
-                            This Privacy Policy explains how we collect, use, store, and protect your personal data.
+                            <strong>Jans Trade, LLC</strong> ("We", "Us", "Platform") is committed to protecting the
+                            privacy of our users.
+                            This Privacy Policy explains how we collect, use, store, and protect your personal data when
+                            you use our SaaS platform.
                         </p>
                         <p class="text-gray-700 leading-relaxed mt-4">
-                            By using this platform, you agree to the terms of this policy. 
-                            If you have any questions about our policy, please contact us.
+                            By using this platform, you agree to the collection and use of information in accordance
+                            with this policy.
+                            If you do not agree with this policy, please do not access or use our Services.
                         </p>
                     </section>
 
@@ -53,85 +62,179 @@
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">2. Data We Collect</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            Our platform collects the following personal data:
+                            We collect specific types of data required to provide our real estate management services:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Identity Information:</strong> Name, surname, Turkish ID Number (encrypted)</li>
-                            <li><strong>Contact Information:</strong> Phone number, email address</li>
-                            <li><strong>Financial Information:</strong> IBAN (encrypted), rent amounts, commission information</li>
-                            <li><strong>Location Information:</strong> Address, city, district, neighborhood information</li>
-                            <li><strong>Contract Information:</strong> Rental contracts, dates, payment information</li>
-                            <li><strong>Authentication Data:</strong> Email address, password (securely stored by Supabase Auth)</li>
-                            <li><strong>Usage Data:</strong> Platform usage statistics, session information</li>
+                            <li><strong>Identity Information:</strong> Name, surname. For Turkish citizens, Turkish ID
+                                Number (T.C. Kimlik No) is collected but strictly **encrypted client-side** before
+                                storage.</li>
+                            <li><strong>Contact Information:</strong> Phone number, email address.</li>
+                            <li><strong>Authentication Data:</strong>
+                                <ul class="list-disc list-inside ml-6 mt-1 text-gray-600">
+                                    <li>If you sign up via Email: Encrypted password (managed by Supabase Auth).</li>
+                                    <li>If you sign up via Google: Your email address, name, and profile picture URL
+                                        (managed via Google OAuth).</li>
+                                </ul>
+                            </li>
+                            <li><strong>Financial Information:</strong> Rent amounts, commission rates. IBAN numbers are
+                                collected but strictly **encrypted client-side** before storage.</li>
+                            <li><strong>Property & Contract Data:</strong> Addresses, rental contract dates,
+                                tenant/owner associations.</li>
+                            <li><strong>Usage Data:</strong> Basic logs of system interaction (e.g., login times). We do
+                                **not** use third-party analytics trackers like Google Analytics at this time.</li>
                         </ul>
                     </section>
 
                     <!-- Data Usage -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. How We Use Your Data</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. How We Use Your Data & Legal Basis</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            Collected data is used for the following purposes:
+                            We process your data for the following purposes and under the following legal bases
+                            (GDPR/KVKK):
                         </p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li>Providing property management services</li>
-                            <li>Managing tenant and owner information</li>
-                            <li>Creating and tracking contracts</li>
-                            <li>Sending automated reminders</li>
-                            <li>Recording financial transactions</li>
-                            <li>Ensuring platform security</li>
-                            <li>Fulfilling legal obligations</li>
-                            <li>Service improvements and analytics</li>
-                        </ul>
+
+                        <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
+                            <ul class="space-y-4">
+                                <li>
+                                    <strong class="text-gray-900">Performance of Contract:</strong>
+                                    <span class="text-gray-700 block">To provide the core Service (managing properties,
+                                        creating contracts, processing subscriptions).</span>
+                                </li>
+                                <li>
+                                    <strong class="text-gray-900">Legal Obligation:</strong>
+                                    <span class="text-gray-700 block">To comply with tax, accounting, and other legal
+                                        requirements.</span>
+                                </li>
+                                <li>
+                                    <strong class="text-gray-900">Legitimate Interest:</strong>
+                                    <span class="text-gray-700 block">To improve platform security, prevent fraud, and
+                                        ensure the technical stability of the Service.</span>
+                                </li>
+                                <li>
+                                    <strong class="text-gray-900">Consent:</strong>
+                                    <span class="text-gray-700 block">For optional features or marketing communications
+                                        (if you have opted in).</span>
+                                </li>
+                            </ul>
+                        </div>
                     </section>
 
-                    <!-- Data Storage -->
+                    <!-- Data Storage and Encryption -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Data Storage and Security</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">4. Data Storage, Encryption & Transfers
+                        </h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            Your data is protected with the following security measures:
+                            We take security seriously. Here is how we protect your data:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Encryption:</strong> Sensitive data (Turkish ID, IBAN) is protected with AES-256-GCM encryption</li>
-                            <li><strong>Secure Storage:</strong> Data is stored in Supabase (PostgreSQL) database</li>
-                            <li><strong>Row Level Security (RLS):</strong> Each user can only access their own data</li>
-                            <li><strong>HTTPS:</strong> All data transfers are made over encrypted connections</li>
-                            <li><strong>Regular Backups:</strong> Data is regularly backed up</li>
-                            <li><strong>Access Control:</strong> Data access is strictly controlled</li>
+                            <li><strong>Advanced Encryption:</strong> Highly sensitive fields (Turkish ID, IBAN) are
+                                encrypted using <strong>AES-GCM</strong> (an industry-standard algorithm) directly in
+                                your browser <em>before</em> they are sent to our database. This adds an extra layer of
+                                privacy.</li>
+                            <li><strong>Secure Database:</strong> Data is stored in <strong>Supabase</strong>
+                                (PostgreSQL), utilizing Row Level Security (RLS) policies to ensure users can only
+                                access their own data.</li>
+                            <li><strong>HTTPS/TLS:</strong> All data in transit between your device and our servers is
+                                encrypted via SSL/TLS.</li>
                         </ul>
+
+                        <h3 class="text-xl font-medium text-gray-900 mt-6 mb-3">International Transfers</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            Our primary infrastructure provider, Supabase, utilizes servers which may be located within
+                            the EU or other regions.
+                            By using the Platform, you acknowledge that your data may be transferred to and processed in
+                            countries outside of your permanent residence.
+                            We rely on Data Processing Agreements (DPAs) and Standard Contractual Clauses (SCCs) to
+                            ensure your data remains protected in accordance with GDPR and KVKK standards.
+                        </p>
                     </section>
 
                     <!-- Third Party Services -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Third-Party Services</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">5. Third-Party Processors</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            Our platform uses the following third-party services:
+                            To provide our Service, we share data with the following trusted third-party service
+                            providers (Processors).
+                            We do not sell your personal data.
                         </p>
-                        <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Supabase:</strong> Database, authentication, and file storage services (Data Processor)</li>
-                            <li><strong>Exchange Rate APIs:</strong> For updating exchange rates</li>
-                        </ul>
-                        <p class="text-gray-700 leading-relaxed mt-4">
-                            These service providers process your data only to provide our services and are subject to 
-                            their own privacy policies. We have signed a Data Processing Agreement (DPA) with Supabase.
-                        </p>
+
+                        <div class="overflow-hidden border border-gray-200 rounded-lg">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                    <tr>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Provider</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Purpose</th>
+                                        <th
+                                            class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Privacy Policy</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            Supabase</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">Database, Authentication, File
+                                            Storage</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"><a
+                                                href="https://supabase.com/privacy" target="_blank">View Policy</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Google
+                                        </td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">OAuth Login (Authentication)</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"><a
+                                                href="https://policies.google.com/privacy" target="_blank">View
+                                                Policy</a></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            Exchange Rate APIs</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">Currency Conversion Data (No
+                                            personal data sent)</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                            Payment Processors</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">Processing subscription payments (if
+                                            applicable)</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Varies</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </section>
 
                     <!-- User Rights -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Your Rights (GDPR/KVKK)</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Your Rights (GDPR & KVKK)</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            Under GDPR and KVKK (Turkish Data Protection Law), you have the following rights:
+                            You have specific rights regarding your personal data. You may exercise these rights at any
+                            time:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Right to Information:</strong> Learn whether your personal data is being processed</li>
-                            <li><strong>Right of Access:</strong> Request information about your processed personal data</li>
-                            <li><strong>Right to Rectification:</strong> Request correction of incorrect or incomplete data</li>
-                            <li><strong>Right to Erasure:</strong> Request deletion of your personal data</li>
-                            <li><strong>Right to Object:</strong> Object to processing of your data</li>
-                            <li><strong>Data Portability:</strong> Transfer your data to another platform</li>
+                            <li><strong>Right of Access:</strong> Request a copy of the personal data we hold about you.
+                            </li>
+                            <li><strong>Right to Rectification:</strong> Request correction of inaccurate or incomplete
+                                data.</li>
+                            <li><strong>Right to Erasure ("Right to be Forgotten"):</strong> Request deletion of your
+                                account and personal data, subject to legal retention obligations.</li>
+                            <li><strong>Right to Restriction:</strong> Request that we restrict the processing of your
+                                data.</li>
+                            <li><strong>Right to Data Portability:</strong> Request your data in a structured,
+                                machine-readable format.</li>
+                            <li><strong>Right to Object:</strong> Object to processing based on legitimate interests.
+                            </li>
+                            <li><strong>Right to Complain:</strong> You have the right to file a complaint with your
+                                local data protection authority.</li>
                         </ul>
                         <p class="text-gray-700 leading-relaxed mt-4">
-                            To exercise these rights, please contact us.
+                            To exercise any of these rights, please contact us at the email address below. We may ask
+                            for proof of identity before fulfilling your request.
                         </p>
                     </section>
 
@@ -139,18 +242,27 @@
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">7. Data Retention</h2>
                         <p class="text-gray-700 leading-relaxed">
-                            Your personal data is retained as long as your account is active. When you delete your account, 
-                            your data will be permanently deleted within 30 days. Data required to be retained by legal 
-                            obligations will continue to be stored for the relevant legal period.
+                            Your personal data is retained only as long as your account is active or as needed to
+                            provide you the Service.
+                            If you chose to delete your account, your data is permanently deleted from our active
+                            databases within 30 days.
+                            However, we may retain certain information (e.g., transaction records) as required by law
+                            (tax, accounting) or for legitimate business purposes (fraud prevention).
                         </p>
                     </section>
 
                     <!-- Cookies -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Cookies</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Cookies & Tracking</h2>
                         <p class="text-gray-700 leading-relaxed">
-                            Our platform uses cookies for authentication and session management. 
-                            For detailed information, please review our <a href="cookie-policy-en.html" class="text-blue-600 hover:text-blue-700 underline">Cookie Policy</a>.
+                            Our platform uses **essential cookies** required for authentication (keeping you logged in)
+                            and user preferences (language settings).
+                        </p>
+                        <p class="text-gray-700 leading-relaxed mt-2">
+                            <strong>No Analytics Tracking:</strong> We do not currently use third-party analytics
+                            cookies (such as Google Analytics) or advertising trackers.
+                            For detailed information, please review our <a href="cookie-policy-en.html"
+                                class="text-blue-600 hover:text-blue-700 underline">Cookie Policy</a>.
                         </p>
                     </section>
 
@@ -158,8 +270,8 @@
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">9. Policy Changes</h2>
                         <p class="text-gray-700 leading-relaxed">
-                            We may update this Privacy Policy from time to time. For significant changes, 
-                            we will notify you via email or in-platform notification. Changes are effective 
+                            We may update this Privacy Policy from time to time. For significant changes,
+                            we will notify you via email or in-platform notification. Changes are effective
                             from the date of publication.
                         </p>
                     </section>
@@ -168,13 +280,15 @@
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">10. Contact Us</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
-                            If you have questions about our privacy policy or wish to exercise your data rights, 
+                            If you have questions about our privacy policy or wish to exercise your data rights,
                             please contact us:
                         </p>
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                            <p class="text-gray-700"><strong>Email:</strong> privacy@emlakcrm.com</p>
-                            <p class="text-gray-700 mt-2"><strong>Data Protection Inquiry:</strong> kvkk@emlakcrm.com</p>
-                            <p class="text-gray-700 mt-2"><strong>Address:</strong> [Company Address]</p>
+                            <p class="text-gray-700"><strong>Data Protection Officer / Contact:</strong>
+                                info@janstrade.com</p>
+                            <p class="text-gray-700 mt-2"><strong>KVKK Inquiries:</strong> info@janstrade.com</p>
+                            <p class="text-gray-700 mt-2"><strong>Address:</strong> 30 N Gould St, STE 4000, Sheridan,
+                                Wyoming, 82801, United States</p>
                         </div>
                     </section>
                 </div>
@@ -182,10 +296,12 @@
                 <!-- Footer -->
                 <div class="mt-12 pt-8 border-t border-gray-200">
                     <div class="flex flex-col sm:flex-row justify-between items-center gap-4">
-                        <p class="text-sm text-gray-500">© 2025 Real Estate CRM. All rights reserved.</p>
+                        <p class="text-sm text-gray-500">© 2025 Jans Trade, LLC. All rights reserved.</p>
                         <div class="flex gap-6">
-                            <a href="terms-of-service-en.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Terms of Service</a>
-                            <a href="cookie-policy-en.html" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Cookie Policy</a>
+                            <a href="terms-of-service-en.html"
+                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Terms of Service</a>
+                            <a href="cookie-policy-en.html"
+                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Cookie Policy</a>
                             <a href="/" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Home</a>
                         </div>
                     </div>
@@ -194,5 +310,5 @@
         </main>
     </div>
 </body>
-</html>
 
+</html>

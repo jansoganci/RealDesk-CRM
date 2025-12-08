@@ -8,6 +8,7 @@
     "yearly": "Yearly",
     "yearlySavings": "2 months free"
   },
+  "trialBadge": "14-day free trial",
   "plans": {
     "starter": {
       "name": "Starter",
@@ -53,4 +54,3 @@
     "yearlyDiscount": "instead of"
   }
 }
-

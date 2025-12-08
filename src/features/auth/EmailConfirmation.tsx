@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { useAuth } from '../../contexts/AuthContext';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { toast } from 'sonner';
@@ -20,15 +19,15 @@ export const EmailConfirmation = () => {
       try {
         // Check if user has a session (email was confirmed)
         const { data: { session } } = await supabase.auth.getSession();
-        
+
         if (session?.user) {
           // Check if email is confirmed (check directly from session user)
           const confirmed = session.user.email_confirmed_at !== null && session.user.email_confirmed_at !== undefined;
-          
+
           if (confirmed) {
             setStatus('confirmed');
             toast.success(t('emailConfirmation.confirmed'));
-            
+
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {
               navigate(ROUTES.DASHBOARD, { replace: true });
@@ -47,7 +46,7 @@ export const EmailConfirmation = () => {
             // Token is in URL - Supabase will handle it automatically
             // Wait a moment for Supabase to process it
             await new Promise(resolve => setTimeout(resolve, 1000));
-            
+
             const { data: { session: newSession } } = await supabase.auth.getSession();
             const confirmed = newSession?.user?.email_confirmed_at !== null && newSession?.user?.email_confirmed_at !== undefined;
             if (newSession?.user && confirmed) {

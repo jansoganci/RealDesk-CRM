@@ -14,14 +14,13 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
   const [isChecking, setIsChecking] = useState(true);
   const [hasUser, setHasUser] = useState(false);
-  const [emailConfirmed, setEmailConfirmed] = useState<boolean | null>(null);
   const [billingLoading, setBillingLoading] = useState(true);
   const [hasActiveAccess, setHasActiveAccess] = useState<boolean | null>(null);
 
   // Additional check for session (helps with iOS Safari/PWA race conditions)
   useEffect(() => {
     let isMounted = true;
-    
+
     const checkSession = async () => {
       try {
         // Wait for auth context to finish loading first
@@ -35,13 +34,11 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
           const { data: { session } } = await supabase.auth.getSession();
           if (isMounted) {
             setHasUser(!!session?.user);
-            setEmailConfirmed(session?.user ? isEmailConfirmed() : null);
             setIsChecking(false);
           }
         } else {
           if (isMounted) {
             setHasUser(true);
-            setEmailConfirmed(isEmailConfirmed());
             setIsChecking(false);
           }
         }
@@ -49,14 +46,13 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
         console.error('Error checking session:', error);
         if (isMounted) {
           setHasUser(false);
-          setEmailConfirmed(null);
           setIsChecking(false);
         }
       }
     };
 
     checkSession();
-    
+
     return () => {
       isMounted = false;
     };

@@ -98,6 +98,31 @@ export const Login = () => {
             {t('auth.loginSubtitle', 'Enter your credentials to access your Emlak CRM workspace.')}
           </p>
 
+          {/* Google Sign In Button (Primary) */}
+          <div className="mb-6 flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700 py-5"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+            >
+              <img
+                src="/icons/google-icon.png"
+                alt="Google"
+                className="h-5 w-5"
+              />
+              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('auth.googleSignIn', 'Sign in with Google')}</span>
+            </Button>
+          </div>
+
+          {/* Divider */}
+          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <span>{t('auth.orSignWithEmail', 'or sign in with email')}</span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField
@@ -147,7 +172,7 @@ export const Login = () => {
               />
 
               <Button
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
                 type="submit"
                 disabled={loading}
               >
@@ -162,31 +187,6 @@ export const Login = () => {
               </Button>
             </form>
           </Form>
-
-          {/* Divider */}
-          <div className="mt-6 flex items-center gap-2 text-xs text-slate-400">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-            <span>{t('auth.orContinueWith', 'or continue with')}</span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-          </div>
-
-          {/* Google Sign In Button */}
-          <div className="mt-4 flex flex-col gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700"
-              onClick={handleGoogleSignIn}
-              disabled={loading}
-            >
-              <img
-                src="/icons/google-icon.png"
-                alt="Google"
-                className="h-5 w-5"
-              />
-              <span>{t('auth.googleSignIn', 'Sign in with Google')}</span>
-            </Button>
-          </div>
 
           {/* Mobile Sign Up Link */}
           <div className="mt-6 text-center text-sm md:hidden">

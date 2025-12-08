@@ -25,13 +25,16 @@ interface ActionItems {
 
 interface ActionItemsCardProps {
   actionItems: ActionItems;
+  totalProperties: number;
 }
 
-export function ActionItemsCard({ actionItems }: ActionItemsCardProps) {
+export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCardProps) {
   const { t } = useTranslation('dashboard');
+  const isNewUser = totalProperties === 0;
 
-  // Don't render if there are no action items
+  // Don't render if there are no action items and user is not new
   if (
+    !isNewUser &&
     actionItems.propertiesMissingInfo.total === 0 &&
     actionItems.tenantsMissingInfo.total === 0 &&
     actionItems.ownersMissingInfo.total === 0
@@ -47,14 +50,37 @@ export function ActionItemsCard({ actionItems }: ActionItemsCardProps) {
             <AlertCircle className="h-5 w-5 text-white" />
           </div>
           <div>
-            <CardTitle className="text-slate-900 font-bold">{t('actionItems.title')}</CardTitle>
+            <CardTitle className="text-slate-900 font-bold">
+              {isNewUser ? t('onboarding.title', 'Getting Started') : t('actionItems.title')}
+            </CardTitle>
             <CardDescription className="text-slate-700 font-medium">
-              {t('actionItems.description')}
+              {isNewUser ? t('onboarding.description', 'Complete these tasks to get started') : t('actionItems.description')}
             </CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Onboarding Tasks for New Users */}
+        {isNewUser && (
+          <div>
+            <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+              <li className="flex items-center gap-2">
+                <span className="text-blue-600">•</span>
+                <a href="/properties/new" className="font-medium hover:text-blue-700 hover:underline">
+                  {t('onboarding.addProperty', 'Add your first property')}
+                </a>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="text-blue-600">•</span>
+                <a href="/profile" className="font-medium hover:text-blue-700 hover:underline">
+                  {t('onboarding.completeProfile', 'Complete your agency profile')}
+                </a>
+              </li>
+            </ul>
+          </div>
+        )}
+
+        {/* Existing Action Items */}
         {actionItems.propertiesMissingInfo.total > 0 && (
           <div>
             <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.properties.title')}</p>

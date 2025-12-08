@@ -82,12 +82,15 @@ const plans: Plan[] = [
   },
 ];
 
+// ... imports
+
 interface PricingSectionProps {
   title?: string;
   subtitle?: string;
+  showHeader?: boolean;
 }
 
-export default function PricingSection({ title, subtitle }: PricingSectionProps) {
+export default function PricingSection({ title, subtitle, showHeader = true }: PricingSectionProps) {
   const { t, i18n } = useTranslation('billing');
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
   const isTurkish = i18n.language === 'tr';
@@ -97,7 +100,6 @@ export default function PricingSection({ title, subtitle }: PricingSectionProps)
   };
 
   const getCurrencySymbol = () => (isTurkish ? '₺' : '$');
-  const getCurrencyCode = () => (isTurkish ? 'TL' : 'USD');
 
   // Determine if we should show the header.
   // If title/subtitle are provided (even empty strings), we use them.
@@ -109,7 +111,7 @@ export default function PricingSection({ title, subtitle }: PricingSectionProps)
     <section className="w-full bg-gradient-to-b from-slate-50 via-neutral-50 to-white px-4 pb-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        {(displayTitle || displaySubtitle) && (
+        {showHeader && (displayTitle || displaySubtitle) && (
           <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
             {displayTitle && (
               <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
@@ -188,6 +190,13 @@ export default function PricingSection({ title, subtitle }: PricingSectionProps)
                 </CardHeader>
 
                 <CardContent className="flex-1 flex flex-col">
+                  {/* Trial Badge */}
+                  <div className="flex justify-center mb-4">
+                    <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-blue-700 text-center leading-tight">
+                      {t('trialBadge')}
+                    </span>
+                  </div>
+
                   {/* Price */}
                   <div className="text-center mb-6">
                     <div className="flex items-baseline justify-center gap-2">

@@ -20,7 +20,7 @@ export const Register = () => {
   const [userEmail, setUserEmail] = useState<string>('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
-  const { signUp, resendConfirmationEmail } = useAuth();
+  const { signUp, resendConfirmationEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['auth', 'common']);
   const language = i18n.language || 'tr';
@@ -33,9 +33,16 @@ export const Register = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      acceptTerms: true, // Set to true to pass schema validation, but we use local state for actual validation
+      acceptTerms: true,
     },
   });
+
+  const handleGoogleSignIn = async () => {
+    const result = await signInWithGoogle();
+    if (!result.success) {
+      toast.error(result.error ?? t('errors.generic'));
+    }
+  };
 
   const onSubmit = async (data: RegisterFormData) => {
     // Validate terms acceptance
@@ -48,7 +55,7 @@ export const Register = () => {
     setLoading(true);
     try {
       const result = await signUp(data.email, data.password);
-      
+
       if (result.requiresEmailConfirmation) {
         // Email confirmation required - show message
         setUserEmail(data.email);
@@ -74,7 +81,7 @@ export const Register = () => {
 
   const handleResendEmail = async () => {
     if (!userEmail) return;
-    
+
     setLoading(true);
     try {
       await resendConfirmationEmail(userEmail);
@@ -161,6 +168,31 @@ export const Register = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
+          {/* Google Sign In Button (Primary) */}
+          <div className="mb-6 flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700 py-5"
+              onClick={handleGoogleSignIn}
+              disabled={loading}
+            >
+              <img
+                src="/icons/google-icon.png"
+                alt="Google"
+                className="h-5 w-5"
+              />
+              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('auth.googleSignUp', 'Sign up with Google')}</span>
+            </Button>
+          </div>
+
+          {/* Divider */}
+          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <span>{t('auth.orSignWithEmail', 'or sign up with email')}</span>
+            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          </div>
+
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
               <FormField

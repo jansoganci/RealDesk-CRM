@@ -65,9 +65,31 @@
     "commissionRateMax": "Komisyon oranı %20'yi geçmemelidir"
   },
   "security": {
-    "changePasswordTitle": "Şifre Değiştir",
-    "changePasswordDescription": "Hesap şifrenizi güncelleyin",
-    "comingSoon": "Yakında"
+    "title": "Hesap Güvenliği",
+    "description": "E-posta ve şifrenizi yönetin",
+    "changeEmail": {
+      "title": "E-posta Adresini Değiştir",
+      "description": "Yeni e-posta adresini gir, onay linki bu adrese gönderilecektir.",
+      "placeholder": "Yeni e-posta adresi",
+      "button": "Onay Gönder",
+      "sending": "Gönderiliyor...",
+      "success": "Onay linki yeni e-posta adresine gönderildi. Lütfen e-postanı kontrol et.",
+      "errorEmpty": "Lütfen yeni e-posta adresini gir",
+      "errorFailed": "E-posta güncellenemedi"
+    },
+    "changePassword": {
+      "title": "Şifre Değiştir",
+      "description": "Güvenlik için hesap şifrenizi güncelleyin",
+      "currentPassword": "Mevcut şifre",
+      "newPassword": "Yeni şifre",
+      "confirmPassword": "Yeni şifre (tekrar)",
+      "button": "Şifreyi Güncelle",
+      "updating": "Güncelleniyor...",
+      "success": "Şifren başarıyla güncellendi",
+      "errorEmpty": "Lütfen tüm şifre alanlarını doldur",
+      "errorMismatch": "Yeni şifreler eşleşmiyor",
+      "errorFailed": "Şifre doğrulanamadı. Lütfen tekrar dene."
+    }
   },
   "exchangeRates": {
     "title": "Döviz Kurları",

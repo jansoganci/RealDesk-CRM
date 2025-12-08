@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
-import { ROUTES, APP_NAME } from '../../config/constants';
+import { ROUTES } from '../../config/constants';
 import { CheckCircle } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 

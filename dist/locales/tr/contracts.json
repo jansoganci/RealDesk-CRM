@@ -289,7 +289,7 @@
     }
   },
   "import": {
-    "title": "📥 Eski Sözleşme Aktarma",
+    "title": "Eski Sözleşme Aktarma",
     "subtitle": "PDF veya Word dosyanızdan sözleşme bilgilerini otomatik olarak çıkarıp sisteme aktarın",
     "description": "PDF veya DOCX dosyasından sözleşme bilgilerini çıkarın",
     "dropzone": {
@@ -317,13 +317,13 @@
       "ready": "Hazır"
     },
     "sections": {
-      "owner": "🏠 Ev Sahibi Bilgileri",
-      "tenant": "👤 Kiracı Bilgileri",
-      "property": "🏘️ Mülk Bilgileri",
-      "contract": "📋 Sözleşme Detayları",
+      "owner": "Ev Sahibi Bilgileri",
+      "tenant": "Kiracı Bilgileri",
+      "property": "Mülk Bilgileri",
+      "contract": "Sözleşme Detayları",
       "extractedData": "Çıkarılan Bilgiler",
       "specialConditions": "Özel Şartlar",
-      "uploadedFile": "📄 Yüklenen Dosya"
+      "uploadedFile": "Yüklenen Dosya"
     },
     "foundAddress": "Bulunan adres",
     "fieldsFilled": "({{extracted}}/{{total}} alan dolu)",
@@ -372,14 +372,14 @@
       "fewFieldsDescription": "PDF'den az sayıda bilgi çıkarılabildi. Lütfen eksik alanları manuel olarak doldurun."
     },
     "success": {
-      "title": "Tebrikler! 🎉",
+      "title": "Tebrikler!",
       "description": "Sözleşme başarıyla kaydedildi",
       "createdRecords": "Oluşturulan Kayıtlar",
       "owner": "Ev Sahibi",
       "tenant": "Kiracı",
       "property": "Mülk",
       "pdfFile": "PDF Dosyası",
-      "pdfSaved": "✓ Başarıyla kaydedildi",
+      "pdfSaved": "Başarıyla kaydedildi",
       "createAnother": "Başka Sözleşme Aktar",
       "viewContract": "Sözleşmeleri Görüntüle",
       "helpText": "Sözleşme ve ilişkili kayıtlar başarıyla sisteme eklendi.\nArtık tüm bilgilere Sözleşmeler sayfasından erişebilirsiniz."

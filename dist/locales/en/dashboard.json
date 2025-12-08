@@ -97,5 +97,21 @@
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Rates updated successfully",
     "refreshError": "Failed to update rates"
+  },
+  "onboarding": {
+    "title": "Getting Started",
+    "description": "Complete these tasks to get started",
+    "addProperty": "Add your first property to start tracking",
+    "completeProfile": "Complete your agency profile"
+  },
+  "welcome": {
+    "title": "Welcome to emlakcrm! 🎉",
+    "description": "Get started by adding your first property and setting up your profile. We'll guide you through the process.",
+    "addProperty": "Add Your First Property",
+    "addPropertyDesc": "Start managing your real estate portfolio",
+    "completeProfile": "Complete Your Profile",
+    "completeProfileDesc": "Set up your agency information",
+    "quickTip": "Quick Tip",
+    "quickTipDesc": "After adding a property, you can create contracts, track tenants, and manage all your real estate operations from one place."
   }
 }

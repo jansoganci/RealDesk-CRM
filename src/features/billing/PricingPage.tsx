@@ -7,7 +7,7 @@ export default function PricingPage() {
   return (
     <MainLayout title="Fiyatlar ve Planlar">
       <PageContainer>
-        <PricingSection />
+        <PricingSection showHeader={false} />
       </PageContainer>
     </MainLayout>
   );

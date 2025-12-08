@@ -7,21 +7,29 @@ import { TheResult } from "@/components/landing/TheResult"
 import { FinalCTA } from "@/components/landing/FinalCTA"
 import { LandingHeader } from "@/components/landing/LandingHeader"
 import { LandingFooter } from "@/components/landing/LandingFooter"
+import { SEO } from "@/components/common/SEO"
 
 export const LandingPage = () => {
   return (
-    <div className="min-h-screen bg-white">
-      <LandingHeader />
-      <main>
-        <Hero />
-        <TheProblem />
-        <ThePivot />
-        <FeatureProperties />
-        <FeatureReminders />
-        <TheResult />
-        <FinalCTA />
-      </main>
-      <LandingFooter />
-    </div>
+    <>
+      <SEO
+        title="Emlak CRM | Gayrimenkul Yönetim Sistemi"
+        description="Modern, mobile-first real estate CRM for Turkish agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system."
+        keywords="emlak crm, gayrimenkul yönetim sistemi, emlak yazılımı, kiracı takip programı, sözleşme yönetimi, real estate crm, property management, tenant tracking, contract management"
+      />
+      <div className="min-h-screen bg-white">
+        <LandingHeader />
+        <main>
+          <Hero />
+          <TheProblem />
+          <ThePivot />
+          <FeatureProperties />
+          <FeatureReminders />
+          <TheResult />
+          <FinalCTA />
+        </main>
+        <LandingFooter />
+      </div>
+    </>
   )
 }

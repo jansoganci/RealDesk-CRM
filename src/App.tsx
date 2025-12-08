@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -9,7 +10,6 @@ import { ForgotPassword } from './features/auth/ForgotPassword';
 import { ResetPassword } from './features/auth/ResetPassword';
 import { EmailConfirmation } from './features/auth/EmailConfirmation';
 import { EmailChanged } from './features/auth/EmailChanged';
-import PricingPage from './features/billing/PricingPage';
 import { BillingSubscribe } from './features/billing/BillingSubscribe';
 import { LandingPage } from './features/landing/LandingPage';
 import { PublicPricingPage } from './features/landing/PublicPricingPage';
@@ -39,135 +39,137 @@ function App() {
     });
   }, []);
   return (
-    <ErrorBoundary>
-      <AuthProvider>
-        <BrowserRouter>
-        <Routes>
-          <Route path={ROUTES.HOME} element={<LandingPage />} />
-          <Route path={ROUTES.LOGIN} element={<Login />} />
-          <Route path={ROUTES.REGISTER} element={<Register />} />
-          <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
-          <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
-          <Route path={ROUTES.CONFIRM_EMAIL} element={<EmailConfirmation />} />
-          <Route path={ROUTES.EMAIL_CHANGED} element={<EmailChanged />} />
-          <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
-          <Route
-            path={ROUTES.BILLING_SUBSCRIBE}
-            element={
-              <ProtectedRoute>
-                <BillingSubscribe />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.DASHBOARD}
-            element={
-              <ProtectedRoute>
-                <Dashboard />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.PROPERTIES}
-            element={
-              <ProtectedRoute>
-                <Properties />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.TENANTS}
-            element={
-              <ProtectedRoute>
-                <Tenants />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.CONTRACTS}
-            element={
-              <ProtectedRoute>
-                <Contracts />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/contracts/create"
-            element={
-              <ProtectedRoute>
-                <ContractCreate />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/contracts/:id/edit"
-            element={
-              <ProtectedRoute>
-                <ContractEdit />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/contracts/import"
-            element={
-              <ProtectedRoute>
-                <ContractImportPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.OWNERS}
-            element={
-              <ProtectedRoute>
-                <Owners />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.REMINDERS}
-            element={
-              <ProtectedRoute>
-                <Reminders />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.INQUIRIES}
-            element={
-              <ProtectedRoute>
-                <Inquiries />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.CALENDAR}
-            element={
-              <ProtectedRoute>
-                <CalendarPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.FINANCE}
-            element={
-              <ProtectedRoute>
-                <Finance />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path={ROUTES.PROFILE}
-            element={
-              <ProtectedRoute>
-                <Profile />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-        <Toaster />
-      </BrowserRouter>
-    </AuthProvider>
-    </ErrorBoundary>
+    <HelmetProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <BrowserRouter>
+            <Routes>
+              <Route path={ROUTES.HOME} element={<LandingPage />} />
+              <Route path={ROUTES.LOGIN} element={<Login />} />
+              <Route path={ROUTES.REGISTER} element={<Register />} />
+              <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
+              <Route path={ROUTES.RESET_PASSWORD} element={<ResetPassword />} />
+              <Route path={ROUTES.CONFIRM_EMAIL} element={<EmailConfirmation />} />
+              <Route path={ROUTES.EMAIL_CHANGED} element={<EmailChanged />} />
+              <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
+              <Route
+                path={ROUTES.BILLING_SUBSCRIBE}
+                element={
+                  <ProtectedRoute>
+                    <BillingSubscribe />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DASHBOARD}
+                element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.PROPERTIES}
+                element={
+                  <ProtectedRoute>
+                    <Properties />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.TENANTS}
+                element={
+                  <ProtectedRoute>
+                    <Tenants />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS}
+                element={
+                  <ProtectedRoute>
+                    <Contracts />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/contracts/create"
+                element={
+                  <ProtectedRoute>
+                    <ContractCreate />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/contracts/:id/edit"
+                element={
+                  <ProtectedRoute>
+                    <ContractEdit />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/contracts/import"
+                element={
+                  <ProtectedRoute>
+                    <ContractImportPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.OWNERS}
+                element={
+                  <ProtectedRoute>
+                    <Owners />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.REMINDERS}
+                element={
+                  <ProtectedRoute>
+                    <Reminders />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.INQUIRIES}
+                element={
+                  <ProtectedRoute>
+                    <Inquiries />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CALENDAR}
+                element={
+                  <ProtectedRoute>
+                    <CalendarPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.FINANCE}
+                element={
+                  <ProtectedRoute>
+                    <Finance />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.PROFILE}
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
+            </Routes>
+            <Toaster />
+          </BrowserRouter>
+        </AuthProvider>
+      </ErrorBoundary>
+    </HelmetProvider>
   );
 }
 

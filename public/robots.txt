@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Block authenticated app areas from being indexed
+Disallow: /dashboard
+Disallow: /properties
+Disallow: /contracts
+Disallow: /tenants
+Disallow: /owners
+Disallow: /finance
+Disallow: /calendar
+Disallow: /reminders
+Disallow: /inquiries
+Disallow: /profile
+Disallow: /api/
+
+Sitemap: https://emlakcrm.app/sitemap.xml
