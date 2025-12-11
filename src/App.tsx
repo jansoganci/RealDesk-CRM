@@ -28,6 +28,7 @@ import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
+import { GTMPageViewTracker } from './components/GTMPageViewTracker';
 import { initializeExchangeRates } from './lib/currency';
 import './App.css';
 
@@ -43,6 +44,7 @@ function App() {
       <ErrorBoundary>
         <AuthProvider>
           <BrowserRouter>
+            <GTMPageViewTracker />
             <Routes>
               <Route path={ROUTES.HOME} element={<LandingPage />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
