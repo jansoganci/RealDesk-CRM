@@ -32,6 +32,7 @@ export const Login = () => {
   const onSubmit = async (data: LoginFormData) => {
     setLoading(true);
     try {
+      localStorage.setItem("pending_login_method", "email");
       await signIn(data.email, data.password);
 
       // Wait for auth state to sync (critical for iOS Safari/PWA)
@@ -63,6 +64,7 @@ export const Login = () => {
   };
 
   const handleGoogleSignIn = async () => {
+    localStorage.setItem("pending_login_method", "google");
     const result = await signInWithGoogle();
     if (!result.success) {
       toast.error(result.error ?? t('errors.generic'));

@@ -38,6 +38,7 @@ export const Register = () => {
   });
 
   const handleGoogleSignIn = async () => {
+    localStorage.setItem("pending_login_method", "google");
     const result = await signInWithGoogle();
     if (!result.success) {
       toast.error(result.error ?? t('errors.generic'));
@@ -54,6 +55,7 @@ export const Register = () => {
 
     setLoading(true);
     try {
+      localStorage.setItem("pending_login_method", "email");
       const result = await signUp(data.email, data.password);
 
       if (result.requiresEmailConfirmation) {

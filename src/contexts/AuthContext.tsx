@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useRef, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
+import { trackLogin } from '../utils/gtm';
 
 interface AuthContextType {
   user: User | null;
@@ -72,6 +73,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
+
+      if (event === "SIGNED_IN" && session?.user) {
+        const method = localStorage.getItem("pending_login_method") || "unknown";
+        localStorage.removeItem("pending_login_method");
+
+        trackLogin(method as 'email' | 'google' | 'magic_link');
+      }
 
       // Handle email confirmation events
       if (event === 'TOKEN_REFRESHED' && session?.user) {
