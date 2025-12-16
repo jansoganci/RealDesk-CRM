@@ -9,6 +9,86 @@
     "yearlySavings": "2 ay ücretsiz"
   },
   "trialBadge": "14 gün ücretsiz dene",
+  "paywall": {
+    "pageTitle": "Abonelik gerekli",
+    "trialActive": {
+      "title": "Ücretsiz denemen aktif",
+      "subtitle": "{{date}} tarihine kadar tüm Emlak CRM özelliklerinin keyfini çıkar",
+      "message": "Paneli keşfet, verilerini içe aktar ve ekibini davet et. Hazır olduğunda işletmene uygun planı seçebilirsin.",
+      "actions": {
+        "dashboard": "Panele git",
+        "viewPlans": "Planları incele"
+      }
+    },
+    "trialEnded": {
+      "title": "Deneme süren sona erdi",
+      "subtitle": "Emlak işini yönetmeye devam etmek için bir plan seç",
+      "message": "Verilerin güvende. Aşağıdan bir plan seçerek erişimini anında yeniden açabilirsin.",
+      "actions": {
+        "choosePlan": "Plan seç"
+      },
+      "helpText": "Karar vermene yardımcı olmamızı ister misin? Ekibimizle iletişime geçebilirsin."
+    },
+    "subscriptionActive": {
+      "title": "Zaten tam erişime sahipsin",
+      "subtitle": "Aboneliğin için teşekkürler",
+      "message": "Emlak CRM'in tüm özelliklerini kullanmaya devam edebilirsin. Aboneliğini yönetebilir veya istediğin zaman panele dönebilirsin.",
+      "actions": {
+        "dashboard": "Panele dön",
+        "manage": "Aboneliği yönet"
+      }
+    }
+  },
+  "trialReminder": {
+    "badge": "Denemede son {{count}} gün",
+    "badge_one": "Denemede son 1 gün",
+    "badge_other": "Denemede son {{count}} gün",
+    "banner": {
+      "titleDefault": "Ücretsiz denemeden yararlanın",
+      "titleWarning": "Deneme yakında bitiyor",
+      "titleCritical": "Deneme bugün bitiyor",
+      "message": {
+        "default": "Ücretsiz denemen aktifken tüm özellikleri keşfet.",
+        "count": "Erişimin kilitlenmesine {{count}} gün kaldı.",
+        "count_one": "Erişimin kilitlenmesine 1 gün kaldı.",
+        "count_other": "Erişimin kilitlenmesine {{count}} gün kaldı.",
+        "today": "Denemen bugün sona eriyor. Kesintisiz devam etmek için bir plan seç."
+      },
+      "ctaPrimary": "Planları incele",
+      "dismiss": "Daha sonra"
+    },
+    "profile": {
+      "label": "Deneme bitiş tarihi {{date}}",
+      "countdown": "{{count}} gün kaldı",
+      "countdown_one": "1 gün kaldı",
+      "countdown_other": "{{count}} gün kaldı"
+    }
+  },
+  "stickyBanner": {
+    "ariaLabel": "Deneme durumu bildirimi",
+    "title": {
+      "default": "Deneme aktif — Tüm özellikleri keşfet",
+      "default_one": "Deneme aktif — 1 gün kaldı",
+      "default_other": "Deneme aktif — {{count}} gün kaldı",
+      "warning": "Deneme {{count}} gün içinde bitiyor",
+      "warning_one": "Deneme 1 gün içinde bitiyor",
+      "warning_other": "Deneme {{count}} gün içinde bitiyor",
+      "urgent": "Sadece {{count}} gün kaldı!",
+      "urgent_one": "Sadece 1 gün kaldı!",
+      "urgent_other": "Sadece {{count}} gün kaldı!",
+      "critical": "Deneme yarın bitiyor",
+      "critical_one": "Deneme bugün bitiyor",
+      "critical_other": "Deneme yarın bitiyor"
+    },
+    "message": {
+      "default": "Emlak CRM ile tam potansiyelini ortaya çıkar",
+      "warning": "Süre dolmadan planını seç",
+      "urgent": "Erişimini kaybetme — hemen plan seç",
+      "critical": "Verilerini ve erişimini korumak için abone ol"
+    },
+    "cta": "Planları Gör",
+    "dismiss": "Kapat"
+  },
   "plans": {
     "starter": {
       "name": "Başlangıç",

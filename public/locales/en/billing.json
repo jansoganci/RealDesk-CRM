@@ -9,6 +9,86 @@
     "yearlySavings": "2 months free"
   },
   "trialBadge": "14-day free trial",
+  "paywall": {
+    "pageTitle": "Subscription required",
+    "trialActive": {
+      "title": "Your free trial is active",
+      "subtitle": "Enjoy all Emlak CRM features until {{date}}",
+      "message": "Explore the dashboard, import your data, and invite your team. When you are ready, choose a plan that fits your agency.",
+      "actions": {
+        "dashboard": "Go to dashboard",
+        "viewPlans": "View plans"
+      }
+    },
+    "trialEnded": {
+      "title": "Your trial has ended",
+      "subtitle": "Choose a plan to keep managing your real estate business",
+      "message": "Your data is safely stored. Pick a plan below to reactivate access instantly.",
+      "actions": {
+        "choosePlan": "Choose a plan"
+      },
+      "helpText": "Need help deciding? Contact our team and we will guide you."
+    },
+    "subscriptionActive": {
+      "title": "You already have full access",
+      "subtitle": "Thanks for being a subscriber",
+      "message": "You can continue using every feature of Emlak CRM. Manage your subscription or head back to the dashboard anytime.",
+      "actions": {
+        "dashboard": "Return to dashboard",
+        "manage": "Manage subscription"
+      }
+    }
+  },
+  "trialReminder": {
+    "badge": "{{count}} days left in trial",
+    "badge_one": "1 day left in trial",
+    "badge_other": "{{count}} days left in trial",
+    "banner": {
+      "titleDefault": "Enjoy your free trial",
+      "titleWarning": "Trial ending soon",
+      "titleCritical": "Trial ends today",
+      "message": {
+        "default": "Explore every feature while your free trial is active.",
+        "count": "{{count}} days left before your access is locked.",
+        "count_one": "1 day left before your access is locked.",
+        "count_other": "{{count}} days left before your access is locked.",
+        "today": "Your trial ends today. Start a plan to keep working without interruption."
+      },
+      "ctaPrimary": "View plans",
+      "dismiss": "Maybe later"
+    },
+    "profile": {
+      "label": "Trial ends on {{date}}",
+      "countdown": "{{count}} days remaining",
+      "countdown_one": "1 day remaining",
+      "countdown_other": "{{count}} days remaining"
+    }
+  },
+  "stickyBanner": {
+    "ariaLabel": "Trial status notification",
+    "title": {
+      "default": "Trial active — Explore all features",
+      "default_one": "Trial active — 1 day left",
+      "default_other": "Trial active — {{count}} days left",
+      "warning": "Trial ending in {{count}} days",
+      "warning_one": "Trial ending in 1 day",
+      "warning_other": "Trial ending in {{count}} days",
+      "urgent": "Only {{count}} days left!",
+      "urgent_one": "Only 1 day left!",
+      "urgent_other": "Only {{count}} days left!",
+      "critical": "Trial ends tomorrow",
+      "critical_one": "Trial ends today",
+      "critical_other": "Trial ends tomorrow"
+    },
+    "message": {
+      "default": "Unlock your full potential with Emlak CRM",
+      "warning": "Choose your plan before time runs out",
+      "urgent": "Don't lose access — pick a plan now",
+      "critical": "Subscribe now to keep your data and access"
+    },
+    "cta": "View Plans",
+    "dismiss": "Dismiss banner"
+  },
   "plans": {
     "starter": {
       "name": "Starter",

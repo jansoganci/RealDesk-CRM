@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
+import { BillingProvider } from './contexts/BillingContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Login } from './features/auth/Login';
@@ -43,10 +44,11 @@ function App() {
     <HelmetProvider>
       <ErrorBoundary>
         <AuthProvider>
-          <BrowserRouter>
-            <GTMPageViewTracker />
-            <Routes>
-              <Route path={ROUTES.HOME} element={<LandingPage />} />
+          <BillingProvider>
+            <BrowserRouter>
+              <GTMPageViewTracker />
+              <Routes>
+                <Route path={ROUTES.HOME} element={<LandingPage />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
               <Route path={ROUTES.REGISTER} element={<Register />} />
               <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPassword />} />
@@ -158,17 +160,18 @@ function App() {
                   </ProtectedRoute>
                 }
               />
-              <Route
-                path={ROUTES.PROFILE}
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-            <Toaster />
-          </BrowserRouter>
+                <Route
+                  path={ROUTES.PROFILE}
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+              </Routes>
+              <Toaster />
+            </BrowserRouter>
+          </BillingProvider>
         </AuthProvider>
       </ErrorBoundary>
     </HelmetProvider>

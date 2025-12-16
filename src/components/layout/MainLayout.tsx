@@ -2,6 +2,7 @@
 import { useState } from 'react';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
+import { TrialBanner } from '../common/TrialBanner';
 import { useMeetingNotifications } from '@/hooks/useMeetingNotifications';
 
 import { COLORS } from '@/config/colors';
@@ -21,6 +22,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
 
       <div className="lg:pl-64">
         <Navbar title={title} onMenuClick={() => setSidebarOpen(true)} />
+        <TrialBanner />
 
         <main className="py-4 lg:py-8">
           {children}

@@ -1,4 +1,17 @@
+/**
+ * @deprecated This component is being replaced by ProfileInfoCard + EditProfileInfoDialog.
+ * The new approach uses a read-only card display with an edit modal instead of inline editing.
+ *
+ * This file is kept for reference during the transition period.
+ * TODO: Delete this file after profile redesign is complete and tested.
+ *
+ * New components:
+ * - ProfileInfoCard.tsx - Read-only display of profile information
+ * - EditProfileInfoDialog.tsx - Modal for editing profile info
+ */
+
 import { useTranslation } from 'react-i18next';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   FormControl,
   FormDescription,
@@ -15,11 +28,13 @@ import {
   SelectValue,
 } from '../../../components/ui/select';
 import { Input } from '../../../components/ui/input';
+import { Lock } from 'lucide-react';
 import type { UseFormReturn } from 'react-hook-form';
 import type { getProfileSchema } from '../profileSchema';
 import type * as z from 'zod';
 
 /**
+ * @deprecated Use ProfileInfoCard and EditProfileInfoDialog instead.
  * Preferences Section Component
  * Displays form fields for language, currency, meeting reminder, and commission rate
  */
@@ -28,14 +43,72 @@ type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>;
 
 interface PreferencesSectionProps {
   form: UseFormReturn<ProfileFormData>;
-  loading: boolean;
+  loading?: boolean;
 }
 
-export function PreferencesSection({ form, loading }: PreferencesSectionProps) {
+export function PreferencesSection({ form, loading = false }: PreferencesSectionProps) {
   const { t } = useTranslation('profile');
+  const { user } = useAuth();
 
   return (
     <>
+      {/* Full Name */}
+      <FormField
+        control={form.control}
+        name="full_name"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-sm">{t('profile:fields.fullName')}</FormLabel>
+            <FormControl>
+              <Input
+                placeholder={t('profile:fields.fullNamePlaceholder')}
+                disabled={loading}
+                className="h-9"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage className="text-xs" />
+          </FormItem>
+        )}
+      />
+
+      {/* Phone Number */}
+      <FormField
+        control={form.control}
+        name="phone_number"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="text-sm">{t('profile:fields.phoneNumber')}</FormLabel>
+            <FormControl>
+              <Input
+                type="tel"
+                placeholder={t('profile:fields.phoneNumberPlaceholder')}
+                disabled={loading}
+                className="h-9"
+                {...field}
+              />
+            </FormControl>
+            <FormMessage className="text-xs" />
+          </FormItem>
+        )}
+      />
+
+      {/* Email (Read-only) */}
+      <FormItem>
+        <FormLabel className="text-sm">{t('profile:fields.emailLocked')}</FormLabel>
+        <div className="relative">
+          <Input
+            value={user?.email || ''}
+            disabled
+            className="h-9 bg-slate-50 text-slate-500 cursor-not-allowed pr-10"
+          />
+          <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+        </div>
+        <FormDescription className="text-xs text-slate-500">
+          {t('accountSecurity.description')}
+        </FormDescription>
+      </FormItem>
+
       {/* Language */}
       <FormField
         control={form.control}

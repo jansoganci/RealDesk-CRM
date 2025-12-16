@@ -1,11 +1,14 @@
 import { useState, useEffect } from 'react';
-import { Menu, Bell } from 'lucide-react';
+import { Menu, Bell, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
+import { ROUTES } from '@/config/constants';
+import { useBilling } from '@/contexts/BillingContext';
+import { calculateTrialDaysRemaining } from '@/utils/trial';
 
 interface NavbarProps {
   title: string;
@@ -14,9 +17,13 @@ interface NavbarProps {
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
   const { t } = useTranslation('navigation');
+  const { t: tBilling } = useTranslation('billing');
   const [reminderCount, setReminderCount] = useState(0);
   const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
   const navigate = useNavigate();
+  const { billingStatus } = useBilling();
+  const trialDaysRemaining = calculateTrialDaysRemaining(billingStatus?.trialEndsAt ?? null);
+  const showTrialBadge = billingStatus?.isTrial;
 
   useEffect(() => {
     loadCounts();
@@ -53,6 +60,19 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
         </div>
 
         <div className="flex items-center gap-2">
+          {showTrialBadge && (
+            <button
+              className="hidden sm:flex items-center gap-2 rounded-full border border-blue-200 bg-blue-50 px-3 py-1 text-sm font-medium text-blue-900 transition hover:bg-blue-100"
+              onClick={() => navigate(ROUTES.PRICING)}
+              aria-label={tBilling('trialReminder.badge', { count: trialDaysRemaining ?? 0 })}
+            >
+              <Sparkles className="h-4 w-4" />
+              <span>
+                {tBilling('trialReminder.badge', { count: trialDaysRemaining ?? 0 })}
+              </span>
+            </button>
+          )}
+
           {/* Notifications Button - Square (like StatCard icons) */}
           {/* Mobile/Tablet: 44px for touch targets, Desktop: 40px for mouse */}
           <button

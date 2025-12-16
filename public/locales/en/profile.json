@@ -3,11 +3,13 @@
   "pageDescription": "Manage your account preferences and settings",
   "sections": {
     "account": "Account Information",
-    "preferences": "Preferences",
+    "preferences": "Personal Information & Preferences",
+    "preferencesDescription": "Manage your personal details, language, currency and business preferences",
     "security": "Security"
   },
   "fields": {
     "email": "Email Address",
+    "emailLocked": "Email (managed by your account)",
     "userId": "User ID",
     "fullName": "Full Name",
     "fullNamePlaceholder": "Enter your full name",
@@ -117,6 +119,160 @@
     "cookies": {
       "title": "Cookie Policy",
       "description": "Information about cookie usage"
+    }
+  },
+  "subscription": {
+    "manageHelperText": "Cancel, update payment method, or view billing details",
+    "invoiceModal": {
+      "title": "All Invoices",
+      "description": "View your complete invoice history"
+    }
+  },
+  "subscriptionCard": {
+    "title": "Subscription Status",
+    "description": "View and manage your subscription details",
+    "currentPlan": "Current Plan",
+    "statusLabel": "Status",
+    "renewsOn": "Renews On",
+    "cancelsOn": "Cancels On",
+    "cancelWarning": "⚠️ Your subscription will be canceled at the end of the period",
+    "status": {
+      "active": "Active",
+      "trialing": "Trial",
+      "pastDue": "Past Due",
+      "canceled": "Canceled",
+      "incomplete": "Incomplete",
+      "expired": "Expired",
+      "unpaid": "Unpaid"
+    },
+    "plans": {
+      "baslangic": "Starter",
+      "profesyonel": "Professional",
+      "ofisPlus": "Office Plus"
+    },
+    "noSubscription": {
+      "description": "You don't have an active subscription",
+      "message": "Choose a plan to access all features",
+      "viewPlans": "View Plans"
+    },
+    "buttons": {
+      "manageSubscription": "Manage Subscription",
+      "upgradePlan": "Upgrade Plan",
+      "opening": "Opening..."
+    },
+    "errors": {
+      "portalTitle": "Error",
+      "portalFailed": "Failed to open portal"
+    }
+  },
+  "userInfo": {
+    "defaultUsername": "User",
+    "memberSince": "Member since {{date}}",
+    "editProfileButton": "Edit Profile"
+  },
+  "editProfile": {
+    "title": "Edit Profile",
+    "description": "Update your account information and security settings",
+    "tabs": {
+      "basicInfo": "Email",
+      "security": "Password"
+    },
+    "fields": {
+      "email": "Email Address",
+      "emailPlaceholder": "your@email.com",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmPassword": "Confirm New Password"
+    },
+    "buttons": {
+      "save": "Save Changes",
+      "cancel": "Cancel",
+      "updating": "Updating..."
+    },
+    "success": {
+      "emailChanged": "Email update request sent. Check your inbox to confirm the change.",
+      "passwordChanged": "Password updated successfully!"
+    },
+    "errors": {
+      "invalidEmail": "Please enter a valid email address",
+      "currentPasswordRequired": "Current password is required",
+      "passwordMinLength": "Password must be at least 8 characters",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordNumber": "Password must contain at least one number",
+      "passwordMismatch": "Passwords do not match",
+      "invalidPassword": "Current password is incorrect",
+      "emailFailed": "Failed to update email. Please try again.",
+      "passwordFailed": "Failed to update password. Please try again.",
+      "sameEmail": "New email is the same as current email"
+    }
+  },
+  "accountSecurity": {
+    "title": "Security",
+    "description": "Manage your email and password",
+    "changeEmailButton": "Email Address",
+    "changePasswordButton": "Password",
+    "emailDescription": "Update your account email address",
+    "passwordDescription": "Change your account password",
+    "changeButton": "Change"
+  },
+  "billingHistory": {
+    "title": "Billing History",
+    "description": "View your recent invoices",
+    "status": {
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Failed"
+    },
+    "table": {
+      "date": "Date",
+      "amount": "Amount",
+      "status": "Status",
+      "invoice": "Invoice"
+    },
+    "noInvoices": "No invoices found",
+    "viewButton": "View",
+    "viewAllButton": "View All Invoices",
+    "futureIntegration": "Real invoice history will be integrated with Stripe API soon"
+  },
+  "profileInfo": {
+    "title": "Profile Information",
+    "editButton": "Edit Profile",
+    "editDialog": {
+      "title": "Edit Profile Information",
+      "description": "Update your profile information. Email address can be changed from security settings."
+    },
+    "updateSuccess": "Profile updated successfully",
+    "updateError": "Failed to update profile",
+    "discardDialog": {
+      "title": "Discard changes?",
+      "description": "Unsaved changes will be lost. Do you want to continue?",
+      "confirm": "Yes, discard",
+      "cancel": "Go back"
+    },
+    "fields": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "emailHelp": "Email can be changed from security settings",
+      "phone": "Phone",
+      "language": "Language",
+      "currency": "Currency",
+      "meetingReminder": "Meeting Reminder",
+      "commissionRate": "Commission Rate"
+    },
+    "languages": {
+      "tr": "Turkish",
+      "en": "English"
+    },
+    "currencies": {
+      "TRY": "Turkish Lira (TRY)",
+      "USD": "US Dollar (USD)",
+      "EUR": "Euro (EUR)"
+    },
+    "reminderOptions": {
+      "30": "30 minutes before",
+      "60": "1 hour before",
+      "90": "1.5 hours before"
     }
   }
 }

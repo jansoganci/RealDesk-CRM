@@ -3,11 +3,13 @@
   "pageDescription": "Hesap tercihlerinizi ve ayarlarınızı yönetin",
   "sections": {
     "account": "Hesap Bilgileri",
-    "preferences": "Tercihler",
+    "preferences": "Kişisel Bilgiler & Tercihler",
+    "preferencesDescription": "Kişisel bilgilerinizi, dil, para birimi ve iş tercihlerinizi yönetin",
     "security": "Güvenlik"
   },
   "fields": {
     "email": "E-posta Adresi",
+    "emailLocked": "E-posta (hesabınız tarafından yönetiliyor)",
     "userId": "Kullanıcı ID",
     "fullName": "Ad Soyad",
     "fullNamePlaceholder": "Adınızı ve soyadınızı girin",
@@ -117,6 +119,160 @@
     "cookies": {
       "title": "Çerez Politikası",
       "description": "Çerez kullanımı hakkında bilgi alın"
+    }
+  },
+  "subscription": {
+    "manageHelperText": "İptal et, ödeme yöntemini güncelle veya fatura bilgilerini görüntüle",
+    "invoiceModal": {
+      "title": "Tüm Faturalar",
+      "description": "Fatura geçmişinizin tamamını görüntüleyin"
+    }
+  },
+  "subscriptionCard": {
+    "title": "Abonelik Durumu",
+    "description": "Abonelik bilgilerinizi görüntüleyin ve yönetin",
+    "currentPlan": "Mevcut Plan",
+    "statusLabel": "Durum",
+    "renewsOn": "Yenileme Tarihi",
+    "cancelsOn": "İptal Tarihi",
+    "cancelWarning": "⚠️ Aboneliğiniz dönem sonunda iptal edilecek",
+    "status": {
+      "active": "Aktif",
+      "trialing": "Deneme",
+      "pastDue": "Gecikmiş",
+      "canceled": "İptal Edildi",
+      "incomplete": "Eksik",
+      "expired": "Süresi Doldu",
+      "unpaid": "Ödenmedi"
+    },
+    "plans": {
+      "baslangic": "Başlangıç",
+      "profesyonel": "Profesyonel",
+      "ofisPlus": "Ofis Plus"
+    },
+    "noSubscription": {
+      "description": "Aktif aboneliğiniz bulunmuyor",
+      "message": "Tüm özelliklere erişmek için bir plan seçin",
+      "viewPlans": "Planları Görüntüle"
+    },
+    "buttons": {
+      "manageSubscription": "Aboneliği Yönet",
+      "upgradePlan": "Planı Yükselt",
+      "opening": "Açılıyor..."
+    },
+    "errors": {
+      "portalTitle": "Hata",
+      "portalFailed": "Portal açılamadı"
+    }
+  },
+  "userInfo": {
+    "defaultUsername": "Kullanıcı",
+    "memberSince": "{{date}} tarihinden beri üye",
+    "editProfileButton": "Profili Düzenle"
+  },
+  "editProfile": {
+    "title": "Profili Düzenle",
+    "description": "Hesap bilgilerinizi ve güvenlik ayarlarınızı güncelleyin",
+    "tabs": {
+      "basicInfo": "E-posta",
+      "security": "Şifre"
+    },
+    "fields": {
+      "email": "E-posta Adresi",
+      "emailPlaceholder": "ornek@email.com",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword": "Yeni Şifre",
+      "confirmPassword": "Yeni Şifre (Tekrar)"
+    },
+    "buttons": {
+      "save": "Değişiklikleri Kaydet",
+      "cancel": "İptal",
+      "updating": "Güncelleniyor..."
+    },
+    "success": {
+      "emailChanged": "E-posta güncelleme isteği gönderildi. Değişikliği onaylamak için gelen kutunuzu kontrol edin.",
+      "passwordChanged": "Şifre başarıyla güncellendi!"
+    },
+    "errors": {
+      "invalidEmail": "Lütfen geçerli bir e-posta adresi girin",
+      "currentPasswordRequired": "Mevcut şifre gereklidir",
+      "passwordMinLength": "Şifre en az 8 karakter olmalıdır",
+      "passwordUppercase": "Şifre en az bir büyük harf içermelidir",
+      "passwordLowercase": "Şifre en az bir küçük harf içermelidir",
+      "passwordNumber": "Şifre en az bir rakam içermelidir",
+      "passwordMismatch": "Şifreler eşleşmiyor",
+      "invalidPassword": "Mevcut şifre yanlış",
+      "emailFailed": "E-posta güncellenemedi. Lütfen tekrar deneyin.",
+      "passwordFailed": "Şifre güncellenemedi. Lütfen tekrar deneyin.",
+      "sameEmail": "Yeni e-posta mevcut e-posta ile aynı"
+    }
+  },
+  "accountSecurity": {
+    "title": "Güvenlik",
+    "description": "E-posta ve şifrenizi yönetin",
+    "changeEmailButton": "E-posta Adresi",
+    "changePasswordButton": "Şifre",
+    "emailDescription": "Hesap e-posta adresinizi güncelleyin",
+    "passwordDescription": "Hesap şifrenizi değiştirin",
+    "changeButton": "Değiştir"
+  },
+  "billingHistory": {
+    "title": "Fatura Geçmişi",
+    "description": "Son faturalarınızı görüntüleyin",
+    "status": {
+      "paid": "Ödendi",
+      "pending": "Beklemede",
+      "failed": "Başarısız"
+    },
+    "table": {
+      "date": "Tarih",
+      "amount": "Tutar",
+      "status": "Durum",
+      "invoice": "Fatura"
+    },
+    "noInvoices": "Fatura bulunamadı",
+    "viewButton": "Görüntüle",
+    "viewAllButton": "Tüm Faturaları Görüntüle",
+    "futureIntegration": "Gerçek fatura geçmişi yakında Stripe API ile entegre edilecektir"
+  },
+  "profileInfo": {
+    "title": "Profil Bilgileri",
+    "editButton": "Profili Düzenle",
+    "editDialog": {
+      "title": "Profil Bilgilerini Düzenle",
+      "description": "Profil bilgilerinizi güncelleyin. E-posta adresi güvenlik ayarlarından değiştirilir."
+    },
+    "updateSuccess": "Profil bilgileri başarıyla güncellendi",
+    "updateError": "Profil güncellenirken bir hata oluştu",
+    "discardDialog": {
+      "title": "Değişiklikleri iptal et?",
+      "description": "Kaydedilmemiş değişiklikler kaybolacak. Devam etmek istiyor musunuz?",
+      "confirm": "Evet, iptal et",
+      "cancel": "Geri dön"
+    },
+    "fields": {
+      "fullName": "Ad Soyad",
+      "email": "E-posta",
+      "emailHelp": "E-posta güvenlik ayarlarından değiştirilir",
+      "phone": "Telefon",
+      "language": "Dil",
+      "currency": "Para Birimi",
+      "meetingReminder": "Toplantı Hatırlatıcısı",
+      "commissionRate": "Komisyon Oranı"
+    },
+    "languages": {
+      "tr": "Türkçe",
+      "en": "English"
+    },
+    "currencies": {
+      "TRY": "Türk Lirası (TRY)",
+      "USD": "US Dollar (USD)",
+      "EUR": "Euro (EUR)"
+    },
+    "reminderOptions": {
+      "30": "30 dakika önce",
+      "60": "1 saat önce",
+      "90": "1.5 saat önce"
     }
   }
 }

@@ -149,7 +149,13 @@ export async function getUserFromRequest(req: Request) {
   } = await supabase.auth.getUser();
 
   if (error || !user) {
-    throw new Error('Invalid or expired token');
+    console.error('Token validation failed:', {
+      error: error?.message,
+      errorCode: error?.status,
+      hasUser: !!user,
+      tokenPrefix: token.substring(0, 20) + '...'
+    });
+    throw new Error(`Invalid or expired token: ${error?.message || 'No user found'}`);
   }
 
   return user;
@@ -178,6 +184,7 @@ export function jsonResponse(
 export function errorResponse(
   message: string,
   status = 400,
+  headers: HeadersInit = {},
   details?: unknown
 ): Response {
   return jsonResponse(
@@ -185,7 +192,8 @@ export function errorResponse(
       error: message,
       ...(details && { details }),
     },
-    status
+    status,
+    headers
   );
 }
 

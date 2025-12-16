@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MainLayout } from '../../components/layout/MainLayout';
 import { PageContainer } from '../../components/layout/PageContainer';
@@ -11,6 +13,8 @@ import { RemindersSection } from './components/RemindersSection';
 import { ExchangeRatesCard } from './components/ExchangeRatesCard';
 import { WelcomeEmptyState } from './components/WelcomeEmptyState';
 import { COLORS } from '@/config/colors';
+import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
 
 export const Dashboard = () => {
   // Data fetching hook
@@ -31,7 +35,31 @@ export const Dashboard = () => {
     formatLastUpdated,
   } = useExchangeRates();
 
-  const { t } = useTranslation('dashboard');
+  const { t, i18n } = useTranslation('dashboard');
+  const { toast } = useToast();
+  const { language } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Handle checkout success
+  useEffect(() => {
+    const checkoutSuccess = searchParams.get('checkout');
+
+    if (checkoutSuccess === 'success') {
+      const isTurkish = i18n.language === 'tr' || language === 'tr';
+
+      toast({
+        title: isTurkish ? 'Abonelik Aktif!' : 'Subscription Activated!',
+        description: isTurkish
+          ? 'Aboneliğiniz aktif hale geldi. Hoş geldiniz!'
+          : 'Your subscription is now active. Welcome aboard!',
+        duration: 5000,
+      });
+
+      // Clear query parameter
+      searchParams.delete('checkout');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams, toast, i18n.language, language]);
 
   // Check if user is new (no properties yet)
   const isNewUser = stats.totalProperties === 0 && !loading;

@@ -2,7 +2,7 @@ import { supabase } from '../config/supabase';
 import type { Database } from '../types/database';
 
 // Extract valid RPC function names from Database type
-type RpcFunctionName = keyof Database['public']['Functions'];
+type RpcFunctionName = Extract<keyof Database['public']['Functions'], string>;
 
 export async function callRpc<TParams, TResult>(
   functionName: RpcFunctionName,
@@ -13,5 +13,4 @@ export async function callRpc<TParams, TResult>(
   if (error) throw error;
   return data as TResult;
 }
-
 

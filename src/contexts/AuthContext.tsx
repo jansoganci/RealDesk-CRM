@@ -48,15 +48,67 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchSessionAndPreferences = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setSession(session);
-      setUser(session?.user ?? null);
+      console.log('🔍 [AuthContext] Starting auth initialization...');
 
-      if (session?.user) {
+      // IMPORTANT: Use getUser() instead of getSession()
+      // getSession() only reads from browser cache (can be fake/stale)
+      // getUser() actually asks Supabase server "is this user real and confirmed?"
+      const { data: { user }, error } = await supabase.auth.getUser();
+
+      console.log('🔍 [AuthContext] getUser() result:', {
+        hasUser: !!user,
+        userId: user?.id,
+        email: user?.email,
+        emailConfirmedAt: user?.email_confirmed_at,
+        error: error?.message,
+      });
+
+      // If there's an error or no user, clear everything
+      if (error || !user) {
+        console.log('❌ [AuthContext] No valid user, clearing session');
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Check if email is confirmed
+      const emailConfirmed = user.email_confirmed_at !== null && user.email_confirmed_at !== undefined;
+
+      console.log('📧 [AuthContext] Email confirmation check:', {
+        emailConfirmed,
+        email_confirmed_at: user.email_confirmed_at,
+      });
+
+      // If email NOT confirmed, don't set user as logged in
+      if (!emailConfirmed) {
+        console.log('⚠️ [AuthContext] Email not confirmed, clearing session');
+        setSession(null);
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+
+      // Email is confirmed! Now get the full session
+      const { data: { session } } = await supabase.auth.getSession();
+
+      console.log('✅ [AuthContext] User authenticated! Setting session:', {
+        userId: user.id,
+        email: user.email,
+        hasAccessToken: !!session?.access_token,
+        accessTokenLength: session?.access_token?.length,
+        expiresAt: session?.expires_at,
+      });
+
+      setSession(session);
+      setUser(user);
+
+      // Load user preferences
+      if (user) {
         const { data: preferences } = await supabase
           .from('user_preferences')
           .select('language, currency, meeting_reminder_minutes, commission_rate')
-          .eq('user_id', session.user.id)
+          .eq('user_id', user.id)
           .maybeSingle();
         if (preferences) {
           setLanguageState(preferences.language || 'tr');
@@ -71,23 +123,44 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchSessionAndPreferences();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      setSession(session);
-      setUser(session?.user ?? null);
+      console.log('🔄 [AuthContext] Auth state changed:', {
+        event,
+        hasSession: !!session,
+        userId: session?.user?.id,
+        emailConfirmedAt: session?.user?.email_confirmed_at,
+      });
 
-      if (event === "SIGNED_IN" && session?.user) {
-        const method = localStorage.getItem("pending_login_method") || "unknown";
-        localStorage.removeItem("pending_login_method");
+      // Check if email is confirmed before setting session
+      if (session?.user) {
+        const emailConfirmed = session.user.email_confirmed_at !== null && session.user.email_confirmed_at !== undefined;
 
-        trackLogin(method as 'email' | 'google' | 'magic_link');
-      }
+        console.log('🔍 [AuthContext] onAuthStateChange - Email check:', {
+          emailConfirmed,
+          userId: session.user.id,
+        });
 
-      // Handle email confirmation events
-      if (event === 'TOKEN_REFRESHED' && session?.user) {
-        // User's email was confirmed - session is now available
-        // Preferences will be loaded in the next effect
-      }
+        // Only set session if email is confirmed
+        if (emailConfirmed) {
+          console.log('✅ [AuthContext] Setting authenticated user in state');
+          setSession(session);
+          setUser(session.user);
 
-      if (!session) {
+          if (event === "SIGNED_IN") {
+            const method = localStorage.getItem("pending_login_method") || "unknown";
+            localStorage.removeItem("pending_login_method");
+            trackLogin(method as 'email' | 'google' | 'magic_link');
+          }
+        } else {
+          // Email not confirmed, don't set session
+          console.log('⚠️ [Auth] Email not confirmed in auth state change');
+          setSession(null);
+          setUser(null);
+        }
+      } else {
+        // No session, clear everything
+        console.log('❌ [AuthContext] No session, clearing all state');
+        setSession(null);
+        setUser(null);
         setLanguageState('tr');
         setCurrencyState('TRY');
         setMeetingReminderMinutesState(30);
@@ -170,6 +243,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signUp = async (email: string, password: string) => {
+    // IMPORTANT: Clear any old sessions before signing up
+    // This prevents "fake sessions" from sticking around
+    await supabase.auth.signOut();
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,

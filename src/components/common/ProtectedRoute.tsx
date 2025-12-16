@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../config/supabase';
 import { ROUTES } from '../../config/constants';
-import { getBillingStatus } from '../../services/billingService';
+import { useBilling } from '../../contexts/BillingContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -14,8 +14,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
   const [isChecking, setIsChecking] = useState(true);
   const [hasUser, setHasUser] = useState(false);
-  const [billingLoading, setBillingLoading] = useState(true);
-  const [hasActiveAccess, setHasActiveAccess] = useState<boolean | null>(null);
+  const { billingStatus, billingLoading } = useBilling();
+  const hasActiveAccess = billingStatus?.hasActiveAccess ?? null;
+  const isTrialActive = billingStatus?.isTrial ?? false;
 
   // Additional check for session (helps with iOS Safari/PWA race conditions)
   useEffect(() => {
@@ -58,50 +59,6 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     };
   }, [user, loading, isEmailConfirmed]);
 
-  // Check billing status after authentication is confirmed
-  useEffect(() => {
-    let isMounted = true;
-
-    const checkBilling = async () => {
-      // Only check billing if user is authenticated
-      if (!user || !hasUser) {
-        setBillingLoading(false);
-        return;
-      }
-
-      // Skip billing check if already on billing subscribe page (prevent redirect loop)
-      if (location.pathname === ROUTES.BILLING_SUBSCRIBE) {
-        setHasActiveAccess(true);
-        setBillingLoading(false);
-        return;
-      }
-
-      try {
-        const { hasActiveAccess } = await getBillingStatus();
-        if (isMounted) {
-          setHasActiveAccess(hasActiveAccess);
-          setBillingLoading(false);
-        }
-      } catch (error) {
-        console.error('[ProtectedRoute] Billing check error:', error);
-        // Treat error as no access
-        if (isMounted) {
-          setHasActiveAccess(false);
-          setBillingLoading(false);
-        }
-      }
-    };
-
-    // Only check billing after auth check is complete
-    if (!loading && !isChecking) {
-      checkBilling();
-    }
-
-    return () => {
-      isMounted = false;
-    };
-  }, [user, hasUser, loading, isChecking, location.pathname]);
-
   // Show loading state while checking auth or billing
   if (loading || isChecking || billingLoading) {
     return (
@@ -130,12 +87,21 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // Redirect to billing subscribe if no active access
-  if (hasActiveAccess === false) {
-    return <Navigate to={ROUTES.BILLING_SUBSCRIBE} replace />;
+  if (hasActiveAccess === false && !isTrialActive) {
+    return (
+      <Navigate
+        to={ROUTES.BILLING_SUBSCRIBE}
+        replace
+        state={{
+          billingStatus,
+          from: location.pathname,
+        }}
+      />
+    );
   }
 
   // Render children if user has active access
-  if (hasActiveAccess === true) {
+  if (hasActiveAccess === true || isTrialActive) {
     return <>{children}</>;
   }
 
