@@ -2,7 +2,11 @@
   "header": {
     "features": "Özellikler",
     "benefits": "Avantajlar",
-    "getStarted": "Başla"
+    "getStarted": "Başla",
+    "login": "Giriş",
+    "cta": "Ücretsiz Başla",
+    "trialBadge": "14 gün ücretsiz",
+    "trialBadgeShort": "14 gün"
   },
   "hero": {
     "title": "Emlak işiniz, tek bir yerde.",
@@ -37,7 +41,7 @@
   },
   "finalCta": {
     "title": "Kontrolü ele almaya hazır mısınız?",
-    "cta": "Ücretsiz Başlayın",
+    "cta": "Ücretsiz Başla",
     "reassurance": "14 gün ücretsiz, kredi kartı gerekmez."
   },
   "pricing": {
@@ -57,7 +61,8 @@
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "cookies": "Çerezler",
-    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir."
+    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir.",
+    "allRightsReserved": "Tüm hakları saklıdır."
   },
   "mockups": {
     "summary": {

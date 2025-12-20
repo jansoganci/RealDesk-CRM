@@ -22,7 +22,7 @@ export const Hero = () => {
           <Button 
             size="lg" 
             className="text-lg px-8 py-6 h-auto bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg hover:shadow-xl transition-all hover:scale-105"
-            onClick={() => navigate(ROUTES.LOGIN)}
+            onClick={() => navigate(ROUTES.REGISTER)}
           >
             {t('hero.cta')}
           </Button>

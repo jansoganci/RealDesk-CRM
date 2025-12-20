@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useAuth } from "@/contexts/AuthContext"
+import { CookieSettingsLink } from "@/components/ui/cookie-settings-link"
 
 export const LandingFooter = () => {
   const { t } = useTranslation('landing')
@@ -16,6 +17,9 @@ export const LandingFooter = () => {
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-6">
+              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm">
+                <span className="text-white font-bold text-sm">E</span>
+              </div>
               <span className="text-xl font-bold text-gray-900">emlakcrm</span>
             </div>
             <p className="text-gray-500 max-w-xs leading-relaxed">
@@ -27,8 +31,8 @@ export const LandingFooter = () => {
           <div>
             <h3 className="font-semibold text-gray-900 mb-4">{t('footer.company')}</h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><a href="#" className="hover:text-black transition-colors">{t('footer.about')}</a></li>
-              <li><a href="#" className="hover:text-black transition-colors">{t('footer.contact')}</a></li>
+              <li><span className="text-gray-400 cursor-default">{t('footer.about')}</span></li>
+              <li><a href="mailto:destek@emlakcrm.app" className="hover:text-black transition-colors">{t('footer.contact')}</a></li>
             </ul>
           </div>
 
@@ -45,12 +49,15 @@ export const LandingFooter = () => {
                   {t('footer.terms')}
                 </a>
               </li>
+              <li>
+                <CookieSettingsLink />
+              </li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© {currentYear} emlakcrm. All rights reserved.</p>
+          <p>© {currentYear} emlakcrm. {t('footer.allRightsReserved')}</p>
         </div>
       </div>
     </footer>

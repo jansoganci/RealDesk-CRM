@@ -30,6 +30,8 @@ import { Profile } from './features/profile/Profile';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import { GTMPageViewTracker } from './components/GTMPageViewTracker';
+import CookieNotice from './components/ui/cookie-notice';
+import { CookieErrorBoundary } from './components/ui/cookie-error-boundary';
 import { initializeExchangeRates } from './lib/currency';
 import './App.css';
 
@@ -47,6 +49,9 @@ function App() {
           <BillingProvider>
             <BrowserRouter>
               <GTMPageViewTracker />
+              <CookieErrorBoundary>
+                <CookieNotice />
+              </CookieErrorBoundary>
               <Routes>
                 <Route path={ROUTES.HOME} element={<LandingPage />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />

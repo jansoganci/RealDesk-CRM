@@ -39,7 +39,7 @@
         <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
                 <h1 class="text-4xl font-bold text-gray-900 mb-4">Çerez Politikası</h1>
-                <p class="text-gray-600 mb-8">Son Güncelleme: 07 Aralık 2025</p>
+                <p class="text-gray-600 mb-8">Son Güncelleme: 19 Aralık 2025</p>
 
                 <div class="prose prose-lg max-w-none space-y-8">
                     <!-- Introduction -->
@@ -78,12 +78,8 @@
                                     güvenli alanlara erişim gibi özellikleri kullanmanızı sağlarlar.
                                 </p>
                                 <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                                    <li><strong>Kimlik Doğrulama:</strong> Supabase tarafından kimliğinizi doğrulamak ve
-                                        oturumunuzu güvenli bir şekilde açık tutmak için kullanılır.</li>
-                                    <li><strong>Güvenlik:</strong> Siteler Arası İstek Sahteciliği (CSRF) ve diğer
-                                        saldırıları önlemek için kullanılır.</li>
-                                    <li><strong>Tercihler:</strong> Dil seçiminizi hatırlamak için kullanılır (örn.
-                                        'i18nextLng').</li>
+                                    <li><strong>auth_token:</strong> Kullanıcı kimlik doğrulama ve oturum yönetimi için kullanılır (7 gün).</li>
+                                    <li><strong>csrf_token:</strong> Siteler Arası İstek Sahteciliği (CSRF) ve diğer saldırıları önlemek için kullanılır (Oturum).</li>
                                 </ul>
                                 <p class="text-gray-700 leading-relaxed mt-3">
                                     <strong>Durum:</strong> Aktif (Devre dışı bırakılamaz)
@@ -95,14 +91,19 @@
                                 </h3>
                                 <p class="text-gray-700 leading-relaxed mb-3">
                                     Bu çerezler, kullanıcıların web sitesiyle nasıl etkileşime girdiğini anlamaya
-                                    yardımcı olur.
+                                    yardımcı olur. Google Tag Manager (GTM) ve Google Analytics aracılığıyla
+                                    kullanılmaktadır.
                                 </p>
                                 <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                                    <li><strong>Analitik:</strong> Şu anda Google Analytics, Mixpanel veya Hotjar gibi
-                                        üçüncü taraf analitik çerezlerini <strong>kullanmıyoruz</strong>.</li>
+                                    <li><strong>Google Analytics (_ga):</strong> Kullanıcıları ayırt etmek için kullanılır. Süre: 2 yıl. Sağlayıcı: Google.</li>
+                                    <li><strong>Google Analytics (_gid):</strong> Kullanıcıları ayırt etmek için kullanılır. Süre: 24 saat. Sağlayıcı: Google.</li>
+                                    <li><strong>Google Tag Manager (_gtm):</strong> Etiketleri ve scriptleri yönetmek için kullanılır. Süre: Oturum. Sağlayıcı: Google.</li>
                                 </ul>
                                 <p class="text-gray-700 leading-relaxed mt-3">
-                                    <strong>Durum:</strong> Şu Anda Kullanılmıyor
+                                    <strong>Durum:</strong> İsteğe Bağlı (Açık Rıza Gerekli)
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2 text-sm">
+                                    <strong>Not:</strong> Bu çerezler yalnızca açık rızanızla kullanılır. GTM Consent Mode v2 ile varsayılan olarak engellenmiştir.
                                 </p>
                             </div>
 
@@ -189,19 +190,34 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            sb-[proje-id]-auth-token</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">Supabase kimlik doğrulama oturumu
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Kesinlikle Gerekli
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Oturum / Kalıcı
-                                        </td>
+                                            auth_token</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Kullanıcı kimlik doğrulama ve oturum yönetimi</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Kesinlikle Gerekli</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">7 gün</td>
                                     </tr>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">i18nextLng</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">Tercih ettiğiniz dili saklar</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">İşlevsellik</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Kalıcı</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">csrf_token</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">CSRF saldırılarına karşı güvenlik koruması</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Kesinlikle Gerekli</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Oturum</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_ga</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Analytics takibi (GTM üzerinden) - kullanıcıları ayırt eder</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analitik</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">2 yıl</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_gid</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Analytics takibi (GTM üzerinden) - kullanıcıları ayırt eder</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analitik</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">24 saat</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_gtm</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Tag Manager konteyneri - etiketleri ve scriptleri yönetir</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analitik</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Oturum</td>
                                     </tr>
                                 </tbody>
                             </table>

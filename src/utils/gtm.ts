@@ -1,14 +1,27 @@
 /**
  * Google Tag Manager Utility Module
  * Provides typed helper functions for pushing events to dataLayer
+ * 
+ * All tracking functions check for analytics consent before firing events.
  */
+
+import { hasConsent } from '@/lib/cookieConsent';
 
 type GTMEventParams = Record<string, unknown>;
 
 /**
  * Push a generic event to GTM dataLayer
+ * 
+ * Checks for analytics consent before firing. Events are blocked if consent not granted.
  */
 export function trackEvent(eventName: string, params?: GTMEventParams): void {
+  // Check consent before firing event
+  if (!hasConsent('analytics')) {
+    console.debug('GTM event blocked: no analytics consent', eventName);
+    return;
+  }
+
+  // Ensure dataLayer exists
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push({
     event: eventName,

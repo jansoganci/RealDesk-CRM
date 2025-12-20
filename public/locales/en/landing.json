@@ -2,7 +2,11 @@
   "header": {
     "features": "Features",
     "benefits": "Benefits",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "login": "Log in",
+    "cta": "Start Free",
+    "trialBadge": "14 days free",
+    "trialBadgeShort": "14 days free"
   },
   "hero": {
     "title": "Your real estate business, in one place.",
@@ -57,7 +61,8 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "cookies": "Cookies",
-    "copyright": "© 2025 emlakcrm. Built with React, TypeScript, Tailwind CSS, and Supabase."
+    "copyright": "© 2025 emlakcrm. Built with React, TypeScript, Tailwind CSS, and Supabase.",
+    "allRightsReserved": "All rights reserved."
   },
   "mockups": {
     "summary": {

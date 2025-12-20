@@ -215,3 +215,6 @@ export interface MonthlyCommissionData {
 
 // Contract Management types
 export * from './contract.types';
+
+// Cookie Consent types
+export * from './cookieConsent';

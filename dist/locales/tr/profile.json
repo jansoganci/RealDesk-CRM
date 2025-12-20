@@ -208,10 +208,13 @@
     }
   },
   "accountSecurity": {
-    "title": "Hesap Güvenliği",
+    "title": "Güvenlik",
     "description": "E-posta ve şifrenizi yönetin",
-    "changeEmailButton": "E-posta Değiştir",
-    "changePasswordButton": "Şifre Değiştir"
+    "changeEmailButton": "E-posta Adresi",
+    "changePasswordButton": "Şifre",
+    "emailDescription": "Hesap e-posta adresinizi güncelleyin",
+    "passwordDescription": "Hesap şifrenizi değiştirin",
+    "changeButton": "Değiştir"
   },
   "billingHistory": {
     "title": "Fatura Geçmişi",

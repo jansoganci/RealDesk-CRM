@@ -39,7 +39,7 @@
         <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="bg-white rounded-lg shadow-lg p-8 md:p-12">
                 <h1 class="text-4xl font-bold text-gray-900 mb-4">Cookie Policy</h1>
-                <p class="text-gray-600 mb-8">Last Updated: December 07, 2025</p>
+                <p class="text-gray-600 mb-8">Last Updated: December 19, 2025</p>
 
                 <div class="prose prose-lg max-w-none space-y-8">
                     <!-- Introduction -->
@@ -75,12 +75,8 @@
                                     navigate the site and use its features, such as accessing secure areas.
                                 </p>
                                 <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                                    <li><strong>Authentication:</strong> Used by Supabase to verify your identity and
-                                        keep you logged in securely.</li>
-                                    <li><strong>Security:</strong> Used to prevent Cross-Site Request Forgery (CSRF) and
-                                        other attacks.</li>
-                                    <li><strong>Preferences:</strong> Used to remember your language selection (e.g.,
-                                        'i18nextLng').</li>
+                                    <li><strong>auth_token:</strong> Used for user authentication and session management (7 days).</li>
+                                    <li><strong>csrf_token:</strong> Used to prevent Cross-Site Request Forgery (CSRF) and other attacks (Session).</li>
                                 </ul>
                                 <p class="text-gray-700 leading-relaxed mt-3">
                                     <strong>Status:</strong> Active (Cannot be disabled)
@@ -92,14 +88,18 @@
                                 </h3>
                                 <p class="text-gray-700 leading-relaxed mb-3">
                                     These cookies help understand how users interact with the website by collecting and
-                                    reporting information anonymously.
+                                    reporting information anonymously. They are used via Google Tag Manager (GTM) and Google Analytics.
                                 </p>
                                 <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                                    <li><strong>Analytics:</strong> We do <strong>not</strong> currently use third-party
-                                        analytics cookies (such as Google Analytics, Mixpanel, or Hotjar).</li>
+                                    <li><strong>Google Analytics (_ga):</strong> Used to distinguish users. Duration: 2 years. Provider: Google.</li>
+                                    <li><strong>Google Analytics (_gid):</strong> Used to distinguish users. Duration: 24 hours. Provider: Google.</li>
+                                    <li><strong>Google Tag Manager (_gtm):</strong> Used to manage tags and scripts. Duration: Session. Provider: Google.</li>
                                 </ul>
                                 <p class="text-gray-700 leading-relaxed mt-3">
-                                    <strong>Status:</strong> Not Currently Used
+                                    <strong>Status:</strong> Optional (Explicit Consent Required)
+                                </p>
+                                <p class="text-gray-700 leading-relaxed mt-2 text-sm">
+                                    <strong>Note:</strong> These cookies are only used with your explicit consent. They are blocked by default via GTM Consent Mode v2.
                                 </p>
                             </div>
 
@@ -184,18 +184,34 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                                            sb-[project-id]-auth-token</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">Supabase authentication session</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Strictly Necessary
-                                        </td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Session /
-                                            Persistent</td>
+                                            auth_token</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">User authentication and session management</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Strictly Necessary</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">7 days</td>
                                     </tr>
                                     <tr>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">i18nextLng</td>
-                                        <td class="px-6 py-4 text-sm text-gray-700">Stores your preferred language</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Functionality</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Persistent</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">csrf_token</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Security protection against CSRF attacks</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Strictly Necessary</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Session</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_ga</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Analytics tracking (via GTM) - distinguishes users</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analytics</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">2 years</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_gid</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Analytics tracking (via GTM) - distinguishes users</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analytics</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">24 hours</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">_gtm</td>
+                                        <td class="px-6 py-4 text-sm text-gray-700">Google Tag Manager container - manages tags and scripts</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Analytics</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700">Session</td>
                                     </tr>
                                 </tbody>
                             </table>

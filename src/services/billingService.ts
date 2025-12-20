@@ -55,28 +55,6 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
       };
     }
 
-    const getFallbackTrialInfo = () => {
-      if (!user.created_at) {
-        return { isTrial: false, trialEndsAt: null };
-      }
-
-      const createdDate = new Date(user.created_at);
-      if (Number.isNaN(createdDate.getTime())) {
-        return { isTrial: false, trialEndsAt: null };
-      }
-
-      const fallbackEnd = new Date(createdDate);
-      fallbackEnd.setDate(fallbackEnd.getDate() + 14);
-
-      if (fallbackEnd.getTime() > Date.now()) {
-        return { isTrial: true, trialEndsAt: fallbackEnd.toISOString() };
-      }
-
-      return { isTrial: false, trialEndsAt: fallbackEnd.toISOString() };
-    };
-
-    const fallbackTrialInfo = getFallbackTrialInfo();
-
     // Call RPC function to check if user has active subscription
     const { data: hasAccess, error: rpcError } = await supabase.rpc(
       'has_active_subscription',
@@ -125,6 +103,8 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
     let trialEndsAt: string | null = null;
     let trialActive = false;
 
+    // Trial status derived ONLY from user_billing.trial_end (single source of truth)
+    // If user_billing is missing or invalid, isTrial=false and trialEndsAt=null
     if (billingRecord?.trial_end) {
       const trialEndValue = billingRecord.trial_end;
       trialEndsAt = trialEndValue;
@@ -133,10 +113,8 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
         const isInTrialStatus = !billingRecord.billing_status || billingRecord.billing_status === 'trial';
         trialActive = isInTrialStatus;
       }
-    } else if (billingError || !billingRecord) {
-      trialActive = fallbackTrialInfo.isTrial;
-      trialEndsAt = fallbackTrialInfo.trialEndsAt;
     }
+    // No fallback: if user_billing is missing/invalid, trialActive stays false and trialEndsAt stays null
 
     const hasActiveAccess = Boolean(hasAccess) || trialActive;
 
@@ -151,15 +129,15 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
       trialEndsAt,
     };
   } catch (error) {
-    // Catch any unexpected errors and return safe fallback
+    // Catch any unexpected errors - fail-safe: no trial, no access
     console.error('[Billing] Unexpected error', error);
     return {
-      hasActiveAccess: true,
+      hasActiveAccess: false,
       status: null,
       currentPeriodEnd: null,
       plan: null,
       cancelAtPeriodEnd: false,
-      isTrial: true,
+      isTrial: false,
       trialEndsAt: null,
     };
   }

@@ -1,0 +1,44 @@
+{
+  "banner": {
+    "title": "Cookie Notice",
+    "description": "We use cookies to enhance your experience. Essential cookies are always active. Optional cookies help us improve our service.",
+    "kvkkNotice": "",
+    "cookiePolicy": "Cookie Policy",
+    "privacyPolicy": "Privacy Policy",
+    "kvkkLink": "Cookie Disclosure",
+    "managePreferences": "Manage your preferences",
+    "acceptAll": "Accept All",
+    "rejectAll": "Reject All",
+    "skipToContent": "Skip to content"
+  },
+  "preferences": {
+    "title": "Cookie Preferences",
+    "description": "You can choose which cookies to accept.",
+    "alwaysActive": "Always Active",
+    "comingSoon": "Coming Soon",
+    "essential": {
+      "title": "Essential Cookies",
+      "description": "Required for site functionality, security, and authentication."
+    },
+    "analytics": {
+      "title": "Analytics Cookies",
+      "description": "Help us understand how visitors use our site."
+    },
+    "marketing": {
+      "title": "Marketing Cookies",
+      "description": "Used for personalized advertising and retargeting."
+    },
+    "cancel": "Cancel",
+    "save": "Save Preferences",
+    "withdrawAll": "Withdraw All Consent"
+  },
+  "footer": {
+    "cookieSettings": "Cookie Settings"
+  },
+  "withdrawal": {
+    "success": "Cookie consent successfully withdrawn",
+    "description": "All analytics and marketing cookies have been removed.",
+    "error": "Failed to withdraw consent"
+  }
+}
+

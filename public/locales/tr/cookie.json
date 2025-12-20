@@ -1,0 +1,44 @@
+{
+  "banner": {
+    "title": "Çerez Bildirimi",
+    "description": "Deneyiminizi iyileştirmek için çerezler kullanıyoruz. Temel çerezler her zaman aktiftir. İsteğe bağlı çerezler hizmetimizi geliştirmemize yardımcı olur.",
+    "kvkkNotice": "Açık rızanız olmadan çerezler kullanılmayacaktır.",
+    "cookiePolicy": "Çerez Politikası",
+    "privacyPolicy": "Gizlilik Politikası",
+    "kvkkLink": "KVKK Aydınlatma Metni",
+    "managePreferences": "Tercihlerinizi yönetin",
+    "acceptAll": "Tümünü Kabul Et",
+    "rejectAll": "Tümünü Reddet",
+    "skipToContent": "İçeriğe geç"
+  },
+  "preferences": {
+    "title": "Çerez Tercihleri",
+    "description": "Hangi çerezleri kabul etmek istediğinizi seçebilirsiniz.",
+    "alwaysActive": "Her Zaman Aktif",
+    "comingSoon": "Yakında",
+    "essential": {
+      "title": "Temel Çerezler",
+      "description": "Site işlevselliği, güvenlik ve kimlik doğrulama için gereklidir."
+    },
+    "analytics": {
+      "title": "Analitik Çerezler",
+      "description": "Ziyaretçilerin sitemizi nasıl kullandığını anlamamıza yardımcı olur."
+    },
+    "marketing": {
+      "title": "Pazarlama Çerezleri",
+      "description": "Kişiselleştirilmiş reklamlar ve yeniden hedefleme için kullanılır."
+    },
+    "cancel": "İptal",
+    "save": "Tercihleri Kaydet",
+    "withdrawAll": "Tüm İzni Geri Çek"
+  },
+  "footer": {
+    "cookieSettings": "Çerez Ayarları"
+  },
+  "withdrawal": {
+    "success": "Çerez izni başarıyla geri çekildi",
+    "description": "Tüm analitik ve pazarlama çerezleri kaldırıldı.",
+    "error": "İzin geri çekilemedi"
+  }
+}
+

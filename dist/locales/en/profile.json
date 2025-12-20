@@ -208,10 +208,13 @@
     }
   },
   "accountSecurity": {
-    "title": "Account Security",
+    "title": "Security",
     "description": "Manage your email and password",
-    "changeEmailButton": "Change Email",
-    "changePasswordButton": "Change Password"
+    "changeEmailButton": "Email Address",
+    "changePasswordButton": "Password",
+    "emailDescription": "Update your account email address",
+    "passwordDescription": "Change your account password",
+    "changeButton": "Change"
   },
   "billingHistory": {
     "title": "Billing History",

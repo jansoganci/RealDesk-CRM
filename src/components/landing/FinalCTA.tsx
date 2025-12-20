@@ -9,17 +9,17 @@ export const FinalCTA = () => {
   const navigate = useNavigate()
 
   return (
-    <section className="min-h-[80vh] flex flex-col items-center justify-center px-6 bg-white text-center">
+    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-white text-center">
       <div className="max-w-4xl mx-auto space-y-8">
         <h2 className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tight">
           {t('finalCta.title')}
         </h2>
         
         <div className="flex flex-col items-center gap-4">
-            <Button 
-              size="lg" 
-              className="text-lg px-12 py-8 h-auto"
-              onClick={() => navigate(ROUTES.LOGIN)}
+            <Button
+              size="lg"
+              className="text-lg px-12 py-8 h-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+              onClick={() => navigate(ROUTES.REGISTER)}
             >
                 {t('finalCta.cta')}
             </Button>

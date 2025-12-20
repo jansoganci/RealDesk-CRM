@@ -6,10 +6,10 @@ export const FeatureProperties = () => {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-white text-center py-20">
+    <section id="features" className="min-h-screen flex flex-col items-center justify-center px-6 bg-white text-center py-20">
       <div className="max-w-5xl mx-auto space-y-16">
         <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-3xl md:text-5xl font-bold text-gray-900 tracking-tight">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
             {t('featureProperties.title')}
             </h2>
             <p className="text-lg text-gray-600 leading-relaxed">
