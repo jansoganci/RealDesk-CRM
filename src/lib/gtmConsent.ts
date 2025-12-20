@@ -25,7 +25,6 @@ export function initGTMConsentMode(): void {
     // Define gtag function if it doesn't exist
     // This is needed for Consent Mode v2
     if (typeof window.gtag === 'undefined') {
-      // @ts-expect-error - gtag function definition
       window.gtag = function gtag() {
         // @ts-expect-error - dataLayer push
         window.dataLayer.push(arguments);

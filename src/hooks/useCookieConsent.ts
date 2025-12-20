@@ -22,6 +22,21 @@ import { GTM_CONTAINER_ID, CONSENT_VERSION } from '@/lib/cookieConfig';
 import { logConsentToDatabase } from '@/lib/consentLogger';
 
 /**
+ * Shared state for showPreferences across all hook instances
+ * This ensures all components using the hook share the same modal visibility state
+ */
+let sharedShowPreferences = false;
+const showPreferencesListeners = new Set<(value: boolean) => void>();
+
+/**
+ * Set shared showPreferences state and notify all listeners
+ */
+function setSharedShowPreferences(value: boolean) {
+  sharedShowPreferences = value;
+  showPreferencesListeners.forEach(listener => listener(value));
+}
+
+/**
  * Hook return type
  */
 export interface UseCookieConsentReturn {
@@ -93,8 +108,20 @@ export function useCookieConsent(): UseCookieConsentReturn {
     return true;
   });
 
-  const [showPreferences, setShowPreferences] = useState<boolean>(false);
+  // Use shared state for showPreferences so all hook instances stay in sync
+  const [showPreferences, setShowPreferences] = useState<boolean>(sharedShowPreferences);
   const [error, setError] = useState<Error | null>(null);
+
+  // Subscribe to shared state changes
+  useEffect(() => {
+    const listener = (value: boolean) => {
+      setShowPreferences(value);
+    };
+    showPreferencesListeners.add(listener);
+    return () => {
+      showPreferencesListeners.delete(listener);
+    };
+  }, []);
 
   // Track if scripts have been loaded to prevent duplicates
   const scriptsLoadedRef = useRef<{
@@ -320,7 +347,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
       logConsentDecision(newConsent);
       
       setShowBanner(false);
-      setShowPreferences(false);
+      setSharedShowPreferences(false);
       
       // Store operation for retry
       lastOperationRef.current = acceptAll;
@@ -357,7 +384,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
       logConsentDecision(newConsent);
       
       setShowBanner(false);
-      setShowPreferences(false);
+      setSharedShowPreferences(false);
       
       // Store operation for retry
       lastOperationRef.current = rejectAll;
@@ -410,14 +437,14 @@ export function useCookieConsent(): UseCookieConsentReturn {
    * Open preferences modal
    */
   const openPreferences = useCallback(() => {
-    setShowPreferences(true);
+    setSharedShowPreferences(true);
   }, []);
 
   /**
    * Close preferences modal
    */
   const closePreferences = useCallback(() => {
-    setShowPreferences(false);
+    setSharedShowPreferences(false);
   }, []);
 
   /**
@@ -467,7 +494,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
       });
 
       // Close preferences modal if open
-      setShowPreferences(false);
+      setSharedShowPreferences(false);
     } catch (err) {
       const error = err instanceof Error ? err : new Error(String(err));
       setError(error);

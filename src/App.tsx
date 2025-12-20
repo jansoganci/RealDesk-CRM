@@ -14,6 +14,8 @@ import { EmailChanged } from './features/auth/EmailChanged';
 import { BillingSubscribe } from './features/billing/BillingSubscribe';
 import { LandingPage } from './features/landing/LandingPage';
 import { PublicPricingPage } from './features/landing/PublicPricingPage';
+import { AboutPage } from './features/landing/AboutPage';
+import { ContactPage } from './features/landing/ContactPage';
 import { Dashboard } from './features/dashboard/Dashboard';
 import { Owners } from './features/owners/Owners';
 import { Properties } from './features/properties/Properties';
@@ -32,27 +34,22 @@ import { Toaster } from './components/ui/sonner';
 import { GTMPageViewTracker } from './components/GTMPageViewTracker';
 import CookieNotice from './components/ui/cookie-notice';
 import { CookieErrorBoundary } from './components/ui/cookie-error-boundary';
+import { CookiePreferences } from './components/ui/cookie-preferences';
+import { useCookieConsent } from './hooks/useCookieConsent';
 import { initializeExchangeRates } from './lib/currency';
 import './App.css';
 
-function App() {
-  // Initialize exchange rates on app start
-  useEffect(() => {
-    initializeExchangeRates().catch(err => {
-      console.warn('Failed to initialize exchange rates on app start:', err);
-    });
-  }, []);
+function AppContent() {
+  const { showPreferences, closePreferences } = useCookieConsent();
+
   return (
-    <HelmetProvider>
-      <ErrorBoundary>
-        <AuthProvider>
-          <BillingProvider>
-            <BrowserRouter>
-              <GTMPageViewTracker />
-              <CookieErrorBoundary>
-                <CookieNotice />
-              </CookieErrorBoundary>
-              <Routes>
+    <>
+      <GTMPageViewTracker />
+      <CookieErrorBoundary>
+        <CookieNotice />
+      </CookieErrorBoundary>
+      <CookiePreferences open={showPreferences} onOpenChange={closePreferences} />
+      <Routes>
                 <Route path={ROUTES.HOME} element={<LandingPage />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
               <Route path={ROUTES.REGISTER} element={<Register />} />
@@ -61,6 +58,8 @@ function App() {
               <Route path={ROUTES.CONFIRM_EMAIL} element={<EmailConfirmation />} />
               <Route path={ROUTES.EMAIL_CHANGED} element={<EmailChanged />} />
               <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
+              <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+              <Route path={ROUTES.CONTACT} element={<ContactPage />} />
               <Route
                 path={ROUTES.BILLING_SUBSCRIBE}
                 element={
@@ -173,8 +172,26 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-              </Routes>
-              <Toaster />
+      </Routes>
+      <Toaster />
+    </>
+  );
+}
+
+function App() {
+  // Initialize exchange rates on app start
+  useEffect(() => {
+    initializeExchangeRates().catch(err => {
+      console.warn('Failed to initialize exchange rates on app start:', err);
+    });
+  }, []);
+  return (
+    <HelmetProvider>
+      <ErrorBoundary>
+        <AuthProvider>
+          <BillingProvider>
+            <BrowserRouter>
+              <AppContent />
             </BrowserRouter>
           </BillingProvider>
         </AuthProvider>

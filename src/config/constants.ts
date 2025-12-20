@@ -29,6 +29,8 @@ export const ROUTES = {
   CONFIRM_EMAIL: '/confirm-email',
   EMAIL_CHANGED: '/email-changed',
   PRICING: '/pricing',
+  ABOUT: '/about',
+  CONTACT: '/contact',
   DASHBOARD: '/dashboard',
   PROPERTIES: '/properties',
   PROPERTY_DETAIL: '/properties/:id',

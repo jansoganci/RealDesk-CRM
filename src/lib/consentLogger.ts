@@ -110,14 +110,14 @@ function logError(message: string, error: unknown, context?: Record<string, unkn
 async function getUserId(): Promise<string | null> {
   try {
     // Try getUser() first - validates JWT via network call
-    const { data: { user }, error: userError } = await supabase.auth.getUser();
+    const { data: { user } } = await supabase.auth.getUser();
 
     if (user?.id) {
       return user.id;
     }
 
     // Fallback: Try getSession() - reads from local storage
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
 
     if (session?.user?.id) {
       return session.user.id;
@@ -209,7 +209,7 @@ export async function logConsentToDatabase(
       return {
         success: false,
         error: 'Invalid consent record: missing required fields',
-        errorType: 'validation',
+        errorType: 'unknown',
       };
     }
 

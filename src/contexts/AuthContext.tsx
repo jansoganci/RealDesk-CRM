@@ -3,6 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
+import { getDetectedLanguage, getDetectedCurrency } from '../lib/localeDetection';
 
 interface AuthContextType {
   user: User | null;
@@ -33,8 +34,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguageState] = useState('tr');
-  const [currency, setCurrencyState] = useState('TRY');
+  const [language, setLanguageState] = useState<string>(() => getDetectedLanguage());
+  const [currency, setCurrencyState] = useState<string>(() => getDetectedCurrency());
   const [meetingReminderMinutes, setMeetingReminderMinutesState] = useState(30);
   const [commissionRate, setCommissionRateState] = useState(4.0);
   const ensuredUserPreferencesFor = useRef<string | null>(null);
@@ -161,8 +162,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         console.log('❌ [AuthContext] No session, clearing all state');
         setSession(null);
         setUser(null);
-        setLanguageState('tr');
-        setCurrencyState('TRY');
+        setLanguageState(getDetectedLanguage());
+        setCurrencyState(getDetectedCurrency());
         setMeetingReminderMinutesState(30);
         setCommissionRateState(4.0);
       }

@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next"
 import { useAuth } from "@/contexts/AuthContext"
+import { Link } from "react-router-dom"
 import { CookieSettingsLink } from "@/components/ui/cookie-settings-link"
 
 export const LandingFooter = () => {
@@ -31,8 +32,16 @@ export const LandingFooter = () => {
           <div>
             <h3 className="font-semibold text-gray-900 mb-4">{t('footer.company')}</h3>
             <ul className="space-y-3 text-sm text-gray-600">
-              <li><span className="text-gray-400 cursor-default">{t('footer.about')}</span></li>
-              <li><a href="mailto:destek@emlakcrm.app" className="hover:text-black transition-colors">{t('footer.contact')}</a></li>
+              <li>
+                <Link to="/about" className="hover:text-black transition-colors">
+                  {t('footer.about')}
+                </Link>
+              </li>
+              <li>
+                <Link to="/contact" className="hover:text-black transition-colors">
+                  {t('footer.contact')}
+                </Link>
+              </li>
             </ul>
           </div>
 

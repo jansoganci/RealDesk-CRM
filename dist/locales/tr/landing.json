@@ -2,7 +2,11 @@
   "header": {
     "features": "Özellikler",
     "benefits": "Avantajlar",
-    "getStarted": "Başla"
+    "getStarted": "Başla",
+    "login": "Giriş",
+    "cta": "Ücretsiz Başla",
+    "trialBadge": "14 gün ücretsiz",
+    "trialBadgeShort": "14 gün"
   },
   "hero": {
     "title": "Emlak işiniz, tek bir yerde.",
@@ -37,7 +41,7 @@
   },
   "finalCta": {
     "title": "Kontrolü ele almaya hazır mısınız?",
-    "cta": "Ücretsiz Başlayın",
+    "cta": "Ücretsiz Başla",
     "reassurance": "14 gün ücretsiz, kredi kartı gerekmez."
   },
   "pricing": {
@@ -57,7 +61,40 @@
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "cookies": "Çerezler",
-    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir."
+    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir.",
+    "allRightsReserved": "Tüm hakları saklıdır."
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "description": "emlakcrm, Türk emlak profesyonelleri için tasarlanmış modern bir gayrimenkul yönetim sistemidir.",
+    "mission": {
+      "title": "Misyonumuz",
+      "description": "Emlak işletmelerinin kaosunu ortadan kaldırmak ve profesyonel bir yönetim deneyimi sunmak. Portföyünüzü, sözleşmelerinizi ve müşterilerinizi tek bir yerden yönetmenizi sağlıyoruz."
+    },
+    "vision": {
+      "title": "Vizyonumuz",
+      "description": "Türkiye'deki tüm emlak profesyonellerinin işlerini kolaylaştırmak ve daha verimli hale getirmek."
+    },
+    "contact": {
+      "title": "İletişim",
+      "description": "Sorularınız için bizimle iletişime geçebilirsiniz:"
+    }
+  },
+  "contact": {
+    "title": "İletişim",
+    "description": "Sorularınız, önerileriniz veya destek talepleriniz için bizimle iletişime geçebilirsiniz.",
+    "email": {
+      "title": "E-posta",
+      "description": "Genel sorularınız ve destek talepleriniz için:"
+    },
+    "support": {
+      "title": "Destek",
+      "description": "Teknik destek ve hesap sorularınız için e-posta gönderebilirsiniz. Mümkün olan en kısa sürede size dönüş yapacağız."
+    },
+    "responseTime": {
+      "title": "Yanıt Süresi",
+      "description": "E-posta taleplerinize genellikle 24-48 saat içinde yanıt veriyoruz. Acil durumlar için lütfen e-postanızda 'Acil' başlığını kullanın."
+    }
   },
   "mockups": {
     "summary": {

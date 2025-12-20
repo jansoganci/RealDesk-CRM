@@ -4,18 +4,15 @@ import { useTranslation } from "react-i18next";
 import { useCookieConsent } from "@/hooks/useCookieConsent";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CookiePreferences } from "@/components/ui/cookie-preferences";
 import { Cookie } from "lucide-react";
 
 export default function CookieNotice() {
   const { t, i18n } = useTranslation("cookie");
   const {
     showBanner,
-    showPreferences,
     acceptAll,
     rejectAll,
     openPreferences,
-    closePreferences,
   } = useCookieConsent();
 
   if (!showBanner) return null;
@@ -118,9 +115,6 @@ export default function CookieNotice() {
           </CardContent>
         </Card>
       </div>
-
-      {/* Preferences Modal */}
-      <CookiePreferences open={showPreferences} onOpenChange={closePreferences} />
     </>
   );
 }
