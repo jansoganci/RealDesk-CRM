@@ -162,11 +162,12 @@
       "use_purpose": "Kullanım Amacı",
       "start_date": "Başlangıç Tarihi",
       "end_date": "Bitiş Tarihi",
-      "rent_amount": "Aylık Kira (TRY)",
-      "deposit": "Depozito (TRY)",
+      "rent_amount": "Aylık Kira",
+      "deposit": "Depozito",
       "payment_day": "Ödeme Günü",
       "payment_method": "Ödeme Yöntemi",
-      "special_conditions": "Özel Şartlar"
+      "special_conditions": "Özel Şartlar",
+      "currency": "Para Birimi"
     },
     "placeholders": {
       "owner_name": "Ali Yılmaz",
@@ -183,7 +184,8 @@
       "il": "İstanbul",
       "payment_method": "Banka Transferi",
       "special_conditions": "Özel şartlar veya notlar...",
-      "usePurpose": "Mesken / İşyeri"
+      "usePurpose": "Mesken / İşyeri",
+      "currency": "Para birimi seçin"
     },
     "propertyTypes": {
       "apartment": "Daire",

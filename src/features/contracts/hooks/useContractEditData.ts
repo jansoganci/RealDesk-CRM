@@ -65,6 +65,7 @@ interface ContractDetails {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
+  deposit_currency?: 'TRY' | 'USD' | 'EUR';
 }
 
 interface ContractWithRelations {
@@ -198,6 +199,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         end_date: new Date(contract.end_date),
         rent_amount: contract.rent_amount || 0,
         deposit: contract.deposit || 0,
+        currency: (contractDetails?.deposit_currency as 'TRY' | 'USD' | 'EUR') || 'TRY',
 
         // Optional details
         payment_day_of_month: contractDetails?.payment_day_of_month || undefined,

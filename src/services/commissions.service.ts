@@ -101,19 +101,16 @@ class CommissionsService {
   }
 
   /**
-   * Get commission statistics
+   * Get commission statistics (all currencies combined)
    */
-  async getStats(currency: string = 'USD'): Promise<CommissionStats> {
+  async getStats(): Promise<CommissionStats> {
     const commissions = await this.getAll();
 
-    // Filter by currency and calculate totals
-    const filteredCommissions = commissions.filter((c) => c.currency === currency);
-
-    const rentalCommissions = filteredCommissions
+    const rentalCommissions = commissions
       .filter((c) => c.type === 'rental')
       .reduce((sum, c) => sum + c.amount, 0);
 
-    const saleCommissions = filteredCommissions
+    const saleCommissions = commissions
       .filter((c) => c.type === 'sale')
       .reduce((sum, c) => sum + c.amount, 0);
 
@@ -123,7 +120,7 @@ class CommissionsService {
       totalEarnings,
       rentalCommissions,
       saleCommissions,
-      currency,
+      currency: 'MIXED', // Indicates multiple currencies may be included
     };
   }
 
@@ -192,9 +189,9 @@ class CommissionsService {
   }
 
   /**
-   * Get monthly earnings breakdown
+   * Get monthly earnings breakdown (all currencies combined)
    */
-  async getMonthlyBreakdown(year: number, currency: string = 'USD'): Promise<Array<{
+  async getMonthlyBreakdown(year: number): Promise<Array<{
     month: number;
     earnings: number;
     rentalEarnings: number;
@@ -204,9 +201,8 @@ class CommissionsService {
     const endDate = new Date(year, 11, 31, 23, 59, 59).toISOString();
 
     const commissions = await this.getByDateRange(startDate, endDate);
-    const filteredCommissions = commissions.filter((c) => c.currency === currency);
 
-    // Group by month
+    // Group by month (all currencies)
     const monthlyData = Array.from({ length: 12 }, (_, i) => ({
       month: i + 1,
       earnings: 0,
@@ -214,7 +210,7 @@ class CommissionsService {
       saleEarnings: 0,
     }));
 
-    filteredCommissions.forEach((commission) => {
+    commissions.forEach((commission) => {
       const month = new Date(commission.created_at).getMonth();
       monthlyData[month].earnings += commission.amount;
 
@@ -229,25 +225,24 @@ class CommissionsService {
   }
 
   /**
-   * Get performance summary for a year
+   * Get performance summary for a year (all currencies combined)
    */
-  async getPerformanceSummary(year: number, currency: string = 'TRY'): Promise<PerformanceSummary> {
+  async getPerformanceSummary(year: number): Promise<PerformanceSummary> {
     const startDate = new Date(year, 0, 1).toISOString();
     const endDate = new Date(year, 11, 31, 23, 59, 59).toISOString();
 
     const commissions = await this.getByDateRange(startDate, endDate);
-    const filteredCommissions = commissions.filter((c) => c.currency === currency);
 
-    // Calculate totals
-    const dealsCount = filteredCommissions.length;
-    const totalCommission = filteredCommissions.reduce((sum, c) => sum + c.amount, 0);
+    // Calculate totals (all currencies)
+    const dealsCount = commissions.length;
+    const totalCommission = commissions.reduce((sum, c) => sum + c.amount, 0);
     const averagePerDeal = dealsCount > 0 ? totalCommission / dealsCount : 0;
 
     // Calculate rental vs sale percentages
-    const rentalTotal = filteredCommissions
+    const rentalTotal = commissions
       .filter((c) => c.type === 'rental')
       .reduce((sum, c) => sum + c.amount, 0);
-    const saleTotal = filteredCommissions
+    const saleTotal = commissions
       .filter((c) => c.type === 'sale')
       .reduce((sum, c) => sum + c.amount, 0);
 
@@ -255,7 +250,7 @@ class CommissionsService {
     const salePercentage = totalCommission > 0 ? (saleTotal / totalCommission) * 100 : 0;
 
     // Find best month
-    const monthlyData = await this.getMonthlyBreakdown(year, currency);
+    const monthlyData = await this.getMonthlyBreakdown(year);
     let bestMonth: PerformanceSummary['bestMonth'] = null;
 
     monthlyData.forEach((data) => {
@@ -276,15 +271,15 @@ class CommissionsService {
       bestMonth,
       rentalPercentage,
       salePercentage,
-      currency,
+      currency: 'MIXED', // Multiple currencies may be included
     };
   }
 
   /**
-   * Get monthly commission data for charts
+   * Get monthly commission data for charts (all currencies combined)
    */
-  async getMonthlyCommissionData(year: number, currency: string = 'TRY'): Promise<MonthlyCommissionData[]> {
-    const monthlyBreakdown = await this.getMonthlyBreakdown(year, currency);
+  async getMonthlyCommissionData(year: number): Promise<MonthlyCommissionData[]> {
+    const monthlyBreakdown = await this.getMonthlyBreakdown(year);
 
     return monthlyBreakdown.map((data) => ({
       month: data.month,

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { Plus, Download, FileText, FileDown, FileSpreadsheet, ChevronDown } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { CurrencySelector } from './CurrencySelector';
 
 export type ExportFormat = 'csv' | 'pdf' | 'excel';
 
@@ -21,6 +22,9 @@ export const FinanceHeader = ({
 
   return (
     <div className="flex items-center gap-2 md:gap-3">
+      {/* Currency Selector */}
+      <CurrencySelector />
+
       {/* Export Button with Dropdown */}
       <div className="relative">
         <div className="flex">

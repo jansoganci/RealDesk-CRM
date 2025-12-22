@@ -101,6 +101,9 @@ function preparePdfData(
     depositAmount: deposit,
     depositText: numberToTurkishText(deposit),
 
+    // Currency
+    currency: formData.currency || 'TRY',
+
     // Fixtures
     fixtures: formData.special_conditions || 'Kombi, Klima',
 

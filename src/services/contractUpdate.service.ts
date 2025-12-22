@@ -67,7 +67,7 @@ export async function updateContractWithEntities(
       .eq('user_id', userId);
 
     if (ownerError) {
-      console.error('Owner update error:', ownerError);
+      // Removed: console.error (security)
       throw new Error(`Failed to update owner: ${ownerError.message}`);
     }
     ownerUpdated = true;
@@ -92,7 +92,7 @@ export async function updateContractWithEntities(
       .eq('user_id', userId);
 
     if (tenantError) {
-      console.error('Tenant update error:', tenantError);
+      // Removed: console.error (security)
       throw new Error(`Failed to update tenant: ${tenantError.message}`);
     }
     tenantUpdated = true;
@@ -173,7 +173,7 @@ export async function updateContractWithEntities(
 
       const detailsData = {
         deposit_amount: formData.deposit || null,
-        deposit_currency: 'TRY',
+        deposit_currency: formData.currency || 'TRY',
         payment_day_of_month: formData.payment_day_of_month,
         payment_method: formData.payment_method || null,
         annual_rent: formData.rent_amount * 12,

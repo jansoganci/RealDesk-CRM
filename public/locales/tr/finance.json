@@ -8,7 +8,9 @@
     "netProfit": "Net Kar",
     "pending": "Bekleyen İşlemler",
     "noChange": "%0",
-    "vsLastMonth": "geçen aya göre"
+    "vsLastMonth": "geçen aya göre",
+    "byCurrency": "Para Birimine Göre",
+    "rateDisclaimer": "İşlem tarihine göre tarihsel kurlar kullanılıyor"
   },
 
   "charts": {
@@ -185,6 +187,8 @@
     "selectCategory": "Kategori seçin",
     "noCategoriesAvailable": "Bu tür için kategori bulunmamaktadır",
     "amount": "Tutar",
+    "currency": "Para Birimi",
+    "selectCurrency": "Para Birimi Seçin",
     "description": "Açıklama",
     "descriptionPlaceholder": "İşlem açıklaması girin",
     "notes": "Notlar (Opsiyonel)",
@@ -200,6 +204,7 @@
     "typeRequired": "Tür gereklidir",
     "categoryRequired": "Kategori gereklidir",
     "amountPositive": "Tutar 0'dan büyük olmalıdır",
+    "currencyRequired": "Para birimi gereklidir",
     "descriptionRequired": "Açıklama gereklidir"
   },
 
@@ -262,5 +267,16 @@
     "deleteConfirm": "Bu işlemi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "exportSuccess": "İşlemler başarıyla dışa aktarıldı",
     "exportError": "İşlemler dışa aktarılamadı"
+  },
+
+  "currency": {
+    "displayCurrency": "Görüntüleme Para Birimi",
+    "updated": "Görüntüleme para birimi güncellendi",
+    "updateError": "Görüntüleme para birimi güncellenemedi"
+  },
+
+  "conversion": {
+    "rate": "Kur",
+    "rateDate": "Kur Tarihi"
   }
 }

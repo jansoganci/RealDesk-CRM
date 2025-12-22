@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Table,
@@ -12,6 +12,12 @@ import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { Skeleton } from '../../../components/ui/skeleton';
 import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../../../components/ui/tooltip';
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -24,15 +30,23 @@ import {
   TrendingUp,
   TrendingDown,
   ArrowUpDown,
+  Info,
 } from 'lucide-react';
-import { useAuth } from '../../../contexts/AuthContext';
 import type { FinancialTransaction } from '../../../types/financial';
+import { useCurrencyConversion } from '../../../hooks/useCurrencyConversion';
 
 interface TransactionsTableProps {
   transactions: FinancialTransaction[];
   loading?: boolean;
   onEdit: (transaction: FinancialTransaction) => void;
   onDelete: (id: string) => void;
+}
+
+interface ConversionCache {
+  [key: string]: {
+    converted: string;
+    rateInfo: { rate: number; rate_date_used: string };
+  };
 }
 
 export const TransactionsTable = ({
@@ -42,14 +56,53 @@ export const TransactionsTable = ({
   onDelete,
 }: TransactionsTableProps) => {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency } = useAuth();
+  const { formatWithConversion, displayCurrency } = useCurrencyConversion();
   const [sortField, setSortField] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
+  const [conversionCache, setConversionCache] = useState<ConversionCache>({});
 
-  const formatCurrency = (amount: number) => {
+  // Load conversions for all transactions
+  useEffect(() => {
+    const loadConversions = async () => {
+      const conversions: ConversionCache = {};
+      for (const transaction of transactions) {
+        const normalizedOriginal = transaction.currency?.toUpperCase().trim() || 'TRY';
+        // Only convert if different from display currency
+        if (normalizedOriginal !== displayCurrency) {
+          try {
+            const result = await formatWithConversion(
+              transaction.amount,
+              transaction.currency,
+              transaction.transaction_date
+            );
+            conversions[transaction.id] = {
+              converted: result.converted,
+              rateInfo: result.rateInfo,
+            };
+          } catch (error) {
+            console.warn(`Failed to convert transaction ${transaction.id}:`, error);
+          }
+        }
+      }
+      setConversionCache(conversions);
+    };
+
+    if (transactions.length > 0) {
+      loadConversions();
+    }
+  }, [transactions, displayCurrency, formatWithConversion]);
+
+  const formatCurrencyLocal = (amount: number, currencyCode: string) => {
+    const normalizedCurrency = currencyCode?.toUpperCase().trim() || 'TRY';
+    if (!normalizedCurrency || normalizedCurrency === 'MIXED') {
+      return new Intl.NumberFormat('tr-TR', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+      }).format(amount);
+    }
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: currency || 'TRY',
+      currency: normalizedCurrency,
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(amount);
@@ -191,16 +244,40 @@ export const TransactionsTable = ({
                 </div>
               </TableCell>
               <TableCell>
-                <span
-                  className={`font-bold ${
-                    transaction.type === 'income'
-                      ? 'text-green-600'
-                      : 'text-red-600'
-                  }`}
-                >
-                  {transaction.type === 'income' ? '+' : '-'}
-                  {formatCurrency(transaction.amount)}
-                </span>
+                <div className="flex flex-col gap-1">
+                  <span
+                    className={`font-bold ${
+                      transaction.type === 'income'
+                        ? 'text-green-600'
+                        : 'text-red-600'
+                    }`}
+                  >
+                    {transaction.type === 'income' ? '+' : '-'}
+                    {formatCurrencyLocal(transaction.amount, transaction.currency)}
+                  </span>
+                  {conversionCache[transaction.id] && (
+                    <TooltipProvider>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <span className="text-xs text-gray-500 italic flex items-center gap-1 cursor-help">
+                            ≈ {conversionCache[transaction.id].converted}
+                            <Info className="h-3 w-3" />
+                          </span>
+                        </TooltipTrigger>
+                        <TooltipContent>
+                          <div className="text-xs">
+                            <div>
+                              {t('finance:conversion.rate')}: {conversionCache[transaction.id].rateInfo.rate.toFixed(4)}
+                            </div>
+                            <div>
+                              {t('finance:conversion.rateDate')}: {new Date(conversionCache[transaction.id].rateInfo.rate_date_used).toLocaleDateString()}
+                            </div>
+                          </div>
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  )}
+                </div>
               </TableCell>
               <TableCell>{getStatusBadge(transaction.payment_status)}</TableCell>
               <TableCell>

@@ -158,11 +158,12 @@
       "use_purpose": "Purpose of Use",
       "start_date": "Start Date",
       "end_date": "End Date",
-      "rent_amount": "Monthly Rent (TRY)",
-      "deposit": "Deposit (TRY)",
+      "rent_amount": "Monthly Rent",
+      "deposit": "Deposit",
       "payment_day": "Payment Day",
       "payment_method": "Payment Method",
-      "special_conditions": "Special Conditions"
+      "special_conditions": "Special Conditions",
+      "currency": "Currency"
     },
     "placeholders": {
       "owner_name": "John Doe",
@@ -176,7 +177,8 @@
       "daire_no": "5",
       "ilce": "Kadıköy",
       "il": "Istanbul",
-      "usePurpose": "Residential / Commercial"
+      "usePurpose": "Residential / Commercial",
+      "currency": "Select currency"
     },
     "propertyTypes": {
       "apartment": "Apartment",

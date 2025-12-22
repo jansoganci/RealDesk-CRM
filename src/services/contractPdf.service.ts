@@ -30,6 +30,38 @@ const PDF_CONFIG = {
 };
 
 /**
+ * Get currency symbol for display
+ */
+function getCurrencySymbol(currency: 'TRY' | 'USD' | 'EUR'): string {
+  switch (currency) {
+    case 'TRY':
+      return '₺';
+    case 'USD':
+      return '$';
+    case 'EUR':
+      return '€';
+    default:
+      return '₺';
+  }
+}
+
+/**
+ * Get currency text in Turkish for display
+ */
+function getCurrencyText(currency: 'TRY' | 'USD' | 'EUR'): string {
+  switch (currency) {
+    case 'TRY':
+      return 'TÜRK LİRASI';
+    case 'USD':
+      return 'AMERİKAN DOLARI';
+    case 'EUR':
+      return 'EURO';
+    default:
+      return 'TÜRK LİRASI';
+  }
+}
+
+/**
  * Generate contract PDF and download
  */
 export async function generateContractPDF(data: ContractPdfData): Promise<void> {
@@ -114,12 +146,12 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
     ['KİRACININ ADI SOYADI', tenantInfo],
     ['KİRACININ İKAMETGAHI', data.tenantAddress],
     ['KİRACININ TELEFONU', data.tenantPhone],
-    ['BİR AYLIK KİRA KARŞILIĞI', `${data.monthlyRentNumber.toLocaleString('tr-TR')} TL (${data.monthlyRentText} TÜRK LİRASI)`],
-    ['BİR SENELİK KİRA KARŞILIĞI', `${data.yearlyRentNumber.toLocaleString('tr-TR')} TL (${data.yearlyRentText} TÜRK LİRASI)`],
+    ['BİR AYLIK KİRA KARŞILIĞI', `${data.monthlyRentNumber.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.monthlyRentText} ${getCurrencyText(data.currency)})`],
+    ['BİR SENELİK KİRA KARŞILIĞI', `${data.yearlyRentNumber.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.yearlyRentText} ${getCurrencyText(data.currency)})`],
     ['KİRANIN NE ŞEKİLDE ÖDENECEĞİ', `IBAN: ${data.ownerIBAN}`],
     ['KİRA MÜDDETİ', '1 YIL'],
     ['KİRANIN BAŞLANGICI', data.startDate],
-    ['DEPOZİTO', `${data.depositAmount.toLocaleString('tr-TR')} TL (${data.depositText} TÜRK LİRASI)`],
+    ['DEPOZİTO', `${data.depositAmount.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.depositText} ${getCurrencyText(data.currency)})`],
     ['KİRALANAN MECURUN NE İÇİN KULLANILACAĞI', data.propertyUsage]
   ];
   

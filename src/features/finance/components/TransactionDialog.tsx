@@ -30,6 +30,7 @@ import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Loader2 } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
 import type { FinancialTransaction, ExpenseCategory } from '../../../types/financial';
 
 interface TransactionDialogProps {
@@ -49,6 +50,9 @@ const getTransactionSchema = (t: any) =>
     }),
     category: z.string().min(1, t('finance:validation.categoryRequired')),
     amount: z.coerce.number().positive(t('finance:validation.amountPositive')),
+    currency: z.enum(['TRY', 'USD', 'EUR'], {
+      required_error: t('finance:validation.currencyRequired'),
+    }),
     description: z.string().min(1, t('finance:validation.descriptionRequired')),
     notes: z.string().optional(),
     payment_method: z.enum(['cash', 'bank_transfer', 'credit_card', 'check']).optional(),
@@ -66,7 +70,14 @@ export const TransactionDialog = ({
   loading = false,
 }: TransactionDialogProps) => {
   const { t } = useTranslation(['finance', 'common']);
+  const { currency: userCurrency } = useAuth();
   const transactionSchema = getTransactionSchema(t);
+
+  // Normalize user currency to uppercase and ensure it's valid
+  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'TRY') as 'TRY' | 'USD' | 'EUR';
+  const normalizedDefaultCurrency = ['TRY', 'USD', 'EUR'].includes(defaultCurrency) 
+    ? defaultCurrency 
+    : 'TRY';
 
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
@@ -75,6 +86,7 @@ export const TransactionDialog = ({
       type: 'expense',
       category: '',
       amount: 0,
+      currency: normalizedDefaultCurrency,
       description: '',
       notes: '',
       payment_method: 'bank_transfer',
@@ -85,29 +97,38 @@ export const TransactionDialog = ({
   // Update form when transaction changes
   useEffect(() => {
     if (transaction) {
+      // When editing: use transaction's currency or fallback to user preference
+      const transactionCurrency = transaction.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
+      const normalizedTransactionCurrency = ['TRY', 'USD', 'EUR'].includes(transactionCurrency)
+        ? (transactionCurrency as 'TRY' | 'USD' | 'EUR')
+        : normalizedDefaultCurrency;
+
       form.reset({
         transaction_date: transaction.transaction_date,
         type: transaction.type,
         category: transaction.category,
         amount: transaction.amount,
+        currency: normalizedTransactionCurrency,
         description: transaction.description,
         notes: transaction.notes || '',
         payment_method: transaction.payment_method as any,
         payment_status: transaction.payment_status as any,
       });
     } else {
+      // When creating new: use user preference or 'TRY'
       form.reset({
         transaction_date: new Date().toISOString().split('T')[0],
         type: 'expense',
         category: '',
         amount: 0,
+        currency: normalizedDefaultCurrency,
         description: '',
         notes: '',
         payment_method: 'bank_transfer',
         payment_status: 'completed',
       });
     }
-  }, [transaction, form]);
+  }, [transaction, form, normalizedDefaultCurrency]);
 
   const handleSubmit = async (data: TransactionFormData) => {
     await onSave(data);
@@ -243,6 +264,36 @@ export const TransactionDialog = ({
                         disabled={loading}
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              {/* Currency */}
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('finance:fields.currency')}</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      value={field.value}
+                      disabled={loading}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder={t('finance:fields.selectCurrency')} />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="TRY">TRY</SelectItem>
+                        <SelectItem value="USD">USD</SelectItem>
+                        <SelectItem value="EUR">EUR</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

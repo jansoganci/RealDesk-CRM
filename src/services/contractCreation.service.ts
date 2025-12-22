@@ -109,7 +109,8 @@ export async function createContractWithEntities(
       start_date: toISODate(formData.start_date),
       end_date: toISODate(formData.end_date),
       rent_amount: formData.rent_amount,
-      deposit: formData.deposit
+      deposit: formData.deposit,
+      currency: formData.currency || 'TRY'
     };
 
     // ========================================================================
@@ -136,7 +137,7 @@ export async function createContractWithEntities(
       ? {
           // Financial details
           deposit_amount: formData.deposit || null,
-          deposit_currency: 'TRY',
+          deposit_currency: formData.currency || 'TRY',
           payment_day_of_month: formData.payment_day_of_month,
           payment_method: formData.payment_method || null,
           annual_rent: formData.rent_amount * 12,
@@ -156,10 +157,7 @@ export async function createContractWithEntities(
     // ========================================================================
     // Call RPC function (atomic transaction)
     // ========================================================================
-    console.log('Calling create_contract_atomic RPC...');
-    console.log('Owner TC Hash:', await hashTC(formData.owner_tc));
-    console.log('Tenant TC Hash:', await hashTC(formData.tenant_tc));
-    console.log('Normalized Address:', normalizedAddressStr);
+    // Removed: sensitive console.log statements (security)
 
     const { data, error } = await supabase.rpc('create_contract_atomic' as any, {
       owner_data: ownerData,
@@ -179,7 +177,7 @@ export async function createContractWithEntities(
       throw new Error('Contract creation failed: No data returned');
     }
 
-    console.log('Contract created successfully:', data);
+    // Removed: console.log with contract data (security)
 
     return data as unknown as ContractCreationResult;
   } catch (error) {

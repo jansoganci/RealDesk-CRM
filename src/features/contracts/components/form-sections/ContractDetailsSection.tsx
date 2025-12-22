@@ -16,6 +16,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { ContractFormData } from '@/types/contract.types';
@@ -168,8 +169,8 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           </div>
         )}
 
-        {/* Rent Amount and Deposit */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        {/* Rent Amount, Deposit, and Currency */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="rent_amount">
               {t('create.fields.rent_amount')} *
@@ -200,6 +201,28 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
             {form.formState.errors.deposit && (
               <p className="text-sm text-red-600 mt-1">
                 {form.formState.errors.deposit.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Label>{t('create.fields.currency')} *</Label>
+            <Select
+              value={form.watch('currency') || 'TRY'}
+              onValueChange={(value) => form.setValue('currency', value as 'TRY' | 'USD' | 'EUR')}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder={t('create.placeholders.currency')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="TRY">₺ TRY (Türk Lirası)</SelectItem>
+                <SelectItem value="USD">$ USD (Amerikan Doları)</SelectItem>
+                <SelectItem value="EUR">€ EUR (Euro)</SelectItem>
+              </SelectContent>
+            </Select>
+            {form.formState.errors.currency && (
+              <p className="text-sm text-red-600 mt-1">
+                {form.formState.errors.currency.message}
               </p>
             )}
           </div>

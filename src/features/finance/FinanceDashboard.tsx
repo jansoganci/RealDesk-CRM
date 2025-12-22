@@ -55,7 +55,7 @@ export const FinanceDashboard = () => {
   // Load initial data
   useEffect(() => {
     financeData.loadData();
-  }, []);
+  }, [financeData.loadData]);
 
   // Reload transactions when filters change
   useEffect(() => {

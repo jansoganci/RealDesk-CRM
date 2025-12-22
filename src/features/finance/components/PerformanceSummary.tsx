@@ -7,6 +7,8 @@ import {
   Target,
   PieChart,
 } from 'lucide-react';
+import { useAuth } from '../../../contexts/AuthContext';
+import { formatCurrency } from '../../../lib/currency';
 import type { PerformanceSummary } from '../../../types';
 
 interface PerformanceSummaryProps {
@@ -19,14 +21,15 @@ export const PerformanceSummaryComponent = ({
   loading = false,
 }: PerformanceSummaryProps) => {
   const { t } = useTranslation(['finance', 'common']);
+  const { currency: displayCurrency } = useAuth();
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: summary?.currency || 'TRY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
+  const formatCurrencyLocal = (amount: number) => {
+    // Always use user's display currency preference
+    const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
+    
+    // If summary currency is "MIXED", still format using display currency
+    // (the amount is already aggregated, just needs formatting)
+    return formatCurrency(amount, normalizedCurrency);
   };
 
   if (loading) {
@@ -74,7 +77,7 @@ export const PerformanceSummaryComponent = ({
           <div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-slate-900">
-                {formatCurrency(summary.totalCommission)}
+                {formatCurrencyLocal(summary.totalCommission)}
               </span>
               <TrendingUp className="h-5 w-5 text-emerald-600" />
             </div>
@@ -107,7 +110,7 @@ export const PerformanceSummaryComponent = ({
                 </span>
               </div>
               <span className="text-xl font-semibold text-slate-900">
-                {formatCurrency(summary.averagePerDeal)}
+                {formatCurrencyLocal(summary.averagePerDeal)}
               </span>
             </div>
           </div>
@@ -125,7 +128,7 @@ export const PerformanceSummaryComponent = ({
                   </p>
                 </div>
                 <span className="text-lg font-bold text-amber-900">
-                  {formatCurrency(summary.bestMonth.amount)}
+                  {formatCurrencyLocal(summary.bestMonth.amount)}
                 </span>
               </div>
             </div>

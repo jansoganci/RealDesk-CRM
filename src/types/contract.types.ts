@@ -99,7 +99,7 @@ export interface ContractWithDetails {
   end_date: string;
   rent_amount: number;
   deposit: number;
-  status: 'draft' | 'active' | 'expired' | 'terminated';
+  status: 'Active' | 'Archived' | 'Inactive';
   created_at: string;
   updated_at: string;
   tenant?: EncryptedTenant;
@@ -156,6 +156,7 @@ export interface ContractFormData {
   end_date: Date;
   rent_amount: number;
   deposit: number;
+  currency: 'TRY' | 'USD' | 'EUR';
 
   // Details (optional)
   payment_day_of_month?: number;
@@ -259,6 +260,9 @@ export interface ContractPdfData {
   // Depozito
   depositAmount: number;          // 30000
   depositText: string;            // "OTUZBİN"
+  
+  // Para Birimi
+  currency: 'TRY' | 'USD' | 'EUR'; // Currency code
   
   // Demirbaş
   fixtures: string;               // "Kombi, Klima, Ankastre Set..."

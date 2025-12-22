@@ -228,11 +228,111 @@ export function getExchangeRatesTimestamp(): number | null {
 }
 
 export const formatCurrency = (amount: number, currency: string) => {
+  // Guard against "MIXED" or invalid currency codes (case-insensitive)
+  const normalizedCurrency = currency?.toUpperCase().trim();
+  if (!normalizedCurrency || normalizedCurrency === 'MIXED') {
+    // Return plain number without currency symbol when MIXED
+    return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  }
+
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency,
+    currency: normalizedCurrency,
   }).format(amount);
 };
+
+// =====================================================
+// Historical Rate Conversion Functions
+// Multi-Currency Finance MVP
+// =====================================================
+
+import { getRateForDate, type RateInfo } from '../services/finance/exchangeRates.service';
+
+/**
+ * Convert amount using historical exchange rate matched by transaction date
+ * @param amount - Amount to convert
+ * @param fromCurrency - Source currency code (ISO 4217)
+ * @param toCurrency - Target currency code (ISO 4217)
+ * @param transactionDate - Transaction date (ISO string or Date)
+ * @returns Promise<number> - Converted amount
+ */
+export async function convertWithHistoricalRate(
+  amount: number,
+  fromCurrency: string,
+  toCurrency: string,
+  transactionDate: string | Date
+): Promise<number> {
+  const rateInfo = await getRateForDate(fromCurrency, toCurrency, transactionDate);
+  return amount * rateInfo.rate;
+}
+
+/**
+ * Get rate information for tooltips (rate + date used)
+ * @param originalCurrency - Original currency code
+ * @param displayCurrency - Display currency code
+ * @param transactionDate - Transaction date
+ * @returns Promise<RateInfo> - Rate and date information
+ */
+export async function getRateInfo(
+  originalCurrency: string,
+  displayCurrency: string,
+  transactionDate: string | Date
+): Promise<RateInfo> {
+  return getRateForDate(originalCurrency, displayCurrency, transactionDate);
+}
+
+/**
+ * Format currency with dual display (original + converted)
+ * @param amount - Original amount
+ * @param originalCurrency - Original currency code
+ * @param displayCurrency - Display currency code
+ * @param transactionDate - Transaction date
+ * @returns Promise<{original: string, converted: string, rateInfo: RateInfo}>
+ */
+export async function formatCurrencyWithConversion(
+  amount: number,
+  originalCurrency: string,
+  displayCurrency: string,
+  transactionDate: string | Date
+): Promise<{
+  original: string;
+  converted: string;
+  rateInfo: RateInfo;
+}> {
+  const normalizedOriginal = originalCurrency?.toUpperCase().trim();
+  const normalizedDisplay = displayCurrency?.toUpperCase().trim();
+
+  // Format original amount
+  const original = formatCurrency(amount, normalizedOriginal || 'TRY');
+
+  // If same currency, return original only
+  if (normalizedOriginal === normalizedDisplay || !normalizedDisplay) {
+    return {
+      original,
+      converted: original,
+      rateInfo: {
+        rate: 1.0,
+        rate_date_used: typeof transactionDate === 'string' 
+          ? transactionDate.split('T')[0]
+          : transactionDate.toISOString().split('T')[0],
+      },
+    };
+  }
+
+  // Get rate and convert
+  const rateInfo = await getRateForDate(normalizedOriginal || 'TRY', normalizedDisplay, transactionDate);
+  const convertedAmount = amount * rateInfo.rate;
+  const converted = formatCurrency(convertedAmount, normalizedDisplay);
+
+  return {
+    original,
+    converted,
+    rateInfo,
+  };
+}
 
 /**
  * Convert currency from one to another (SYNC version for render functions)

@@ -135,6 +135,10 @@ export const contractFormSchema = z.object({
     .min(0, 'Depozito 0 veya daha fazla olmalı')
     .max(1000000000, 'Geçersiz tutar'),
 
+  currency: z.enum(['TRY', 'USD', 'EUR'], {
+    errorMap: () => ({ message: 'Para birimi seçiniz' }),
+  }).default('TRY'),
+
   // ============================================================================
   // Optional Details Section
   // ============================================================================
@@ -187,6 +191,7 @@ export const contractFormDefaultValues: Partial<ContractFormData> = {
   il: 'İstanbul', // Default to Istanbul
   property_type: 'apartment',
   use_purpose: '',
+  currency: 'TRY',
   payment_method: '',
   special_conditions: '',
 };

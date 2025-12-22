@@ -8,7 +8,9 @@
     "netProfit": "Net Profit",
     "pending": "Pending Transactions",
     "noChange": "0%",
-    "vsLastMonth": "vs last month"
+    "vsLastMonth": "vs last month",
+    "byCurrency": "By Currency",
+    "rateDisclaimer": "Using historical rates by transaction date"
   },
 
   "charts": {
@@ -185,6 +187,8 @@
     "selectCategory": "Select category",
     "noCategoriesAvailable": "No categories available for this type",
     "amount": "Amount",
+    "currency": "Currency",
+    "selectCurrency": "Select Currency",
     "description": "Description",
     "descriptionPlaceholder": "Enter transaction description",
     "notes": "Notes (Optional)",
@@ -200,6 +204,7 @@
     "typeRequired": "Type is required",
     "categoryRequired": "Category is required",
     "amountPositive": "Amount must be greater than 0",
+    "currencyRequired": "Currency is required",
     "descriptionRequired": "Description is required"
   },
 
@@ -262,5 +267,16 @@
     "deleteConfirm": "Are you sure you want to delete this transaction? This action cannot be undone.",
     "exportSuccess": "Transactions exported successfully",
     "exportError": "Failed to export transactions"
+  },
+
+  "currency": {
+    "displayCurrency": "Display Currency",
+    "updated": "Display currency updated",
+    "updateError": "Failed to update display currency"
+  },
+
+  "conversion": {
+    "rate": "Rate",
+    "rateDate": "Rate Date"
   }
 }
