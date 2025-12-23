@@ -227,7 +227,7 @@ export const processDueRecurringExpenses = async (): Promise<number> => {
       const { data: nextDate } = await supabase.rpc('calculate_next_due_date', {
         current_due_date: expense.next_due_date,
         freq: expense.frequency,
-        day_of_month: expense.day_of_month,
+        day_of_month: expense.day_of_month ?? undefined,
       });
 
       // Update recurring expense
@@ -302,7 +302,7 @@ export const calculateNextDueDate = async (
   const { data, error } = await supabase.rpc('calculate_next_due_date', {
     current_due_date: currentDate,
     freq: frequency,
-    day_of_month: dayOfMonth || null,
+    day_of_month: dayOfMonth ?? undefined,
   });
 
   if (error) {
@@ -365,7 +365,7 @@ export const markBillAsPaid = async (
   const { data: nextDate } = await supabase.rpc('calculate_next_due_date', {
     current_due_date: expense.next_due_date,
     freq: expense.frequency,
-    day_of_month: expense.day_of_month,
+    day_of_month: expense.day_of_month ?? undefined,
   });
 
   // Update recurring expense

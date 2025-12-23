@@ -279,5 +279,9 @@
   "conversion": {
     "rate": "Kur",
     "rateDate": "Kur Tarihi"
+  },
+
+  "pagination": {
+    "showing": "{{total}} işlemden {{from}}-{{to}} arası gösteriliyor"
   }
 }

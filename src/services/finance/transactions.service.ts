@@ -6,12 +6,17 @@
 import { supabase } from '../../config/supabase';
 import { insertRow, updateRow } from '../../lib/db';
 import { getAuthenticatedUserId } from '../../lib/auth';
+import type { Database } from '../../types/database';
 import type {
   FinancialTransaction,
   CreateFinancialTransactionInput,
   UpdateFinancialTransactionInput,
   TransactionFilters,
+  PaginatedTransactions,
 } from '../../types/financial';
+
+type DbTransactionInsert = Database['public']['Tables']['financial_transactions']['Insert'];
+type DbTransactionUpdate = Database['public']['Tables']['financial_transactions']['Update'];
 
 // =====================================================
 // Financial Transactions CRUD
@@ -23,12 +28,11 @@ import type {
  * @returns Array of financial transactions
  */
 export const getTransactions = async (
-  filters?: TransactionFilters,
-  columns: string = '*'
+  filters?: TransactionFilters
 ): Promise<FinancialTransaction[]> => {
   let query = supabase
     .from('financial_transactions')
-    .select(columns)
+    .select('*')
     .order('transaction_date', { ascending: false });
 
   // Apply filters
@@ -60,14 +64,82 @@ export const getTransactions = async (
     query = query.lte('amount', filters.max_amount);
   }
 
-  const { data, error } = await query;
+  const { data, error } = await query.returns<FinancialTransaction[]>();
 
   if (error) {
     console.error('Error fetching transactions:', error);
     throw error;
   }
 
-  return (data as any || []) as FinancialTransaction[];
+  return data || [];
+};
+
+/**
+ * Get paginated financial transactions for the current user
+ * @param filters - Optional filters including pagination params
+ * @returns Paginated transactions with metadata
+ */
+export const getTransactionsPaginated = async (
+  filters?: TransactionFilters
+): Promise<PaginatedTransactions> => {
+  const page = filters?.page || 1;
+  const pageSize = filters?.pageSize || 25;
+  const from = (page - 1) * pageSize;
+  const to = from + pageSize - 1;
+
+  let query = supabase
+    .from('financial_transactions')
+    .select('*', { count: 'exact' })
+    .order('transaction_date', { ascending: false });
+
+  // Apply filters
+  if (filters?.type) {
+    query = query.eq('type', filters.type);
+  }
+  if (filters?.category) {
+    query = query.eq('category', filters.category);
+  }
+  if (filters?.payment_status) {
+    query = query.eq('payment_status', filters.payment_status);
+  }
+  if (filters?.start_date) {
+    query = query.gte('transaction_date', filters.start_date);
+  }
+  if (filters?.end_date) {
+    query = query.lte('transaction_date', filters.end_date);
+  }
+  if (filters?.property_id) {
+    query = query.eq('property_id', filters.property_id);
+  }
+  if (filters?.contract_id) {
+    query = query.eq('contract_id', filters.contract_id);
+  }
+  if (filters?.min_amount !== undefined) {
+    query = query.gte('amount', filters.min_amount);
+  }
+  if (filters?.max_amount !== undefined) {
+    query = query.lte('amount', filters.max_amount);
+  }
+
+  // Apply pagination
+  query = query.range(from, to);
+
+  const { data, error, count } = await query.returns<FinancialTransaction[]>();
+
+  if (error) {
+    console.error('Error fetching paginated transactions:', error);
+    throw error;
+  }
+
+  const total = count || 0;
+
+  return {
+    data: data || [],
+    total,
+    page,
+    pageSize,
+    totalPages: Math.ceil(total / pageSize),
+  };
 };
 
 /**
@@ -102,7 +174,7 @@ export const createTransaction = async (
 ): Promise<FinancialTransaction> => {
   const userId = await getAuthenticatedUserId();
 
-  const transaction = await insertRow('financial_transactions', {
+  const insertData: DbTransactionInsert = {
     user_id: userId,
     transaction_date: data.transaction_date,
     type: data.type,
@@ -124,8 +196,9 @@ export const createTransaction = async (
     recurring_day: data.recurring_day || null,
     recurring_end_date: data.recurring_end_date || null,
     parent_transaction_id: data.parent_transaction_id || null,
-  });
+  };
 
+  const transaction = await insertRow('financial_transactions', insertData);
   return transaction as FinancialTransaction;
 };
 
@@ -139,7 +212,7 @@ export const updateTransaction = async (
   id: string,
   data: UpdateFinancialTransactionInput
 ): Promise<FinancialTransaction> => {
-  const transaction = await updateRow('financial_transactions', id, {
+  const updateData: DbTransactionUpdate = {
     transaction_date: data.transaction_date,
     type: data.type,
     category: data.category,
@@ -159,8 +232,9 @@ export const updateTransaction = async (
     recurring_frequency: data.recurring_frequency,
     recurring_day: data.recurring_day,
     recurring_end_date: data.recurring_end_date,
-  });
+  };
 
+  const transaction = await updateRow('financial_transactions', id, updateData);
   return transaction as FinancialTransaction;
 };
 

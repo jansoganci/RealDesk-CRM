@@ -54,13 +54,13 @@ export interface SaleProperty extends Omit<Property, 'property_type' | 'status' 
   status: SalePropertyStatus;
   sale_price: number;
   currency: string;
-  sold_at?: string | null;
-  sold_price?: number | null;
-  buyer_name?: string | null;
-  buyer_phone?: string | null;
-  buyer_email?: string | null;
-  offer_date?: string | null;
-  offer_amount?: number | null;
+  sold_at: string | null;
+  sold_price: number | null;
+  buyer_name: string | null;
+  buyer_phone: string | null;
+  buyer_email: string | null;
+  offer_date: string | null;
+  offer_amount: number | null;
 }
 
 export interface PropertyWithOwner extends Property {

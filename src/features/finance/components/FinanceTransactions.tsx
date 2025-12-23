@@ -5,6 +5,7 @@ import type {
   TransactionFilters,
   ExpenseCategory,
 } from '../../../types/financial';
+import type { PaginationState } from '../hooks/useFinanceData';
 import { useTranslation } from 'react-i18next';
 
 interface FinanceTransactionsProps {
@@ -15,6 +16,8 @@ interface FinanceTransactionsProps {
   onEdit: (transaction: FinancialTransaction) => void;
   onDelete: (id: string) => Promise<void>;
   loading: boolean;
+  pagination?: PaginationState;
+  onPageChange?: (page: number) => void;
 }
 
 export const FinanceTransactions = ({
@@ -25,6 +28,8 @@ export const FinanceTransactions = ({
   onEdit,
   onDelete,
   loading,
+  pagination,
+  onPageChange,
 }: FinanceTransactionsProps) => {
   const { t } = useTranslation(['finance']);
 
@@ -54,6 +59,8 @@ export const FinanceTransactions = ({
             loading={loading}
             onEdit={onEdit}
             onDelete={onDelete}
+            pagination={pagination}
+            onPageChange={onPageChange}
           />
         </div>
       </div>

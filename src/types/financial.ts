@@ -6,10 +6,6 @@
 // tracking tables and related entities
 // =====================================================
 
-// =====================================================
-// Enums and Constants
-// =====================================================
-
 export type TransactionType = 'income' | 'expense';
 export type PaymentStatus = 'completed' | 'pending' | 'cancelled';
 export type PaymentMethod = 'cash' | 'bank_transfer' | 'credit_card' | 'check';
@@ -24,7 +20,7 @@ export interface FinancialTransaction {
   user_id: string;
 
   // Transaction Core Details
-  transaction_date: string; // ISO date string
+  transaction_date: string; // DATE string
   type: TransactionType;
   category: string;
   subcategory: string | null;
@@ -54,7 +50,7 @@ export interface FinancialTransaction {
   is_recurring: boolean;
   recurring_frequency: RecurringFrequency | null;
   recurring_day: number | null;
-  recurring_end_date: string | null; // ISO date string
+  recurring_end_date: string | null; // DATE string
   parent_transaction_id: string | null;
 
   // Metadata
@@ -251,6 +247,17 @@ export interface TransactionFilters {
   contract_id?: string;
   min_amount?: number;
   max_amount?: number;
+  // Pagination
+  page?: number;      // 1-indexed page number (default: 1)
+  pageSize?: number;  // items per page (default: 25)
+}
+
+export interface PaginatedTransactions {
+  data: FinancialTransaction[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 export interface RecurringExpenseFilters {

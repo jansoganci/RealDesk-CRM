@@ -17,6 +17,15 @@ import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('Finance');
 
+const DEFAULT_PAGE_SIZE = 25;
+
+export interface PaginationState {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+}
+
 export const useFinanceData = (filters: TransactionFilters) => {
   const { t } = useTranslation(['finance']);
   const { currency: displayCurrency } = useAuth();
@@ -26,6 +35,14 @@ export const useFinanceData = (filters: TransactionFilters) => {
   const [transactions, setTransactions] = useState<FinancialTransaction[]>([]);
   const [categories, setCategories] = useState<ExpenseCategory[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Pagination state
+  const [pagination, setPagination] = useState<PaginationState>({
+    page: 1,
+    pageSize: DEFAULT_PAGE_SIZE,
+    total: 0,
+    totalPages: 0,
+  });
 
   // Analytics state
   const [ratios, setRatios] = useState<FinancialRatios | null>(null);
@@ -37,7 +54,7 @@ export const useFinanceData = (filters: TransactionFilters) => {
   const [monthlyCommissions, setMonthlyCommissions] = useState<MonthlyCommissionData[]>([]);
 
   // Load core data (dashboard, categories, transactions, performance)
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (page: number = 1) => {
     setLoading(true);
     try {
       const currentYear = new Date().getFullYear();
@@ -58,10 +75,12 @@ export const useFinanceData = (filters: TransactionFilters) => {
         fetchAndStoreDailyRates(today).catch(() => {});
       }
 
-      const [dashboardData, categoriesData, transactionsData, rawCommissions] = await Promise.all([
+      const paginatedFilters = { ...filters, page, pageSize: DEFAULT_PAGE_SIZE };
+
+      const [dashboardData, categoriesData, paginatedResult, rawCommissions] = await Promise.all([
         financialTransactionsService.getFinancialDashboardNormalized(displayCurrency || 'TRY'),
         financialTransactionsService.getCategories(),
-        financialTransactionsService.getTransactions(filters, 'id, amount, currency, transaction_date, category, type, payment_status, description, payment_method'),
+        financialTransactionsService.getTransactionsPaginated(paginatedFilters),
         commissionsService.getByDateRange(startDate, endDate),
       ]);
 
@@ -73,19 +92,25 @@ export const useFinanceData = (filters: TransactionFilters) => {
 
       setDashboard(dashboardData);
       setCategories(categoriesData);
-      setTransactions(transactionsData);
+      setTransactions(paginatedResult.data);
+      setPagination({
+        page: paginatedResult.page,
+        pageSize: paginatedResult.pageSize,
+        total: paginatedResult.total,
+        totalPages: paginatedResult.totalPages,
+      });
       setPerformanceSummary(normalizedPerformance);
 
       // PROACTIVE RATE HYDRATION: Pre-fetch rates for the transactions table
-      if (transactionsData.length > 0) {
-        const rateRequests = transactionsData
+      if (paginatedResult.data.length > 0) {
+        const rateRequests = paginatedResult.data
           .filter(t => t.currency !== 'TRY' || displayCurrency !== 'TRY')
           .map(t => [
             { currency: t.currency, date: t.transaction_date },
             { currency: displayCurrency || 'TRY', date: t.transaction_date }
           ])
           .flat();
-        
+
         if (rateRequests.length > 0) {
           getRatesForBatchFromTry(rateRequests).catch(err => {
             logger.warn('Failed to pre-fetch table rates:', err);
@@ -100,16 +125,30 @@ export const useFinanceData = (filters: TransactionFilters) => {
     }
   }, [filters, t, displayCurrency]);
 
-  // Load transactions only
-  const loadTransactions = useCallback(async () => {
+  // Load transactions only (paginated)
+  const loadTransactions = useCallback(async (page: number = pagination.page) => {
     try {
-      const data = await financialTransactionsService.getTransactions(filters);
-      setTransactions(data);
+      const paginatedFilters = { ...filters, page, pageSize: DEFAULT_PAGE_SIZE };
+      const paginatedResult = await financialTransactionsService.getTransactionsPaginated(paginatedFilters);
+      setTransactions(paginatedResult.data);
+      setPagination({
+        page: paginatedResult.page,
+        pageSize: paginatedResult.pageSize,
+        total: paginatedResult.total,
+        totalPages: paginatedResult.totalPages,
+      });
     } catch (error) {
       logger.error('Error loading transactions:', error);
       toast.error(t('finance:messages.loadError'));
     }
-  }, [filters, t]);
+  }, [filters, pagination.page, t]);
+
+  // Change page
+  const setPage = useCallback((newPage: number) => {
+    if (newPage >= 1 && newPage <= pagination.totalPages) {
+      loadTransactions(newPage);
+    }
+  }, [loadTransactions, pagination.totalPages]);
 
   // Load analytics data (lazy - only when needed)
   const loadAnalytics = useCallback(async () => {
@@ -155,6 +194,9 @@ export const useFinanceData = (filters: TransactionFilters) => {
     performanceSummary,
     monthlyCommissions,
 
+    // Pagination
+    pagination,
+
     // Loading states
     loading,
     analyticsLoading,
@@ -166,6 +208,7 @@ export const useFinanceData = (filters: TransactionFilters) => {
     refreshDashboard,
     setTransactions,
     setDashboard,
+    setPage,
   }), [
     dashboard,
     transactions,
@@ -174,12 +217,14 @@ export const useFinanceData = (filters: TransactionFilters) => {
     yearlySummary,
     performanceSummary,
     monthlyCommissions,
+    pagination,
     loading,
     analyticsLoading,
     loadData,
     loadTransactions,
     loadAnalytics,
     refreshDashboard,
+    setPage,
   ]);
 };
 

@@ -278,5 +278,9 @@
   "conversion": {
     "rate": "Rate",
     "rateDate": "Rate Date"
+  },
+
+  "pagination": {
+    "showing": "Showing {{from}}-{{to}} of {{total}} transactions"
   }
 }

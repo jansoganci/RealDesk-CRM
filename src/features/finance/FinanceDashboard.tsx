@@ -153,6 +153,8 @@ export const FinanceDashboard = () => {
                 onEdit={handleEditTransaction}
                 onDelete={financeActions.handleDeleteTransaction}
                 loading={financeData.loading}
+                pagination={financeData.pagination}
+                onPageChange={financeData.setPage}
               />
             </div>
           )}

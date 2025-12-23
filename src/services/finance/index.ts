@@ -6,6 +6,7 @@
 // Transactions CRUD
 export {
   getTransactions,
+  getTransactionsPaginated,
   getTransactionById,
   createTransaction,
   updateTransaction,

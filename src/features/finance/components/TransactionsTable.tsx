@@ -31,15 +31,20 @@ import {
   TrendingDown,
   ArrowUpDown,
   Info,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import type { FinancialTransaction } from '../../../types/financial';
 import { useCurrencyConversion } from '../../../hooks/useCurrencyConversion';
+import type { PaginationState } from '../hooks/useFinanceData';
 
 interface TransactionsTableProps {
   transactions: FinancialTransaction[];
   loading?: boolean;
   onEdit: (transaction: FinancialTransaction) => void;
   onDelete: (id: string) => void;
+  pagination?: PaginationState;
+  onPageChange?: (page: number) => void;
 }
 
 interface ConversionCache {
@@ -54,6 +59,8 @@ export const TransactionsTable = ({
   loading = false,
   onEdit,
   onDelete,
+  pagination,
+  onPageChange,
 }: TransactionsTableProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { formatWithConversion, displayCurrency } = useCurrencyConversion();
@@ -202,143 +209,228 @@ export const TransactionsTable = ({
     );
   }
 
+  // Generate page numbers to display
+  const getPageNumbers = () => {
+    if (!pagination || pagination.totalPages <= 1) return [];
+
+    const pages: (number | 'ellipsis')[] = [];
+    const { page, totalPages } = pagination;
+
+    // Always show first page
+    pages.push(1);
+
+    // Add ellipsis if needed
+    if (page > 3) {
+      pages.push('ellipsis');
+    }
+
+    // Add pages around current page
+    for (let i = Math.max(2, page - 1); i <= Math.min(totalPages - 1, page + 1); i++) {
+      if (!pages.includes(i)) {
+        pages.push(i);
+      }
+    }
+
+    // Add ellipsis if needed
+    if (page < totalPages - 2) {
+      pages.push('ellipsis');
+    }
+
+    // Always show last page
+    if (totalPages > 1 && !pages.includes(totalPages)) {
+      pages.push(totalPages);
+    }
+
+    return pages;
+  };
+
   return (
-    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow className="bg-gray-50">
-            <TableHead
-              className="cursor-pointer hover:bg-gray-100 transition-colors"
-              onClick={() => handleSort('date')}
-            >
-              <div className="flex items-center gap-2">
-                {t('finance:table.date')}
-                <ArrowUpDown className="h-4 w-4" />
-              </div>
-            </TableHead>
-            <TableHead>{t('finance:table.type')}</TableHead>
-            <TableHead>{t('finance:table.category')}</TableHead>
-            <TableHead>{t('finance:table.description')}</TableHead>
-            <TableHead
-              className="cursor-pointer hover:bg-gray-100 transition-colors"
-              onClick={() => handleSort('amount')}
-            >
-              <div className="flex items-center gap-2">
-                {t('finance:table.amount')}
-                <ArrowUpDown className="h-4 w-4" />
-              </div>
-            </TableHead>
-            <TableHead>{t('finance:table.status')}</TableHead>
-            <TableHead>{t('finance:table.paymentMethod')}</TableHead>
-            <TableHead className="text-right">{t('finance:table.actions')}</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sortedTransactions.map(transaction => (
-            <TableRow
-              key={transaction.id}
-              className="hover:bg-gray-50 transition-colors"
-            >
-              <TableCell className="font-medium">
-                {formatDate(transaction.transaction_date)}
-              </TableCell>
-              <TableCell>
+    <div className="space-y-4">
+      <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="bg-gray-50">
+              <TableHead
+                className="cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => handleSort('date')}
+              >
                 <div className="flex items-center gap-2">
-                  {transaction.type === 'income' ? (
-                    <div className="flex items-center gap-1 text-green-600">
-                      <TrendingUp className="h-4 w-4" />
-                      <span className="font-medium">
-                        {t('finance:types.income')}
-                      </span>
-                    </div>
-                  ) : (
-                    <div className="flex items-center gap-1 text-red-600">
-                      <TrendingDown className="h-4 w-4" />
-                      <span className="font-medium">
-                        {t('finance:types.expense')}
-                      </span>
-                    </div>
-                  )}
+                  {t('finance:table.date')}
+                  <ArrowUpDown className="h-4 w-4" />
                 </div>
-              </TableCell>
-              <TableCell>
-                <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
-                  {transaction.category}
-                </span>
-              </TableCell>
-              <TableCell>
-                <div className="max-w-xs truncate" title={transaction.description}>
-                  {transaction.description}
+              </TableHead>
+              <TableHead>{t('finance:table.type')}</TableHead>
+              <TableHead>{t('finance:table.category')}</TableHead>
+              <TableHead>{t('finance:table.description')}</TableHead>
+              <TableHead
+                className="cursor-pointer hover:bg-gray-100 transition-colors"
+                onClick={() => handleSort('amount')}
+              >
+                <div className="flex items-center gap-2">
+                  {t('finance:table.amount')}
+                  <ArrowUpDown className="h-4 w-4" />
                 </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex flex-col gap-1">
-                  <span
-                    className={`font-bold ${
-                      transaction.type === 'income'
-                        ? 'text-green-600'
-                        : 'text-red-600'
-                    }`}
-                  >
-                    {transaction.type === 'income' ? '+' : '-'}
-                    {formatCurrencyLocal(transaction.amount, transaction.currency)}
-                  </span>
-                  {conversionCache[transaction.id] && (
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span className="text-xs text-gray-500 italic flex items-center gap-1 cursor-help">
-                            ≈ {conversionCache[transaction.id].converted}
-                            <Info className="h-3 w-3" />
-                          </span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <div className="text-xs">
-                            <div>
-                              {t('finance:conversion.rate')}: {conversionCache[transaction.id].rateInfo.rate.toFixed(4)}
-                            </div>
-                            <div>
-                              {t('finance:conversion.rateDate')}: {new Date(conversionCache[transaction.id].rateInfo.rate_date_used).toLocaleDateString()}
-                            </div>
-                          </div>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>{getStatusBadge(transaction.payment_status)}</TableCell>
-              <TableCell>
-                {transaction.payment_method
-                  ? t(`finance:paymentMethods.${transaction.payment_method}`)
-                  : '-'}
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => onEdit(transaction)}>
-                      <Edit className="mr-2 h-4 w-4" />
-                      {t('common:actions.edit')}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => onDelete(transaction.id)}
-                      className="text-red-600"
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      {t('common:actions.delete')}
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+              </TableHead>
+              <TableHead>{t('finance:table.status')}</TableHead>
+              <TableHead>{t('finance:table.paymentMethod')}</TableHead>
+              <TableHead className="text-right">{t('finance:table.actions')}</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {sortedTransactions.map(transaction => (
+              <TableRow
+                key={transaction.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+                <TableCell className="font-medium">
+                  {formatDate(transaction.transaction_date)}
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2">
+                    {transaction.type === 'income' ? (
+                      <div className="flex items-center gap-1 text-green-600">
+                        <TrendingUp className="h-4 w-4" />
+                        <span className="font-medium">
+                          {t('finance:types.income')}
+                        </span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-1 text-red-600">
+                        <TrendingDown className="h-4 w-4" />
+                        <span className="font-medium">
+                          {t('finance:types.expense')}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 rounded">
+                    {transaction.category}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="max-w-xs truncate" title={transaction.description}>
+                    {transaction.description}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col gap-1">
+                    <span
+                      className={`font-bold ${
+                        transaction.type === 'income'
+                          ? 'text-green-600'
+                          : 'text-red-600'
+                      }`}
+                    >
+                      {transaction.type === 'income' ? '+' : '-'}
+                      {formatCurrencyLocal(transaction.amount, transaction.currency)}
+                    </span>
+                    {conversionCache[transaction.id] && (
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <span className="text-xs text-gray-500 italic flex items-center gap-1 cursor-help">
+                              ≈ {conversionCache[transaction.id].converted}
+                              <Info className="h-3 w-3" />
+                            </span>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            <div className="text-xs">
+                              <div>
+                                {t('finance:conversion.rate')}: {conversionCache[transaction.id].rateInfo.rate.toFixed(4)}
+                              </div>
+                              <div>
+                                {t('finance:conversion.rateDate')}: {new Date(conversionCache[transaction.id].rateInfo.rate_date_used).toLocaleDateString()}
+                              </div>
+                            </div>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    )}
+                  </div>
+                </TableCell>
+                <TableCell>{getStatusBadge(transaction.payment_status)}</TableCell>
+                <TableCell>
+                  {transaction.payment_method
+                    ? t(`finance:paymentMethods.${transaction.payment_method}`)
+                    : '-'}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEdit(transaction)}>
+                        <Edit className="mr-2 h-4 w-4" />
+                        {t('common:actions.edit')}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => onDelete(transaction.id)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        {t('common:actions.delete')}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Pagination */}
+      {pagination && pagination.totalPages > 1 && onPageChange && (
+        <div className="flex items-center justify-between px-2">
+          <p className="text-sm text-gray-600">
+            {t('finance:pagination.showing', {
+              from: (pagination.page - 1) * pagination.pageSize + 1,
+              to: Math.min(pagination.page * pagination.pageSize, pagination.total),
+              total: pagination.total,
+            })}
+          </p>
+          <div className="flex items-center gap-1">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onPageChange(pagination.page - 1)}
+              disabled={pagination.page <= 1}
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </Button>
+
+            {getPageNumbers().map((pageNum, idx) =>
+              pageNum === 'ellipsis' ? (
+                <span key={`ellipsis-${idx}`} className="px-2 text-gray-400">...</span>
+              ) : (
+                <Button
+                  key={pageNum}
+                  variant={pagination.page === pageNum ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => onPageChange(pageNum)}
+                  className="min-w-[36px]"
+                >
+                  {pageNum}
+                </Button>
+              )
+            )}
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onPageChange(pagination.page + 1)}
+              disabled={pagination.page >= pagination.totalPages}
+            >
+              <ChevronRight className="h-4 w-4" />
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

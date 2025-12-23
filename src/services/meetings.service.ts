@@ -5,19 +5,25 @@ import {
   ERROR_MEETING_NOT_FOUND,
   ERROR_SERVER_ERROR,
 } from '@/lib/errorCodes';
-import type { Database } from '@/types/database';
 import type { Meeting, MeetingInsert, MeetingUpdate } from '@/types';
 import { getAuthenticatedUserId } from '@/lib/auth';
 
 const MEETINGS_TABLE = 'meetings';
 
 /**
+ * Partial types matching the actual select projections used in queries
+ */
+type TenantPartial = { id: string; name: string; email: string | null; phone: string | null };
+type PropertyPartial = { id: string; address: string; city: string | null; district: string | null };
+type OwnerPartial = { id: string; name: string; email: string | null; phone: string | null };
+
+/**
  * The shape of a meeting record when fetched with its relations.
  */
 export type MeetingWithRelations = Meeting & {
-  tenant: Database['public']['Tables']['tenants']['Row'] | null;
-  property: Database['public']['Tables']['properties']['Row'] | null;
-  owner: Database['public']['Tables']['property_owners']['Row'] | null;
+  tenant: TenantPartial | null;
+  property: PropertyPartial | null;
+  owner: OwnerPartial | null;
 };
 
 class MeetingsService {

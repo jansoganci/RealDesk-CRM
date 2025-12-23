@@ -19,6 +19,7 @@ import type {
   YearlySummary,
   TopCategory,
   CashFlowForecast,
+  FinancialTransaction,
 } from '../../types/financial';
 
 /**
@@ -524,45 +525,49 @@ export const getBudgetVsActualNormalized = async (
   }
 
   const transactions = data || [];
-  const normalizedBreakdown = await calculateCategoryBreakdown(transactions, displayCurrency, 'expense');
+  const normalizedBreakdown = await calculateCategoryBreakdown(transactions as FinancialTransaction[], displayCurrency, 'expense');
   const actualByCategory = new Map(normalizedBreakdown.map(b => [b.category, b.total_amount.value]));
 
-  const comparisons: BudgetVsActual[] = categoriesWithBudget.map(category => {
-    // Note: Budgets are assumed to be in TRY in the database.
-    // We must normalize the budget to the display currency.
-    // Using current date for budget conversion as it's a target for the whole month.
-    const budgetedRaw = category.monthly_budget || 0;
-    
-    // For now, we'll keep budgets in TRY or assume they match display currency?
-    // In fintech, budgets are usually set in the base currency.
-    // Let's assume budgets are in TRY and convert them.
-    // (This is a simplified assumption for this MVP)
-    const budgeted = budgetedRaw; // TODO: Normalize budget if needed
+  // Convert all budgets to displayCurrency (budgets are stored in TRY)
+  const comparisons: BudgetVsActual[] = await Promise.all(
+    categoriesWithBudget.map(async category => {
+      const budgetedRaw = category.monthly_budget || 0;
 
-    const actual = actualByCategory.get(category.name) || 0;
-    const difference = budgeted - actual;
-    const percentage_difference = budgeted > 0 ? (difference / budgeted) * 100 : 0;
+      // Convert budget from TRY to displayCurrency using end-of-month rate
+      let budgeted = budgetedRaw;
+      if (displayCurrency !== 'TRY' && budgetedRaw > 0) {
+        const budgetMetric = await calculateNormalizedSum(
+          [{ amount: budgetedRaw, currency: 'TRY', transaction_date: endDate }],
+          displayCurrency
+        );
+        budgeted = budgetMetric.value;
+      }
 
-    let status: 'under' | 'over' | 'on_track';
-    if (Math.abs(percentage_difference) < 5) {
-      status = 'on_track';
-    } else if (difference >= 0) {
-      status = 'under';
-    } else {
-      status = 'over';
-    }
+      const actual = actualByCategory.get(category.name) || 0;
+      const difference = budgeted - actual;
+      const percentage_difference = budgeted > 0 ? (difference / budgeted) * 100 : 0;
 
-    return {
-      category: category.name,
-      budgeted,
-      actual,
-      difference,
-      percentage_difference,
-      status,
-      icon: category.icon,
-      color: category.color,
-    };
-  });
+      let status: 'under' | 'over' | 'on_track';
+      if (Math.abs(percentage_difference) < 5) {
+        status = 'on_track';
+      } else if (difference >= 0) {
+        status = 'under';
+      } else {
+        status = 'over';
+      }
+
+      return {
+        category: category.name,
+        budgeted,
+        actual,
+        difference,
+        percentage_difference,
+        status,
+        icon: category.icon,
+        color: category.color,
+      };
+    })
+  );
 
   return comparisons.sort((a, b) => Math.abs(b.difference) - Math.abs(a.difference));
 };
@@ -573,6 +578,7 @@ export const getBudgetVsActualNormalized = async (
 
 /**
  * Get monthly summary for a specific month
+ * @deprecated Use getMonthlySummaryNormalized() instead. This method sums amounts without currency conversion.
  * @param month - Month in YYYY-MM format
  * @returns Monthly summary data
  */
@@ -616,6 +622,7 @@ export const getMonthlySummary = async (
 
 /**
  * Get category breakdown for a date range
+ * @deprecated Use calculateCategoryBreakdown() from reportCalculator instead. This method sums amounts without currency conversion.
  * @param startDate - Start date (ISO string)
  * @param endDate - End date (ISO string)
  * @param type - Transaction type (income/expense)
@@ -680,6 +687,7 @@ export const getCategoryBreakdown = async (
 
 /**
  * Get monthly trends for the last N months
+ * @deprecated Use getMonthlyTrendsNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getMonthlyTrends = async (
   months: number = 6
@@ -713,6 +721,7 @@ export const getMonthlyTrends = async (
 
 /**
  * Get comprehensive financial dashboard data
+ * @deprecated Use getFinancialDashboardNormalized() instead. This method sums amounts without currency conversion.
  * @returns Dashboard summary with all metrics
  */
 export const getFinancialDashboard = async (): Promise<FinancialDashboard> => {
@@ -781,6 +790,7 @@ export const getFinancialDashboard = async (): Promise<FinancialDashboard> => {
 
 /**
  * Get financial ratios and KPIs
+ * @deprecated Use getFinancialRatiosNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getFinancialRatios = async (
   month?: string
@@ -810,6 +820,7 @@ export const getFinancialRatios = async (
 
 /**
  * Get budget vs actual comparison for expense categories
+ * @deprecated Use getBudgetVsActualNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getBudgetVsActual = async (
   month: string
@@ -883,6 +894,7 @@ export const getBudgetVsActual = async (
 
 /**
  * Get yearly summary with 12 months of data
+ * @deprecated Use getYearlySummaryNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getYearlySummary = async (
   year?: number
@@ -916,6 +928,7 @@ export const getYearlySummary = async (
 
 /**
  * Get top categories by spend or income
+ * @deprecated Use getTopCategoriesNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getTopCategories = async (
   type: 'income' | 'expense',
@@ -950,6 +963,7 @@ export const getTopCategories = async (
 
 /**
  * Get cash flow forecast for next 30 days
+ * @deprecated Use getCashFlowForecastNormalized() instead. This method sums amounts without currency conversion.
  */
 export const getCashFlowForecast = async (): Promise<CashFlowForecast> => {
   const today = new Date();

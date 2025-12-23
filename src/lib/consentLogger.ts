@@ -7,6 +7,7 @@
 
 import { supabase } from '@/config/supabase';
 import type { ConsentRecordInsert } from '@/types/cookieConsent';
+import type { Json } from '@/types/database';
 
 /**
  * Result type for consent logging operations
@@ -223,7 +224,7 @@ export async function logConsentToDatabase(
         .insert({
           timestamp: consent.timestamp.toISOString(),
           version: consent.version,
-          categories: consent.categories,
+          categories: consent.categories as unknown as Json,
           session_id: consent.sessionId,
           user_agent: consent.userAgent || null,
           language: consent.language,

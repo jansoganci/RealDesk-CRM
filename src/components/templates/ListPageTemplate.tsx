@@ -78,7 +78,7 @@ export interface ListPageTemplateProps<T> {
   headerContent?: ReactNode; // Optional: Content to render above search/filter row
 }
 
-export const ListPageTemplate = memo(function ListPageTemplate<T>({
+function ListPageTemplateInner<T>({
   title,
   items,
   loading,
@@ -231,6 +231,7 @@ export const ListPageTemplate = memo(function ListPageTemplate<T>({
       )}
     </MainLayout>
   );
-});
+}
 
-ListPageTemplate.displayName = 'ListPageTemplate';
+// Preserve generic type through memo using type assertion
+export const ListPageTemplate = memo(ListPageTemplateInner) as typeof ListPageTemplateInner;
