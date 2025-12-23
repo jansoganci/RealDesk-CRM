@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { BillingProvider } from './contexts/BillingContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Login } from './features/auth/Login';
@@ -190,9 +191,11 @@ function App() {
       <ErrorBoundary>
         <AuthProvider>
           <BillingProvider>
-            <BrowserRouter>
-              <AppContent />
-            </BrowserRouter>
+            <NotificationProvider>
+              <BrowserRouter>
+                <AppContent />
+              </BrowserRouter>
+            </NotificationProvider>
           </BillingProvider>
         </AuthProvider>
       </ErrorBoundary>

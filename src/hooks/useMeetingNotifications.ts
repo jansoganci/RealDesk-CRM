@@ -13,18 +13,19 @@ const isNotificationSupported = () => {
 
 export const useMeetingNotifications = () => {
   const { user, meetingReminderMinutes } = useAuth();
+  const userId = user?.id;
   const [permission, setPermission] = useState<NotificationPermission | 'unsupported'>(
     isNotificationSupported() ? Notification.permission : 'unsupported'
   );
   const notifiedMeetingIds = useRef(new Set<string>());
+  const isCheckingRef = useRef(false);
 
   // Use user's meeting reminder preference from AuthContext
   const reminderMinutes = meetingReminderMinutes;
 
   useEffect(() => {
     // Early return if notifications are not supported or user is not logged in
-    if (!user || !isNotificationSupported()) {
-      console.log('[Notifications] Not supported or user not logged in');
+    if (!userId || !isNotificationSupported()) {
       return;
     }
 
@@ -43,8 +44,9 @@ export const useMeetingNotifications = () => {
     requestPermission();
 
     const checkMeetings = async () => {
-      if (permission !== 'granted' || !isNotificationSupported()) return;
+      if (permission !== 'granted' || !isNotificationSupported() || isCheckingRef.current) return;
 
+      isCheckingRef.current = true;
       try {
         const upcomingMeetings = await meetingsService.getUpcoming(10);
         const now = new Date();
@@ -71,6 +73,8 @@ export const useMeetingNotifications = () => {
         });
       } catch (error) {
         console.error('[Notifications] Failed to check for meeting notifications:', error);
+      } finally {
+        isCheckingRef.current = false;
       }
     };
 
@@ -81,7 +85,7 @@ export const useMeetingNotifications = () => {
     return () => {
       clearInterval(intervalId);
     };
-  }, [user, permission, reminderMinutes]);
+  }, [userId, permission, reminderMinutes]);
 
   return { permission };
 };

@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
 import { Menu, Bell, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
-import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 import { COLORS } from '@/config/colors';
 import { ROUTES } from '@/config/constants';
 import { useBilling } from '@/contexts/BillingContext';
+import { useNotifications } from '@/contexts/NotificationContext';
 import { calculateTrialDaysRemaining } from '@/utils/trial';
 
 interface NavbarProps {
@@ -18,31 +17,11 @@ interface NavbarProps {
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
   const { t } = useTranslation('navigation');
   const { t: tBilling } = useTranslation('billing');
-  const [reminderCount, setReminderCount] = useState(0);
-  const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
   const navigate = useNavigate();
   const { billingStatus } = useBilling();
+  const { reminderCount, unreadMatchesCount } = useNotifications();
   const trialDaysRemaining = calculateTrialDaysRemaining(billingStatus?.trialEndsAt ?? null);
   const showTrialBadge = billingStatus?.isTrial;
-
-  useEffect(() => {
-    loadCounts();
-    const interval = setInterval(loadCounts, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadCounts = async () => {
-    try {
-      const [reminders, unreadMatches] = await Promise.all([
-        remindersService.getActiveReminders(),
-        inquiriesService.getUnreadMatchesCount(),
-      ]);
-      setReminderCount(reminders.length);
-      setUnreadMatchesCount(unreadMatches);
-    } catch (error) {
-      console.error('Failed to load counts:', error);
-    }
-  };
 
   return (
     <header className={`sticky top-0 z-30 ${COLORS.card.bg} border-b ${COLORS.border.DEFAULT_class} shadow-sm`}>

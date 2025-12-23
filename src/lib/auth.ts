@@ -25,23 +25,40 @@ import { supabase } from '../config/supabase';
  * });
  * ```
  */
+// Promise caching for deduping parallel auth checks
+let activeUserPromise: Promise<string> | null = null;
+
 export async function getAuthenticatedUserId(): Promise<string> {
-  // Primary: Try getUser() - validates JWT via network call
-  const { data: { user }, error: userError } = await supabase.auth.getUser();
-
-  if (user?.id) {
-    return user.id;
+  // If a request is already in flight, return that promise
+  if (activeUserPromise) {
+    return activeUserPromise;
   }
 
-  // Fallback: Try getSession() - reads from local storage
-  const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+  activeUserPromise = (async () => {
+    try {
+      // Primary: Try getUser() - validates JWT via network call
+      const { data: { user } } = await supabase.auth.getUser();
 
-  if (session?.user?.id) {
-    console.warn('[Auth] Using session fallback for user ID');
-    return session.user.id;
-  }
+      if (user?.id) {
+        return user.id;
+      }
 
-  // Both failed - user is not authenticated
-  console.error('[Auth] Authentication failed', { userError, sessionError });
-  throw new Error('User not authenticated. Please log in again.');
+      // Fallback: Try getSession() - reads from local storage
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user?.id) {
+        console.warn('[Auth] Using session fallback for user ID');
+        return session.user.id;
+      }
+
+      // Both failed - user is not authenticated
+      throw new Error('User not authenticated. Please log in again.');
+    } finally {
+      // Clear the promise so next request can start fresh if needed
+      // (usually session is stable, so subsequent calls are fast)
+      activeUserPromise = null;
+    }
+  })();
+
+  return activeUserPromise;
 }

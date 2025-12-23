@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef, useState } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
@@ -16,6 +16,8 @@ interface AuthContextType {
   currency: string;
   meetingReminderMinutes: number;
   commissionRate: number;
+  fullName: string;
+  phoneNumber: string | null;
   setLanguage: (language: string) => void;
   setCurrency: (currency: string) => void;
   signIn: (email: string, password: string) => Promise<void>;
@@ -37,39 +39,64 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [language, setLanguageState] = useState<string>(() => getDetectedLanguage());
-  const [currency, setCurrencyState] = useState<string>(() => getDetectedCurrency());
-  const [meetingReminderMinutes, setMeetingReminderMinutesState] = useState(30);
-  const [commissionRate, setCommissionRateState] = useState(4.0);
+  
+  // Batched preferences state
+  const [preferences, setPreferences] = useState({
+    language: getDetectedLanguage(),
+    currency: getDetectedCurrency(),
+    meetingReminderMinutes: 30,
+    commissionRate: 4.0,
+    fullName: '',
+    phoneNumber: null as string | null,
+  });
+
   const ensuredUserPreferencesFor = useRef<string | null>(null);
 
   // Sync i18n with language state changes
   useEffect(() => {
-    if (i18n.language !== language) {
-      i18n.changeLanguage(language);
+    if (i18n.language !== preferences.language) {
+      i18n.changeLanguage(preferences.language);
     }
-  }, [language]);
+  }, [preferences.language]);
 
   useEffect(() => {
     const fetchSessionAndPreferences = async () => {
       authLogger.debug('Starting auth initialization...');
 
-      // IMPORTANT: Use getUser() instead of getSession()
-      // getSession() only reads from browser cache (can be fake/stale)
-      // getUser() actually asks Supabase server "is this user real and confirmed?"
-      const { data: { user }, error } = await supabase.auth.getUser();
-
-      if (user) {
-        authLogger.debug('getUser() result: User found', {
-          userId: user.id.slice(0, 8) + '...',
-          emailConfirmedAt: user.email_confirmed_at,
-        });
+      // PHASE 4: Instant Hydration via Session Cache
+      // getSession() is near-instant as it reads from LocalStorage
+      const { data: { session: cachedSession } } = await supabase.auth.getSession();
+      
+      if (cachedSession?.user) {
+        authLogger.debug('Instant hydration via cached session');
+        setUser(cachedSession.user);
+        setSession(cachedSession);
+        // We set loading to false EARLY so the UI can render
+        setLoading(false);
       }
 
-      // If there's an error or no user, clear everything
+      const initialUserId = cachedSession?.user?.id;
+
+      const promises: [Promise<any>, Promise<any>?] = [
+        supabase.auth.getUser() // Silent validation in background
+      ];
+
+      if (initialUserId) {
+        promises.push(
+          supabase
+            .from('user_preferences')
+            .select('language, currency, meeting_reminder_minutes, commission_rate, full_name, phone_number')
+            .eq('user_id', initialUserId)
+            .maybeSingle()
+        );
+      }
+
+      const [userRes, prefsRes] = await Promise.all(promises);
+      const { data: { user }, error } = userRes;
+
       if (error || !user) {
         if (error) {
-          authLogger.warn('No valid user session found during init', error.message);
+          authLogger.warn('No valid user session found during silent validation', error.message);
         }
         setSession(null);
         setUser(null);
@@ -80,37 +107,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Check if email is confirmed
       const emailConfirmed = user.email_confirmed_at !== null && user.email_confirmed_at !== undefined;
 
-      // If email NOT confirmed, don't set user as logged in
       if (!emailConfirmed) {
-        authLogger.debug('Email not confirmed, clearing session');
+        authLogger.debug('Email not confirmed in background check, clearing session');
         setSession(null);
         setUser(null);
         setLoading(false);
         return;
       }
 
-      // Email is confirmed! Now get the full session
-      const { data: { session } } = await supabase.auth.getSession();
-
-      authLogger.debug('User authenticated successfully');
-
-      setSession(session);
+      // Update state with verified user and session
       setUser(user);
+      setSession(cachedSession || null);
 
-      // Load user preferences
-      if (user) {
-        const { data: preferences } = await supabase
-          .from('user_preferences')
-          .select('language, currency, meeting_reminder_minutes, commission_rate')
-          .eq('user_id', user.id)
-          .maybeSingle();
-        if (preferences) {
-          setLanguageState(preferences.language || 'tr');
-          setCurrencyState(preferences.currency || 'TRY');
-          setMeetingReminderMinutesState(preferences.meeting_reminder_minutes || 30);
-          setCommissionRateState(preferences.commission_rate || 4.0);
-        }
+      // Handle preferences result
+      if (prefsRes && prefsRes.data) {
+        const prefs = prefsRes.data;
+        setPreferences({
+          language: prefs.language || 'tr',
+          currency: prefs.currency || 'TRY',
+          meetingReminderMinutes: prefs.meeting_reminder_minutes || 30,
+          commissionRate: prefs.commission_rate || 4.0,
+          fullName: prefs.full_name || '',
+          phoneNumber: prefs.phone_number || null,
+        });
       }
+      
       setLoading(false);
     };
 
@@ -123,36 +144,41 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         userId: session?.user?.id.slice(0, 8) + '...',
       });
 
-      // Check if email is confirmed before setting session
+      // Avoid redundant state updates if session is unchanged
+      setUser(prevUser => {
+        const newUser = session?.user ?? null;
+        if (prevUser?.id === newUser?.id && event !== 'SIGNED_IN' && event !== 'SIGNED_OUT') {
+          return prevUser;
+        }
+        return newUser;
+      });
+
+      setSession(prevSession => {
+        if (prevSession?.access_token === session?.access_token) {
+          return prevSession;
+        }
+        return session ?? null;
+      });
+
       if (session?.user) {
         const emailConfirmed = session.user.email_confirmed_at !== null && session.user.email_confirmed_at !== undefined;
 
-        // Only set session if email is confirmed
         if (emailConfirmed) {
-          authLogger.debug('Setting authenticated user in state');
-          setSession(session);
-          setUser(session.user);
-
           if (event === "SIGNED_IN") {
             const method = localStorage.getItem("pending_login_method") || "unknown";
             localStorage.removeItem("pending_login_method");
             trackLogin(method as 'email' | 'google' | 'magic_link');
           }
-        } else {
-          // Email not confirmed, don't set session
-          authLogger.debug('Email not confirmed in auth state change');
-          setSession(null);
-          setUser(null);
         }
       } else {
-        // No session, clear everything
-        authLogger.debug('No session, clearing all state');
-        setSession(null);
-        setUser(null);
-        setLanguageState(getDetectedLanguage());
-        setCurrencyState(getDetectedCurrency());
-        setMeetingReminderMinutesState(30);
-        setCommissionRateState(4.0);
+        setPreferences({
+          language: getDetectedLanguage(),
+          currency: getDetectedCurrency(),
+          meetingReminderMinutes: 30,
+          commissionRate: 4.0,
+          fullName: '',
+          phoneNumber: null,
+        });
       }
       setLoading(false);
     });
@@ -162,14 +188,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const ensureUserPreferences = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      const currentUserId = session?.user?.id;
+      const currentUserId = user?.id;
 
-      if (!currentUserId) {
-        return;
-      }
-
-      if (ensuredUserPreferencesFor.current === currentUserId) {
+      if (!currentUserId || ensuredUserPreferencesFor.current === currentUserId) {
         return;
       }
 
@@ -193,10 +214,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     ensureUserPreferences();
   }, [user?.id]);
 
-  const updateUserPreferences = async (prefs: { language?: string; currency?: string }) => {
+  const updateUserPreferences = useCallback(async (prefs: { language?: string; currency?: string }) => {
     if (!user) return;
 
-    // First, try to update an existing row
     const { data, error } = await supabase
       .from('user_preferences')
       .update(prefs)
@@ -204,35 +224,31 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       .select()
       .single();
 
-    // If the update didn't find a row (data is null) and there was no error, insert a new one.
-    // A '404 Not Found' is not considered a fatal error by the client, so error will be null.
     if (!data && !error) {
       await supabase.from('user_preferences').insert({ ...prefs, user_id: user.id });
     }
-  };
+  }, [user?.id]);
 
-  const setLanguage = async (newLanguage: string) => {
-    setLanguageState(newLanguage);
+  const setLanguage = useCallback(async (newLanguage: string) => {
+    setPreferences(prev => ({ ...prev, language: newLanguage }));
     await updateUserPreferences({ language: newLanguage });
-  };
+  }, [updateUserPreferences]);
 
-  const setCurrency = async (newCurrency: string) => {
-    setCurrencyState(newCurrency);
+  const setCurrency = useCallback(async (newCurrency: string) => {
+    setPreferences(prev => ({ ...prev, currency: newCurrency }));
     await updateUserPreferences({ currency: newCurrency });
-  };
+  }, [updateUserPreferences]);
 
-  const signIn = async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string) => {
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) throw error;
-  };
+  }, []);
 
-  const signUp = async (email: string, password: string) => {
-    // IMPORTANT: Clear any old sessions before signing up
-    // This prevents "fake sessions" from sticking around
+  const signUp = useCallback(async (email: string, password: string) => {
     await supabase.auth.signOut();
 
     const { data, error } = await supabase.auth.signUp({
@@ -244,103 +260,82 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (error) throw error;
-
-    // Check if email confirmation is required
-    // When email confirmation is enabled, Supabase returns user but no session
     const requiresEmailConfirmation = !data.session && !!data.user;
-
     return { requiresEmailConfirmation };
-  };
+  }, []);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-
     ensuredUserPreferencesFor.current = null;
-  };
+  }, []);
 
-  const resetPassword = async (email: string) => {
+  const resetPassword = useCallback(async (email: string) => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-
     if (error) throw error;
-  };
+  }, []);
 
-  const updatePassword = async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
+  const updatePassword = useCallback(async (newPassword: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase.auth.updateUser({
       password: newPassword,
     });
-
     if (error) {
       authLogger.error('Password update error:', error);
       return { success: false, error: error.message };
     }
-
     return { success: true };
-  };
+  }, []);
 
-  const requestPasswordReset = async (email: string): Promise<{ success: boolean; error?: string }> => {
+  const requestPasswordReset = useCallback(async (email: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-
     if (error) {
       authLogger.error('Password reset request error:', error);
       return { success: false, error: error.message };
     }
-
     return { success: true };
-  };
+  }, []);
 
-  const changeEmail = async (newEmail: string): Promise<{ success: boolean; error?: string }> => {
+  const changeEmail = useCallback(async (newEmail: string): Promise<{ success: boolean; error?: string }> => {
     const { error } = await supabase.auth.updateUser(
       { email: newEmail },
       { emailRedirectTo: `${window.location.origin}/email-changed` }
     );
-
     if (error) {
       authLogger.error('Email change error:', error);
       return { success: false, error: error.message };
     }
-
     return { success: true };
-  };
+  }, []);
 
-  const reauthenticate = async (password: string): Promise<{ success: boolean; error?: string }> => {
-    // Get current user's email from state or fetch it
+  const reauthenticate = useCallback(async (password: string): Promise<{ success: boolean; error?: string }> => {
     let email = user?.email;
-
     if (!email) {
       const { data, error: userError } = await supabase.auth.getUser();
-
       if (userError || !data.user?.email) {
         authLogger.error('reauthenticate getUser error:', userError);
         return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
       }
-
       email = data.user.email;
     }
-
     if (!email) {
       return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
     }
-
-    // Verify password by attempting to sign in
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
-
     if (error) {
       authLogger.error('reauthenticate error:', error);
       return { success: false, error: error.message };
     }
-
     return { success: true };
-  };
+  }, [user?.email]);
 
-  const resendConfirmationEmail = async (email: string) => {
+  const resendConfirmationEmail = useCallback(async (email: string) => {
     const { error } = await supabase.auth.resend({
       type: 'signup',
       email,
@@ -348,17 +343,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         emailRedirectTo: `${window.location.origin}/confirm-email`,
       },
     });
-
     if (error) throw error;
-  };
+  }, []);
 
-  const isEmailConfirmed = (): boolean => {
-    // Check if user exists and email is confirmed
-    // In Supabase, user.email_confirmed_at is set when email is confirmed
+  const isEmailConfirmed = useCallback((): boolean => {
     return user?.email_confirmed_at !== null && user?.email_confirmed_at !== undefined;
-  };
+  }, [user?.email_confirmed_at]);
 
-  const signInWithGoogle = async (): Promise<{ success: boolean; error?: string }> => {
+  const signInWithGoogle = useCallback(async (): Promise<{ success: boolean; error?: string }> => {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
@@ -366,21 +358,62 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           redirectTo: window.location.origin,
         },
       });
-
       if (error) {
         authLogger.error('signInWithGoogle error:', error);
         return { success: false, error: error.message };
       }
-
       return { success: true };
     } catch (error: any) {
       authLogger.error('signInWithGoogle exception:', error);
       return { success: false, error: error.message ?? 'Unknown error' };
     }
-  };
+  }, []);
+
+  const value = useMemo(() => ({
+    user,
+    session,
+    loading,
+    language: preferences.language,
+    currency: preferences.currency,
+    meetingReminderMinutes: preferences.meetingReminderMinutes,
+    commissionRate: preferences.commissionRate,
+    fullName: preferences.fullName,
+    phoneNumber: preferences.phoneNumber,
+    setLanguage,
+    setCurrency,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
+    updatePassword,
+    requestPasswordReset,
+    changeEmail,
+    reauthenticate,
+    resendConfirmationEmail,
+    isEmailConfirmed,
+    signInWithGoogle
+  }), [
+    user?.id,
+    session?.access_token,
+    loading,
+    preferences,
+    setLanguage,
+    setCurrency,
+    signIn,
+    signUp,
+    signOut,
+    resetPassword,
+    updatePassword,
+    requestPasswordReset,
+    changeEmail,
+    reauthenticate,
+    resendConfirmationEmail,
+    isEmailConfirmed,
+    signInWithGoogle
+  ]);
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, language, currency, meetingReminderMinutes, commissionRate, setLanguage, setCurrency, signIn, signUp, signOut, resetPassword, updatePassword, requestPasswordReset, changeEmail, reauthenticate, resendConfirmationEmail, isEmailConfirmed, signInWithGoogle }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

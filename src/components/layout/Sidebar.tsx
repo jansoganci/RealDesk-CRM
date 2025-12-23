@@ -1,7 +1,7 @@
-import { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
+import { useNotifications } from '../../contexts/NotificationContext';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { ROUTES, APP_NAME } from '../../config/constants';
@@ -20,7 +20,6 @@ import {
   FileText
 } from 'lucide-react';
 import { cn } from '../../lib/utils';
-import { remindersService, inquiriesService } from '../../lib/serviceProxy';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -43,27 +42,7 @@ const navigationItems = [
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { t } = useTranslation('navigation');
   const { signOut } = useAuth();
-  const [reminderCount, setReminderCount] = useState(0);
-  const [unreadMatchesCount, setUnreadMatchesCount] = useState(0);
-
-  useEffect(() => {
-    loadCounts();
-    const interval = setInterval(loadCounts, 60000);
-    return () => clearInterval(interval);
-  }, []);
-
-  const loadCounts = async () => {
-    try {
-      const [reminders, unreadMatches] = await Promise.all([
-        remindersService.getActiveReminders(),
-        inquiriesService.getUnreadMatchesCount(),
-      ]);
-      setReminderCount(reminders.length);
-      setUnreadMatchesCount(unreadMatches);
-    } catch (error) {
-      console.error('Failed to load counts:', error);
-    }
-  };
+  const { reminderCount, unreadMatchesCount } = useNotifications();
 
   const handleSignOut = async () => {
     try {

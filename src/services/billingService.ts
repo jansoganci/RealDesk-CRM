@@ -55,26 +55,34 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
       };
     }
 
-    // Call RPC function to check if user has active subscription
-    const { data: hasAccess, error: rpcError } = await supabase.rpc(
-      'has_active_subscription',
-      { check_user_id: user.id }
-    );
+    // Start all requests in parallel
+    const [rpcRes, subscriptionRes, billingRes] = await Promise.all([
+      supabase.rpc('has_active_subscription', { check_user_id: user.id }),
+      supabase.from('subscriptions')
+        .select('status, current_period_end, stripe_product_id, cancel_at_period_end')
+        .eq('user_id', user.id)
+        .maybeSingle(),
+      supabase.from('user_billing')
+        .select('billing_status, trial_end')
+        .eq('user_id', user.id)
+        .maybeSingle()
+    ]);
+
+    const { data: hasAccess, error: rpcError } = rpcRes;
+    const { data: subscription, error: subscriptionError } = subscriptionRes;
+    const { data: billingRecord, error: billingError } = billingRes;
 
     if (rpcError) {
       console.error('[Billing] RPC error', rpcError);
       // Treat RPC error as no access, but continue to fetch subscription
     }
 
-    // Fetch subscription details
-    const { data: subscription, error: subscriptionError } = await supabase
-      .from('subscriptions')
-      .select('status, current_period_end, stripe_product_id, cancel_at_period_end')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
     if (subscriptionError) {
       console.error('[Billing] Subscription fetch error', subscriptionError);
+    }
+
+    if (billingError) {
+      console.error('[Billing] user_billing fetch error', billingError);
     }
 
     // Map product ID to plan name
@@ -86,17 +94,6 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
         'prod_Tb3lXZviFuPPL7': 'ofis_plus',
       };
       plan = planMap[subscription.stripe_product_id] || null;
-    }
-
-    // Fetch trial/billing record for legacy credit-card-free trial tracking
-    const { data: billingRecord, error: billingError } = await supabase
-      .from('user_billing')
-      .select('billing_status, trial_end')
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (billingError) {
-      console.error('[Billing] user_billing fetch error', billingError);
     }
 
     const now = Date.now();

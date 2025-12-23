@@ -23,7 +23,7 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
       return;
     }
 
-    if (!user) {
+    if (!user?.id) {
       setBillingStatus(null);
       setBillingLoading(false);
       setBillingError(null);
@@ -41,7 +41,7 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
     } finally {
       setBillingLoading(false);
     }
-  }, [authLoading, user]);
+  }, [authLoading, user?.id]);
 
   useEffect(() => {
     if (authLoading) {
@@ -49,7 +49,7 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
       return;
     }
 
-    if (!user) {
+    if (!user?.id) {
       setBillingStatus(null);
       setBillingLoading(false);
       setBillingError(null);
@@ -57,7 +57,7 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
     }
 
     refreshBilling();
-  }, [authLoading, refreshBilling, user]);
+  }, [authLoading, refreshBilling, user?.id]);
 
   const value = useMemo(
     () => ({

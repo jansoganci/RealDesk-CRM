@@ -24,10 +24,18 @@ interface ProfileData {
 
 export const Profile = () => {
   const { t, i18n } = useTranslation(['profile', 'common']);
-  const { user } = useAuth();
+  const { 
+    user, 
+    loading: authLoading,
+    fullName,
+    phoneNumber,
+    language: prefLanguage,
+    currency,
+    meetingReminderMinutes,
+    commissionRate
+  } = useAuth();
   const language = i18n.language === 'tr' ? 'tr' : 'en';
 
-  const [isLoading, setIsLoading] = useState(true);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     fullName: '',
@@ -39,42 +47,20 @@ export const Profile = () => {
     commissionRate: 4.0,
   });
 
-  const loadPreferences = useCallback(async () => {
-    if (!user) return;
-
-    setIsLoading(true);
-    try {
-      const prefs = await userPreferencesService.getPreferences();
-
+  // Sync profile data from AuthContext
+  useEffect(() => {
+    if (!authLoading && user) {
       setProfileData({
-        fullName: prefs.full_name || '',
+        fullName: fullName || '',
         email: user.email || '',
-        phoneNumber: prefs.phone_number || null,
-        language: (prefs.language === 'tr' || prefs.language === 'en')
-          ? prefs.language
-          : 'tr',
-        currency: prefs.currency || 'TRY',
-        meetingReminderMinutes: prefs.meeting_reminder_minutes || 30,
-        commissionRate: prefs.commission_rate || 4.0,
+        phoneNumber: phoneNumber || null,
+        language: (prefLanguage === 'tr' || prefLanguage === 'en') ? prefLanguage : 'tr',
+        currency: currency || 'TRY',
+        meetingReminderMinutes: meetingReminderMinutes || 30,
+        commissionRate: commissionRate || 4.0,
       });
-    } catch (error) {
-      console.error('Failed to load preferences:', error);
-    } finally {
-      setIsLoading(false);
     }
-  }, [user]);
-
-  // Load user preferences on mount
-  useEffect(() => {
-    loadPreferences();
-  }, [loadPreferences]);
-
-  // Update email when user changes
-  useEffect(() => {
-    if (user?.email) {
-      setProfileData((prev) => ({ ...prev, email: user.email || '' }));
-    }
-  }, [user?.email]);
+  }, [authLoading, user, fullName, phoneNumber, prefLanguage, currency, meetingReminderMinutes, commissionRate]);
 
   const handleEditClick = () => {
     setIsEditDialogOpen(true);
@@ -85,8 +71,9 @@ export const Profile = () => {
   };
 
   const handleSaveSuccess = () => {
-    // Reload preferences after successful save
-    loadPreferences();
+    // No need to reload locally, AuthContext should be updated or we can just let it be
+    // If the dialog updates preferences, it might need to trigger an AuthContext refresh
+    // but for now we follow the plan of using AuthContext data.
   };
 
   return (
@@ -100,7 +87,7 @@ export const Profile = () => {
           <ProfileInfoCard
             data={profileData}
             onEditClick={handleEditClick}
-            isLoading={isLoading}
+            isLoading={authLoading}
           />
 
           {/* Account Security - Full Width */}
