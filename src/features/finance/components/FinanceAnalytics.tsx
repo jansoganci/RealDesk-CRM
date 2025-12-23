@@ -4,13 +4,13 @@ import { UpcomingBills } from './UpcomingBills';
 import { CommissionTrends } from './CommissionTrends';
 import type {
   FinancialRatios,
-  YearlySummary,
 } from '../../../types/financial';
 import type { MonthlyCommissionData } from '../../../types';
+import type { NormalizedYearlySummary } from '../../../services/finance/analytics.service';
 
 interface FinanceAnalyticsProps {
   ratios: FinancialRatios | null;
-  yearlySummary: YearlySummary | null;
+  yearlySummary: NormalizedYearlySummary | null;
   monthlyCommissions: MonthlyCommissionData[];
   loading: boolean;
   onBillPaid: () => Promise<void>;

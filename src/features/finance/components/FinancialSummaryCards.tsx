@@ -11,7 +11,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
-import { NormalizedFinancialDashboard, NormalizedMonthlySummary } from '../../../services/finance/analytics.service';
+import { NormalizedFinancialDashboard } from '../../../services/finance/analytics.service';
 import { CalculatedMetric } from '../../../services/finance/reportCalculator';
 
 interface FinancialSummaryCardsProps {

@@ -57,7 +57,12 @@ export const ownersService = {
     const { data, error } = await supabase
       .from('property_owners')
       .select(`
-        *,
+        id,
+        name,
+        email,
+        phone,
+        address,
+        created_at,
         properties:properties(count)
       `)
       .order('created_at', { ascending: false });

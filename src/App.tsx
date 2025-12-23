@@ -102,7 +102,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/contracts/create"
+                path={ROUTES.CONTRACT_CREATE}
                 element={
                   <ProtectedRoute>
                     <ContractCreate />

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Table,
@@ -60,35 +60,63 @@ export const TransactionsTable = ({
   const [sortField, setSortField] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [conversionCache, setConversionCache] = useState<ConversionCache>({});
+  
+  // Guard against redundant loads
+  const lastProcessedRef = useRef<string>('');
 
   // Load conversions for all transactions
   useEffect(() => {
+    // Create a fingerprint of the current state to avoid redundant work
+    const fingerprint = `${transactions.length}-${displayCurrency}-${transactions.map(t => t.id).join(',')}`;
+    
+    if (lastProcessedRef.current === fingerprint) return;
+
     const loadConversions = async () => {
+      lastProcessedRef.current = fingerprint;
       const conversions: ConversionCache = {};
-      for (const transaction of transactions) {
-        const normalizedOriginal = transaction.currency?.toUpperCase().trim() || 'TRY';
-        // Only convert if different from display currency
-        if (normalizedOriginal !== displayCurrency) {
+      const needsConversion = transactions.filter(t => {
+        const normalizedOriginal = t.currency?.toUpperCase().trim() || 'TRY';
+        return normalizedOriginal !== displayCurrency;
+      });
+
+      if (needsConversion.length === 0) {
+        setConversionCache({});
+        return;
+      }
+
+      // Process in parallel since exchange rates are now cached in memory
+      const results = await Promise.all(
+        needsConversion.map(async (transaction) => {
           try {
             const result = await formatWithConversion(
               transaction.amount,
               transaction.currency,
               transaction.transaction_date
             );
-            conversions[transaction.id] = {
-              converted: result.converted,
-              rateInfo: result.rateInfo,
-            };
+            return { id: transaction.id, result };
           } catch (error) {
             console.warn(`Failed to convert transaction ${transaction.id}:`, error);
+            return null;
           }
+        })
+      );
+
+      results.forEach(item => {
+        if (item) {
+          conversions[item.id] = {
+            converted: item.result.converted,
+            rateInfo: item.result.rateInfo,
+          };
         }
-      }
+      });
+
       setConversionCache(conversions);
     };
 
     if (transactions.length > 0) {
       loadConversions();
+    } else {
+      setConversionCache({});
     }
   }, [transactions, displayCurrency, formatWithConversion]);
 

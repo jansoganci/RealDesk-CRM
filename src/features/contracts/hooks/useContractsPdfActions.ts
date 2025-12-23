@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { contractsService } from '../../../lib/serviceProxy';
@@ -109,11 +109,16 @@ export function useContractsPdfActions({
     input.click();
   }, [refreshData, handlePdfFileSelected]);
 
-  return {
+  return useMemo(() => ({
     uploadingContractId,
     pdfActionLoading,
     handleDownloadPdf,
     handleUploadPdfClick,
-  };
+  }), [
+    uploadingContractId,
+    pdfActionLoading,
+    handleDownloadPdf,
+    handleUploadPdfClick,
+  ]);
 }
 

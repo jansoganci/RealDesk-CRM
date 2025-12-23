@@ -367,7 +367,7 @@ class InquiriesService {
       .from('inquiry_matches')
       .select(`
         *,
-        property:properties(*)
+        property:properties(id, address, city, district, status, property_type, rent_amount, sale_price, currency)
       `)
       .eq('inquiry_id', inquiryId)
       .order('matched_at', { ascending: false });

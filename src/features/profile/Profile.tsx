@@ -1,7 +1,6 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
-import { userPreferencesService } from '@/lib/serviceProxy';
 import { UserInfoHeader } from './components/UserInfoHeader';
 import { ProfileInfoCard } from './components/ProfileInfoCard';
 import { EditProfileInfoDialog } from './components/EditProfileInfoDialog';

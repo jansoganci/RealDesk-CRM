@@ -18,9 +18,18 @@ class ContractsService {
     const { data, error } = await supabase
       .from('contracts')
       .select(`
-        *,
-        tenant:tenants(*),
-        property:properties(*)
+        id,
+        status,
+        start_date,
+        end_date,
+        rent_amount,
+        currency,
+        created_at,
+        contract_pdf_path,
+        rent_increase_reminder_enabled,
+        rent_increase_reminder_days,
+        tenant:tenants(id, name, email, phone),
+        property:properties(id, address, city, district, il, ilce)
       `)
       .order('created_at', { ascending: false });
 
@@ -33,8 +42,8 @@ class ContractsService {
       .from('contracts')
       .select(`
         *,
-        tenant:tenants(*),
-        property:properties(*)
+        tenant:tenants(id, name, email, phone),
+        property:properties(id, address, city, district, il, ilce)
       `)
       .eq('id', id)
       .maybeSingle();
@@ -69,9 +78,17 @@ class ContractsService {
     const { data, error } = await supabase
       .from('contracts')
       .select(`
-        *,
-        tenant:tenants(*),
-        property:properties(*)
+        id,
+        status,
+        start_date,
+        end_date,
+        rent_amount,
+        currency,
+        contract_pdf_path,
+        rent_increase_reminder_enabled,
+        rent_increase_reminder_days,
+        tenant:tenants(id, name, email, phone),
+        property:properties(id, address, city, district, il, ilce)
       `)
       .eq('status', 'Active')
       .order('end_date', { ascending: true });
@@ -87,9 +104,17 @@ class ContractsService {
     const { data, error } = await supabase
       .from('contracts')
       .select(`
-        *,
-        tenant:tenants(*),
-        property:properties(*)
+        id,
+        status,
+        start_date,
+        end_date,
+        rent_amount,
+        currency,
+        contract_pdf_path,
+        rent_increase_reminder_enabled,
+        rent_increase_reminder_days,
+        tenant:tenants(id, name, email, phone),
+        property:properties(id, address, city, district, il, ilce)
       `)
       .eq('status', 'Active')
       .gte('end_date', formatDateForDb(today))

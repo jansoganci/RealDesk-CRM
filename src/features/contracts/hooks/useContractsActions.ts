@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { contractsService } from '../../../lib/serviceProxy';
@@ -91,7 +91,7 @@ export function useContractsActions({
     window.location.href = `/contracts/${contract.id}/edit`;
   }, []);
 
-  return {
+  return useMemo(() => ({
     deleteDialogOpen,
     contractToDelete,
     actionLoading,
@@ -100,6 +100,15 @@ export function useContractsActions({
     handleDeleteCancel,
     handleAddContract,
     handleEditContract,
-  };
+  }), [
+    deleteDialogOpen,
+    contractToDelete,
+    actionLoading,
+    handleDeleteClick,
+    handleDeleteConfirm,
+    handleDeleteCancel,
+    handleAddContract,
+    handleEditContract,
+  ]);
 }
 

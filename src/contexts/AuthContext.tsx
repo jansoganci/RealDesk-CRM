@@ -3,7 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
-import { getDetectedLanguage, getDetectedCurrency } from '../lib/localeDetection';
+import { getDetectedLanguage, getDetectedCurrency, SupportedLanguage, SupportedCurrency } from '../lib/localeDetection';
 import { createLogger } from '../lib/logger';
 
 const authLogger = createLogger('Auth');
@@ -83,11 +83,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (initialUserId) {
         promises.push(
-          supabase
+          (supabase
             .from('user_preferences')
             .select('language, currency, meeting_reminder_minutes, commission_rate, full_name, phone_number')
             .eq('user_id', initialUserId)
-            .maybeSingle()
+            .maybeSingle() as any) as Promise<any>
         );
       }
 
@@ -230,12 +230,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user?.id]);
 
   const setLanguage = useCallback(async (newLanguage: string) => {
-    setPreferences(prev => ({ ...prev, language: newLanguage }));
+    setPreferences(prev => ({ ...prev, language: newLanguage as SupportedLanguage }));
     await updateUserPreferences({ language: newLanguage });
   }, [updateUserPreferences]);
 
   const setCurrency = useCallback(async (newCurrency: string) => {
-    setPreferences(prev => ({ ...prev, currency: newCurrency }));
+    setPreferences(prev => ({ ...prev, currency: newCurrency as SupportedCurrency }));
     await updateUserPreferences({ currency: newCurrency });
   }, [updateUserPreferences]);
 

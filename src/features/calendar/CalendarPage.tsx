@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router-dom';
 import { meetingsService } from '@/lib/serviceProxy';
@@ -126,11 +126,11 @@ export const CalendarPage = () => {
     fetchMeetings();
   }, [weekDays, t]);
 
-  const handlePrevDay = () => setSelectedDate(subDays(selectedDate, 1));
-  const handleNextDay = () => setSelectedDate(addDays(selectedDate, 1));
-  const handleToday = () => setSelectedDate(new Date());
-  const handleMeetingAdded = () => {
-    const fetchMeetings = async () => {
+  const handlePrevDay = useCallback(() => setSelectedDate(prev => subDays(prev, 1)), []);
+  const handleNextDay = useCallback(() => setSelectedDate(prev => addDays(prev, 1)), []);
+  const handleToday = useCallback(() => setSelectedDate(new Date()), []);
+  const handleMeetingAdded = useCallback(() => {
+    const fetchMeetingsData = async () => {
         setLoading(true);
         try {
             const rangeStart = startOfDay(weekDays[0]);
@@ -143,16 +143,26 @@ export const CalendarPage = () => {
             setLoading(false);
         }
     };
-    fetchMeetings();
-  };
+    fetchMeetingsData();
+  }, [weekDays, t]);
 
-  const meetingsForSelectedDay = meetings.filter(
-    (m) => format(new Date(m.start_time), 'yyyy-MM-dd') === format(selectedDate, 'yyyy-MM-dd')
-  );
+  const meetingsByDay = useMemo(() => {
+    const grouped: Record<string, MeetingWithRelations[]> = {};
+    meetings.forEach(meeting => {
+      const dayKey = format(new Date(meeting.start_time), 'yyyy-MM-dd');
+      if (!grouped[dayKey]) grouped[dayKey] = [];
+      grouped[dayKey].push(meeting);
+    });
+    return grouped;
+  }, [meetings]);
 
-  const getMeetingsForDay = (day: Date) => {
-    return meetings.filter(m => format(new Date(m.start_time), 'yyyy-MM-dd') === format(day, 'yyyy-MM-dd'));
-  }
+  const selectedDayKey = useMemo(() => format(selectedDate, 'yyyy-MM-dd'), [selectedDate]);
+  const meetingsForSelectedDay = useMemo(() => meetingsByDay[selectedDayKey] || [], [meetingsByDay, selectedDayKey]);
+
+  const getMeetingsForDay = useCallback((day: Date) => {
+    const dayKey = format(day, 'yyyy-MM-dd');
+    return meetingsByDay[dayKey] || [];
+  }, [meetingsByDay]);
 
   return (
     <MainLayout title={t('calendar:title')}>

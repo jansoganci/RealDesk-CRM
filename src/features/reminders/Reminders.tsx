@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from 'react';
 import { useRemindersData } from './hooks/useRemindersData';
 import { useReminderCategories } from './hooks/useReminderCategories';
 import { useReminderActions } from './hooks/useReminderActions';
@@ -58,9 +59,42 @@ export const Reminders = () => {
 
   const { t } = useTranslation(['reminders', 'common']);
 
-  const handleMarkAsContactedClick = (reminder: ReminderWithDetails) => {
+  const handleMarkAsContactedClick = useCallback((reminder: ReminderWithDetails) => {
     openContactDialog(reminder);
-  };
+  }, [openContactDialog]);
+
+  const tabsConfig = useMemo(() => [
+    { 
+      id: 'overdue', 
+      label: `${t('tabs.overdue')}${overdueReminders.length > 0 ? ` (${overdueReminders.length})` : ''}`,
+      icon: <AlertCircle className="h-4 w-4" />
+    },
+    { 
+      id: 'upcoming', 
+      label: `${t('tabs.upcoming')}${upcomingReminders.length > 0 ? ` (${upcomingReminders.length})` : ''}`,
+      icon: <Calendar className="h-4 w-4" />
+    },
+    { 
+      id: 'scheduled', 
+      label: `${t('tabs.scheduled')}${scheduledReminders.length > 0 ? ` (${scheduledReminders.length})` : ''}`,
+      icon: <Bell className="h-4 w-4" />
+    },
+    { 
+      id: 'expired', 
+      label: `${t('tabs.expired')}${expiredContracts.length > 0 ? ` (${expiredContracts.length})` : ''}`,
+      icon: <FileText className="h-4 w-4" />
+    },
+  ], [overdueReminders.length, upcomingReminders.length, scheduledReminders.length, expiredContracts.length, t]);
+
+  const onConfirmMarkAsContacted = useCallback(() => {
+    if (selectedReminder) {
+      handleMarkAsContacted(selectedReminder.id);
+    }
+  }, [selectedReminder, handleMarkAsContacted]);
+
+  const onContactDialogChange = useCallback((open: boolean) => {
+    if (!open) closeContactDialog();
+  }, [closeContactDialog]);
 
   if (loading) {
     return <ReminderLoadingSkeleton />;
@@ -101,28 +135,7 @@ export const Reminders = () => {
         ) : (
           <div className="space-y-4">
             <AnimatedTabs
-              tabs={[
-                { 
-                  id: 'overdue', 
-                  label: `${t('tabs.overdue')}${overdueReminders.length > 0 ? ` (${overdueReminders.length})` : ''}`,
-                  icon: <AlertCircle className="h-4 w-4" />
-                },
-                { 
-                  id: 'upcoming', 
-                  label: `${t('tabs.upcoming')}${upcomingReminders.length > 0 ? ` (${upcomingReminders.length})` : ''}`,
-                  icon: <Calendar className="h-4 w-4" />
-                },
-                { 
-                  id: 'scheduled', 
-                  label: `${t('tabs.scheduled')}${scheduledReminders.length > 0 ? ` (${scheduledReminders.length})` : ''}`,
-                  icon: <Bell className="h-4 w-4" />
-                },
-                { 
-                  id: 'expired', 
-                  label: `${t('tabs.expired')}${expiredContracts.length > 0 ? ` (${expiredContracts.length})` : ''}`,
-                  icon: <FileText className="h-4 w-4" />
-                },
-              ]}
+              tabs={tabsConfig}
               defaultTab={activeTab || undefined}
               onChange={(tabId) => setActiveTab(tabId)}
             />
@@ -139,7 +152,7 @@ export const Reminders = () => {
           </div>
         )}
 
-        <AlertDialog open={showContactDialog} onOpenChange={(open) => !open && closeContactDialog()}>
+        <AlertDialog open={showContactDialog} onOpenChange={onContactDialogChange}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>{t('dialogs.markTitle')}</AlertDialogTitle>
@@ -148,7 +161,7 @@ export const Reminders = () => {
           <AlertDialogFooter>
             <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => selectedReminder && handleMarkAsContacted(selectedReminder.id)}
+              onClick={onConfirmMarkAsContacted}
               className={`${COLORS.success.bg} ${COLORS.success.hover}`}
             >
               {t('dialogs.confirm')}

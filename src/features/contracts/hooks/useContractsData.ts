@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { contractsService } from '../../../lib/serviceProxy';
@@ -46,10 +46,10 @@ export function useContractsData(): UseContractsDataReturn {
     loadContracts();
   }, [loadContracts]);
 
-  return {
+  return useMemo(() => ({
     contracts,
     loading,
     refreshData: loadContracts,
-  };
+  }), [contracts, loading, loadContracts]);
 }
 

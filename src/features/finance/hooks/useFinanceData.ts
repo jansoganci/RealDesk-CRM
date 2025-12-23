@@ -1,8 +1,8 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { financialTransactionsService, commissionsService } from '../../../lib/serviceProxy';
-import { fetchAndStoreDailyRates, hasRatesForDate } from '../../../services/finance/exchangeRates.service';
+import { fetchAndStoreDailyRates, hasRatesForDate, getRatesForBatchFromTry } from '../../../services/finance/exchangeRates.service';
 import { calculatePerformanceSummary, NormalizedPerformanceSummary } from '../../../services/finance/reportCalculator';
 import { useAuth } from '../../../contexts/AuthContext';
 import { NormalizedFinancialDashboard, NormalizedYearlySummary } from '../../../services/finance/analytics.service';
@@ -12,7 +12,7 @@ import type {
   ExpenseCategory,
   FinancialRatios,
 } from '../../../types/financial';
-import type { PerformanceSummary, MonthlyCommissionData } from '../../../types';
+import type { MonthlyCommissionData } from '../../../types';
 import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('Finance');
@@ -61,7 +61,7 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const [dashboardData, categoriesData, transactionsData, rawCommissions] = await Promise.all([
         financialTransactionsService.getFinancialDashboardNormalized(displayCurrency || 'TRY'),
         financialTransactionsService.getCategories(),
-        financialTransactionsService.getTransactions(filters),
+        financialTransactionsService.getTransactions(filters, 'id, amount, currency, transaction_date, category, type, payment_status, description, payment_method'),
         commissionsService.getByDateRange(startDate, endDate),
       ]);
 
@@ -75,6 +75,23 @@ export const useFinanceData = (filters: TransactionFilters) => {
       setCategories(categoriesData);
       setTransactions(transactionsData);
       setPerformanceSummary(normalizedPerformance);
+
+      // PROACTIVE RATE HYDRATION: Pre-fetch rates for the transactions table
+      if (transactionsData.length > 0) {
+        const rateRequests = transactionsData
+          .filter(t => t.currency !== 'TRY' || displayCurrency !== 'TRY')
+          .map(t => [
+            { currency: t.currency, date: t.transaction_date },
+            { currency: displayCurrency || 'TRY', date: t.transaction_date }
+          ])
+          .flat();
+        
+        if (rateRequests.length > 0) {
+          getRatesForBatchFromTry(rateRequests).catch(err => {
+            logger.warn('Failed to pre-fetch table rates:', err);
+          });
+        }
+      }
     } catch (error) {
       logger.error('Error loading finance data:', error);
       toast.error(t('finance:messages.loadError'));
@@ -128,7 +145,7 @@ export const useFinanceData = (filters: TransactionFilters) => {
     }
   }, [displayCurrency]);
 
-  return {
+  return useMemo(() => ({
     // Data
     dashboard,
     transactions,
@@ -149,6 +166,20 @@ export const useFinanceData = (filters: TransactionFilters) => {
     refreshDashboard,
     setTransactions,
     setDashboard,
-  };
+  }), [
+    dashboard,
+    transactions,
+    categories,
+    ratios,
+    yearlySummary,
+    performanceSummary,
+    monthlyCommissions,
+    loading,
+    analyticsLoading,
+    loadData,
+    loadTransactions,
+    loadAnalytics,
+    refreshDashboard,
+  ]);
 };
 

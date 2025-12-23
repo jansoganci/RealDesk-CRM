@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { OwnerDialog } from './OwnerDialog';
@@ -14,7 +14,8 @@ import { getOwnerSchema } from './ownerSchema';
 
 export const Owners = () => {
   const { t } = useTranslation(['owners', 'common']);
-  const ownerSchema = getOwnerSchema(t);
+  
+  const ownerSchema = useMemo(() => getOwnerSchema(t), [t]);
   type OwnerFormData = z.infer<typeof ownerSchema>;
 
   const [owners, setOwners] = useState<(PropertyOwner & { property_count?: number })[]>([]);
@@ -27,9 +28,23 @@ export const Owners = () => {
   const [ownerToDelete, setOwnerToDelete] = useState<PropertyOwner | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  const loadOwners = useCallback(async () => {
+    try {
+      setLoading(true);
+      const data = await ownersService.getOwnersWithPropertyCount();
+      setOwners(data);
+      setFilteredOwners(data);
+    } catch (error) {
+      toast.error(t('toasts.loadError'));
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  }, [t]);
+
   useEffect(() => {
     loadOwners();
-  }, []);
+  }, [loadOwners]);
 
   useEffect(() => {
     if (searchQuery.trim() === '') {
@@ -46,36 +61,22 @@ export const Owners = () => {
     }
   }, [searchQuery, owners]);
 
-  const loadOwners = async () => {
-    try {
-      setLoading(true);
-      const data = await ownersService.getOwnersWithPropertyCount();
-      setOwners(data);
-      setFilteredOwners(data);
-    } catch (error) {
-      toast.error(t('toasts.loadError'));
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleAddOwner = () => {
+  const handleAddOwner = useCallback(() => {
     setSelectedOwner(null);
     setDialogOpen(true);
-  };
+  }, []);
 
-  const handleEditOwner = (owner: PropertyOwner) => {
+  const handleEditOwner = useCallback((owner: PropertyOwner) => {
     setSelectedOwner(owner);
     setDialogOpen(true);
-  };
+  }, []);
 
-  const handleDeleteClick = (owner: PropertyOwner) => {
+  const handleDeleteClick = useCallback((owner: PropertyOwner) => {
     setOwnerToDelete(owner);
     setDeleteDialogOpen(true);
-  };
+  }, []);
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = useCallback(async () => {
     if (!ownerToDelete) return;
 
     try {
@@ -91,9 +92,9 @@ export const Owners = () => {
     } finally {
       setActionLoading(false);
     }
-  };
+  }, [ownerToDelete, t, loadOwners]);
 
-  const handleSubmit = async (data: OwnerFormData) => {
+  const handleSubmit = useCallback(async (data: OwnerFormData) => {
     try {
       setActionLoading(true);
       if (selectedOwner) {
@@ -113,7 +114,123 @@ export const Owners = () => {
     } finally {
       setActionLoading(false);
     }
-  };
+  }, [selectedOwner, t, loadOwners]);
+
+  const renderTableHeaders = useCallback(() => (
+    <>
+      <TableHead>{t('table.name')}</TableHead>
+      <TableHead>{t('table.contact')}</TableHead>
+      <TableHead>{t('table.address')}</TableHead>
+      <TableHead className="text-center">{t('table.properties')}</TableHead>
+      <TableHead className="text-right">{t('table.actions')}</TableHead>
+    </>
+  ), [t]);
+
+  const renderTableRow = useCallback((owner: PropertyOwner & { property_count?: number }) => (
+    <TableRow key={owner.id}>
+      <TableCell className="font-medium">{owner.name}</TableCell>
+      <TableCell>
+        <div className="space-y-1">
+          <div className="flex items-center gap-2 text-sm min-w-0">
+            <Mail className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+            <span className={`truncate max-w-[150px] md:max-w-[250px]`}>{owner.email}</span>
+          </div>
+          <div className="flex items-center gap-2 text-sm">
+            <Phone className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+            <span>{owner.phone}</span>
+          </div>
+        </div>
+      </TableCell>
+      <TableCell>
+        {owner.address ? (
+          <div className="flex items-center gap-2 text-sm min-w-0">
+            <MapPin className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+            <span className={`${COLORS.gray.text600} truncate max-w-[180px] md:max-w-[300px]`}>{owner.address}</span>
+          </div>
+        ) : (
+          <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
+        )}
+      </TableCell>
+      <TableCell className="text-center">
+        <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
+          {owner.property_count || 0}
+        </span>
+      </TableCell>
+      <TableCell className="text-right">
+        <TableActionButtons
+          onEdit={() => handleEditOwner(owner)}
+          onDelete={() => handleDeleteClick(owner)}
+          showView={false}
+        />
+      </TableCell>
+    </TableRow>
+  ), [handleEditOwner, handleDeleteClick, t]);
+
+  const renderCardContent = useCallback((owner: PropertyOwner & { property_count?: number }) => (
+    <div className="space-y-3">
+      {/* Header */}
+      <div className="flex items-start justify-between gap-2">
+        <span className={`font-semibold text-base ${COLORS.gray.text900}`}>
+          {owner.name}
+        </span>
+        <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
+          {t('propertyCount', { count: owner.property_count || 0 })}
+        </span>
+      </div>
+
+      {/* Body */}
+      <div className="space-y-2">
+        {owner.email && (
+          <div className="flex items-center gap-2 text-sm">
+            <Mail className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+            <span className={`${COLORS.gray.text600} truncate`}>{owner.email}</span>
+          </div>
+        )}
+        
+        {owner.phone && (
+          <div className="flex items-center gap-2 text-sm">
+            <Phone className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+            <span className={COLORS.gray.text600}>{owner.phone}</span>
+          </div>
+        )}
+
+        {owner.address && (
+          <div className="flex items-center gap-2 text-sm">
+            <MapPin className={`h-4 w-4 ${COLORS.muted.textLight}`} />
+            <span className={`${COLORS.gray.text600} truncate`}>{owner.address}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Footer - Actions */}
+      <div className="flex gap-2 pt-2 border-t">
+        <TableActionButtons
+          onEdit={() => handleEditOwner(owner)}
+          onDelete={() => handleDeleteClick(owner)}
+          showView={false}
+        />
+      </div>
+    </div>
+  ), [handleEditOwner, handleDeleteClick, t]);
+
+  const deleteDialogConfig = useMemo(() => ({
+    open: deleteDialogOpen,
+    title: t('deleteDialog.title'),
+    description: t('deleteDialog.description', { ownerName: ownerToDelete?.name }),
+    onConfirm: handleDeleteConfirm,
+    onCancel: () => setDeleteDialogOpen(false),
+    loading: actionLoading,
+  }), [deleteDialogOpen, ownerToDelete, handleDeleteConfirm, actionLoading, t]);
+
+  const emptyStateConfig = useMemo(() => ({
+    title: searchQuery ? t('emptyState.noOwnersFound') : t('emptyState.noOwnersYet'),
+    description: searchQuery
+      ? t('emptyState.noOwnersFoundDescription')
+      : t('emptyState.noOwnersYetDescription'),
+    icon: <User className={`h-16 w-16 ${COLORS.muted.textLight}`} />,
+    actionLabel: t('emptyState.addActionLabel'),
+    showAction: !searchQuery,
+  }), [searchQuery, t]);
 
   return (
     <>
@@ -127,117 +244,11 @@ export const Owners = () => {
         onAdd={handleAddOwner}
         addButtonLabel={t('addOwnerButton')}
         skeletonColumnCount={5}
-        emptyState={{
-          title: searchQuery ? t('emptyState.noOwnersFound') : t('emptyState.noOwnersYet'),
-          description: searchQuery
-            ? t('emptyState.noOwnersFoundDescription')
-            : t('emptyState.noOwnersYetDescription'),
-          icon: <User className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('emptyState.addActionLabel'),
-          showAction: !searchQuery,
-        }}
-        renderTableHeaders={() => (
-          <>
-            <TableHead>{t('table.name')}</TableHead>
-            <TableHead>{t('table.contact')}</TableHead>
-            <TableHead>{t('table.address')}</TableHead>
-            <TableHead className="text-center">{t('table.properties')}</TableHead>
-            <TableHead className="text-right">{t('table.actions')}</TableHead>
-          </>
-        )}
-        renderTableRow={(owner) => (
-          <TableRow>
-            <TableCell className="font-medium">{owner.name}</TableCell>
-            <TableCell>
-              <div className="space-y-1">
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <Mail className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span className={`truncate max-w-[150px] md:max-w-[250px]`}>{owner.email}</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span>{owner.phone}</span>
-                </div>
-              </div>
-            </TableCell>
-            <TableCell>
-              {owner.address ? (
-                <div className="flex items-center gap-2 text-sm min-w-0">
-                  <MapPin className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-                  <span className={`${COLORS.gray.text600} truncate max-w-[180px] md:max-w-[300px]`}>{owner.address}</span>
-                </div>
-              ) : (
-                <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
-              )}
-            </TableCell>
-            <TableCell className="text-center">
-              <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
-                {owner.property_count || 0}
-              </span>
-            </TableCell>
-            <TableCell className="text-right">
-              <TableActionButtons
-                onEdit={() => handleEditOwner(owner)}
-                onDelete={() => handleDeleteClick(owner)}
-                showView={false}
-              />
-            </TableCell>
-          </TableRow>
-        )}
-        renderCardContent={(owner) => (
-          <div className="space-y-3">
-            {/* Header */}
-            <div className="flex items-start justify-between gap-2">
-              <span className={`font-semibold text-base ${COLORS.gray.text900}`}>
-                {owner.name}
-              </span>
-              <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
-                {t('propertyCount', { count: owner.property_count || 0 })}
-              </span>
-            </div>
-
-            {/* Body */}
-            <div className="space-y-2">
-              {owner.email && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Mail className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-                  <span className={`${COLORS.gray.text600} truncate`}>{owner.email}</span>
-                </div>
-              )}
-              
-              {owner.phone && (
-                <div className="flex items-center gap-2 text-sm">
-                  <Phone className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-                  <span className={COLORS.gray.text600}>{owner.phone}</span>
-                </div>
-              )}
-
-              {owner.address && (
-                <div className="flex items-center gap-2 text-sm">
-                  <MapPin className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-                  <span className={`${COLORS.gray.text600} truncate`}>{owner.address}</span>
-                </div>
-              )}
-            </div>
-
-            {/* Footer - Actions */}
-            <div className="flex gap-2 pt-2 border-t">
-              <TableActionButtons
-                onEdit={() => handleEditOwner(owner)}
-                onDelete={() => handleDeleteClick(owner)}
-                showView={false}
-              />
-            </div>
-          </div>
-        )}
-        deleteDialog={{
-          open: deleteDialogOpen,
-          title: t('deleteDialog.title'),
-          description: t('deleteDialog.description', { ownerName: ownerToDelete?.name }),
-          onConfirm: handleDeleteConfirm,
-          onCancel: () => setDeleteDialogOpen(false),
-          loading: actionLoading,
-        }}
+        emptyState={emptyStateConfig}
+        renderTableHeaders={renderTableHeaders}
+        renderTableRow={renderTableRow}
+        renderCardContent={renderCardContent}
+        deleteDialog={deleteDialogConfig}
       />
 
       <OwnerDialog

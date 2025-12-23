@@ -3,7 +3,7 @@
 // Provides currency conversion functions using user's display currency preference
 // =====================================================
 
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
   formatCurrencyWithConversion,
@@ -28,7 +28,10 @@ interface FormatResult {
  */
 export function useCurrencyConversion() {
   const { currency: displayCurrency } = useAuth();
-  const normalizedDisplayCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
+  const normalizedDisplayCurrency = useMemo(() => 
+    displayCurrency?.toUpperCase().trim() || 'TRY',
+    [displayCurrency]
+  );
 
   /**
    * Convert amount using historical rate
@@ -102,11 +105,11 @@ export function useCurrencyConversion() {
     [normalizedDisplayCurrency]
   );
 
-  return {
+  return useMemo(() => ({
     displayCurrency: normalizedDisplayCurrency,
     convert,
     formatWithConversion,
     getRate,
-  };
+  }), [normalizedDisplayCurrency, convert, formatWithConversion, getRate]);
 }
 

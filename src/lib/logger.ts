@@ -49,7 +49,21 @@ class Logger {
    * ERROR: Critical failures. Visible in production.
    */
   error(message: string, ...args: any[]) {
-    console.error(this.formatMessage(message), ...args);
+    // Enhanced error logging for Supabase/PostgREST errors
+    const processedArgs = args.map(arg => {
+      if (arg && typeof arg === 'object' && ('message' in arg || 'code' in arg)) {
+        return {
+          message: arg.message,
+          details: arg.details,
+          hint: arg.hint,
+          code: arg.code,
+          status: arg.status,
+          ...arg
+        };
+      }
+      return arg;
+    });
+    console.error(this.formatMessage(message), ...processedArgs);
   }
 }
 

@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { MainLayout } from '../layout/MainLayout';
 import { PageContainer } from '../layout/PageContainer';
@@ -78,7 +78,7 @@ export interface ListPageTemplateProps<T> {
   headerContent?: ReactNode; // Optional: Content to render above search/filter row
 }
 
-export function ListPageTemplate<T>({
+export const ListPageTemplate = memo(function ListPageTemplate<T>({
   title,
   items,
   loading,
@@ -102,7 +102,7 @@ export function ListPageTemplate<T>({
   const { t } = useTranslation('common');
   return (
     <MainLayout title={title}>
-      <PageContainer>
+      <PageContainer className="min-h-[600px]">
         {headerContent && <div className="mb-6">{headerContent}</div>}
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
@@ -231,4 +231,6 @@ export function ListPageTemplate<T>({
       )}
     </MainLayout>
   );
-}
+});
+
+ListPageTemplate.displayName = 'ListPageTemplate';

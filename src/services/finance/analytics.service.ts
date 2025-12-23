@@ -8,6 +8,7 @@ import { getTransactions } from './transactions.service';
 import { getCategories } from './categories.service';
 import { getUpcomingRecurringExpenses } from './recurring.service';
 import { calculateCategoryBreakdown, NormalizedCategoryBreakdown, calculateNormalizedSum, CalculatedMetric } from './reportCalculator';
+import { getRatesForBatchFromTry } from './exchangeRates.service';
 import type {
   MonthlySummary,
   CategoryBreakdown,
@@ -63,7 +64,7 @@ export const getMonthlySummaryNormalized = async (
 
   const { data, error } = await supabase
     .from('financial_transactions')
-    .select('*')
+    .select('id, amount, currency, transaction_date, category, type, payment_status')
     .gte('transaction_date', startDate)
     .lte('transaction_date', endDate)
     .eq('payment_status', 'completed');
@@ -123,8 +124,8 @@ export const getFinancialDashboardNormalized = async (
     upcomingExpenses,
     pendingCountResult,
   ] = await Promise.all([
-    supabase.from('financial_transactions').select('*').gte('transaction_date', currentMonth + '-01').lte('transaction_date', currentMonthEnd).eq('payment_status', 'completed'),
-    supabase.from('financial_transactions').select('*').gte('transaction_date', previousMonth + '-01').lte('transaction_date', new Date(today.getFullYear(), today.getMonth() - 1, 0).toISOString().split('T')[0]).eq('payment_status', 'completed'),
+    supabase.from('financial_transactions').select('id, amount, currency, transaction_date, category, type, payment_status').gte('transaction_date', currentMonth + '-01').lte('transaction_date', currentMonthEnd).eq('payment_status', 'completed'),
+    supabase.from('financial_transactions').select('id, amount, currency, transaction_date, category, type, payment_status').gte('transaction_date', previousMonth + '-01').lte('transaction_date', new Date(today.getFullYear(), today.getMonth() - 1, 0).toISOString().split('T')[0]).eq('payment_status', 'completed'),
     getTransactions({ start_date: yearStart, end_date: yearEnd, payment_status: 'completed' }),
     getCategories('income'),
     getCategories('expense'),
@@ -139,14 +140,66 @@ export const getFinancialDashboardNormalized = async (
   const currentMonthTransactions = allTransactionsCurrent.data || [];
   const previousMonthTransactions = allTransactionsPrevious.data || [];
   
-  // Calculate normalized summaries
+  // PRE-FLIGHT: Collect all unique date/currency pairs from all transaction sets
+  const rateRequests: Array<{ currency: string; date: string }> = [];
+  const allSets = [...currentMonthTransactions, ...previousMonthTransactions, ...yearToDateTransactions];
+  
+  allSets.forEach(t => {
+    if (t.currency !== 'TRY') {
+      rateRequests.push({ currency: t.currency, date: t.transaction_date });
+    }
+    if (displayCurrency !== 'TRY') {
+      rateRequests.push({ currency: displayCurrency, date: t.transaction_date });
+    }
+  });
+
+  // Pre-fetch all rates in one go to warm the cache
+  if (rateRequests.length > 0) {
+    await getRatesForBatchFromTry(rateRequests);
+  }
+
+  // Calculate normalized summaries locally instead of re-fetching
   const [currentSummary, previousSummary, ytdIncome, ytdExpense, incomeBreakdown, expenseBreakdown] = await Promise.all([
-    getMonthlySummaryNormalized(currentMonth, displayCurrency),
-    getMonthlySummaryNormalized(previousMonth, displayCurrency),
+    // Local calculation for current month
+    (async () => {
+      const inc = currentMonthTransactions.filter(t => t.type === 'income');
+      const exp = currentMonthTransactions.filter(t => t.type === 'expense');
+      const total_inc = await calculateNormalizedSum(inc, displayCurrency);
+      const total_exp = await calculateNormalizedSum(exp, displayCurrency);
+      return {
+        month: currentMonth,
+        total_income: total_inc,
+        total_expense: total_exp,
+        net_income: {
+          value: total_inc.value - total_exp.value,
+          isComplete: total_inc.isComplete && total_exp.isComplete,
+          missingDates: Array.from(new Set([...total_inc.missingDates, ...total_exp.missingDates]))
+        },
+        transaction_count: currentMonthTransactions.length,
+      };
+    })(),
+    // Local calculation for previous month
+    (async () => {
+      const inc = previousMonthTransactions.filter(t => t.type === 'income');
+      const exp = previousMonthTransactions.filter(t => t.type === 'expense');
+      const total_inc = await calculateNormalizedSum(inc, displayCurrency);
+      const total_exp = await calculateNormalizedSum(exp, displayCurrency);
+      return {
+        month: previousMonth,
+        total_income: total_inc,
+        total_expense: total_exp,
+        net_income: {
+          value: total_inc.value - total_exp.value,
+          isComplete: total_inc.isComplete && total_exp.isComplete,
+          missingDates: Array.from(new Set([...total_inc.missingDates, ...total_exp.missingDates]))
+        },
+        transaction_count: previousMonthTransactions.length,
+      };
+    })(),
     calculateNormalizedSum(yearToDateTransactions.filter(t => t.type === 'income'), displayCurrency),
     calculateNormalizedSum(yearToDateTransactions.filter(t => t.type === 'expense'), displayCurrency),
-    calculateCategoryBreakdown(currentMonthTransactions, displayCurrency, 'income'),
-    calculateCategoryBreakdown(currentMonthTransactions, displayCurrency, 'expense'),
+    calculateCategoryBreakdown(currentMonthTransactions as any, displayCurrency, 'income'),
+    calculateCategoryBreakdown(currentMonthTransactions as any, displayCurrency, 'expense'),
   ]);
 
   // Inject metadata into breakdowns
@@ -258,7 +311,7 @@ export const getCashFlowForecastNormalized = async (
 
   const { data, error } = await supabase
     .from('financial_transactions')
-    .select('*')
+    .select('id, amount, currency, transaction_date, category, type, payment_status')
     .gte('transaction_date', pastStr)
     .lte('transaction_date', todayStr)
     .eq('type', 'income')
@@ -373,7 +426,7 @@ export const getTopCategoriesNormalized = async (
   // Use the new calculator for breakdown
   const { data, error } = await supabase
     .from('financial_transactions')
-    .select('*')
+    .select('id, amount, currency, transaction_date, category, type, payment_status')
     .gte('transaction_date', startDate || '1900-01-01')
     .lte('transaction_date', endDate || '2100-12-31')
     .eq('type', type)
@@ -385,7 +438,7 @@ export const getTopCategoriesNormalized = async (
   }
 
   const transactions = data || [];
-  const normalizedBreakdown = await calculateCategoryBreakdown(transactions, displayCurrency, type);
+  const normalizedBreakdown = await calculateCategoryBreakdown(transactions as any, displayCurrency, type);
 
   // Get category metadata
   const categories = await getCategories(type);

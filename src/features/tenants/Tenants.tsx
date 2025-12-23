@@ -1,4 +1,5 @@
 
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TableHead } from '../../components/ui/table';
 import { EnhancedTenantDialog } from './EnhancedTenantDialog';
@@ -59,22 +60,77 @@ export const Tenants = () => {
     onCloseDelete: closeDeleteDialog,
   });
 
-  const handleAddTenant = () => {
+  const handleAddTenant = useCallback(() => {
     openCreate();
-  };
+  }, [openCreate]);
 
-  const handleEditTenant = (tenant: TenantWithProperty) => {
+  const handleEditTenant = useCallback((tenant: TenantWithProperty) => {
     openEdit(tenant);
-  };
+  }, [openEdit]);
 
-  const handleDeleteClick = (tenant: TenantWithProperty) => {
+  const handleDeleteClick = useCallback((tenant: TenantWithProperty) => {
     openDeleteDialog(tenant);
-  };
+  }, [openDeleteDialog]);
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = useCallback(async () => {
     if (!tenantToDelete) return;
     await handleDeleteConfirmAction(tenantToDelete);
-  };
+  }, [tenantToDelete, handleDeleteConfirmAction]);
+
+  const filterOptions = useMemo(() => [
+    { value: 'all', label: t('filters.all') },
+    { value: 'assigned', label: t('filters.assigned') },
+    { value: 'unassigned', label: t('filters.unassigned') },
+  ], [t]);
+
+  const emptyStateConfig = useMemo(() => ({
+    title: searchQuery || assignmentFilter !== 'all' ? t('emptyState.noTenantsFound') : t('emptyState.noTenantsYet'),
+    description: searchQuery || assignmentFilter !== 'all'
+      ? t('emptyState.noTenantsFoundDescription')
+      : t('emptyState.noTenantsYetDescription'),
+    icon: <Users className={`h-16 w-16 ${COLORS.muted.text}`} />,
+    actionLabel: t('emptyState.addActionLabel'),
+    showAction: !searchQuery && assignmentFilter === 'all',
+  }), [searchQuery, assignmentFilter, t]);
+
+  const renderTableHeaders = useCallback(() => (
+    <>
+      <TableHead>{t('table.name')}</TableHead>
+      <TableHead>{t('table.contact')}</TableHead>
+      <TableHead>{t('table.property')}</TableHead>
+      <TableHead>{t('table.status')}</TableHead>
+      <TableHead className="text-right">{t('table.actions')}</TableHead>
+    </>
+  ), [t]);
+
+  const renderTableRow = useCallback((tenant: any, _index: number) => (
+    <TenantTableRow
+      key={tenant.id}
+      tenant={tenant}
+      onEdit={handleEditTenant}
+      onDelete={handleDeleteClick}
+      onScheduleMeeting={handleScheduleMeeting}
+    />
+  ), [handleEditTenant, handleDeleteClick, handleScheduleMeeting]);
+
+  const renderCardContent = useCallback((tenant: any, _index: number) => (
+    <TenantCard
+      key={tenant.id}
+      tenant={tenant}
+      onEdit={handleEditTenant}
+      onDelete={handleDeleteClick}
+      onScheduleMeeting={handleScheduleMeeting}
+    />
+  ), [handleEditTenant, handleDeleteClick, handleScheduleMeeting]);
+
+  const deleteDialogConfig = useMemo(() => ({
+    open: isDeleteDialogOpen,
+    title: t('deleteDialog.title'),
+    description: t('deleteDialog.description', { tenantName: tenantToDelete?.name }),
+    onConfirm: handleDeleteConfirm,
+    onCancel: closeDeleteDialog,
+    loading: actionLoading,
+  }), [isDeleteDialogOpen, tenantToDelete?.name, handleDeleteConfirm, closeDeleteDialog, actionLoading, t]);
 
   return (
     <>
@@ -87,57 +143,16 @@ export const Tenants = () => {
         searchPlaceholder={t('searchPlaceholder')}
         filterValue={assignmentFilter}
         onFilterChange={setAssignmentFilter}
-        filterOptions={[
-          { value: 'all', label: t('filters.all') },
-          { value: 'assigned', label: t('filters.assigned') },
-          { value: 'unassigned', label: t('filters.unassigned') },
-        ]}
+        filterOptions={filterOptions}
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddTenant}
         addButtonLabel={t('addTenantButton')}
         skeletonColumnCount={5}
-        emptyState={{
-          title: searchQuery || assignmentFilter !== 'all' ? t('emptyState.noTenantsFound') : t('emptyState.noTenantsYet'),
-          description: searchQuery || assignmentFilter !== 'all'
-            ? t('emptyState.noTenantsFoundDescription')
-            : t('emptyState.noTenantsYetDescription'),
-          icon: <Users className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('emptyState.addActionLabel'),
-          showAction: !searchQuery && assignmentFilter === 'all',
-        }}
-        renderTableHeaders={() => (
-          <>
-            <TableHead>{t('table.name')}</TableHead>
-            <TableHead>{t('table.contact')}</TableHead>
-            <TableHead>{t('table.property')}</TableHead>
-            <TableHead>{t('table.status')}</TableHead>
-            <TableHead className="text-right">{t('table.actions')}</TableHead>
-          </>
-        )}
-        renderTableRow={(tenant) => (
-          <TenantTableRow
-            tenant={tenant}
-            onEdit={handleEditTenant}
-            onDelete={handleDeleteClick}
-            onScheduleMeeting={handleScheduleMeeting}
-          />
-        )}
-        renderCardContent={(tenant) => (
-          <TenantCard
-            tenant={tenant}
-            onEdit={handleEditTenant}
-            onDelete={handleDeleteClick}
-            onScheduleMeeting={handleScheduleMeeting}
-          />
-        )}
-        deleteDialog={{
-          open: isDeleteDialogOpen,
-          title: t('deleteDialog.title'),
-          description: t('deleteDialog.description', { tenantName: tenantToDelete?.name }),
-          onConfirm: handleDeleteConfirm,
-          onCancel: closeDeleteDialog,
-          loading: actionLoading,
-        }}
+        emptyState={emptyStateConfig}
+        renderTableHeaders={renderTableHeaders}
+        renderTableRow={renderTableRow}
+        renderCardContent={renderCardContent}
+        deleteDialog={deleteDialogConfig}
       />
 
       <EnhancedTenantDialog

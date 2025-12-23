@@ -26,7 +26,7 @@ import { getStatusFilterOptions } from './utils/statusUtils';
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
   const { currency, commissionRate } = useAuth();
-  const propertySchema = getPropertySchema(t);
+  const propertySchema = useMemo(() => getPropertySchema(t), [t]);
   type PropertyFormData = z.infer<typeof propertySchema>;
 
   const [properties, setProperties] = useState<PropertyWithOwner[]>([]);
@@ -78,9 +78,15 @@ export const Properties = () => {
       setLoading(true);
       const data = await propertiesService.getAll();
       setProperties(data);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(t('toasts.loadError'));
-      console.error(error);
+      console.error('[Properties] Error fetching properties:', {
+        message: error.message,
+        details: error.details,
+        hint: error.hint,
+        code: error.code,
+        status: error.status
+      });
     } finally {
       setLoading(false);
     }
@@ -100,41 +106,41 @@ export const Properties = () => {
     onCloseEdit: closeEdit,
   });
 
-  const handleAddProperty = () => {
+  const handleAddProperty = useCallback(() => {
     openCreate();
-  };
+  }, [openCreate]);
 
-  const handleEditProperty = (property: PropertyWithOwner) => {
+  const handleEditProperty = useCallback((property: PropertyWithOwner) => {
     openEdit(property);
-  };
+  }, [openEdit]);
 
-  const handleDeleteClick = (property: PropertyWithOwner) => {
+  const handleDeleteClick = useCallback((property: PropertyWithOwner) => {
     openDeleteDialog(property);
-  };
+  }, [openDeleteDialog]);
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = useCallback(async () => {
     if (!propertyToDelete) return;
     await handleDelete(propertyToDelete.id);
     closeDeleteDialog();
-  };
+  }, [propertyToDelete, handleDelete, closeDeleteDialog]);
 
-  const handleSubmit = async (data: PropertyFormData) => {
+  const handleSubmit = useCallback(async (data: PropertyFormData) => {
     await handleCreate(data, editingProperty);
-  };
+  }, [handleCreate, editingProperty]);
 
-  const handleAddTenantToProperty = (propertyId: string) => {
+  const handleAddTenantToProperty = useCallback((propertyId: string) => {
     openTenantDialog(propertyId);
-  };
+  }, [openTenantDialog]);
 
-  const handleTenantCreated = async (result: TenantWithContractResult) => {
+  const handleTenantCreated = useCallback(async (result: TenantWithContractResult) => {
     toast.success(t('toasts.addTenantToPropertySuccess', { tenantName: result.tenant.name }));
     await loadProperties();
     closeTenantDialog();
-  };
+  }, [t, loadProperties, closeTenantDialog]);
 
-  const handleMarkAsSoldClick = (property: PropertyWithOwner) => {
+  const handleMarkAsSoldClick = useCallback((property: PropertyWithOwner) => {
     openMarkAsSoldDialog(property);
-  };
+  }, [openMarkAsSoldDialog]);
 
   // Commission hook
   const { handleSaveCommission, isSubmitting: markAsSoldLoading } = usePropertyCommission({
@@ -145,10 +151,71 @@ export const Properties = () => {
     },
   });
 
-  const handleMarkAsSoldConfirm = async (salePrice: number, saleCurrency: string) => {
+  const handleMarkAsSoldConfirm = useCallback(async (salePrice: number, saleCurrency: string) => {
     if (!propertyToSell) return;
     await handleSaveCommission(propertyToSell, salePrice, saleCurrency);
-  };
+  }, [propertyToSell, handleSaveCommission]);
+
+  const tableHeaders = useCallback(() => <PropertyTableHeaders />, []);
+  
+  const renderTableRow = useCallback((property: any, _index: number) => (
+    <PropertyTableRow
+      key={property.id}
+      property={property}
+      onEdit={handleEditProperty}
+      onDelete={handleDeleteClick}
+      onAddTenant={handleAddTenantToProperty}
+      currency={currency}
+    />
+  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, currency]);
+
+  const renderCardContent = useCallback((property: any, _index: number) => (
+    <PropertyCard
+      key={property.id}
+      property={property}
+      onEdit={handleEditProperty}
+      onDelete={() => handleDeleteClick(property)}
+      onAddTenant={handleAddTenantToProperty}
+      currency={currency}
+    />
+  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, currency]);
+
+  const emptyStateConfig = useMemo(() => ({
+    title: searchQuery || statusFilter !== 'all' ? t('emptyState.noPropertiesFound') : t('emptyState.noPropertiesYet'),
+    description: searchQuery || statusFilter !== 'all'
+      ? t('emptyState.noPropertiesFoundDescription')
+      : t('emptyState.noPropertiesYetDescription'),
+    icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text}`} />,
+    actionLabel: t('emptyState.addActionLabel'),
+    showAction: !searchQuery && statusFilter === 'all',
+  }), [searchQuery, statusFilter, t]);
+
+  const deleteDialogConfig = useMemo(() => ({
+    open: isDeleteDialogOpen,
+    title: t('deleteDialog.title'),
+    description: t('deleteDialog.description', { propertyAddress: propertyToDelete?.address }),
+    onConfirm: handleDeleteConfirm,
+    onCancel: closeDeleteDialog,
+    loading: actionLoading,
+  }), [isDeleteDialogOpen, propertyToDelete?.address, handleDeleteConfirm, closeDeleteDialog, actionLoading, t]);
+
+  const tabsConfig = useMemo(() => [
+    { 
+      id: 'all', 
+      label: t('typeFilter.all'),
+      icon: <Building2 className="h-4 w-4" />
+    },
+    { 
+      id: 'rental', 
+      label: t('typeFilter.rental'),
+      icon: <Home className="h-4 w-4" />
+    },
+    { 
+      id: 'sale', 
+      label: t('typeFilter.sale'),
+      icon: <TrendingUp className="h-4 w-4" />
+    },
+  ], [t]);
 
   return (
     <>
@@ -168,64 +235,17 @@ export const Properties = () => {
         skeletonColumnCount={8}
         headerContent={
           <AnimatedTabs
-            tabs={[
-              { 
-                id: 'all', 
-                label: t('typeFilter.all'),
-                icon: <Building2 className="h-4 w-4" />
-              },
-              { 
-                id: 'rental', 
-                label: t('typeFilter.rental'),
-                icon: <Home className="h-4 w-4" />
-              },
-              { 
-                id: 'sale', 
-                label: t('typeFilter.sale'),
-                icon: <TrendingUp className="h-4 w-4" />
-              },
-            ]}
+            tabs={tabsConfig}
             defaultTab={propertyTypeFilter}
             onChange={(tabId) => setPropertyTypeFilter(tabId as 'all' | 'rental' | 'sale')}
           />
         }
-        emptyState={{
-          title: searchQuery || statusFilter !== 'all' ? t('emptyState.noPropertiesFound') : t('emptyState.noPropertiesYet'),
-          description: searchQuery || statusFilter !== 'all'
-            ? t('emptyState.noPropertiesFoundDescription')
-            : t('emptyState.noPropertiesYetDescription'),
-          icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text}`} />,
-          actionLabel: t('emptyState.addActionLabel'),
-          showAction: !searchQuery && statusFilter === 'all',
-        }}
-        renderTableHeaders={() => <PropertyTableHeaders />}
-        renderTableRow={(property) => (
-          <PropertyTableRow
-            property={property}
-            onEdit={handleEditProperty}
-            onDelete={handleDeleteClick}
-            onAddTenant={handleAddTenantToProperty}
-            currency={currency}
-          />
-        )}
-        renderCardContent={(property) => (
-          <PropertyCard
-            property={property}
-            onEdit={handleEditProperty}
-            onDelete={() => handleDeleteClick(property)}
-            onAddTenant={handleAddTenantToProperty}
-            currency={currency}
-          />
-        )}
-        deleteDialog={{
-          open: isDeleteDialogOpen,
-          title: t('deleteDialog.title'),
-          description: t('deleteDialog.description', { propertyAddress: propertyToDelete?.address }),
-          onConfirm: handleDeleteConfirm,
-          onCancel: closeDeleteDialog,
-          loading: actionLoading,
-        }}
-        />
+        emptyState={emptyStateConfig}
+        renderTableHeaders={tableHeaders}
+        renderTableRow={renderTableRow}
+        renderCardContent={renderCardContent}
+        deleteDialog={deleteDialogConfig}
+      />
 
         <PropertyDialog
         open={isCreateOpen || isEditOpen}

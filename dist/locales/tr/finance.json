@@ -247,7 +247,8 @@
     "bestMonth": "En İyi Ay",
     "rentalVsSale": "Kira - Satış Dağılımı",
     "rental": "Kira",
-    "sale": "Satış"
+    "sale": "Satış",
+    "missingRates": "Bazı işlemler için döviz kuru bulunamadı"
   },
 
   "commissionTrends": {

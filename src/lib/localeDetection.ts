@@ -17,8 +17,8 @@ const DETECTED_LANGUAGE_KEY = 'emlak_detected_language';
 const DETECTED_CURRENCY_KEY = 'emlak_detected_currency';
 
 // Supported languages and currencies
-type SupportedLanguage = 'tr' | 'en';
-type SupportedCurrency = 'TRY' | 'USD';
+export type SupportedLanguage = 'tr' | 'en';
+export type SupportedCurrency = 'TRY' | 'USD';
 
 // Default fallback
 const DEFAULT_LANGUAGE: SupportedLanguage = 'tr';

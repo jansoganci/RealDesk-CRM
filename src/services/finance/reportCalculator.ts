@@ -1,4 +1,4 @@
-import { PerformanceSummary, Commission } from '../../types';
+import { Commission } from '../../types';
 import { FinancialTransaction, CategoryBreakdown } from '../../types/financial';
 import { getRateFromTry, getRatesForBatchFromTry, RateInfo } from './exchangeRates.service';
 
@@ -229,7 +229,6 @@ export async function calculateCategoryBreakdown(
 
   const breakdownPromises = Object.entries(categoryGroups).map(async ([category, items]) => {
     const categoryMetric = await calculateNormalizedSum(items, displayCurrency);
-    const firstItem = items[0];
     
     return {
       category,

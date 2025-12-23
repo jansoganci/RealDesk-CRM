@@ -28,7 +28,7 @@ class MeetingsService {
   async getAll(): Promise<MeetingWithRelations[]> {
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .select('*, tenant:tenants(*), property:properties(*), owner:property_owners(*)')
+      .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
       .order('start_time', { ascending: true });
 
     if (error) {
@@ -37,26 +37,18 @@ class MeetingsService {
     return data || [];
   }
 
-  /**
-   * Fetches a single meeting by its ID.
-   * @param id The UUID of the meeting to fetch.
-   * @returns A promise that resolves to the meeting with its relations.
-   */
   async getById(id: string): Promise<MeetingWithRelations> {
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .select('*, tenant:tenants(*), property:properties(*), owner:property_owners(*)')
+      .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
       .eq('id', id)
-      .single();
+      .maybeSingle();
 
     if (error) {
-      if (error.code === 'PGRST116') {
-        throw new AppError(ERROR_MEETING_NOT_FOUND, 'Meeting not found');
-      }
       throw new AppError(ERROR_SERVER_ERROR, 'Failed to fetch meeting by ID');
     }
     if (!data) {
-      throw new AppError(ERROR_MEETING_NOT_FOUND, 'Meeting not found.');
+      throw new AppError(ERROR_MEETING_NOT_FOUND, 'Meeting not found');
     }
     return data;
   }
@@ -114,16 +106,10 @@ class MeetingsService {
     }
   }
 
-  /**
-   * Fetches meetings within a specific date range.
-   * @param startDate The start of the date range (ISO string).
-   * @param endDate The end of the date range (ISO string).
-   * @returns A promise that resolves to an array of meetings within the range.
-   */
   async getByDateRange(startDate: string, endDate: string): Promise<MeetingWithRelations[]> {
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .select('*, tenant:tenants(*), property:properties(*), owner:property_owners(*)')
+      .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
       .gte('start_time', startDate)
       .lte('start_time', endDate)
       .order('start_time', { ascending: true });
@@ -134,16 +120,11 @@ class MeetingsService {
     return data || [];
   }
 
-  /**
-   * Fetches upcoming meetings.
-   * @param limit The maximum number of upcoming meetings to fetch. Defaults to 10.
-   * @returns A promise that resolves to an array of upcoming meetings.
-   */
   async getUpcoming(limit = 10): Promise<MeetingWithRelations[]> {
     const now = new Date().toISOString();
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .select('*, tenant:tenants(*), property:properties(*), owner:property_owners(*)')
+      .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
       .gte('start_time', now)
       .order('start_time', { ascending: true })
       .limit(limit);

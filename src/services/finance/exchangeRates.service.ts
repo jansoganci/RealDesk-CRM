@@ -8,10 +8,22 @@ import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('ExchangeRates');
 
+// In-memory cache for exchange rates to prevent redundant DB calls
+// Key format: "CURRENCY-YYYY-MM-DD"
+const rateCache = new Map<string, RateInfo>();
+
 export interface RateInfo {
   rate: number;
   rate_date_used: string; // ISO date string
   source?: string;
+}
+
+/**
+ * Clear the in-memory rate cache
+ */
+export function clearRateCache() {
+  rateCache.clear();
+  logger.debug('Rate cache cleared');
 }
 
 /**
@@ -21,7 +33,16 @@ export interface RateInfo {
  */
 export async function hasRatesForDate(date: Date): Promise<boolean> {
   const dateStr = date.toISOString().split('T')[0];
-  logger.debug('Checking for date:', dateStr);
+  
+  // Check cache first
+  const cacheKeyPrefix = `-${dateStr}`;
+  for (const key of rateCache.keys()) {
+    if (key.endsWith(cacheKeyPrefix)) {
+      return true;
+    }
+  }
+
+  logger.debug('Checking DB for date:', dateStr);
   const { data, error } = await supabase
     .from('exchange_rates')
     .select('rate_date')
@@ -48,6 +69,14 @@ export async function hasRatesForDate(date: Date): Promise<boolean> {
 export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<void> {
   const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD format
   logger.debug('Called for date:', dateStr);
+  
+  // Clear cache for this date to ensure fresh data is used after fetch
+  const cacheKeySuffix = `-${dateStr}`;
+  for (const key of rateCache.keys()) {
+    if (key.endsWith(cacheKeySuffix)) {
+      rateCache.delete(key);
+    }
+  }
   
   // Get Supabase URL and anon key from environment
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -116,22 +145,27 @@ export async function getRateFromTry(
   date: string | Date
 ): Promise<RateInfo> {
   const target = targetCurrency.toUpperCase().trim();
+  const dateStr = typeof date === 'string' 
+    ? date.split('T')[0] // Extract YYYY-MM-DD from ISO string
+    : date.toISOString().split('T')[0];
   
-  // If TRY, return 1.0
+  const cacheKey = `${target}-${dateStr}`;
+
+  // 1. TRY always 1.0
   if (target === 'TRY') {
-    const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
     return {
       rate: 1.0,
       rate_date_used: dateStr,
     };
   }
 
-  // Normalize date
-  const dateStr = typeof date === 'string' 
-    ? date.split('T')[0] // Extract YYYY-MM-DD from ISO string
-    : date.toISOString().split('T')[0];
+  // 2. Check cache first
+  const cached = rateCache.get(cacheKey);
+  if (cached) {
+    return cached;
+  }
 
-  // Try exact date match first
+  // 3. Try exact date match from DB
   let { data, error } = await supabase
     .from('exchange_rates')
     .select('rate, rate_date, source')
@@ -140,16 +174,17 @@ export async function getRateFromTry(
     .eq('rate_date', dateStr)
     .maybeSingle();
 
-  // If exact match found, return it
   if (data && !error) {
-    return {
+    const result = {
       rate: Number(data.rate),
       rate_date_used: data.rate_date,
       source: data.source || undefined,
     };
+    rateCache.set(cacheKey, result);
+    return result;
   }
 
-  // Fallback: Get previous available rate
+  // 4. Fallback: Get previous available rate from DB
   const { data: fallbackData, error: fallbackError } = await supabase
     .from('exchange_rates')
     .select('rate, rate_date, source')
@@ -161,19 +196,21 @@ export async function getRateFromTry(
     .maybeSingle();
 
   if (fallbackData && !fallbackError) {
-    return {
+    const result = {
       rate: Number(fallbackData.rate),
       rate_date_used: fallbackData.rate_date,
       source: fallbackData.source || undefined,
     };
+    // Cache this too for performance
+    rateCache.set(cacheKey, result);
+    return result;
   }
 
-  // Last resort: Try to fetch and store rates for the requested date
+  // 5. Last resort: Fetch on-demand
   try {
     const requestedDate = new Date(dateStr);
     await fetchAndStoreDailyRates(requestedDate);
     
-    // Retry lookup after fetching
     const { data: retryData } = await supabase
       .from('exchange_rates')
       .select('rate, rate_date, source')
@@ -183,23 +220,22 @@ export async function getRateFromTry(
       .maybeSingle();
 
     if (retryData) {
-      return {
+      const result = {
         rate: Number(retryData.rate),
         rate_date_used: retryData.rate_date,
         source: retryData.source || undefined,
       };
+      rateCache.set(cacheKey, result);
+      return result;
     }
   } catch (fetchError) {
     logger.warn('Failed to fetch rates on-demand:', fetchError);
   }
 
-  // Ultimate fallback: return a very rough historical average or throw?
-  // The plan says return { isComplete: false } in calculator, so we return a dummy rate here
-  // and check date match in the calculator.
   logger.warn(`No exchange rate found for TRY->${target} on ${dateStr}, using 1.0 as dummy`);
   return {
     rate: 1.0,
-    rate_date_used: '1970-01-01', // Explicitly wrong date to trigger isComplete: false
+    rate_date_used: '1970-01-01',
   };
 }
 
@@ -241,30 +277,59 @@ export async function getRatesForBatchFromTry(
 ): Promise<Record<string, RateInfo>> {
   if (requests.length === 0) return {};
 
-  const uniqueDates = Array.from(new Set(requests.map(r => r.date.split('T')[0])));
-  const uniqueCurrencies = Array.from(new Set(requests.map(r => r.currency.toUpperCase().trim())));
-
-  const { data, error } = await supabase
-    .from('exchange_rates')
-    .select('to_currency, rate, rate_date, source')
-    .eq('from_currency', 'TRY')
-    .in('to_currency', uniqueCurrencies)
-    .in('rate_date', uniqueDates);
-
-  if (error) {
-    logger.error('Error in batch rate fetch:', error);
-    return {};
-  }
-
   const lookup: Record<string, RateInfo> = {};
-  data?.forEach(row => {
-    const key = `${row.to_currency}-${row.rate_date}`;
-    lookup[key] = {
-      rate: Number(row.rate),
-      rate_date_used: row.rate_date,
-      source: row.source || undefined,
-    };
+  const missingRequests: Array<{ currency: string; date: string }> = [];
+
+  // 1. Identify what's missing from cache
+  requests.forEach(req => {
+    const currency = req.currency.toUpperCase().trim();
+    const date = req.date.split('T')[0];
+    const key = `${currency}-${date}`;
+    
+    if (currency === 'TRY') {
+      lookup[key] = { rate: 1.0, rate_date_used: date };
+    } else if (rateCache.has(key)) {
+      lookup[key] = rateCache.get(key)!;
+    } else {
+      missingRequests.push({ currency, date });
+    }
   });
+
+  if (missingRequests.length === 0) return lookup;
+
+  // 2. Fetch missing from DB in chunks to avoid URL length limits
+  const uniqueDates = Array.from(new Set(missingRequests.map(r => r.date)));
+  const uniqueCurrencies = Array.from(new Set(missingRequests.map(r => r.currency)));
+
+  // Chunk size of 50 dates to keep URL safe
+  const DATE_CHUNK_SIZE = 50;
+  for (let i = 0; i < uniqueDates.length; i += DATE_CHUNK_SIZE) {
+    const dateChunk = uniqueDates.slice(i, i + DATE_CHUNK_SIZE);
+    
+    const { data, error } = await supabase
+      .from('exchange_rates')
+      .select('to_currency, rate, rate_date, source')
+      .eq('from_currency', 'TRY')
+      .in('to_currency', uniqueCurrencies)
+      .in('rate_date', dateChunk);
+
+    if (error) {
+      logger.error('Error in batch rate fetch chunk:', error);
+      continue;
+    }
+
+    // 3. Update lookup and cache
+    data?.forEach(row => {
+      const key = `${row.to_currency}-${row.rate_date}`;
+      const result = {
+        rate: Number(row.rate),
+        rate_date_used: row.rate_date,
+        source: row.source || undefined,
+      };
+      lookup[key] = result;
+      rateCache.set(key, result);
+    });
+  }
 
   return lookup;
 }

@@ -30,7 +30,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { clausesService, type MergedClause } from '@/services/clauses.service';
+import { clausesService } from '@/services/clauses.service';
 import type { ContractFormData } from '../schemas/contractForm.schema';
 
 // ============================================================================

@@ -7,10 +7,6 @@ import {
   Target,
   PieChart,
   AlertCircle,
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
@@ -44,11 +40,6 @@ export const PerformanceSummaryComponent = ({
         </div>
       </div>
     );
-  };
-
-  const formatCurrencyLocal = (amount: number) => {
-    const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
-    return formatCurrency(amount, normalizedCurrency);
   };
 
   if (loading) {

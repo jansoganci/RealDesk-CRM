@@ -37,19 +37,31 @@ class PropertiesService {
     const { data, error } = await supabase
       .from('properties')
       .select(`
-        *,
-        owner:property_owners(*),
-        photos:property_photos(*),
+        id,
+        address,
+        city,
+        district,
+        status,
+        property_type,
+        rent_amount,
+        sale_price,
+        currency,
+        created_at,
+        notes,
+        listing_url,
+        owner:property_owners(id, name, phone),
+        photos:property_photos(id, file_path),
         contracts(
           id,
           status,
           rent_amount,
           currency,
           end_date,
-          tenant:tenants(*)
+          tenant:tenants(id, name, phone)
         )
       `)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(50);
 
     if (error) {
       logger.error('Error fetching properties:', error);
@@ -63,20 +75,32 @@ class PropertiesService {
     const { data, error } = await supabase
       .from('properties')
       .select(`
-        *,
-        owner:property_owners(*),
-        photos:property_photos(*),
+        id,
+        address,
+        city,
+        district,
+        status,
+        property_type,
+        rent_amount,
+        sale_price,
+        currency,
+        created_at,
+        notes,
+        listing_url,
+        owner:property_owners(id, name, phone),
+        photos:property_photos(id, file_path),
         contracts(
           id,
           status,
           rent_amount,
           currency,
           end_date,
-          tenant:tenants(*)
+          tenant:tenants(id, name, phone)
         )
       `)
       .eq('property_type', 'rental')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(50);
 
     if (error) {
       logger.error('Error fetching rental properties:', error);
@@ -90,12 +114,24 @@ class PropertiesService {
     const { data, error } = await supabase
       .from('properties')
       .select(`
-        *,
-        owner:property_owners(*),
-        photos:property_photos(*)
+        id,
+        address,
+        city,
+        district,
+        status,
+        property_type,
+        rent_amount,
+        sale_price,
+        currency,
+        created_at,
+        notes,
+        listing_url,
+        owner:property_owners(id, name, phone),
+        photos:property_photos(id, file_path)
       `)
       .eq('property_type', 'sale')
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .limit(50);
 
     if (error) {
       logger.error('Error fetching sale properties:', error);
@@ -109,16 +145,27 @@ class PropertiesService {
     const { data, error } = await supabase
       .from('properties')
       .select(`
-        *,
-        owner:property_owners(*),
-        photos:property_photos(*),
+        id,
+        address,
+        city,
+        district,
+        status,
+        property_type,
+        rent_amount,
+        sale_price,
+        currency,
+        created_at,
+        notes,
+        listing_url,
+        owner:property_owners(id, name, phone),
+        photos:property_photos(id, file_path),
         contracts(
           id,
           status,
           rent_amount,
           currency,
           end_date,
-          tenant:tenants(*)
+          tenant:tenants(id, name, phone)
         )
       `)
       .eq('id', id)
@@ -137,11 +184,25 @@ class PropertiesService {
   async getByOwnerId(ownerId: string): Promise<Property[]> {
     const { data, error } = await supabase
       .from('properties')
-      .select('*')
+      .select(`
+        id,
+        address,
+        city,
+        district,
+        status,
+        property_type,
+        rent_amount,
+        sale_price,
+        currency,
+        created_at
+      `)
       .eq('owner_id', ownerId)
       .order('created_at', { ascending: false });
 
-    if (error) throw error;
+    if (error) {
+      logger.error('Error fetching owner properties:', error);
+      throw error;
+    }
     return (data || []) as Property[];
   }
 
@@ -212,12 +273,15 @@ class PropertiesService {
   }
 
   async getStats() {
-    // Select all columns to avoid query syntax issues, then filter what we need
+    // Select only needed columns for stats calculation
     const { data, error } = await supabase
       .from('properties')
-      .select('*');
+      .select('status, property_type');
 
-    if (error) throw error;
+    if (error) {
+      logger.error('Error fetching property stats:', error);
+      throw error;
+    }
 
     // Extract only the fields we need
     const properties = (data || []).map(p => ({
@@ -258,10 +322,13 @@ class PropertiesService {
         id,
         city,
         district,
-        photos:property_photos(count)
+        photos:property_photos(id)
       `);
 
-    if (error) throw error;
+    if (error) {
+      logger.error('Error fetching properties with missing info:', error);
+      throw error;
+    }
 
     const missingInfo = {
       noPhotos: 0,
@@ -272,7 +339,7 @@ class PropertiesService {
     const propertiesWithMissingInfo = new Set<string>();
 
     properties?.forEach((p: any) => {
-      const photoCount = p.photos?.[0]?.count || 0;
+      const photoCount = p.photos?.length || 0;
       const hasLocation = (p.city && p.city.trim() !== '') || (p.district && p.district.trim() !== '');
       
       if (photoCount === 0) {

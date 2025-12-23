@@ -23,11 +23,12 @@ import type {
  * @returns Array of financial transactions
  */
 export const getTransactions = async (
-  filters?: TransactionFilters
+  filters?: TransactionFilters,
+  columns: string = '*'
 ): Promise<FinancialTransaction[]> => {
   let query = supabase
     .from('financial_transactions')
-    .select('*')
+    .select(columns)
     .order('transaction_date', { ascending: false });
 
   // Apply filters
@@ -66,7 +67,7 @@ export const getTransactions = async (
     throw error;
   }
 
-  return (data || []) as FinancialTransaction[];
+  return (data as any || []) as FinancialTransaction[];
 };
 
 /**

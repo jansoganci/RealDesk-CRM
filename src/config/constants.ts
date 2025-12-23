@@ -44,6 +44,7 @@ export const ROUTES = {
   CONTRACTS: '/contracts',
   CONTRACT_DETAIL: '/contracts/:id',
   CONTRACT_NEW: '/contracts/new',
+  CONTRACT_CREATE: '/contracts/create',
   CONTRACT_IMPORT: '/contracts/import',
   REMINDERS: '/reminders',
   INQUIRIES: '/inquiries',
