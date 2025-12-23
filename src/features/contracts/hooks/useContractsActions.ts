@@ -3,6 +3,9 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { contractsService } from '../../../lib/serviceProxy';
 import type { ContractWithDetails } from '../../../types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Contracts');
 
 /**
  * Contracts Actions Hook
@@ -52,7 +55,7 @@ export function useContractsActions({
         try {
           await contractsService.deleteContractPdf(contractToDelete.contract_pdf_path);
         } catch (error) {
-          console.warn('Failed to delete PDF:', error);
+          logger.warn('Failed to delete PDF:', error);
           // Continue with contract deletion even if PDF deletion fails
         }
       }
@@ -69,7 +72,7 @@ export function useContractsActions({
       setContractToDelete(null);
     } catch (error) {
       toast.error(t('errors.deleteFailed'));
-      console.error(error);
+      logger.error('Failed to delete contract:', error);
     } finally {
       setActionLoading(false);
     }

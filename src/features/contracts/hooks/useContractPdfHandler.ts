@@ -13,6 +13,9 @@ import { tr } from 'date-fns/locale';
 import { generateContractPDFBlob } from '@/services/contractPdf.service';
 import { numberToTurkishText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('ContractPdf');
 
 // ============================================================================
 // Types
@@ -161,10 +164,10 @@ function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
 
-    console.log('PDF download triggered');
+    logger.debug('PDF download triggered');
     return true;
   } catch (downloadError) {
-    console.error('Browser download failed:', downloadError);
+    logger.error('Browser download failed:', downloadError);
     return false;
   }
 }
@@ -173,7 +176,7 @@ function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
  * Handle upload errors with appropriate toast messages
  */
 function handleUploadError(error: unknown, t: (key: string) => string): void {
-  console.error('PDF storage upload failed:', error);
+  logger.error('PDF storage upload failed:', error);
 
   const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
@@ -232,13 +235,13 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       // STEP 1: Prepare PDF data
       const pdfData = preparePdfData(formData, contractResult.contract_id);
 
-      // STEP 2: Generate PDF Blob
-      const pdfBlob = await generateContractPDFBlob(pdfData);
+      // STEP 2: Generate PDF Blob (with merged clauses from database)
+      const pdfBlob = await generateContractPDFBlob(pdfData, contractResult.contract_id);
 
       // STEP 3: Validate PDF size
       validatePdfSize(pdfBlob);
 
-      console.log(`PDF generated successfully: ${(pdfBlob.size / 1024).toFixed(2)} KB`);
+      logger.debug(`PDF generated successfully: ${(pdfBlob.size / 1024).toFixed(2)} KB`);
 
       // STEP 4: Upload to Supabase Storage
       let storageSaveSucceeded = false;
@@ -250,7 +253,7 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
         storageFilePath = await uploadPdfToStorage(pdfBlob, contractResult.contract_id);
         storageSaveSucceeded = true;
 
-        console.log('PDF saved to storage:', storageFilePath);
+        logger.debug('PDF saved to storage:', storageFilePath);
       } catch (uploadError) {
         handleUploadError(uploadError, t);
       }
@@ -270,12 +273,21 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       };
 
     } catch (pdfError) {
-      console.error('PDF generation failed:', pdfError);
+      logger.error('PDF generation failed:', pdfError);
 
-      toast.error(t('pdf.errors.generationFailed'), {
-        description: t('pdf.errors.generationFailedDescription'),
-        duration: 8000
-      });
+      // Handle clause fetch failures specifically
+      const errorMessage = pdfError instanceof Error ? pdfError.message.toLowerCase() : '';
+      if (errorMessage.includes('clause') || errorMessage.includes('madde')) {
+        toast.error('Özel maddeler yüklenemedi', {
+          description: 'PDF oluşturulamadı. Lütfen tekrar deneyin.',
+          duration: 8000
+        });
+      } else {
+        toast.error(t('pdf.errors.generationFailed'), {
+          description: pdfError instanceof Error ? pdfError.message : t('pdf.errors.generationFailedDescription'),
+          duration: 8000
+        });
+      }
 
       setIsProcessing(false);
 

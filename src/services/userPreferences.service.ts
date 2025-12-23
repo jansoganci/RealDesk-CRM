@@ -1,6 +1,9 @@
 import { supabase } from '../config/supabase';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { Database } from '../types/database';
+import { createLogger } from '../lib/logger';
+
+const logger = createLogger('UserPreferences');
 
 type UserPreferences = Database['public']['Tables']['user_preferences']['Row'];
 type UserPreferencesUpdate = Database['public']['Tables']['user_preferences']['Update'];
@@ -19,7 +22,7 @@ class UserPreferencesService {
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching user preferences:', error);
+      logger.error('Error fetching user preferences:', error);
       throw new Error('Failed to fetch preferences');
     }
 
@@ -63,7 +66,7 @@ class UserPreferencesService {
       .single();
 
     if (error) {
-      console.error('Error updating user preferences:', error);
+      logger.error('Error updating user preferences:', error);
       throw new Error('Failed to update preferences');
     }
 

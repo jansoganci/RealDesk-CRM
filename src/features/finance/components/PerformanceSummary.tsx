@@ -6,13 +6,18 @@ import {
   Award,
   Target,
   PieChart,
+  AlertCircle,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
-import type { PerformanceSummary } from '../../../types';
+import { NormalizedPerformanceSummary, CalculatedMetric } from '../../../services/finance/reportCalculator';
 
 interface PerformanceSummaryProps {
-  summary: PerformanceSummary | null;
+  summary: NormalizedPerformanceSummary | null;
   loading?: boolean;
 }
 
@@ -23,12 +28,26 @@ export const PerformanceSummaryComponent = ({
   const { t } = useTranslation(['finance', 'common']);
   const { currency: displayCurrency } = useAuth();
 
-  const formatCurrencyLocal = (amount: number) => {
-    // Always use user's display currency preference
+  const formatMetric = (metric: CalculatedMetric) => {
     const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
-    
-    // If summary currency is "MIXED", still format using display currency
-    // (the amount is already aggregated, just needs formatting)
+    const formatted = formatCurrency(metric.value, normalizedCurrency);
+
+    if (metric.isComplete) {
+      return <span>{formatted}</span>;
+    }
+
+    return (
+      <div className="flex items-center gap-1">
+        <span>{formatted}</span>
+        <div title={`${t('finance:performance.missingRates')}: ${metric.missingDates.join(', ')}`}>
+          <AlertCircle className="h-4 w-4 text-amber-500 inline cursor-help" />
+        </div>
+      </div>
+    );
+  };
+
+  const formatCurrencyLocal = (amount: number) => {
+    const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
     return formatCurrency(amount, normalizedCurrency);
   };
 
@@ -77,7 +96,7 @@ export const PerformanceSummaryComponent = ({
           <div>
             <div className="flex items-baseline gap-2">
               <span className="text-3xl font-bold text-slate-900">
-                {formatCurrencyLocal(summary.totalCommission)}
+                {formatMetric(summary.totalCommission)}
               </span>
               <TrendingUp className="h-5 w-5 text-emerald-600" />
             </div>
@@ -110,7 +129,7 @@ export const PerformanceSummaryComponent = ({
                 </span>
               </div>
               <span className="text-xl font-semibold text-slate-900">
-                {formatCurrencyLocal(summary.averagePerDeal)}
+                {formatMetric(summary.averagePerDeal)}
               </span>
             </div>
           </div>
@@ -128,7 +147,7 @@ export const PerformanceSummaryComponent = ({
                   </p>
                 </div>
                 <span className="text-lg font-bold text-amber-900">
-                  {formatCurrencyLocal(summary.bestMonth.amount)}
+                  {formatMetric(summary.bestMonth.amount)}
                 </span>
               </div>
             </div>

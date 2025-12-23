@@ -3,11 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { useAuth } from '../../../contexts/AuthContext';
 import { AnimatedTabs } from '../../../components/ui/animated-tabs';
-import { TrendingUp, TrendingDown, PieChart } from 'lucide-react';
-import type { FinancialDashboard } from '../../../types/financial';
+import { TrendingUp, TrendingDown, PieChart, AlertCircle } from 'lucide-react';
+import { NormalizedFinancialDashboard } from '../../../services/finance/analytics.service';
+import { formatCurrency } from '../../../lib/currency';
 
 interface FinancialChartsProps {
-  dashboard: FinancialDashboard | null;
+  dashboard: NormalizedFinancialDashboard | null;
   loading?: boolean;
 }
 
@@ -16,29 +17,28 @@ export const FinancialCharts = ({
   loading = false,
 }: FinancialChartsProps) => {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency } = useAuth();
+  const { currency: userCurrency } = useAuth();
   const [breakdownTab, setBreakdownTab] = useState<'income' | 'expense'>('expense');
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: currency || 'TRY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+  const formatCurrencyLocal = (value: number) => {
+    return formatCurrency(value, userCurrency || 'TRY');
   };
 
   // Prepare data for category breakdown - top 5 categories
   const incomeData =
     dashboard?.income_by_category?.slice(0, 5).map(cat => ({
       name: cat.category,
-      value: cat.total_amount,
+      value: cat.total_amount.value,
+      isComplete: cat.total_amount.isComplete,
+      missingDates: cat.total_amount.missingDates,
     })) || [];
 
   const expenseData =
     dashboard?.expense_by_category?.slice(0, 5).map(cat => ({
       name: cat.category,
-      value: cat.total_amount,
+      value: cat.total_amount.value,
+      isComplete: cat.total_amount.isComplete,
+      missingDates: cat.total_amount.missingDates,
     })) || [];
 
   // Colors for progress bars
@@ -102,7 +102,7 @@ export const FinancialCharts = ({
                 {t('finance:charts.total')}
               </span>
               <span className="text-lg font-bold text-slate-900">
-                {formatCurrency(activeTotal)}
+                {formatCurrencyLocal(activeTotal)}
               </span>
             </div>
 
@@ -125,9 +125,16 @@ export const FinancialCharts = ({
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-semibold text-slate-900">
-                          {formatCurrency(item.value)}
-                        </span>
+                        <div className="flex items-center gap-1">
+                          <span className="text-sm font-semibold text-slate-900">
+                            {formatCurrencyLocal(item.value)}
+                          </span>
+                          {!item.isComplete && (
+                            <div title={`${t('finance:performance.missingRates')}: ${item.missingDates.join(', ')}`}>
+                              <AlertCircle className="h-3 w-3 text-amber-500 cursor-help" />
+                            </div>
+                          )}
+                        </div>
                         <span className="text-xs text-gray-500 w-12 text-right">
                           {percentage.toFixed(0)}%
                         </span>

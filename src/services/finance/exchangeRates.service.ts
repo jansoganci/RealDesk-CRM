@@ -4,6 +4,9 @@
 // =====================================================
 
 import { supabase } from '../../config/supabase';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('ExchangeRates');
 
 export interface RateInfo {
   rate: number;
@@ -18,7 +21,7 @@ export interface RateInfo {
  */
 export async function hasRatesForDate(date: Date): Promise<boolean> {
   const dateStr = date.toISOString().split('T')[0];
-  console.log('[hasRatesForDate] Checking for date:', dateStr);
+  logger.debug('Checking for date:', dateStr);
   const { data, error } = await supabase
     .from('exchange_rates')
     .select('rate_date')
@@ -27,12 +30,12 @@ export async function hasRatesForDate(date: Date): Promise<boolean> {
     .maybeSingle();
   
   if (error) {
-    console.warn('[hasRatesForDate] Error checking rates for date:', error);
+    logger.warn('Error checking rates for date:', error);
     return false;
   }
   
   const exists = !!data;
-  console.log('[hasRatesForDate] Result:', exists ? 'EXISTS' : 'NOT FOUND');
+  logger.debug('Result:', exists ? 'EXISTS' : 'NOT FOUND');
   return exists;
 }
 
@@ -44,7 +47,7 @@ export async function hasRatesForDate(date: Date): Promise<boolean> {
  */
 export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<void> {
   const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD format
-  console.log('[fetchAndStoreDailyRates] Called for date:', dateStr);
+  logger.debug('Called for date:', dateStr);
   
   // Get Supabase URL and anon key from environment
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -56,7 +59,7 @@ export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<
 
   // Call Edge Function (runs server-side with service role)
   const functionUrl = `${supabaseUrl}/functions/v1/fetch-exchange-rates`;
-  console.log('[fetchAndStoreDailyRates] Calling Edge Function:', functionUrl);
+  logger.debug('Calling Edge Function:', functionUrl);
   
   // Get user's auth token for authenticated request
   const { data: { session } } = await supabase.auth.getSession();
@@ -69,7 +72,7 @@ export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<
   if (authToken) {
     headers['Authorization'] = `Bearer ${authToken}`;
   }
-  console.log('[fetchAndStoreDailyRates] Headers:', {
+  logger.debug('Headers:', {
     hasApikey: !!supabaseAnonKey,
     hasAuth: !!authToken,
   });
@@ -80,11 +83,11 @@ export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<
     body: JSON.stringify({ date: dateStr }),
   });
 
-  console.log('[fetchAndStoreDailyRates] Response status:', response.status, response.statusText);
+  logger.debug('Response status:', response.status, response.statusText);
 
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-    console.error('[fetchAndStoreDailyRates] Edge Function error:', {
+    logger.error('Edge Function error:', {
       status: response.status,
       statusText: response.statusText,
       error: errorData,
@@ -93,32 +96,29 @@ export async function fetchAndStoreDailyRates(date: Date = new Date()): Promise<
   }
 
   const result = await response.json();
-  console.log('[fetchAndStoreDailyRates] Success:', result);
+  logger.info('Success:', result);
   
   // Log if skipped (already exists)
   if (result.skipped) {
-    console.log(`[fetchAndStoreDailyRates] Rates for ${dateStr} already exist, skipped`);
+    logger.debug(`Rates for ${dateStr} already exist, skipped`);
   }
 }
 
 /**
- * Get exchange rate for a specific date with fallback to previous available rate
- * @param fromCurrency - Source currency code (ISO 4217)
- * @param toCurrency - Target currency code (ISO 4217)
+ * Get exchange rate for a specific date from the TRY anchor
+ * This follows the "Units per 1 TRY" standard.
+ * @param targetCurrency - Target currency code (ISO 4217)
  * @param date - Transaction date (ISO date string or Date object)
- * @returns Promise<RateInfo> - Rate and the date that was actually used
+ * @returns Promise<RateInfo> - Rate (Units per 1 TRY) and the date that was actually used
  */
-export async function getRateForDate(
-  fromCurrency: string,
-  toCurrency: string,
+export async function getRateFromTry(
+  targetCurrency: string,
   date: string | Date
 ): Promise<RateInfo> {
-  // Normalize currencies
-  const from = fromCurrency.toUpperCase().trim();
-  const to = toCurrency.toUpperCase().trim();
+  const target = targetCurrency.toUpperCase().trim();
   
-  // If same currency, return 1.0
-  if (from === to) {
+  // If TRY, return 1.0
+  if (target === 'TRY') {
     const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
     return {
       rate: 1.0,
@@ -135,8 +135,8 @@ export async function getRateForDate(
   let { data, error } = await supabase
     .from('exchange_rates')
     .select('rate, rate_date, source')
-    .eq('from_currency', from)
-    .eq('to_currency', to)
+    .eq('from_currency', 'TRY')
+    .eq('to_currency', target)
     .eq('rate_date', dateStr)
     .maybeSingle();
 
@@ -149,12 +149,12 @@ export async function getRateForDate(
     };
   }
 
-  // Fallback: Get previous available rate (ORDER BY rate_date DESC LIMIT 1)
+  // Fallback: Get previous available rate
   const { data: fallbackData, error: fallbackError } = await supabase
     .from('exchange_rates')
     .select('rate, rate_date, source')
-    .eq('from_currency', from)
-    .eq('to_currency', to)
+    .eq('from_currency', 'TRY')
+    .eq('to_currency', target)
     .lte('rate_date', dateStr)
     .order('rate_date', { ascending: false })
     .limit(1)
@@ -169,7 +169,6 @@ export async function getRateForDate(
   }
 
   // Last resort: Try to fetch and store rates for the requested date
-  // This handles the case where no rates exist yet
   try {
     const requestedDate = new Date(dateStr);
     await fetchAndStoreDailyRates(requestedDate);
@@ -178,8 +177,8 @@ export async function getRateForDate(
     const { data: retryData } = await supabase
       .from('exchange_rates')
       .select('rate, rate_date, source')
-      .eq('from_currency', from)
-      .eq('to_currency', to)
+      .eq('from_currency', 'TRY')
+      .eq('to_currency', target)
       .eq('rate_date', dateStr)
       .maybeSingle();
 
@@ -191,15 +190,83 @@ export async function getRateForDate(
       };
     }
   } catch (fetchError) {
-    console.warn('Failed to fetch rates on-demand:', fetchError);
+    logger.warn('Failed to fetch rates on-demand:', fetchError);
   }
 
-  // Ultimate fallback: return 1.0 if no rate found (shouldn't happen in production)
-  console.warn(`No exchange rate found for ${from}->${to} on ${dateStr}, using 1.0`);
+  // Ultimate fallback: return a very rough historical average or throw?
+  // The plan says return { isComplete: false } in calculator, so we return a dummy rate here
+  // and check date match in the calculator.
+  logger.warn(`No exchange rate found for TRY->${target} on ${dateStr}, using 1.0 as dummy`);
   return {
     rate: 1.0,
-    rate_date_used: dateStr,
+    rate_date_used: '1970-01-01', // Explicitly wrong date to trigger isComplete: false
   };
+}
+
+/**
+ * Legacy support for getRateForDate - refactored to use TRY anchor
+ */
+export async function getRateForDate(
+  fromCurrency: string,
+  toCurrency: string,
+  date: string | Date
+): Promise<RateInfo> {
+  const from = fromCurrency.toUpperCase().trim();
+  const to = toCurrency.toUpperCase().trim();
+
+  if (from === to) {
+    const dateStr = typeof date === 'string' ? date : date.toISOString().split('T')[0];
+    return { rate: 1.0, rate_date_used: dateStr };
+  }
+
+  const [rSource, rTarget] = await Promise.all([
+    getRateFromTry(from, date),
+    getRateFromTry(to, date)
+  ]);
+
+  // Combined rate: (1 / rSource) * rTarget
+  return {
+    rate: (1 / rSource.rate) * rTarget.rate,
+    rate_date_used: rSource.rate_date_used === rTarget.rate_date_used 
+      ? rSource.rate_date_used 
+      : `${rSource.rate_date_used}|${rTarget.rate_date_used}`
+  };
+}
+
+/**
+ * Batch fetch exchange rates for multiple dates and currencies from TRY anchor
+ */
+export async function getRatesForBatchFromTry(
+  requests: Array<{ currency: string; date: string }>
+): Promise<Record<string, RateInfo>> {
+  if (requests.length === 0) return {};
+
+  const uniqueDates = Array.from(new Set(requests.map(r => r.date.split('T')[0])));
+  const uniqueCurrencies = Array.from(new Set(requests.map(r => r.currency.toUpperCase().trim())));
+
+  const { data, error } = await supabase
+    .from('exchange_rates')
+    .select('to_currency, rate, rate_date, source')
+    .eq('from_currency', 'TRY')
+    .in('to_currency', uniqueCurrencies)
+    .in('rate_date', uniqueDates);
+
+  if (error) {
+    logger.error('Error in batch rate fetch:', error);
+    return {};
+  }
+
+  const lookup: Record<string, RateInfo> = {};
+  data?.forEach(row => {
+    const key = `${row.to_currency}-${row.rate_date}`;
+    lookup[key] = {
+      rate: Number(row.rate),
+      rate_date_used: row.rate_date,
+      source: row.source || undefined,
+    };
+  });
+
+  return lookup;
 }
 
 /**
@@ -233,13 +300,13 @@ export async function backfillRatesForDateRange(
           await fetchAndStoreDailyRates(new Date(current));
           fetched++;
         } catch (error) {
-          console.warn(`Failed to fetch rates for ${dateStr}:`, error);
+          logger.warn(`Failed to fetch rates for ${dateStr}:`, error);
         }
       } else {
         skipped++;
       }
     } catch (error) {
-      console.warn(`Error checking rates for ${dateStr}:`, error);
+      logger.warn(`Error checking rates for ${dateStr}:`, error);
     }
     
     // Move to next day

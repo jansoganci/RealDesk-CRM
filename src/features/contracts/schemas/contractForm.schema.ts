@@ -157,6 +157,15 @@ export const contractFormSchema = z.object({
     .optional()
     .or(z.literal('')),
 
+  // ============================================================================
+  // Clause Overrides (Editable Clauses Feature)
+  // ============================================================================
+  clauseOverrides: z.array(z.object({
+    clause_type: z.enum(['GENEL_SARTLAR', 'OZEL_SARTLAR', 'TAHLIYE_TAAHHUTNAMESI']),
+    clause_index: z.number().int().min(0),
+    custom_content: z.string().min(1, 'Madde içeriği boş olamaz'),
+  })).optional(),
+
 }).refine((data) => data.end_date > data.start_date, {
   message: 'Bitiş tarihi başlangıç tarihinden sonra olmalı',
   path: ['end_date'],
@@ -194,4 +203,5 @@ export const contractFormDefaultValues: Partial<ContractFormData> = {
   currency: 'TRY',
   payment_method: '',
   special_conditions: '',
+  clauseOverrides: [],
 };

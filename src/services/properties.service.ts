@@ -2,6 +2,9 @@ import { supabase } from '../config/supabase';
 import type { Property, PropertyInsert, PropertyUpdate, PropertyWithOwner } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { createLogger } from '../lib/logger';
+
+const logger = createLogger('Properties');
 
 class PropertiesService {
   // Private helper to transform properties data
@@ -49,7 +52,7 @@ class PropertiesService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching properties:', error);
+      logger.error('Error fetching properties:', error);
       throw error;
     }
 
@@ -76,7 +79,7 @@ class PropertiesService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching rental properties:', error);
+      logger.error('Error fetching rental properties:', error);
       throw error;
     }
 
@@ -95,7 +98,7 @@ class PropertiesService {
       .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error fetching sale properties:', error);
+      logger.error('Error fetching sale properties:', error);
       throw error;
     }
 
@@ -122,7 +125,7 @@ class PropertiesService {
       .maybeSingle();
 
     if (error) {
-      console.error('Error fetching property:', error);
+      logger.error('Error fetching property:', error);
       throw error;
     }
     if (!data) return null;

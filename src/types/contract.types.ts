@@ -123,6 +123,57 @@ export interface ContractDetails {
 }
 
 // ============================================================================
+// Clause Types (Editable Contract Clauses Feature)
+// ============================================================================
+
+export type ClauseType = 'GENEL_SARTLAR' | 'OZEL_SARTLAR' | 'TAHLIYE_TAAHHUTNAMESI';
+
+export interface ClauseTemplate {
+  id: string;
+  user_id: string;
+  clause_type: ClauseType;
+  clause_index: number;
+  content: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ClauseOverride {
+  id: string;
+  contract_id: string;
+  user_id: string;
+  clause_type: ClauseType;
+  clause_index: number;
+  custom_content: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MergedClause {
+  clause_type: ClauseType;
+  clause_index: number;
+  content: string;
+  is_customized: boolean;
+}
+
+export interface EditableClause {
+  type: ClauseType;
+  index: number;
+  content: string;
+  isCustomized: boolean;
+  isEditing: boolean;
+}
+
+export interface TemplateVariables {
+  paymentDay?: string;
+  ownerIBAN?: string;
+  ownerName?: string;
+  tenantName?: string;
+  contractDate?: string;
+}
+
+// ============================================================================
 // Form Data Types (used by React Hook Form)
 // ============================================================================
 
@@ -162,6 +213,13 @@ export interface ContractFormData {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
+
+  // Clause Overrides (editable clauses feature)
+  clauseOverrides?: Array<{
+    clause_type: ClauseType;
+    clause_index: number;
+    custom_content: string;
+  }>;
 }
 
 // ============================================================================

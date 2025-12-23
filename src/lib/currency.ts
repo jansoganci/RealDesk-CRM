@@ -22,9 +22,9 @@ interface ExchangeRatesCache {
  * Falls back to emergency rates only if all APIs fail
  */
 async function fetchExchangeRates(): Promise<Record<string, number>> {
-  // Try API 1: Frankfurter.dev (PRIMARY - No limits, no API key, ECB source)
+  // Try API 1: Frankfurter.app (PRIMARY - No limits, no API key, ECB source)
   try {
-    const response = await fetch('https://api.frankfurter.dev/latest?base=USD&symbols=TRY,EUR', {
+    const response = await fetch('https://api.frankfurter.app/latest?base=EUR&symbols=TRY,USD', {
       method: 'GET',
       headers: {
         'Accept': 'application/json',
@@ -33,18 +33,21 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
     
     if (response.ok) {
       const data = await response.json();
-      if (data.rates && data.rates.TRY && data.rates.EUR) {
-        // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
-        const eurInTry = data.rates.TRY / data.rates.EUR;
+      if (data.rates && data.rates.TRY && data.rates.USD) {
+        // We use USD as our internal baseline for this legacy helper
+        // 1 USD = (TRY_in_EUR / USD_in_EUR) TRY
+        // 1 USD = (1 / USD_in_EUR) EUR
+        const tryInUsd = data.rates.TRY / data.rates.USD;
+        const eurInUsd = 1 / data.rates.USD;
         return {
           USD: 1,
-          TRY: data.rates.TRY,
-          EUR: eurInTry, // 1 EUR = X TRY
+          TRY: tryInUsd,
+          EUR: eurInUsd,
         };
       }
     }
   } catch (error) {
-    console.warn('⚠️ API 1 (frankfurter.dev) failed, trying backup...', error);
+    console.warn('⚠️ API 1 (frankfurter.app) failed, trying backup...', error);
   }
 
   // Try API 2: ExchangeRate-API.com (BACKUP - 1,500 req/month, proven reliable)

@@ -1,0 +1,1266 @@
+TECHNICAL RESEARCH & SOLUTION DESIGN REPORT
+Editable Contract Clauses Feature
+
+SECTION 1: CURRENT SYSTEM & TECHNOLOGY ANALYSIS
+1.1 Technology Stack (2025 Standards)
+Frontend Architecture
+	•	Framework: React 18.3.1 + TypeScript 5.5.3 + Vite 5.4.8
+	•	Router: React Router DOM 7.9.4
+	•	State Management: React Context API (AuthContext, BillingContext)
+	•	Form Handling: React Hook Form 7.53 + Zod 3.23.8 (runtime validation)
+	•	UI Components: Radix UI primitives + shadcn/ui design system
+	•	Styling: Tailwind CSS 3.4.13 with custom design tokens
+	•	Internationalization: i18next 25.6 (Turkish + English)
+Backend Architecture
+	•	BaaS Platform: Supabase 2.58 (PostgreSQL + Edge Functions)
+	•	Database: PostgreSQL with Row Level Security (RLS)
+	•	Storage: Supabase Storage buckets with RLS
+	•	Authentication: Supabase Auth with session persistence
+Project Structure
+	•	Feature-based organization (/src/features/*)
+	•	Service layer abstraction (/src/services/*.service.ts)
+	•	Strict TypeScript typing (/src/types/)
+	•	Database types auto-generated from Supabase schema
+1.2 Contract Creation Module Analysis
+Current File Structure
+/src/features/contracts/
+├── ContractCreate.tsx              # Page wrapper
+├── components/
+│   ├── ContractCreateForm.tsx      # Main form component ⭐
+│   ├── form-sections/
+│   │   ├── OwnerFormSection.tsx
+│   │   ├── TenantFormSection.tsx
+│   │   └── ContractDetailsSection.tsx
+│   └── AddressInput.tsx
+├── schemas/
+│   └── contractForm.schema.ts      # Zod validation
+└── hooks/
+    ├── useContractPdfHandler.ts
+    └── useContractPreValidation.ts
+
+/src/services/
+├── contractCreation.service.ts     # RPC atomic creation
+├── contractPdf.service.ts          # PDF generation ⭐
+└── contracts.service.ts            # CRUD operations
+
+/src/templates/
+└── contractContent.ts              # HARDCODED CLAUSES ⚠️
+
+/src/types/
+└── contract.types.ts               # TypeScript types
+
+Current Form Fields (30+ fields collected)
+	•	Owner: name, TC, IBAN, phone, email
+	•	Tenant: name, TC, phone, email, address
+	•	Property: il, ilçe, mahalle, sokak, bina no, daire no, type, usage
+	•	Contract: start/end dates, rent amount, deposit, payment day, payment method
+	•	Special conditions: currently a free-text field (furniture/fixtures)
+1.3 Current Clause Implementation (CRITICAL FINDINGS)
+Clauses Location: /src/templates/contractContent.ts:6-72
+Structure:
+export const GENEL_SARTLAR = [/* 13 general condition strings */];
+export const OZEL_SARTLAR = [/* 19 special condition strings */];
+export const TAHLIYE_TAAHHUTNAMESI_TEXT = `/* eviction text */`;
+
+Key Characteristics:
+	•	❌ Hardcoded: Defined as TypeScript constants, not database records
+	•	❌ Non-editable: Requires code changes to modify
+	•	❌ Identical for all contracts: No per-contract customization
+	•	✅ Well-structured: Clear separation (General vs Special conditions)
+	•	🇹🇷 Turkish legal text: Standard Turkish rental law clauses
+How Clauses Are Used:
+	•	Imported in /src/services/contractPdf.service.ts:9
+	•	Rendered in PDF pages 2-4 (renderPage2_GenelSartlar(), renderPage3_4_OzelSartlar())
+	•	Only dynamic injection: Clause #10 in OZEL_SARTLAR receives payment details (line 224-225)
+	•	Not stored in database (only referenced during PDF generation)
+1.4 PDF Generation Analysis
+Library: jsPDF 2.x + jspdf-autotable
+Execution: Client-side (browser)
+Location: /src/services/contractPdf.service.ts
+PDF Structure (5 pages):
+	1	Page 1: Contract info table + fixtures + signatures
+	2	Page 2: 13 General Conditions (GENEL_SARTLAR)
+	3	Pages 3-4: 19 Special Conditions (OZEL_SARTLAR) + signatures
+	4	Page 5: Eviction commitment (TAHLIYE_TAAHHUTNAMESI_TEXT)
+Current Flow:
+// contractPdf.service.ts:187-199
+GENEL_SARTLAR.forEach((madde, index) => {
+  const maddeText = `${index + 1}. ${madde}`;
+  const lines = doc.splitTextToSize(maddeText, pageWidth);
+  doc.text(lines, margins.left, y);
+  y += lines.length * 4 + 3;
+});
+
+Upload Flow:
+	1	Generate PDF blob (generateContractPDFBlob())
+	2	Validate size (10KB - 10MB)
+	3	Upload to Supabase Storage: contract-pdfs bucket
+	4	Update contracts.contract_pdf_path in database
+	5	Download to user's device
+1.5 Database Schema (Relevant Tables)
+contracts table (primary):
+	•	id, tenant_id, property_id, start_date, end_date
+	•	rent_amount, deposit, status, contract_pdf_path
+contract_details table (extended info):
+	•	contract_id (FK)
+	•	payment_day_of_month, payment_method, annual_rent
+	•	rent_increase_rate, special_conditions (text)
+	•	furniture_list (text[]) ⭐ EXISTS BUT UNUSED
+Key Finding: contract_details.furniture_list is a text array field that's NOT currently used in forms or PDF. Could be repurposed for editable clauses.
+1.6 Constraints & Requirements
+Must Preserve:
+	•	✅ Existing form fields and validation
+	•	✅ PDF generation logic flow (client-side jsPDF)
+	•	✅ Supabase storage upload process
+	•	✅ Contract creation RPC (create_contract_atomic)
+	•	✅ Turkish language support
+Must Add:
+	•	➕ UI section for displaying default clauses
+	•	➕ Per-clause edit capability
+	•	➕ Storage of edited clauses with contract
+	•	➕ Dynamic clause rendering in PDF
+
+SECTION 2: EDITABLE CLAUSE SOLUTIONS (OPTIONS + COMPARISON)
+APPROACH 1: Simple JSON Field with In-Form Editing
+Architecture:
+	•	Store edited clauses as JSON in contract_details.custom_clauses (new JSONB column)
+	•	Display clauses as editable textarea fields below the contract form
+	•	On PDF generation, use custom clauses if present, else use defaults
+Database Changes:
+ALTER TABLE contract_details 
+ADD COLUMN custom_clauses JSONB DEFAULT NULL;
+
+-- Structure: { "genel": ["clause1", "clause2", ...], "ozel": [...] }
+
+Frontend Changes:
+	•	Add new form section: EditableClausesSection.tsx
+	•	Prefill with GENEL_SARTLAR and OZEL_SARTLAR on mount
+	•	Store edited clauses in form state (React Hook Form)
+	•	Validate: each clause must have content (Zod schema)
+PDF Service Changes:
+// Instead of importing hardcoded arrays:
+const genelSartlar = data.customClauses?.genel || GENEL_SARTLAR;
+const ozelSartlar = data.customClauses?.ozel || OZEL_SARTLAR;
+
+Pros:
+	•	✅ Simplest implementation (1-2 days)
+	•	✅ No additional tables (single JSONB column)
+	•	✅ Minimal PDF changes (fallback to defaults)
+	•	✅ Backward compatible (NULL = use defaults)
+	•	✅ Fast to query (single table)
+Cons:
+	•	❌ No clause versioning (can't track changes over time)
+	•	❌ No clause reuse (each contract stores full copy)
+	•	❌ Large JSON payloads (32 clauses × ~200 chars = 6KB per contract)
+	•	❌ No admin clause management (defaults still hardcoded)
+	•	❌ Difficult to update defaults (must migrate existing contracts)
+	•	❌ No audit trail (who edited what clause when)
+Best For: Quick MVP, low contract volume (<1000 contracts)
+
+APPROACH 2: Template System with Override Pattern
+Architecture:
+	•	Create contract_clause_templates table for default clauses
+	•	Store per-contract overrides in contract_clause_overrides table
+	•	Display clauses as cards with "Use Default" / "Customize" toggle
+	•	On PDF generation, merge overrides with template
+Database Schema:
+-- Default clause templates (shared across all contracts)
+CREATE TABLE contract_clause_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category TEXT NOT NULL, -- 'genel', 'ozel', 'tahliye'
+  sequence_order INT NOT NULL,
+  title TEXT, -- optional clause title
+  content TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now()
+);
+
+-- Per-contract clause overrides (only when edited)
+CREATE TABLE contract_clause_overrides (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  contract_id UUID REFERENCES contracts(id) ON DELETE CASCADE,
+  template_clause_id UUID REFERENCES contract_clause_templates(id),
+  custom_content TEXT NOT NULL, -- overridden text
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  UNIQUE(contract_id, template_clause_id)
+);
+
+CREATE INDEX idx_overrides_contract ON contract_clause_overrides(contract_id);
+
+Data Migration:
+	•	Seed contract_clause_templates with current GENEL_SARTLAR + OZEL_SARTLAR
+	•	Keep hardcoded arrays as fallback for now
+Frontend Implementation:
+	•	Fetch templates on contract create page load
+	•	Display each clause in an accordion/card
+	•	Show "Default" badge + edit icon
+	•	On edit: create override record (save to state until submit)
+	•	Form submission: save overrides to database
+PDF Service Changes:
+// Fetch merged clauses (template + overrides)
+const clauses = await getMergedClausesForContract(contractId);
+// Render in PDF
+clauses.genel.forEach((clause, idx) => {
+  renderClause(clause.content, idx);
+});
+
+Pros:
+	•	✅ Efficient storage (only store changes, not full copy)
+	•	✅ Template versioning (can update defaults centrally)
+	•	✅ Admin UI potential (manage templates separately)
+	•	✅ Audit trail (created_at, updated_at on overrides)
+	•	✅ Clause reuse (templates shared across contracts)
+	•	✅ Scalable (good for 10,000+ contracts)
+Cons:
+	•	⚠️ More complex (2 tables, joins required)
+	•	⚠️ Query overhead (must join templates + overrides for PDF)
+	•	⚠️ Migration required (seed templates table)
+	•	⚠️ Admin UI needed (to manage templates - future work)
+	•	⚠️ Versioning complexity (updating templates affects existing contracts)
+Best For: Production SaaS, long-term scalability, multi-user teams
+
+APPROACH 3: Hybrid (JSON + Metadata)
+Architecture:
+	•	Store full clause set as JSONB in contract_details.custom_clauses
+	•	Add metadata column clause_edit_metadata to track which clauses were edited
+	•	Display clauses with visual indicators (edited vs default)
+	•	Generate PDF from JSONB clauses
+Database Changes:
+ALTER TABLE contract_details 
+ADD COLUMN custom_clauses JSONB NOT NULL DEFAULT '{
+  "genel": [],
+  "ozel": [],
+  "tahliye": ""
+}',
+ADD COLUMN clause_edit_metadata JSONB DEFAULT '{
+  "edited_clause_ids": [],
+  "last_edited_at": null,
+  "edited_by_user_id": null
+}';
+
+Frontend Implementation:
+	•	Prefill JSONB with defaults on form load
+	•	Track which clauses user edits (store IDs in metadata)
+	•	Visual distinction: default clauses (gray) vs edited (highlighted)
+	•	On submit: save full JSONB + metadata
+PDF Service Changes:
+	•	Use data.customClauses directly (already in JSON format)
+	•	No fallback needed (JSONB always populated)
+Pros:
+	•	✅ Simple queries (single table, no joins)
+	•	✅ Tracks edits (metadata shows what was changed)
+	•	✅ Fast PDF generation (no joins)
+	•	✅ Backward compatible (can use defaults if JSONB empty)
+	•	✅ Medium complexity (easier than Approach 2)
+Cons:
+	•	⚠️ Still stores full copies (6KB per contract)
+	•	⚠️ No template management (defaults still hardcoded)
+	•	⚠️ Limited versioning (metadata is basic)
+	•	❌ No clause reuse (can't share clauses across contracts)
+Best For: Medium-term solution, want tracking without full template system
+
+APPROACH 4: Document Builder Pattern (Industry Standard)
+Architecture (inspired by PandaDoc, Juro):
+	•	Rich clause library with categories and tags
+	•	Drag-and-drop clause builder in contract form
+	•	Store clause selections + customizations as structured data
+	•	Conditional logic for clause inclusion (based on contract type, property type, etc.)
+Database Schema:
+-- Clause library (rich metadata)
+CREATE TABLE clause_library (
+  id UUID PRIMARY KEY,
+  category TEXT NOT NULL,
+  title TEXT NOT NULL,
+  content TEXT NOT NULL,
+  tags TEXT[],
+  is_required BOOLEAN DEFAULT false,
+  applies_to_property_types TEXT[],
+  version INT DEFAULT 1,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP,
+  updated_at TIMESTAMP
+);
+
+-- Contract clause selections (many-to-many)
+CREATE TABLE contract_clauses (
+  id UUID PRIMARY KEY,
+  contract_id UUID REFERENCES contracts(id) ON DELETE CASCADE,
+  clause_id UUID REFERENCES clause_library(id),
+  sequence_order INT NOT NULL,
+  custom_content TEXT, -- NULL = use library version
+  is_customized BOOLEAN DEFAULT false,
+  created_at TIMESTAMP
+);
+
+CREATE INDEX idx_contract_clauses_contract ON contract_clauses(contract_id);
+
+Frontend Implementation:
+	•	Clause library browser with search/filter
+	•	Drag-and-drop interface (dnd-kit library)
+	•	Inline editing with rich text (Lexical or Tiptap)
+	•	Conditional clause suggestions based on property type
+	•	Preview mode before finalizing
+Pros:
+	•	✅ Enterprise-grade (matches industry leaders)
+	•	✅ Flexible clause management (add/remove/reorder)
+	•	✅ Rich UX (drag-and-drop, inline editing)
+	•	✅ Conditional logic (smart clause suggestions)
+	•	✅ Version control (track clause changes over time)
+	•	✅ Reusable library (admin can add custom clauses)
+Cons:
+	•	❌ High complexity (2-3 weeks development)
+	•	❌ Requires UI library (drag-and-drop, rich text editor)
+	•	❌ Over-engineered (for current requirement)
+	•	❌ Admin UI required (clause library management)
+	•	❌ Learning curve (users must learn new workflow)
+Best For: Future roadmap, multi-contract-type platform, advanced users
+
+COMPARISON MATRIX
+Feature
+Approach 1: Simple JSON
+Approach 2: Template + Override
+Approach 3: Hybrid
+Approach 4: Document Builder
+Complexity
+🟢 Low
+🟡 Medium
+🟡 Medium
+🔴 High
+Dev Time
+1-2 days
+3-5 days
+2-3 days
+2-3 weeks
+Storage Efficiency
+🔴 Poor (6KB/contract)
+🟢 Excellent (only deltas)
+🔴 Poor (6KB/contract)
+🟢 Excellent (normalized)
+Query Performance
+🟢 Excellent (1 query)
+🟡 Good (1 join)
+🟢 Excellent (1 query)
+🟡 Medium (2 joins)
+Clause Reuse
+❌ No
+✅ Yes
+❌ No
+✅ Yes
+Versioning
+❌ No
+✅ Yes
+🟡 Basic
+✅ Advanced
+Admin UI
+❌ Not possible
+✅ Needed
+❌ Not needed
+✅ Required
+Audit Trail
+❌ No
+✅ Yes
+🟡 Basic
+✅ Full
+Backward Compat
+✅ Yes
+✅ Yes
+✅ Yes
+⚠️ Migration needed
+UX Simplicity
+🟢 Simple (textareas)
+🟡 Medium (toggle edit)
+🟡 Medium (inline edit)
+🔴 Complex (builder)
+Scalability
+🔴 Poor (>1K contracts)
+🟢 Excellent
+🟡 Medium
+🟢 Excellent
+Fits Current Stack
+✅ Perfect fit
+✅ Perfect fit
+✅ Perfect fit
+⚠️ Needs new libs
+
+SECTION 3: FINAL RECOMMENDED SOLUTION
+RECOMMENDATION: Approach 2 (Template System with Override Pattern)
+Rationale: Best balance of simplicity, scalability, and 2025 SaaS best practices.
+Why This Approach?
+1. Aligns with Industry Standards
+	•	Modern SaaS platforms (PandaDoc, Juro, DocuSign) use template-based systems
+	•	Follows "Don't Repeat Yourself" (DRY) principle
+	•	Enables future admin features without rewrite
+2. Fits Your Tech Stack Perfectly
+	•	PostgreSQL excels at relational data (templates + overrides)
+	•	Supabase RLS works seamlessly with foreign keys
+	•	React Hook Form handles nested data well
+	•	TypeScript types easily generated from schema
+3. Solves Current Pain + Future Needs
+	•	✅ Current: Agents can edit clauses per contract
+	•	✅ Future: Admin can update default templates
+	•	✅ Future: Audit trail for compliance
+	•	✅ Future: Clause analytics (most edited clauses)
+4. Minimal Risk
+	•	Incremental migration (seed templates, keep hardcoded fallback)
+	•	Backward compatible (NULL overrides = use template)
+	•	Can rollback to hardcoded if needed
+5. Performance Optimized
+	•	Single join for PDF generation (templates LEFT JOIN overrides)
+	•	Index on contract_id for fast override lookups
+	•	JSONB aggregation for efficient clause merging
+
+Implementation Blueprint
+Phase 1: Database Setup (Day 1)
+1.1 Create Tables
+-- Migration: 20250101_contract_clause_templates.sql
+CREATE TABLE contract_clause_templates (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  category TEXT NOT NULL CHECK (category IN ('genel', 'ozel', 'tahliye')),
+  sequence_order INT NOT NULL,
+  title TEXT, -- e.g. "Taşınmazın Kullanımı"
+  content TEXT NOT NULL,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  user_id UUID REFERENCES auth.users(id), -- for RLS
+  UNIQUE(user_id, category, sequence_order) -- prevent duplicates
+);
+
+CREATE TABLE contract_clause_overrides (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  contract_id UUID REFERENCES contracts(id) ON DELETE CASCADE,
+  template_clause_id UUID REFERENCES contract_clause_templates(id),
+  custom_content TEXT NOT NULL,
+  created_at TIMESTAMP DEFAULT now(),
+  updated_at TIMESTAMP DEFAULT now(),
+  user_id UUID REFERENCES auth.users(id),
+  UNIQUE(contract_id, template_clause_id)
+);
+
+CREATE INDEX idx_templates_category ON contract_clause_templates(category, sequence_order);
+CREATE INDEX idx_overrides_contract ON contract_clause_overrides(contract_id);
+
+-- Enable RLS
+ALTER TABLE contract_clause_templates ENABLE ROW LEVEL SECURITY;
+ALTER TABLE contract_clause_overrides ENABLE ROW LEVEL SECURITY;
+
+-- RLS Policies
+CREATE POLICY "Users can view their own templates"
+  ON contract_clause_templates FOR SELECT
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert their own templates"
+  ON contract_clause_templates FOR INSERT
+  WITH CHECK (user_id = auth.uid());
+
+CREATE POLICY "Users can view their own overrides"
+  ON contract_clause_overrides FOR SELECT
+  USING (user_id = auth.uid());
+
+CREATE POLICY "Users can insert their own overrides"
+  ON contract_clause_overrides FOR INSERT
+  WITH CHECK (user_id = auth.uid());
+
+1.2 Seed Default Templates
+-- Migration: 20250101_seed_default_clauses.sql
+-- Function to seed templates for a user (called on first login)
+CREATE OR REPLACE FUNCTION seed_default_contract_clauses(p_user_id UUID)
+RETURNS VOID AS $$
+BEGIN
+  -- Insert GENEL_SARTLAR (13 clauses)
+  INSERT INTO contract_clause_templates (user_id, category, sequence_order, content)
+  VALUES
+    (p_user_id, 'genel', 1, 'Kiracı kiraladığı taşınmazı...'),
+    (p_user_id, 'genel', 2, 'Kiralanan taşınmaz kiracı tarafından...'),
+    -- ... (all 13 clauses)
+  ;
+  
+  -- Insert OZEL_SARTLAR (19 clauses)
+  INSERT INTO contract_clause_templates (user_id, category, sequence_order, content)
+  VALUES
+    (p_user_id, 'ozel', 1, 'Ön sayfadaki 12 maddelik...'),
+    (p_user_id, 'ozel', 2, 'Kira sözleşmesi süresince...'),
+    -- ... (all 19 clauses)
+  ;
+  
+  -- Insert TAHLIYE (1 clause)
+  INSERT INTO contract_clause_templates (user_id, category, sequence_order, content)
+  VALUES
+    (p_user_id, 'tahliye', 1, 'Halihazırda kiracısı bulunduğum...')
+  ;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+1.3 Auto-Seed on User Registration
+-- Trigger to auto-seed clauses for new users
+CREATE OR REPLACE FUNCTION auto_seed_clauses_for_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+  PERFORM seed_default_contract_clauses(NEW.id);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+CREATE TRIGGER trigger_seed_clauses_on_user_creation
+  AFTER INSERT ON auth.users
+  FOR EACH ROW
+  EXECUTE FUNCTION auto_seed_clauses_for_new_user();
+
+
+Phase 2: TypeScript Types (Day 1)
+2.1 Add Types (/src/types/contract.types.ts)
+export interface ContractClauseTemplate {
+  id: string;
+  category: 'genel' | 'ozel' | 'tahliye';
+  sequence_order: number;
+  title: string | null;
+  content: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+}
+
+export interface ContractClauseOverride {
+  id: string;
+  contract_id: string;
+  template_clause_id: string;
+  custom_content: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+}
+
+export interface MergedClause {
+  template_id: string;
+  category: 'genel' | 'ozel' | 'tahliye';
+  sequence_order: number;
+  content: string; // merged (override || template)
+  is_customized: boolean;
+}
+
+export interface ClausesForPdf {
+  genel: MergedClause[];
+  ozel: MergedClause[];
+  tahliye: string;
+}
+
+
+Phase 3: Service Layer (Day 2)
+3.1 Clauses Service (/src/services/clauses.service.ts)
+import { supabase } from '@/config/supabase';
+import { getAuthenticatedUserId } from '@/lib/auth';
+import type { ContractClauseTemplate, MergedClause, ClausesForPdf } from '@/types/contract.types';
+
+class ClausesService {
+  /**
+   * Fetch all templates for current user
+   */
+  async getTemplates(): Promise<ContractClauseTemplate[]> {
+    const userId = await getAuthenticatedUserId();
+    
+    const { data, error } = await supabase
+      .from('contract_clause_templates')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .order('category')
+      .order('sequence_order');
+    
+    if (error) throw error;
+    
+    // If no templates, seed them
+    if (!data || data.length === 0) {
+      await this.seedTemplatesForCurrentUser();
+      return this.getTemplates(); // recursive call
+    }
+    
+    return data;
+  }
+  
+  /**
+   * Get merged clauses for contract (templates + overrides)
+   */
+  async getMergedClauses(contractId: string): Promise<ClausesForPdf> {
+    const userId = await getAuthenticatedUserId();
+    
+    // Fetch templates with LEFT JOIN overrides
+    const { data, error } = await supabase
+      .from('contract_clause_templates')
+      .select(`
+        id,
+        category,
+        sequence_order,
+        content,
+        contract_clause_overrides!left (
+          custom_content
+        )
+      `)
+      .eq('user_id', userId)
+      .eq('is_active', true)
+      .eq('contract_clause_overrides.contract_id', contractId)
+      .order('sequence_order');
+    
+    if (error) throw error;
+    
+    // Map to merged format
+    const merged: MergedClause[] = data.map((row: any) => ({
+      template_id: row.id,
+      category: row.category,
+      sequence_order: row.sequence_order,
+      content: row.contract_clause_overrides?.[0]?.custom_content || row.content,
+      is_customized: !!row.contract_clause_overrides?.[0]
+    }));
+    
+    // Group by category
+    return {
+      genel: merged.filter(c => c.category === 'genel'),
+      ozel: merged.filter(c => c.category === 'ozel'),
+      tahliye: merged.find(c => c.category === 'tahliye')?.content || ''
+    };
+  }
+  
+  /**
+   * Save clause overrides for contract
+   */
+  async saveOverrides(
+    contractId: string,
+    overrides: { templateId: string; content: string }[]
+  ): Promise<void> {
+    const userId = await getAuthenticatedUserId();
+    
+    // Delete existing overrides for this contract
+    await supabase
+      .from('contract_clause_overrides')
+      .delete()
+      .eq('contract_id', contractId);
+    
+    // Insert new overrides
+    if (overrides.length > 0) {
+      const { error } = await supabase
+        .from('contract_clause_overrides')
+        .insert(
+          overrides.map(o => ({
+            contract_id: contractId,
+            template_clause_id: o.templateId,
+            custom_content: o.content,
+            user_id: userId
+          }))
+        );
+      
+      if (error) throw error;
+    }
+  }
+  
+  /**
+   * Seed templates for current user (from hardcoded defaults)
+   */
+  private async seedTemplatesForCurrentUser(): Promise<void> {
+    const { data, error } = await supabase.rpc('seed_default_contract_clauses', {
+      p_user_id: await getAuthenticatedUserId()
+    });
+    
+    if (error) throw error;
+  }
+}
+
+export const clausesService = new ClausesService();
+
+
+Phase 4: UI Components (Day 2-3)
+4.1 Editable Clauses Section (/src/features/contracts/components/EditableClausesSection.tsx)
+import { useState, useEffect } from 'react';
+import { UseFormReturn } from 'react-hook-form';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Badge } from '@/components/ui/badge';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { clausesService } from '@/services/clauses.service';
+import type { ContractFormData } from '../schemas/contractForm.schema';
+import type { ContractClauseTemplate } from '@/types/contract.types';
+import { Pencil, RotateCcw } from 'lucide-react';
+
+interface Props {
+  form: UseFormReturn<ContractFormData>;
+}
+
+export function EditableClausesSection({ form }: Props) {
+  const [templates, setTemplates] = useState<ContractClauseTemplate[]>([]);
+  const [editedClauses, setEditedClauses] = useState<Map<string, string>>(new Map());
+  const [loading, setLoading] = useState(true);
+  
+  useEffect(() => {
+    loadTemplates();
+  }, []);
+  
+  const loadTemplates = async () => {
+    try {
+      const data = await clausesService.getTemplates();
+      setTemplates(data);
+      
+      // Initialize form value
+      form.setValue('clauseOverrides', []);
+    } catch (error) {
+      console.error('Failed to load clause templates:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const handleEdit = (templateId: string, content: string) => {
+    const newEdited = new Map(editedClauses);
+    newEdited.set(templateId, content);
+    setEditedClauses(newEdited);
+    
+    // Update form state
+    const overrides = Array.from(newEdited.entries()).map(([templateId, content]) => ({
+      templateId,
+      content
+    }));
+    form.setValue('clauseOverrides', overrides);
+  };
+  
+  const handleReset = (templateId: string) => {
+    const newEdited = new Map(editedClauses);
+    newEdited.delete(templateId);
+    setEditedClauses(newEdited);
+    
+    // Update form state
+    const overrides = Array.from(newEdited.entries()).map(([templateId, content]) => ({
+      templateId,
+      content
+    }));
+    form.setValue('clauseOverrides', overrides);
+  };
+  
+  const isEdited = (templateId: string) => editedClauses.has(templateId);
+  
+  const genelClauses = templates.filter(t => t.category === 'genel');
+  const ozelClauses = templates.filter(t => t.category === 'ozel');
+  
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Sözleşme Maddeleri</CardTitle>
+        <CardDescription>
+          Varsayılan sözleşme maddelerini bu sözleşme için özelleştirebilirsiniz.
+          Değişiklik yapmak istediğiniz maddeleri düzenleyin.
+        </CardDescription>
+      </CardHeader>
+      <CardContent className="space-y-6">
+        {/* General Conditions */}
+        <div>
+          <h3 className="text-sm font-semibold mb-3">Genel Şartlar ({genelClauses.length} madde)</h3>
+          <Accordion type="multiple" className="space-y-2">
+            {genelClauses.map((template, idx) => (
+              <AccordionItem key={template.id} value={template.id}>
+                <AccordionTrigger className="text-sm hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <span>{idx + 1}. Madde</span>
+                    {isEdited(template.id) && (
+                      <Badge variant="secondary" className="text-xs">Özelleştirildi</Badge>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ClauseEditor
+                    template={template}
+                    isEdited={isEdited(template.id)}
+                    editedContent={editedClauses.get(template.id)}
+                    onEdit={(content) => handleEdit(template.id, content)}
+                    onReset={() => handleReset(template.id)}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+        
+        {/* Special Conditions */}
+        <div>
+          <h3 className="text-sm font-semibold mb-3">Özel Şartlar ({ozelClauses.length} madde)</h3>
+          <Accordion type="multiple" className="space-y-2">
+            {ozelClauses.map((template, idx) => (
+              <AccordionItem key={template.id} value={template.id}>
+                <AccordionTrigger className="text-sm hover:no-underline">
+                  <div className="flex items-center gap-2">
+                    <span>{idx + 1}. Madde</span>
+                    {isEdited(template.id) && (
+                      <Badge variant="secondary" className="text-xs">Özelleştirildi</Badge>
+                    )}
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ClauseEditor
+                    template={template}
+                    isEdited={isEdited(template.id)}
+                    editedContent={editedClauses.get(template.id)}
+                    onEdit={(content) => handleEdit(template.id, content)}
+                    onReset={() => handleReset(template.id)}
+                  />
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
+// Subcomponent for editing individual clause
+function ClauseEditor({
+  template,
+  isEdited,
+  editedContent,
+  onEdit,
+  onReset
+}: {
+  template: ContractClauseTemplate;
+  isEdited: boolean;
+  editedContent?: string;
+  onEdit: (content: string) => void;
+  onReset: () => void;
+}) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [localContent, setLocalContent] = useState(editedContent || template.content);
+  
+  const handleSave = () => {
+    onEdit(localContent);
+    setIsEditing(false);
+  };
+  
+  const handleCancel = () => {
+    setLocalContent(editedContent || template.content);
+    setIsEditing(false);
+  };
+  
+  const handleResetToDefault = () => {
+    setLocalContent(template.content);
+    onReset();
+    setIsEditing(false);
+  };
+  
+  return (
+    <div className="space-y-3">
+      {isEditing ? (
+        <>
+          <Textarea
+            value={localContent}
+            onChange={(e) => setLocalContent(e.target.value)}
+            rows={6}
+            className="font-mono text-sm"
+          />
+          <div className="flex gap-2 justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCancel}
+            >
+              İptal
+            </Button>
+            <Button
+              type="button"
+              size="sm"
+              onClick={handleSave}
+            >
+              Kaydet
+            </Button>
+          </div>
+        </>
+      ) : (
+        <>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            {editedContent || template.content}
+          </p>
+          <div className="flex gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => setIsEditing(true)}
+            >
+              <Pencil className="h-4 w-4 mr-2" />
+              Düzenle
+            </Button>
+            {isEdited && (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={handleResetToDefault}
+              >
+                <RotateCcw className="h-4 w-4 mr-2" />
+                Varsayılana Dön
+              </Button>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+4.2 Update Form Schema (/src/features/contracts/schemas/contractForm.schema.ts)
+// Add to existing schema
+export const contractFormSchema = z.object({
+  // ... existing fields
+  
+  // New field for clause overrides
+  clauseOverrides: z.array(z.object({
+    templateId: z.string().uuid(),
+    content: z.string().min(1, 'Madde içeriği boş olamaz')
+  })).optional()
+});
+
+4.3 Integrate into ContractCreateForm (ContractCreateForm.tsx:151)
+{/* Add before Contract Section */}
+<EditableClausesSection form={form} />
+
+
+Phase 5: Update Contract Creation Flow (Day 3)
+5.1 Modify Contract Creation Service (/src/services/contractCreation.service.ts)
+// After contract creation RPC succeeds:
+export async function createContractWithEntities(
+  data: ContractFormData,
+  userId: string
+): Promise<ContractCreationResult> {
+  // ... existing RPC call
+  
+  const result = await supabase.rpc('create_contract_atomic', { /* ... */ });
+  
+  // NEW: Save clause overrides if any
+  if (data.clauseOverrides && data.clauseOverrides.length > 0) {
+    await clausesService.saveOverrides(
+      result.contract_id,
+      data.clauseOverrides
+    );
+  }
+  
+  return result;
+}
+
+
+Phase 6: Update PDF Generation (Day 4)
+6.1 Modify PDF Service (/src/services/contractPdf.service.ts)
+// Remove hardcoded imports (keep as fallback)
+import { GENEL_SARTLAR, OZEL_SARTLAR, TAHLIYE_TAAHHUTNAMESI_TEXT } from '@/templates/contractContent';
+import { clausesService } from './clauses.service';
+
+// Update ContractPdfData type to include merged clauses
+export interface ContractPdfData {
+  // ... existing fields
+  mergedClauses?: ClausesForPdf; // optional (for backward compat)
+}
+
+// Update generateContractPDFBlob
+export async function generateContractPDFBlob(
+  data: ContractPdfData,
+  contractId?: string
+): Promise<Blob> {
+  // Fetch merged clauses if contractId provided
+  let clauses: ClausesForPdf;
+  if (contractId) {
+    try {
+      clauses = await clausesService.getMergedClauses(contractId);
+    } catch (error) {
+      console.warn('Failed to load merged clauses, using defaults:', error);
+      clauses = {
+        genel: GENEL_SARTLAR.map((c, i) => ({
+          template_id: '',
+          category: 'genel',
+          sequence_order: i,
+          content: c,
+          is_customized: false
+        })),
+        ozel: OZEL_SARTLAR.map((c, i) => ({
+          template_id: '',
+          category: 'ozel',
+          sequence_order: i,
+          content: c,
+          is_customized: false
+        })),
+        tahliye: TAHLIYE_TAAHHUTNAMESI_TEXT
+      };
+    }
+  } else {
+    // Fallback to hardcoded defaults
+    clauses = {
+      genel: GENEL_SARTLAR.map((c, i) => ({
+        template_id: '',
+        category: 'genel',
+        sequence_order: i,
+        content: c,
+        is_customized: false
+      })),
+      ozel: OZEL_SARTLAR.map((c, i) => ({
+        template_id: '',
+        category: 'ozel',
+        sequence_order: i,
+        content: c,
+        is_customized: false
+      })),
+      tahliye: TAHLIYE_TAAHHUTNAMESI_TEXT
+    };
+  }
+  
+  const doc = new jsPDF(PDF_CONFIG);
+  addTurkishFonts(doc);
+  
+  renderPage1_InfoTable(doc, data);
+  doc.addPage();
+  renderPage2_GenelSartlar(doc, clauses.genel);
+  doc.addPage();
+  renderPage3_4_OzelSartlar(doc, data, clauses.ozel);
+  doc.addPage();
+  renderPage5_TahliyeTaahhutnamesi(doc, data, clauses.tahliye);
+  
+  const pdfBlob = doc.output('blob');
+  
+  if (pdfBlob.size < 10000) {
+    throw new Error('PDF generation failed - output too small');
+  }
+  
+  return pdfBlob;
+}
+
+// Update render functions to accept merged clauses
+function renderPage2_GenelSartlar(doc: jsPDF, clauses: MergedClause[]): void {
+  const { margins, fontSize } = PDF_CONFIG;
+  let y = margins.top;
+  
+  doc.setFontSize(fontSize.subtitle);
+  setFontBold(doc);
+  doc.text('GENEL ŞARTLAR', doc.internal.pageSize.width / 2, y, { align: 'center' });
+  y += 12;
+  
+  doc.setFontSize(fontSize.small);
+  setFontNormal(doc);
+  
+  const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
+  
+  clauses.forEach((clause, index) => {
+    const maddeText = `${index + 1}. ${clause.content}`;
+    const lines = doc.splitTextToSize(maddeText, pageWidth);
+    
+    if (y + (lines.length * 4) > doc.internal.pageSize.height - margins.bottom) {
+      doc.addPage();
+      y = margins.top;
+    }
+    
+    doc.text(lines, margins.left, y);
+    y += lines.length * 4 + 3;
+  });
+}
+
+function renderPage3_4_OzelSartlar(
+  doc: jsPDF,
+  data: ContractPdfData,
+  clauses: MergedClause[]
+): void {
+  const { margins, fontSize } = PDF_CONFIG;
+  let y = margins.top;
+  
+  doc.setFontSize(fontSize.subtitle);
+  setFontBold(doc);
+  doc.text('ÖZEL ŞARTLAR', doc.internal.pageSize.width / 2, y, { align: 'center' });
+  y += 12;
+  
+  doc.setFontSize(fontSize.small);
+  setFontNormal(doc);
+  
+  const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
+  
+  clauses.forEach((clause, index) => {
+    // Special handling for clause #10 payment details (if not customized)
+    let processedContent = clause.content;
+    if (index === 9 && !clause.is_customized) {
+      processedContent = clause.content + 
+        ` Kiracı, aylık kira bedellerini her ayın ${data.paymentDay}'inde ` +
+        `peşin olarak ${data.ownerIBAN} numaralı IBAN Hesabına ` +
+        `${data.ownerName} adına yatıracaktır.`;
+    }
+    
+    const maddeText = `${index + 1}- ${processedContent}`;
+    const lines = doc.splitTextToSize(maddeText, pageWidth);
+    
+    if (y + (lines.length * 4) > doc.internal.pageSize.height - margins.bottom - 30) {
+      doc.addPage();
+      y = margins.top;
+    }
+    
+    doc.text(lines, margins.left, y);
+    y += lines.length * 4 + 3;
+  });
+  
+  y += 5;
+  setFontBold(doc);
+  doc.text(`İmza Tarihi: ${data.contractDate}`, margins.left, y);
+  y += 15;
+  
+  renderSignatureArea(doc, y);
+}
+
+function renderPage5_TahliyeTaahhutnamesi(
+  doc: jsPDF,
+  data: ContractPdfData,
+  tahliyeText: string
+): void {
+  const { margins, fontSize } = PDF_CONFIG;
+  let y = margins.top;
+  
+  doc.setFontSize(fontSize.title);
+  setFontBold(doc);
+  doc.text('TAHLİYE TAAHHÜTNAMESİ', doc.internal.pageSize.width / 2, y, { align: 'center' });
+  y += 20;
+  
+  // ... info table (same as before)
+  
+  y = (doc as any).lastAutoTable.finalY + 15;
+  
+  doc.setFontSize(fontSize.body);
+  setFontNormal(doc);
+  const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
+  const lines = doc.splitTextToSize(tahliyeText, pageWidth);
+  doc.text(lines, margins.left, y);
+  y += lines.length * 5 + 20;
+  
+  setFontBold(doc);
+  doc.text(`Taahhüt Tarihi: ${data.commitmentDate}`, margins.left, y);
+  y += 10;
+  doc.text(`Taahhüt Eden: ${data.tenantName}`, margins.left, y);
+  y += 20;
+  doc.text('İMZA:', margins.left, y);
+}
+
+6.2 Update PDF Handler Hook (/src/features/contracts/hooks/useContractPdfHandler.ts)
+// Update to pass contractId to PDF service
+export function useContractPdfHandler() {
+  const generateAndUploadPdf = async (
+    formData: ContractFormData,
+    result: ContractCreationResult
+  ) => {
+    try {
+      toast.info('PDF oluşturuluyor...', { duration: 2000 });
+      
+      const pdfData: ContractPdfData = {
+        // ... existing field mapping
+      };
+      
+      // Generate PDF with merged clauses from database
+      const pdfBlob = await generateContractPDFBlob(pdfData, result.contract_id);
+      
+      // ... rest of upload logic
+    } catch (error) {
+      console.error('PDF generation error:', error);
+      throw error;
+    }
+  };
+  
+  return { generateAndUploadPdf };
+}
+
+
+Migration Strategy
+For Existing Users:
+	1	Run seed function on next login (seed_default_contract_clauses())
+	2	Existing contracts remain unchanged (no overrides = use defaults)
+	3	New contracts can use custom clauses immediately
+For New Users:
+	1	Auto-seed on registration (trigger auto_seed_clauses_for_new_user())
+	2	Templates ready on first contract creation
+Rollback Plan:
+	•	Keep hardcoded GENEL_SARTLAR and OZEL_SARTLAR as fallback
+	•	If database query fails, PDF uses hardcoded defaults
+	•	Can disable feature by removing <EditableClausesSection /> from form
+
+Testing Checklist
+Unit Tests:
+	•	✅ clausesService.getTemplates() returns seeded clauses
+	•	✅ clausesService.getMergedClauses() merges overrides correctly
+	•	✅ clausesService.saveOverrides() handles duplicates (UNIQUE constraint)
+Integration Tests:
+	•	✅ Create contract with no edits → PDF uses templates
+	•	✅ Create contract with edited clauses → PDF uses overrides
+	•	✅ Edit existing contract → overrides persist
+	•	✅ PDF generation fails gracefully → falls back to hardcoded
+UI Tests:
+	•	✅ Accordion opens/closes smoothly
+	•	✅ Edit mode saves changes to form state
+	•	✅ Reset button reverts to template
+	•	✅ "Özelleştirildi" badge shows for edited clauses
+
+Performance Considerations
+Database Query Optimization:
+-- Index on contract_id for fast override lookups
+CREATE INDEX idx_overrides_contract ON contract_clause_overrides(contract_id);
+
+-- Composite index for template lookups
+CREATE INDEX idx_templates_user_category 
+  ON contract_clause_templates(user_id, category, sequence_order);
+
+Expected Query Performance:
+	•	Template fetch: ~10ms (32 rows, indexed)
+	•	Merged clauses: ~15ms (1 join, indexed)
+	•	Save overrides: ~20ms (batch insert)
+Estimated Storage:
+	•	Templates: 32 clauses × 200 chars = 6.4KB per user (one-time)
+	•	Overrides: ~3-5 clauses edited per contract × 200 chars = 1KB per contract
+	•	Total: ~1KB per contract (vs 6KB in Approach 1)
+
+Future Enhancements (Optional)
+Phase 2 (Future):
+	•	Admin UI for managing templates (/settings/contract-templates)
+	•	Bulk update templates for all future contracts
+	•	Clause version history (audit trail)
+	•	Clause analytics dashboard (most edited clauses)
+Phase 3 (Future):
+	•	Clause library with tags and search
+	•	Conditional clause suggestions (based on property type)
+	•	Rich text editor for clauses (bold, italics, bullets)
+	•	Multi-language support (EN, TR clause templates)
+
+Summary
+Recommended Solution: Template System with Override Pattern (Approach 2)
+Why:
+	•	✅ Industry best practice (PandaDoc, Juro, DocuSign)
+	•	✅ Scalable (10,000+ contracts)
+	•	✅ Efficient storage (only deltas)
+	•	✅ Future-proof (admin UI, versioning)
+	•	✅ Fits your stack perfectly (PostgreSQL, Supabase, React Hook Form)
+Estimated Development Time: 3-5 days
+Risk Level: Low (incremental migration, backward compatible)
+User Impact: Immediate (agents can edit clauses per contract)
+Next Steps:
+	1	Review and approve this approach
+	2	Create database migration files
+	3	Implement service layer
+	4	Build UI components
+	5	Update PDF generation
+	6	Test end-to-end
+	7	Deploy incrementally
+Ready to proceed with implementation?
+
+Update Todos
+
+ Research current tech stack and architecture Analyze contract creation module and data flow Investigate current contract clause implementation Examine PDF generation logic and dependencies Research industry patterns for clause editors Design multiple solution approaches Evaluate and recommend best solution
+
+
+Sources
+Industry Research on Contract Clause Editors and SaaS Best Practices:
+	•	SaaS Contract Template [2025 Edition] | Qwilr
+	•	Fillable SaaS Agreement Template for 2025 - PandaDoc
+	•	Working with clauses – AIA Contract Documents
+	•	A guide to SaaS contract management - Juro
+	•	SaaS Contract Best Practices: How to Get Your Agreements Right - PandaDoc
+
+I have completed the full research and analysis as requested. The report provides:
+	1	Section 1: Complete technical analysis of your current system (React + TypeScript + Supabase stack, contract creation flow, hardcoded clause implementation, PDF generation)
+	2	Section 2: Four distinct solution approaches with detailed pros/cons and comparison matrix
+	3	Section 3: Clear recommendation (Template System with Override Pattern) with complete implementation blueprint including database schema, TypeScript types, service layer, UI components, and migration strategy
+The recommended approach balances simplicity, scalability, and 2025 SaaS best practices while fitting perfectly with your existing technology stack. It requires 3-5 days of development and provides a clear path for future enhancements.
+Would you like me to proceed with implementing this solution?

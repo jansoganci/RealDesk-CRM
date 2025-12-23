@@ -4,6 +4,9 @@ import { toast } from 'sonner';
 import { commissionsService } from '@/lib/serviceProxy';
 import { formatCurrency } from '@/lib/currency';
 import type { PropertyWithOwner } from '@/types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('PropertyCommission');
 
 interface UsePropertyCommissionOptions {
   onSuccess?: () => void;
@@ -42,7 +45,7 @@ export function usePropertyCommission(options?: UsePropertyCommissionOptions) {
       options?.onSuccess?.();
     } catch (error) {
       toast.error(t('markAsSold.errorToast'));
-      console.error('Failed to save commission:', error);
+      logger.error('Failed to save commission:', error);
       throw error;
     } finally {
       setIsSubmitting(false);

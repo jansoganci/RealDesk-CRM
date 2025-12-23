@@ -8,6 +8,7 @@ import autoTable from 'jspdf-autotable';
 import { ContractPdfData } from '@/types/contract.types';
 import { GENEL_SARTLAR, OZEL_SARTLAR, TAHLIYE_TAAHHUTNAMESI_TEXT } from '@/templates/contractContent';
 import { addTurkishFonts, setFontBold, setFontNormal } from './pdfFonts';
+import { clausesService } from './clauses.service';
 
 // PDF Configuration
 const PDF_CONFIG = {
@@ -80,27 +81,76 @@ export async function generateContractPDF(data: ContractPdfData): Promise<void> 
 
 /**
  * Generate contract PDF blob (for storage upload)
+ * @param data - PDF data
+ * @param contractId - Optional contract ID to fetch custom clauses
  */
-export async function generateContractPDFBlob(data: ContractPdfData): Promise<Blob> {
+export async function generateContractPDFBlob(
+  data: ContractPdfData,
+  contractId?: string
+): Promise<Blob> {
   const doc = new jsPDF(PDF_CONFIG);
-  
+
   // Add Turkish font support
   addTurkishFonts(doc);
-  
+
+  // ============================================================================
+  // Fetch merged clauses (templates + overrides) from database
+  // ============================================================================
+  let genelSartlar: string[] = GENEL_SARTLAR;
+  let ozelSartlar: string[] = OZEL_SARTLAR;
+  let tahliyeText: string = TAHLIYE_TAAHHUTNAMESI_TEXT;
+
+  if (contractId) {
+    // Fetch merged clauses from database (templates + overrides)
+    // This is called AFTER Phase 6 saves overrides, so database has latest data
+    const merged = await clausesService.getMergedClauses(contractId);
+
+    // Build template variable map
+    const variables = {
+      paymentDay: data.paymentDay,
+      ownerIBAN: data.ownerIBAN,
+      ownerName: data.ownerName,
+      tenantName: data.tenantName,
+      contractDate: data.contractDate,
+    };
+
+    // Extract by type, sort, replace variables
+    genelSartlar = merged
+      .filter((c) => c.clause_type === 'GENEL_SARTLAR')
+      .sort((a, b) => a.clause_index - b.clause_index)
+      .map((c) => clausesService.replaceVariables(c.content, variables));
+
+    ozelSartlar = merged
+      .filter((c) => c.clause_type === 'OZEL_SARTLAR')
+      .sort((a, b) => a.clause_index - b.clause_index)
+      .map((c) => clausesService.replaceVariables(c.content, variables));
+
+    const tahliyeClauses = merged
+      .filter((c) => c.clause_type === 'TAHLIYE_TAAHHUTNAMESI')
+      .sort((a, b) => a.clause_index - b.clause_index);
+
+    if (tahliyeClauses.length > 0) {
+      tahliyeText = clausesService.replaceVariables(tahliyeClauses[0].content, variables);
+    }
+
+    // Note: If getMergedClauses() throws, error propagates to caller
+    // UI layer (useContractPdfHandler) will catch and show toast
+  }
+
   // Sayfa 1: Bilgi Tablosu
   renderPage1_InfoTable(doc, data);
-  
+
   // Sayfa 2: Genel Şartlar
   doc.addPage();
-  renderPage2_GenelSartlar(doc);
-  
+  renderPage2_GenelSartlar(doc, genelSartlar);
+
   // Sayfa 3-4: Özel Şartlar
   doc.addPage();
-  renderPage3_4_OzelSartlar(doc, data);
+  renderPage3_4_OzelSartlar(doc, data, ozelSartlar);
   
   // Sayfa 5: Tahliye Taahhütnamesi
   doc.addPage();
-  renderPage5_TahliyeTaahhutnamesi(doc, data);
+  renderPage5_TahliyeTaahhutnamesi(doc, data, tahliyeText);
   
   // Generate blob
   const pdfBlob = doc.output('blob');
@@ -200,23 +250,23 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
 // ============================================================================
 // PAGE 2: GENERAL CONDITIONS
 // ============================================================================
-function renderPage2_GenelSartlar(doc: jsPDF): void {
+function renderPage2_GenelSartlar(doc: jsPDF, clauses: string[]): void {
   const { margins, fontSize } = PDF_CONFIG;
   let y = margins.top;
-  
+
   // Title
   doc.setFontSize(fontSize.subtitle);
   setFontBold(doc);
   doc.text('GENEL ŞARTLAR', doc.internal.pageSize.width / 2, y, { align: 'center' });
   y += 12;
-  
+
   // Items
   doc.setFontSize(fontSize.small);
   setFontNormal(doc);
-  
+
   const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
-  
-  GENEL_SARTLAR.forEach((madde, index) => {
+
+  clauses.forEach((madde, index) => {
     const maddeText = `${index + 1}. ${madde}`;
     const lines = doc.splitTextToSize(maddeText, pageWidth);
     
@@ -234,30 +284,27 @@ function renderPage2_GenelSartlar(doc: jsPDF): void {
 // ============================================================================
 // PAGE 3-4: SPECIAL CONDITIONS
 // ============================================================================
-function renderPage3_4_OzelSartlar(doc: jsPDF, data: ContractPdfData): void {
+function renderPage3_4_OzelSartlar(doc: jsPDF, data: ContractPdfData, clauses: string[]): void {
   const { margins, fontSize } = PDF_CONFIG;
   let y = margins.top;
-  
+
   // Title
   doc.setFontSize(fontSize.subtitle);
   setFontBold(doc);
   doc.text('ÖZEL ŞARTLAR', doc.internal.pageSize.width / 2, y, { align: 'center' });
   y += 12;
-  
+
   // Items
   doc.setFontSize(fontSize.small);
   setFontNormal(doc);
-  
+
   const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
-  
-  OZEL_SARTLAR.forEach((madde, index) => {
-    // Inject payment details into clause 10
-    let processedMadde = madde;
-    if (index === 9) {
-      processedMadde = madde + ` Kiracı, aylık kira bedellerini her ayın ${data.paymentDay}'inde peşin olarak ${data.ownerIBAN} numaralı IBAN Hesabına ${data.ownerName} adına yatıracaktır.`;
-    }
-    
-    const maddeText = `${index + 1}- ${processedMadde}`;
+
+  clauses.forEach((madde, index) => {
+    // Note: Variable replacement already done in generateContractPDFBlob
+    // No need to inject payment details here anymore
+
+    const maddeText = `${index + 1}- ${madde}`;
     const lines = doc.splitTextToSize(maddeText, pageWidth);
     
     // Page overflow check
@@ -283,16 +330,16 @@ function renderPage3_4_OzelSartlar(doc: jsPDF, data: ContractPdfData): void {
 // ============================================================================
 // PAGE 5: EVICTION COMMITMENT
 // ============================================================================
-function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData): void {
+function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData, text: string): void {
   const { margins, fontSize } = PDF_CONFIG;
   let y = margins.top;
-  
+
   // Title
   doc.setFontSize(fontSize.title);
   setFontBold(doc);
   doc.text('TAHLİYE TAAHHÜTNAMESİ', doc.internal.pageSize.width / 2, y, { align: 'center' });
   y += 20;
-  
+
   // Build names with TC on same line
   const tenantWithTC = data.tenantTC
     ? `${data.tenantName} - T.C.: ${data.tenantTC}`
@@ -308,7 +355,7 @@ function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData): vo
     ['Tahliye Edilecek Kiralananın Adresi', `${data.mahalle} ${data.sokak} No:${data.binaNo} D:${data.daireNo} ${data.ilce}/${data.il}`],
     ['Tahliye Tarihi', data.evictionDate]
   ];
-  
+
   autoTable(doc, {
     startY: y,
     head: [],
@@ -326,14 +373,14 @@ function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData): vo
     },
     margin: { left: margins.left, right: margins.right }
   });
-  
+
   y = (doc as any).lastAutoTable.finalY + 15;
-  
-  // Commitment text
+
+  // Commitment text (use parameter instead of constant)
   doc.setFontSize(fontSize.body);
   setFontNormal(doc);
   const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
-  const lines = doc.splitTextToSize(TAHLIYE_TAAHHUTNAMESI_TEXT, pageWidth);
+  const lines = doc.splitTextToSize(text, pageWidth);
   doc.text(lines, margins.left, y);
   y += lines.length * 5 + 20;
   

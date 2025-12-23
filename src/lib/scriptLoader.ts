@@ -6,6 +6,9 @@
  */
 
 import { hasConsent } from './cookieConsent';
+import { createLogger } from './logger';
+
+const logger = createLogger('ScriptLoader');
 
 /**
  * Cookie category type
@@ -34,7 +37,7 @@ export function loadScript(
 ): HTMLScriptElement | null {
   // Check consent before loading
   if (!hasConsent(category)) {
-    console.debug(`Script blocked: no ${category} consent`, src);
+    logger.debug(`Script blocked: no ${category} consent`, src);
     return null;
   }
 
@@ -43,7 +46,7 @@ export function loadScript(
     `script[src="${src}"][data-cookie-category="${category}"]`
   );
   if (existingScript) {
-    console.debug('Script already loaded:', src);
+    logger.debug('Script already loaded:', src);
     return existingScript as HTMLScriptElement;
   }
 
@@ -54,10 +57,10 @@ export function loadScript(
     script.setAttribute('data-cookie-category', category);
     document.head.appendChild(script);
 
-    console.debug(`Script loaded: ${src} (${category})`);
+    logger.debug(`Script loaded: ${src} (${category})`);
     return script;
   } catch (error) {
-    console.error('Error loading script:', error);
+    logger.error('Error loading script:', error);
     return null;
   }
 }
@@ -71,7 +74,7 @@ export function loadScript(
 export function loadGTM(containerId: string): Promise<ScriptLoadResult> {
   // Check analytics consent
   if (!hasConsent('analytics')) {
-    console.debug('GTM blocked: no analytics consent');
+    logger.debug('GTM blocked: no analytics consent');
     return Promise.resolve({ success: false, error: 'blocked', message: 'No analytics consent' });
   }
 
@@ -80,7 +83,7 @@ export function loadGTM(containerId: string): Promise<ScriptLoadResult> {
     `script[src*="googletagmanager.com/gtm.js"][data-cookie-category="analytics"]`
   );
   if (existingGTM) {
-    console.debug('GTM already loaded');
+    logger.debug('GTM already loaded');
     return Promise.resolve({ success: true });
   }
 
@@ -118,14 +121,14 @@ export function loadGTM(containerId: string): Promise<ScriptLoadResult> {
         if (noscript && noscript.parentNode) {
           noscript.remove();
         }
-        console.warn('[ScriptLoader] GTM load timeout after 5 seconds');
+        logger.warn('GTM load timeout after 5 seconds');
         resolve({ success: false, error: 'timeout', message: 'Script load timeout' });
       }, 5000);
 
       // Handle successful load
       script.onload = () => {
         clearTimeout(timeout);
-        console.debug('GTM loaded:', containerId);
+        logger.debug('GTM loaded:', containerId);
         resolve({ success: true });
       };
 
@@ -142,7 +145,7 @@ export function loadGTM(containerId: string): Promise<ScriptLoadResult> {
         // Ad blockers often block googletagmanager.com
         const isAdBlocker = !window.dataLayer || window.dataLayer.length === 0;
         
-        console.warn('[ScriptLoader] GTM script failed to load', {
+        logger.warn('GTM script failed to load', {
           containerId,
           likelyAdBlocker: isAdBlocker,
         });
@@ -156,7 +159,7 @@ export function loadGTM(containerId: string): Promise<ScriptLoadResult> {
 
       document.head.appendChild(script);
     } catch (error) {
-      console.error('[ScriptLoader] Error loading GTM:', error);
+      logger.error('Error loading GTM:', error);
       resolve({
         success: false,
         error: 'unknown',
@@ -179,7 +182,7 @@ export function removeScript(category: CookieCategory): void {
     );
     scripts.forEach((script) => {
       script.remove();
-      console.debug('Script removed:', script.getAttribute('src'));
+      logger.debug('Script removed:', script.getAttribute('src'));
     });
 
     // Remove noscript fallbacks
@@ -190,13 +193,13 @@ export function removeScript(category: CookieCategory): void {
       const noscript = iframe.parentElement;
       if (noscript && noscript.tagName === 'NOSCRIPT') {
         noscript.remove();
-        console.debug('Noscript fallback removed');
+        logger.debug('Noscript fallback removed');
       }
     });
 
-    console.debug(`All ${category} scripts removed`);
+    logger.debug(`All ${category} scripts removed`);
   } catch (error) {
-    console.error('Error removing scripts:', error);
+    logger.error('Error removing scripts:', error);
   }
 }
 
@@ -234,13 +237,13 @@ export function clearCookies(category: CookieCategory): void {
         }
       } catch (error) {
         // Log warning if cookie clearing fails (e.g., HttpOnly cookies, invalid domain)
-        console.warn(`[ScriptLoader] Failed to clear cookie: ${cookieName}`, error);
+        logger.warn(`Failed to clear cookie: ${cookieName}`, error);
       }
     });
 
-    console.debug(`Cookies cleared for ${category} category`);
+    logger.debug(`Cookies cleared for ${category} category`);
   } catch (error) {
-    console.error('Error clearing cookies:', error);
+    logger.error('Error clearing cookies:', error);
   }
 }
 
@@ -276,12 +279,12 @@ export function clearLocalStorageData(category: CookieCategory): void {
 
     keysToRemove.forEach((key) => {
       localStorage.removeItem(key);
-      console.debug('localStorage key removed:', key);
+      logger.debug('localStorage key removed:', key);
     });
 
-    console.debug(`localStorage cleared for ${category} category`);
+    logger.debug(`localStorage cleared for ${category} category`);
   } catch (error) {
-    console.error('Error clearing localStorage:', error);
+    logger.error('Error clearing localStorage:', error);
   }
 }
 
@@ -295,6 +298,6 @@ export function cleanupCategory(category: CookieCategory): void {
   removeScript(category);
   clearCookies(category);
   clearLocalStorageData(category);
-  console.debug(`Complete cleanup done for ${category} category`);
+  logger.debug(`Complete cleanup done for ${category} category`);
 }
 

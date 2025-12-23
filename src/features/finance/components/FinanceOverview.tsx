@@ -1,12 +1,12 @@
 import { FinancialSummaryCards } from './FinancialSummaryCards';
 import { FinancialCharts } from './FinancialCharts';
 import { PerformanceSummaryComponent } from './PerformanceSummary';
-import type { FinancialDashboard } from '../../../types/financial';
-import type { PerformanceSummary } from '../../../types';
+import { NormalizedFinancialDashboard } from '../../../services/finance/analytics.service';
+import { NormalizedPerformanceSummary } from '../../../services/finance/reportCalculator';
 
 interface FinanceOverviewProps {
-  dashboard: FinancialDashboard | null;
-  performanceSummary: PerformanceSummary | null;
+  dashboard: NormalizedFinancialDashboard | null;
+  performanceSummary: NormalizedPerformanceSummary | null;
   loading: boolean;
 }
 

@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { createContractWithEntities } from '@/lib/serviceProxy';
+import { clausesService } from '@/services/clauses.service';
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,6 +25,7 @@ import { useContractPreValidation } from '../hooks/useContractPreValidation';
 import { useConfirmationDialog } from '../hooks/useConfirmationDialog';
 import { fillFormWithTestData } from '../data/testContracts';
 import { OwnerFormSection, TenantFormSection, ContractDetailsSection } from './form-sections';
+import { EditableClausesSection } from './EditableClausesSection';
 
 export function ContractCreateForm() {
   const { t } = useTranslation('contracts');
@@ -96,7 +98,27 @@ export function ContractCreateForm() {
       });
 
       // ========================================================================
-      // V4: Generate PDF Contract and Save to Storage (using extracted hook)
+      // V5: Save Clause Overrides (BEFORE PDF generation)
+      // ========================================================================
+      if (data.clauseOverrides && data.clauseOverrides.length > 0) {
+        try {
+          await clausesService.saveOverrides(
+            result.contract_id,
+            data.clauseOverrides,
+            user.id
+          );
+          console.log('[ContractCreate] Clause overrides saved');
+        } catch (overrideError) {
+          console.error('[ContractCreate] Failed to save clause overrides:', overrideError);
+          toast.warning('Sözleşme oluşturuldu ancak özel maddeler kaydedilemedi', {
+            description: 'PDF oluşturmadan önce maddeleri kontrol edin',
+          });
+          // Non-blocking: Continue to PDF generation anyway
+        }
+      }
+
+      // ========================================================================
+      // V6: Generate PDF Contract and Save to Storage (using extracted hook)
       // ========================================================================
       await generateAndUploadPdf(data, result);
 
@@ -150,6 +172,9 @@ export function ContractCreateForm() {
 
       {/* Contract Section */}
       <ContractDetailsSection form={form} />
+
+      {/* Editable Clauses Section */}
+      <EditableClausesSection form={form} />
 
       {/* Form Actions */}
       <div className="flex gap-4">

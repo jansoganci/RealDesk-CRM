@@ -4,6 +4,9 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import { tenantsService } from '../../../lib/serviceProxy';
 import type { TenantWithProperty, TenantWithContractResult } from '../../../types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Tenants');
 
 /**
  * Tenant Actions Hook
@@ -44,7 +47,7 @@ export function useTenantActions({
         await refreshData();
         onCloseDelete?.();
       } catch (error) {
-        console.error('Failed to delete tenant:', error);
+        logger.error('Failed to delete tenant:', error);
         toast.error(t('toasts.deleteError'));
       } finally {
         setIsLoading(false);

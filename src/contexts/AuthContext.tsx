@@ -4,6 +4,9 @@ import { supabase } from '../config/supabase';
 import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
 import { getDetectedLanguage, getDetectedCurrency } from '../lib/localeDetection';
+import { createLogger } from '../lib/logger';
+
+const authLogger = createLogger('Auth');
 
 interface AuthContextType {
   user: User | null;
@@ -49,24 +52,25 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const fetchSessionAndPreferences = async () => {
-      console.log('🔍 [AuthContext] Starting auth initialization...');
+      authLogger.debug('Starting auth initialization...');
 
       // IMPORTANT: Use getUser() instead of getSession()
       // getSession() only reads from browser cache (can be fake/stale)
       // getUser() actually asks Supabase server "is this user real and confirmed?"
       const { data: { user }, error } = await supabase.auth.getUser();
 
-      console.log('🔍 [AuthContext] getUser() result:', {
-        hasUser: !!user,
-        userId: user?.id,
-        email: user?.email,
-        emailConfirmedAt: user?.email_confirmed_at,
-        error: error?.message,
-      });
+      if (user) {
+        authLogger.debug('getUser() result: User found', {
+          userId: user.id.slice(0, 8) + '...',
+          emailConfirmedAt: user.email_confirmed_at,
+        });
+      }
 
       // If there's an error or no user, clear everything
       if (error || !user) {
-        console.log('❌ [AuthContext] No valid user, clearing session');
+        if (error) {
+          authLogger.warn('No valid user session found during init', error.message);
+        }
         setSession(null);
         setUser(null);
         setLoading(false);
@@ -76,14 +80,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Check if email is confirmed
       const emailConfirmed = user.email_confirmed_at !== null && user.email_confirmed_at !== undefined;
 
-      console.log('📧 [AuthContext] Email confirmation check:', {
-        emailConfirmed,
-        email_confirmed_at: user.email_confirmed_at,
-      });
-
       // If email NOT confirmed, don't set user as logged in
       if (!emailConfirmed) {
-        console.log('⚠️ [AuthContext] Email not confirmed, clearing session');
+        authLogger.debug('Email not confirmed, clearing session');
         setSession(null);
         setUser(null);
         setLoading(false);
@@ -93,13 +92,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       // Email is confirmed! Now get the full session
       const { data: { session } } = await supabase.auth.getSession();
 
-      console.log('✅ [AuthContext] User authenticated! Setting session:', {
-        userId: user.id,
-        email: user.email,
-        hasAccessToken: !!session?.access_token,
-        accessTokenLength: session?.access_token?.length,
-        expiresAt: session?.expires_at,
-      });
+      authLogger.debug('User authenticated successfully');
 
       setSession(session);
       setUser(user);
@@ -124,25 +117,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     fetchSessionAndPreferences();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log('🔄 [AuthContext] Auth state changed:', {
+      authLogger.debug('Auth state changed', {
         event,
         hasSession: !!session,
-        userId: session?.user?.id,
-        emailConfirmedAt: session?.user?.email_confirmed_at,
+        userId: session?.user?.id.slice(0, 8) + '...',
       });
 
       // Check if email is confirmed before setting session
       if (session?.user) {
         const emailConfirmed = session.user.email_confirmed_at !== null && session.user.email_confirmed_at !== undefined;
 
-        console.log('🔍 [AuthContext] onAuthStateChange - Email check:', {
-          emailConfirmed,
-          userId: session.user.id,
-        });
-
         // Only set session if email is confirmed
         if (emailConfirmed) {
-          console.log('✅ [AuthContext] Setting authenticated user in state');
+          authLogger.debug('Setting authenticated user in state');
           setSession(session);
           setUser(session.user);
 
@@ -153,13 +140,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
           }
         } else {
           // Email not confirmed, don't set session
-          console.log('⚠️ [Auth] Email not confirmed in auth state change');
+          authLogger.debug('Email not confirmed in auth state change');
           setSession(null);
           setUser(null);
         }
       } else {
         // No session, clear everything
-        console.log('❌ [AuthContext] No session, clearing all state');
+        authLogger.debug('No session, clearing all state');
         setSession(null);
         setUser(null);
         setLanguageState(getDetectedLanguage());
@@ -286,7 +273,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (error) {
-      console.error('Password update error:', error);
+      authLogger.error('Password update error:', error);
       return { success: false, error: error.message };
     }
 
@@ -299,7 +286,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (error) {
-      console.error('Password reset request error:', error);
+      authLogger.error('Password reset request error:', error);
       return { success: false, error: error.message };
     }
 
@@ -313,7 +300,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     );
 
     if (error) {
-      console.error('Email change error:', error);
+      authLogger.error('Email change error:', error);
       return { success: false, error: error.message };
     }
 
@@ -328,7 +315,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error: userError } = await supabase.auth.getUser();
 
       if (userError || !data.user?.email) {
-        console.error('[Auth] reauthenticate getUser error:', userError);
+        authLogger.error('reauthenticate getUser error:', userError);
         return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
       }
 
@@ -346,7 +333,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     });
 
     if (error) {
-      console.error('[Auth] reauthenticate error:', error);
+      authLogger.error('reauthenticate error:', error);
       return { success: false, error: error.message };
     }
 
@@ -381,13 +368,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       });
 
       if (error) {
-        console.error('[Auth] signInWithGoogle error:', error);
+        authLogger.error('signInWithGoogle error:', error);
         return { success: false, error: error.message };
       }
 
       return { success: true };
     } catch (error: any) {
-      console.error('[Auth] signInWithGoogle exception:', error);
+      authLogger.error('signInWithGoogle exception:', error);
       return { success: false, error: error.message ?? 'Unknown error' };
     }
   };

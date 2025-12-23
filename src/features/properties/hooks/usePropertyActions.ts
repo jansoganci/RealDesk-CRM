@@ -4,6 +4,9 @@ import { toast } from 'sonner';
 import { propertiesService } from '@/lib/serviceProxy';
 import type { PropertyWithOwner, PropertyStatus } from '@/types';
 import * as z from 'zod';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Properties');
 
 interface UsePropertyActionsOptions {
   onSuccess?: () => void;
@@ -38,7 +41,7 @@ export function usePropertyActions(
       options?.onSuccess?.();
     } catch (error) {
       toast.error(editingProperty ? t('toasts.updateError') : t('toasts.addError'));
-      console.error(error);
+      logger.error('Failed to create/update property:', error);
     } finally {
       setIsLoading(false);
     }
@@ -57,7 +60,7 @@ export function usePropertyActions(
       options?.onSuccess?.();
     } catch (error) {
       toast.error(t('toasts.updateError'));
-      console.error(error);
+      logger.error('Failed to update property:', error);
     } finally {
       setIsLoading(false);
     }
@@ -72,7 +75,7 @@ export function usePropertyActions(
       options?.onSuccess?.();
     } catch (error) {
       toast.error(t('toasts.deleteError'));
-      console.error(error);
+      logger.error('Failed to delete property:', error);
     } finally {
       setIsLoading(false);
     }
@@ -94,7 +97,7 @@ export function usePropertyActions(
       options?.onSuccess?.();
     } catch (error) {
       toast.error(t('toasts.updateError'));
-      console.error(error);
+      logger.error('Failed to change property status:', error);
     } finally {
       setIsLoading(false);
     }

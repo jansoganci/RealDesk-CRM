@@ -8,6 +8,9 @@
 
 import type { ConsentCategories } from '@/types/cookieConsent';
 import { CONSENT_VERSION, CONSENT_EXPIRY_ENABLED, CONSENT_EXPIRY_DAYS } from './cookieConfig';
+import { createLogger } from './logger';
+
+const logger = createLogger('CookieConsent');
 
 /**
  * Storage key for consent data in localStorage
@@ -136,14 +139,14 @@ export function getConsentFromStorage(): ConsentStorageData | null {
               localStorage.setItem(CONSENT_STORAGE_KEY, JSON.stringify(parsed));
               inMemoryStorage.set(CONSENT_STORAGE_KEY, parsed);
             } catch (error) {
-              console.debug('[CookieConsent] Failed to save migrated consent:', error);
+              logger.debug('Failed to save migrated consent:', error);
             }
           }
 
           // Check consent expiry (only if feature flag is enabled)
           if (CONSENT_EXPIRY_ENABLED && isConsentExpired(parsed.timestamp)) {
             // Consent has expired, clear it and show banner
-            console.debug(`[CookieConsent] Consent expired after ${CONSENT_EXPIRY_DAYS} days, clearing storage`);
+            logger.debug(`Consent expired after ${CONSENT_EXPIRY_DAYS} days, clearing storage`);
             clearConsentFromStorage();
             return null;
           }
@@ -156,7 +159,7 @@ export function getConsentFromStorage(): ConsentStorageData | null {
         return null;
       } catch (error) {
         // localStorage read failed, try in-memory fallback
-        console.debug('[CookieConsent] localStorage read failed, using in-memory fallback:', error);
+        logger.debug('localStorage read failed, using in-memory fallback:', error);
         return inMemoryStorage.get(CONSENT_STORAGE_KEY) || null;
       }
     } else {
@@ -164,7 +167,7 @@ export function getConsentFromStorage(): ConsentStorageData | null {
       return inMemoryStorage.get(CONSENT_STORAGE_KEY) || null;
     }
   } catch (error) {
-    console.error('[CookieConsent] Error reading consent from storage:', error);
+    logger.error('Error reading consent from storage:', error);
     return null;
   }
 }
@@ -198,7 +201,7 @@ export function saveConsentToStorage(categories: ConsentCategories): void {
         inMemoryStorage.set(CONSENT_STORAGE_KEY, data);
       } catch (error) {
         // localStorage write failed, use in-memory fallback
-        console.debug('[CookieConsent] localStorage write failed, using in-memory fallback:', error);
+        logger.debug('localStorage write failed, using in-memory fallback:', error);
         inMemoryStorage.set(CONSENT_STORAGE_KEY, data);
       }
     } else {
@@ -206,7 +209,7 @@ export function saveConsentToStorage(categories: ConsentCategories): void {
       inMemoryStorage.set(CONSENT_STORAGE_KEY, data);
     }
   } catch (error) {
-    console.error('[CookieConsent] Error saving consent to storage:', error);
+    logger.error('Error saving consent to storage:', error);
     // Last resort: try in-memory fallback
     try {
       const data: ConsentStorageData = {
@@ -220,7 +223,7 @@ export function saveConsentToStorage(categories: ConsentCategories): void {
       };
       inMemoryStorage.set(CONSENT_STORAGE_KEY, data);
     } catch (fallbackError) {
-      console.error('[CookieConsent] In-memory fallback also failed:', fallbackError);
+      logger.error('In-memory fallback also failed:', fallbackError);
     }
   }
 }
@@ -239,14 +242,14 @@ export function clearConsentFromStorage(): void {
       try {
         localStorage.removeItem(CONSENT_STORAGE_KEY);
       } catch (error) {
-        console.debug('[CookieConsent] localStorage clear failed:', error);
+        logger.debug('localStorage clear failed:', error);
       }
     }
 
     // Always clear from in-memory fallback
     inMemoryStorage.delete(CONSENT_STORAGE_KEY);
   } catch (error) {
-    console.error('[CookieConsent] Error clearing consent from storage:', error);
+    logger.error('Error clearing consent from storage:', error);
   }
 }
 
@@ -294,7 +297,7 @@ function generateRandomString(length: number): string {
     }
   } catch (error) {
     // Fallback to Math.random() if crypto API fails
-    console.warn('[CookieConsent] crypto.getRandomValues() unavailable, using Math.random() fallback');
+    logger.warn('crypto.getRandomValues() unavailable, using Math.random() fallback');
   }
   
   // Fallback to Math.random() if crypto is unavailable
@@ -328,7 +331,7 @@ export function getSessionId(): string {
 
     return sessionId;
   } catch (error) {
-    console.error('Error getting session ID:', error);
+    logger.error('Error getting session ID:', error);
     // Fallback: generate a temporary ID
     return `session-${Date.now()}-${generateRandomString(7)}`;
   }
@@ -384,7 +387,7 @@ function isConsentExpired(timestamp: string): boolean {
     return daysSinceConsent >= CONSENT_EXPIRY_DAYS;
   } catch (error) {
     // If timestamp parsing fails, treat as expired to be safe
-    console.warn('[CookieConsent] Failed to parse consent timestamp, treating as expired:', error);
+    logger.warn('Failed to parse consent timestamp, treating as expired:', error);
     return true;
   }
 }
@@ -407,7 +410,7 @@ function migrateConsentVersion(
     }
 
     // Log migration event
-    console.debug(`[CookieConsent] Migrating consent from ${oldData.version} to ${newVersion}`);
+    logger.debug(`Migrating consent from ${oldData.version} to ${newVersion}`);
 
     // Validate that a migration path exists
     // Currently supported versions: v1.0
@@ -416,8 +419,8 @@ function migrateConsentVersion(
     const isNewVersionSupported = supportedVersions.includes(newVersion);
 
     if (!isOldVersionSupported) {
-      console.warn(
-        `[CookieConsent] Migration validation failed: old version '${oldData.version}' is not supported. ` +
+      logger.warn(
+        `Migration validation failed: old version '${oldData.version}' is not supported. ` +
         `Supported versions: ${supportedVersions.join(', ')}. ` +
         `User will need to re-consent.`
       );
@@ -425,8 +428,8 @@ function migrateConsentVersion(
     }
 
     if (!isNewVersionSupported) {
-      console.warn(
-        `[CookieConsent] Migration validation failed: new version '${newVersion}' is not supported. ` +
+      logger.warn(
+        `Migration validation failed: new version '${newVersion}' is not supported. ` +
         `Supported versions: ${supportedVersions.join(', ')}. ` +
         `User will need to re-consent.`
       );
@@ -449,14 +452,14 @@ function migrateConsentVersion(
 
     // If we reach here, versions are different but no explicit migration path exists
     // This should not happen if version validation is correct, but log it explicitly
-    console.warn(
-      `[CookieConsent] Migration path not implemented: ${oldData.version} -> ${newVersion}. ` +
+    logger.warn(
+      `Migration path not implemented: ${oldData.version} -> ${newVersion}. ` +
       `Both versions are supported but no migration logic exists. ` +
       `User will need to re-consent.`
     );
     return null;
   } catch (error) {
-    console.error('[CookieConsent] Error migrating consent version:', error);
+    logger.error('Error migrating consent version:', error);
     return null;
   }
 }

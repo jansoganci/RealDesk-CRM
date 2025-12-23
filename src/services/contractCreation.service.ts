@@ -10,6 +10,9 @@ import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
 import type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
 import type { ContractCreationResult } from '@/types/contract.types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('ContractCreation');
 
 /**
  * Create contract with automatic entity creation
@@ -169,7 +172,7 @@ export async function createContractWithEntities(
     });
 
     if (error) {
-      console.error('RPC error:', error);
+      logger.error('RPC error:', error);
       throw new Error(`Contract creation failed: ${error.message}`);
     }
 
@@ -181,7 +184,7 @@ export async function createContractWithEntities(
 
     return data as unknown as ContractCreationResult;
   } catch (error) {
-    console.error('Contract creation error:', error);
+    logger.error('Contract creation error:', error);
     throw error;
   }
 }

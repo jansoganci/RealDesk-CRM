@@ -10,6 +10,9 @@ import type {
   UpdateFinancialTransactionInput,
 } from '../../../types/financial';
 import type { ExportFormat } from '../components/FinanceHeader';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Finance');
 
 interface UseFinanceActionsProps {
   onDataChange: () => Promise<void>;
@@ -45,7 +48,7 @@ export const useFinanceActions = ({
 
         await onDataChange();
       } catch (error) {
-        console.error('Error saving transaction:', error);
+        logger.error('Error saving transaction:', error);
         toast.error(t('finance:messages.saveError'));
         throw error;
       } finally {
@@ -66,7 +69,7 @@ export const useFinanceActions = ({
         toast.success(t('finance:messages.deleteSuccess'));
         await onDataChange();
       } catch (error) {
-        console.error('Error deleting transaction:', error);
+        logger.error('Error deleting transaction:', error);
         toast.error(t('finance:messages.deleteError'));
       }
     },
@@ -106,7 +109,7 @@ export const useFinanceActions = ({
 
         toast.success(t('finance:export.exportSuccess', { format: format.toUpperCase() }));
       } catch (error) {
-        console.error(`Error exporting ${format}:`, error);
+        logger.error(`Error exporting ${format}:`, error);
         toast.error(t('finance:export.exportError'));
       }
     },

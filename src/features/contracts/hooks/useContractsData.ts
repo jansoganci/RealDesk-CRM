@@ -3,6 +3,9 @@ import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { contractsService } from '../../../lib/serviceProxy';
 import type { ContractWithDetails } from '../../../types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Contracts');
 
 /**
  * Contracts Data Fetching Hook
@@ -31,7 +34,7 @@ export function useContractsData(): UseContractsDataReturn {
       setContracts(data);
     } catch (error) {
       toast.error(t('errors.loadFailed'));
-      console.error(error);
+      logger.error('Failed to load contracts:', error);
       setContracts([]); // Set empty array on error
     } finally {
       setLoading(false);

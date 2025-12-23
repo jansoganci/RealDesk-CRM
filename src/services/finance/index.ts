@@ -40,12 +40,23 @@ export {
 // Analytics & Reports
 export {
   getMonthlySummary,
+  getMonthlySummaryNormalized,
   getCategoryBreakdown,
   getMonthlyTrends,
+  getMonthlyTrendsNormalized,
   getFinancialDashboard,
+  getFinancialDashboardNormalized,
   getFinancialRatios,
+  getFinancialRatiosNormalized,
   getBudgetVsActual,
+  getBudgetVsActualNormalized,
   getYearlySummary,
+  getYearlySummaryNormalized,
   getTopCategories,
+  getTopCategoriesNormalized,
   getCashFlowForecast,
+  getCashFlowForecastNormalized,
 } from './analytics.service';
+
+// Report Calculator
+export * from './reportCalculator';

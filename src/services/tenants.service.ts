@@ -30,6 +30,9 @@ import {
   ERROR_CONTRACT_NOT_FOUND,
   ERROR_TENANT_CONTRACT_CREATION_FAILED,
 } from '../lib/errorCodes';
+import { createLogger } from '../lib/logger';
+
+const logger = createLogger('Tenants');
 
 class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
@@ -253,7 +256,7 @@ class TenantsService {
           const { contractsService } = await import('./contracts.service');
           await contractsService.uploadContractPdfAndPersist(pdfFile, resTyped.contract_id);
         } catch (uploadErr) {
-          console.error('PDF upload failed after tenant/contract creation:', uploadErr);
+          logger.error('PDF upload failed after tenant/contract creation:', uploadErr);
           
           // Rollback the tenant and contract creation
           try {
@@ -263,7 +266,7 @@ class TenantsService {
             };
             await callRpc<RpcRollbackTenantWithContractParams, void>('rpc_rollback_tenant_with_contract', rbArgs);
             } catch (rollbackErr) {
-            console.error('Failed to rollback after PDF upload error:', rollbackErr);
+            logger.error('Failed to rollback after PDF upload error:', rollbackErr);
           }
 
           throw new AppError(ERROR_TENANT_PDF_UPLOAD_FAILED);
@@ -294,7 +297,7 @@ class TenantsService {
       };
 
     } catch (error) {
-      console.error('[Tenant creation failed]', error);
+      logger.error('Tenant creation failed', error);
       
       // Preserve error structure for UI handling
       if (error instanceof AppError) {

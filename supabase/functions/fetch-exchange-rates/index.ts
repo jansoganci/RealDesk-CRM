@@ -21,31 +21,18 @@ interface RequestBody {
 }
 
 Deno.serve(async (req) => {
-  console.log('[Edge Function] ===== ENTRY =====');
-  console.log('[Edge Function] fetch-exchange-rates called', {
-    method: req.method,
-    hasAuth: !!req.headers.get('Authorization'),
-    hasApikey: !!req.headers.get('apikey'),
-    url: req.url,
-  });
-  
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
-    console.log('[Edge Function] CORS preflight request');
     return new Response(null, { headers: corsHeaders });
   }
 
   // Test supabaseAdmin initialization before use
-  console.log('[Edge Function] STEP 1: Testing supabaseAdmin initialization...');
   try {
-    // Attempt a minimal query to verify service role is configured
     const testResult = await supabaseAdmin.from('exchange_rates').select('id').limit(0);
     if (testResult.error) {
       console.error('[Edge Function] CRITICAL: supabaseAdmin query failed:', {
         message: testResult.error.message,
         code: testResult.error.code,
-        details: testResult.error.details,
-        hint: testResult.error.hint,
       });
       return errorResponse(
         'Service role configuration error',
@@ -54,13 +41,10 @@ Deno.serve(async (req) => {
         { error: testResult.error.message, code: testResult.error.code }
       );
     }
-    console.log('[Edge Function] STEP 1: ✓ supabaseAdmin initialized successfully');
   } catch (initError) {
     console.error('[Edge Function] CRITICAL: supabaseAdmin initialization exception:', {
       message: initError instanceof Error ? initError.message : String(initError),
       stack: initError instanceof Error ? initError.stack : undefined,
-      name: initError instanceof Error ? initError.name : typeof initError,
-      error: initError,
     });
     return errorResponse(
       'Service role initialization failed',
@@ -72,47 +56,28 @@ Deno.serve(async (req) => {
 
   try {
     // Parse request body
-    console.log('[Edge Function] STEP 2: Parsing request body...');
     let body: RequestBody = {};
     if (req.method === 'POST') {
       try {
         body = await req.json();
-        console.log('[Edge Function] STEP 2: ✓ Body parsed:', { hasDate: !!body.date, date: body.date });
       } catch (parseError) {
-        console.warn('[Edge Function] STEP 2: Body parse failed (using defaults):', {
-          message: parseError instanceof Error ? parseError.message : String(parseError),
-          error: parseError,
-        });
         // No body or invalid JSON - use defaults
       }
-    } else {
-      console.log('[Edge Function] STEP 2: Not a POST request, using defaults');
     }
 
     // Determine target date
-    console.log('[Edge Function] STEP 3: Parsing target date...');
     let targetDate: Date;
     let dateStr: string;
     try {
       targetDate = body.date ? new Date(body.date) : new Date();
-      console.log('[Edge Function] STEP 3: Date object created:', {
-        input: body.date,
-        isValid: !isNaN(targetDate.getTime()),
-        timestamp: targetDate.getTime(),
-      });
-      
       if (isNaN(targetDate.getTime())) {
         throw new Error(`Invalid date: ${body.date}`);
       }
-      
       dateStr = targetDate.toISOString().split('T')[0];
-      console.log('[Edge Function] STEP 3: ✓ Date parsed successfully:', dateStr);
     } catch (dateError) {
-      console.error('[Edge Function] STEP 3: ✗ Date parsing failed:', {
+      console.error('[Edge Function] Date parsing failed:', {
         message: dateError instanceof Error ? dateError.message : String(dateError),
-        stack: dateError instanceof Error ? dateError.stack : undefined,
         input: body.date,
-        error: dateError,
       });
       return errorResponse(
         'Invalid date format',
@@ -123,7 +88,6 @@ Deno.serve(async (req) => {
     }
 
     // Check if rates already exist for this date
-    console.log('[Edge Function] STEP 4: Querying existing rates for date:', dateStr);
     let existing;
     try {
       const queryResult = await supabaseAdmin
@@ -133,12 +97,9 @@ Deno.serve(async (req) => {
         .limit(1);
       
       if (queryResult.error) {
-        console.error('[Edge Function] STEP 4: ✗ Database query error:', {
+        console.error('[Edge Function] Database query error:', {
           message: queryResult.error.message,
           code: queryResult.error.code,
-          details: queryResult.error.details,
-          hint: queryResult.error.hint,
-          error: queryResult.error,
         });
         return errorResponse(
           'Database query failed',
@@ -149,15 +110,9 @@ Deno.serve(async (req) => {
       }
       
       existing = queryResult.data;
-      console.log('[Edge Function] STEP 4: ✓ Query successful:', { 
-        exists: !!existing?.length,
-        count: existing?.length || 0 
-      });
     } catch (queryException) {
-      console.error('[Edge Function] STEP 4: ✗ Database query exception:', {
+      console.error('[Edge Function] Database query exception:', {
         message: queryException instanceof Error ? queryException.message : String(queryException),
-        stack: queryException instanceof Error ? queryException.stack : undefined,
-        error: queryException,
       });
       return errorResponse(
         'Database query exception',
@@ -168,7 +123,6 @@ Deno.serve(async (req) => {
     }
 
     if (existing && existing.length > 0) {
-      console.log('[Edge Function] Rates already exist, returning early');
       return jsonResponse({
         success: true,
         message: `Rates for ${dateStr} already exist`,
@@ -178,149 +132,99 @@ Deno.serve(async (req) => {
     }
 
     // Fetch rates from API
-    console.log('[Edge Function] STEP 5: Fetching rates from external API...');
     let rates: Record<string, number> = {};
 
     try {
-      // Try API 1: Frankfurter.dev (supports historical dates)
-      const apiUrl = `https://api.frankfurter.dev/${dateStr}?base=USD&symbols=TRY,EUR`;
-      console.log('[Edge Function] STEP 5: Calling Frankfurter API:', apiUrl);
-      
-      let response: Response;
-      try {
-        response = await fetch(apiUrl, {
-          method: 'GET',
-          headers: { 'Accept': 'application/json' },
-        });
-        console.log('[Edge Function] STEP 5: API response received:', {
-          status: response.status,
-          statusText: response.statusText,
-          ok: response.ok,
-          headers: Object.fromEntries(response.headers.entries()),
-        });
-      } catch (fetchError) {
-        console.error('[Edge Function] STEP 5: ✗ Fetch request failed:', {
-          message: fetchError instanceof Error ? fetchError.message : String(fetchError),
-          stack: fetchError instanceof Error ? fetchError.stack : undefined,
-          error: fetchError,
-        });
-        throw fetchError;
-      }
+      // Try API 1: Frankfurter.app (supports historical dates)
+      // Note: we use base=EUR as it's the most stable base for Frankfurter/ECB data
+      const apiUrl = `https://api.frankfurter.app/${dateStr}?base=EUR&symbols=TRY,USD`;
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+      });
 
       if (response.ok) {
-        let data;
-        try {
-          data = await response.json();
-          console.log('[Edge Function] STEP 5: ✓ JSON parsed:', {
-            hasRates: !!data.rates,
-            hasTRY: !!data.rates?.TRY,
-            hasEUR: !!data.rates?.EUR,
-            tryValue: data.rates?.TRY,
-            eurValue: data.rates?.EUR,
-          });
-        } catch (jsonError) {
-          console.error('[Edge Function] STEP 5: ✗ JSON parse failed:', {
-            message: jsonError instanceof Error ? jsonError.message : String(jsonError),
-            stack: jsonError instanceof Error ? jsonError.stack : undefined,
-            status: response.status,
-            error: jsonError,
-          });
-          throw new Error(`Invalid JSON response: ${jsonError instanceof Error ? jsonError.message : String(jsonError)}`);
-        }
-        
-        if (data.rates && data.rates.TRY && data.rates.EUR) {
-          // Validate rates are not zero before division
-          if (data.rates.TRY === 0 || data.rates.EUR === 0) {
-            throw new Error(`Invalid exchange rate: TRY=${data.rates.TRY}, EUR=${data.rates.EUR}`);
-          }
-          
-          // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
-          const eurInTry = data.rates.TRY / data.rates.EUR;
+        const data = await response.json();
+        if (data.rates && data.rates.TRY && data.rates.USD) {
+          // Standardize to TRY base: "Units per 1 TRY"
+          // Formula: 1 TRY = (1 / EUR_in_TRY) EUR
+          // Formula: 1 TRY = (USD_in_EUR / TRY_in_EUR) USD
           rates = {
-            USD: 1,
-            TRY: data.rates.TRY,
-            EUR: eurInTry,
+            TRY: 1,
+            EUR: 1 / data.rates.TRY,
+            USD: data.rates.USD / data.rates.TRY,
           };
-          console.log('[Edge Function] STEP 5: ✓ Rates calculated:', rates);
         } else {
-          console.warn('[Edge Function] STEP 5: Missing required rates in response:', data);
+          throw new Error('Missing required rates in API response');
         }
       } else {
-        console.warn('[Edge Function] STEP 5: API returned non-OK status:', response.status);
+        throw new Error(`API returned ${response.status}: ${response.statusText}`);
       }
     } catch (error) {
-      console.error('[Edge Function] STEP 5: ✗ Primary API failed:', {
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        error: error,
-      });
-      console.log('[Edge Function] STEP 5: Attempting fallback API...');
-
-      // Fallback: Use current rates API (for MVP)
+      // Fallback: Try multiple APIs
+      // Fallback 1: Frankfurter latest
       try {
-        const fallbackUrl = 'https://api.frankfurter.dev/latest?base=USD&symbols=TRY,EUR';
-        console.log('[Edge Function] STEP 5: Calling fallback API:', fallbackUrl);
+        const fallbackUrl1 = 'https://api.frankfurter.app/latest?base=EUR&symbols=TRY,USD';
+        const response1 = await fetch(fallbackUrl1);
         
-        const currentResponse = await fetch(fallbackUrl);
-        console.log('[Edge Function] STEP 5: Fallback response:', {
-          status: currentResponse.status,
-          ok: currentResponse.ok,
-        });
-        
-        if (currentResponse.ok) {
-          let currentData;
-          try {
-            currentData = await currentResponse.json();
-            console.log('[Edge Function] STEP 5: Fallback JSON parsed:', {
-              hasRates: !!currentData.rates,
-              hasTRY: !!currentData.rates?.TRY,
-              hasEUR: !!currentData.rates?.EUR,
-            });
-          } catch (fallbackJsonError) {
-            console.error('[Edge Function] STEP 5: ✗ Fallback JSON parse failed:', {
-              message: fallbackJsonError instanceof Error ? fallbackJsonError.message : String(fallbackJsonError),
-              error: fallbackJsonError,
-            });
-            throw fallbackJsonError;
-          }
-          
-          if (currentData.rates && currentData.rates.TRY && currentData.rates.EUR) {
-            if (currentData.rates.TRY === 0 || currentData.rates.EUR === 0) {
-              throw new Error(`Invalid fallback exchange rate: TRY=${currentData.rates.TRY}, EUR=${currentData.rates.EUR}`);
-            }
-            
-            const eurInTry = currentData.rates.TRY / currentData.rates.EUR;
+        if (response1.ok) {
+          const data1 = await response1.json();
+          if (data1.rates && data1.rates.TRY && data1.rates.USD) {
             rates = {
-              USD: 1,
-              TRY: currentData.rates.TRY,
-              EUR: eurInTry,
+              TRY: 1,
+              EUR: 1 / data1.rates.TRY,
+              USD: data1.rates.USD / data1.rates.TRY,
             };
-            console.log('[Edge Function] STEP 5: ✓ Fallback rates calculated:', rates);
           } else {
-            console.warn('[Edge Function] STEP 5: Fallback response missing required rates');
+            throw new Error('Fallback 1 missing rates');
           }
+        } else {
+          throw new Error(`Fallback 1 returned ${response1.status}`);
         }
-      } catch (fallbackError) {
-        console.error('[Edge Function] STEP 5: ✗ Fallback API failed:', {
-          message: fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
-          stack: fallbackError instanceof Error ? fallbackError.stack : undefined,
-          error: fallbackError,
-        });
-        return errorResponse(
-          'Unable to fetch exchange rates from API',
-          500,
-          corsHeaders,
-          { 
-            error: fallbackError instanceof Error ? fallbackError.message : String(fallbackError),
-            stack: fallbackError instanceof Error ? fallbackError.stack : undefined,
+      } catch (fallback1Error) {
+        // Fallback 2: ExchangeRate-API (USD base)
+        try {
+          const fallbackUrl2 = 'https://api.exchangerate-api.com/v4/latest/USD';
+          const response2 = await fetch(fallbackUrl2);
+          
+          if (response2.ok) {
+            const data2 = await response2.json();
+            if (data2.rates && data2.rates.TRY && data2.rates.EUR) {
+              // Convert USD-base to TRY-base: "Units per 1 TRY"
+              rates = {
+                TRY: 1,
+                USD: 1 / data2.rates.TRY,
+                EUR: data2.rates.EUR / data2.rates.TRY,
+              };
+            } else {
+              throw new Error('Fallback 2 missing rates');
+            }
+          } else {
+            throw new Error(`Fallback 2 returned ${response2.status}`);
           }
-        );
+        } catch (fallback2Error) {
+          console.error('[Edge Function] All APIs failed:', {
+            primary: error instanceof Error ? error.message : String(error),
+            fallback1: fallback1Error instanceof Error ? fallback1Error.message : String(fallback1Error),
+            fallback2: fallback2Error instanceof Error ? fallback2Error.message : String(fallback2Error),
+          });
+          return errorResponse(
+            'Unable to fetch exchange rates from any API',
+            500,
+            corsHeaders,
+            { 
+              error: 'All exchange rate APIs failed',
+              fallback1: fallback1Error instanceof Error ? fallback1Error.message : String(fallback1Error),
+              fallback2: fallback2Error instanceof Error ? fallback2Error.message : String(fallback2Error),
+            }
+          );
+        }
       }
     }
 
-    console.log('[Edge Function] STEP 6: Validating rates...');
+    // Validate rates
     if (!rates.USD || !rates.TRY || !rates.EUR) {
-      console.error('[Edge Function] STEP 6: ✗ Invalid rates object:', rates);
+      console.error('[Edge Function] Invalid rates object:', rates);
       return errorResponse(
         'Failed to fetch valid exchange rates',
         500,
@@ -328,23 +232,34 @@ Deno.serve(async (req) => {
         { rates }
       );
     }
-    console.log('[Edge Function] STEP 6: ✓ Rates validated:', rates);
 
-    // Store rates in database (all pairs: USD->TRY, USD->EUR, TRY->USD, EUR->USD, EUR->TRY, TRY->EUR)
-    console.log('[Edge Function] STEP 7: Preparing rate pairs...');
+    /**
+     * POST-MORTEM NOTE:
+     * Frankfurter returns "1 base = X symbol". 
+     * To ensure our table follows "1 TRY = X target", we must triangulate.
+     * Bug was likely caused by inconsistent base assumptions or broken .dev endpoint redirects.
+     */
     const pairs = [
-      { from: 'USD', to: 'TRY', rate: rates.TRY },
-      { from: 'USD', to: 'EUR', rate: rates.EUR },
-      { from: 'TRY', to: 'USD', rate: 1 / rates.TRY },
-      { from: 'EUR', to: 'USD', rate: 1 / rates.EUR },
-      { from: 'EUR', to: 'TRY', rate: rates.TRY / rates.EUR },
-      { from: 'TRY', to: 'EUR', rate: rates.EUR / rates.TRY },
+      { from: 'TRY', to: 'USD', rate: rates.USD },
+      { from: 'TRY', to: 'EUR', rate: rates.EUR },
     ];
     
-    // Validate no Infinity or NaN
+    // SAFEGUARD: Prevent clearly inverted rates from entering the system
+    // 1 TRY is currently ~0.02 EUR. If it's > 0.2, it's almost certainly inverted (e.g. 1.17 USD/EUR).
+    const clearlyWrong = pairs.filter(p => p.from === 'TRY' && p.to === 'EUR' && p.rate > 0.2);
+    if (clearlyWrong.length > 0) {
+      console.error('[Edge Function] CRITICAL: Clearly wrong rate detected, skipping save:', clearlyWrong);
+      return errorResponse(
+        'Inverted rate detected',
+        500,
+        corsHeaders,
+        { detected: clearlyWrong }
+      );
+    }
+    
     const invalidPairs = pairs.filter(p => !isFinite(p.rate));
     if (invalidPairs.length > 0) {
-      console.error('[Edge Function] STEP 7: ✗ Invalid rate calculations:', invalidPairs);
+      console.error('[Edge Function] Invalid rate calculations:', invalidPairs);
       return errorResponse(
         'Invalid rate calculations (Infinity or NaN)',
         500,
@@ -360,57 +275,28 @@ Deno.serve(async (req) => {
       rate: pair.rate,
       source: 'frankfurter.dev',
     }));
-    
-    console.log('[Edge Function] STEP 7: ✓ Rate records prepared:', {
-      count: rateRecords.length,
-      sample: rateRecords[0],
-    });
 
-    console.log('[Edge Function] STEP 8: Inserting rates into database...');
-    let insertResult;
-    try {
-      insertResult = await supabaseAdmin
-        .from('exchange_rates')
-        .upsert(rateRecords, {
-          onConflict: 'rate_date,from_currency,to_currency',
-        });
-      
-      if (insertResult.error) {
-        console.error('[Edge Function] STEP 8: ✗ Database insert error:', {
-          message: insertResult.error.message,
-          code: insertResult.error.code,
-          details: insertResult.error.details,
-          hint: insertResult.error.hint,
-          error: insertResult.error,
-        });
-        return errorResponse(
-          'Failed to store exchange rates in database',
-          500,
-          corsHeaders,
-          { 
-            error: insertResult.error.message,
-            code: insertResult.error.code,
-            details: insertResult.error.details,
-          }
-        );
-      }
-      
-      console.log('[Edge Function] STEP 8: ✓ Rates inserted successfully');
-    } catch (insertException) {
-      console.error('[Edge Function] STEP 8: ✗ Database insert exception:', {
-        message: insertException instanceof Error ? insertException.message : String(insertException),
-        stack: insertException instanceof Error ? insertException.stack : undefined,
-        error: insertException,
+    const insertResult = await supabaseAdmin
+      .from('exchange_rates')
+      .upsert(rateRecords, {
+        onConflict: 'rate_date,from_currency,to_currency',
+      });
+    
+    if (insertResult.error) {
+      console.error('[Edge Function] Database insert error:', {
+        message: insertResult.error.message,
+        code: insertResult.error.code,
       });
       return errorResponse(
-        'Database insert exception',
+        'Failed to store exchange rates in database',
         500,
         corsHeaders,
-        { error: insertException instanceof Error ? insertException.message : String(insertException) }
+        { 
+          error: insertResult.error.message,
+          code: insertResult.error.code,
+        }
       );
     }
-
-    console.log('[Edge Function] ===== SUCCESS =====');
     return jsonResponse(
       {
         success: true,
@@ -425,12 +311,9 @@ Deno.serve(async (req) => {
       corsHeaders
     );
   } catch (error) {
-    console.error('[Edge Function] ===== UNHANDLED EXCEPTION =====');
-    console.error('[Edge Function] Unexpected error in fetch-exchange-rates:', {
+    console.error('[Edge Function] Unexpected error:', {
       message: error instanceof Error ? error.message : String(error),
       stack: error instanceof Error ? error.stack : undefined,
-      name: error instanceof Error ? error.name : typeof error,
-      error: error,
     });
     return errorResponse(
       'Internal server error',
@@ -438,7 +321,6 @@ Deno.serve(async (req) => {
       corsHeaders,
       { 
         error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
       }
     );
   }

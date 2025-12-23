@@ -3,6 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { tenantsService } from '../../../lib/serviceProxy';
 import type { TenantWithProperty } from '../../../types';
+import { createLogger } from '@/lib/logger';
+
+const logger = createLogger('Tenants');
 
 /**
  * Tenants Data Fetching Hook
@@ -26,7 +29,7 @@ export function useTenantsData(): UseTenantsDataReturn {
       const data = await tenantsService.getAll();
       setTenants(data);
     } catch (error) {
-      console.error('Failed to load tenants:', error);
+      logger.error('Failed to load tenants:', error);
       toast.error(t('toasts.loadError'));
       setTenants([]); // Set empty array on error
     } finally {

@@ -3,10 +3,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui
 import { Skeleton } from '../../../components/ui/skeleton';
 import { Line } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
-import type { YearlySummary } from '../../../types/financial';
+import { NormalizedYearlySummary } from '../../../services/finance/analytics.service';
+import { formatCurrency } from '../../../lib/currency';
 
 interface FinancialTrendsProps {
-  yearlySummary: YearlySummary | null;
+  yearlySummary: NormalizedYearlySummary | null;
   loading?: boolean;
 }
 
@@ -15,15 +16,10 @@ export const FinancialTrends = ({
   loading = false,
 }: FinancialTrendsProps) => {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency } = useAuth();
+  const { currency: userCurrency } = useAuth();
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('tr-TR', {
-      style: 'currency',
-      currency: currency || 'TRY',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
+  const formatCurrencyLocal = (value: number) => {
+    return formatCurrency(value, userCurrency || 'TRY');
   };
 
   const formatMonth = (month: string) => {
@@ -54,7 +50,7 @@ export const FinancialTrends = ({
     datasets: [
       {
         label: t('finance:analytics.revenue'),
-        data: yearlySummary.months.map(month => month.total_income),
+        data: yearlySummary.months.map(month => month.total_income.value),
         borderColor: '#10b981',
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         fill: true,
@@ -64,7 +60,7 @@ export const FinancialTrends = ({
       },
       {
         label: t('finance:analytics.expenses'),
-        data: yearlySummary.months.map(month => month.total_expense),
+        data: yearlySummary.months.map(month => month.total_expense.value),
         borderColor: '#ef4444',
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         fill: true,
@@ -74,7 +70,7 @@ export const FinancialTrends = ({
       },
       {
         label: t('finance:analytics.profit'),
-        data: yearlySummary.months.map(month => month.net_income),
+        data: yearlySummary.months.map(month => month.net_income.value),
         borderColor: '#3b82f6',
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
@@ -97,7 +93,7 @@ export const FinancialTrends = ({
       tooltip: {
         callbacks: {
           label: (context: any) => {
-            return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+            return `${context.dataset.label}: ${formatCurrencyLocal(context.parsed.y)}`;
           },
         },
       },
@@ -124,7 +120,7 @@ export const FinancialTrends = ({
           font: {
             size: 12,
           },
-          callback: (value: any) => formatCurrency(value),
+          callback: (value: any) => formatCurrencyLocal(value),
         },
       },
     },
