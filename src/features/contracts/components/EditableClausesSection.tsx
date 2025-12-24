@@ -14,6 +14,7 @@ import { useState, useEffect } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Pencil, RotateCcw, Check, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -61,6 +62,7 @@ interface EditableClausesSectionProps {
 export function EditableClausesSection({ form }: EditableClausesSectionProps) {
   const [clauses, setClauses] = useState<EditableClauseState[]>([]);
   const [loading, setLoading] = useState(true);
+  const { t } = useTranslation('contracts');
 
   // Load clauses on mount
   useEffect(() => {
@@ -91,8 +93,8 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
       setClauses(editableState);
     } catch (error) {
       console.error('[EditableClausesSection] Load error:', error);
-      toast.error('Madde şablonları yüklenemedi', {
-        description: error instanceof Error ? error.message : 'Bilinmeyen hata',
+      toast.error(t('clauses.errors.loadFailed'), {
+        description: error instanceof Error ? error.message : t('clauses.errors.unknown'),
       });
     } finally {
       setLoading(false);
@@ -139,7 +141,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
 
           // Validation: content cannot be empty
           if (!newContent) {
-            toast.error('Madde boş bırakılamaz');
+            toast.error(t('clauses.errors.emptyContent'));
             return clause;
           }
 
@@ -167,7 +169,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
 
           form.setValue('clauseOverrides', currentOverrides);
 
-          toast.success('Madde özelleştirildi');
+          toast.success(t('clauses.toasts.customized'));
 
           return {
             ...clause,
@@ -196,7 +198,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
     // Reload clauses to get original template content
     loadClauses();
 
-    toast.success('Varsayılan madde geri yüklendi');
+    toast.success(t('clauses.toasts.reset'));
   }
 
   /**
@@ -222,8 +224,8 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Sözleşme Maddeleri</CardTitle>
-          <CardDescription>Yükleniyor...</CardDescription>
+          <CardTitle>{t('clauses.title')}</CardTitle>
+          <CardDescription>{t('clauses.loading')}</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -232,10 +234,9 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Sözleşme Maddeleri</CardTitle>
+        <CardTitle>{t('clauses.title')}</CardTitle>
         <CardDescription>
-          Sözleşme maddelerini isteğe göre özelleştirebilirsiniz. Değişiklikler yalnızca bu
-          sözleşme için geçerlidir.
+          {t('clauses.description')}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -244,10 +245,12 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
           <AccordionItem value="genel">
             <AccordionTrigger>
               <div className="flex items-center gap-2">
-                <span className="font-medium">Genel Şartlar ({genelSartlar.length} madde)</span>
+                <span className="font-medium">
+                  {t('clauses.sections.general', { count: genelSartlar.length })}
+                </span>
                 {genelSartlar.some((c) => c.isCustomized) && (
                   <Badge variant="secondary" className="text-xs">
-                    Özelleştirilmiş
+                    {t('clauses.badges.customized')}
                   </Badge>
                 )}
               </div>
@@ -276,10 +279,12 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
           <AccordionItem value="ozel">
             <AccordionTrigger>
               <div className="flex items-center gap-2">
-                <span className="font-medium">Özel Şartlar ({ozelSartlar.length} madde)</span>
+                <span className="font-medium">
+                  {t('clauses.sections.special', { count: ozelSartlar.length })}
+                </span>
                 {ozelSartlar.some((c) => c.isCustomized) && (
                   <Badge variant="secondary" className="text-xs">
-                    Özelleştirilmiş
+                    {t('clauses.badges.customized')}
                   </Badge>
                 )}
               </div>
@@ -308,10 +313,10 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
           <AccordionItem value="tahliye">
             <AccordionTrigger>
               <div className="flex items-center gap-2">
-                <span className="font-medium">Tahliye Taahhütnamesi</span>
+                <span className="font-medium">{t('clauses.sections.eviction')}</span>
                 {tahliye.some((c) => c.isCustomized) && (
                   <Badge variant="secondary" className="text-xs">
-                    Özelleştirilmiş
+                    {t('clauses.badges.customized')}
                   </Badge>
                 )}
               </div>
@@ -363,19 +368,22 @@ function ClauseEditor({
   onReset,
   onContentChange,
 }: ClauseEditorProps) {
+  const { t } = useTranslation('contracts');
+  const clauseLabel = clauseNumber ? t('clauses.clauseLabel', { number: clauseNumber }) : null;
+
   // Editing mode
   if (clause.isEditing) {
     return (
       <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            {clauseNumber && (
+            {clauseLabel && (
               <span className="text-sm font-semibold text-blue-900">
-                Madde {clauseNumber}
+                {clauseLabel}
               </span>
             )}
             <Badge variant="outline" className="text-xs">
-              Düzenleniyor
+              {t('clauses.badges.editing')}
             </Badge>
           </div>
         </div>
@@ -385,17 +393,17 @@ function ClauseEditor({
           onChange={(e) => onContentChange(e.target.value)}
           rows={6}
           className="mb-3 font-mono text-sm resize-none"
-          placeholder="Madde içeriğini giriniz..."
+          placeholder={t('clauses.placeholder')}
         />
 
         <div className="flex gap-2 justify-end">
           <Button size="sm" variant="outline" onClick={onCancelEdit}>
             <X className="h-4 w-4 mr-1" />
-            İptal
+            {t('clauses.actions.cancel')}
           </Button>
           <Button size="sm" onClick={onSaveEdit}>
             <Check className="h-4 w-4 mr-1" />
-            Kaydet
+            {t('clauses.actions.save')}
           </Button>
         </div>
       </div>
@@ -407,14 +415,14 @@ function ClauseEditor({
     <div className="rounded-lg border p-4 hover:border-gray-300 transition-colors">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
-          {clauseNumber && (
+          {clauseLabel && (
             <span className="text-sm font-semibold text-gray-700">
-              Madde {clauseNumber}
+              {clauseLabel}
             </span>
           )}
           {clause.isCustomized && (
             <Badge variant="secondary" className="text-xs">
-              Özelleştirilmiş
+              {t('clauses.badges.customized')}
             </Badge>
           )}
         </div>
@@ -422,12 +430,12 @@ function ClauseEditor({
         <div className="flex gap-2">
           <Button size="sm" variant="ghost" onClick={onStartEdit}>
             <Pencil className="h-4 w-4 mr-1" />
-            Düzenle
+            {t('clauses.actions.edit')}
           </Button>
           {clause.isCustomized && (
             <Button size="sm" variant="ghost" onClick={onReset}>
               <RotateCcw className="h-4 w-4 mr-1" />
-              Varsayılana Dön
+              {t('clauses.actions.reset')}
             </Button>
           )}
         </div>

@@ -41,7 +41,16 @@ class ContractsService {
     const { data, error } = await supabase
       .from('contracts')
       .select(`
-        *,
+        id,
+        status,
+        start_date,
+        end_date,
+        rent_amount,
+        currency,
+        created_at,
+        contract_pdf_path,
+        rent_increase_reminder_enabled,
+        rent_increase_reminder_days,
         tenant:tenants(id, name, email, phone),
         property:properties(id, address, city, district, il, ilce)
       `)
@@ -55,7 +64,7 @@ class ContractsService {
   async getByTenantId(tenantId: string): Promise<Contract[]> {
     const { data, error } = await supabase
       .from('contracts')
-      .select('*')
+      .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('tenant_id', tenantId)
       .order('created_at', { ascending: false });
 
@@ -66,7 +75,7 @@ class ContractsService {
   async getByPropertyId(propertyId: string): Promise<Contract[]> {
     const { data, error } = await supabase
       .from('contracts')
-      .select('*')
+      .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('property_id', propertyId)
       .order('created_at', { ascending: false });
 

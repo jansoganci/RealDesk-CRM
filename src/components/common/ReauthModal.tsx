@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
 import {
   Dialog,
@@ -20,6 +21,7 @@ interface ReauthModalProps {
 
 export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
   const { reauthenticate } = useAuth();
+  const { t } = useTranslation(['auth', 'common']);
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -29,7 +31,7 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
     setErrorMessage(null);
 
     if (!password.trim()) {
-      setErrorMessage('Lütfen şifreni gir.');
+      setErrorMessage(t('reauth.errorEmpty'));
       return;
     }
 
@@ -38,7 +40,7 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
     const result = await reauthenticate(password);
 
     if (!result.success) {
-      setErrorMessage(result.error ?? 'Şifre doğrulanamadı. Lütfen tekrar dene.');
+      setErrorMessage(result.error ?? t('reauth.errorInvalid'));
       setLoading(false);
       return;
     }
@@ -63,9 +65,9 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
     <Dialog open={isOpen} onOpenChange={handleClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>İşleme devam etmek için şifreni gir</DialogTitle>
+          <DialogTitle>{t('reauth.title')}</DialogTitle>
           <DialogDescription>
-            Please re-enter your current password to continue.
+            {t('reauth.description')}
           </DialogDescription>
         </DialogHeader>
 
@@ -73,7 +75,7 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
           <div className="space-y-2">
             <Input
               type="password"
-              placeholder="Şifre"
+              placeholder={t('reauth.passwordPlaceholder')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               disabled={loading}
@@ -92,16 +94,16 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
               onClick={handleClose}
               disabled={loading}
             >
-              Vazgeç
+              {t('common:cancel')}
             </Button>
             <Button type="submit" disabled={loading}>
               {loading ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Doğrulanıyor...
+                  {t('reauth.loading')}
                 </>
               ) : (
-                'Onayla'
+                t('reauth.confirm')
               )}
             </Button>
           </DialogFooter>
@@ -110,4 +112,3 @@ export function ReauthModal({ isOpen, onClose, onSuccess }: ReauthModalProps) {
     </Dialog>
   );
 }
-

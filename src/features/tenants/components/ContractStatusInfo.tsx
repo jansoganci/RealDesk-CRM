@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import type { Contract } from '../../../types';
 
 /**
@@ -10,14 +11,23 @@ interface ContractStatusInfoProps {
 }
 
 export function ContractStatusInfo({ primaryContract }: ContractStatusInfoProps) {
+  const { t } = useTranslation('tenants');
+
   if (primaryContract) {
+    const dateRange =
+      primaryContract.start_date && primaryContract.end_date
+        ? t('edit.contractDateRange', {
+          start: primaryContract.start_date,
+          end: primaryContract.end_date,
+        })
+        : '';
+
     return (
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
         <p className="text-sm text-blue-700">
-          <strong>Editing Contract:</strong> {primaryContract.status} contract 
-          {primaryContract.start_date && primaryContract.end_date && 
-            ` (${primaryContract.start_date} to ${primaryContract.end_date})`
-          }
+          <strong>{t('edit.contractStatusLabel')}</strong>{' '}
+          {t('edit.contractStatusText', { status: primaryContract.status })}
+          {dateRange ? ` ${dateRange}` : ''}
         </p>
       </div>
     );
@@ -26,9 +36,8 @@ export function ContractStatusInfo({ primaryContract }: ContractStatusInfoProps)
   return (
     <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
       <p className="text-sm text-yellow-700">
-        <strong>No Contract Found:</strong> A new contract will be created for this tenant.
+        <strong>{t('edit.noContractLabel')}</strong> {t('edit.noContractDescription')}
       </p>
     </div>
   );
 }
-

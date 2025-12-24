@@ -7,11 +7,13 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { ContractEditForm } from './components/ContractEditForm';
 import { useContractEditData } from './hooks/useContractEditData';
 import { Button } from '@/components/ui/button';
 import { Loader2, AlertCircle, ArrowLeft } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { ROUTES } from '@/config/constants';
 
 export default function ContractEdit() {
   const { t } = useTranslation('contracts');
@@ -50,7 +52,7 @@ export default function ContractEdit() {
             </Alert>
             <Button
               variant="outline"
-              onClick={() => navigate('/contracts')}
+              onClick={() => navigate(ROUTES.CONTRACTS_RENT)}
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t('edit.backToList')}
@@ -66,21 +68,11 @@ export default function ContractEdit() {
       <PageContainer>
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => navigate('/contracts')}
-              className="mb-4"
-            >
-              <ArrowLeft className="h-4 w-4 mr-2" />
-              {t('edit.backToList')}
-            </Button>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-              {t('edit.title')}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 mt-2">
-              {t('edit.subtitle')}
-            </p>
+            <PageHeader
+              title={t('edit.title')}
+              subtitle={t('edit.subtitle')}
+              back={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
+            />
           </div>
           <ContractEditForm
             contractId={data.contractId}

@@ -4,8 +4,11 @@ import { Button } from '../../components/ui/button';
 import { ROUTES } from '../../config/constants';
 import { CheckCircle } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import { useTranslation } from 'react-i18next';
 
 export const EmailChanged = () => {
+  const { t } = useTranslation('auth');
+
   return (
     <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
       <Card className="w-full max-w-md mx-4">
@@ -16,13 +19,13 @@ export const EmailChanged = () => {
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
-            E-posta Adresin Güncellendi
+            {t('emailChanged.title')}
           </CardTitle>
           <CardDescription className="text-center">
-            Yeni e-posta adresin başarıyla doğrulandı. Artık hesabına bu adresle giriş yapabilirsin.
+            {t('emailChanged.description')}
             <br />
             <span className="text-xs text-gray-500 mt-2 block">
-              Your email address has been successfully updated. You can now sign in with your new email.
+              {t('emailChanged.secondaryDescription')}
             </span>
           </CardDescription>
         </CardHeader>
@@ -32,7 +35,7 @@ export const EmailChanged = () => {
               <Button
                 className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
               >
-                Giriş Yap
+                {t('emailChanged.loginButton')}
               </Button>
             </Link>
             <Link to={ROUTES.DASHBOARD} className="w-full">
@@ -40,7 +43,7 @@ export const EmailChanged = () => {
                 variant="outline"
                 className="w-full"
               >
-                Dashboard'a Git
+                {t('emailChanged.dashboardButton')}
               </Button>
             </Link>
           </div>
@@ -49,4 +52,3 @@ export const EmailChanged = () => {
     </div>
   );
 };
-

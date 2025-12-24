@@ -11,6 +11,7 @@ import { FileText, AlertCircle, Bell, Calendar, DollarSign } from 'lucide-react'
 import { format } from 'date-fns';
 import { COLORS } from '@/config/colors';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { useAuth } from '../../contexts/AuthContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { useTranslation } from 'react-i18next';
@@ -261,6 +262,21 @@ export const Contracts = () => {
     loading: actionLoading,
   }), [deleteDialogOpen, contractToDelete?.tenant?.name, handleDeleteConfirm, handleDeleteCancel, actionLoading, t]);
 
+  const handleAddContract = useCallback(() => {
+    navigate(ROUTES.CONTRACT_CREATE);
+  }, [navigate]);
+
+  const headerContent = useMemo(() => (
+    <div className="space-y-4">
+      <PageHeader
+        back={{ href: ROUTES.CONTRACTS_HUB, label: t('edit.backToList') }}
+      />
+      <ContractImportBanner
+        onImportClick={() => navigate(ROUTES.CONTRACT_IMPORT)}
+      />
+    </div>
+  ), [t, navigate]);
+
   return (
     <>
       <ListPageTemplate
@@ -274,16 +290,10 @@ export const Contracts = () => {
         onFilterChange={setStatusFilter}
         filterOptions={filterOptions}
         filterPlaceholder={t('filterPlaceholder')}
-        onAdd={() => {
-          navigate(ROUTES.CONTRACT_CREATE);
-        }}
+        onAdd={handleAddContract}
         addButtonLabel={t('actions.add')}
         skeletonColumnCount={7}
-        headerContent={
-          <ContractImportBanner
-            onImportClick={() => navigate(ROUTES.CONTRACT_IMPORT)}
-          />
-        }
+        headerContent={headerContent}
         emptyState={emptyStateConfig}
         renderTableHeaders={tableHeaders}
         renderTableRow={renderTableRow}

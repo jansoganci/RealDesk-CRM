@@ -1,0 +1,190 @@
+{
+  "list": {
+    "pageTitle": "Sale Contracts",
+    "header": {
+      "title": "Sale Contracts",
+      "subtitle": "Manage your property sale contracts"
+    },
+    "backToHub": "Contracts",
+    "newContract": "New Contract",
+    "emptyState": {
+      "title": "No sale contracts yet",
+      "description": "Click the button below to create your first sale contract.",
+      "action": "New Sale Contract"
+    },
+    "card": {
+      "untitled": "Untitled Contract",
+      "seller": "Seller:",
+      "buyer": "Buyer:",
+      "amount": "Amount:"
+    },
+    "confirmDelete": "Are you sure you want to delete this contract?"
+  },
+  "builder": {
+    "pageTitle": "New Sale Contract",
+    "headerTitle": "New Sale Contract",
+    "stepLabel": "Step {{step}} / 3",
+    "backToList": "Sale Contracts",
+    "steps": {
+      "form": {
+        "title": "Contract Details",
+        "description": "Enter seller, buyer, and sale details"
+      },
+      "editor": {
+        "title": "Contract Text",
+        "description": "Review and edit the contract text"
+      },
+      "preview": {
+        "title": "Preview and Save",
+        "description": "Review the contract and save it"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "nextToEditor": "Next: Contract Text",
+      "nextToPreview": "Next: Preview",
+      "back": "Back",
+      "saveDraft": "Save Draft",
+      "finalize": "Finalize"
+    },
+    "summary": {
+      "seller": "Seller:",
+      "buyer": "Buyer:",
+      "amount": "Amount:",
+      "payment": "Payment:"
+    },
+    "defaultTitle": "{{address}} - Sale Contract"
+  },
+  "edit": {
+    "pageTitle": "Edit Sale Contract",
+    "headerTitle": "Edit Sale Contract",
+    "stepLabel": "Step {{step}} / 3",
+    "backToList": "Sale Contracts",
+    "steps": {
+      "form": {
+        "title": "Contract Details",
+        "description": "Enter seller, buyer, and sale details"
+      },
+      "editor": {
+        "title": "Contract Text",
+        "description": "Review and edit the contract text"
+      },
+      "preview": {
+        "title": "Preview and Save",
+        "description": "Review the contract and save it"
+      }
+    },
+    "actions": {
+      "cancel": "Cancel",
+      "nextToEditor": "Next: Contract Text",
+      "nextToPreview": "Next: Preview",
+      "back": "Back",
+      "saveDraft": "Save Draft",
+      "finalize": "Finalize"
+    },
+    "summary": {
+      "seller": "Seller:",
+      "buyer": "Buyer:",
+      "amount": "Amount:",
+      "payment": "Payment:"
+    },
+    "defaultTitle": "{{address}} - Sale Contract"
+  },
+  "form": {
+    "sections": {
+      "seller": "Seller Information",
+      "buyer": "Buyer Information",
+      "property": "Property Information",
+      "saleTerms": "Sale Terms",
+      "contractTitle": "Contract Title"
+    },
+    "labels": {
+      "seller_name": "Full Name *",
+      "seller_tc": "ID Number *",
+      "seller_phone": "Phone *",
+      "seller_email": "Email",
+      "seller_address": "Address *",
+      "buyer_name": "Full Name *",
+      "buyer_tc": "ID Number *",
+      "buyer_phone": "Phone *",
+      "buyer_email": "Email",
+      "buyer_address": "Address *",
+      "property_address": "Property Address *",
+      "title_deed_no": "Title Deed No",
+      "parcel_info": "Block/Parcel",
+      "square_meters": "Square Meters",
+      "sale_price": "Sale Price *",
+      "currency": "Currency",
+      "payment_method": "Payment Method",
+      "deposit_amount": "Deposit Amount",
+      "closing_date": "Deed Transfer Date",
+      "title": "Title (optional)",
+      "special_conditions": "Special Conditions"
+    },
+    "placeholders": {
+      "seller_name": "Seller full name",
+      "seller_tc": "11-digit ID",
+      "seller_phone": "5XX XXX XX XX",
+      "seller_email": "email@example.com",
+      "seller_address": "Full address",
+      "buyer_name": "Buyer full name",
+      "buyer_tc": "11-digit ID",
+      "buyer_phone": "5XX XXX XX XX",
+      "buyer_email": "email@example.com",
+      "buyer_address": "Full address",
+      "property_address": "Full property address",
+      "title_deed_no": "Title deed number",
+      "parcel_info": "Block/parcel info",
+      "square_meters": "m²",
+      "sale_price": "Amount",
+      "currency": "Currency",
+      "payment_method": "Payment method",
+      "deposit_amount": "Deposit",
+      "title": "e.g., Kadikoy Apartment Sale Contract",
+      "special_conditions": "Additional terms (optional)"
+    },
+    "options": {
+      "currency": {
+        "TRY": "TRY",
+        "USD": "USD",
+        "EUR": "EUR"
+      },
+      "paymentMethod": {
+        "cash": "Cash",
+        "bank_transfer": "Bank Transfer",
+        "installment": "Installment",
+        "mortgage": "Mortgage"
+      }
+    }
+  },
+  "status": {
+    "draft": "Draft",
+    "final": "Final",
+    "signed": "Signed",
+    "archived": "Archived",
+    "cancelled": "Cancelled"
+  },
+  "toasts": {
+    "list": {
+      "loadFailed": "Failed to load sale contracts",
+      "deleteSuccess": "Contract deleted",
+      "deleteFailed": "Delete failed"
+    },
+    "builder": {
+      "missingRequired": "Please fill in the required fields",
+      "emptyContent": "Contract content cannot be empty",
+      "savedDraft": "Draft saved",
+      "savedFinal": "Contract finalized",
+      "saveFailed": "Save failed"
+    },
+    "edit": {
+      "notFound": "Contract not found",
+      "loadFailed": "Failed to load contract",
+      "missingRequired": "Please fill in the required fields",
+      "emptyContent": "Contract content cannot be empty",
+      "savedDraft": "Draft saved",
+      "savedFinal": "Contract finalized",
+      "saveFailed": "Save failed"
+    }
+  }
+}

@@ -32,6 +32,11 @@
     "save": "Save Preferences",
     "withdrawAll": "Withdraw All Consent"
   },
+  "errorBoundary": {
+    "title": "Cookie Preferences Temporarily Unavailable",
+    "body": "There was an error loading cookie preferences. The site will continue to work, but you may not be able to manage your cookie settings right now.",
+    "dismiss": "Dismiss"
+  },
   "footer": {
     "cookieSettings": "Cookie Settings"
   },
@@ -41,4 +46,3 @@
     "error": "Failed to withdraw consent"
   }
 }
-

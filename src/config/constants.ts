@@ -41,11 +41,28 @@ export const ROUTES = {
   TENANTS: '/tenants',
   TENANT_DETAIL: '/tenants/:id',
   TENANT_NEW: '/tenants/new',
-  CONTRACTS: '/contracts',
-  CONTRACT_DETAIL: '/contracts/:id',
-  CONTRACT_NEW: '/contracts/new',
-  CONTRACT_CREATE: '/contracts/create',
-  CONTRACT_IMPORT: '/contracts/import',
+
+  // Contracts Hub (NEW)
+  CONTRACTS_HUB: '/contracts',
+
+  // Rent contracts (moved to /contracts/rent/*)
+  CONTRACTS_RENT: '/contracts/rent',
+  CONTRACTS_RENT_CREATE: '/contracts/rent/create',
+  CONTRACTS_RENT_EDIT: '/contracts/rent/:id/edit',
+  CONTRACTS_RENT_IMPORT: '/contracts/rent/import',
+
+  // Sale contracts (NEW v2)
+  CONTRACTS_SALE: '/contracts/sale',
+  CONTRACTS_SALE_CREATE: '/contracts/sale/create',
+  CONTRACTS_SALE_EDIT: '/contracts/sale/:id/edit',
+
+  // Legacy aliases (for backwards compatibility with existing rent module code)
+  CONTRACTS: '/contracts/rent',
+  CONTRACT_DETAIL: '/contracts/rent/:id',
+  CONTRACT_NEW: '/contracts/rent/new',
+  CONTRACT_CREATE: '/contracts/rent/create',
+  CONTRACT_IMPORT: '/contracts/rent/import',
+
   REMINDERS: '/reminders',
   INQUIRIES: '/inquiries',
   CALENDAR: '/calendar',

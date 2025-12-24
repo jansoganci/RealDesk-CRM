@@ -51,12 +51,12 @@ export function useTenantFilters({ tenants }: UseTenantFiltersOptions): UseTenan
     return filtered;
   }, [tenants, searchQuery, assignmentFilter]);
 
-  return {
+  return useMemo(() => ({
     filteredTenants,
     searchQuery,
     setSearchQuery,
     assignmentFilter,
     setAssignmentFilter,
-  };
+  }), [filteredTenants, searchQuery, assignmentFilter]);
 }
 

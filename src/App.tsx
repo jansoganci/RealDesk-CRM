@@ -25,6 +25,10 @@ import { Contracts } from './features/contracts/Contracts';
 import ContractCreate from './features/contracts/ContractCreate';
 import ContractEdit from './features/contracts/ContractEdit';
 import { ContractImportPage } from './features/contracts/import/ContractImportPage';
+import { ContractsHub } from './features/contractsHub/ContractsHub';
+import { SaleContractsList } from './features/contractsSale/SaleContractsList';
+import { SaleContractBuilder } from './features/contractsSale/SaleContractBuilder';
+import { SaleContractEdit } from './features/contractsSale/SaleContractEdit';
 import { Reminders } from './features/reminders/Reminders';
 import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
@@ -93,8 +97,19 @@ function AppContent() {
                   </ProtectedRoute>
                 }
               />
+              {/* Contracts Hub */}
               <Route
-                path={ROUTES.CONTRACTS}
+                path={ROUTES.CONTRACTS_HUB}
+                element={
+                  <ProtectedRoute>
+                    <ContractsHub />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Rent Contracts */}
+              <Route
+                path={ROUTES.CONTRACTS_RENT}
                 element={
                   <ProtectedRoute>
                     <Contracts />
@@ -102,7 +117,7 @@ function AppContent() {
                 }
               />
               <Route
-                path={ROUTES.CONTRACT_CREATE}
+                path={ROUTES.CONTRACTS_RENT_CREATE}
                 element={
                   <ProtectedRoute>
                     <ContractCreate />
@@ -110,7 +125,7 @@ function AppContent() {
                 }
               />
               <Route
-                path="/contracts/:id/edit"
+                path={ROUTES.CONTRACTS_RENT_EDIT}
                 element={
                   <ProtectedRoute>
                     <ContractEdit />
@@ -118,10 +133,36 @@ function AppContent() {
                 }
               />
               <Route
-                path="/contracts/import"
+                path={ROUTES.CONTRACTS_RENT_IMPORT}
                 element={
                   <ProtectedRoute>
                     <ContractImportPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              {/* Sale Contracts */}
+              <Route
+                path={ROUTES.CONTRACTS_SALE}
+                element={
+                  <ProtectedRoute>
+                    <SaleContractsList />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_SALE_CREATE}
+                element={
+                  <ProtectedRoute>
+                    <SaleContractBuilder />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_SALE_EDIT}
+                element={
+                  <ProtectedRoute>
+                    <SaleContractEdit />
                   </ProtectedRoute>
                 }
               />

@@ -6,6 +6,8 @@
 import { useTranslation } from 'react-i18next';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { PageHeader } from '@/components/layout/PageHeader';
+import { ROUTES } from '@/config/constants';
 import { ContractCreateForm } from './components/ContractCreateForm';
 
 export default function ContractCreate() {
@@ -14,14 +16,11 @@ export default function ContractCreate() {
   return (
     <MainLayout title={t('create.title')}>
       <PageContainer>
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full">
           <div className="mb-6">
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-slate-100">
-              {t('create.title')}
-            </h1>
-            <p className="text-slate-600 dark:text-slate-400 mt-2">
-              {t('create.subtitle')}
-            </p>
+            <PageHeader
+              back={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
+            />
           </div>
           <ContractCreateForm />
         </div>

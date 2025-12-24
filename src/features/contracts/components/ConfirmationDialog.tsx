@@ -13,6 +13,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import { useTranslation } from 'react-i18next';
 
 interface ConfirmationDialogProps {
   open: boolean;
@@ -32,9 +33,13 @@ export function ConfirmationDialog({
   message,
   onConfirm,
   onCancel,
-  confirmText = 'Devam Et',
-  cancelText = 'İptal'
+  confirmText,
+  cancelText
 }: ConfirmationDialogProps) {
+  const { t } = useTranslation('contracts');
+  const resolvedConfirmText = confirmText ?? t('confirmation.confirm');
+  const resolvedCancelText = cancelText ?? t('confirmation.cancel');
+
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -46,10 +51,10 @@ export function ConfirmationDialog({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel onClick={onCancel}>
-            {cancelText}
+            {resolvedCancelText}
           </AlertDialogCancel>
           <AlertDialogAction onClick={onConfirm}>
-            {confirmText}
+            {resolvedConfirmText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

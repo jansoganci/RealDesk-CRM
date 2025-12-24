@@ -23,7 +23,6 @@ import { ConfirmationDialog } from './ConfirmationDialog';
 import { useContractPdfHandler } from '../hooks/useContractPdfHandler';
 import { useContractPreValidation } from '../hooks/useContractPreValidation';
 import { useConfirmationDialog } from '../hooks/useConfirmationDialog';
-import { fillFormWithTestData } from '../data/testContracts';
 import { OwnerFormSection, TenantFormSection, ContractDetailsSection } from './form-sections';
 import { EditableClausesSection } from './EditableClausesSection';
 
@@ -40,9 +39,6 @@ export function ContractCreateForm() {
     resolver: zodResolver(contractFormSchema),
     defaultValues: contractFormDefaultValues,
   });
-
-  // Fill form with test data (extracted to data/testContracts.ts)
-  const fillTestData = () => fillFormWithTestData(form);
 
   const onSubmit = async (data: ContractFormData) => {
     if (!user?.id) {
@@ -110,8 +106,8 @@ export function ContractCreateForm() {
           console.log('[ContractCreate] Clause overrides saved');
         } catch (overrideError) {
           console.error('[ContractCreate] Failed to save clause overrides:', overrideError);
-          toast.warning('Sözleşme oluşturuldu ancak özel maddeler kaydedilemedi', {
-            description: 'PDF oluşturmadan önce maddeleri kontrol edin',
+          toast.warning(t('create.toasts.clausesSaveFailedTitle'), {
+            description: t('create.toasts.clausesSaveFailedDescription'),
           });
           // Non-blocking: Continue to PDF generation anyway
         }
@@ -137,20 +133,6 @@ export function ContractCreateForm() {
   return (
     <>
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      {/* Test Data Button - DEV ONLY */}
-      {import.meta.env.DEV && (
-        <div className="flex justify-end mb-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={fillTestData}
-            className="bg-yellow-50 border-yellow-300 hover:bg-yellow-100"
-          >
-            🧪 Test Verileriyle Doldur
-          </Button>
-        </div>
-      )}
-
       {/* Owner Section */}
       <OwnerFormSection form={form} />
 

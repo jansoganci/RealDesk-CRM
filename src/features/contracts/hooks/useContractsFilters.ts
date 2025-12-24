@@ -53,12 +53,12 @@ export function useContractsFilters({
     return filtered;
   }, [contracts, searchQuery, statusFilter]);
 
-  return {
+  return useMemo(() => ({
     searchQuery,
     setSearchQuery,
     statusFilter,
     setStatusFilter,
     filteredContracts,
-  };
+  }), [searchQuery, statusFilter, filteredContracts]);
 }
 

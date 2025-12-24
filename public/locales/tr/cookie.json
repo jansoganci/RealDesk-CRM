@@ -32,6 +32,11 @@
     "save": "Tercihleri Kaydet",
     "withdrawAll": "Tüm İzni Geri Çek"
   },
+  "errorBoundary": {
+    "title": "Çerez Tercihleri Geçici Olarak Kullanılamıyor",
+    "body": "Çerez tercihleri yüklenirken bir hata oluştu. Site çalışmaya devam edecek, ancak çerez ayarlarınızı şu anda yönetemeyebilirsiniz.",
+    "dismiss": "Kapat"
+  },
   "footer": {
     "cookieSettings": "Çerez Ayarları"
   },
@@ -41,4 +46,3 @@
     "error": "İzin geri çekilemedi"
   }
 }
-

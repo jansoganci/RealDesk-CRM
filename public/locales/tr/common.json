@@ -23,12 +23,26 @@
     "next": "Sonraki slayt",
     "item": "Slayt {{number}}"
   },
+  "breadcrumb": {
+    "label": "Gezinme yolu",
+    "more": "Daha fazla"
+  },
+  "pagination": {
+    "label": "Sayfalama",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "morePages": "Daha fazla sayfa",
+    "previousAria": "Önceki sayfaya git",
+    "nextAria": "Sonraki sayfaya git"
+  },
   "actions": {
     "cancel": "İptal",
     "save": "Kaydet",
     "saving": "Kaydediliyor...",
     "refresh": "Yenile",
     "edit": "Düzenle",
-    "delete": "Sil"
+    "delete": "Sil",
+    "back": "Geri",
+    "close": "Kapat"
   }
 }

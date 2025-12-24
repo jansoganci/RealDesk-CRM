@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight, Check } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
 import { Badge } from '../../../components/ui/badge';
 import { COLORS } from '@/config/colors';
+import { useTranslation } from 'react-i18next';
 import type { TenantEditStep } from '../constants/tenantSteps';
 
 /**
@@ -32,6 +33,8 @@ export function MultiStepNavigationButtons({
   onSubmit,
   onCancel,
 }: MultiStepNavigationButtonsProps) {
+  const { t } = useTranslation(['tenants', 'common']);
+
   return (
     <div className="flex items-center justify-between pt-4 border-t">
       <Button
@@ -41,11 +44,11 @@ export function MultiStepNavigationButtons({
         disabled={submitting}
       >
         {isFirstStep ? (
-          'Cancel'
+          t('common:cancel')
         ) : (
           <>
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
+            {t('common:actions.back')}
           </>
         )}
       </Button>
@@ -68,15 +71,15 @@ export function MultiStepNavigationButtons({
         className={isLastStep ? `${COLORS.success.bg} ${COLORS.success.hover}` : ''}
       >
         {submitting ? (
-          'Saving...'
+          t('common:saving')
         ) : isLastStep ? (
           <>
             <Check className="h-4 w-4 mr-2" />
-            Update Tenant & Contract
+            {t('edit.navigation.update')}
           </>
         ) : (
           <>
-            Next: {steps[currentStep]?.title}
+            {t('edit.navigation.nextWithStep', { step: steps[currentStep]?.title ?? '' })}
             <ArrowRight className="h-4 w-4 ml-2" />
           </>
         )}
@@ -84,4 +87,3 @@ export function MultiStepNavigationButtons({
     </div>
   );
 }
-

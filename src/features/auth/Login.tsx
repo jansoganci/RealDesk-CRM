@@ -77,17 +77,17 @@ export const Login = () => {
         {/* Left Panel - Marketing / Sign Up */}
         <div className="hidden md:flex flex-col justify-center gap-4 bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 text-white p-10">
           <h2 className="text-3xl font-bold">
-            {t('auth.newHereTitle', 'New here?')}
+            {t('login.newHereTitle')}
           </h2>
           <p className="text-sm text-indigo-100 max-w-sm">
-            {t('auth.newHereSubtitle', 'Join today and organize all your properties, tenants and contracts from one simple dashboard.')}
+            {t('login.newHereSubtitle')}
           </p>
           <Button
             variant="outline"
             className="mt-4 bg-white/10 hover:bg-white/20 border-white text-white w-fit"
             onClick={() => navigate(ROUTES.REGISTER)}
           >
-            {t('auth.newHereCta', 'Create an account')}
+            {t('login.newHereCta')}
           </Button>
         </div>
 
@@ -97,7 +97,7 @@ export const Login = () => {
             {t('login.title')}
           </h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
-            {t('auth.loginSubtitle', 'Enter your credentials to access your Emlak CRM workspace.')}
+            {t('login.workspaceSubtitle')}
           </p>
 
           {/* Google Sign In Button (Primary) */}
@@ -114,14 +114,14 @@ export const Login = () => {
                 alt="Google"
                 className="h-5 w-5"
               />
-              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('auth.googleSignIn', 'Sign in with Google')}</span>
+              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('googleSignIn')}</span>
             </Button>
           </div>
 
           {/* Divider */}
           <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-            <span>{t('auth.orSignWithEmail', 'or sign in with email')}</span>
+            <span>{t('orSignWithEmail')}</span>
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
           </div>
 

@@ -1362,6 +1362,264 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ---
 
+## Rent Contract Management Guide
+
+### Creating a New Rent Contract
+
+The application provides two methods for creating rental contracts:
+
+#### Method 1: Quick Contract Creation from Contract List
+
+1. Navigate to **Contracts** page
+2. Click **"+ Add Contract"** button
+3. Fill in the contract details:
+   - **Owner Selection** - Choose from existing property owners or create new
+   - **Tenant Selection** - Choose from existing tenants or create new
+   - **Property Selection** - Select the property being rented
+   - **Contract Details**:
+     - Start Date and End Date (must be valid date range)
+     - Monthly Rent Amount
+     - Deposit Amount
+     - Currency (TRY, USD, or EUR)
+     - Payment Day of Month (1-31)
+     - Special Conditions (optional)
+     - Furniture List (optional)
+4. **Auto-Generate PDF** - Click "Generate PDF" to create Turkish contract
+5. **Save Contract** - The contract is saved with auto-generated PDF to Supabase Storage
+
+**Features:**
+- Turkish rental contract template (5 pages)
+- Auto-calculation of annual rent
+- TÜFE increase clause support
+- Eviction commitment (Tahliye Taahhütnamesi) included
+- Signed URL for secure PDF access
+
+#### Method 2: Multi-Step Tenant Creation with Contract
+
+1. Navigate to **Tenants** page
+2. Click **"+ Add Tenant"** button
+3. **Step 1: Tenant Information**
+   - Name, Phone, Email
+   - TC ID (encrypted with AES-256-GCM)
+   - Address
+4. **Step 2: Property & Contract Details**
+   - Select or create property
+   - Enter contract dates (start/end)
+   - Enter rent amount and deposit
+   - Select currency
+   - Rent increase reminder option
+5. **Step 3: PDF Management**
+   - Auto-generate PDF from template
+   - Or upload existing contract PDF
+   - Configure reminder settings
+6. **Confirmation** - Review and save all data atomically
+
+**Benefits:**
+- Atomic operation - all-or-nothing creation
+- No orphaned records if process fails
+- Automatic duplicate checking (TC ID hash)
+- Comprehensive contract in one flow
+
+### Uploading Legacy Rent Contracts
+
+The system supports importing existing rent contracts from PDF or DOCX files with OCR-based text extraction.
+
+#### Import Wizard (Step-by-Step)
+
+Access at: **Contracts > Import Contract** or `/contracts/import`
+
+**Step 1: Upload File**
+- Drag-drop or click to upload PDF/DOCX file
+- Maximum file size: 5MB
+- Supported formats: PDF, DOCX
+- File is processed client-side, not stored
+
+**Step 2: Extract Data (OCR)**
+- Automated text extraction using Flavius API
+- Progress indicator shows extraction status
+- Handles Turkish characters (İ, Ş, Ğ, Ü, Ö, Ç)
+- Gracefully handles extraction failures with manual fallback
+
+**Step 3: Review & Edit**
+The system extracts and displays data in 4 sections:
+
+1. **Owner Section**
+   - Full Name
+   - TC ID (Turkish National ID - 11 digits)
+   - IBAN (Bank Account - for rent payments)
+   - Phone Number
+   - Email
+
+2. **Tenant Section**
+   - Full Name
+   - TC ID (for duplicate detection)
+   - Phone Number
+   - Residential Address
+   - Email
+
+3. **Property Section**
+   - Full Address or Components:
+     - Mahalle (Neighborhood)
+     - Cadde/Sokak (Street)
+     - Bina No (Building Number)
+     - Daire No (Apartment Number)
+     - İlçe (District)
+     - İl (City/Province)
+
+4. **Contract Details**
+   - Contract Start Date
+   - Contract End Date
+   - Monthly Rent Amount
+   - Deposit Amount
+   - Currency (TRY, USD, EUR)
+   - Payment Day of Month
+   - Special Conditions (from document)
+
+**PDF Preview:**
+- Side-by-side preview of original PDF document
+- Compare extracted data with original
+- Edit any field that was incorrectly extracted
+
+**Step 4: Complete Import**
+- System checks for duplicates:
+  - Owner TC ID (prevents re-importing same owner)
+  - Tenant TC ID (links to existing tenant if found)
+  - Property address normalization
+- Auto-links to existing entities when matches found
+- Creates new owner/tenant/property if no matches
+- Imports contract with extracted data
+
+#### Data Validation During Import
+
+**TC ID Validation:**
+```typescript
+// Turkish National ID format: 11 digits, first digit not 0
+const isValidTC = (tc: string): boolean => {
+  const num = parseInt(tc);
+  return tc.length === 11 && !tc.startsWith('0') && num > 0;
+};
+```
+
+**IBAN Validation:**
+```typescript
+// IBAN format: TR + 24 alphanumeric characters
+const isValidIBAN = (iban: string): boolean => {
+  return /^TR\d{2}[A-Z0-9]{22}$/.test(iban);
+};
+```
+
+**Phone Normalization:**
+```typescript
+// Turkish format: 05XX XXX XX XX (11 digits)
+const normalizePhone = (phone: string): string => {
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.startsWith('90')) {
+    return '0' + cleaned.slice(2);
+  }
+  return cleaned;
+};
+```
+
+#### Security & Privacy
+
+- **Encryption**: TC ID and IBAN encrypted with AES-256-GCM before storage
+- **Hashing**: TC ID hashed with SHA-256 for duplicate detection (never stored plain)
+- **Storage**: Contracts stored in private Supabase Storage bucket with RLS policies
+- **Access**: Signed URLs generated for PDF downloads (15 min expiration)
+- **User Isolation**: RLS policies ensure users only see their own contracts
+
+#### Common Import Scenarios
+
+**Scenario 1: New Owner, New Tenant, New Property**
+- All entities created automatically
+- Contract linked to all new entities
+- One atomic operation
+
+**Scenario 2: Existing Owner, New Tenant, Existing Property**
+- Owner and property recognized by TC hash and address matching
+- New tenant created
+- Contract linked to existing owner/property and new tenant
+
+**Scenario 3: Existing Owner, Existing Tenant, Existing Property**
+- All entities recognized
+- Contract linked to existing entities
+- Useful for re-importing or updating contracts
+
+#### Troubleshooting Contract Import
+
+**Issue: OCR Extraction Failed**
+- Solution: Manually fill in the form fields
+- Upload the PDF anyway for record keeping
+- Editor allows full customization
+
+**Issue: Duplicate Owner/Tenant Detected**
+- Solution: System will link to existing record
+- Prevent duplicate data in database
+- View and merge if needed
+
+**Issue: Address Matching Failed**
+- Solution: Edit address components in the form
+- System performs fuzzy matching with normalization
+- Manual entry ensures accuracy
+
+**Issue: PDF Shows Incorrect Data After Import**
+- Solution: Edit extracted values in the review form
+- PDF preview shows original document for reference
+- Your edits take precedence over extraction
+
+### Contract Status Management
+
+**Active Contract:**
+- Currently valid rental agreement
+- Tenant actively occupies property
+- Rent collection ongoing
+- Reminders enabled by default
+
+**Archived Contract:**
+- Contract completed or terminated
+- Historical record maintained
+- No active reminders
+- Used for reports and analytics
+
+**Inactive Contract:**
+- Temporarily suspended
+- Reactivate when needed
+- No current rent collection
+
+### Multi-Currency Support
+
+Contracts support multiple currencies for international rentals:
+
+- **TRY** (Turkish Lira) - Default
+- **USD** (US Dollar)
+- **EUR** (Euro)
+
+Exchange rates are updated automatically on the dashboard. Users can track rent income in multiple currencies and view financial reports in their preferred currency.
+
+---
+
+## Recent Updates (v1.1.1 - 2025-12-07)
+
+### Legal & Compliance
+- **Terms of Service** - Comprehensive update for EN/TR versions
+  - Added subscription, billing, and cancellation policies
+  - Updated definitions for "Free Trial" and "Paid Plans"
+  - Clarified territorial scope and governing law (Turkey)
+  - Updated legal entity to Jans Trade, LLC
+
+- **Privacy Policy** - Alignment with KVKK and GDPR
+  - Added specific clauses for Google OAuth data collection
+  - Clarified client-side encryption (AES-GCM) for sensitive data (TC, IBAN)
+  - Updated data processor list (Supabase, Google)
+  - Added international data transfer disclosures
+
+- **Cookie Policy**
+  - Confirmed usage of only strictly necessary cookies (Auth, Language)
+  - Explicit declaration of "No Analytics Tracking" status
+  - Added Google OAuth cookie disclosure
+
+---
+
 ## Future Enhancement Opportunities
 
 1. **Real-time Features** - Supabase Realtime for live updates
@@ -1375,5 +1633,5 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ---
 
-**Last Updated**: 2025-11-25
-**Version**: 1.1.0
+**Last Updated**: 2025-12-07
+**Version**: 1.1.1

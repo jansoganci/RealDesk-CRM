@@ -85,12 +85,12 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
             <Label htmlFor="tenant_email">
               {t('create.fields.tenant_email')}
             </Label>
-            <Input
-              id="tenant_email"
-              type="email"
-              placeholder="ornek@email.com"
-              {...form.register('tenant_email')}
-            />
+          <Input
+            id="tenant_email"
+            type="email"
+            placeholder={t('create.placeholders.email')}
+            {...form.register('tenant_email')}
+          />
             {form.formState.errors.tenant_email && (
               <p className="text-sm text-red-600 mt-1">
                 {form.formState.errors.tenant_email.message}

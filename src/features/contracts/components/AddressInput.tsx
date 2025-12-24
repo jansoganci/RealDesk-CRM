@@ -109,7 +109,7 @@ export function AddressInput({ form }: AddressInputProps) {
               </li>
               <li>
                 <span className="font-medium">{t('activeContractWarning.rent')}:</span>{' '}
-                {activeContract.rent_amount.toLocaleString()} {activeContract.currency}/ay
+                {activeContract.rent_amount.toLocaleString()} {activeContract.currency}{t('activeContractWarning.perMonthSuffix')}
               </li>
             </ul>
           </AlertDescription>

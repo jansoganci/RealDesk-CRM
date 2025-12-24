@@ -48,7 +48,7 @@ export const Register = () => {
   const onSubmit = async (data: RegisterFormData) => {
     // Validate terms acceptance
     if (!acceptTerms) {
-      setTermsError(t('auth.termsRequired', 'You must accept the terms to continue.'));
+      setTermsError(t('termsRequired'));
       return;
     }
     setTermsError(null);
@@ -184,14 +184,14 @@ export const Register = () => {
                 alt="Google"
                 className="h-5 w-5"
               />
-              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('auth.googleSignUp', 'Sign up with Google')}</span>
+              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('googleSignUp')}</span>
             </Button>
           </div>
 
           {/* Divider */}
           <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
-            <span>{t('auth.orSignWithEmail', 'or sign up with email')}</span>
+            <span>{t('register.orSignWithEmail')}</span>
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
           </div>
 
@@ -276,23 +276,23 @@ export const Register = () => {
                   className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
                 />
                 <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
-                  {t('auth.termsLabel', 'By creating an account, I accept the')}{' '}
+                  {t('termsLabel')}{' '}
                   <a
                     href={`/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`}
                     target="_blank"
                     rel="noreferrer"
                     className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
                   >
-                    {t('auth.termsLink', 'Terms of Service')}
+                    {t('termsLink')}
                   </a>{' '}
-                  {t('auth.termsAnd', 'and')}{' '}
+                  {t('termsAnd')}{' '}
                   <a
                     href={`/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
                     target="_blank"
                     rel="noreferrer"
                     className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
                   >
-                    {t('auth.privacyLink', 'Privacy Policy')}
+                    {t('privacyLink')}
                   </a>.
                 </label>
               </div>

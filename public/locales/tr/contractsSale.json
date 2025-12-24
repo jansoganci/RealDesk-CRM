@@ -1,0 +1,190 @@
+{
+  "list": {
+    "pageTitle": "Satış Sözleşmeleri",
+    "header": {
+      "title": "Satış Sözleşmeleri",
+      "subtitle": "Gayrimenkul satış sözleşmelerinizi yönetin"
+    },
+    "backToHub": "Sözleşmeler",
+    "newContract": "Yeni Sözleşme",
+    "emptyState": {
+      "title": "Henüz satış sözleşmesi yok",
+      "description": "İlk satış sözleşmenizi oluşturmak için aşağıdaki butona tıklayın.",
+      "action": "Yeni Satış Sözleşmesi"
+    },
+    "card": {
+      "untitled": "Başlıksız Sözleşme",
+      "seller": "Satıcı:",
+      "buyer": "Alıcı:",
+      "amount": "Tutar:"
+    },
+    "confirmDelete": "Bu sözleşmeyi silmek istediğinizden emin misiniz?"
+  },
+  "builder": {
+    "pageTitle": "Yeni Satış Sözleşmesi",
+    "headerTitle": "Yeni Satış Sözleşmesi",
+    "stepLabel": "Adım {{step}} / 3",
+    "backToList": "Satış Sözleşmeleri",
+    "steps": {
+      "form": {
+        "title": "Sözleşme Bilgileri",
+        "description": "Satıcı, alıcı ve satış detaylarını girin"
+      },
+      "editor": {
+        "title": "Sözleşme Metni",
+        "description": "Sözleşme metnini inceleyip düzenleyebilirsiniz"
+      },
+      "preview": {
+        "title": "Önizleme ve Kaydet",
+        "description": "Sözleşmeyi kontrol edin ve kaydedin"
+      }
+    },
+    "actions": {
+      "cancel": "İptal",
+      "nextToEditor": "Sonraki: Sözleşme Metni",
+      "nextToPreview": "Sonraki: Önizleme",
+      "back": "Geri",
+      "saveDraft": "Taslak Kaydet",
+      "finalize": "Kesinleştir"
+    },
+    "summary": {
+      "seller": "Satıcı:",
+      "buyer": "Alıcı:",
+      "amount": "Tutar:",
+      "payment": "Ödeme:"
+    },
+    "defaultTitle": "{{address}} - Satış Sözleşmesi"
+  },
+  "edit": {
+    "pageTitle": "Satış Sözleşmesi Düzenle",
+    "headerTitle": "Satış Sözleşmesi Düzenle",
+    "stepLabel": "Adım {{step}} / 3",
+    "backToList": "Satış Sözleşmeleri",
+    "steps": {
+      "form": {
+        "title": "Sözleşme Bilgileri",
+        "description": "Satıcı, alıcı ve satış detaylarını girin"
+      },
+      "editor": {
+        "title": "Sözleşme Metni",
+        "description": "Sözleşme metnini inceleyip düzenleyebilirsiniz"
+      },
+      "preview": {
+        "title": "Önizleme ve Kaydet",
+        "description": "Sözleşmeyi kontrol edin ve kaydedin"
+      }
+    },
+    "actions": {
+      "cancel": "İptal",
+      "nextToEditor": "Sonraki: Sözleşme Metni",
+      "nextToPreview": "Sonraki: Önizleme",
+      "back": "Geri",
+      "saveDraft": "Taslak Kaydet",
+      "finalize": "Kesinleştir"
+    },
+    "summary": {
+      "seller": "Satıcı:",
+      "buyer": "Alıcı:",
+      "amount": "Tutar:",
+      "payment": "Ödeme:"
+    },
+    "defaultTitle": "{{address}} - Satış Sözleşmesi"
+  },
+  "form": {
+    "sections": {
+      "seller": "Satıcı Bilgileri",
+      "buyer": "Alıcı Bilgileri",
+      "property": "Taşınmaz Bilgileri",
+      "saleTerms": "Satış Şartları",
+      "contractTitle": "Sözleşme Başlığı"
+    },
+    "labels": {
+      "seller_name": "Ad Soyad *",
+      "seller_tc": "TC Kimlik No *",
+      "seller_phone": "Telefon *",
+      "seller_email": "E-posta",
+      "seller_address": "Adres *",
+      "buyer_name": "Ad Soyad *",
+      "buyer_tc": "TC Kimlik No *",
+      "buyer_phone": "Telefon *",
+      "buyer_email": "E-posta",
+      "buyer_address": "Adres *",
+      "property_address": "Taşınmaz Adresi *",
+      "title_deed_no": "Tapu No",
+      "parcel_info": "Ada/Parsel",
+      "square_meters": "Metrekare",
+      "sale_price": "Satış Bedeli *",
+      "currency": "Para Birimi",
+      "payment_method": "Ödeme Yöntemi",
+      "deposit_amount": "Kapora Tutarı",
+      "closing_date": "Tapu Devir Tarihi",
+      "title": "Başlık (opsiyonel)",
+      "special_conditions": "Özel Şartlar"
+    },
+    "placeholders": {
+      "seller_name": "Satıcı adı soyadı",
+      "seller_tc": "11 haneli TC",
+      "seller_phone": "5XX XXX XX XX",
+      "seller_email": "email@example.com",
+      "seller_address": "Tam adres",
+      "buyer_name": "Alıcı adı soyadı",
+      "buyer_tc": "11 haneli TC",
+      "buyer_phone": "5XX XXX XX XX",
+      "buyer_email": "email@example.com",
+      "buyer_address": "Tam adres",
+      "property_address": "Taşınmazın tam adresi",
+      "title_deed_no": "Tapu sicil no",
+      "parcel_info": "Ada/Parsel bilgisi",
+      "square_meters": "m²",
+      "sale_price": "Tutar",
+      "currency": "Para birimi",
+      "payment_method": "Ödeme yöntemi",
+      "deposit_amount": "Kapora",
+      "title": "Örn: Kadıköy Daire Satış Sözleşmesi",
+      "special_conditions": "Ek şartlar (opsiyonel)"
+    },
+    "options": {
+      "currency": {
+        "TRY": "TRY",
+        "USD": "USD",
+        "EUR": "EUR"
+      },
+      "paymentMethod": {
+        "cash": "Nakit",
+        "bank_transfer": "Havale/EFT",
+        "installment": "Taksit",
+        "mortgage": "Kredi"
+      }
+    }
+  },
+  "status": {
+    "draft": "Taslak",
+    "final": "Kesin",
+    "signed": "İmzalı",
+    "archived": "Arşiv",
+    "cancelled": "İptal"
+  },
+  "toasts": {
+    "list": {
+      "loadFailed": "Satış sözleşmeleri yüklenemedi",
+      "deleteSuccess": "Sözleşme silindi",
+      "deleteFailed": "Silme işlemi başarısız"
+    },
+    "builder": {
+      "missingRequired": "Lütfen zorunlu alanları doldurun",
+      "emptyContent": "Sözleşme içeriği boş olamaz",
+      "savedDraft": "Taslak kaydedildi",
+      "savedFinal": "Sözleşme kesinleştirildi",
+      "saveFailed": "Kaydetme başarısız"
+    },
+    "edit": {
+      "notFound": "Sözleşme bulunamadı",
+      "loadFailed": "Sözleşme yüklenemedi",
+      "missingRequired": "Lütfen zorunlu alanları doldurun",
+      "emptyContent": "Sözleşme içeriği boş olamaz",
+      "savedDraft": "Taslak kaydedildi",
+      "savedFinal": "Sözleşme kesinleştirildi",
+      "saveFailed": "Kaydetme başarısız"
+    }
+  }
+}

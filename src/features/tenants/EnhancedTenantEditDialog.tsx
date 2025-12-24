@@ -157,18 +157,22 @@ export const EnhancedTenantEditDialog = ({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Users className={`h-5 w-5 ${COLORS.primary.text}`} />
-            Edit Tenant & Contract
+            {t('edit.dialogTitle')}
           </DialogTitle>
           <DialogDescription>
-            Update tenant and contract information in a single workflow
+            {t('edit.dialogDescription')}
           </DialogDescription>
         </DialogHeader>
 
         {/* Progress Bar */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Step {currentStep} of {TENANT_EDIT_STEPS.length}</span>
-            <span className="text-sm text-gray-500">{Math.round(getStepProgress())}% Complete</span>
+            <span className="text-sm font-medium">
+              {t('edit.stepProgress', { current: currentStep, total: TENANT_EDIT_STEPS.length })}
+            </span>
+            <span className="text-sm text-gray-500">
+              {t('edit.progressComplete', { percent: Math.round(getStepProgress()) })}
+            </span>
           </div>
           <Progress value={getStepProgress()} className="h-2" />
         </div>

@@ -5,6 +5,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../../components/ui/dialog';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Tenant Edit Loading State Component
@@ -20,13 +21,15 @@ export function TenantEditLoadingState({
   open,
   onOpenChange,
 }: TenantEditLoadingStateProps) {
+  const { t } = useTranslation('tenants');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Loading...</DialogTitle>
+          <DialogTitle>{t('edit.loadingTitle')}</DialogTitle>
           <DialogDescription>
-            Loading tenant and contract information...
+            {t('edit.loadingDescription')}
           </DialogDescription>
         </DialogHeader>
         <div className="flex justify-center py-8">
@@ -36,4 +39,3 @@ export function TenantEditLoadingState({
     </Dialog>
   );
 }
-

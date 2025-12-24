@@ -4,6 +4,7 @@
  */
 
 import { z } from 'zod';
+import i18n from '@/i18n';
 import { isValidTC, isValidIBAN } from '@/lib/serviceProxy';
 import { isValidPhone } from '@/lib/serviceProxy';
 
@@ -11,35 +12,38 @@ import { isValidPhone } from '@/lib/serviceProxy';
 // Contract Form Schema
 // ============================================================================
 
+const t = (key: string, options?: Record<string, unknown>) =>
+  i18n.t(`contracts:validation.${key}`, options);
+
 export const contractFormSchema = z.object({
   // ============================================================================
   // Owner Section
   // ============================================================================
   owner_name: z.string()
-    .min(2, 'En az 2 karakter gerekli')
-    .max(100, 'En fazla 100 karakter'),
+    .min(2, t('minChars', { min: 2 }))
+    .max(100, t('maxChars', { max: 100 })),
 
   owner_tc: z.string()
-    .length(11, 'TC Kimlik No 11 haneli olmalı')
-    .regex(/^\d+$/, 'Sadece rakam giriniz')
+    .length(11, t('tcLengthStrict', { length: 11 }))
+    .regex(/^\d+$/, t('digitsOnly'))
     .refine((tc) => isValidTC(tc), {
-      message: 'Geçersiz TC Kimlik No formatı',
+      message: t('invalidTcFormat'),
     }),
 
   owner_iban: z.string()
-    .regex(/^TR\d{24}$/, 'Geçerli IBAN giriniz (TR + 24 rakam)')
+    .regex(/^TR\d{24}$/, t('ibanFormat'))
     .refine((iban) => isValidIBAN(iban), {
-      message: 'Geçersiz IBAN formatı',
+      message: t('invalidIbanFormat'),
     }),
 
   owner_phone: z.string()
-    .min(10, 'Geçerli telefon numarası giriniz')
+    .min(10, t('phoneMin'))
     .refine((phone) => isValidPhone(phone), {
-      message: 'Geçersiz telefon numarası (5XX XXX XX XX formatında olmalı)',
+      message: t('invalidPhoneFormat'),
     }),
 
   owner_email: z.string()
-    .email('Geçerli email adresi giriniz')
+    .email(t('validEmail'))
     .optional()
     .or(z.literal('')),
 
@@ -47,64 +51,64 @@ export const contractFormSchema = z.object({
   // Tenant Section
   // ============================================================================
   tenant_name: z.string()
-    .min(2, 'En az 2 karakter gerekli')
-    .max(100, 'En fazla 100 karakter'),
+    .min(2, t('minChars', { min: 2 }))
+    .max(100, t('maxChars', { max: 100 })),
 
   tenant_tc: z.string()
-    .length(11, 'TC Kimlik No 11 haneli olmalı')
-    .regex(/^\d+$/, 'Sadece rakam giriniz')
+    .length(11, t('tcLengthStrict', { length: 11 }))
+    .regex(/^\d+$/, t('digitsOnly'))
     .refine((tc) => isValidTC(tc), {
-      message: 'Geçersiz TC Kimlik No formatı',
+      message: t('invalidTcFormat'),
     }),
 
   tenant_phone: z.string()
-    .min(10, 'Geçerli telefon numarası giriniz')
+    .min(10, t('phoneMin'))
     .refine((phone) => isValidPhone(phone), {
-      message: 'Geçersiz telefon numarası (5XX XXX XX XX formatında olmalı)',
+      message: t('invalidPhoneFormat'),
     }),
 
   tenant_email: z.string()
-    .email('Geçerli email adresi giriniz')
+    .email(t('validEmail'))
     .optional()
     .or(z.literal('')),
 
   tenant_address: z.string()
-    .min(10, 'Tam adres giriniz (en az 10 karakter)'),
+    .min(10, t('fullAddressMin', { min: 10 })),
 
   // ============================================================================
   // Property Section
   // ============================================================================
   mahalle: z.string()
-    .min(2, 'Mahalle gerekli')
-    .max(100, 'En fazla 100 karakter'),
+    .min(2, t('neighborhoodRequired'))
+    .max(100, t('maxChars', { max: 100 })),
 
   cadde_sokak: z.string()
-    .min(2, 'Cadde/Sokak gerekli')
-    .max(100, 'En fazla 100 karakter'),
+    .min(2, t('streetRequired'))
+    .max(100, t('maxChars', { max: 100 })),
 
   bina_no: z.string()
-    .min(1, 'Bina no gerekli')
-    .max(20, 'En fazla 20 karakter'),
+    .min(1, t('buildingNoRequired'))
+    .max(20, t('maxChars', { max: 20 })),
 
   daire_no: z.string()
-    .max(20, 'En fazla 20 karakter')
+    .max(20, t('maxChars', { max: 20 }))
     .optional()
     .or(z.literal('')),
 
   ilce: z.string()
-    .min(2, 'İlçe gerekli')
-    .max(50, 'En fazla 50 karakter'),
+    .min(2, t('districtRequired'))
+    .max(50, t('maxChars', { max: 50 })),
 
   il: z.string()
-    .min(2, 'İl gerekli')
-    .max(50, 'En fazla 50 karakter'),
+    .min(2, t('cityRequired'))
+    .max(50, t('maxChars', { max: 50 })),
 
   property_type: z.enum(['apartment', 'house', 'commercial'], {
-    errorMap: () => ({ message: 'Geçerli mülk tipi seçiniz' }),
+    errorMap: () => ({ message: t('propertyTypeRequired') }),
   }),
 
   use_purpose: z.string()
-    .max(100, 'En fazla 100 karakter')
+    .max(100, t('maxChars', { max: 100 }))
     .optional()
     .or(z.literal('')),
 
@@ -112,48 +116,48 @@ export const contractFormSchema = z.object({
   // Contract Section
   // ============================================================================
   start_date: z.date({
-    required_error: 'Başlangıç tarihi gerekli',
-    invalid_type_error: 'Geçerli tarih giriniz',
+    required_error: t('startDateRequired'),
+    invalid_type_error: t('validDate'),
   }),
 
   end_date: z.date({
-    required_error: 'Bitiş tarihi gerekli',
-    invalid_type_error: 'Geçerli tarih giriniz',
+    required_error: t('endDateRequired'),
+    invalid_type_error: t('validDate'),
   }),
 
   rent_amount: z.number({
-    required_error: 'Kira tutarı gerekli',
-    invalid_type_error: 'Geçerli sayı giriniz',
+    required_error: t('rentRequired'),
+    invalid_type_error: t('validNumber'),
   })
-    .min(1, 'Kira tutarı 0\'dan büyük olmalı')
-    .max(1000000000, 'Geçersiz tutar'),
+    .min(1, t('rentGreaterThanZero'))
+    .max(1000000000, t('invalidAmount')),
 
   deposit: z.number({
-    required_error: 'Depozito gerekli',
-    invalid_type_error: 'Geçerli sayı giriniz',
+    required_error: t('depositRequired'),
+    invalid_type_error: t('validNumber'),
   })
-    .min(0, 'Depozito 0 veya daha fazla olmalı')
-    .max(1000000000, 'Geçersiz tutar'),
+    .min(0, t('depositNonNegative'))
+    .max(1000000000, t('invalidAmount')),
 
   currency: z.enum(['TRY', 'USD', 'EUR'], {
-    errorMap: () => ({ message: 'Para birimi seçiniz' }),
+    errorMap: () => ({ message: t('currencyRequired') }),
   }).default('TRY'),
 
   // ============================================================================
   // Optional Details Section
   // ============================================================================
   payment_day_of_month: z.number()
-    .min(1, 'Gün 1-31 arası olmalı')
-    .max(31, 'Gün 1-31 arası olmalı')
+    .min(1, t('paymentDayRange'))
+    .max(31, t('paymentDayRange'))
     .optional(),
 
   payment_method: z.string()
-    .max(100, 'En fazla 100 karakter')
+    .max(100, t('maxChars', { max: 100 }))
     .optional()
     .or(z.literal('')),
 
   special_conditions: z.string()
-    .max(1000, 'En fazla 1000 karakter')
+    .max(1000, t('maxChars', { max: 1000 }))
     .optional()
     .or(z.literal('')),
 
@@ -163,11 +167,11 @@ export const contractFormSchema = z.object({
   clauseOverrides: z.array(z.object({
     clause_type: z.enum(['GENEL_SARTLAR', 'OZEL_SARTLAR', 'TAHLIYE_TAAHHUTNAMESI']),
     clause_index: z.number().int().min(0),
-    custom_content: z.string().min(1, 'Madde içeriği boş olamaz'),
+    custom_content: z.string().min(1, t('clauseContentRequired')),
   })).optional(),
 
 }).refine((data) => data.end_date > data.start_date, {
-  message: 'Bitiş tarihi başlangıç tarihinden sonra olmalı',
+  message: t('endDateAfterStartStrict'),
   path: ['end_date'],
 });
 

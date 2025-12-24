@@ -97,11 +97,10 @@ export class CookieErrorBoundary extends Component<
                 <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-2">
                   <h3 className="font-semibold text-sm text-gray-900">
-                    Cookie Preferences Temporarily Unavailable
+                    {i18n.t('cookie:errorBoundary.title')}
                   </h3>
                   <p className="text-xs text-gray-700 leading-relaxed">
-                    There was an error loading cookie preferences. The site will continue to work,
-                    but you may not be able to manage your cookie settings right now.
+                    {i18n.t('cookie:errorBoundary.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 text-xs">
                     <a
@@ -110,7 +109,7 @@ export class CookieErrorBoundary extends Component<
                       rel="noopener noreferrer"
                       className="underline text-blue-600 hover:text-blue-700 transition-colors"
                     >
-                      Cookie Policy
+                      {i18n.t('cookie:banner.cookiePolicy')}
                     </a>
                     <span className="text-gray-400">•</span>
                     <a
@@ -119,7 +118,7 @@ export class CookieErrorBoundary extends Component<
                       rel="noopener noreferrer"
                       className="underline text-blue-600 hover:text-blue-700 transition-colors"
                     >
-                      Privacy Policy
+                      {i18n.t('cookie:banner.privacyPolicy')}
                     </a>
                   </div>
                   <Button
@@ -128,7 +127,7 @@ export class CookieErrorBoundary extends Component<
                     onClick={this.handleDismiss}
                     className="mt-2 w-full sm:w-auto"
                   >
-                    Dismiss
+                    {i18n.t('cookie:errorBoundary.dismiss')}
                   </Button>
                 </div>
               </div>
@@ -141,6 +140,5 @@ export class CookieErrorBoundary extends Component<
     return this.props.children;
   }
 }
-
 
 

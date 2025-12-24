@@ -28,18 +28,8 @@ export const ContractImportPage = () => {
   };
 
   return (
-    <MainLayout title={t('import.title')}>
+    <MainLayout title="">
       <PageContainer>
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            {t('import.title')}
-          </h1>
-          <p className="text-gray-600">
-            {t('import.subtitle')}
-          </p>
-        </div>
-
       {/* Progress Indicator (Simple) */}
       {currentStep !== 'upload' && (
         <div className="mb-8 flex items-center gap-2 text-sm text-gray-600">

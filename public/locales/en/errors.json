@@ -6,6 +6,12 @@
     "notFound": "The requested resource was not found.",
     "serverError": "Server error. Please try again later."
   },
+  "boundary": {
+    "title": "Something went wrong",
+    "description": "The application encountered an unexpected error. Please try reloading the page.",
+    "details": "Error Details",
+    "reload": "Reload Page"
+  },
   "validation": {
     "required": "This field is required",
     "invalidEmail": "Invalid email format",

@@ -1,0 +1,31 @@
+{
+  "title": "Contracts",
+  "subtitle": "All contract types in one place",
+  "cards": {
+    "rent": {
+      "title": "Rent Contracts",
+      "description": "Create and manage your rental agreements",
+      "badge": "{{count}} contracts"
+    },
+    "sale": {
+      "title": "Sale Contracts",
+      "description": "Create and manage your sale agreements",
+      "badge": "{{count}} contracts"
+    },
+    "commission": {
+      "title": "Commission Contracts",
+      "description": "Manage your real estate commission agreements",
+      "badge": "Coming Soon"
+    },
+    "showing": {
+      "title": "Showing Records",
+      "description": "Track your property showing records",
+      "badge": "Coming Soon"
+    }
+  },
+  "actions": {
+    "view": "View",
+    "create": "Create New",
+    "comingSoon": "Coming Soon"
+  }
+}

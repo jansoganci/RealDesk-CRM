@@ -6,6 +6,12 @@
     "notFound": "İstenen kaynak bulunamadı.",
     "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin."
   },
+  "boundary": {
+    "title": "Bir şeyler ters gitti",
+    "description": "Uygulama beklenmeyen bir hatayla karşılaştı. Lütfen sayfayı yeniden yükleyin.",
+    "details": "Hata Detayları",
+    "reload": "Sayfayı Yeniden Yükle"
+  },
   "validation": {
     "required": "Bu alan zorunludur",
     "invalidEmail": "Geçersiz e-posta formatı",

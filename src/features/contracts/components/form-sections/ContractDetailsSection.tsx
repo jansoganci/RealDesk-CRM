@@ -215,9 +215,9 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 <SelectValue placeholder={t('create.placeholders.currency')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="TRY">₺ TRY (Türk Lirası)</SelectItem>
-                <SelectItem value="USD">$ USD (Amerikan Doları)</SelectItem>
-                <SelectItem value="EUR">€ EUR (Euro)</SelectItem>
+                <SelectItem value="TRY">{t('create.currencyOptions.TRY')}</SelectItem>
+                <SelectItem value="USD">{t('create.currencyOptions.USD')}</SelectItem>
+                <SelectItem value="EUR">{t('create.currencyOptions.EUR')}</SelectItem>
               </SelectContent>
             </Select>
             {form.formState.errors.currency && (

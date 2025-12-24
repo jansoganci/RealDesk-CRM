@@ -1,0 +1,31 @@
+{
+  "title": "Sozlesmeler",
+  "subtitle": "Tum sozlesme turleri tek bir yerde",
+  "cards": {
+    "rent": {
+      "title": "Kira Sozlesmeleri",
+      "description": "Gayrimenkul kira sozlesmelerinizi olusturun ve yonetin",
+      "badge": "{{count}} sozlesme"
+    },
+    "sale": {
+      "title": "Satis Sozlesmeleri",
+      "description": "Gayrimenkul satis sozlesmelerinizi olusturun ve yonetin",
+      "badge": "{{count}} sozlesme"
+    },
+    "commission": {
+      "title": "Komisyon Sozlesmeleri",
+      "description": "Emlak komisyon sozlesmelerinizi yonetin",
+      "badge": "Yakinda"
+    },
+    "showing": {
+      "title": "Gosterim Kayitlari",
+      "description": "Mulk gosterim kayitlarinizi takip edin",
+      "badge": "Yakinda"
+    }
+  },
+  "actions": {
+    "view": "Goruntule",
+    "create": "Yeni Olustur",
+    "comingSoon": "Yakinda"
+  }
+}

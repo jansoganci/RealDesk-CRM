@@ -102,12 +102,12 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
             <Label htmlFor="owner_email">
               {t('create.fields.owner_email')}
             </Label>
-            <Input
-              id="owner_email"
-              type="email"
-              placeholder="ornek@email.com"
-              {...form.register('owner_email')}
-            />
+          <Input
+            id="owner_email"
+            type="email"
+            placeholder={t('create.placeholders.email')}
+            {...form.register('owner_email')}
+          />
             {form.formState.errors.owner_email && (
               <p className="text-sm text-red-600 mt-1">
                 {form.formState.errors.owner_email.message}
