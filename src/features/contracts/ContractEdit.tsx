@@ -71,7 +71,7 @@ export default function ContractEdit() {
             <PageHeader
               title={t('edit.title')}
               subtitle={t('edit.subtitle')}
-              back={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
+              backTo={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
             />
           </div>
           <ContractEditForm

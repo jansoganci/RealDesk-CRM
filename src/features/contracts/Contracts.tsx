@@ -269,7 +269,7 @@ export const Contracts = () => {
   const headerContent = useMemo(() => (
     <div className="space-y-4">
       <PageHeader
-        back={{ href: ROUTES.CONTRACTS_HUB, label: t('edit.backToList') }}
+        backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('edit.backToList') }}
       />
       <ContractImportBanner
         onImportClick={() => navigate(ROUTES.CONTRACT_IMPORT)}

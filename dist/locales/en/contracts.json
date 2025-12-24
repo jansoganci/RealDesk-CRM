@@ -86,6 +86,10 @@
       }
     }
   },
+  "confirmation": {
+    "confirm": "Continue",
+    "cancel": "Cancel"
+  },
   "toasts": {
     "deleted": "Contract deleted successfully",
     "created": "Contract created successfully",
@@ -117,7 +121,37 @@
     "checkingTenant": "Checking tenant...",
     "ownerDataChanged": "Owner Data Changed",
     "tenantDataChanged": "Tenant Data Changed",
-    "multipleContracts": "Multiple Active Contracts"
+    "multipleContracts": "Multiple Active Contracts",
+    "minChars": "At least {{min}} characters required",
+    "maxChars": "Maximum {{max}} characters",
+    "digitsOnly": "Digits only",
+    "invalidTcFormat": "Invalid TC ID format",
+    "ibanFormat": "Enter a valid IBAN (TR + 24 digits)",
+    "invalidIbanFormat": "Invalid IBAN format",
+    "phoneMin": "Enter a valid phone number",
+    "invalidPhoneFormat": "Invalid phone number (must be in 5XX XXX XX XX format)",
+    "validEmail": "Enter a valid email address",
+    "fullAddressMin": "Enter full address (at least {{min}} characters)",
+    "neighborhoodRequired": "Neighborhood is required",
+    "streetRequired": "Street/Avenue is required",
+    "buildingNoRequired": "Building number is required",
+    "districtRequired": "District is required",
+    "cityRequired": "City is required",
+    "propertyTypeRequired": "Select a valid property type",
+    "startDateRequired": "Start date is required",
+    "endDateRequired": "End date is required",
+    "validDate": "Enter a valid date",
+    "rentRequired": "Rent amount is required",
+    "validNumber": "Enter a valid number",
+    "rentGreaterThanZero": "Rent amount must be greater than 0",
+    "invalidAmount": "Invalid amount",
+    "depositRequired": "Deposit is required",
+    "depositNonNegative": "Deposit must be 0 or greater",
+    "currencyRequired": "Select a currency",
+    "paymentDayRange": "Day must be between 1 and 31",
+    "clauseContentRequired": "Clause content cannot be empty",
+    "endDateAfterStartStrict": "End date must be after start date",
+    "tcLengthStrict": "TC ID must be {{length}} digits"
   },
   "create": {
     "title": "Create New Contract",
@@ -170,6 +204,7 @@
       "owner_tc": "12345678901",
       "owner_iban": "TR123456789012345678901234",
       "owner_phone": "0555 123 45 67",
+      "email": "email@example.com",
       "tenant_name": "Jane Smith",
       "mahalle": "Moda Neighborhood",
       "cadde_sokak": "Atatürk Avenue",
@@ -184,6 +219,11 @@
       "apartment": "Apartment",
       "house": "House",
       "commercial": "Commercial"
+    },
+    "currencyOptions": {
+      "TRY": "₺ TRY (Turkish Lira)",
+      "USD": "$ USD (US Dollar)",
+      "EUR": "€ EUR (Euro)"
     },
     "buttons": {
       "submit": "Create Contract",
@@ -205,7 +245,40 @@
       "propertyUsed": "✓ Existing property used",
       "contractCreated": "✓ Contract created",
       "allCompleted": "All operations completed successfully!",
+      "clausesSaveFailedTitle": "Contract created but custom clauses could not be saved",
+      "clausesSaveFailedDescription": "Please review clauses before generating the PDF",
       "unknownError": "Unknown error"
+    }
+  },
+  "clauses": {
+    "title": "Contract Clauses",
+    "loading": "Loading...",
+    "description": "You can customize contract clauses as needed. Changes apply only to this contract.",
+    "sections": {
+      "general": "General Terms ({{count}} clauses)",
+      "special": "Special Terms ({{count}} clauses)",
+      "eviction": "Eviction Undertaking"
+    },
+    "badges": {
+      "customized": "Customized",
+      "editing": "Editing"
+    },
+    "clauseLabel": "Clause {{number}}",
+    "placeholder": "Enter clause content...",
+    "actions": {
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "reset": "Reset to Default"
+    },
+    "toasts": {
+      "customized": "Clause customized",
+      "reset": "Default clause restored"
+    },
+    "errors": {
+      "loadFailed": "Failed to load clause templates",
+      "unknown": "Unknown error",
+      "emptyContent": "Clause cannot be empty"
     }
   },
   "activeContractWarning": {
@@ -215,7 +288,8 @@
     "bannerMessage": "This property already has an active contract:",
     "tenant": "Tenant",
     "period": "Period",
-    "rent": "Rent"
+    "rent": "Rent",
+    "perMonthSuffix": "/month"
   },
   "edit": {
     "title": "Edit Contract",

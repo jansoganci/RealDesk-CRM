@@ -178,6 +178,21 @@
     "loadDataFailed": "Failed to load tenant and contract data",
     "pdfUploadFailed": "Tenant and contract updated, but PDF upload failed",
     "updateSuccess": "{{name}} updated successfully!",
-    "updateFailed": "Failed to update tenant and contract"
+    "updateFailed": "Failed to update tenant and contract",
+    "dialogTitle": "Edit Tenant & Contract",
+    "dialogDescription": "Update tenant and contract information in a single workflow",
+    "stepProgress": "Step {{current}} of {{total}}",
+    "progressComplete": "{{percent}}% Complete",
+    "loadingTitle": "Loading...",
+    "loadingDescription": "Loading tenant and contract information...",
+    "contractStatusLabel": "Editing Contract:",
+    "contractStatusText": "{{status}} contract",
+    "contractDateRange": "({{start}} to {{end}})",
+    "noContractLabel": "No Contract Found:",
+    "noContractDescription": "A new contract will be created for this tenant.",
+    "navigation": {
+      "update": "Update Tenant & Contract",
+      "nextWithStep": "Next: {{step}}"
+    }
   }
 }

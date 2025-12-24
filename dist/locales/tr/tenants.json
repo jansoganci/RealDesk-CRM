@@ -178,6 +178,21 @@
     "loadDataFailed": "Kiracı ve sözleşme verileri yüklenemedi",
     "pdfUploadFailed": "Kiracı ve sözleşme güncellendi, ancak PDF yüklemesi başarısız oldu",
     "updateSuccess": "{{name}} başarıyla güncellendi!",
-    "updateFailed": "Kiracı ve sözleşme güncellenemedi"
+    "updateFailed": "Kiracı ve sözleşme güncellenemedi",
+    "dialogTitle": "Kiracı ve Sözleşmeyi Düzenle",
+    "dialogDescription": "Kiracı ve sözleşme bilgilerini tek bir akışta güncelleyin",
+    "stepProgress": "Adım {{current}} / {{total}}",
+    "progressComplete": "{{percent}}% Tamamlandı",
+    "loadingTitle": "Yükleniyor...",
+    "loadingDescription": "Kiracı ve sözleşme bilgileri yükleniyor...",
+    "contractStatusLabel": "Sözleşme Düzenleniyor:",
+    "contractStatusText": "{{status}} sözleşme",
+    "contractDateRange": "({{start}} - {{end}})",
+    "noContractLabel": "Sözleşme Bulunamadı:",
+    "noContractDescription": "Bu kiracı için yeni bir sözleşme oluşturulacak.",
+    "navigation": {
+      "update": "Kiracı ve Sözleşmeyi Güncelle",
+      "nextWithStep": "Sonraki: {{step}}"
+    }
   }
 }

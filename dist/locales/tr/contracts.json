@@ -86,6 +86,10 @@
       }
     }
   },
+  "confirmation": {
+    "confirm": "Devam Et",
+    "cancel": "İptal"
+  },
   "toasts": {
     "deleted": "Sözleşme başarıyla silindi",
     "created": "Sözleşme başarıyla oluşturuldu",
@@ -117,7 +121,37 @@
     "checkingTenant": "Kiracı kontrol ediliyor...",
     "ownerDataChanged": "Ev Sahibi Bilgileri Değişti",
     "tenantDataChanged": "Kiracı Bilgileri Değişti",
-    "multipleContracts": "Birden Fazla Aktif Sözleşme"
+    "multipleContracts": "Birden Fazla Aktif Sözleşme",
+    "minChars": "En az {{min}} karakter gerekli",
+    "maxChars": "En fazla {{max}} karakter",
+    "digitsOnly": "Sadece rakam giriniz",
+    "invalidTcFormat": "Geçersiz TC Kimlik No formatı",
+    "ibanFormat": "Geçerli IBAN giriniz (TR + 24 rakam)",
+    "invalidIbanFormat": "Geçersiz IBAN formatı",
+    "phoneMin": "Geçerli telefon numarası giriniz",
+    "invalidPhoneFormat": "Geçersiz telefon numarası (5XX XXX XX XX formatında olmalı)",
+    "validEmail": "Geçerli email adresi giriniz",
+    "fullAddressMin": "Tam adres giriniz (en az {{min}} karakter)",
+    "neighborhoodRequired": "Mahalle gerekli",
+    "streetRequired": "Cadde/Sokak gerekli",
+    "buildingNoRequired": "Bina no gerekli",
+    "districtRequired": "İlçe gerekli",
+    "cityRequired": "İl gerekli",
+    "propertyTypeRequired": "Geçerli mülk tipi seçiniz",
+    "startDateRequired": "Başlangıç tarihi gerekli",
+    "endDateRequired": "Bitiş tarihi gerekli",
+    "validDate": "Geçerli tarih giriniz",
+    "rentRequired": "Kira tutarı gerekli",
+    "validNumber": "Geçerli sayı giriniz",
+    "rentGreaterThanZero": "Kira tutarı 0'dan büyük olmalı",
+    "invalidAmount": "Geçersiz tutar",
+    "depositRequired": "Depozito gerekli",
+    "depositNonNegative": "Depozito 0 veya daha fazla olmalı",
+    "currencyRequired": "Para birimi seçiniz",
+    "paymentDayRange": "Gün 1-31 arası olmalı",
+    "clauseContentRequired": "Madde içeriği boş olamaz",
+    "endDateAfterStartStrict": "Bitiş tarihi başlangıç tarihinden sonra olmalı",
+    "tcLengthStrict": "TC Kimlik No {{length}} haneli olmalı"
   },
   "create": {
     "title": "Yeni Sözleşme Oluştur",
@@ -174,6 +208,7 @@
       "owner_tc": "12345678901",
       "owner_iban": "TR123456789012345678901234",
       "owner_phone": "0555 123 45 67",
+      "email": "ornek@email.com",
       "tenant_name": "Ayşe Demir",
       "tenant_address": "Kiracının mevcut adresi",
       "mahalle": "Moda Mahallesi",
@@ -191,6 +226,11 @@
       "apartment": "Daire",
       "house": "Müstakil Ev",
       "commercial": "İşyeri"
+    },
+    "currencyOptions": {
+      "TRY": "₺ TRY (Türk Lirası)",
+      "USD": "$ USD (Amerikan Doları)",
+      "EUR": "€ EUR (Euro)"
     },
     "buttons": {
       "submit": "Sözleşme Oluştur",
@@ -212,7 +252,40 @@
       "propertyUsed": "✓ Mevcut mülk kullanıldı",
       "contractCreated": "✓ Sözleşme oluşturuldu",
       "allCompleted": "Tüm işlemler başarıyla tamamlandı!",
+      "clausesSaveFailedTitle": "Sözleşme oluşturuldu ancak özel maddeler kaydedilemedi",
+      "clausesSaveFailedDescription": "PDF oluşturmadan önce maddeleri kontrol edin",
       "unknownError": "Bilinmeyen hata"
+    }
+  },
+  "clauses": {
+    "title": "Sözleşme Maddeleri",
+    "loading": "Yükleniyor...",
+    "description": "Sözleşme maddelerini isteğe göre özelleştirebilirsiniz. Değişiklikler yalnızca bu sözleşme için geçerlidir.",
+    "sections": {
+      "general": "Genel Şartlar ({{count}} madde)",
+      "special": "Özel Şartlar ({{count}} madde)",
+      "eviction": "Tahliye Taahhütnamesi"
+    },
+    "badges": {
+      "customized": "Özelleştirilmiş",
+      "editing": "Düzenleniyor"
+    },
+    "clauseLabel": "Madde {{number}}",
+    "placeholder": "Madde içeriğini giriniz...",
+    "actions": {
+      "cancel": "İptal",
+      "save": "Kaydet",
+      "edit": "Düzenle",
+      "reset": "Varsayılana Dön"
+    },
+    "toasts": {
+      "customized": "Madde özelleştirildi",
+      "reset": "Varsayılan madde geri yüklendi"
+    },
+    "errors": {
+      "loadFailed": "Madde şablonları yüklenemedi",
+      "unknown": "Bilinmeyen hata",
+      "emptyContent": "Madde boş bırakılamaz"
     }
   },
   "activeContractWarning": {
@@ -222,7 +295,8 @@
     "bannerMessage": "Bu mülkün zaten aktif bir sözleşmesi var:",
     "tenant": "Kiracı",
     "period": "Dönem",
-    "rent": "Kira"
+    "rent": "Kira",
+    "perMonthSuffix": "/ay"
   },
   "edit": {
     "title": "Sözleşmeyi Düzenle",

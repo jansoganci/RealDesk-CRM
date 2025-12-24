@@ -3,7 +3,7 @@
  * 3-step wizard: Form → Editor → Save
  */
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -59,8 +59,6 @@ export function SaleContractBuilder() {
       special_conditions: '',
     },
   });
-
-  const progress = useMemo(() => ((step - 1) / 2) * 100, [step]);
 
   const handleNextToEditor = useCallback(() => {
     const values = form.getValues();
@@ -134,7 +132,7 @@ export function SaleContractBuilder() {
           {/* Header */}
           <div className="mb-6">
             <PageHeader
-              back={{ href: ROUTES.CONTRACTS_SALE, label: t('builder.backToList') }}
+              backTo={{ href: ROUTES.CONTRACTS_SALE, label: t('builder.backToList') }}
             />
           </div>
 

@@ -19,7 +19,7 @@ export default function ContractCreate() {
         <div className="w-full">
           <div className="mb-6">
             <PageHeader
-              back={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
+              backTo={{ href: ROUTES.CONTRACTS_RENT, label: t('edit.backToList') }}
             />
           </div>
           <ContractCreateForm />

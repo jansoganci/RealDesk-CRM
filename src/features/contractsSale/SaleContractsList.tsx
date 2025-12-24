@@ -90,7 +90,7 @@ export function SaleContractsList() {
         {/* Header */}
         <div className="mb-6">
           <PageHeader
-            back={{ href: ROUTES.CONTRACTS_HUB, label: t('list.backToHub') }}
+            backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('list.backToHub') }}
             actions={(
               <Button
                 onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}

@@ -184,7 +184,7 @@ export function SaleContractEdit() {
             <PageHeader
               title={t('edit.headerTitle')}
               subtitle={t('edit.stepLabel', { step })}
-              back={{ href: ROUTES.CONTRACTS_SALE, label: t('edit.backToList') }}
+              backTo={{ href: ROUTES.CONTRACTS_SALE, label: t('edit.backToList') }}
             />
             <Progress value={progress} className="mt-4 h-2" />
           </div>
