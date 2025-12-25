@@ -141,6 +141,8 @@ export function EditProfileInfoDialog({
       });
 
       // Update auth context
+      const { setManualLanguage } = await import('@/lib/localeDetection');
+      setManualLanguage(data.language as 'tr' | 'en');
       await setLanguage(data.language);
       await setCurrency(data.currency);
 

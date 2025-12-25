@@ -15,6 +15,7 @@
 const LOCALE_DETECTED_KEY = 'emlak_locale_detected';
 const DETECTED_LANGUAGE_KEY = 'emlak_detected_language';
 const DETECTED_CURRENCY_KEY = 'emlak_detected_currency';
+const MANUAL_LANGUAGE_KEY = 'emlak_language_manual';
 
 // Supported languages and currencies
 export type SupportedLanguage = 'tr' | 'en';
@@ -137,6 +138,75 @@ function getCurrencyForLanguage(language: SupportedLanguage): SupportedCurrency 
 }
 
 /**
+ * Get country code from Cloudflare cookie
+ *
+ * @returns string | null - ISO country code (e.g., 'TR', 'US') or null
+ */
+function getCloudflareCountry(): string | null {
+  try {
+    if (typeof document === 'undefined') {
+      return null;
+    }
+    const cookies = document.cookie.split('; ');
+    const countryCookie = cookies.find(c => c.startsWith('x-visitor-country='));
+    if (countryCookie) {
+      return countryCookie.split('=')[1];
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Check if language was manually selected by user
+ *
+ * @returns boolean - true if user explicitly selected language via dropdown
+ */
+function isManualLanguageSelection(): boolean {
+  if (!isLocalStorageAvailable()) {
+    return false;
+  }
+  try {
+    return window.localStorage.getItem(MANUAL_LANGUAGE_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Mark language as manually selected
+ * Called when user clicks language dropdown
+ *
+ * @param language - the language user selected
+ */
+export function setManualLanguage(language: SupportedLanguage): void {
+  if (!isLocalStorageAvailable()) {
+    return;
+  }
+  try {
+    window.localStorage.setItem(MANUAL_LANGUAGE_KEY, 'true');
+    window.localStorage.setItem(DETECTED_LANGUAGE_KEY, language);
+  } catch {
+    // Silent fail
+  }
+}
+
+/**
+ * Detect language from Cloudflare country
+ *
+ * @returns SupportedLanguage | null - 'tr' if Turkey, null otherwise
+ */
+function detectLanguageFromCountry(): SupportedLanguage | null {
+  const country = getCloudflareCountry();
+  if (country === 'TR') {
+    return 'tr';
+  }
+  // All other countries default to English
+  return country ? 'en' : null;
+}
+
+/**
  * Store detected values in localStorage
  *
  * @param language - language to store
@@ -187,19 +257,40 @@ function detectLocale(): { language: SupportedLanguage; currency: SupportedCurre
 /**
  * Get detected language
  *
- * Returns the detected/stored language, running detection if needed.
- * This function is safe to call synchronously during module initialization.
+ * Returns the detected/stored language with Cloudflare country priority.
+ *
+ * Precedence:
+ * 1. Manual selection (user clicked language dropdown)
+ * 2. Cloudflare country detection (CF-IPCountry header)
+ * 3. Browser language (navigator.language)
+ * 4. Fallback to 'en'
  *
  * @returns SupportedLanguage - 'tr' or 'en'
  */
 export function getDetectedLanguage(): SupportedLanguage {
-  // Check stored value first
+  // Priority 1: Check if user manually selected language
+  if (isManualLanguageSelection()) {
+    const stored = getStoredLanguage();
+    if (stored) {
+      return stored;
+    }
+  }
+
+  // Priority 2: Check Cloudflare country
+  const countryLang = detectLanguageFromCountry();
+  if (countryLang) {
+    // Store for future visits
+    storeDetectedValues(countryLang, getCurrencyForLanguage(countryLang));
+    return countryLang;
+  }
+
+  // Priority 3: Check stored value (return visitor, non-manual)
   const stored = getStoredLanguage();
   if (stored && !isFirstVisit()) {
     return stored;
   }
 
-  // Run detection
+  // Priority 4: Detect from browser
   const { language } = detectLocale();
   return language;
 }

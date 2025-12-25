@@ -15,6 +15,9 @@ export const LandingHeader = () => {
 
   const changeLanguage = async (lng: string) => {
     try {
+      // Import setManualLanguage dynamically to mark as manual selection
+      const { setManualLanguage } = await import('@/lib/localeDetection')
+      setManualLanguage(lng as 'tr' | 'en')
       await setLanguage(lng)
     } catch (error) {
       console.error('Failed to change language:', error)
