@@ -24,10 +24,10 @@ export const TheResult = () => {
            {/* Glow behind the chart */}
            <div className="absolute -inset-4 bg-blue-500/20 blur-3xl rounded-full -z-10 opacity-50" />
            
-           <img 
-            src="/landing/result-growth.jpeg" 
-            alt="Portfolio performance growth chart" 
-            className="w-full h-auto object-contain drop-shadow-2xl rounded-2xl"
+           <img
+            src="/landing/result-growth.jpeg"
+            alt={t('result.imageAlt')}
+            className="w-full h-auto object-contain drop-shadow-2xl rounded-20"
            />
         </div>
       </div>

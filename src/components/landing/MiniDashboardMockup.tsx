@@ -7,7 +7,7 @@ export const MiniDashboardMockup = () => {
   return (
     <div className="relative w-full max-w-[650px] mx-auto px-4 md:px-0 animate-in fade-in zoom-in-95 duration-700">
       {/* Laptop Base Styling */}
-      <div className="relative rounded-2xl bg-white border border-gray-200 shadow-2xl overflow-hidden aspect-[4/3] md:aspect-[16/10]">
+      <div className="relative rounded-20 bg-white border border-gray-200 shadow-2xl overflow-hidden aspect-[4/3] md:aspect-[16/10]">
 
         {/* Browser / Window Header */}
         <div className="h-6 md:h-8 bg-gray-50 border-b border-gray-100 flex items-center px-3 md:px-4 gap-1.5 md:gap-2">

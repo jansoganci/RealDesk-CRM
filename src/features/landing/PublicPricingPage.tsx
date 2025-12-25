@@ -14,7 +14,7 @@ export const PublicPricingPage = () => {
         <LandingHeader />
         <main className="bg-neutral-50 pt-20">
           <div className="max-w-6xl mx-auto px-4 py-16 text-center">
-            <p className="text-slate-500">Loading...</p>
+            <p className="text-slate-500">{t('pricing.loading')}</p>
           </div>
         </main>
         <LandingFooter />
@@ -52,4 +52,3 @@ export const PublicPricingPage = () => {
     </>
   )
 }
-

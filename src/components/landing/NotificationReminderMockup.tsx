@@ -10,7 +10,7 @@ export function NotificationReminderMockup() {
       <div className="absolute -inset-4 bg-gradient-to-b from-amber-100/50 to-transparent rounded-[2rem] blur-xl -z-10" />
 
       {/* Main Card */}
-      <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+      <div className="bg-white rounded-20 shadow-xl border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="p-6 border-b border-gray-50 flex items-center justify-between bg-gray-50/30">
           <div className="flex items-center gap-3">

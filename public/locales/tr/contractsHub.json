@@ -1,31 +1,31 @@
 {
-  "title": "Sozlesmeler",
-  "subtitle": "Tum sozlesme turleri tek bir yerde",
+  "title": "Sözleşmeler",
+  "subtitle": "Tüm sözleşme türleri tek bir yerde",
   "cards": {
     "rent": {
-      "title": "Kira Sozlesmeleri",
-      "description": "Gayrimenkul kira sozlesmelerinizi olusturun ve yonetin",
-      "badge": "{{count}} sozlesme"
+      "title": "Kira Sözleşmeleri",
+      "description": "Gayrimenkul kira sözleşmelerinizi oluşturun ve yönetin",
+      "badge": "{{count}} sözleşme"
     },
     "sale": {
-      "title": "Satis Sozlesmeleri",
-      "description": "Gayrimenkul satis sozlesmelerinizi olusturun ve yonetin",
-      "badge": "{{count}} sozlesme"
+      "title": "Satış Sözleşmeleri",
+      "description": "Gayrimenkul satış sözleşmelerinizi oluşturun ve yönetin",
+      "badge": "{{count}} sözleşme"
     },
     "commission": {
-      "title": "Komisyon Sozlesmeleri",
-      "description": "Emlak komisyon sozlesmelerinizi yonetin",
-      "badge": "Yakinda"
+      "title": "Komisyon Sözleşmeleri",
+      "description": "Emlak komisyon sözleşmelerinizi yönetin",
+      "badge": "Yakında"
     },
     "showing": {
-      "title": "Gosterim Kayitlari",
-      "description": "Mulk gosterim kayitlarinizi takip edin",
-      "badge": "Yakinda"
+      "title": "Gösterim Kayıtları",
+      "description": "Mülk gösterim kayıtlarınızı takip edin",
+      "badge": "Yakında"
     }
   },
   "actions": {
-    "view": "Goruntule",
-    "create": "Yeni Olustur",
-    "comingSoon": "Yakinda"
+    "view": "Görüntüle",
+    "create": "Yeni Oluştur",
+    "comingSoon": "Yakında"
   }
 }

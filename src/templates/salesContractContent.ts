@@ -1,68 +1,64 @@
 /**
  * Sales Contract Template Content
  * Template with placeholder variables for sale contracts
+ * Format: Based on "TAŞINMAZ ALIM-SATIM VE HİZMET SÖZLEŞMESİ"
  */
 
-export const SALE_CONTRACT_TEMPLATE_CONTENT = `GAYRIMENKUL SATIS SOZLESMESI
+export const SALE_CONTRACT_TEMPLATE_CONTENT = `TAŞINMAZ ALIM-SATIM VE HİZMET SÖZLEŞMESİ
 
-SOZLESME TARIHI: {{contract_date}}
+1. TARAFLAR:
 
-TARAFLAR
+1.1.     ARACI:
 
-SATICI:
-Ad Soyad: {{seller_name}}
-TC Kimlik No: {{seller_tc}}
-Telefon: {{seller_phone}}
-E-posta: {{seller_email}}
-Adres: {{seller_address}}
+İsim-Soyad (Şahıs): {{agent_name}}
 
-ALICI:
-Ad Soyad: {{buyer_name}}
-TC Kimlik No: {{buyer_tc}}
-Telefon: {{buyer_phone}}
-E-posta: {{buyer_email}}
-Adres: {{buyer_address}}
+1.2.     ALICI TARAF:
 
-SATIS KONUSU TASINMAZ
+İsim-Soyad (Şahıs): {{buyer_name}}
+T.C Kimlik No: {{buyer_tc}}
 
-Adres: {{property_address}}
-Tapu Sicil No: {{title_deed_no}}
-Ada/Parsel: {{parcel_info}}
-Brut Alan: {{square_meters}} m2
+1.3.     SATICI TARAF:
 
-SATIS SARTLARI
+İsim-Soyad (Şahıs): {{seller_name}}
+T.C Kimlik No: {{seller_tc}}
 
-Satis Bedeli: {{sale_price}} {{currency}}
-Odeme Yontemi: {{payment_method_label}}
-Kapora Tutari: {{deposit_amount}} {{currency}}
-Tapu Devir Tarihi: {{closing_date}}
+1. SÖZLEŞMENİN KONUSU
 
-OZEL SARTLAR
+İşbu sözleşmenin konusu, Satıcı'nın maliki olduğu ya da satışı konusunda yetkili olduğu taşınmazın satış işlemini gerçekleştirmek için Aracı'nın vereceği tanıtım, pazarlama ve aracılık hizmetlerine ilişkin faaliyetleri sonucunda Satıcı ile Alıcı arasında Sözleşmeye konu işi satış şarhasına kadar getirme, gerçekleştireceği bu hizmetlere mukabil Satıcı ile Alıcı tarafından Aracı'ya ödenecek hizmet bedeli ile ilgili yükümlüleri düzenlemektedir.
 
-{{special_conditions}}
+2. GAYRİMENKULE İLİŞKİN BİLGİLER:
 
-GENEL HUKUMLER
+İL/İLÇE :      {{province_district}}
+MAHALLE :      {{neighborhood}}
+ADA NO :       {{ada_no}}
+PARSEL NO:     {{parsel_no}}
 
-1. Satici, sozlesme konusu tasinmazin mulkiyetinin kendisine ait oldugunu, tasinmaz uzerinde herhangi bir ipotek, haciz, serhuye veya ucuncu sahislarin herhangi bir hakki bulunmadigini beyan ve taahhut eder.
+1-Bu gayrimenkul ile ilgili taraflar yukarıda yazılı satış bedeli ve buna bağlı tüm konularda bir mutabakata varmıştır.
 
-2. Alici, belirlenen satis bedelini sozlesme sartlarina uygun olarak odemeyi kabul ve taahhut eder.
+2-Alıcı ......................................... ....0.000 ₺ hizmet bedeli ödeyecektir.
 
-3. Tapu devir islemleri, sozlesmede belirtilen tarihte taraflarin mutabakatida ile gerceklestirilecektir.
+3-Satıcı ......................................... ....000 ₺ hizmet bedeli ödeyecektir.
 
-4. Tasinmazin teslimi, tapu devir islemlerinin tamamlanmasini takiben gerceklestirilecektir.
+4-Resmi (devlet kanalı) yollarla ilgili herhangi bir sorunla karşılaşılması durumunda iki taraf içinde cezai işlem maddeleri geçersiz sayılacaktır, itiraz edilemeyecektir.
 
-5. Taraflardan herhangi birinin sozlesme sartlarina uymamasi halinde, diger taraf bu sozlesmeyi feshetme ve zararin tazminini talep etme hakkina sahiptir.
+5-Alıcı satıştan, kendisinden kaynaklanmayan harici sebeplerden kaynaklanmadığı sürece satış işleminden vazgeçmesi durumunda ...00.000 ₺ cezai şart ödeyecektir.
 
-6. Bu sozlesmeden dogan uyusmazliklarda Istanbul Mahkemeleri ve Icra Daireleri yetkilidir.
+6-Satıcı satıştan, kendisinden kaynaklanmayan harici sebeplerden kaynaklanmadığı sürece satış işleminden vazgeçmesi durumunda ...00.000 ₺ cezai şart ödeyecek ve alıcıdan alınan kapora geri iade edilecektir.
 
-7. Bu sozlesme 2 (iki) nushu olarak duzenlenmis ve taraflarca okunarak imza altina alinmistir.
+7-İmar affından tapulama yapılmasından dolayı süreç beklenecektir. Cayma durumunda 5. Ve 6. Maddelerde geçerli olacaktır.
 
-IMZALAR
+8-Tapu masrafları alıcıya aittir.
 
-SATICI                           ALICI
-{{seller_name}}                  {{buyer_name}}
+9-Bu anlaşma 3 (üç) nüsha olarak düzenlenmiş olup, ilgili taraflarca imzalanarak uygulamaya konulmuştur. Her türlü uyuşmazlığın giderilmesine İstanbul Anadolu Mahkemeleri ve icra daireleri yetkilidir.
 
-Tarih: {{contract_date}}         Tarih: {{contract_date}}
+
+ALICI                           YETKİLİ EMLAK. DANIŞMANI                    SATICI
+
+{{buyer_name}}                                                              {{seller_name}}
+
+
+
+İmza Tarihi: {{contract_date}}
 `;
 
 /**

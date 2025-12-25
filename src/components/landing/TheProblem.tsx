@@ -5,9 +5,9 @@ export const TheProblem = () => {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-slate-950 text-white text-center py-20 relative overflow-hidden">
+    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-gray-50 text-gray-900 text-center py-20 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/10 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto space-y-12 z-10">
         <div className="space-y-6">
@@ -15,7 +15,7 @@ export const TheProblem = () => {
             {t('problem.title')}
           </h2>
           
-          <div className="space-y-2 text-lg md:text-xl text-gray-400 font-light">
+          <div className="space-y-2 text-lg md:text-xl text-gray-600 font-light">
             <p>• {t('problem.item1')}</p>
             <p>• {t('problem.item2')}</p>
             <p>• {t('problem.item3')}</p>
@@ -24,13 +24,13 @@ export const TheProblem = () => {
 
         {/* Chaos Visual */}
         <div className="relative w-full max-w-2xl mx-auto animate-in fade-in zoom-in-95 duration-1000 delay-200">
-           <img 
-            src="/landing/problem-chaos.jpeg" 
-            alt="Chaotic workflow representation" 
-            className="w-full h-auto object-contain drop-shadow-2xl opacity-90 hover:opacity-100 transition-opacity duration-500"
+           <img
+            src="/landing/problem-chaos.jpeg"
+            alt={t('problem.imageAlt')}
+            className="w-full h-auto object-contain drop-shadow-2xl opacity-90 hover:opacity-100 transition-opacity duration-500 rounded-20"
            />
            {/* Overlay gradient to blend bottom edge if needed, though image looks standalone */}
-           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent opacity-20 rounded-xl" />
+           <div className="absolute inset-0 bg-gradient-to-t from-gray-50 via-transparent to-transparent opacity-20 rounded-20" />
         </div>
       </div>
     </section>

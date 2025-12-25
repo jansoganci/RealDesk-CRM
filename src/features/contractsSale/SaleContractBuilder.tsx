@@ -21,6 +21,7 @@ import { ROUTES } from '@/config/constants';
 import { ArrowLeft, ArrowRight, Check, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { contractBuilderService } from '@/services/contractBuilder.service';
+import { contractPdfEngineService } from '@/services/contractPdfEngine.service';
 import { saleContractFormSchema, type SaleContractFormData } from './schemas/saleContractForm.schema';
 import { SALE_CONTRACT_TEMPLATE_CONTENT, replacePlaceholders } from '@/templates/salesContractContent';
 
@@ -36,19 +37,15 @@ export function SaleContractBuilder() {
   const form = useForm<SaleContractFormData>({
     resolver: zodResolver(saleContractFormSchema),
     defaultValues: {
+      agent_name: '',
       seller_name: '',
       seller_tc: '',
-      seller_phone: '',
-      seller_email: '',
-      seller_address: '',
       buyer_name: '',
       buyer_tc: '',
-      buyer_phone: '',
-      buyer_email: '',
-      buyer_address: '',
-      property_address: '',
-      title_deed_no: '',
-      parcel_info: '',
+      province_district: '',
+      neighborhood: '',
+      ada_no: '',
+      parsel_no: '',
       square_meters: undefined,
       sale_price: undefined,
       currency: 'TRY',
@@ -64,7 +61,7 @@ export function SaleContractBuilder() {
     const values = form.getValues();
 
     // Basic validation for required fields
-    if (!values.seller_name || !values.buyer_name || !values.property_address || !values.sale_price) {
+    if (!values.agent_name || !values.seller_name || !values.seller_tc || !values.buyer_name || !values.buyer_tc || !values.province_district || !values.neighborhood || !values.sale_price) {
       toast.error(t('toasts.builder.missingRequired'));
       return;
     }
@@ -86,12 +83,33 @@ export function SaleContractBuilder() {
     setStep(3);
   }, [renderedContent, t]);
 
+  const fillTestData = useCallback(() => {
+    form.setValue('agent_name', 'Mehmet Yılmaz - Yetkili Emlak Danışmanı');
+    form.setValue('seller_name', 'Ahmet Şahin İçli');
+    form.setValue('seller_tc', '12345678901');
+    form.setValue('buyer_name', 'Gülay Öztürk Çakır');
+    form.setValue('buyer_tc', '98765432109');
+    form.setValue('province_district', 'İstanbul/Kadıköy');
+    form.setValue('neighborhood', 'Fenerbahçe Mahallesi');
+    form.setValue('ada_no', '1234');
+    form.setValue('parsel_no', '5678');
+    form.setValue('square_meters', 120);
+    form.setValue('sale_price', 3500000);
+    form.setValue('currency', 'TRY');
+    form.setValue('payment_method', 'bank_transfer');
+    form.setValue('deposit_amount', 350000);
+    form.setValue('closing_date', '2025-02-15');
+    form.setValue('title', 'Kadıköy Bağdat Caddesi Daire Satışı');
+    form.setValue('special_conditions', 'Ödeme şartları uygun görüldü. Müşteri memnuniyeti önemlidir. Taşınmaz temiz ve bakımlı teslim edilecektir.');
+    toast.success('Test verileri yüklendi! ✅');
+  }, [form]);
+
   const handleSave = useCallback(async (status: 'draft' | 'final') => {
     try {
       setSaving(true);
       const values = form.getValues();
 
-      await contractBuilderService.createInstance({
+      const instance = await contractBuilderService.createInstance({
         type: 'sale',
         form_data: values,
         rendered_content: renderedContent,
@@ -115,7 +133,31 @@ export function SaleContractBuilder() {
         },
       });
 
-      toast.success(status === 'draft' ? t('toasts.builder.savedDraft') : t('toasts.builder.savedFinal'));
+      // Generate PDF only for 'final' status
+      if (status === 'final') {
+        try {
+          const pdfResult = await contractPdfEngineService.generateAndSave(
+            'sale',
+            values,
+            instance.id,
+            instance.user_id,
+            true // trigger download
+          );
+
+          if (pdfResult.success) {
+            toast.success(t('toasts.builder.savedFinalWithPdf'));
+          } else {
+            toast.warning(t('toasts.builder.savedFinalNoPdf'), {
+              description: pdfResult.error
+            });
+          }
+        } catch (error) {
+          toast.warning(t('toasts.builder.savedFinalNoPdf'));
+        }
+      } else {
+        toast.success(t('toasts.builder.savedDraft'));
+      }
+
       navigate(ROUTES.CONTRACTS_SALE);
     } catch (error) {
       console.error('Failed to save:', error);
@@ -140,12 +182,39 @@ export function SaleContractBuilder() {
           {step === 1 && (
             <Card>
               <CardHeader>
-                <CardTitle>{t('builder.steps.form.title')}</CardTitle>
-                <CardDescription>
-                  {t('builder.steps.form.description')}
-                </CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>{t('builder.steps.form.title')}</CardTitle>
+                    <CardDescription>
+                      {t('builder.steps.form.description')}
+                    </CardDescription>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={fillTestData}
+                    className="bg-yellow-50 hover:bg-yellow-100 border-yellow-300 text-yellow-700"
+                  >
+                    🧪 TEST
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent className="space-y-6">
+                {/* Agent Section */}
+                <div className="space-y-4">
+                  <h3 className="font-semibold text-lg border-b pb-2">Aracı Bilgileri</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="agent_name">Aracı Adı Soyadı</Label>
+                      <Input
+                        id="agent_name"
+                        {...form.register('agent_name')}
+                        placeholder="Mehmet Emlakçı"
+                      />
+                    </div>
+                  </div>
+                </div>
+
                 {/* Seller Section */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">{t('form.sections.seller')}</h3>
@@ -167,32 +236,6 @@ export function SaleContractBuilder() {
                         maxLength={11}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="seller_phone">{t('form.labels.seller_phone')}</Label>
-                      <Input
-                        id="seller_phone"
-                        {...form.register('seller_phone')}
-                        placeholder={t('form.placeholders.seller_phone')}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="seller_email">{t('form.labels.seller_email')}</Label>
-                      <Input
-                        id="seller_email"
-                        type="email"
-                        {...form.register('seller_email')}
-                        placeholder={t('form.placeholders.seller_email')}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="seller_address">{t('form.labels.seller_address')}</Label>
-                    <Textarea
-                      id="seller_address"
-                      {...form.register('seller_address')}
-                      placeholder={t('form.placeholders.seller_address')}
-                      rows={2}
-                    />
                   </div>
                 </div>
 
@@ -217,62 +260,43 @@ export function SaleContractBuilder() {
                         maxLength={11}
                       />
                     </div>
-                    <div>
-                      <Label htmlFor="buyer_phone">{t('form.labels.buyer_phone')}</Label>
-                      <Input
-                        id="buyer_phone"
-                        {...form.register('buyer_phone')}
-                        placeholder={t('form.placeholders.buyer_phone')}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="buyer_email">{t('form.labels.buyer_email')}</Label>
-                      <Input
-                        id="buyer_email"
-                        type="email"
-                        {...form.register('buyer_email')}
-                        placeholder={t('form.placeholders.buyer_email')}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <Label htmlFor="buyer_address">{t('form.labels.buyer_address')}</Label>
-                    <Textarea
-                      id="buyer_address"
-                      {...form.register('buyer_address')}
-                      placeholder={t('form.placeholders.buyer_address')}
-                      rows={2}
-                    />
                   </div>
                 </div>
 
                 {/* Property Section */}
                 <div className="space-y-4">
                   <h3 className="font-semibold text-lg border-b pb-2">{t('form.sections.property')}</h3>
-                  <div>
-                    <Label htmlFor="property_address">{t('form.labels.property_address')}</Label>
-                    <Textarea
-                      id="property_address"
-                      {...form.register('property_address')}
-                      placeholder={t('form.placeholders.property_address')}
-                      rows={2}
-                    />
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="title_deed_no">{t('form.labels.title_deed_no')}</Label>
+                      <Label htmlFor="province_district">İl/İlçe *</Label>
                       <Input
-                        id="title_deed_no"
-                        {...form.register('title_deed_no')}
-                        placeholder={t('form.placeholders.title_deed_no')}
+                        id="province_district"
+                        {...form.register('province_district')}
+                        placeholder="Örn: İstanbul/Kadıköy"
                       />
                     </div>
                     <div>
-                      <Label htmlFor="parcel_info">{t('form.labels.parcel_info')}</Label>
+                      <Label htmlFor="neighborhood">Mahalle *</Label>
                       <Input
-                        id="parcel_info"
-                        {...form.register('parcel_info')}
-                        placeholder={t('form.placeholders.parcel_info')}
+                        id="neighborhood"
+                        {...form.register('neighborhood')}
+                        placeholder="Örn: Fenerbahçe Mahallesi"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="ada_no">Ada No</Label>
+                      <Input
+                        id="ada_no"
+                        {...form.register('ada_no')}
+                        placeholder="Örn: 1234"
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="parsel_no">Parsel No</Label>
+                      <Input
+                        id="parsel_no"
+                        {...form.register('parsel_no')}
+                        placeholder="Örn: 5678"
                       />
                     </div>
                     <div>

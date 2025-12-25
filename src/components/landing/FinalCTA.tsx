@@ -15,16 +15,22 @@ export const FinalCTA = () => {
           {t('finalCta.title')}
         </h2>
         
-        <div className="flex flex-col items-center gap-4">
-            <Button
-              size="lg"
-              className="text-lg px-12 py-8 h-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-              onClick={() => navigate(ROUTES.REGISTER)}
-            >
-                {t('finalCta.cta')}
-            </Button>
-            <p className="text-sm text-gray-500">
-                {t('finalCta.reassurance')}
+        <div className="flex flex-col items-center gap-6">
+            <div className="flex flex-col items-center gap-4">
+              <Button
+                size="lg"
+                className="text-lg px-12 py-8 h-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                onClick={() => navigate(ROUTES.REGISTER)}
+              >
+                  {t('finalCta.cta')}
+              </Button>
+              <p className="text-sm text-gray-500">
+                  {t('finalCta.reassurance')}
+              </p>
+            </div>
+            
+            <p className="text-xs text-gray-400 font-light tracking-widest uppercase">
+              {t('shared.complianceBadge')}
             </p>
         </div>
       </div>

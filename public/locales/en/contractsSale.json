@@ -164,6 +164,17 @@
     "archived": "Archived",
     "cancelled": "Cancelled"
   },
+  "pdf": {
+    "generating": "Generating PDF...",
+    "generated": "PDF generated and downloaded",
+    "generateFailed": "Failed to generate PDF",
+    "regenerating": "Regenerating PDF...",
+    "downloading": "Downloading PDF...",
+    "downloadFailed": "Failed to download PDF",
+    "notFound": "PDF not found for this contract",
+    "download": "Download PDF",
+    "generate": "Generate PDF"
+  },
   "toasts": {
     "list": {
       "loadFailed": "Failed to load sale contracts",
@@ -175,7 +186,9 @@
       "emptyContent": "Contract content cannot be empty",
       "savedDraft": "Draft saved",
       "savedFinal": "Contract finalized",
-      "saveFailed": "Save failed"
+      "saveFailed": "Save failed",
+      "savedFinalWithPdf": "Contract saved and PDF generated",
+      "savedFinalNoPdf": "Contract saved but PDF generation failed"
     },
     "edit": {
       "notFound": "Contract not found",

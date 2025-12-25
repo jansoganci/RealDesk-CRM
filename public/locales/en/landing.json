@@ -6,25 +6,35 @@
     "login": "Log in",
     "cta": "Start Free",
     "trialBadge": "14 days free",
-    "trialBadgeShort": "14 days free"
+    "trialBadgeShort": "14 days free",
+    "menuOpenLabel": "Open menu",
+    "menuCloseLabel": "Close menu"
   },
   "hero": {
     "title": "Your real estate business, in one place.",
     "subtitle": "Escape the chaos. Manage your portfolio, contracts, and clients from a single place.",
     "cta": "Start for Free",
-    "placeholder": "Dashboard Screenshot"
+    "placeholder": "Dashboard Screenshot",
+    "trustLine": "Manage contracts and rent tracking from one place, in an organized way",
+    "imageAlt": "Emlak CRM dashboard preview"
+  },
+  "shared": {
+    "complianceBadge": "KVKK COMPLIANT · ENCRYPTED DATA · DAILY BACKUPS"
   },
   "problem": {
     "title": "Everything is scattered everywhere.",
     "item1": "Client requests lost in WhatsApp messages",
     "item2": "Rent increase dates forgotten in Excel files",
     "item3": "Photos in gallery, contracts in folders...",
-    "placeholder": "Chaos Visual"
+    "placeholder": "Chaos Visual",
+    "imageAlt": "Chaotic workflow representation"
   },
   "pivot": {
     "title": "We unify them all.",
     "description": "emlakcrm brings all these scattered pieces into one professional system. No more searching, no more losing.",
-    "placeholder": "Unification Animation"
+    "placeholder": "Unification Animation",
+    "videoAriaLabel": "EmlakCRM dashboard demonstration showing unified property management",
+    "videoFallback": "Your browser does not support video. The video shows how EmlakCRM unifies all your property management tasks."
   },
   "featureProperties": {
     "title": "Your entire portfolio on one screen.",
@@ -37,7 +47,30 @@
   },
   "result": {
     "title": "Less chaos, more success.",
-    "description": "Take control of your business. Look professional, manage more clients."
+    "description": "Take control of your business. Look professional, manage more clients.",
+    "imageAlt": "Portfolio performance growth chart"
+  },
+  "testimonial": {
+    "quote": "\"Now my entire portfolio and contracts are in my pocket. Wherever I am, I can access them instantly.\"",
+    "name": "Ahmet S.",
+    "role": "Sisli/Istanbul · Real Estate Consultant"
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "items": [
+      {
+        "question": "Is switching from Excel difficult?",
+        "answer": "No, you can import your Excel files in seconds or get free support from our team."
+      },
+      {
+        "question": "Is it mobile friendly?",
+        "answer": "Yes, EmlakCRM is fully mobile-friendly. You can access all features from your phone browser without downloading any app."
+      },
+      {
+        "question": "How does support work?",
+        "answer": "We provide fast technical support every day via WhatsApp and email."
+      }
+    ]
   },
   "finalCta": {
     "title": "Ready to take control?",
@@ -46,7 +79,8 @@
   },
   "pricing": {
     "title": "Pricing & plans for Emlak CRM",
-    "subtitle": "Try all features for 14 days, no credit card required. Designed for real estate agents and small agencies."
+    "subtitle": "Try all features for 14 days, no credit card required. Designed for real estate agents and small agencies.",
+    "loading": "Loading..."
   },
   "footer": {
     "tagline": "Modern real estate management for professionals",

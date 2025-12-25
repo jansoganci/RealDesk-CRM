@@ -13,17 +13,19 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ROUTES } from '@/config/constants';
-import { Plus, FileText, Pencil, Trash2 } from 'lucide-react';
+import { Plus, FileText, Pencil, Trash2, FileDown, RefreshCw, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { contractBuilderService } from '@/services/contractBuilder.service';
 import type { ContractInstanceV2 } from '@/types/contractBuilder.types';
 import { toast } from 'sonner';
+import { useSaleContractPdf } from './hooks/useSaleContractPdf';
 
 export function SaleContractsList() {
   const { t } = useTranslation(['contractsSale', 'common']);
   const navigate = useNavigate();
   const [instances, setInstances] = useState<ContractInstanceV2[]>([]);
   const [loading, setLoading] = useState(true);
+  const { isGenerating, isDownloading, generatePdf, downloadPdf } = useSaleContractPdf();
 
   // Fetch instances on mount
   useEffect(() => {
@@ -155,6 +157,27 @@ export function SaleContractsList() {
                         </p>
                       </div>
                       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                        {instance.pdf_path ? (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); downloadPdf(instance); }}
+                            disabled={isDownloading}
+                            title={t('pdf.download')}
+                          >
+                            {isDownloading ? <Loader2 className="h-4 w-4 animate-spin" /> : <FileDown className="h-4 w-4" />}
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={(e) => { e.stopPropagation(); generatePdf(instance); }}
+                            disabled={isGenerating}
+                            title={t('pdf.generate')}
+                          >
+                            {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="sm"

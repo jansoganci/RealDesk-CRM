@@ -18,17 +18,17 @@ export const ThePivot = () => {
         </div>
         
         {/* Video Container */}
-        <div className="relative w-full max-w-3xl mx-auto rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-1000 delay-200">
+        <div className="relative w-full max-w-3xl mx-auto rounded-20 overflow-hidden shadow-2xl ring-1 ring-white/10 animate-in fade-in zoom-in-95 duration-1000 delay-200">
              <video
                 autoPlay
                 loop
                 muted
                 playsInline
                 className="w-full h-auto object-cover"
-                aria-label="emlakcrm dashboard demonstration showing unified property management"
+                aria-label={t('pivot.videoAriaLabel')}
              >
                 <source src="/landing/pivot-solution.mp4" type="video/mp4" />
-                <p className="text-gray-400 p-4">Your browser does not support video. The video shows how emlakcrm unifies all your property management tasks.</p>
+                <p className="text-gray-400 p-4">{t('pivot.videoFallback')}</p>
              </video>
              
              {/* Video Overlay Gradient for better blending */}

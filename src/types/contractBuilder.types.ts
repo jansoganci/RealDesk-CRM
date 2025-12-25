@@ -36,6 +36,7 @@ export interface ContractInstanceV2 {
   status: ContractStatus;
   signed_at: string | null;
   signed_by: string | null;
+  pdf_path: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -83,6 +84,7 @@ export interface UpdateContractInstanceRequest {
   status?: ContractStatus;
   signed_at?: string;
   signed_by?: string;
+  pdf_path?: string | null;
 }
 
 /**

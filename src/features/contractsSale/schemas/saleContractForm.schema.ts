@@ -6,24 +6,22 @@
 import { z } from 'zod';
 
 export const saleContractFormSchema = z.object({
+  // Agent info
+  agent_name: z.string().min(1, 'Araci adi zorunlu'),
+
   // Seller info
   seller_name: z.string().min(1, 'Satici adi zorunlu'),
   seller_tc: z.string().min(11, 'TC 11 haneli olmali').max(11, 'TC 11 haneli olmali'),
-  seller_phone: z.string().min(10, 'Telefon numarasi zorunlu'),
-  seller_email: z.string().email('Gecerli e-posta girin').optional().or(z.literal('')),
-  seller_address: z.string().min(1, 'Adres zorunlu'),
 
   // Buyer info
   buyer_name: z.string().min(1, 'Alici adi zorunlu'),
   buyer_tc: z.string().min(11, 'TC 11 haneli olmali').max(11, 'TC 11 haneli olmali'),
-  buyer_phone: z.string().min(10, 'Telefon numarasi zorunlu'),
-  buyer_email: z.string().email('Gecerli e-posta girin').optional().or(z.literal('')),
-  buyer_address: z.string().min(1, 'Adres zorunlu'),
 
   // Property info
-  property_address: z.string().min(1, 'Tasinmaz adresi zorunlu'),
-  title_deed_no: z.string().optional().or(z.literal('')),
-  parcel_info: z.string().optional().or(z.literal('')),
+  province_district: z.string().min(1, 'Il/Ilce zorunlu'),
+  neighborhood: z.string().min(1, 'Mahalle zorunlu'),
+  ada_no: z.string().optional().or(z.literal('')),
+  parsel_no: z.string().optional().or(z.literal('')),
   square_meters: z.number().optional(),
 
   // Sale terms

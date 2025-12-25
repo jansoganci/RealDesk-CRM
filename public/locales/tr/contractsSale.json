@@ -164,6 +164,17 @@
     "archived": "Arşiv",
     "cancelled": "İptal"
   },
+  "pdf": {
+    "generating": "PDF oluşturuluyor...",
+    "generated": "PDF oluşturuldu ve indirildi",
+    "generateFailed": "PDF oluşturulamadı",
+    "regenerating": "PDF yeniden oluşturuluyor...",
+    "downloading": "PDF indiriliyor...",
+    "downloadFailed": "PDF indirilemedi",
+    "notFound": "Bu sözleşme için PDF bulunamadı",
+    "download": "PDF İndir",
+    "generate": "PDF Oluştur"
+  },
   "toasts": {
     "list": {
       "loadFailed": "Satış sözleşmeleri yüklenemedi",
@@ -175,7 +186,9 @@
       "emptyContent": "Sözleşme içeriği boş olamaz",
       "savedDraft": "Taslak kaydedildi",
       "savedFinal": "Sözleşme kesinleştirildi",
-      "saveFailed": "Kaydetme başarısız"
+      "saveFailed": "Kaydetme başarısız",
+      "savedFinalWithPdf": "Sözleşme kaydedildi ve PDF oluşturuldu",
+      "savedFinalNoPdf": "Sözleşme kaydedildi ancak PDF oluşturulamadı"
     },
     "edit": {
       "notFound": "Sözleşme bulunamadı",

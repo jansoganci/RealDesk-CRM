@@ -36,7 +36,7 @@ export const LandingHeader = () => {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-100/80">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-20 flex items-center justify-between">
         {/* Logo */}
         <div
           className="flex items-center gap-2 cursor-pointer group"
@@ -79,10 +79,11 @@ export const LandingHeader = () => {
               {t('header.login')}
             </button>
 
-            {/* Primary CTA */}
+            {/* Primary CTA - Refined to Ghost/Outline style for Header balance */}
             <Button
               onClick={() => handleNavigation(ROUTES.REGISTER)}
-              className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full px-5 py-2 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+              variant="outline"
+              className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-6 h-10 text-sm font-semibold transition-all duration-200"
             >
               {t('header.cta')}
             </Button>
@@ -94,7 +95,7 @@ export const LandingHeader = () => {
           <button
             className="p-2 text-gray-700 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors duration-200"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+            aria-label={isMobileMenuOpen ? t('header.menuCloseLabel') : t('header.menuOpenLabel')}
           >
             {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
