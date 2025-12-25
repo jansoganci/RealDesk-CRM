@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { DollarSign, RefreshCw } from 'lucide-react';
-import { QuickAddButton } from '@/features/quick-add';
+import { DollarSign, RefreshCw, FileText } from 'lucide-react';
 import { PDFExtractButton } from '../PDFExtractButton';
 
 interface ExchangeRatesCardProps {
@@ -23,6 +23,8 @@ export function ExchangeRatesCard({
   onQuickAddSuccess,
 }: ExchangeRatesCardProps) {
   const { t } = useTranslation('dashboard');
+  const { t: tContracts } = useTranslation('contracts');
+  const navigate = useNavigate();
 
   return (
     <Card className="mb-6 shadow-sm border border-gray-200 bg-white">
@@ -73,14 +75,20 @@ export function ExchangeRatesCard({
               className="h-7 w-7 p-0 hover:bg-gray-100"
               title={t('exchangeRates.refreshButton')}
             >
-              {refreshingRates ? (
+                {refreshingRates ? (
                 <RefreshCw className="h-3.5 w-3.5 animate-spin text-gray-600" />
               ) : (
                 <RefreshCw className="h-3.5 w-3.5 text-gray-600" />
               )}
             </Button>
-            <PDFExtractButton />
-            <QuickAddButton onSuccess={onQuickAddSuccess} />
+            <Button
+              onClick={() => navigate('/contracts/rent')}
+              variant="default"
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm"
+            >
+              <FileText className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
+              <span>{tContracts('pdfExtract.buttonText')}</span>
+            </Button>
           </div>
         </div>
       </CardContent>

@@ -22,6 +22,7 @@ import { PropertyCard } from './components/PropertyCard';
 import { PropertyTableRow } from './components/PropertyTableRow';
 import { PropertyTableHeaders } from './components/PropertyTableHeaders';
 import { getStatusFilterOptions } from './utils/statusUtils';
+import { QuickAddButton } from '@/features/quick-add';
 
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
@@ -232,7 +233,9 @@ export const Properties = () => {
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddProperty}
         addButtonLabel={t('addPropertyButton')}
+        addButtonLabelShort={t('addPropertyButtonShort')}
         skeletonColumnCount={8}
+        leftAction={<QuickAddButton onSuccess={loadProperties} />}
         headerContent={
           <AnimatedTabs
             tabs={tabsConfig}

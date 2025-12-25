@@ -69,6 +69,7 @@ export interface ListPageTemplateProps<T> {
   filterPlaceholder?: string;
   onAdd: () => void;
   addButtonLabel: string;
+  addButtonLabelShort?: string; // Optional: Short label for mobile
   emptyState: EmptyStateConfig;
   renderTableHeaders: () => ReactNode;
   renderTableRow: (item: T, index: number) => ReactNode;
@@ -76,6 +77,7 @@ export interface ListPageTemplateProps<T> {
   deleteDialog?: DeleteDialogConfig;
   skeletonColumnCount?: number; // Optional: Number of columns for skeleton (default: 5)
   headerContent?: ReactNode; // Optional: Content to render above search/filter row
+  leftAction?: ReactNode; // Optional: Content to render to the left of the main add button
 }
 
 function ListPageTemplateInner<T>({
@@ -91,6 +93,7 @@ function ListPageTemplateInner<T>({
   filterPlaceholder = 'Filter',
   onAdd,
   addButtonLabel,
+  addButtonLabelShort,
   emptyState,
   renderTableHeaders,
   renderTableRow,
@@ -98,6 +101,7 @@ function ListPageTemplateInner<T>({
   deleteDialog,
   skeletonColumnCount = 5,
   headerContent,
+  leftAction,
 }: ListPageTemplateProps<T>) {
   const { t } = useTranslation('common');
   return (
@@ -130,13 +134,24 @@ function ListPageTemplateInner<T>({
               </Select>
             )}
           </div>
-          <Button
-            onClick={onAdd}
-            variant="default"
-          >
-            <Plus className="h-4 w-4" />
-            {addButtonLabel}
-          </Button>
+          <div className="flex items-center gap-2">
+            {leftAction}
+            <Button
+              onClick={onAdd}
+              variant="default"
+              className="h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm"
+            >
+              <Plus className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
+              {addButtonLabelShort ? (
+                <>
+                  <span className="hidden sm:inline">{addButtonLabel}</span>
+                  <span className="sm:hidden">{addButtonLabelShort}</span>
+                </>
+              ) : (
+                <span>{addButtonLabel}</span>
+              )}
+            </Button>
+          </div>
         </div>
 
         {loading ? (

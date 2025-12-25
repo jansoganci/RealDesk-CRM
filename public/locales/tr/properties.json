@@ -3,6 +3,7 @@
   "searchPlaceholder": "Adres, mal sahibi, şehir ile ara...",
   "filterPlaceholder": "Duruma göre filtrele",
   "addPropertyButton": "Mülk Ekle",
+  "addPropertyButtonShort": "Mülk",
   "addTenantButton": "Kiracı Ekle",
   "typeFilter": {
     "all": "Tüm Mülkler",
