@@ -474,8 +474,8 @@
     }
   },
   "pdfExtract": {
-    "buttonTitle": "Extract text from PDF",
-    "buttonText": "PDF Extract",
+    "buttonTitle": "Add Rental Contract",
+    "buttonText": "Add Rental Contract",
     "invalidFileType": "Only PDF and EPUB files are supported.",
     "fileTooLarge": "File size too large. Maximum 100 MB.",
     "extractionFailed": "Could not extract text from PDF. The file may be empty or a scanned document.",

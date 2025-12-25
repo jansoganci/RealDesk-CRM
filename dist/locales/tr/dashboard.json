@@ -96,7 +96,9 @@
     "hoursAgo": "{{hours}} saat önce",
     "daysAgo": "{{days}} gün önce",
     "refreshSuccess": "Kurlar başarıyla güncellendi",
-    "refreshError": "Kurlar güncellenemedi"
+    "refreshError": "Kurlar güncellenemedi",
+    "usd_try": "USD/TRY",
+    "eur_try": "EUR/TRY"
   },
   "onboarding": {
     "title": "Başlangıç",

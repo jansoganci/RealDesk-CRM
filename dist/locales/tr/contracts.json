@@ -481,8 +481,8 @@
     }
   },
   "pdfExtract": {
-    "buttonTitle": "PDF'den metin çıkar",
-    "buttonText": "PDF Çıkar",
+    "buttonTitle": "Kira Sözleşmesi Ekle",
+    "buttonText": "Kira Sözleşmesi Ekle",
     "invalidFileType": "Sadece PDF ve EPUB dosyaları desteklenir.",
     "fileTooLarge": "Dosya boyutu çok büyük. Maksimum 100 MB.",
     "extractionFailed": "PDF'den metin çıkarılamadı. Dosya boş olabilir veya taranmış bir belge olabilir.",

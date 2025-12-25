@@ -23,7 +23,6 @@ export const Dashboard = () => {
     actionItems,
     reminders,
     loading,
-    refreshData: loadStats,
   } = useDashboardData();
 
   // Exchange rates hook
@@ -73,7 +72,6 @@ export const Dashboard = () => {
           refreshingRates={refreshingRates}
           onRefresh={handleRefreshRates}
           formatLastUpdated={formatLastUpdated}
-          onQuickAddSuccess={loadStats}
         />
 
         {isNewUser ? (

@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { DollarSign, RefreshCw, FileText } from 'lucide-react';
-import { PDFExtractButton } from '../PDFExtractButton';
 
 interface ExchangeRatesCardProps {
   exchangeRates: Record<string, number>;
@@ -11,7 +10,6 @@ interface ExchangeRatesCardProps {
   refreshingRates: boolean;
   onRefresh: () => void;
   formatLastUpdated: (timestamp: number | null) => string;
-  onQuickAddSuccess: () => void;
 }
 
 export function ExchangeRatesCard({
@@ -20,7 +18,6 @@ export function ExchangeRatesCard({
   refreshingRates,
   onRefresh,
   formatLastUpdated,
-  onQuickAddSuccess,
 }: ExchangeRatesCardProps) {
   const { t } = useTranslation('dashboard');
   const { t: tContracts } = useTranslation('contracts');
