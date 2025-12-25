@@ -62,12 +62,10 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
     if (response.ok) {
       const data = await response.json();
       if (data.rates && typeof data.rates.TRY === 'number' && typeof data.rates.EUR === 'number') {
-        // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
-        const eurInTry = data.rates.TRY / data.rates.EUR;
         return {
           USD: 1,
           TRY: data.rates.TRY,
-          EUR: eurInTry, // 1 EUR = X TRY
+          EUR: data.rates.EUR,
         };
       }
     }
@@ -87,12 +85,10 @@ async function fetchExchangeRates(): Promise<Record<string, number>> {
     if (response.ok) {
       const data = await response.json();
       if (data.success && data.rates && data.rates.TRY && data.rates.EUR) {
-        // Calculate EUR in TRY: If 1 USD = X TRY and 1 USD = Y EUR, then 1 EUR = X/Y TRY
-        const eurInTry = data.rates.TRY / data.rates.EUR;
         return {
           USD: 1,
           TRY: data.rates.TRY,
-          EUR: eurInTry, // 1 EUR = X TRY
+          EUR: data.rates.EUR,
         };
       }
     }

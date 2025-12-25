@@ -40,22 +40,19 @@ export function ExchangeRatesCard({
 
           {/* Center: Rates */}
           <div className="flex items-center gap-3 md:gap-4 flex-1 justify-start md:justify-center">
-            <div className="text-center hidden md:block">
-              <div className="text-xs text-gray-500 mb-0.5">USD</div>
-              <div className="text-sm md:text-base font-semibold text-gray-900">1.00</div>
-            </div>
-            <div className="w-px h-6 md:h-8 bg-gray-200 hidden md:block"></div>
             <div className="text-center">
-              <div className="text-xs text-gray-500 mb-0.5">TRY</div>
+              <div className="text-xs text-gray-500 mb-0.5">{t('exchangeRates.usd_try')}</div>
               <div className="text-sm md:text-base font-semibold text-gray-900">
                 {exchangeRates.TRY?.toFixed(2) || '42.30'}
               </div>
             </div>
             <div className="w-px h-6 md:h-8 bg-gray-200"></div>
             <div className="text-center">
-              <div className="text-xs text-gray-500 mb-0.5">EUR</div>
+              <div className="text-xs text-gray-500 mb-0.5">{t('exchangeRates.eur_try')}</div>
               <div className="text-sm md:text-base font-semibold text-gray-900">
-                {exchangeRates.EUR?.toFixed(2) || '49.09'}
+                {(exchangeRates.TRY && exchangeRates.EUR) 
+                  ? (exchangeRates.TRY / exchangeRates.EUR).toFixed(2) 
+                  : '49.09'}
               </div>
             </div>
           </div>

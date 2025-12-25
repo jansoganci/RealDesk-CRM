@@ -96,7 +96,9 @@
     "hoursAgo": "{{hours}} hrs ago",
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Rates updated successfully",
-    "refreshError": "Failed to update rates"
+    "refreshError": "Failed to update rates",
+    "usd_try": "USD/TRY",
+    "eur_try": "EUR/TRY"
   },
   "onboarding": {
     "title": "Getting Started",
