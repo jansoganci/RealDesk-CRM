@@ -6,25 +6,35 @@
     "login": "Giriş",
     "cta": "Ücretsiz Başla",
     "trialBadge": "14 gün ücretsiz",
-    "trialBadgeShort": "14 gün"
+    "trialBadgeShort": "14 gün",
+    "menuOpenLabel": "Menüyü aç",
+    "menuCloseLabel": "Menüyü kapat"
   },
   "hero": {
     "title": "Emlak işiniz, tek bir yerde.",
     "subtitle": "Kaostan kurtulun. Portföyünüzü, sözleşmelerinizi ve müşterilerinizi tek bir yerden yönetin.",
     "cta": "Ücretsiz Başla",
-    "placeholder": "Dashboard Ekran Görüntüsü"
+    "placeholder": "Dashboard Ekran Görüntüsü",
+    "trustLine": "Sözleşme ve kira takibini tek yerden, düzenli şekilde yönetmenizi sağlar",
+    "imageAlt": "Emlak CRM kontrol paneli önizlemesi"
+  },
+  "shared": {
+    "complianceBadge": "KVKK UYUMLU · ŞİFRELİ VERİ · GÜNLÜK YEDEKLEME"
   },
   "problem": {
     "title": "Her şey bir yere dağılmış durumda.",
     "item1": "WhatsApp mesajları arasında kaybolan müşteri talepleri",
     "item2": "Excel dosyalarında unutulan kira artış tarihleri",
     "item3": "Fotoğraflar galeride, sözleşmeler klasörde...",
-    "placeholder": "Kaos Görseli"
+    "placeholder": "Kaos Görseli",
+    "imageAlt": "Dağınık iş akışı temsili"
   },
   "pivot": {
     "title": "Biz onları birleştiriyoruz.",
     "description": "emlakcrm, tüm bu dağınık parçaları tek bir profesyonel sistemde toplar. Artık aramak yok, kaybetmek yok.",
-    "placeholder": "Birleşim Animasyonu"
+    "placeholder": "Birleşim Animasyonu",
+    "videoAriaLabel": "EmlakCRM kontrol paneli gösterimi, birleşik gayrimenkul yönetimini gösterir",
+    "videoFallback": "Tarayıcınız video desteklemiyor. Video, EmlakCRM'in tüm gayrimenkul yönetim görevlerini nasıl birleştirdiğini gösterir."
   },
   "featureProperties": {
     "title": "Tüm portföyünüz tek ekranda.",
@@ -37,7 +47,30 @@
   },
   "result": {
     "title": "Daha az kaos, daha çok başarı.",
-    "description": "İşinizin kontrolünü elinize alın. Profesyonel görünün, daha fazla müşteri yönetin."
+    "description": "İşinizin kontrolünü elinize alın. Profesyonel görünün, daha fazla müşteri yönetin.",
+    "imageAlt": "Portföy performans büyüme grafiği"
+  },
+  "testimonial": {
+    "quote": "\"Artık tüm portföyüm ve sözleşmelerim cebimde. Nerede olursam olayım, anında erişebiliyorum.\"",
+    "name": "Ahmet S.",
+    "role": "Şişli/İstanbul · Gayrimenkul Danışmanı"
+  },
+  "faq": {
+    "title": "Sıkça Sorulan Sorular",
+    "items": [
+      {
+        "question": "Excel’den geçiş zor mu?",
+        "answer": "Hayır, Excel dosyalarınızı saniyeler içinde içe aktarabilir veya ekibimizden ücretsiz destek alabilirsiniz."
+      },
+      {
+        "question": "Mobil uyumlu mu?",
+        "answer": "Evet, emlakcrm tamamen mobil uyumludur. Herhangi bir uygulama indirmeden telefonunuzun tarayıcısından tüm özelliklere ulaşabilirsiniz."
+      },
+      {
+        "question": "Destek süreci nasıl?",
+        "answer": "Haftanın her günü WhatsApp hattımız ve e-posta üzerinden hızlı teknik destek sağlıyoruz."
+      }
+    ]
   },
   "finalCta": {
     "title": "Kontrolü ele almaya hazır mısınız?",
@@ -46,7 +79,8 @@
   },
   "pricing": {
     "title": "Fiyatlar ve Planlar",
-    "subtitle": "14 gün boyunca tüm özellikleri deneyin, kredi kartı gerektirmez. Emlak ofisleri ve emlak danışmanları için tasarlandı."
+    "subtitle": "14 gün boyunca tüm özellikleri deneyin, kredi kartı gerektirmez. Emlak ofisleri ve emlak danışmanları için tasarlandı.",
+    "loading": "Yükleniyor..."
   },
   "footer": {
     "tagline": "Türk profesyonelleri için modern emlak yönetimi",

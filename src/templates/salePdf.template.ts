@@ -6,8 +6,6 @@
 
 import type { SaleContractFormData } from '@/features/contractsSale/schemas/saleContractForm.schema';
 import type { PdfTemplate, TemplateGenerator } from '@/services/contractPdfEngine.service';
-import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
 import {
   SATIS_SOZLESMESI_MADDELERI,
   SOZLESME_BASLIGI,
@@ -21,19 +19,6 @@ import {
 // ============================================================================
 
 /**
- * Get Turkish label for payment method
- */
-function getPaymentMethodLabel(method: string): string {
-  const labels: Record<string, string> = {
-    cash: 'Nakit',
-    bank_transfer: 'Havale/EFT',
-    installment: 'Taksit',
-    mortgage: 'Kredi',
-  };
-  return labels[method] || method;
-}
-
-/**
  * Format value for display - returns '-' if empty/undefined
  */
 function formatValue(value: string | number | undefined | null): string {
@@ -41,16 +26,6 @@ function formatValue(value: string | number | undefined | null): string {
     return '-';
   }
   return String(value);
-}
-
-/**
- * Format number with Turkish locale
- */
-function formatNumber(value: number | undefined | null): string {
-  if (value === undefined || value === null) {
-    return '-';
-  }
-  return value.toLocaleString('tr-TR');
 }
 
 // ============================================================================
@@ -61,7 +36,6 @@ export const generateSalePdfTemplate: TemplateGenerator<SaleContractFormData> = 
   formData,
   instanceId
 ): PdfTemplate => {
-  const contractDate = format(new Date(), 'dd MMMM yyyy', { locale: tr });
   const contractNumber = instanceId.slice(0, 8).toUpperCase();
 
   return {
