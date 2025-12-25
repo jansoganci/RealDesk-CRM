@@ -16,6 +16,7 @@ const LOCALE_DETECTED_KEY = 'emlak_locale_detected';
 const DETECTED_LANGUAGE_KEY = 'emlak_detected_language';
 const DETECTED_CURRENCY_KEY = 'emlak_detected_currency';
 const MANUAL_LANGUAGE_KEY = 'emlak_language_manual';
+const MANUAL_CURRENCY_KEY = 'emlak_currency_manual';
 
 // Supported languages and currencies
 export type SupportedLanguage = 'tr' | 'en';
@@ -193,6 +194,40 @@ export function setManualLanguage(language: SupportedLanguage): void {
 }
 
 /**
+ * Check if currency was manually selected by user
+ *
+ * @returns boolean - true if user explicitly selected currency in settings
+ */
+function isManualCurrencySelection(): boolean {
+  if (!isLocalStorageAvailable()) {
+    return false;
+  }
+  try {
+    return window.localStorage.getItem(MANUAL_CURRENCY_KEY) === 'true';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Mark currency as manually selected
+ * Called when user changes currency in profile settings
+ *
+ * @param currency - the currency user selected
+ */
+export function setManualCurrency(currency: SupportedCurrency): void {
+  if (!isLocalStorageAvailable()) {
+    return;
+  }
+  try {
+    window.localStorage.setItem(MANUAL_CURRENCY_KEY, 'true');
+    window.localStorage.setItem(DETECTED_CURRENCY_KEY, currency);
+  } catch {
+    // Silent fail
+  }
+}
+
+/**
  * Detect language from Cloudflare country
  *
  * @returns SupportedLanguage | null - 'tr' if Turkey, null otherwise
@@ -204,6 +239,20 @@ function detectLanguageFromCountry(): SupportedLanguage | null {
   }
   // All other countries default to English
   return country ? 'en' : null;
+}
+
+/**
+ * Detect currency from Cloudflare country
+ *
+ * @returns SupportedCurrency | null - 'TRY' if Turkey, 'USD' for others
+ */
+function detectCurrencyFromCountry(): SupportedCurrency | null {
+  const country = getCloudflareCountry();
+  if (country === 'TR') {
+    return 'TRY';
+  }
+  // All other countries default to USD
+  return country ? 'USD' : null;
 }
 
 /**
@@ -298,19 +347,41 @@ export function getDetectedLanguage(): SupportedLanguage {
 /**
  * Get detected currency
  *
- * Returns the detected/stored currency, running detection if needed.
- * This function is safe to call synchronously during module initialization.
+ * Returns the detected/stored currency with Cloudflare country priority.
+ *
+ * Precedence:
+ * 1. Manual selection (user changed currency in settings)
+ * 2. Cloudflare country detection (CF-IPCountry header)
+ * 3. Browser language-based currency
+ * 4. Fallback to 'USD'
  *
  * @returns SupportedCurrency - 'TRY' or 'USD'
  */
 export function getDetectedCurrency(): SupportedCurrency {
-  // Check stored value first
+  // Priority 1: Check if user manually selected currency
+  if (isManualCurrencySelection()) {
+    const stored = getStoredCurrency();
+    if (stored) {
+      return stored;
+    }
+  }
+
+  // Priority 2: Check Cloudflare country
+  const countryCurrency = detectCurrencyFromCountry();
+  if (countryCurrency) {
+    // Store for future visits
+    const countryLang = detectLanguageFromCountry() || 'en';
+    storeDetectedValues(countryLang, countryCurrency);
+    return countryCurrency;
+  }
+
+  // Priority 3: Check stored value (return visitor, non-manual)
   const stored = getStoredCurrency();
   if (stored && !isFirstVisit()) {
     return stored;
   }
 
-  // Run detection
+  // Priority 4: Detect from browser/language
   const { currency } = detectLocale();
   return currency;
 }
