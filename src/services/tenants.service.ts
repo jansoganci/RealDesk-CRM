@@ -10,6 +10,7 @@ import type {
 } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 import type {
   RpcCreateTenantWithContractParams,
   RpcCreateTenantWithContractResult,
@@ -36,6 +37,8 @@ const logger = createLogger('Tenants');
 
 class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('tenants')
       .select(`
@@ -46,6 +49,8 @@ class TenantsService {
           property:properties(id, address, city, district, il, ilce)
         )
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -62,10 +67,14 @@ class TenantsService {
   }
 
   async getById(id: string): Promise<TenantWithProperty | null> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('tenants')
       .select('*')
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) throw error;
@@ -73,10 +82,14 @@ class TenantsService {
   }
 
   async getByPropertyId(propertyId: string): Promise<Tenant[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('tenants')
       .select('*')
       .eq('property_id', propertyId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -84,10 +97,14 @@ class TenantsService {
   }
 
   async getUnassigned(): Promise<Tenant[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('tenants')
       .select('*')
       .is('property_id', null)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -95,13 +112,15 @@ class TenantsService {
   }
 
   async create(tenant: TenantInsert): Promise<Tenant> {
-    // Get authenticated user ID with session fallback
+    // Get authenticated user ID and org ID
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id into tenant data
+    // Inject user_id and org_id into tenant data
     return insertRow('tenants', {
       ...tenant,
       user_id: userId,
+      org_id: orgId,
     });
   }
 
@@ -110,22 +129,21 @@ class TenantsService {
   }
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('tenants')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
+    await softDelete('tenants', id);
   }
 
   // DEPRECATED: assignToProperty removed - tenants.property_id column no longer exists
   // Use contracts table to link tenants to properties
 
   async getStats() {
+    const orgId = await getActiveOrgId();
+
     // Get all tenants
     const { data: tenants, error: tenantsError } = await supabase
       .from('tenants')
-      .select('id');
+      .select('id')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (tenantsError) throw tenantsError;
 
@@ -133,6 +151,8 @@ class TenantsService {
     const { data: contracts, error: contractsError } = await supabase
       .from('contracts')
       .select('tenant_id')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('status', 'Active');
 
     if (contractsError) throw contractsError;
@@ -151,9 +171,13 @@ class TenantsService {
   }
 
   async getTenantsWithMissingInfo() {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('tenants')
-      .select('id, phone, email');
+      .select('id, phone, email')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) throw error;
 

@@ -7,6 +7,7 @@ import { supabase } from '@/config/supabase';
 import { encrypt, hashTC } from './encryption.service';
 import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
+import { getActiveOrgId } from '@/lib/orgHelpers';
 import type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
 
 // ============================================================================
@@ -192,12 +193,14 @@ export async function updateContractWithEntities(
 
       if (detailsError) {
         // If no existing details, insert new one
+        const orgId = await getActiveOrgId();
         const { error: insertError } = await supabase
           .from('contract_details' as any)
           .insert({
             ...detailsData,
             contract_id: contractId,
             user_id: userId,
+            org_id: orgId,
           });
 
         if (insertError) {

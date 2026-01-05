@@ -87,6 +87,21 @@ class UserPreferencesService {
   async updateMeetingReminder(minutes: number): Promise<void> {
     await this.updatePreferences({ meeting_reminder_minutes: minutes });
   }
+
+  /**
+   * Update onboarding banner dismissal timestamp
+   */
+  async updateOnboardingBannerDismissal(dismissedAt: number): Promise<void> {
+    await this.updatePreferences({ onboarding_banner_dismissed_at: dismissedAt });
+  }
+
+  /**
+   * Get onboarding banner dismissal timestamp
+   */
+  async getOnboardingBannerDismissal(): Promise<number | null> {
+    const prefs = await this.getPreferences();
+    return prefs.onboarding_banner_dismissed_at ?? null;
+  }
 }
 
 export const userPreferencesService = new UserPreferencesService();

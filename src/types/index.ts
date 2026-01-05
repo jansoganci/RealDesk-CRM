@@ -218,3 +218,6 @@ export * from './contract.types';
 
 // Cookie Consent types
 export * from './cookieConsent';
+
+// Organization types
+export * from './org';

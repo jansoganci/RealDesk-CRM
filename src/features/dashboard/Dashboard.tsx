@@ -15,6 +15,8 @@ import { WelcomeEmptyState } from './components/WelcomeEmptyState';
 import { COLORS } from '@/config/colors';
 import { useToast } from '@/components/ui/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
+import { CompletionBanner } from '@/components/onboarding/CompletionBanner';
+import { useOnboardingBanner } from '@/hooks/useOnboardingBanner';
 
 export const Dashboard = () => {
   // Data fetching hook
@@ -38,6 +40,7 @@ export const Dashboard = () => {
   const { toast } = useToast();
   const { language } = useAuth();
   const [searchParams, setSearchParams] = useSearchParams();
+  const { shouldShowBanner, dismissBanner, resumeOnboarding, isLoading: bannerLoading } = useOnboardingBanner();
 
   // Handle checkout success
   useEffect(() => {
@@ -66,6 +69,12 @@ export const Dashboard = () => {
   return (
     <MainLayout title="Dashboard">
       <PageContainer>
+        {shouldShowBanner && !bannerLoading && (
+          <CompletionBanner
+            onDismiss={dismissBanner}
+            onResume={resumeOnboarding}
+          />
+        )}
         <ExchangeRatesCard
           exchangeRates={exchangeRates}
           lastUpdated={lastUpdated}

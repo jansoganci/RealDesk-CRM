@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
+import { OrgProvider } from './contexts/OrgContext';
 import { BillingProvider } from './contexts/BillingContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
@@ -34,6 +35,7 @@ import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
+import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import { GTMPageViewTracker } from './components/GTMPageViewTracker';
@@ -65,6 +67,14 @@ function AppContent() {
               <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
               <Route path={ROUTES.ABOUT} element={<AboutPage />} />
               <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+              <Route
+                path={ROUTES.ONBOARDING}
+                element={
+                  <ProtectedRoute>
+                    <Onboarding />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path={ROUTES.BILLING_SUBSCRIBE}
                 element={
@@ -231,13 +241,15 @@ function App() {
     <HelmetProvider>
       <ErrorBoundary>
         <AuthProvider>
-          <BillingProvider>
-            <NotificationProvider>
-              <BrowserRouter>
-                <AppContent />
-              </BrowserRouter>
-            </NotificationProvider>
-          </BillingProvider>
+          <OrgProvider>
+            <BillingProvider>
+              <NotificationProvider>
+                <BrowserRouter>
+                  <AppContent />
+                </BrowserRouter>
+              </NotificationProvider>
+            </BillingProvider>
+          </OrgProvider>
         </AuthProvider>
       </ErrorBoundary>
     </HelmetProvider>

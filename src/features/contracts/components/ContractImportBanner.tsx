@@ -9,10 +9,11 @@ import { FileInput } from 'lucide-react';
 
 interface ContractImportBannerProps {
   onImportClick: () => void;
+  disabled?: boolean;
 }
 
-export function ContractImportBanner({ onImportClick }: ContractImportBannerProps) {
-  const { t } = useTranslation('contracts');
+export function ContractImportBanner({ onImportClick, disabled }: ContractImportBannerProps) {
+  const { t } = useTranslation(['contracts', 'common']);
 
   return (
     <div className="bg-gradient-to-r from-blue-50 to-amber-50 border-2 border-blue-200 rounded-lg p-4">
@@ -28,6 +29,8 @@ export function ContractImportBanner({ onImportClick }: ContractImportBannerProp
         </div>
         <Button
           onClick={onImportClick}
+          disabled={disabled}
+          title={disabled ? t('common:readOnlyMode') : undefined}
           className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 whitespace-nowrap"
         >
           <FileInput className="h-4 w-4 mr-2" />

@@ -16,6 +16,27 @@ import { inquiriesService } from '../../lib/serviceProxy';
 import { Phone, MapPin, DollarSign, Check } from 'lucide-react';
 import { toast } from 'sonner';
 
+// Helper function to format budget with currency symbol
+const formatBudget = (min: number | null, max: number | null, currencyType: string = 'TRY'): string => {
+  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'TRY';
+  
+  const formatter = new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: normalizedCurrency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  if (min && max) {
+    return `${formatter.format(min)} - ${formatter.format(max)}`;
+  } else if (min) {
+    return formatter.format(min);
+  } else if (max) {
+    return formatter.format(max);
+  }
+  return '';
+};
+
 interface InquiryMatchesDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -119,30 +140,23 @@ export const InquiryMatchesDialog = ({
                 </div>
               )}
               {/* Budget display based on inquiry type */}
-              {inquiry.inquiry_type === 'rental' ? (
-                (inquiry.min_rent_budget || inquiry.max_rent_budget) && (
-                  <div className="flex items-center gap-1">
-                    <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
+              {(() => {
+                const isRental = inquiry.inquiry_type === 'rental';
+                const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
+                const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
+                // Get currency_type from inquiry, default to 'TRY' if not present
+                const currencyType = (inquiry as any).currency_type || 'TRY';
+
+                if (minBudget || maxBudget) {
+                  return (
                     <span className={COLORS.gray.text700}>
-                      {inquiry.min_rent_budget && `${inquiry.min_rent_budget.toLocaleString()}`}
-                      {inquiry.min_rent_budget && inquiry.max_rent_budget && ' - '}
-                      {inquiry.max_rent_budget && `${inquiry.max_rent_budget.toLocaleString()}`}
-                      {' '}{t('matches.perMonth')}
+                      {formatBudget(minBudget, maxBudget, currencyType)}
+                      {isRental && ` ${t('matches.perMonth')}`}
                     </span>
-                  </div>
-                )
-              ) : (
-                (inquiry.min_sale_budget || inquiry.max_sale_budget) && (
-                  <div className="flex items-center gap-1">
-                    <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-                    <span className={COLORS.gray.text700}>
-                      {inquiry.min_sale_budget && `${inquiry.min_sale_budget.toLocaleString()}`}
-                      {inquiry.min_sale_budget && inquiry.max_sale_budget && ' - '}
-                      {inquiry.max_sale_budget && `${inquiry.max_sale_budget.toLocaleString()}`}
-                    </span>
-                  </div>
-                )
-              )}
+                  );
+                }
+                return null;
+              })()}
             </div>
           </div>
 

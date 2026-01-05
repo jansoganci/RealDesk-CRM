@@ -166,6 +166,11 @@ export const FinanceDashboard = () => {
                 ratios={financeData.ratios}
                 yearlySummary={financeData.yearlySummary}
                 monthlyCommissions={financeData.monthlyCommissions}
+                commissionByPropertyType={financeData.commissionByPropertyType}
+                averageDaysToClose={financeData.averageDaysToClose}
+                commissionByClientType={financeData.commissionByClientType}
+                marketingROI={financeData.marketingROI}
+                conversionFunnel={financeData.conversionFunnel}
                 loading={financeData.analyticsLoading}
                 onBillPaid={async () => {
                   await financeData.loadData();

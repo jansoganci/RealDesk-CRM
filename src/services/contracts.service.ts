@@ -1,6 +1,7 @@
 import { supabase } from '../config/supabase';
 import type { Contract, ContractInsert, ContractUpdate, ContractWithDetails } from '../types';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId } from '../lib/orgHelpers';
 import type {
   RpcCreateContractAndUpdatePropertyParams,
   RpcCreateContractAndUpdatePropertyResult,
@@ -15,6 +16,8 @@ import { getToday, addDaysToDate, formatDateForDb, isDateInRange } from '../lib/
 
 class ContractsService {
   async getAll(): Promise<ContractWithDetails[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
       .select(`
@@ -31,6 +34,8 @@ class ContractsService {
         tenant:tenants(id, name, email, phone),
         property:properties(id, address, city, district, il, ilce)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -38,6 +43,8 @@ class ContractsService {
   }
 
   async getById(id: string): Promise<ContractWithDetails | null> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
       .select(`
@@ -55,6 +62,8 @@ class ContractsService {
         property:properties(id, address, city, district, il, ilce)
       `)
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) throw error;
@@ -62,10 +71,14 @@ class ContractsService {
   }
 
   async getByTenantId(tenantId: string): Promise<Contract[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
       .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('tenant_id', tenantId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -73,10 +86,14 @@ class ContractsService {
   }
 
   async getByPropertyId(propertyId: string): Promise<Contract[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
       .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('property_id', propertyId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -84,6 +101,8 @@ class ContractsService {
   }
 
   async getActiveContracts(): Promise<ContractWithDetails[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
       .select(`
@@ -99,6 +118,8 @@ class ContractsService {
         tenant:tenants(id, name, email, phone),
         property:properties(id, address, city, district, il, ilce)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('status', 'Active')
       .order('end_date', { ascending: true });
 
@@ -107,6 +128,7 @@ class ContractsService {
   }
 
   async getExpiringContracts(days: number = 30): Promise<ContractWithDetails[]> {
+    const orgId = await getActiveOrgId();
     const today = getToday();
     const futureDate = addDaysToDate(today, days);
 
@@ -125,6 +147,8 @@ class ContractsService {
         tenant:tenants(id, name, email, phone),
         property:properties(id, address, city, district, il, ilce)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('status', 'Active')
       .gte('end_date', formatDateForDb(today))
       .lte('end_date', formatDateForDb(futureDate))
@@ -135,13 +159,15 @@ class ContractsService {
   }
 
   async create(contract: ContractInsert): Promise<Contract> {
-    // Get authenticated user ID with session fallback
+    // Get authenticated user ID and org ID
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id and auto-enable 30-day contract expiry reminders
+    // Inject user_id, org_id and auto-enable 30-day contract expiry reminders
     return insertRow('contracts', {
       ...contract,
       user_id: userId,
+      org_id: orgId,
       rent_increase_reminder_enabled: contract.rent_increase_reminder_enabled ?? true,
       rent_increase_reminder_days: contract.rent_increase_reminder_days ?? 30,
     });
@@ -255,9 +281,13 @@ class ContractsService {
   }
 
   async getStats() {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contracts')
-      .select('status, end_date');
+      .select('status, end_date')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) throw error;
 

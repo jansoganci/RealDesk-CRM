@@ -7,10 +7,12 @@ import {
   Target,
   PieChart,
   AlertCircle,
+  Building2,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import { NormalizedPerformanceSummary, CalculatedMetric } from '../../../services/finance/reportCalculator';
+import { YearOverYearIndicator } from './YearOverYearIndicator';
 
 interface PerformanceSummaryProps {
   summary: NormalizedPerformanceSummary | null;
@@ -94,10 +96,42 @@ export const PerformanceSummaryComponent = ({
             <p className="text-xs text-gray-500 mt-1">
               {t('finance:performance.totalCommission')} ({summary.year})
             </p>
+            {summary.previousYear && (
+              <YearOverYearIndicator
+                current={summary.totalCommission.value}
+                previous={summary.previousYear.totalCommission.value}
+                className="mt-1"
+              />
+            )}
           </div>
 
+          {/* Transaction Volume */}
+          {summary.transactionVolume && summary.transactionVolume.value > 0 && (
+            <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
+              <div className="flex items-center gap-2 mb-1">
+                <Building2 className="h-4 w-4 text-blue-600" />
+                <span className="text-xs font-medium text-blue-700">
+                  {t('finance:performance.transactionVolume')}
+                </span>
+              </div>
+              <span className="text-xl font-semibold text-blue-900">
+                {formatMetric(summary.transactionVolume)}
+              </span>
+              <p className="text-xs text-blue-600 mt-1">
+                {t('finance:performance.transactionVolumeDesc', { year: summary.year })}
+              </p>
+              {summary.previousYear && summary.previousYear.transactionVolume && summary.previousYear.transactionVolume.value >= 0 && (
+                <YearOverYearIndicator
+                  current={summary.transactionVolume.value}
+                  previous={summary.previousYear.transactionVolume.value}
+                  className="mt-1"
+                />
+              )}
+            </div>
+          )}
+
           {/* Stats Grid */}
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* Deals Count */}
             <div className="bg-slate-50 rounded-lg p-3">
               <div className="flex items-center gap-2 mb-1">
@@ -109,6 +143,13 @@ export const PerformanceSummaryComponent = ({
               <span className="text-xl font-semibold text-slate-900">
                 {summary.dealsCount}
               </span>
+              {summary.previousYear && (
+                <YearOverYearIndicator
+                  current={summary.dealsCount}
+                  previous={summary.previousYear.dealsCount}
+                  className="mt-1"
+                />
+              )}
             </div>
 
             {/* Average Per Deal */}
@@ -122,6 +163,13 @@ export const PerformanceSummaryComponent = ({
               <span className="text-xl font-semibold text-slate-900">
                 {formatMetric(summary.averagePerDeal)}
               </span>
+              {summary.previousYear && (
+                <YearOverYearIndicator
+                  current={summary.averagePerDeal.value}
+                  previous={summary.previousYear.averagePerDeal.value}
+                  className="mt-1"
+                />
+              )}
             </div>
           </div>
 

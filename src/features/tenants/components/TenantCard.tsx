@@ -3,6 +3,7 @@ import { TableActionButtons } from '@/components/common/TableActionButtons';
 import { Phone, Mail, Building2, UserX, CalendarPlus } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { TenantAssignmentBadge } from '../utils/badgeUtils';
+import { useOrg } from '@/contexts/OrgContext';
 import type { TenantWithProperty } from '@/types';
 
 interface TenantCardProps {
@@ -18,7 +19,8 @@ export function TenantCard({
   onDelete,
   onScheduleMeeting,
 }: TenantCardProps) {
-  const { t } = useTranslation('tenants');
+  const { t } = useTranslation(['tenants', 'common']);
+  const { isMember } = useOrg();
 
   return (
     <div className="space-y-3">
@@ -83,11 +85,16 @@ export function TenantCard({
           onEdit={() => onEdit(tenant)}
           onDelete={() => onDelete(tenant)}
           showView={false}
+          disabledEdit={isMember}
+          disabledDelete={isMember}
+          disabledEditTooltip={isMember ? t('common:readOnlyMode') : undefined}
+          disabledDeleteTooltip={isMember ? t('common:readOnlyMode') : undefined}
           customActions={[
             {
               icon: <CalendarPlus className="h-4 w-4" />,
-              tooltip: t('scheduleMeeting'),
+              tooltip: isMember ? t('common:readOnlyMode') : t('scheduleMeeting'),
               onClick: () => onScheduleMeeting(tenant),
+              disabled: isMember,
             },
           ]}
         />

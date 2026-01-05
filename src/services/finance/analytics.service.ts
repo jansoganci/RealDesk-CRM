@@ -9,6 +9,8 @@ import { getCategories } from './categories.service';
 import { getUpcomingRecurringExpenses } from './recurring.service';
 import { calculateCategoryBreakdown, NormalizedCategoryBreakdown, calculateNormalizedSum, CalculatedMetric } from './reportCalculator';
 import { getRatesForBatchFromTry } from './exchangeRates.service';
+import { getActiveOrgId } from '../../lib/orgHelpers';
+import { getRateForDate } from './exchangeRates.service';
 import type {
   MonthlySummary,
   CategoryBreakdown,
@@ -357,6 +359,7 @@ export interface NormalizedYearlySummary {
   net_income: CalculatedMetric;
   profit_margin: number;
   months: NormalizedMonthlySummary[];
+  previousYear?: NormalizedYearlySummary; // For year-over-year comparison
 }
 
 /**
@@ -404,6 +407,634 @@ export const getYearlySummaryNormalized = async (
     profit_margin,
     months,
   };
+};
+
+/**
+ * Get total transaction volume (sales volume) for a year
+ * Sum of all sold property prices
+ */
+export const getTransactionVolumeNormalized = async (
+  year: number,
+  displayCurrency: string
+): Promise<CalculatedMetric> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    const { data, error } = await supabase
+      .from('properties')
+      .select('sold_price, currency, sold_at')
+      .eq('org_id', orgId)
+      .not('sold_at', 'is', null)
+      .not('sold_price', 'is', null)
+      .gte('sold_at', startDate)
+      .lte('sold_at', endDate)
+      .is('deleted_at', null);
+
+    if (error) {
+      console.error('Error fetching transaction volume:', error);
+      return { value: 0, isComplete: true, missingDates: [] };
+    }
+
+    if (!data || data.length === 0) {
+      return { value: 0, isComplete: true, missingDates: [] };
+    }
+
+    // Group by currency and convert
+    const currencyGroups: Record<string, number> = {};
+    const missingDates: string[] = [];
+
+    for (const property of data) {
+      const currency = (property.currency || 'TRY').toUpperCase().trim();
+      const amount = Number(property.sold_price) || 0;
+      
+      if (amount > 0) {
+        if (!currencyGroups[currency]) {
+          currencyGroups[currency] = 0;
+        }
+        currencyGroups[currency] += amount;
+      }
+    }
+
+    // Convert all to display currency
+    const normalizedDisplayCurrency = displayCurrency.toUpperCase().trim();
+    const conversionPromises = Object.entries(currencyGroups).map(
+      async ([currency, amount]) => {
+        if (currency === normalizedDisplayCurrency) {
+          return amount;
+        }
+        // Use exchange rate service with mid-year date as average
+        try {
+          const rateInfo = await getRateForDate(
+            currency,
+            normalizedDisplayCurrency,
+            `${year}-06-15`
+          );
+          return amount * rateInfo.rate;
+        } catch (error) {
+          console.warn(`Failed to convert ${currency} to ${normalizedDisplayCurrency}:`, error);
+          // If conversion fails, still include the amount (will show as incomplete)
+          missingDates.push(`${year}-06-15`);
+          return amount; // Return original amount, will be marked as incomplete
+        }
+      }
+    );
+
+    const convertedAmounts = await Promise.all(conversionPromises);
+    const totalValue = convertedAmounts.reduce((sum, val) => sum + val, 0);
+
+    return {
+      value: totalValue,
+      isComplete: missingDates.length === 0,
+      missingDates: Array.from(new Set(missingDates))
+    };
+  } catch (error) {
+    console.error('Error in getTransactionVolumeNormalized:', error);
+    return { value: 0, isComplete: true, missingDates: [] };
+  }
+};
+
+/**
+ * Get commission breakdown by property type (rental vs sale)
+ */
+export interface CommissionByPropertyType {
+  rental: CalculatedMetric;
+  sale: CalculatedMetric;
+  total: CalculatedMetric;
+}
+
+export const getCommissionByPropertyType = async (
+  year: number,
+  displayCurrency: string
+): Promise<CommissionByPropertyType> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    // Import commissions service dynamically to avoid circular dependency
+    const { commissionsService } = await import('../../lib/serviceProxy');
+    const commissions = await commissionsService.getByDateRange(startDate, endDate);
+
+    if (!commissions || commissions.length === 0) {
+      return {
+        rental: { value: 0, isComplete: true, missingDates: [] },
+        sale: { value: 0, isComplete: true, missingDates: [] },
+        total: { value: 0, isComplete: true, missingDates: [] }
+      };
+    }
+
+    // Separate by type
+    const rentalCommissions = commissions.filter(c => c.type === 'rental');
+    const saleCommissions = commissions.filter(c => c.type === 'sale');
+
+    // Calculate normalized sums
+    const rentalMetric = await calculateNormalizedSum(rentalCommissions, displayCurrency);
+    const saleMetric = await calculateNormalizedSum(saleCommissions, displayCurrency);
+
+    const totalValue = rentalMetric.value + saleMetric.value;
+    const isComplete = rentalMetric.isComplete && saleMetric.isComplete;
+    const missingDates = [...rentalMetric.missingDates, ...saleMetric.missingDates];
+
+    return {
+      rental: rentalMetric,
+      sale: saleMetric,
+      total: {
+        value: totalValue,
+        isComplete,
+        missingDates: Array.from(new Set(missingDates))
+      }
+    };
+  } catch (error) {
+    console.error('Error in getCommissionByPropertyType:', error);
+    return {
+      rental: { value: 0, isComplete: true, missingDates: [] },
+      sale: { value: 0, isComplete: true, missingDates: [] },
+      total: { value: 0, isComplete: true, missingDates: [] }
+    };
+  }
+};
+
+/**
+ * Get average days to close (from listing to deal closure)
+ */
+export interface AverageDaysToClose {
+  averageDays: number;
+  medianDays: number;
+  salesAverage: number;
+  rentalsAverage: number;
+  totalDeals: number;
+}
+
+export const getAverageDaysToClose = async (
+  year: number
+): Promise<AverageDaysToClose> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    // Get sales: properties with sold_at in year
+    const { data: salesData, error: salesError } = await supabase
+      .from('properties')
+      .select('created_at, sold_at')
+      .eq('org_id', orgId)
+      .not('sold_at', 'is', null)
+      .gte('sold_at', startDate)
+      .lte('sold_at', endDate)
+      .is('deleted_at', null);
+
+    if (salesError) {
+      console.error('Error fetching sales data:', salesError);
+    }
+
+    // Get rentals: contracts with start_date in year
+    const { data: contractsData, error: contractsError } = await supabase
+      .from('contracts')
+      .select('start_date, property:properties(created_at)')
+      .eq('org_id', orgId)
+      .gte('start_date', startDate)
+      .lte('start_date', endDate)
+      .is('deleted_at', null);
+
+    if (contractsError) {
+      console.error('Error fetching contracts data:', contractsError);
+    }
+
+    const daysToClose: number[] = [];
+    const salesDays: number[] = [];
+    const rentalsDays: number[] = [];
+
+    // Calculate days for sales
+    if (salesData) {
+      salesData.forEach((property: any) => {
+        if (property.created_at && property.sold_at) {
+          const created = new Date(property.created_at);
+          const sold = new Date(property.sold_at);
+          const days = Math.floor((sold.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+          if (days >= 0) {
+            daysToClose.push(days);
+            salesDays.push(days);
+          }
+        }
+      });
+    }
+
+    // Calculate days for rentals
+    if (contractsData) {
+      contractsData.forEach((contract: any) => {
+        const property = contract.property;
+        if (property && property.created_at && contract.start_date) {
+          const created = new Date(property.created_at);
+          const start = new Date(contract.start_date);
+          const days = Math.floor((start.getTime() - created.getTime()) / (1000 * 60 * 60 * 24));
+          if (days >= 0) {
+            daysToClose.push(days);
+            rentalsDays.push(days);
+          }
+        }
+      });
+    }
+
+    // Calculate averages and median
+    const calculateAverage = (arr: number[]) => {
+      if (arr.length === 0) return 0;
+      return Math.round(arr.reduce((sum, val) => sum + val, 0) / arr.length);
+    };
+
+    const calculateMedian = (arr: number[]) => {
+      if (arr.length === 0) return 0;
+      const sorted = [...arr].sort((a, b) => a - b);
+      const mid = Math.floor(sorted.length / 2);
+      return sorted.length % 2 === 0
+        ? Math.round((sorted[mid - 1] + sorted[mid]) / 2)
+        : sorted[mid];
+    };
+
+    return {
+      averageDays: calculateAverage(daysToClose),
+      medianDays: calculateMedian(daysToClose),
+      salesAverage: calculateAverage(salesDays),
+      rentalsAverage: calculateAverage(rentalsDays),
+      totalDeals: daysToClose.length,
+    };
+  } catch (error) {
+    console.error('Error in getAverageDaysToClose:', error);
+    return {
+      averageDays: 0,
+      medianDays: 0,
+      salesAverage: 0,
+      rentalsAverage: 0,
+      totalDeals: 0,
+    };
+  }
+};
+
+/**
+ * Get commission breakdown by client type (Owner, Tenant, Buyer)
+ */
+export interface CommissionByClientType {
+  owner: CalculatedMetric;
+  tenant: CalculatedMetric;
+  buyer: CalculatedMetric;
+  total: CalculatedMetric;
+}
+
+export const getCommissionByClientType = async (
+  year: number,
+  displayCurrency: string
+): Promise<CommissionByClientType> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    // Get commissions with property and contract data
+    const { data: commissionsData, error: commissionsError } = await supabase
+      .from('commissions')
+      .select(`
+        *,
+        property:properties(
+          id,
+          property_type,
+          buyer_name,
+          owner_id
+        ),
+        contract:contracts(
+          id,
+          tenant_id
+        )
+      `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
+      .gte('created_at', startDate)
+      .lte('created_at', endDate);
+
+    if (commissionsError) {
+      console.error('Error fetching commissions:', commissionsError);
+      return {
+        owner: { value: 0, isComplete: true, missingDates: [] },
+        tenant: { value: 0, isComplete: true, missingDates: [] },
+        buyer: { value: 0, isComplete: true, missingDates: [] },
+        total: { value: 0, isComplete: true, missingDates: [] }
+      };
+    }
+
+    if (!commissionsData || commissionsData.length === 0) {
+      return {
+        owner: { value: 0, isComplete: true, missingDates: [] },
+        tenant: { value: 0, isComplete: true, missingDates: [] },
+        buyer: { value: 0, isComplete: true, missingDates: [] },
+        total: { value: 0, isComplete: true, missingDates: [] }
+      };
+    }
+
+    // Categorize commissions by client type
+    const ownerCommissions: any[] = [];
+    const tenantCommissions: any[] = [];
+    const buyerCommissions: any[] = [];
+
+    commissionsData.forEach((commission: any) => {
+      const property = commission.property;
+      const contract = commission.contract;
+
+      if (commission.type === 'rental' && contract && contract.tenant_id) {
+        // Rental with tenant = Tenant commission
+        tenantCommissions.push(commission);
+      } else if (commission.type === 'sale' && property && property.buyer_name) {
+        // Sale with buyer = Buyer commission
+        buyerCommissions.push(commission);
+      } else {
+        // All others = Owner commission (default)
+        ownerCommissions.push(commission);
+      }
+    });
+
+    // Calculate normalized sums
+    const ownerMetric = await calculateNormalizedSum(ownerCommissions, displayCurrency);
+    const tenantMetric = await calculateNormalizedSum(tenantCommissions, displayCurrency);
+    const buyerMetric = await calculateNormalizedSum(buyerCommissions, displayCurrency);
+
+    const totalValue = ownerMetric.value + tenantMetric.value + buyerMetric.value;
+    const isComplete = ownerMetric.isComplete && tenantMetric.isComplete && buyerMetric.isComplete;
+    const missingDates = [...ownerMetric.missingDates, ...tenantMetric.missingDates, ...buyerMetric.missingDates];
+
+    return {
+      owner: ownerMetric,
+      tenant: tenantMetric,
+      buyer: buyerMetric,
+      total: {
+        value: totalValue,
+        isComplete,
+        missingDates: Array.from(new Set(missingDates))
+      }
+    };
+  } catch (error) {
+    console.error('Error in getCommissionByClientType:', error);
+    return {
+      owner: { value: 0, isComplete: true, missingDates: [] },
+      tenant: { value: 0, isComplete: true, missingDates: [] },
+      buyer: { value: 0, isComplete: true, missingDates: [] },
+      total: { value: 0, isComplete: true, missingDates: [] }
+    };
+  }
+};
+
+/**
+ * Get Marketing ROI (Return on Investment)
+ */
+export interface MarketingROI {
+  totalMarketingSpend: CalculatedMetric;
+  commissionRevenue: CalculatedMetric;
+  roi: number;
+  byCategory: Array<{
+    category: string;
+    spend: CalculatedMetric;
+    roi: number;
+  }>;
+}
+
+export const getMarketingROI = async (
+  year: number,
+  displayCurrency: string
+): Promise<MarketingROI> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    // Marketing expense categories
+    const marketingCategories = [
+      'Digital Marketing',
+      'Print Advertising',
+      'Social Media Ads',
+      'Website Maintenance',
+      'Photography & Videography',
+      'Signage & Branding'
+    ];
+
+    // Get marketing expenses
+    const { data: transactionsData, error: transactionsError } = await supabase
+      .from('financial_transactions')
+      .select('*')
+      .eq('org_id', orgId)
+      .eq('type', 'expense')
+      .in('category', marketingCategories)
+      .gte('transaction_date', startDate)
+      .lte('transaction_date', endDate)
+      .is('deleted_at', null);
+
+    if (transactionsError) {
+      console.error('Error fetching marketing expenses:', transactionsError);
+    }
+
+    // Get commission revenue for the same period
+    const { commissionsService } = await import('../../lib/serviceProxy');
+    const commissions = await commissionsService.getByDateRange(startDate, endDate);
+
+    // Calculate total marketing spend
+    const marketingTransactions = (transactionsData || []).map((t: any) => ({
+      amount: t.amount,
+      currency: t.currency,
+      created_at: t.transaction_date || t.created_at,
+    }));
+
+    const totalMarketingSpend = await calculateNormalizedSum(marketingTransactions, displayCurrency);
+
+    // Calculate commission revenue
+    const commissionRevenue = await calculateNormalizedSum(commissions, displayCurrency);
+
+    // Calculate ROI: ((Revenue - Expenses) / Expenses) × 100
+    const roi = totalMarketingSpend.value > 0
+      ? ((commissionRevenue.value - totalMarketingSpend.value) / totalMarketingSpend.value) * 100
+      : 0;
+
+    // Calculate by category
+    const byCategory = await Promise.all(
+      marketingCategories.map(async (category) => {
+        const categoryTransactions = (transactionsData || []).filter(
+          (t: any) => t.category === category
+        ).map((t: any) => ({
+          amount: t.amount,
+          currency: t.currency,
+          created_at: t.transaction_date || t.created_at,
+        }));
+
+        const categorySpend = await calculateNormalizedSum(categoryTransactions, displayCurrency);
+        const categoryROI = categorySpend.value > 0
+          ? ((commissionRevenue.value - categorySpend.value) / categorySpend.value) * 100
+          : 0;
+
+        return {
+          category,
+          spend: categorySpend,
+          roi: categoryROI,
+        };
+      })
+    );
+
+    return {
+      totalMarketingSpend,
+      commissionRevenue,
+      roi,
+      byCategory,
+    };
+  } catch (error) {
+    console.error('Error in getMarketingROI:', error);
+    return {
+      totalMarketingSpend: { value: 0, isComplete: true, missingDates: [] },
+      commissionRevenue: { value: 0, isComplete: true, missingDates: [] },
+      roi: 0,
+      byCategory: [],
+    };
+  }
+};
+
+/**
+ * Get conversion funnel metrics (Inquiry → Appointment → Contract)
+ */
+export interface ConversionFunnelMetrics {
+  inquiries: number;
+  appointments: number;
+  contracts: number;
+  rates: {
+    leadToAppointment: number;
+    appointmentToContract: number;
+    overall: number;
+  };
+}
+
+export const getConversionFunnelMetrics = async (
+  year: number
+): Promise<ConversionFunnelMetrics> => {
+  try {
+    const orgId = await getActiveOrgId();
+    const startDate = `${year}-01-01`;
+    const endDate = `${year}-12-31`;
+
+    // Get inquiries created in year
+    const { data: inquiriesData, error: inquiriesError } = await supabase
+      .from('property_inquiries')
+      .select('id, status')
+      .eq('org_id', orgId)
+      .gte('created_at', startDate)
+      .lte('created_at', endDate)
+      .is('deleted_at', null);
+
+    if (inquiriesError) {
+      console.error('Error fetching inquiries:', inquiriesError);
+    }
+
+    // Get inquiry matches to link inquiries to properties
+    const inquiryIds = (inquiriesData || []).map((i: any) => i.id);
+    const { data: inquiryMatchesData, error: matchesError } = await supabase
+      .from('inquiry_matches')
+      .select('inquiry_id, property_id')
+      .in('inquiry_id', inquiryIds.length > 0 ? inquiryIds : ['00000000-0000-0000-0000-000000000000']);
+
+    if (matchesError) {
+      console.error('Error fetching inquiry matches:', matchesError);
+    }
+
+    // Get meetings (appointments) in year
+    const { data: meetingsData, error: meetingsError } = await supabase
+      .from('meetings')
+      .select('id, property_id, tenant_id, owner_id')
+      .eq('org_id', orgId)
+      .gte('start_time', startDate)
+      .lte('start_time', endDate)
+      .is('deleted_at', null);
+
+    if (meetingsError) {
+      console.error('Error fetching meetings:', meetingsError);
+    }
+
+    // Get contracts created in year
+    const { data: contractsData, error: contractsError } = await supabase
+      .from('contracts')
+      .select('id, property_id')
+      .eq('org_id', orgId)
+      .gte('start_date', startDate)
+      .lte('start_date', endDate)
+      .is('deleted_at', null);
+
+    if (contractsError) {
+      console.error('Error fetching contracts:', contractsError);
+    }
+
+    const inquiries = (inquiriesData || []).length;
+    const meetings = (meetingsData || []).length;
+    const contracts = (contractsData || []).length;
+
+    // Build maps for matching
+    // Map inquiry_id -> property_ids (via inquiry_matches)
+    const inquiryToProperties = new Map<string, Set<string>>();
+    (inquiryMatchesData || []).forEach((match: any) => {
+      if (!inquiryToProperties.has(match.inquiry_id)) {
+        inquiryToProperties.set(match.inquiry_id, new Set());
+      }
+      if (match.property_id) {
+        inquiryToProperties.get(match.inquiry_id)!.add(match.property_id);
+      }
+    });
+
+    // Get property IDs from meetings
+    const meetingPropertyIds = new Set((meetingsData || []).map((m: any) => m.property_id).filter(Boolean));
+    
+    // Get property IDs from contracts
+    const contractPropertyIds = new Set((contractsData || []).map((c: any) => c.property_id).filter(Boolean));
+
+    // Count inquiries that have appointments
+    // An inquiry has an appointment if:
+    // 1. It has a matched property that has a meeting, OR
+    // 2. Its status is 'contacted' or 'closed' (indicates contact was made)
+    let inquiriesWithAppointments = 0;
+    (inquiriesData || []).forEach((inquiry: any) => {
+      const inquiryProperties = inquiryToProperties.get(inquiry.id) || new Set();
+      const hasMatchingMeeting = Array.from(inquiryProperties).some(propId => meetingPropertyIds.has(propId));
+      const isContacted = inquiry.status === 'contacted' || inquiry.status === 'closed';
+      
+      if (hasMatchingMeeting || isContacted) {
+        inquiriesWithAppointments++;
+      }
+    });
+
+    // Count appointments that have contracts
+    // An appointment (meeting) has a contract if its property_id is in contracts
+    const appointmentsWithContracts = Array.from(meetingPropertyIds).filter(id => contractPropertyIds.has(id)).length;
+    
+    // Use the higher count for appointments (either from meetings or from contacted inquiries)
+    const appointments = Math.max(inquiriesWithAppointments, meetings);
+
+    // Calculate conversion rates
+    const leadToAppointment = inquiries > 0 ? (appointments / inquiries) * 100 : 0;
+    const appointmentToContract = appointments > 0 ? (appointmentsWithContracts / appointments) * 100 : 0;
+    const overall = inquiries > 0 ? (contracts / inquiries) * 100 : 0;
+
+    return {
+      inquiries,
+      appointments,
+      contracts,
+      rates: {
+        leadToAppointment,
+        appointmentToContract,
+        overall,
+      },
+    };
+  } catch (error) {
+    console.error('Error in getConversionFunnelMetrics:', error);
+    return {
+      inquiries: 0,
+      appointments: 0,
+      contracts: 0,
+      rates: {
+        leadToAppointment: 0,
+        appointmentToContract: 0,
+        overall: 0,
+      },
+    };
+  }
 };
 
 /**

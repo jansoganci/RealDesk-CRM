@@ -5,6 +5,7 @@ import { Line } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { NormalizedYearlySummary } from '../../../services/finance/analytics.service';
 import { formatCurrency } from '../../../lib/currency';
+import { YearOverYearIndicator } from './YearOverYearIndicator';
 
 interface FinancialTrendsProps {
   yearlySummary: NormalizedYearlySummary | null;
@@ -140,7 +141,7 @@ export const FinancialTrends = ({
           </div>
           <div className="text-right">
             <p className="text-xs text-gray-500">
-              {t('finance:analytics.profitMargin')}
+              {t('finance:analytics.operatingEfficiency')}
             </p>
             <p
               className={`text-2xl font-bold ${
@@ -151,6 +152,13 @@ export const FinancialTrends = ({
             >
               {yearlySummary.profit_margin.toFixed(1)}%
             </p>
+            {yearlySummary.previousYear && (
+              <YearOverYearIndicator
+                current={yearlySummary.profit_margin}
+                previous={yearlySummary.previousYear.profit_margin}
+                className="mt-1"
+              />
+            )}
           </div>
         </div>
       </CardHeader>

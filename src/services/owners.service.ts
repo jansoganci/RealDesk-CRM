@@ -2,6 +2,7 @@ import { supabase } from '../config/supabase';
 import type { PropertyOwner, PropertyOwnerInsert, PropertyOwnerUpdate } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 
 interface OwnerWithPropertyCount extends PropertyOwner {
   property_count: number;
@@ -9,9 +10,13 @@ interface OwnerWithPropertyCount extends PropertyOwner {
 
 export const ownersService = {
   async getAll() {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_owners')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -19,10 +24,14 @@ export const ownersService = {
   },
 
   async getById(id: string) {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_owners')
       .select('*')
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) throw error;
@@ -30,13 +39,15 @@ export const ownersService = {
   },
 
   async create(owner: PropertyOwnerInsert) {
-    // Get authenticated user ID with session fallback
+    // Get authenticated user ID and org ID
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id into owner data
+    // Inject user_id and org_id into owner data
     return insertRow('property_owners', {
       ...owner,
       user_id: userId,
+      org_id: orgId,
     });
   },
 
@@ -45,15 +56,12 @@ export const ownersService = {
   },
 
   async delete(id: string) {
-    const { error } = await supabase
-      .from('property_owners')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
+    await softDelete('property_owners', id);
   },
 
   async getOwnersWithPropertyCount(): Promise<OwnerWithPropertyCount[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_owners')
       .select(`
@@ -65,6 +73,8 @@ export const ownersService = {
         created_at,
         properties:properties(count)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
@@ -80,9 +90,13 @@ export const ownersService = {
   },
 
   async getOwnersWithMissingInfo() {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_owners')
-      .select('id, phone, email');
+      .select('id, phone, email')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) throw error;
 
@@ -96,7 +110,7 @@ export const ownersService = {
     data?.forEach((o) => {
       const hasPhone = o.phone && o.phone.trim() !== '';
       const hasEmail = o.email && o.email.trim() !== '';
-      
+
       if (!hasPhone) missingInfo.noPhone++;
       if (!hasEmail) missingInfo.noEmail++;
       if (!hasPhone && !hasEmail) {

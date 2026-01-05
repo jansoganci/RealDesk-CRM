@@ -13,6 +13,7 @@ import { COLORS } from '@/config/colors';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOrg } from '@/contexts/OrgContext';
 import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { useTranslation } from 'react-i18next';
 import { isExpiringSoon } from './utils/contractUtils';
@@ -21,6 +22,7 @@ import { ROUTES } from '../../config/constants';
 
 export const Contracts = () => {
   const { t } = useTranslation(['contracts', 'common']);
+  const { isMember } = useOrg();
   const { currency } = useAuth();
   const navigate = useNavigate();
 
@@ -273,9 +275,10 @@ export const Contracts = () => {
       />
       <ContractImportBanner
         onImportClick={() => navigate(ROUTES.CONTRACT_IMPORT)}
+        disabled={isMember}
       />
     </div>
-  ), [t, navigate]);
+  ), [t, navigate, isMember]);
 
   return (
     <>
@@ -292,6 +295,8 @@ export const Contracts = () => {
         filterPlaceholder={t('filterPlaceholder')}
         onAdd={handleAddContract}
         addButtonLabel={t('actions.add')}
+        disabledAdd={isMember}
+        addDisabledTooltip={isMember ? t('common:readOnlyMode') : undefined}
         skeletonColumnCount={7}
         headerContent={headerContent}
         emptyState={emptyStateConfig}

@@ -10,12 +10,17 @@ import type {
 } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 
 class InquiriesService {
   async getAll(): Promise<PropertyInquiry[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_inquiries')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -27,9 +32,13 @@ class InquiriesService {
   }
 
   async getRentalInquiries(): Promise<PropertyInquiry[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_inquiries')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('inquiry_type', 'rental')
       .order('created_at', { ascending: false });
 
@@ -42,9 +51,13 @@ class InquiriesService {
   }
 
   async getSaleInquiries(): Promise<PropertyInquiry[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_inquiries')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('inquiry_type', 'sale')
       .order('created_at', { ascending: false });
 
@@ -57,10 +70,14 @@ class InquiriesService {
   }
 
   async getById(id: string): Promise<InquiryWithMatches | null> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('property_inquiries')
       .select('*')
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) {
@@ -79,14 +96,16 @@ class InquiriesService {
     } as InquiryWithMatches;
   }
 
-  async create(inquiry: Omit<PropertyInquiryInsert, 'user_id'>): Promise<PropertyInquiry> {
-    // Get authenticated user ID with session fallback
+  async create(inquiry: Omit<PropertyInquiryInsert, 'user_id' | 'org_id'>): Promise<PropertyInquiry> {
+    // Get authenticated user ID and org ID
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id into inquiry data
+    // Inject user_id and org_id into inquiry data
     return insertRow('property_inquiries', {
       ...inquiry,
       user_id: userId,
+      org_id: orgId,
     });
   }
 
@@ -95,12 +114,7 @@ class InquiriesService {
   }
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('property_inquiries')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
+    await softDelete('property_inquiries', id);
   }
 
   async checkMatchesForNewProperty(propertyId: string): Promise<void> {
@@ -254,8 +268,9 @@ class InquiriesService {
 
       if (existingMatch) return; // Match already exists
 
-      // Get user ID to associate with match
+      // Get user ID and org ID to associate with match
       const userId = await getAuthenticatedUserId();
+      const orgId = await getActiveOrgId();
 
       // Create match
       const matchData: InquiryMatchInsert = {
@@ -264,6 +279,7 @@ class InquiriesService {
         notification_sent: false,
         contacted: false,
         user_id: userId,
+        org_id: orgId,
       };
 
       await insertRow('inquiry_matches', matchData);
@@ -293,10 +309,14 @@ class InquiriesService {
   }
 
   async getStats() {
+    const orgId = await getActiveOrgId();
+
     // Select all columns to avoid query syntax issues, then filter what we need
     const { data, error } = await supabase
       .from('property_inquiries')
-      .select('*');
+      .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) throw error;
 
@@ -335,9 +355,13 @@ class InquiriesService {
   }
 
   async getActiveInquiries(type?: 'rental' | 'sale'): Promise<PropertyInquiry[]> {
+    const orgId = await getActiveOrgId();
+
     let query = supabase
       .from('property_inquiries')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('status', 'active');
 
     if (type) {
@@ -352,9 +376,13 @@ class InquiriesService {
   }
 
   async getUnreadMatchesCount(): Promise<number> {
+    const orgId = await getActiveOrgId();
+
     const { count, error } = await supabase
       .from('inquiry_matches')
       .select('*', { count: 'exact', head: true })
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('notification_sent', false);
 
     if (error) throw error;
@@ -363,6 +391,8 @@ class InquiriesService {
   }
 
   async getMatchesByInquiry(inquiryId: string): Promise<InquiryMatchWithProperty[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('inquiry_matches')
       .select(`
@@ -370,11 +400,14 @@ class InquiriesService {
         property:properties(id, address, city, district, status, property_type, rent_amount, sale_price, currency)
       `)
       .eq('inquiry_id', inquiryId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('matched_at', { ascending: false });
 
     if (error) throw error;
 
-    return (data || []) as InquiryMatchWithProperty[];
+    // Cast through unknown because query returns partial property fields
+    return (data || []) as unknown as InquiryMatchWithProperty[];
   }
 }
 

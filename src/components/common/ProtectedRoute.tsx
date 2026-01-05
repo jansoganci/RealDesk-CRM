@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../config/supabase';
 import { ROUTES } from '../../config/constants';
 import { useBilling } from '../../contexts/BillingContext';
+import { useOrg } from '../../contexts/OrgContext';
 
 interface ProtectedRouteProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isChecking, setIsChecking] = useState(true);
   const [hasUser, setHasUser] = useState(false);
   const { billingStatus, billingLoading } = useBilling();
+  const { currentOrg, loading: orgLoading } = useOrg();
   const hasActiveAccess = billingStatus?.hasActiveAccess ?? null;
   const isTrialActive = billingStatus?.isTrial ?? false;
 
@@ -59,8 +61,8 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     };
   }, [user, loading, isEmailConfirmed]);
 
-  // Show loading state while checking auth or billing
-  if (loading || isChecking || billingLoading) {
+  // Show loading state while checking auth, org, or billing
+  if (loading || isChecking || orgLoading || billingLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -79,6 +81,25 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // We allow access here because email confirmation page handles the confirmation flow
   // Note: If email confirmation is required, users won't have a session until confirmed,
   // so this check is mainly for edge cases
+
+  // Step 2: Check onboarding FIRST (before billing)
+  // Only check if org is loaded (not null)
+  if (currentOrg) {
+    // If already on onboarding page and onboarding is complete, redirect to dashboard
+    if (location.pathname === ROUTES.ONBOARDING && currentOrg.onboarding_completed) {
+      return <Navigate to={ROUTES.DASHBOARD} replace />;
+    }
+    
+    // If not on onboarding page and onboarding is incomplete, redirect to onboarding
+    if (location.pathname !== ROUTES.ONBOARDING && !currentOrg.onboarding_completed) {
+      return <Navigate to={ROUTES.ONBOARDING} replace />;
+    }
+    
+    // If on onboarding page and onboarding is incomplete, allow it (skip billing check)
+    if (location.pathname === ROUTES.ONBOARDING && !currentOrg.onboarding_completed) {
+      return <>{children}</>;
+    }
+  }
 
   // Check billing access after authentication is confirmed
   // Skip billing check if already on billing subscribe page

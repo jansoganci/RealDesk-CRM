@@ -8,6 +8,7 @@
  */
 
 import { supabase } from '../config/supabase';
+import { getActiveOrgId } from '../lib/orgHelpers';
 import type {
   ContractType,
   ContractInstanceV2,
@@ -55,10 +56,12 @@ class ContractBuilderService {
   async createInstance(request: CreateContractInstanceRequest): Promise<ContractInstanceV2> {
     const { data: userData } = await supabase.auth.getUser();
     if (!userData.user) throw new Error('Not authenticated');
+    const orgId = await getActiveOrgId();
 
     const { data, error } = await fromV2('contract_instances_v2')
       .insert({
         user_id: userData.user.id,
+        org_id: orgId,
         type: request.type,
         template_id: request.template_id || null,
         title: request.title,

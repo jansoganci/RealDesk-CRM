@@ -10,6 +10,7 @@
 
 import { supabase } from '@/config/supabase';
 import { getAuthenticatedUserId } from '@/lib/auth';
+import { getActiveOrgId } from '@/lib/orgHelpers';
 import {
   GENEL_SARTLAR,
   OZEL_SARTLAR,
@@ -97,6 +98,7 @@ export const clausesService = {
    */
   async seedTemplatesForUser(userId?: string): Promise<void> {
     const uid = userId || await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
     // Check if already seeded
     const alreadySeeded = await this.hasTemplates(uid);
@@ -107,12 +109,20 @@ export const clausesService = {
 
     console.log('[Clauses] Seeding default templates for user...');
 
-    const templates: Omit<ClauseTemplate, 'id' | 'created_at' | 'updated_at'>[] = [];
+    const templates: Array<{
+      user_id: string;
+      org_id: string;
+      clause_type: string;
+      clause_index: number;
+      content: string;
+      is_active: boolean;
+    }> = [];
 
     // Seed GENEL_SARTLAR (13 clauses, indices 0-12)
     GENEL_SARTLAR.forEach((content, index) => {
       templates.push({
         user_id: uid,
+        org_id: orgId,
         clause_type: 'GENEL_SARTLAR',
         clause_index: index,
         content,
@@ -132,6 +142,7 @@ export const clausesService = {
 
       templates.push({
         user_id: uid,
+        org_id: orgId,
         clause_type: 'OZEL_SARTLAR',
         clause_index: index,
         content: processedContent,
@@ -142,23 +153,35 @@ export const clausesService = {
     // Seed TAHLIYE_TAAHHUTNAMESI (1 clause, index 0)
     templates.push({
       user_id: uid,
+      org_id: orgId,
       clause_type: 'TAHLIYE_TAAHHUTNAMESI',
       clause_index: 0,
       content: TAHLIYE_TAAHHUTNAMESI_TEXT,
       is_active: true,
     });
 
-    // Bulk insert (single query for performance)
+    // Use upsert to handle race conditions (idempotent seeding)
+    // If templates already exist, ignore duplicates (don't update existing)
     const { error } = await supabase
       .from('contract_clause_templates')
-      .insert(templates);
+      .upsert(templates, {
+        onConflict: 'user_id,clause_type,clause_index',
+        ignoreDuplicates: true, // Don't update existing templates, just skip duplicates
+      });
 
     if (error) {
+      // Handle duplicate key errors gracefully (race condition)
+      // PostgreSQL error code 23505 = unique_violation
+      if (error.code === '23505' || error.message.includes('duplicate key')) {
+        console.log('[Clauses] Templates already exist (race condition handled)');
+        return; // Templates already seeded, safe to ignore
+      }
+      
       console.error('[Clauses] Seeding error:', error);
       throw new Error(`Failed to seed clause templates: ${error.message}`);
     }
 
-    console.log(`[Clauses] Successfully seeded ${templates.length} default templates`);
+    console.log(`[Clauses] Successfully seeded ${templates.length} default templates (duplicates ignored if any)`);
   },
 
   /**
@@ -194,10 +217,14 @@ export const clausesService = {
    * Get overrides for a specific contract
    */
   async getOverrides(contractId: string): Promise<ClauseOverride[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('contract_clause_overrides')
       .select('*')
       .eq('contract_id', contractId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('clause_type')
       .order('clause_index');
 
@@ -278,11 +305,13 @@ export const clausesService = {
     }
 
     const uid = userId || await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
     // Prepare override records
     const records = overrides.map(override => ({
       contract_id: contractId,
       user_id: uid,
+      org_id: orgId,
       clause_type: override.clause_type,
       clause_index: override.clause_index,
       custom_content: override.custom_content,

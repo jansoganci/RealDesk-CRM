@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Skeleton } from '../../../components/ui/skeleton';
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -90,7 +90,7 @@ export const CommissionTrends = ({
       <CardContent>
         <div className="h-[300px]">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
+            <LineChart
               data={chartData}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
@@ -127,21 +127,25 @@ export const CommissionTrends = ({
                   </span>
                 )}
               />
-              <Bar
+              <Line
+                type="monotone"
                 dataKey="rental"
                 name="rental"
-                fill="#3b82f6"
-                radius={[4, 4, 0, 0]}
-                stackId="stack"
+                stroke="#3b82f6"
+                strokeWidth={2}
+                dot={{ fill: '#3b82f6', r: 4 }}
+                activeDot={{ r: 6 }}
               />
-              <Bar
+              <Line
+                type="monotone"
                 dataKey="sale"
                 name="sale"
-                fill="#10b981"
-                radius={[4, 4, 0, 0]}
-                stackId="stack"
+                stroke="#10b981"
+                strokeWidth={2}
+                dot={{ fill: '#10b981', r: 4 }}
+                activeDot={{ r: 6 }}
               />
-            </BarChart>
+            </LineChart>
           </ResponsiveContainer>
         </div>
       </CardContent>

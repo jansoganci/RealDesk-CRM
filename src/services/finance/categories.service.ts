@@ -6,6 +6,7 @@
 import { supabase } from '../../config/supabase';
 import { insertRow, updateRow } from '../../lib/db';
 import { getAuthenticatedUserId } from '../../lib/auth';
+import { getActiveOrgId, softDelete } from '../../lib/orgHelpers';
 import type {
   ExpenseCategory,
   CreateExpenseCategoryInput,
@@ -24,9 +25,13 @@ import type {
 export const getCategories = async (
   type?: 'income' | 'expense'
 ): Promise<ExpenseCategory[]> => {
+  const orgId = await getActiveOrgId();
+
   let query = supabase
     .from('expense_categories')
     .select('*')
+    .or(`org_id.eq.${orgId},org_id.is.null`)
+    .is('deleted_at', null)
     .eq('is_active', true)
     .order('name', { ascending: true });
 
@@ -52,10 +57,14 @@ export const getCategories = async (
 export const getCategoryById = async (
   id: string
 ): Promise<ExpenseCategory | null> => {
+  const orgId = await getActiveOrgId();
+
   const { data, error } = await supabase
     .from('expense_categories')
     .select('*')
     .eq('id', id)
+    .or(`org_id.eq.${orgId},org_id.is.null`)
+    .is('deleted_at', null)
     .maybeSingle();
 
   if (error) {
@@ -75,9 +84,11 @@ export const createCategory = async (
   data: CreateExpenseCategoryInput
 ): Promise<ExpenseCategory> => {
   const userId = await getAuthenticatedUserId();
+  const orgId = await getActiveOrgId();
 
   const category = await insertRow('expense_categories', {
     user_id: userId,
+    org_id: orgId,
     name: data.name,
     type: data.type,
     parent_category: data.parent_category || null,
@@ -115,20 +126,11 @@ export const updateCategory = async (
 };
 
 /**
- * Delete a custom expense category
+ * Delete a custom expense category (soft delete)
  * @param id - Category ID
  * @returns True if deleted successfully
  */
 export const deleteCategory = async (id: string): Promise<boolean> => {
-  const { error } = await supabase
-    .from('expense_categories')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting category:', error);
-    throw error;
-  }
-
+  await softDelete('expense_categories', id);
   return true;
 };

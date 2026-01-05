@@ -7,6 +7,7 @@ import {
 } from '@/lib/errorCodes';
 import type { Meeting, MeetingInsert, MeetingUpdate } from '@/types';
 import { getAuthenticatedUserId } from '@/lib/auth';
+import { getActiveOrgId, softDelete } from '@/lib/orgHelpers';
 
 const MEETINGS_TABLE = 'meetings';
 
@@ -32,9 +33,13 @@ class MeetingsService {
    * @returns A promise that resolves to an array of meetings with their relations.
    */
   async getAll(): Promise<MeetingWithRelations[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
       .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('start_time', { ascending: true });
 
     if (error) {
@@ -44,10 +49,14 @@ class MeetingsService {
   }
 
   async getById(id: string): Promise<MeetingWithRelations> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
       .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) {
@@ -67,10 +76,11 @@ class MeetingsService {
   async create(meetingData: MeetingInsert): Promise<Meeting> {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
-      .insert({ ...meetingData, user_id: userId })
+      .insert({ ...meetingData, user_id: userId, org_id: orgId })
       .select()
       .single();
 
@@ -105,17 +115,17 @@ class MeetingsService {
    * @param id The UUID of the meeting to delete.
    */
   async delete(id: string): Promise<void> {
-    const { error } = await supabase.from(MEETINGS_TABLE).delete().eq('id', id);
-
-    if (error) {
-      throw new AppError(ERROR_SERVER_ERROR, 'Failed to delete meeting');
-    }
+    await softDelete(MEETINGS_TABLE, id);
   }
 
   async getByDateRange(startDate: string, endDate: string): Promise<MeetingWithRelations[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
       .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .gte('start_time', startDate)
       .lte('start_time', endDate)
       .order('start_time', { ascending: true });
@@ -127,10 +137,14 @@ class MeetingsService {
   }
 
   async getUpcoming(limit = 10): Promise<MeetingWithRelations[]> {
+    const orgId = await getActiveOrgId();
     const now = new Date().toISOString();
+
     const { data, error } = await supabase
       .from(MEETINGS_TABLE)
       .select('*, tenant:tenants(id, name, email, phone), property:properties(id, address, city, district), owner:property_owners(id, name, email, phone)')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .gte('start_time', now)
       .order('start_time', { ascending: true })
       .limit(limit);

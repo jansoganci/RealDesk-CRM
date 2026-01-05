@@ -69,4 +69,5 @@ export const ROUTES = {
   FINANCE: '/finance',
   PROFILE: '/profile',
   BILLING_SUBSCRIBE: '/billing/subscribe',
+  ONBOARDING: '/onboarding',
 } as const;

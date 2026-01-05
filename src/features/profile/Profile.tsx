@@ -1,9 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOrg } from '@/contexts/OrgContext';
 import { UserInfoHeader } from './components/UserInfoHeader';
 import { ProfileInfoCard } from './components/ProfileInfoCard';
 import { EditProfileInfoDialog } from './components/EditProfileInfoDialog';
+import { OrganizationSettingsCard } from './components/OrganizationSettingsCard';
+import { EditOrganizationDialog } from './components/EditOrganizationDialog';
 import { SubscriptionStatusCard } from './components/SubscriptionStatusCard';
 import { BillingHistoryCard } from './components/BillingHistoryCard';
 import { AccountSecurityCard } from './components/AccountSecurityCard';
@@ -33,9 +36,11 @@ export const Profile = () => {
     meetingReminderMinutes,
     commissionRate
   } = useAuth();
+  const { currentOrg, isOwner } = useOrg();
   const language = i18n.language === 'tr' ? 'tr' : 'en';
 
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isEditOrgDialogOpen, setIsEditOrgDialogOpen] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     fullName: '',
     email: user?.email || '',
@@ -75,6 +80,18 @@ export const Profile = () => {
     // but for now we follow the plan of using AuthContext data.
   };
 
+  const handleEditOrgClick = () => {
+    setIsEditOrgDialogOpen(true);
+  };
+
+  const handleEditOrgClose = () => {
+    setIsEditOrgDialogOpen(false);
+  };
+
+  const handleOrgSaveSuccess = () => {
+    // OrgContext will refresh automatically via refreshOrg call in dialog
+  };
+
   return (
     <MainLayout title={t('profile:pageTitle')}>
       <PageContainer>
@@ -88,6 +105,13 @@ export const Profile = () => {
             onEditClick={handleEditClick}
             isLoading={authLoading}
           />
+
+          {/* Organization Settings Card - Only show if user is owner */}
+          {isOwner && currentOrg && (
+            <OrganizationSettingsCard
+              onEditClick={handleEditOrgClick}
+            />
+          )}
 
           {/* Account Security - Full Width */}
           <AccountSecurityCard />
@@ -109,6 +133,16 @@ export const Profile = () => {
           initialData={profileData}
           onSaveSuccess={handleSaveSuccess}
         />
+
+        {/* Edit Organization Dialog/Drawer */}
+        {currentOrg && (
+          <EditOrganizationDialog
+            isOpen={isEditOrgDialogOpen}
+            onClose={handleEditOrgClose}
+            initialName={currentOrg.name}
+            onSaveSuccess={handleOrgSaveSuccess}
+          />
+        )}
       </PageContainer>
     </MainLayout>
   );

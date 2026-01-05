@@ -31,8 +31,14 @@ import { Card } from '../ui/card';
 import { EmptyState } from '../common/EmptyState';
 import { MobileCardView } from '../common/MobileCardView';
 import { TableSkeleton } from '../common/skeletons';
-import { Search, Plus } from 'lucide-react';
+import { Search, Plus, Info } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/tooltip';
 
 export interface FilterOption {
   value: string;
@@ -70,6 +76,8 @@ export interface ListPageTemplateProps<T> {
   onAdd: () => void;
   addButtonLabel: string;
   addButtonLabelShort?: string; // Optional: Short label for mobile
+  disabledAdd?: boolean; // Added for member role
+  addDisabledTooltip?: string; // Added for member role
   emptyState: EmptyStateConfig;
   renderTableHeaders: () => ReactNode;
   renderTableRow: (item: T, index: number) => ReactNode;
@@ -94,6 +102,8 @@ function ListPageTemplateInner<T>({
   onAdd,
   addButtonLabel,
   addButtonLabelShort,
+  disabledAdd = false,
+  addDisabledTooltip,
   emptyState,
   renderTableHeaders,
   renderTableRow,
@@ -104,6 +114,26 @@ function ListPageTemplateInner<T>({
   leftAction,
 }: ListPageTemplateProps<T>) {
   const { t } = useTranslation('common');
+
+  const AddButton = (
+    <Button
+      onClick={onAdd}
+      variant="default"
+      className="h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm"
+      disabled={disabledAdd}
+    >
+      <Plus className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
+      {addButtonLabelShort ? (
+        <>
+          <span className="hidden sm:inline">{addButtonLabel}</span>
+          <span className="sm:hidden">{addButtonLabelShort}</span>
+        </>
+      ) : (
+        <span>{addButtonLabel}</span>
+      )}
+    </Button>
+  );
+
   return (
     <MainLayout title={title}>
       <PageContainer className="min-h-[600px]">
@@ -136,21 +166,25 @@ function ListPageTemplateInner<T>({
           </div>
           <div className="flex items-center gap-2">
             {leftAction}
-            <Button
-              onClick={onAdd}
-              variant="default"
-              className="h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm"
-            >
-              <Plus className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
-              {addButtonLabelShort ? (
-                <>
-                  <span className="hidden sm:inline">{addButtonLabel}</span>
-                  <span className="sm:hidden">{addButtonLabelShort}</span>
-                </>
-              ) : (
-                <span>{addButtonLabel}</span>
-              )}
-            </Button>
+            {disabledAdd && addDisabledTooltip ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className="cursor-not-allowed">
+                      {AddButton}
+                    </div>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <div className="flex items-center gap-1">
+                      <Info className="h-4 w-4" />
+                      {addDisabledTooltip}
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              AddButton
+            )}
           </div>
         </div>
 
@@ -183,6 +217,8 @@ function ListPageTemplateInner<T>({
             actionLabel={emptyState.actionLabel}
             onAction={emptyState.showAction ? onAdd : undefined}
             showAction={emptyState.showAction}
+            disabledAction={disabledAdd}
+            actionTooltip={disabledAdd ? addDisabledTooltip : undefined}
           />
         ) : (
           <>

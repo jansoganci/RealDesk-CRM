@@ -27,7 +27,7 @@ export function WelcomeEmptyState() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                     {/* Add Property Button */}
                     <button
-                        onClick={() => navigate(ROUTES.PROPERTY_NEW)}
+                        onClick={() => navigate(ROUTES.PROPERTIES)}
                         className="group relative overflow-hidden rounded-xl p-6 bg-gradient-to-br from-blue-600 via-blue-700 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
                         <div className="flex flex-col items-center gap-4 relative z-10">

@@ -2,10 +2,32 @@ import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TableActionButtons } from '@/components/common/TableActionButtons';
-import { Phone, Mail, MapPin, DollarSign, Eye, Loader2 } from 'lucide-react';
+import { Phone, Mail, MapPin, Eye, Loader2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import { useOrg } from '@/contexts/OrgContext';
 import type { PropertyInquiry } from '@/types';
 import { getInquiryStatusBadgeClasses } from '../utils/statusUtils';
+
+// Helper function to format budget with currency symbol
+const formatBudget = (min: number | null, max: number | null, currencyType: string = 'TRY'): string => {
+  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'TRY';
+  
+  const formatter = new Intl.NumberFormat('tr-TR', {
+    style: 'currency',
+    currency: normalizedCurrency,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  });
+
+  if (min && max) {
+    return `${formatter.format(min)} - ${formatter.format(max)}`;
+  } else if (min) {
+    return formatter.format(min);
+  } else if (max) {
+    return formatter.format(max);
+  }
+  return '';
+};
 
 interface InquiryCardProps {
   inquiry: PropertyInquiry;
@@ -22,7 +44,8 @@ export function InquiryCard({
   onViewMatches,
   matchesLoading,
 }: InquiryCardProps) {
-  const { t } = useTranslation('inquiries');
+  const { t } = useTranslation(['inquiries', 'common']);
+  const { isMember } = useOrg();
 
   return (
     <div key={inquiry.id} className={`p-4 rounded-lg border ${COLORS.gray.border200} space-y-3`}>
@@ -58,14 +81,13 @@ export function InquiryCard({
         const isRental = inquiry.inquiry_type === 'rental';
         const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
         const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
+        // Get currency_type from inquiry, default to 'TRY' if not present
+        const currencyType = (inquiry as any).currency_type || 'TRY';
 
         if (minBudget || maxBudget) {
           return (
-            <div className={`text-sm ${COLORS.gray.text600} flex items-center gap-1`}>
-              <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-              {minBudget && `${minBudget}`}
-              {minBudget && maxBudget && ' - '}
-              {maxBudget && `${maxBudget}`}
+            <div className={`text-sm ${COLORS.gray.text600}`}>
+              {formatBudget(minBudget, maxBudget, currencyType)}
             </div>
           );
         }
@@ -92,6 +114,10 @@ export function InquiryCard({
         <TableActionButtons
           onEdit={() => onEdit(inquiry)}
           onDelete={() => onDelete(inquiry)}
+          disabledEdit={isMember}
+          disabledDelete={isMember}
+          disabledEditTooltip={isMember ? t('common:readOnlyMode') : undefined}
+          disabledDeleteTooltip={isMember ? t('common:readOnlyMode') : undefined}
         />
       </div>
     </div>

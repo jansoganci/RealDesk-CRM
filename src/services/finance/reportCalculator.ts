@@ -19,6 +19,7 @@ export interface NormalizedPerformanceSummary {
   dealsCount: number;
   totalCommission: CalculatedMetric;
   averagePerDeal: CalculatedMetric;
+  transactionVolume?: CalculatedMetric; // Total property values sold
   bestMonth: {
     month: number;
     monthName: string;
@@ -27,6 +28,7 @@ export interface NormalizedPerformanceSummary {
   rentalPercentage: number; // Percentage is derived from converted amounts
   salePercentage: number;   // Percentage is derived from converted amounts
   currency: string;
+  previousYear?: NormalizedPerformanceSummary; // For year-over-year comparison
 }
 
 /**

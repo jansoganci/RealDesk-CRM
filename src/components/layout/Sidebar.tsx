@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../contexts/AuthContext';
+import { useOrg } from '../../contexts/OrgContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -42,6 +43,7 @@ const navigationItems = [
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { t } = useTranslation('navigation');
   const { signOut } = useAuth();
+  const { currentOrg } = useOrg();
   const { reminderCount, unreadMatchesCount } = useNotifications();
 
   const handleSignOut = async () => {
@@ -69,8 +71,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         )}
       >
         <div className="flex items-center justify-between p-5 border-b border-gray-200/50 bg-blue-600 shadow-lg">
-          <div className="flex items-center gap-3">
+          <div className="flex flex-col">
             <span className="font-bold text-white text-lg tracking-tight">{APP_NAME}</span>
+            {currentOrg && (
+              <span className="text-white/70 text-xs truncate max-w-[180px]">
+                {currentOrg.name}
+              </span>
+            )}
           </div>
           <Button
             variant="ghost"

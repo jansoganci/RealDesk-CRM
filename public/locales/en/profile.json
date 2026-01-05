@@ -274,5 +274,32 @@
       "60": "1 hour before",
       "90": "1.5 hours before"
     }
+  },
+  "organizationSettings": {
+    "title": "Organization Settings",
+    "editButton": "Edit",
+    "editDialog": {
+      "title": "Edit Organization Name",
+      "description": "Update your organization name"
+    },
+    "updateSuccess": "Organization name updated successfully",
+    "updateError": "Failed to update organization name",
+    "discardDialog": {
+      "title": "Discard changes?",
+      "description": "Unsaved changes will be lost. Do you want to continue?",
+      "confirm": "Yes, discard",
+      "cancel": "Go back"
+    },
+    "fields": {
+      "name": "Organization Name",
+      "namePlaceholder": "Enter your organization name"
+    },
+    "validation": {
+      "nameMin": "Organization name must be at least 2 characters",
+      "nameMax": "Organization name must not exceed 255 characters"
+    },
+    "errors": {
+      "notOwner": "Only organization owner can change the name"
+    }
   }
 }

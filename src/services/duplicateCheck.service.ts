@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '@/config/supabase';
+import { getActiveOrgId } from '@/lib/orgHelpers';
 
 export interface DuplicateNameCheck {
   hasDuplicate: boolean;
@@ -45,13 +46,15 @@ export async function checkDuplicateName(
   userId: string
 ): Promise<DuplicateNameCheck> {
   const table = entityType === 'owner' ? 'property_owners' : 'tenants';
+  const orgId = await getActiveOrgId();
 
   const { data, error } = await supabase
     .from(table)
     .select('name, tc_hash')
     .ilike('name', name)
     .neq('tc_hash', tcHash)
-    .eq('user_id', userId);
+    .eq('org_id', orgId)
+    .is('deleted_at', null);
 
   if (error) {
     console.error('Duplicate name check failed:', error);
@@ -80,13 +83,15 @@ export async function checkDataChanges(
   userId: string
 ): Promise<DataChangesCheck> {
   const table = entityType === 'owner' ? 'property_owners' : 'tenants';
+  const orgId = await getActiveOrgId();
 
   const { data: existing, error } = await supabase
     .from(table)
     .select('*')
     .eq('tc_hash', tcHash)
-    .eq('user_id', userId)
-    .single();
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
+    .maybeSingle();
 
   if (error || !existing) {
     return { hasChanges: false };
@@ -128,13 +133,16 @@ export async function checkMultipleContracts(
   tcHash: string,
   userId: string
 ): Promise<MultipleContractsCheck> {
+  const orgId = await getActiveOrgId();
+  
   // First get tenant by TC hash
   const { data: tenant } = await supabase
     .from('tenants')
     .select('id')
     .eq('tc_hash', tcHash)
-    .eq('user_id', userId)
-    .single();
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
+    .maybeSingle();
 
   if (!tenant) {
     return { hasMultiple: false };
@@ -153,7 +161,8 @@ export async function checkMultipleContracts(
     `)
     .eq('tenant_id', tenant.id)
     .eq('status', 'Active')
-    .eq('user_id', userId);
+    .eq('org_id', orgId)
+    .is('deleted_at', null);
 
   if (error || !activeContracts || activeContracts.length === 0) {
     return { hasMultiple: false };

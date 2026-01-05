@@ -36,6 +36,7 @@ import {
 } from 'lucide-react';
 import type { FinancialTransaction } from '../../../types/financial';
 import { useCurrencyConversion } from '../../../hooks/useCurrencyConversion';
+import { useOrg } from '@/contexts/OrgContext';
 import type { PaginationState } from '../hooks/useFinanceData';
 
 interface TransactionsTableProps {
@@ -63,6 +64,7 @@ export const TransactionsTable = ({
   onPageChange,
 }: TransactionsTableProps) => {
   const { t } = useTranslation(['finance', 'common']);
+  const { isMember } = useOrg();
   const { formatWithConversion, displayCurrency } = useCurrencyConversion();
   const [sortField, setSortField] = useState<'date' | 'amount'>('date');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -364,16 +366,23 @@ export const TransactionsTable = ({
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => onEdit(transaction)}>
+                      <DropdownMenuItem 
+                        onClick={() => !isMember && onEdit(transaction)}
+                        disabled={isMember}
+                        className={isMember ? "opacity-50 cursor-not-allowed" : ""}
+                      >
                         <Edit className="mr-2 h-4 w-4" />
                         {t('common:actions.edit')}
+                        {isMember && <span className="ml-auto text-[10px] italic">({t('common:readOnlyMode')})</span>}
                       </DropdownMenuItem>
                       <DropdownMenuItem
-                        onClick={() => onDelete(transaction.id)}
-                        className="text-red-600"
+                        onClick={() => !isMember && onDelete(transaction.id)}
+                        disabled={isMember}
+                        className={`text-red-600 ${isMember ? "opacity-50 cursor-not-allowed text-gray-400" : ""}`}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         {t('common:actions.delete')}
+                        {isMember && <span className="ml-auto text-[10px] italic text-gray-400">({t('common:readOnlyMode')})</span>}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

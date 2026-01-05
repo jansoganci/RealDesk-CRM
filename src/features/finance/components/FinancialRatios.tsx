@@ -5,6 +5,7 @@ import {
   TrendingUp,
   TrendingDown,
   Activity,
+  PieChart,
 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import type { FinancialRatios } from '../../../types/financial';
@@ -61,20 +62,6 @@ export const FinancialRatiosComponent = ({
 
   const kpis = [
     {
-      title: t('finance:analytics.profitMargin'),
-      value: formatPercentage(ratios.profit_margin),
-      description: t('finance:analytics.profitMarginDesc'),
-      icon: TrendingUp,
-      iconBg:
-        ratios.profit_margin >= 20
-          ? 'bg-emerald-600'
-          : ratios.profit_margin >= 10
-          ? 'bg-blue-600'
-          : 'bg-amber-600',
-      trend: ratios.profit_margin >= 0 ? 'up' : 'down',
-      trendColor: ratios.profit_margin >= 0 ? 'text-green-600' : 'text-red-600',
-    },
-    {
       title: t('finance:analytics.cashFlowForecast'),
       value: formatCurrency(ratios.cash_flow_forecast_30d),
       description: t('finance:analytics.cashFlowForecastDesc'),
@@ -86,6 +73,25 @@ export const FinancialRatiosComponent = ({
       trend: ratios.cash_flow_forecast_30d >= 0 ? 'up' : 'down',
       trendColor:
         ratios.cash_flow_forecast_30d >= 0 ? 'text-green-600' : 'text-red-600',
+    },
+    {
+      title: t('finance:analytics.expenseRatio'),
+      value: formatPercentage(ratios.expense_ratio),
+      description: t('finance:analytics.expenseRatioDesc'),
+      icon: PieChart,
+      iconBg:
+        ratios.expense_ratio < 30
+          ? 'bg-emerald-600'
+          : ratios.expense_ratio < 50
+          ? 'bg-amber-600'
+          : 'bg-red-600',
+      trend: ratios.expense_ratio < 50 ? 'down' : 'up',
+      trendColor:
+        ratios.expense_ratio < 30
+          ? 'text-green-600'
+          : ratios.expense_ratio < 50
+          ? 'text-amber-600'
+          : 'text-red-600',
     },
   ];
 

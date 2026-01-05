@@ -2,6 +2,7 @@ import { supabase } from '../config/supabase';
 import type { Property, PropertyInsert, PropertyUpdate, PropertyWithOwner } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 import { createLogger } from '../lib/logger';
 
 const logger = createLogger('Properties');
@@ -34,6 +35,8 @@ class PropertiesService {
   }
 
   async getAll(): Promise<PropertyWithOwner[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('properties')
       .select(`
@@ -60,6 +63,8 @@ class PropertiesService {
           tenant:tenants(id, name, phone)
         )
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false })
       .limit(50);
 
@@ -72,6 +77,8 @@ class PropertiesService {
   }
 
   async getRentalProperties(): Promise<PropertyWithOwner[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('properties')
       .select(`
@@ -98,6 +105,8 @@ class PropertiesService {
           tenant:tenants(id, name, phone)
         )
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('property_type', 'rental')
       .order('created_at', { ascending: false })
       .limit(50);
@@ -111,6 +120,8 @@ class PropertiesService {
   }
 
   async getSaleProperties(): Promise<PropertyWithOwner[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('properties')
       .select(`
@@ -129,6 +140,8 @@ class PropertiesService {
         owner:property_owners(id, name, phone),
         photos:property_photos(id, file_path)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('property_type', 'sale')
       .order('created_at', { ascending: false })
       .limit(50);
@@ -142,6 +155,8 @@ class PropertiesService {
   }
 
   async getById(id: string): Promise<PropertyWithOwner | null> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('properties')
       .select(`
@@ -169,6 +184,8 @@ class PropertiesService {
         )
       `)
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) {
@@ -182,6 +199,8 @@ class PropertiesService {
   }
 
   async getByOwnerId(ownerId: string): Promise<Property[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('properties')
       .select(`
@@ -197,6 +216,8 @@ class PropertiesService {
         created_at
       `)
       .eq('owner_id', ownerId)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -206,7 +227,7 @@ class PropertiesService {
     return (data || []) as Property[];
   }
 
-  async create(property: Omit<PropertyInsert, 'user_id'>): Promise<Property> {
+  async create(property: Omit<PropertyInsert, 'user_id' | 'org_id'>): Promise<Property> {
     // Validate that required fields match property_type
     if (property.property_type === 'rental' && !property.rent_amount) {
       throw new Error('Rent amount is required for rental properties');
@@ -215,13 +236,15 @@ class PropertiesService {
       throw new Error('Sale price is required for sale properties');
     }
 
-    // Get authenticated user ID with session fallback
+    // Get authenticated user ID and org ID
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id into property data
+    // Inject user_id and org_id into property data
     const newProperty = await insertRow('properties', {
       ...property,
       user_id: userId,
+      org_id: orgId,
     });
 
     // Trigger matching for rental properties that are Empty
@@ -264,19 +287,18 @@ class PropertiesService {
   }
 
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('properties')
-      .delete()
-      .eq('id', id);
-
-    if (error) throw error;
+    await softDelete('properties', id);
   }
 
   async getStats() {
+    const orgId = await getActiveOrgId();
+
     // Select only needed columns for stats calculation
     const { data, error } = await supabase
       .from('properties')
-      .select('status, property_type');
+      .select('status, property_type')
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) {
       logger.error('Error fetching property stats:', error);
@@ -316,6 +338,8 @@ class PropertiesService {
   }
 
   async getPropertiesWithMissingInfo() {
+    const orgId = await getActiveOrgId();
+
     const { data: properties, error } = await supabase
       .from('properties')
       .select(`
@@ -323,7 +347,9 @@ class PropertiesService {
         city,
         district,
         photos:property_photos(id)
-      `);
+      `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null);
 
     if (error) {
       logger.error('Error fetching properties with missing info:', error);

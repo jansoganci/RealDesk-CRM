@@ -9,11 +9,13 @@ import { Mail, Phone, MapPin, User } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
+import { useOrg } from '@/contexts/OrgContext';
 import * as z from 'zod';
 import { getOwnerSchema } from './ownerSchema';
 
 export const Owners = () => {
   const { t } = useTranslation(['owners', 'common']);
+  const { isMember } = useOrg();
   
   const ownerSchema = useMemo(() => getOwnerSchema(t), [t]);
   type OwnerFormData = z.infer<typeof ownerSchema>;
@@ -161,10 +163,14 @@ export const Owners = () => {
           onEdit={() => handleEditOwner(owner)}
           onDelete={() => handleDeleteClick(owner)}
           showView={false}
+          disabledEdit={isMember}
+          disabledDelete={isMember}
+          disabledEditTooltip={isMember ? t('common:readOnlyMode') : undefined}
+          disabledDeleteTooltip={isMember ? t('common:readOnlyMode') : undefined}
         />
       </TableCell>
     </TableRow>
-  ), [handleEditOwner, handleDeleteClick, t]);
+  ), [handleEditOwner, handleDeleteClick, t, isMember]);
 
   const renderCardContent = useCallback((owner: PropertyOwner & { property_count?: number }) => (
     <div className="space-y-3">
@@ -208,10 +214,14 @@ export const Owners = () => {
           onEdit={() => handleEditOwner(owner)}
           onDelete={() => handleDeleteClick(owner)}
           showView={false}
+          disabledEdit={isMember}
+          disabledDelete={isMember}
+          disabledEditTooltip={isMember ? t('common:readOnlyMode') : undefined}
+          disabledDeleteTooltip={isMember ? t('common:readOnlyMode') : undefined}
         />
       </div>
     </div>
-  ), [handleEditOwner, handleDeleteClick, t]);
+  ), [handleEditOwner, handleDeleteClick, t, isMember]);
 
   const deleteDialogConfig = useMemo(() => ({
     open: deleteDialogOpen,
@@ -243,6 +253,8 @@ export const Owners = () => {
         searchPlaceholder={t('searchPlaceholder')}
         onAdd={handleAddOwner}
         addButtonLabel={t('addOwnerButton')}
+        disabledAdd={isMember}
+        addDisabledTooltip={isMember ? t('common:readOnlyMode') : undefined}
         skeletonColumnCount={5}
         emptyState={emptyStateConfig}
         renderTableHeaders={renderTableHeaders}

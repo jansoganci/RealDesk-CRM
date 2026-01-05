@@ -1,6 +1,7 @@
 import { supabase } from '../config/supabase';
 import type { Commission, CommissionInsert, CommissionStats, CommissionWithProperty, PerformanceSummary, MonthlyCommissionData } from '../types';
 import { getAuthenticatedUserId } from '../lib/auth';
+import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 
 const MONTH_NAMES_TR = [
   'Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran',
@@ -12,9 +13,13 @@ class CommissionsService {
    * Get all commissions for the authenticated user
    */
   async getAll(): Promise<Commission[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('commissions')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -29,10 +34,14 @@ class CommissionsService {
    * Get commission by ID
    */
   async getById(id: string): Promise<Commission | null> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('commissions')
       .select('*')
       .eq('id', id)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .maybeSingle();
 
     if (error) {
@@ -47,12 +56,16 @@ class CommissionsService {
    * Get commissions with property details
    */
   async getAllWithProperties(): Promise<CommissionWithProperty[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('commissions')
       .select(`
         *,
         property:properties(*)
       `)
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -67,9 +80,13 @@ class CommissionsService {
    * Get commissions by date range
    */
   async getByDateRange(startDate: string, endDate: string): Promise<Commission[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('commissions')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .gte('created_at', startDate)
       .lte('created_at', endDate)
       .order('created_at', { ascending: false });
@@ -86,9 +103,13 @@ class CommissionsService {
    * Get commissions by type (rental or sale)
    */
   async getByType(type: 'rental' | 'sale'): Promise<Commission[]> {
+    const orgId = await getActiveOrgId();
+
     const { data, error } = await supabase
       .from('commissions')
       .select('*')
+      .eq('org_id', orgId)
+      .is('deleted_at', null)
       .eq('type', type)
       .order('created_at', { ascending: false});
 
@@ -131,13 +152,15 @@ class CommissionsService {
   async create(commission: CommissionInsert): Promise<Commission> {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
 
-    // Inject user_id, overriding any provided value for security
+    // Inject user_id and org_id, overriding any provided values for security
     const { data, error } = await supabase
       .from('commissions')
       .insert({
         ...commission,
         user_id: userId, // Force current user's ID
+        org_id: orgId,   // Force current org's ID
       })
       .select()
       .single();
@@ -174,18 +197,10 @@ class CommissionsService {
   }
 
   /**
-   * Delete a commission
+   * Delete a commission (soft delete)
    */
   async delete(id: string): Promise<void> {
-    const { error } = await supabase
-      .from('commissions')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting commission:', error);
-      throw error;
-    }
+    await softDelete('commissions', id);
   }
 
   /**

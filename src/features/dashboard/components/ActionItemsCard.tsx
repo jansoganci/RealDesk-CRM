@@ -66,7 +66,7 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
             <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
               <li className="flex items-center gap-2">
                 <span className="text-blue-600">•</span>
-                <a href="/properties/new" className="font-medium hover:text-blue-700 hover:underline">
+                <a href="/properties" className="font-medium hover:text-blue-700 hover:underline">
                   {t('onboarding.addProperty', 'Add your first property')}
                 </a>
               </li>

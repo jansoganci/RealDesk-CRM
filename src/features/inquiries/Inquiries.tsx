@@ -7,6 +7,7 @@ import { InquiryMatchesDialog } from './InquiryMatchesDialog';
 import { PropertyInquiry } from '../../types';
 import { Inbox, Home, TrendingUp } from 'lucide-react';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
+import { useOrg } from '@/contexts/OrgContext';
 import * as z from 'zod';
 import { getInquirySchema } from './inquirySchema';
 import { useInquiriesData } from './hooks/useInquiriesData';
@@ -18,6 +19,7 @@ import { InquiryCard } from './components/InquiryCard';
 
 export const Inquiries = () => {
   const { t } = useTranslation(['inquiries', 'common']);
+  const { isMember } = useOrg();
   const inquirySchema = useMemo(() => getInquirySchema(t), [t]);
   type InquiryFormData = z.infer<typeof inquirySchema>;
 
@@ -172,6 +174,8 @@ export const Inquiries = () => {
             searchPlaceholder={t('searchPlaceholder')}
             onAdd={handleAddInquiry}
             addButtonLabel={t('addNew')}
+            disabledAdd={isMember}
+            addDisabledTooltip={isMember ? t('common:readOnlyMode') : undefined}
             skeletonColumnCount={5}
             headerContent={
               <AnimatedTabs

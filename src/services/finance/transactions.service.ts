@@ -6,6 +6,7 @@
 import { supabase } from '../../config/supabase';
 import { insertRow, updateRow } from '../../lib/db';
 import { getAuthenticatedUserId } from '../../lib/auth';
+import { getActiveOrgId, softDelete } from '../../lib/orgHelpers';
 import type { Database } from '../../types/database';
 import type {
   FinancialTransaction,
@@ -30,9 +31,13 @@ type DbTransactionUpdate = Database['public']['Tables']['financial_transactions'
 export const getTransactions = async (
   filters?: TransactionFilters
 ): Promise<FinancialTransaction[]> => {
+  const orgId = await getActiveOrgId();
+
   let query = supabase
     .from('financial_transactions')
     .select('*')
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .order('transaction_date', { ascending: false });
 
   // Apply filters
@@ -82,6 +87,7 @@ export const getTransactions = async (
 export const getTransactionsPaginated = async (
   filters?: TransactionFilters
 ): Promise<PaginatedTransactions> => {
+  const orgId = await getActiveOrgId();
   const page = filters?.page || 1;
   const pageSize = filters?.pageSize || 25;
   const from = (page - 1) * pageSize;
@@ -90,6 +96,8 @@ export const getTransactionsPaginated = async (
   let query = supabase
     .from('financial_transactions')
     .select('*', { count: 'exact' })
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .order('transaction_date', { ascending: false });
 
   // Apply filters
@@ -150,10 +158,14 @@ export const getTransactionsPaginated = async (
 export const getTransactionById = async (
   id: string
 ): Promise<FinancialTransaction | null> => {
+  const orgId = await getActiveOrgId();
+
   const { data, error } = await supabase
     .from('financial_transactions')
     .select('*')
     .eq('id', id)
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .maybeSingle();
 
   if (error) {
@@ -173,9 +185,11 @@ export const createTransaction = async (
   data: CreateFinancialTransactionInput
 ): Promise<FinancialTransaction> => {
   const userId = await getAuthenticatedUserId();
+  const orgId = await getActiveOrgId();
 
   const insertData: DbTransactionInsert = {
     user_id: userId,
+    org_id: orgId,
     transaction_date: data.transaction_date,
     type: data.type,
     category: data.category,
@@ -239,21 +253,12 @@ export const updateTransaction = async (
 };
 
 /**
- * Delete a financial transaction
+ * Delete a financial transaction (soft delete)
  * @param id - Transaction ID
  * @returns True if deleted successfully
  */
 export const deleteTransaction = async (id: string): Promise<boolean> => {
-  const { error } = await supabase
-    .from('financial_transactions')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting transaction:', error);
-    throw error;
-  }
-
+  await softDelete('financial_transactions', id);
   return true;
 };
 

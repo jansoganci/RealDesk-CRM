@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { TableActionButtons } from '@/components/common/TableActionButtons';
 import { FileDown, Upload, Loader2 } from 'lucide-react';
+import { useOrg } from '@/contexts/OrgContext';
 import type { ContractWithDetails } from '../../../types';
 
 /**
@@ -30,7 +31,8 @@ export function ContractPdfActionButtons({
   onEdit,
   onDelete,
 }: ContractPdfActionButtonsProps) {
-  const { t } = useTranslation('contracts');
+  const { t } = useTranslation(['contracts', 'common']);
+  const { isMember } = useOrg();
   const hasPdf = !!contract.contract_pdf_path;
   const isUploading = uploadingContractId === contract.id;
 
@@ -54,9 +56,9 @@ export function ContractPdfActionButtons({
           variant="ghost"
           size="sm"
           onClick={() => onUpload(contract.id)}
-          disabled={actionLoading || isUploading}
+          disabled={actionLoading || isUploading || isMember}
           className="h-8 px-2"
-          title={t('pdf.actions.upload')}
+          title={isMember ? t('common:readOnlyMode') : t('pdf.actions.upload')}
         >
           {isUploading ? (
             <Loader2 className="h-4 w-4 animate-spin" />
@@ -71,6 +73,10 @@ export function ContractPdfActionButtons({
         onEdit={() => onEdit(contract)}
         onDelete={() => onDelete(contract)}
         showView={false}
+        disabledEdit={isMember}
+        disabledDelete={isMember}
+        disabledEditTooltip={isMember ? t('common:readOnlyMode') : undefined}
+        disabledDeleteTooltip={isMember ? t('common:readOnlyMode') : undefined}
       />
     </div>
   );

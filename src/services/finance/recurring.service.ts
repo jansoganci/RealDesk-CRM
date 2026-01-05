@@ -6,6 +6,7 @@
 import { supabase } from '../../config/supabase';
 import { insertRow, updateRow } from '../../lib/db';
 import { getAuthenticatedUserId } from '../../lib/auth';
+import { getActiveOrgId, softDelete } from '../../lib/orgHelpers';
 import { createTransaction } from './transactions.service';
 import type {
   RecurringExpense,
@@ -39,9 +40,13 @@ const normalizePaymentMethod = (
 export const getRecurringExpenses = async (
   filters?: RecurringExpenseFilters
 ): Promise<RecurringExpense[]> => {
+  const orgId = await getActiveOrgId();
+
   let query = supabase
     .from('recurring_expenses')
     .select('*')
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .order('next_due_date', { ascending: true });
 
   // Apply filters
@@ -76,10 +81,14 @@ export const getRecurringExpenses = async (
 export const getRecurringExpenseById = async (
   id: string
 ): Promise<RecurringExpense | null> => {
+  const orgId = await getActiveOrgId();
+
   const { data, error } = await supabase
     .from('recurring_expenses')
     .select('*')
     .eq('id', id)
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .maybeSingle();
 
   if (error) {
@@ -99,9 +108,11 @@ export const createRecurringExpense = async (
   data: CreateRecurringExpenseInput
 ): Promise<RecurringExpense> => {
   const userId = await getAuthenticatedUserId();
+  const orgId = await getActiveOrgId();
 
   const recurringExpense = await insertRow('recurring_expenses', {
     user_id: userId,
+    org_id: orgId,
     name: data.name,
     description: data.description || null,
     category: data.category,
@@ -157,21 +168,12 @@ export const updateRecurringExpense = async (
 };
 
 /**
- * Delete a recurring expense
+ * Delete a recurring expense (soft delete)
  * @param id - Recurring expense ID
  * @returns True if deleted successfully
  */
 export const deleteRecurringExpense = async (id: string): Promise<boolean> => {
-  const { error } = await supabase
-    .from('recurring_expenses')
-    .delete()
-    .eq('id', id);
-
-  if (error) {
-    console.error('Error deleting recurring expense:', error);
-    throw error;
-  }
-
+  await softDelete('recurring_expenses', id);
   return true;
 };
 
@@ -185,12 +187,15 @@ export const deleteRecurringExpense = async (id: string): Promise<boolean> => {
  * @returns Number of transactions created
  */
 export const processDueRecurringExpenses = async (): Promise<number> => {
+  const orgId = await getActiveOrgId();
   const today = new Date().toISOString().split('T')[0];
 
   // Get all active recurring expenses due today or earlier
   const { data: dueExpenses, error } = await supabase
     .from('recurring_expenses')
     .select('*')
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .eq('is_active', true)
     .eq('auto_create_transaction', true)
     .lte('next_due_date', today);
@@ -253,6 +258,7 @@ export const processDueRecurringExpenses = async (): Promise<number> => {
 export const getUpcomingRecurringExpenses = async (
   daysAhead: number = 30
 ): Promise<UpcomingRecurringExpense[]> => {
+  const orgId = await getActiveOrgId();
   const today = new Date();
   const futureDate = new Date(today);
   futureDate.setDate(futureDate.getDate() + daysAhead);
@@ -263,6 +269,8 @@ export const getUpcomingRecurringExpenses = async (
   const { data, error } = await supabase
     .from('recurring_expenses')
     .select('*')
+    .eq('org_id', orgId)
+    .is('deleted_at', null)
     .eq('is_active', true)
     .lte('next_due_date', futureStr)
     .order('next_due_date', { ascending: true });

@@ -17,6 +17,14 @@ import { CalendarSkeleton } from '@/components/common/skeletons';
 import { cn } from '@/lib/utils';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { useOrg } from '@/contexts/OrgContext';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import { Info } from 'lucide-react';
 
 // --- MeetingCard Component ---
 // As per requirement #8, this would normally be in its own file: `src/features/calendar/MeetingCard.tsx`
@@ -70,6 +78,7 @@ const MeetingCard = ({ meeting }: MeetingCardProps) => {
 // --- Main CalendarPage Component ---
 export const CalendarPage = () => {
   const { t } = useTranslation(['calendar', 'common']);
+  const { isMember } = useOrg();
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [meetings, setMeetings] = useState<MeetingWithRelations[]>([]);
   const [loading, setLoading] = useState(true);
@@ -234,13 +243,37 @@ export const CalendarPage = () => {
           </div>
 
           {/* Floating Add Button */}
-          <Button
-            onClick={() => setFormOpen(true)}
-            className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg flex items-center justify-center"
-            aria-label="Add Meeting"
-          >
-            <Plus className="h-7 w-7" />
-          </Button>
+          {isMember ? (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <div className="fixed bottom-6 right-6">
+                    <Button
+                      disabled
+                      className="h-14 w-14 rounded-full shadow-lg flex items-center justify-center cursor-not-allowed"
+                      aria-label="Add Meeting"
+                    >
+                      <Plus className="h-7 w-7" />
+                    </Button>
+                  </div>
+                </TooltipTrigger>
+                <TooltipContent side="left">
+                  <div className="flex items-center gap-1">
+                    <Info className="h-4 w-4" />
+                    {t('common:readOnlyMode')}
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          ) : (
+            <Button
+              onClick={() => setFormOpen(true)}
+              className="fixed bottom-6 right-6 h-14 w-14 rounded-full shadow-lg flex items-center justify-center"
+              aria-label="Add Meeting"
+            >
+              <Plus className="h-7 w-7" />
+            </Button>
+          )}
 
           {/* Add Meeting Dialog */}
           <AddMeetingDialog

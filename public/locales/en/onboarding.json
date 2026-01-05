@@ -1,0 +1,63 @@
+{
+  "step1": {
+    "title": "Welcome! What brings you to Emlak CRM?",
+    "subtitle": "We're asking a few questions to provide you with the best experience",
+    "question": "What will you use Emlak CRM for?",
+    "options": {
+      "properties": "Organize my property listings",
+      "clients": "Track client relationships (tenants/owners)",
+      "contracts": "Manage contracts and documents",
+      "team": "Team collaboration and reporting",
+      "all": "All of the above"
+    },
+    "skip": "Skip",
+    "continue": "Continue",
+    "saving": "Saving...",
+    "validation": {
+      "required": "Please select an option"
+    }
+  },
+  "step2": {
+    "title": "Let's set up your organization",
+    "subtitle": "We're collecting some basic information",
+    "organization": {
+      "title": "Organization Information",
+      "name": "Organization Name",
+      "namePlaceholder": "Enter your organization name",
+      "teamSize": "What's your team size?",
+      "teamSizeOptions": {
+        "solo": "Just me (individual consultant)",
+        "small": "2-5 people (small team)",
+        "medium": "6-20 people (medium team)",
+        "large": "20+ people (large office)"
+      }
+    },
+    "preferences": {
+      "title": "Preferences (Optional)",
+      "description": "You can change these settings later from your profile page",
+      "language": "Interface Language",
+      "currency": "Currency"
+    },
+    "back": "Back",
+    "continue": "Save and Continue",
+    "saving": "Saving...",
+    "validation": {
+      "nameRequired": "Organization name is required",
+      "nameMin": "Organization name must be at least 2 characters",
+      "nameMax": "Organization name must not exceed 255 characters",
+      "teamSizeRequired": "Please select team size"
+    }
+  },
+  "step3": {
+    "title": "Let's get started!",
+    "subtitle": "Onboarding complete! You can now go to your dashboard to get started.",
+    "goToDashboard": "Go to Dashboard",
+    "completing": "Completing...",
+    "success": "Great! Onboarding completed."
+  },
+  "progress": {
+    "step": "Step",
+    "of": "/"
+  }
+}
+

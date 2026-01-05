@@ -24,6 +24,10 @@ interface TableActionButtonsProps {
   showEdit?: boolean;
   showDelete?: boolean;
   showView?: boolean;
+  disabledEdit?: boolean;
+  disabledDelete?: boolean;
+  disabledEditTooltip?: string;
+  disabledDeleteTooltip?: string;
 }
 
 export const TableActionButtons = memo(({
@@ -34,6 +38,10 @@ export const TableActionButtons = memo(({
   showEdit = true,
   showDelete = true,
   showView = false,
+  disabledEdit = false,
+  disabledDelete = false,
+  disabledEditTooltip,
+  disabledDeleteTooltip,
 }: TableActionButtonsProps) => {
   const { t } = useTranslation(['components.tableActions']);
   
@@ -69,19 +77,20 @@ export const TableActionButtons = memo(({
           </Tooltip>
         )}
 
-        {showEdit && onEdit && (
+        {showEdit && (onEdit || disabledEdit) && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={onEdit}
+                onClick={disabledEdit ? undefined : onEdit}
                 className={editButtonClasses}
-                aria-label={t('edit')}
+                aria-label={disabledEdit ? disabledEditTooltip || t('edit') : t('edit')}
+                disabled={disabledEdit}
               >
                 <Pencil className="h-6 w-6" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t('edit')}</p>
+              <p>{disabledEdit && disabledEditTooltip ? disabledEditTooltip : t('edit')}</p>
             </TooltipContent>
           </Tooltip>
         )}
@@ -103,19 +112,20 @@ export const TableActionButtons = memo(({
           </Tooltip>
         ))}
 
-        {showDelete && onDelete && (
+        {showDelete && (onDelete || disabledDelete) && (
           <Tooltip>
             <TooltipTrigger asChild>
               <button
-                onClick={onDelete}
+                onClick={disabledDelete ? undefined : onDelete}
                 className={deleteButtonClasses}
-                aria-label={t('delete')}
+                aria-label={disabledDelete ? disabledDeleteTooltip || t('delete') : t('delete')}
+                disabled={disabledDelete}
               >
                 <Trash2 className="h-6 w-6" />
               </button>
             </TooltipTrigger>
             <TooltipContent>
-              <p>{t('delete')}</p>
+              <p>{disabledDelete && disabledDeleteTooltip ? disabledDeleteTooltip : t('delete')}</p>
             </TooltipContent>
           </Tooltip>
         )}
