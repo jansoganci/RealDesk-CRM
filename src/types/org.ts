@@ -55,6 +55,24 @@ export interface OrgMemberWithOrg extends OrgMember {
 }
 
 /**
+ * User data from auth.users (subset)
+ */
+export interface OrgUserData {
+  email: string;
+  raw_user_meta_data: {
+    full_name?: string;
+    avatar_url?: string;
+  } | null;
+}
+
+/**
+ * OrgMember with joined user data (for team members list)
+ */
+export interface OrgMemberWithUser extends OrgMember {
+  user: OrgUserData;
+}
+
+/**
  * OrgContext value type
  */
 export interface OrgContextValue {

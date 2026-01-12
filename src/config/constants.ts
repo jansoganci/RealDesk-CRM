@@ -68,6 +68,7 @@ export const ROUTES = {
   CALENDAR: '/calendar',
   FINANCE: '/finance',
   PROFILE: '/profile',
+  TEAM: '/team',
   BILLING_SUBSCRIBE: '/billing/subscribe',
   ONBOARDING: '/onboarding',
 } as const;

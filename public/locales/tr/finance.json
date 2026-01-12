@@ -78,6 +78,85 @@
     "automationError": "Otomasyon çalıştırılamadı"
   },
 
+  "recurring": {
+    "title": "Tekrarlayan Giderler",
+    "addButton": "Tekrarlayan Gider Ekle",
+    "editButton": "Tekrarlayan Gideri Düzenle",
+    "dialog": {
+      "addTitle": "Tekrarlayan Gider Ekle",
+      "addDescription": "Yeni tekrarlayan gider oluştur",
+      "editTitle": "Tekrarlayan Gideri Düzenle",
+      "editDescription": "Tekrarlayan gider detaylarını güncelle"
+    },
+    "form": {
+      "name": "Ad",
+      "amount": "Tutar",
+      "currency": "Para Birimi",
+      "category": "Kategori",
+      "frequency": "Sıklık",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "indefinite": "Süresiz/Son Tarih Yok",
+      "dayOfMonth": "Ayın Günü",
+      "vendor": "Satıcı Adı",
+      "paymentMethod": "Ödeme Yöntemi",
+      "notes": "Notlar"
+    },
+    "frequencies": {
+      "monthly": "Aylık",
+      "quarterly": "3 Aylık",
+      "yearly": "Yıllık"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Pasif"
+    },
+    "messages": {
+      "created": "Tekrarlayan gider başarıyla oluşturuldu",
+      "updated": "Tekrarlayan gider başarıyla güncellendi",
+      "deleted": "Tekrarlayan gider başarıyla silindi",
+      "loadError": "Tekrarlayan giderler yüklenemedi",
+      "saveError": "Tekrarlayan gider kaydedilemedi",
+      "deleteError": "Tekrarlayan gider silinemedi",
+      "transactionsGenerated": "{{count}} tekrarlayan işlem oluşturuldu"
+    },
+    "list": {
+      "title": "Tekrarlayan Giderler",
+      "description": "Tekrarlayan faturalarınızı ve giderlerinizi yönetin",
+      "empty": {
+        "title": "Tekrarlayan gider yok",
+        "description": "Başlamak için ilk tekrarlayan giderinizi oluşturun"
+      }
+    },
+    "table": {
+      "name": "Ad",
+      "category": "Kategori",
+      "amount": "Tutar",
+      "frequency": "Sıklık",
+      "nextDueDate": "Sonraki Vade Tarihi",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "actions": {
+      "edit": "Düzenle",
+      "delete": "Sil"
+    },
+    "delete": {
+      "confirm": "Tekrarlayan Gideri Sil",
+      "message": "Bu tekrarlayan gideri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    },
+    "filters": {
+      "search": "Ada göre ara...",
+      "status": "Durum",
+      "all": "Tümü",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "category": "Kategori",
+      "frequency": "Sıklık",
+      "allFrequencies": "Tüm Sıklıklar"
+    }
+  },
+
   "filters": {
     "selectMonth": "Ay seçin",
     "allMonths": "Tüm Aylar",

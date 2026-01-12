@@ -63,6 +63,42 @@ function getCurrencyText(currency: 'TRY' | 'USD' | 'EUR'): string {
 }
 
 /**
+ * Translate property type from English enum to Turkish
+ * Maps database enum values to Turkish labels for PDF display
+ */
+function translatePropertyType(propertyType: string): string {
+  const normalizedType = propertyType?.toLowerCase().trim();
+  
+  switch (normalizedType) {
+    case 'apartment':
+      return 'Daire';
+    case 'house':
+    case 'detached_house':
+    case 'müstakil':
+      return 'Müstakil Ev';
+    case 'commercial':
+    case 'workplace':
+    case 'işyeri':
+      return 'İşyeri';
+    case 'villa':
+      return 'Villa';
+    case 'office':
+    case 'ofis':
+      return 'Ofis';
+    case 'shop':
+    case 'dükkan':
+      return 'Dükkan';
+    case 'warehouse':
+    case 'depo':
+      return 'Depo';
+    default:
+      // If already in Turkish or unknown, return as-is (fallback)
+      // This handles cases where the value might already be translated
+      return propertyType || 'Daire';
+  }
+}
+
+/**
  * Generate contract PDF and download
  */
 export async function generateContractPDF(data: ContractPdfData): Promise<void> {
@@ -191,7 +227,7 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
     ['NUMARASI', data.contractNumber],
     ['MAHALLESİ/İLÇE/İL', `${data.mahalle} / ${data.ilce} / ${data.il}`],
     ['SOKAĞI/NUMARASI', `${data.sokak} No: ${data.binaNo} Daire: ${data.daireNo}`],
-    ['KİRALANAN ŞEYİN CİNSİ', data.propertyType],
+    ['KİRALANAN ŞEYİN CİNSİ', translatePropertyType(data.propertyType)],
     ['KİRAYA VERENİN ADI SOYADI', ownerInfo],
     ['KİRACININ ADI SOYADI', tenantInfo],
     ['KİRACININ İKAMETGAHI', data.tenantAddress],

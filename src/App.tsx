@@ -35,6 +35,7 @@ import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
+import { TeamMembersList } from './features/organization/TeamMembersList';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
@@ -221,6 +222,14 @@ function AppContent() {
                   element={
                     <ProtectedRoute>
                       <Profile />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path={ROUTES.TEAM}
+                  element={
+                    <ProtectedRoute>
+                      <TeamMembersList />
                     </ProtectedRoute>
                   }
                 />
