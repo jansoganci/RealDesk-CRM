@@ -78,6 +78,85 @@
     "automationError": "Failed to run automation"
   },
 
+  "recurring": {
+    "title": "Recurring Expenses",
+    "addButton": "Add Recurring Expense",
+    "editButton": "Edit Recurring Expense",
+    "dialog": {
+      "addTitle": "Add Recurring Expense",
+      "addDescription": "Create a new recurring expense",
+      "editTitle": "Edit Recurring Expense",
+      "editDescription": "Update recurring expense details"
+    },
+    "form": {
+      "name": "Name",
+      "amount": "Amount",
+      "currency": "Currency",
+      "category": "Category",
+      "frequency": "Frequency",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "indefinite": "Indefinite/No End Date",
+      "dayOfMonth": "Day of Month",
+      "vendor": "Vendor Name",
+      "paymentMethod": "Payment Method",
+      "notes": "Notes"
+    },
+    "frequencies": {
+      "monthly": "Monthly",
+      "quarterly": "Quarterly",
+      "yearly": "Yearly"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "messages": {
+      "created": "Recurring expense created successfully",
+      "updated": "Recurring expense updated successfully",
+      "deleted": "Recurring expense deleted successfully",
+      "loadError": "Failed to load recurring expenses",
+      "saveError": "Failed to save recurring expense",
+      "deleteError": "Failed to delete recurring expense",
+      "transactionsGenerated": "{{count}} recurring transaction(s) created"
+    },
+    "list": {
+      "title": "Recurring Expenses",
+      "description": "Manage your recurring bills and expenses",
+      "empty": {
+        "title": "No recurring expenses",
+        "description": "Create your first recurring expense to get started"
+      }
+    },
+    "table": {
+      "name": "Name",
+      "category": "Category",
+      "amount": "Amount",
+      "frequency": "Frequency",
+      "nextDueDate": "Next Due Date",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "delete": {
+      "confirm": "Delete Recurring Expense",
+      "message": "Are you sure you want to delete this recurring expense? This action cannot be undone."
+    },
+    "filters": {
+      "search": "Search by name...",
+      "status": "Status",
+      "all": "All",
+      "active": "Active",
+      "inactive": "Inactive",
+      "category": "Category",
+      "frequency": "Frequency",
+      "allFrequencies": "All Frequencies"
+    }
+  },
+
   "filters": {
     "selectMonth": "Select month",
     "allMonths": "All Months",
@@ -209,10 +288,37 @@
   },
 
   "analytics": {
-    "profitMargin": "Profit Margin",
-    "profitMarginDesc": "Net profit as percentage of total revenue",
+    "operatingEfficiency": "Operating Efficiency",
+    "operatingEfficiencyDesc": "Net profit as percentage of total revenue",
     "expenseRatio": "Expense Ratio",
     "expenseRatioDesc": "Operating expenses as percentage of revenue",
+    "commissionByPropertyType": "Commission by Property Type",
+    "rentalCommissions": "Rental Commissions",
+    "saleCommissions": "Sale Commissions",
+    "averageDaysToClose": "Average Days to Close",
+    "medianDaysToClose": "Median Days to Close",
+    "salesAverage": "Sales Average",
+    "rentalsAverage": "Rentals Average",
+    "totalDeals": "Total Deals",
+    "days": "days",
+    "commissionByClientType": "Commission by Client Type",
+    "ownerCommissions": "Owner Commissions",
+    "tenantCommissions": "Tenant Commissions",
+    "buyerCommissions": "Buyer Commissions",
+    "marketingROI": "Marketing ROI",
+    "marketingSpend": "Marketing Spend",
+    "commissionRevenue": "Commission Revenue",
+    "roiPercentage": "ROI",
+    "byCategory": "By Category",
+    "noMarketingData": "No marketing expense data available",
+    "conversionFunnel": "Conversion Funnel",
+    "totalInquiries": "Total Inquiries",
+    "appointments": "Appointments",
+    "contracts": "Contracts",
+    "leadToAppointment": "Lead to Appointment",
+    "appointmentToContract": "Appointment to Contract",
+    "overallConversion": "Overall Conversion",
+    "count": "Count",
     "budgetEfficiency": "Budget Efficiency",
     "budgetEfficiencyDesc": "How well spending stays within budget",
     "cashFlowForecast": "30-Day Forecast",
@@ -244,6 +350,10 @@
     "totalCommission": "Total Commission",
     "dealsCount": "Total Deals",
     "averagePerDeal": "Average Per Deal",
+    "transactionVolume": "Transaction Volume",
+    "transactionVolumeDesc": "Total property values sold in {{year}}",
+    "vsLastYear": "vs last year",
+    "new": "New",
     "bestMonth": "Best Month",
     "rentalVsSale": "Rental vs Sale Split",
     "rental": "Rental",

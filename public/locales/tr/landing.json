@@ -31,7 +31,7 @@
   },
   "pivot": {
     "title": "Biz onları birleştiriyoruz.",
-    "description": "emlakcrm, tüm bu dağınık parçaları tek bir profesyonel sistemde toplar. Artık aramak yok, kaybetmek yok.",
+    "description": "Emlak CRM, tüm bu dağınık parçaları tek bir profesyonel sistemde toplar. Artık aramak yok, kaybetmek yok.",
     "placeholder": "Birleşim Animasyonu",
     "videoAriaLabel": "EmlakCRM kontrol paneli gösterimi, birleşik gayrimenkul yönetimini gösterir",
     "videoFallback": "Tarayıcınız video desteklemiyor. Video, EmlakCRM'in tüm gayrimenkul yönetim görevlerini nasıl birleştirdiğini gösterir."
@@ -64,7 +64,7 @@
       },
       {
         "question": "Mobil uyumlu mu?",
-        "answer": "Evet, emlakcrm tamamen mobil uyumludur. Herhangi bir uygulama indirmeden telefonunuzun tarayıcısından tüm özelliklere ulaşabilirsiniz."
+        "answer": "Evet, Emlak CRM tamamen mobil uyumludur. Herhangi bir uygulama indirmeden telefonunuzun tarayıcısından tüm özelliklere ulaşabilirsiniz."
       },
       {
         "question": "Destek süreci nasıl?",
@@ -95,12 +95,12 @@
     "privacy": "Gizlilik",
     "terms": "Şartlar",
     "cookies": "Çerezler",
-    "copyright": "© 2025 emlakcrm. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir.",
+    "copyright": "© 2025 Emlak CRM. React, TypeScript, Tailwind CSS ve Supabase ile geliştirilmiştir.",
     "allRightsReserved": "Tüm hakları saklıdır."
   },
   "about": {
     "title": "Hakkımızda",
-    "description": "emlakcrm, Türk emlak profesyonelleri için tasarlanmış modern bir gayrimenkul yönetim sistemidir.",
+    "description": "Emlak CRM, Türk emlak profesyonelleri için tasarlanmış modern bir gayrimenkul yönetim sistemidir.",
     "mission": {
       "title": "Misyonumuz",
       "description": "Emlak işletmelerinin kaosunu ortadan kaldırmak ve profesyonel bir yönetim deneyimi sunmak. Portföyünüzü, sözleşmelerinizi ve müşterilerinizi tek bir yerden yönetmenizi sağlıyoruz."

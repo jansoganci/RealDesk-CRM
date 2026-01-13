@@ -5,7 +5,7 @@
   "cards": {
     "totalIncome": "Toplam Gelir",
     "totalExpenses": "Toplam Gider",
-    "netProfit": "Net Kar",
+    "netProfit": "Net Kâr",
     "pending": "Bekleyen İşlemler",
     "noChange": "%0",
     "vsLastMonth": "geçen aya göre",
@@ -76,6 +76,85 @@
     "transactionsGenerated": "{{count}} tekrarlayan işlem oluşturuldu",
     "noTransactionsToGenerate": "Oluşturulacak tekrarlayan işlem yok",
     "automationError": "Otomasyon çalıştırılamadı"
+  },
+
+  "recurring": {
+    "title": "Tekrarlayan Giderler",
+    "addButton": "Tekrarlayan Gider Ekle",
+    "editButton": "Tekrarlayan Gideri Düzenle",
+    "dialog": {
+      "addTitle": "Tekrarlayan Gider Ekle",
+      "addDescription": "Yeni tekrarlayan gider oluştur",
+      "editTitle": "Tekrarlayan Gideri Düzenle",
+      "editDescription": "Tekrarlayan gider detaylarını güncelle"
+    },
+    "form": {
+      "name": "Ad",
+      "amount": "Tutar",
+      "currency": "Para Birimi",
+      "category": "Kategori",
+      "frequency": "Sıklık",
+      "startDate": "Başlangıç Tarihi",
+      "endDate": "Bitiş Tarihi",
+      "indefinite": "Süresiz/Son Tarih Yok",
+      "dayOfMonth": "Ayın Günü",
+      "vendor": "Satıcı Adı",
+      "paymentMethod": "Ödeme Yöntemi",
+      "notes": "Notlar"
+    },
+    "frequencies": {
+      "monthly": "Aylık",
+      "quarterly": "3 Aylık",
+      "yearly": "Yıllık"
+    },
+    "status": {
+      "active": "Aktif",
+      "inactive": "Pasif"
+    },
+    "messages": {
+      "created": "Tekrarlayan gider başarıyla oluşturuldu",
+      "updated": "Tekrarlayan gider başarıyla güncellendi",
+      "deleted": "Tekrarlayan gider başarıyla silindi",
+      "loadError": "Tekrarlayan giderler yüklenemedi",
+      "saveError": "Tekrarlayan gider kaydedilemedi",
+      "deleteError": "Tekrarlayan gider silinemedi",
+      "transactionsGenerated": "{{count}} tekrarlayan işlem oluşturuldu"
+    },
+    "list": {
+      "title": "Tekrarlayan Giderler",
+      "description": "Tekrarlayan faturalarınızı ve giderlerinizi yönetin",
+      "empty": {
+        "title": "Tekrarlayan gider yok",
+        "description": "Başlamak için ilk tekrarlayan giderinizi oluşturun"
+      }
+    },
+    "table": {
+      "name": "Ad",
+      "category": "Kategori",
+      "amount": "Tutar",
+      "frequency": "Sıklık",
+      "nextDueDate": "Sonraki Vade Tarihi",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "actions": {
+      "edit": "Düzenle",
+      "delete": "Sil"
+    },
+    "delete": {
+      "confirm": "Tekrarlayan Gideri Sil",
+      "message": "Bu tekrarlayan gideri silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+    },
+    "filters": {
+      "search": "Ada göre ara...",
+      "status": "Durum",
+      "all": "Tümü",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "category": "Kategori",
+      "frequency": "Sıklık",
+      "allFrequencies": "Tüm Sıklıklar"
+    }
   },
 
   "filters": {
@@ -209,19 +288,46 @@
   },
 
   "analytics": {
-    "profitMargin": "Kar Marjı",
-    "profitMarginDesc": "Toplam gelire göre net kar yüzdesi",
+    "operatingEfficiency": "İşletme Verimliliği",
+    "operatingEfficiencyDesc": "Toplam gelire göre net kar yüzdesi",
     "expenseRatio": "Gider Oranı",
     "expenseRatioDesc": "Gelire göre işletme giderleri yüzdesi",
+    "commissionByPropertyType": "Gayrimenkul Tipine Göre Komisyon",
+    "rentalCommissions": "Kira Komisyonları",
+    "saleCommissions": "Satış Komisyonları",
+    "averageDaysToClose": "Ortalama Kapanış Süresi",
+    "medianDaysToClose": "Medyan Kapanış Süresi",
+    "salesAverage": "Satış Ortalaması",
+    "rentalsAverage": "Kira Ortalaması",
+    "totalDeals": "Toplam İşlem",
+    "days": "gün",
+    "commissionByClientType": "Müşteri Tipine Göre Komisyon",
+    "ownerCommissions": "Mal Sahibi Komisyonları",
+    "tenantCommissions": "Kiracı Komisyonları",
+    "buyerCommissions": "Alıcı Komisyonları",
+    "marketingROI": "Pazarlama ROI",
+    "marketingSpend": "Pazarlama Harcaması",
+    "commissionRevenue": "Komisyon Geliri",
+    "roiPercentage": "ROI",
+    "byCategory": "Kategoriye Göre",
+    "noMarketingData": "Pazarlama gider verisi bulunmamaktadır",
+    "conversionFunnel": "Dönüşüm Hunisi",
+    "totalInquiries": "Toplam Talep",
+    "appointments": "Randevular",
+    "contracts": "Sözleşmeler",
+    "leadToAppointment": "Talep - Randevu",
+    "appointmentToContract": "Randevu - Sözleşme",
+    "overallConversion": "Genel Dönüşüm",
+    "count": "Adet",
     "budgetEfficiency": "Bütçe Verimliliği",
     "budgetEfficiencyDesc": "Harcamaların bütçe içinde kalma performansı",
     "cashFlowForecast": "30 Günlük Tahmin",
     "cashFlowForecastDesc": "Önümüzdeki 30 gün için tahmini nakit akışı",
     "yearlyTrend": "12 Aylık Finansal Trend",
-    "yearlyTrendDesc": "{{year}} yılı gelir, gider ve kar trendleri",
+    "yearlyTrendDesc": "{{year}} yılı gelir, gider ve kâr trendleri",
     "revenue": "Gelir",
     "expenses": "Giderler",
-    "profit": "Kar",
+    "profit": "Kâr",
     "budgetVsActual": "Bütçe - Gerçekleşen Karşılaştırması",
     "budgetVsActualDesc": "Kategorilere göre bütçelenen ve gerçekleşen harcamaların karşılaştırması",
     "budgeted": "Bütçelenen",
@@ -244,6 +350,10 @@
     "totalCommission": "Toplam Komisyon",
     "dealsCount": "İşlem Sayısı",
     "averagePerDeal": "İşlem Başı Ortalama",
+    "transactionVolume": "İşlem Hacmi",
+    "transactionVolumeDesc": "{{year}} yılında satılan toplam gayrimenkul değeri",
+    "vsLastYear": "geçen yıla göre",
+    "new": "Yeni",
     "bestMonth": "En İyi Ay",
     "rentalVsSale": "Kira - Satış Dağılımı",
     "rental": "Kira",

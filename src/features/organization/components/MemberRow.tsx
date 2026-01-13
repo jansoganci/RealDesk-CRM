@@ -102,7 +102,7 @@ export const MemberRow = memo(({
                 className="h-9 w-9"
               >
                 <MoreHorizontal className="h-5 w-5" />
-                <span className="sr-only">{t('actions')}</span>
+                <span className="sr-only">{t('actions.label')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">

@@ -71,4 +71,5 @@ export const ROUTES = {
   TEAM: '/team',
   BILLING_SUBSCRIBE: '/billing/subscribe',
   ONBOARDING: '/onboarding',
+  ACCEPT_INVITE: '/accept-invite',
 } as const;

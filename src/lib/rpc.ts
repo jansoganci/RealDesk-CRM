@@ -1,5 +1,5 @@
 import { supabase } from '../config/supabase';
-import type { Database } from '../types/database';
+import type { Database } from '../types/database.types';
 
 // Extract valid RPC function names from Database type
 type RpcFunctionName = Extract<keyof Database['public']['Functions'], string>;

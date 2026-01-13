@@ -93,7 +93,7 @@ export const MemberCard = memo(({
                   className="h-8 w-8 shrink-0"
                 >
                   <MoreVertical className="h-4 w-4" />
-                  <span className="sr-only">{t('actions')}</span>
+                  <span className="sr-only">{t('actions.label')}</span>
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

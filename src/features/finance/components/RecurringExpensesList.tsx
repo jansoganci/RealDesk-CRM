@@ -37,7 +37,6 @@ import {
 } from 'lucide-react';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { RecurringExpensesFiltersBar } from './RecurringExpensesFiltersBar';
-import { useCurrencyConversion } from '../../../hooks/useCurrencyConversion';
 import { useOrg } from '@/contexts/OrgContext';
 import type {
   RecurringExpense,
@@ -66,7 +65,6 @@ export const RecurringExpensesList = ({
 }: RecurringExpensesListProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { isMember } = useOrg();
-  const { displayCurrency } = useCurrencyConversion();
   const [searchTerm, setSearchTerm] = useState('');
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [expenseToDelete, setExpenseToDelete] = useState<string | null>(null);

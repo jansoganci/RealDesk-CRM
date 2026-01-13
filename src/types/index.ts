@@ -1,4 +1,4 @@
-import type { Database } from './database';
+import type { Database } from './database.types';
 
 export type PropertyOwner = Database['public']['Tables']['property_owners']['Row'];
 export type PropertyOwnerInsert = Database['public']['Tables']['property_owners']['Insert'];

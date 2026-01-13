@@ -5,7 +5,6 @@ import { CommissionTrends } from './CommissionTrends';
 import { CommissionByPropertyTypeComponent } from './CommissionByPropertyType';
 import { AverageDaysToCloseComponent } from './AverageDaysToClose';
 import { CommissionByClientTypeComponent } from './CommissionByClientType';
-import { MarketingROIComponent } from './MarketingROI';
 import { ConversionFunnelComponent } from './ConversionFunnel';
 import type {
   FinancialRatios,
@@ -33,7 +32,6 @@ export const FinanceAnalytics = ({
   commissionByPropertyType,
   averageDaysToClose,
   commissionByClientType,
-  marketingROI,
   conversionFunnel,
   loading,
   onBillPaid,

@@ -1,5 +1,5 @@
 import { supabase } from '../config/supabase';
-import type { Database } from '../types/database';
+import type { Database } from '../types/database.types';
 
 type Tables = Database['public']['Tables'];
 type TableName = keyof Tables;

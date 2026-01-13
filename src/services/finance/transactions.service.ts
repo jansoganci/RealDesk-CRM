@@ -7,7 +7,7 @@ import { supabase } from '../../config/supabase';
 import { insertRow, updateRow } from '../../lib/db';
 import { getAuthenticatedUserId } from '../../lib/auth';
 import { getActiveOrgId, softDelete } from '../../lib/orgHelpers';
-import type { Database } from '../../types/database';
+import type { Database } from '../../types/database.types';
 import type {
   FinancialTransaction,
   CreateFinancialTransactionInput,

@@ -10,6 +10,7 @@ import {
   LayoutDashboard,
   Home,
   Users,
+  Users2,
   UserCheck,
   Bell,
   Search,
@@ -37,6 +38,7 @@ const navigationItems = [
   { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
   { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
+  { key: 'team', href: ROUTES.TEAM, icon: Users2 },
   { key: 'profile', href: ROUTES.PROFILE, icon: UserCircle },
 ];
 
@@ -70,7 +72,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className="flex items-center justify-between p-5 border-b border-gray-200/50 bg-blue-600 shadow-lg">
+        <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-blue-600 shadow-lg shrink-0">
           <div className="flex flex-col">
             <span className="font-bold text-white text-lg tracking-tight">{APP_NAME}</span>
             {currentOrg && (

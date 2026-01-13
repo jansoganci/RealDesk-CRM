@@ -36,6 +36,7 @@ import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
 import { TeamMembersList } from './features/organization/TeamMembersList';
+import { AcceptInvite } from './features/organization/AcceptInvite';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
@@ -68,6 +69,7 @@ function AppContent() {
               <Route path={ROUTES.PRICING} element={<PublicPricingPage />} />
               <Route path={ROUTES.ABOUT} element={<AboutPage />} />
               <Route path={ROUTES.CONTACT} element={<ContactPage />} />
+              <Route path={ROUTES.ACCEPT_INVITE} element={<AcceptInvite />} />
               <Route
                 path={ROUTES.ONBOARDING}
                 element={

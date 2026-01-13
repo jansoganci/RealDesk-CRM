@@ -8,11 +8,19 @@
   "deleting": "Siliniyor...",
   "searchPlaceholder": "Ara...",
   "filterPlaceholder": "Filtrele",
+  "noSearchResults": "Sonuç bulunamadı",
+  "tryDifferentSearch": "Farklı bir arama terimi deneyin",
   "deleteDialog": {
-    "title": "Kayıtı Sil",
+    "title": "Kaydı Sil",
     "description": "Bu kaydı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "cancel": "İptal",
     "delete": "Sil"
+  },
+  "discardDialog": {
+    "title": "Değişiklikleri iptal et?",
+    "description": "Kaydedilmemiş değişiklikleriniz var. İptal etmek istediğinizden emin misiniz?",
+    "cancel": "Düzenlemeye Devam Et",
+    "confirm": "İptal Et"
   },
   "demoMode": {
     "banner": "🚀 Demo Modu - Örnek verilerle keşfediyorsunuz",
@@ -24,7 +32,7 @@
     "item": "Slayt {{number}}"
   },
   "breadcrumb": {
-    "label": "Gezinme yolu",
+    "label": "Sayfa Yolu",
     "more": "Daha fazla"
   },
   "pagination": {

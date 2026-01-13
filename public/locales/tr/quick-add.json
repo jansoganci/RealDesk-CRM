@@ -25,7 +25,7 @@
     "rentAmount": "Kira Bedeli",
     "salePrice": "Satış Fiyatı",
     "currency": "Para Birimi",
-    "listingUrl": "İlan URL",
+    "listingUrl": "İlan Linki",
     "notes": "Notlar",
     "addTenant": "Bu mülke kiracı ekle",
     "tenantName": "Kiracı Adı",
@@ -56,11 +56,11 @@
     "sale": "Satılık"
   },
   "statuses": {
-    "Empty": "Boş",
+    "Empty": "Müsait",
     "Occupied": "Dolu",
     "Inactive": "Pasif",
-    "Available": "Müsait",
-    "Under Offer": "Teklif Altında",
+    "Available": "Satışa Hazır",
+    "Under Offer": "Teklif Alındı",
     "Sold": "Satıldı"
   },
   "currencies": {

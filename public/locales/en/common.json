@@ -8,11 +8,19 @@
   "deleting": "Deleting...",
   "searchPlaceholder": "Search...",
   "filterPlaceholder": "Filter",
+  "noSearchResults": "No results found",
+  "tryDifferentSearch": "Try a different search term",
   "deleteDialog": {
     "title": "Delete Item",
     "description": "Are you sure you want to delete this item? This action cannot be undone.",
     "cancel": "Cancel",
     "delete": "Delete"
+  },
+  "discardDialog": {
+    "title": "Discard changes?",
+    "description": "You have unsaved changes. Are you sure you want to discard them?",
+    "cancel": "Keep Editing",
+    "confirm": "Discard"
   },
   "demoMode": {
     "banner": "🚀 Demo Mode - You're exploring with sample data",

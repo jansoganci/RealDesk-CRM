@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -15,6 +15,8 @@ import { getLoginSchema, LoginFormData } from './authSchemas';
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [searchParams] = useSearchParams();
+  const redirect = searchParams.get('redirect');
   const { signIn, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
@@ -54,7 +56,7 @@ export const Login = () => {
 
       toast.success(t('toast.loginSuccess'));
       // Use replace to prevent back navigation to login page
-      navigate(ROUTES.DASHBOARD, { replace: true });
+      navigate(redirect || ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : t('errors.generic');
       toast.error(errorMessage);

@@ -7,7 +7,7 @@
     "serverError": "Sunucu hatası. Lütfen daha sonra tekrar deneyin."
   },
   "boundary": {
-    "title": "Bir şeyler ters gitti",
+    "title": "Beklenmeyen bir hata oluştu",
     "description": "Uygulama beklenmeyen bir hatayla karşılaştı. Lütfen sayfayı yeniden yükleyin.",
     "details": "Hata Detayları",
     "reload": "Sayfayı Yeniden Yükle"

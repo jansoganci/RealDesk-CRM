@@ -1,6 +1,6 @@
 import { supabase } from '../config/supabase';
 import { getAuthenticatedUserId } from '../lib/auth';
-import { Database } from '../types/database';
+import type { Database } from '../types/database.types';
 import { createLogger } from '../lib/logger';
 
 const logger = createLogger('UserPreferences');
@@ -36,6 +36,7 @@ class UserPreferencesService {
         full_name: null,
         phone_number: null,
         commission_rate: 4.0,
+        onboarding_banner_dismissed_at: null,
       };
     }
 
@@ -92,7 +93,7 @@ class UserPreferencesService {
    * Update onboarding banner dismissal timestamp
    */
   async updateOnboardingBannerDismissal(dismissedAt: number): Promise<void> {
-    await this.updatePreferences({ onboarding_banner_dismissed_at: dismissedAt });
+    await this.updatePreferences({ onboarding_banner_dismissed_at: new Date(dismissedAt).toISOString() });
   }
 
   /**
@@ -100,7 +101,7 @@ class UserPreferencesService {
    */
   async getOnboardingBannerDismissal(): Promise<number | null> {
     const prefs = await this.getPreferences();
-    return prefs.onboarding_banner_dismissed_at ?? null;
+    return prefs.onboarding_banner_dismissed_at ? new Date(prefs.onboarding_banner_dismissed_at).getTime() : null;
   }
 }
 

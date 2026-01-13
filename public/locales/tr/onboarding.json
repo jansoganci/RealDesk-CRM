@@ -1,11 +1,11 @@
 {
   "step1": {
-    "title": "Hoş geldiniz! Emlak CRM'ye ne için geldiniz?",
+    "title": "Hoş geldiniz! Emlak CRM'e ne için geldiniz?",
     "subtitle": "Size en uygun deneyimi sunmak için birkaç soru soruyoruz",
     "question": "Emlak CRM'yi ne için kullanacaksınız?",
     "options": {
-      "properties": "Emlak listelerimi organize etmek",
-      "clients": "Müşteri ilişkilerimi takip etmek (kiracı/sahip)",
+      "properties": "Portföyümü organize etmek",
+      "clients": "Müşteri ilişkilerini takip etmek (kiracı/mal sahibi)",
       "contracts": "Sözleşme ve belgeleri yönetmek",
       "team": "Ekip işbirliği ve raporlama",
       "all": "Hepsi"
@@ -50,10 +50,10 @@
   },
   "step3": {
     "title": "Hemen başlayalım!",
-    "subtitle": "Onboarding tamamlandı! Dashboard'a giderek başlayabilirsiniz.",
-    "goToDashboard": "Dashboard'a Git",
+    "subtitle": "Kurulum tamamlandı! Panele giderek başlayabilirsiniz.",
+    "goToDashboard": "Panele Git",
     "completing": "Tamamlanıyor...",
-    "success": "Harika! Onboarding tamamlandı."
+    "success": "Harika! Kurulum tamamlandı."
   },
   "progress": {
     "step": "Adım",

@@ -18,7 +18,7 @@ interface Step3QuickStartProps {
 export function Step3QuickStart({ onComplete }: Step3QuickStartProps) {
   const { t } = useTranslation('onboarding');
   const navigate = useNavigate();
-  const { primaryUseCase, completeOnboarding, isLoading } = useOnboarding();
+  const { primaryUseCase, isLoading } = useOnboarding();
   const { currentOrg } = useOrg();
   const [completing, setCompleting] = useState(false);
 

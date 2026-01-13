@@ -73,6 +73,64 @@ export interface OrgMemberWithUser extends OrgMember {
 }
 
 /**
+ * Organization invitation
+ */
+export interface OrgInvitation {
+  id: string;
+  org_id: string;
+  email: string;
+  role: OrgRole;
+  invitation_token: string;
+  invited_by: string | null;
+  invited_at: string;
+  expires_at: string;
+  accepted_at: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+/**
+ * OrgInvitation with organization data (for showing in UI)
+ */
+export interface OrgInvitationWithOrg extends OrgInvitation {
+  organization: Organization;
+}
+
+/**
+ * Public invitation info (for accept page)
+ */
+export interface InvitationInfo {
+  valid: boolean;
+  org_name?: string;
+  org_logo?: string | null;
+  role?: OrgRole;
+  invited_by_name?: string | null;
+  invited_at?: string;
+  expires_at?: string;
+  expired?: boolean;
+}
+
+/**
+ * Unified team member type (combines active members and pending invitations)
+ */
+export interface TeamMember {
+  id: string;
+  type: 'member' | 'invitation';
+  email: string;
+  name: string | null;
+  avatarUrl: string | null;
+  role: OrgRole;
+  status: 'active' | 'pending';
+  joinedAt: string | null;
+  invitedAt: string | null;
+  expiresAt?: string | null;
+  invitationToken?: string | null;
+  // For type narrowing
+  member?: OrgMemberWithUser;
+  invitation?: OrgInvitation;
+}
+
+/**
  * OrgContext value type
  */
 export interface OrgContextValue {

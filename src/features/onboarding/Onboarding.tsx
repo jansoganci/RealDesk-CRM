@@ -1,5 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { useEffect } from 'react';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { useOnboarding } from './hooks/useOnboarding';
@@ -8,13 +7,10 @@ import { OnboardingProgress } from './components/OnboardingProgress';
 import { Step1GoalSelection } from './components/Step1GoalSelection';
 import { Step2OrganizationSetup } from './components/Step2OrganizationSetup';
 import { Step3QuickStart } from './components/Step3QuickStart';
-import { ROUTES } from '@/config/constants';
 
 export function Onboarding() {
-  const { t } = useTranslation('onboarding');
   const { currentStep, nextStep, previousStep, resumeFromStep } = useOnboarding();
   const { refreshOrg } = useOrg();
-  const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
   // Handle resume from query param

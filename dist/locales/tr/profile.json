@@ -274,5 +274,32 @@
       "60": "1 saat önce",
       "90": "1.5 saat önce"
     }
+  },
+  "organizationSettings": {
+    "title": "Organizasyon Ayarları",
+    "editButton": "Düzenle",
+    "editDialog": {
+      "title": "Organizasyon Adını Düzenle",
+      "description": "Organizasyon adınızı güncelleyin"
+    },
+    "updateSuccess": "Organizasyon adı başarıyla güncellendi",
+    "updateError": "Organizasyon adı güncellenirken bir hata oluştu",
+    "discardDialog": {
+      "title": "Değişiklikleri iptal et?",
+      "description": "Kaydedilmemiş değişiklikler kaybolacak. Devam etmek istiyor musunuz?",
+      "confirm": "Evet, iptal et",
+      "cancel": "Geri dön"
+    },
+    "fields": {
+      "name": "Organizasyon Adı",
+      "namePlaceholder": "Organizasyon adınızı girin"
+    },
+    "validation": {
+      "nameMin": "Organizasyon adı en az 2 karakter olmalıdır",
+      "nameMax": "Organizasyon adı 255 karakteri geçmemelidir"
+    },
+    "errors": {
+      "notOwner": "Sadece organizasyon sahibi adı değiştirebilir"
+    }
   }
 }

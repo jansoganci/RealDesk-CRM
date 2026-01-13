@@ -1,6 +1,5 @@
 import { supabase } from '@/config/supabase';
 import { createLogger } from '@/lib/logger';
-import { getAuthenticatedUserId } from '@/lib/auth';
 
 const logger = createLogger('Onboarding');
 
@@ -14,7 +13,7 @@ export interface OnboardingStatus {
 }
 
 export interface OnboardingEventData {
-  [key: string]: unknown;
+  [key: string]: any;
 }
 
 class OnboardingService {
@@ -121,7 +120,7 @@ class OnboardingService {
         step_number: stepNumber,
         step_name: stepName,
         action_taken: action,
-        data: data || {},
+        data: (data || {}) as any,
       });
 
     if (error) {

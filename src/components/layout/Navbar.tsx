@@ -25,7 +25,7 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
 
   return (
     <header className={`sticky top-0 z-30 ${COLORS.card.bg} border-b ${COLORS.border.DEFAULT_class} shadow-sm`}>
-      <div className="flex items-center justify-between gap-4 px-4 py-4 lg:px-6">
+      <div className="flex items-center justify-between gap-4 px-4 h-[72px] lg:px-6">
         <div className="flex items-center gap-4">
           <Button
             variant="outline"

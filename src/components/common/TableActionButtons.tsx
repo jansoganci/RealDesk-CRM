@@ -14,6 +14,7 @@ interface ActionButton {
   onClick: () => void;
   variant?: 'edit' | 'delete' | 'view' | 'custom';
   className?: string;
+  disabled?: boolean;
 }
 
 interface TableActionButtonsProps {
@@ -99,9 +100,10 @@ export const TableActionButtons = memo(({
           <Tooltip key={index}>
             <TooltipTrigger asChild>
               <button
-                onClick={action.onClick}
-                className={action.className || viewButtonClasses}
+                onClick={action.disabled ? undefined : action.onClick}
+                className={`${action.className || viewButtonClasses} ${action.disabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 aria-label={typeof action.tooltip === 'string' ? action.tooltip : t(action.tooltip)}
+                disabled={action.disabled}
               >
                 {action.icon}
               </button>

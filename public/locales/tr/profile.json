@@ -292,8 +292,12 @@
     },
     "fields": {
       "name": "Organizasyon Adı",
-      "namePlaceholder": "Organizasyon adınızı girin"
+      "namePlaceholder": "Organizasyon adınızı girin",
+      "createdAt": "Kuruluş Tarihi",
+      "orgId": "Organizasyon ID"
     },
+    "copyId": "ID'yi Kopyala",
+    "idCopied": "Organizasyon ID panoya kopyalandı",
     "validation": {
       "nameMin": "Organizasyon adı en az 2 karakter olmalıdır",
       "nameMax": "Organizasyon adı 255 karakteri geçmemelidir"
@@ -301,5 +305,15 @@
     "errors": {
       "notOwner": "Sadece organizasyon sahibi adı değiştirebilir"
     }
+  },
+  "teamMembers": {
+    "title": "Ekip Üyeleri",
+    "count": "{{count}} üye",
+    "count_one": "{{count}} üye",
+    "count_other": "{{count}} üye",
+    "viewAll": "Tümünü Gör",
+    "andMore": "+{{count}} daha",
+    "empty": "Henüz ekip üyesi yok",
+    "addMember": "Ekip Üyesi Ekle"
   }
 }

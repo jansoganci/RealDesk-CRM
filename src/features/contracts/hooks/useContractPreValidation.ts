@@ -51,7 +51,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
 
   const validateBeforeSubmit = async (
     data: ContractFormData,
-    userId: string,
+    _userId: string,
     showConfirmation: ShowConfirmationFn
   ): Promise<PreValidationResult> => {
 
@@ -64,8 +64,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     const ownerDuplicate = await checkDuplicateName(
       data.owner_name,
       ownerTcHash,
-      'owner',
-      userId
+      'owner'
     );
 
     if (ownerDuplicate.hasDuplicate) {
@@ -77,8 +76,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     const tenantDuplicate = await checkDuplicateName(
       data.tenant_name,
       tenantTcHash,
-      'tenant',
-      userId
+      'tenant'
     );
 
     if (tenantDuplicate.hasDuplicate) {
@@ -92,8 +90,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
         phone: normalizePhone(data.owner_phone),
         email: data.owner_email
       },
-      'owner',
-      userId
+      'owner'
     );
 
     if (ownerChanges.hasChanges && ownerChanges.message) {
@@ -114,8 +111,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
         email: data.tenant_email,
         address: data.tenant_address
       },
-      'tenant',
-      userId
+      'tenant'
     );
 
     if (tenantChanges.hasChanges && tenantChanges.message) {
@@ -129,7 +125,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     }
 
     // Step 6: Check multiple active contracts
-    const multipleContracts = await checkMultipleContracts(tenantTcHash, userId);
+    const multipleContracts = await checkMultipleContracts(tenantTcHash);
 
     if (multipleContracts.hasMultiple && multipleContracts.message) {
       const confirmed = await showConfirmation(

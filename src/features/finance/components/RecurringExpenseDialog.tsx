@@ -48,7 +48,7 @@ interface RecurringExpenseDialogProps {
   loading?: boolean;
 }
 
-const getRecurringExpenseSchema = (t: any) =>
+const getRecurringExpenseSchema = (_t: any) =>
   z.object({
     name: z.string().min(1, 'Name is required'),
     amount: z.coerce.number().positive('Amount must be greater than 0'),

@@ -9,7 +9,7 @@
   "searchPlaceholder": "Ara...",
   "filterPlaceholder": "Filtrele",
   "deleteDialog": {
-    "title": "Kayıtı Sil",
+    "title": "Kaydı Sil",
     "description": "Bu kaydı silmek istediğinizden emin misiniz? Bu işlem geri alınamaz.",
     "cancel": "İptal",
     "delete": "Sil"
@@ -44,5 +44,18 @@
     "delete": "Sil",
     "back": "Geri",
     "close": "Kapat"
+  },
+  "readOnlyMode": "Sadece görüntüleme yetkiniz var",
+  "org": {
+    "loading": "Organizasyon yükleniyor...",
+    "error": "Organizasyon yüklenemedi",
+    "noOrg": "Organizasyon bulunamadı"
+  },
+  "completionBanner": {
+    "title": "Kurulumu henüz tamamlamadınız",
+    "description": "Emlak CRM'den en iyi şekilde faydalanmak için kurulum adımlarını tamamlayın",
+    "completeSetup": "Kurulumu Tamamla",
+    "later": "Daha Sonra",
+    "dismiss": "Kapat"
   }
 }

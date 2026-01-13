@@ -42,8 +42,7 @@ export interface MultipleContractsCheck {
 export async function checkDuplicateName(
   name: string,
   tcHash: string,
-  entityType: 'owner' | 'tenant',
-  userId: string
+  entityType: 'owner' | 'tenant'
 ): Promise<DuplicateNameCheck> {
   const table = entityType === 'owner' ? 'property_owners' : 'tenants';
   const orgId = await getActiveOrgId();
@@ -79,8 +78,7 @@ export async function checkDuplicateName(
 export async function checkDataChanges(
   tcHash: string,
   newData: { phone: string; email?: string; address?: string },
-  entityType: 'owner' | 'tenant',
-  userId: string
+  entityType: 'owner' | 'tenant'
 ): Promise<DataChangesCheck> {
   const table = entityType === 'owner' ? 'property_owners' : 'tenants';
   const orgId = await getActiveOrgId();
@@ -130,8 +128,7 @@ export async function checkDataChanges(
  * Warns: "⚠️ Bu kiracının 2 aktif sözleşmesi var"
  */
 export async function checkMultipleContracts(
-  tcHash: string,
-  userId: string
+  tcHash: string
 ): Promise<MultipleContractsCheck> {
   const orgId = await getActiveOrgId();
   

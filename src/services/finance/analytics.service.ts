@@ -509,7 +509,6 @@ export const getCommissionByPropertyType = async (
   displayCurrency: string
 ): Promise<CommissionByPropertyType> => {
   try {
-    const orgId = await getActiveOrgId();
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
 

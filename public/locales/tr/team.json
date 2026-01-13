@@ -1,0 +1,103 @@
+{
+  "pageTitle": "Ekip Üyeleri",
+  "addMember": "Üye Ekle",
+  "addMemberShort": "Ekle",
+  "searchPlaceholder": "Üye ara...",
+  "ownerOnly": "Sadece organizasyon sahipleri ekip üyelerini yönetebilir",
+  "you": "(Sen)",
+  "cannotModifySelf": "Kendi hesabınızı düzenleyemezsiniz",
+  "table": {
+    "member": "Üye",
+    "email": "E-posta",
+    "status": "Durum",
+    "role": "Rol",
+    "joined": "Katılım",
+    "actions": "İşlemler"
+  },
+  "status": {
+    "active": "Aktif",
+    "pending": "Beklemede"
+  },
+  "roles": {
+    "owner": "Sahip",
+    "member": "Üye"
+  },
+  "emptyState": {
+    "title": "Henüz ekip üyesi yok",
+    "description": "Mülkleriniz ve sözleşmeleriniz üzerinde işbirliği yapmak için ekip üyeleri ekleyin"
+  },
+  "addDialog": {
+    "title": "Ekip Üyesi Ekle",
+    "description": "Organizasyonunuza birini davet edin. Mevcut bir hesapları olmalıdır.",
+    "emailLabel": "E-posta Adresi",
+    "emailPlaceholder": "ornek@email.com",
+    "roleLabel": "Rol",
+    "roleHelp": "Sahipler ekibi ve ayarları yönetebilir. Üyeler standart erişime sahiptir.",
+    "submit": "Üye Ekle",
+    "submitting": "Ekleniyor..."
+  },
+  "changeRoleDialog": {
+    "promoteTitle": "Sahip Yap",
+    "demoteTitle": "Üye Yap",
+    "promoteDescription": "{{name}} kişisini organizasyon sahibi yapın. Ekip üyelerini ve organizasyon ayarlarını yönetebilecek.",
+    "demoteDescription": "{{name}} kişisini normal üye yapın. Ekip üyelerini ve organizasyon ayarlarını yönetme yetkisini kaybedecek.",
+    "currentRole": "Mevcut Rol",
+    "newRole": "Yeni Rol",
+    "submit": "Değişikliği Onayla",
+    "submitting": "Güncelleniyor...",
+    "demoteWarning": "Bu kullanıcı yönetici yetkilerini kaybedecek ve ekip üyelerini veya organizasyon ayarlarını yönetemeyecek."
+  },
+  "removeDialog": {
+    "title": "Ekip Üyesini Kaldır",
+    "description": "{{name}} kişisini organizasyonunuzdan kaldırmak istediğinizden emin misiniz?",
+    "warning": "Bu işlem geri alınamaz. Kullanıcı tüm organizasyon verilerine, mülklere, sözleşmelere ve diğer kaynaklara erişimini anında kaybedecek.",
+    "cancel": "İptal",
+    "confirm": "Üyeyi Kaldır",
+    "removing": "Kaldırılıyor..."
+  },
+  "validation": {
+    "emailRequired": "E-posta adresi gereklidir",
+    "emailInvalid": "Geçerli bir e-posta adresi girin",
+    "roleRequired": "Lütfen bir rol seçin"
+  },
+  "success": {
+    "memberAdded": "Ekip üyesi başarıyla eklendi",
+    "roleUpdated": "Üye rolü başarıyla güncellendi",
+    "memberRemoved": "Ekip üyesi başarıyla kaldırıldı",
+    "invitationAccepted": "Davet başarıyla kabul edildi!"
+  },
+  "errors": {
+    "addFailed": "Ekip üyesi eklenemedi. Lütfen tekrar deneyin.",
+    "updateFailed": "Üye rolü güncellenemedi. Lütfen tekrar deneyin.",
+    "removeFailed": "Ekip üyesi kaldırılamadı. Lütfen tekrar deneyin.",
+    "userNotFound": "Kullanıcı bulunamadı. Davet edilmeden önce kayıt olmaları gerekiyor.",
+    "alreadyMember": "Bu kullanıcı zaten organizasyonunuzun bir üyesi.",
+    "lastOwner": "Son sahip kaldırılamaz. Önce sahipliği devredin.",
+    "cannotDemoteLastOwner": "Son sahip üye yapılamaz. Önce başka bir üyeyi sahip yapın.",
+    "invitationExpired": "Davet Süresi Dolmuş",
+    "invitationExpiredDesc": "Bu davet bağlantısının süresi dolmuş. Lütfen gönderenden daveti yeniden göndermesini isteyin.",
+    "invalidInvitation": "Geçersiz Davet",
+    "invalidInvitationDesc": "Bu davet bağlantısı geçersiz veya zaten kullanılmış."
+  },
+  "invite": {
+    "title": "Davet Edildiniz!",
+    "invitedYouTo": "sizi",
+    "asRole": "organizasyonuna şununla katılmaya davet etti:",
+    "loginPrompt": "Bu daveti kabul etmek ve ekibe katılmak için lütfen hesabınıza giriş yapın veya yeni bir hesap oluşturun.",
+    "loggedInAs": "Şu hesapla giriş yapıldı:",
+    "acceptButton": "Daveti Kabul Et",
+    "wrongAccount": "Sizin hesabınız değil mi?"
+  },
+  "actions": {
+    "label": "İşlemler",
+    "promoteToOwner": "Sahip Yap",
+    "demoteToMember": "Üye Yap",
+    "removeMember": "Ekipten Kaldır",
+    "copyInviteLink": "Davet Bağlantısını Kopyala",
+    "resendInvite": "Daveti Yeniden Gönder",
+    "revokeInvite": "Daveti İptal Et"
+  },
+  "invitationRevoked": "Davet başarıyla iptal edildi",
+  "inviteLinkCopied": "Davet bağlantısı panoya kopyalandı",
+  "invitationResent": "Davet yeni bağlantı ile yeniden gönderildi"
+}

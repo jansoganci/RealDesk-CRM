@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "Emlak CRM için planını seç",
+    "title": "Emlak CRM için planınızı seçin",
     "subtitle": "14 gün boyunca tüm özellikleri deneyin, kredi kartı gerektirmez."
   },
   "billingPeriod": {
@@ -12,27 +12,27 @@
   "paywall": {
     "pageTitle": "Abonelik gerekli",
     "trialActive": {
-      "title": "Ücretsiz denemen aktif",
-      "subtitle": "{{date}} tarihine kadar tüm Emlak CRM özelliklerinin keyfini çıkar",
-      "message": "Paneli keşfet, verilerini içe aktar ve ekibini davet et. Hazır olduğunda işletmene uygun planı seçebilirsin.",
+      "title": "Ücretsiz denemeniz aktif",
+      "subtitle": "{{date}} tarihine kadar tüm Emlak CRM özelliklerinin keyfini çıkarın",
+      "message": "Paneli keşfedin, verilerinizi içe aktarın ve ekibinizi davet edin. Hazır olduğunuzda işletmenize uygun planı seçebilirsiniz.",
       "actions": {
         "dashboard": "Panele git",
-        "viewPlans": "Planları incele"
+        "viewPlans": "Planları inceleyin"
       }
     },
     "trialEnded": {
-      "title": "Deneme süren sona erdi",
-      "subtitle": "Emlak işini yönetmeye devam etmek için bir plan seç",
-      "message": "Verilerin güvende. Aşağıdan bir plan seçerek erişimini anında yeniden açabilirsin.",
+      "title": "Deneme süreniz sona erdi",
+      "subtitle": "Emlak işinizi yönetmeye devam etmek için bir plan seçin",
+      "message": "Verileriniz güvende. Aşağıdan bir plan seçerek erişiminizi anında yeniden açabilirsiniz.",
       "actions": {
-        "choosePlan": "Plan seç"
+        "choosePlan": "Plan seçin"
       },
-      "helpText": "Karar vermene yardımcı olmamızı ister misin? Ekibimizle iletişime geçebilirsin."
+      "helpText": "Karar vermenize yardımcı olmamızı ister misiniz? Ekibimizle iletişime geçebilirsiniz."
     },
     "subscriptionActive": {
-      "title": "Zaten tam erişime sahipsin",
-      "subtitle": "Aboneliğin için teşekkürler",
-      "message": "Emlak CRM'in tüm özelliklerini kullanmaya devam edebilirsin. Aboneliğini yönetebilir veya istediğin zaman panele dönebilirsin.",
+      "title": "Zaten tam erişime sahipsiniz",
+      "subtitle": "Aboneliğiniz için teşekkürler",
+      "message": "Emlak CRM'in tüm özelliklerini kullanmaya devam edebilirsiniz. Aboneliğinizi yönetebilir veya istediğiniz zaman panele dönebilirsiniz.",
       "actions": {
         "dashboard": "Panele dön",
         "manage": "Aboneliği yönet"
@@ -48,13 +48,13 @@
       "titleWarning": "Deneme yakında bitiyor",
       "titleCritical": "Deneme bugün bitiyor",
       "message": {
-        "default": "Ücretsiz denemen aktifken tüm özellikleri keşfet.",
-        "count": "Erişimin kilitlenmesine {{count}} gün kaldı.",
-        "count_one": "Erişimin kilitlenmesine 1 gün kaldı.",
-        "count_other": "Erişimin kilitlenmesine {{count}} gün kaldı.",
-        "today": "Denemen bugün sona eriyor. Kesintisiz devam etmek için bir plan seç."
+        "default": "Ücretsiz denemeniz aktifken tüm özellikleri keşfedin.",
+        "count": "Erişiminizin kilitlenmesine {{count}} gün kaldı.",
+        "count_one": "Erişiminizin kilitlenmesine 1 gün kaldı.",
+        "count_other": "Erişiminizin kilitlenmesine {{count}} gün kaldı.",
+        "today": "Denemeniz bugün sona eriyor. Kesintisiz devam etmek için bir plan seçin."
       },
-      "ctaPrimary": "Planları incele",
+      "ctaPrimary": "Planları inceleyin",
       "dismiss": "Daha sonra"
     },
     "profile": {
@@ -67,7 +67,7 @@
   "stickyBanner": {
     "ariaLabel": "Deneme durumu bildirimi",
     "title": {
-      "default": "Deneme aktif — Tüm özellikleri keşfet",
+      "default": "Deneme aktif — Tüm özellikleri keşfedin",
       "default_one": "Deneme aktif — 1 gün kaldı",
       "default_other": "Deneme aktif — {{count}} gün kaldı",
       "warning": "Deneme {{count}} gün içinde bitiyor",
@@ -81,10 +81,10 @@
       "critical_other": "Deneme yarın bitiyor"
     },
     "message": {
-      "default": "Emlak CRM ile tam potansiyelini ortaya çıkar",
-      "warning": "Süre dolmadan planını seç",
-      "urgent": "Erişimini kaybetme — hemen plan seç",
-      "critical": "Verilerini ve erişimini korumak için abone ol"
+      "default": "Emlak CRM ile tam potansiyelinizi ortaya çıkarın",
+      "warning": "Süre dolmadan planınızı seçin",
+      "urgent": "Erişiminizi kaybetmeyin — hemen plan seçin",
+      "critical": "Verilerinizi ve erişiminizi korumak için abone olun"
     },
     "cta": "Planları Gör",
     "dismiss": "Kapat"
@@ -117,10 +117,10 @@
       "pro": "5 ekip üyesi",
       "office": "Sınırsız ekip üyesi"
     },
-    "basicContractManagement": "Temel kontrat yönetimi",
-    "fullContractManagement": "Tam kontrat yönetimi",
-    "advancedContractManagement": "Gelişmiş kontrat yönetimi",
-    "pdfContractGeneration": "PDF kontrat oluşturma",
+    "basicContractManagement": "Temel sözleşme yönetimi",
+    "fullContractManagement": "Tam sözleşme yönetimi",
+    "advancedContractManagement": "Gelişmiş sözleşme yönetimi",
+    "pdfContractGeneration": "PDF sözleşme oluşturma",
     "customPdfTemplates": "Özel PDF şablonları",
     "prioritySupport": "Öncelikli destek"
   },

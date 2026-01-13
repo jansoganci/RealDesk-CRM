@@ -4,7 +4,7 @@
   "addOwnerButton": "Mal Sahibi Ekle",
   "propertyCount": "{{count}} mülk",
   "table": {
-    "name": "İsim",
+    "name": "Ad Soyad",
     "contact": "İletişim",
     "address": "Adres",
     "properties": "Mülkler",
@@ -20,7 +20,7 @@
     "addError": "Mal sahibi eklenemedi"
   },
   "validations": {
-    "nameRequired": "İsim gereklidir",
+    "nameRequired": "Ad Soyad gereklidir",
     "invalidEmail": "Geçersiz e-posta adresi",
     "phoneRequired": "Telefon gereklidir"
   },
@@ -41,8 +41,8 @@
     "addDescription": "Aşağıya mal sahibi bilgilerini girin.",
     "editDescription": "Aşağıdan mal sahibi bilgilerini güncelleyin.",
     "form": {
-      "name": "İsim",
-      "namePlaceholder": "Mal sahibi ismi",
+      "name": "Ad Soyad",
+      "namePlaceholder": "Ad Soyad",
       "email": "E-posta",
       "emailPlaceholder": "sahip@ornek.com",
       "phone": "Telefon",

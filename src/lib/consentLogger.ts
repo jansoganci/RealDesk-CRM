@@ -7,7 +7,7 @@
 
 import { supabase } from '@/config/supabase';
 import type { ConsentRecordInsert } from '@/types/cookieConsent';
-import type { Json } from '@/types/database';
+import type { Json } from '@/types/database.types';
 
 /**
  * Result type for consent logging operations

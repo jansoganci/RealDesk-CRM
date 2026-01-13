@@ -44,5 +44,18 @@
     "delete": "Delete",
     "back": "Back",
     "close": "Close"
+  },
+  "readOnlyMode": "You have read-only access",
+  "org": {
+    "loading": "Loading organization...",
+    "error": "Failed to load organization",
+    "noOrg": "No organization found"
+  },
+  "completionBanner": {
+    "title": "You haven't completed the setup",
+    "description": "Complete the setup steps to get the most out of Emlak CRM",
+    "completeSetup": "Complete Setup",
+    "later": "Later",
+    "dismiss": "Dismiss"
   }
 }

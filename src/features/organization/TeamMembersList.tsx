@@ -27,10 +27,10 @@ import { TableSkeleton } from '@/components/common/skeletons';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrg } from '@/contexts/OrgContext';
 import { organizationService } from '@/services/organization.service';
-import type { OrgMemberWithUser } from '@/types/org';
+import type { OrgMemberWithUser, OrgInvitation, TeamMember } from '@/types/org';
 
-import { MemberRow } from './components/MemberRow';
-import { MemberCard } from './components/MemberCard';
+import { TeamMemberRow } from './components/TeamMemberRow';
+import { TeamMemberCard } from './components/TeamMemberCard';
 import { AddMemberDialog } from './components/AddMemberDialog';
 import { ChangeMemberRoleDialog } from './components/ChangeMemberRoleDialog';
 import { RemoveMemberDialog } from './components/RemoveMemberDialog';
@@ -44,7 +44,7 @@ export function TeamMembersList() {
   const { currentOrg, isOwner } = useOrg();
 
   // State
-  const [members, setMembers] = useState<OrgMemberWithUser[]>([]);
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -52,18 +52,64 @@ export function TeamMembersList() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
-  const [selectedMember, setSelectedMember] = useState<OrgMemberWithUser | null>(null);
+  const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  // Fetch members
-  const fetchMembers = useCallback(async () => {
+  // Fetch members and invitations
+  const fetchTeamData = useCallback(async () => {
     if (!currentOrg) return;
 
     try {
       setLoading(true);
-      const data = await organizationService.getMembers(currentOrg.id);
-      setMembers(data);
+      
+      // Fetch both members and invitations in parallel
+      const [members, invitations] = await Promise.all([
+        organizationService.getMembers(currentOrg.id),
+        organizationService.getInvitations(currentOrg.id).catch(() => []), // Fail gracefully if invitations aren't supported yet
+      ]);
+
+      // Transform members to unified format
+      const memberRows: TeamMember[] = members.map((member: OrgMemberWithUser) => ({
+        id: member.id,
+        type: 'member' as const,
+        email: member.user?.email || '',
+        name: member.user?.raw_user_meta_data?.full_name || null,
+        avatarUrl: member.user?.raw_user_meta_data?.avatar_url || null,
+        role: member.role,
+        status: 'active' as const,
+        joinedAt: member.joined_at,
+        invitedAt: member.invited_at,
+        member,
+      }));
+
+      // Transform invitations to unified format
+      const invitationRows: TeamMember[] = invitations.map((invitation: OrgInvitation) => ({
+        id: invitation.id,
+        type: 'invitation' as const,
+        email: invitation.email,
+        name: null,
+        avatarUrl: null,
+        role: invitation.role,
+        status: 'pending' as const,
+        joinedAt: null,
+        invitedAt: invitation.invited_at,
+        expiresAt: invitation.expires_at,
+        invitationToken: invitation.invitation_token,
+        invitation,
+      }));
+
+      // Combine and sort: active members first, then pending invitations, both sorted by date
+      const combined = [
+        ...memberRows.sort((a, b) => 
+          new Date(b.joinedAt || 0).getTime() - new Date(a.joinedAt || 0).getTime()
+        ),
+        ...invitationRows.sort((a, b) => 
+          new Date(b.invitedAt || 0).getTime() - new Date(a.invitedAt || 0).getTime()
+        ),
+      ];
+
+      setTeamMembers(combined);
     } catch (error) {
-      console.error('Failed to fetch members:', error);
+      console.error('Failed to fetch team data:', error);
       toast.error(t('common:error'));
     } finally {
       setLoading(false);
@@ -71,43 +117,81 @@ export function TeamMembersList() {
   }, [currentOrg, t]);
 
   useEffect(() => {
-    fetchMembers();
-  }, [fetchMembers]);
+    fetchTeamData();
+  }, [fetchTeamData]);
 
-  // Filter members by search
-  const filteredMembers = members.filter((member) => {
+  // Filter team members by search
+  const filteredTeamMembers = teamMembers.filter((teamMember) => {
     if (!searchQuery) return true;
 
     const query = searchQuery.toLowerCase();
-    const name = member.user?.raw_user_meta_data?.full_name?.toLowerCase() || '';
-    const email = member.user?.email?.toLowerCase() || '';
+    const name = teamMember.name?.toLowerCase() || '';
+    const email = teamMember.email?.toLowerCase() || '';
 
     return name.includes(query) || email.includes(query);
   });
 
-  // Handlers
-  const handleChangeRole = (member: OrgMemberWithUser) => {
-    setSelectedMember(member);
+  // Handlers for members
+  const handleChangeRole = (teamMember: TeamMember) => {
+    setSelectedMember(teamMember);
     setShowRoleDialog(true);
   };
 
-  const handleRemove = (member: OrgMemberWithUser) => {
-    setSelectedMember(member);
+  const handleRemove = (teamMember: TeamMember) => {
+    setSelectedMember(teamMember);
     setShowRemoveDialog(true);
   };
 
+  // Handlers for invitations
+  const handleRevoke = async (teamMember: TeamMember) => {
+    if (!teamMember.invitation) return;
+
+    try {
+      await organizationService.revokeInvitation(teamMember.invitation.id);
+      toast.success(t('team:invitationRevoked'));
+      fetchTeamData();
+    } catch (error: any) {
+      toast.error(error.message || t('common:error'));
+    }
+  };
+
+  const handleCopyLink = async (teamMember: TeamMember) => {
+    if (!teamMember.invitationToken) return;
+
+    const inviteLink = `${window.location.origin}/accept-invite?token=${teamMember.invitationToken}`;
+    
+    try {
+      await navigator.clipboard.writeText(inviteLink);
+      toast.success(t('team:inviteLinkCopied'));
+    } catch (error) {
+      toast.error(t('common:error'));
+    }
+  };
+
+  const handleResend = async (teamMember: TeamMember) => {
+    if (!teamMember.invitation) return;
+
+    try {
+      await organizationService.resendInvitation(teamMember.invitation.id);
+      toast.success(t('team:invitationResent'));
+      fetchTeamData();
+    } catch (error: any) {
+      toast.error(error.message || t('common:error'));
+    }
+  };
+
   const handleAddSuccess = () => {
-    fetchMembers();
+    fetchTeamData();
   };
 
   const handleRoleChangeSuccess = () => {
-    fetchMembers();
+    fetchTeamData();
     setShowRoleDialog(false);
     setSelectedMember(null);
   };
 
   const handleRemoveSuccess = () => {
-    fetchMembers();
+    fetchTeamData();
     setShowRemoveDialog(false);
     setSelectedMember(null);
   };
@@ -188,7 +272,7 @@ export function TeamMembersList() {
               ))}
             </div>
           </>
-        ) : filteredMembers.length === 0 ? (
+        ) : filteredTeamMembers.length === 0 ? (
           <EmptyState
             title={searchQuery ? t('common:noSearchResults') : t('team:emptyState.title')}
             description={searchQuery ? t('common:tryDifferentSearch') : t('team:emptyState.description')}
@@ -207,20 +291,24 @@ export function TeamMembersList() {
                     <TableRow>
                       <TableHead>{t('team:table.member')}</TableHead>
                       <TableHead className="hidden lg:table-cell">{t('team:table.email')}</TableHead>
+                      <TableHead>{t('team:table.status')}</TableHead>
                       <TableHead>{t('team:table.role')}</TableHead>
                       <TableHead className="hidden md:table-cell">{t('team:table.joined')}</TableHead>
                       <TableHead className="text-right">{t('team:table.actions')}</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
-                    {filteredMembers.map((member) => (
-                      <MemberRow
-                        key={member.id}
-                        member={member}
-                        isCurrentUser={member.user_id === user?.id}
+                    {filteredTeamMembers.map((teamMember) => (
+                      <TeamMemberRow
+                        key={teamMember.id}
+                        teamMember={teamMember}
+                        isCurrentUser={teamMember.member?.user_id === user?.id}
                         isOwner={isOwner}
                         onChangeRole={handleChangeRole}
                         onRemove={handleRemove}
+                        onRevoke={handleRevoke}
+                        onCopyLink={handleCopyLink}
+                        onResend={handleResend}
                       />
                     ))}
                   </TableBody>
@@ -230,14 +318,17 @@ export function TeamMembersList() {
 
             {/* Mobile Cards */}
             <div className="md:hidden space-y-4 mt-6">
-              {filteredMembers.map((member) => (
-                <MemberCard
-                  key={member.id}
-                  member={member}
-                  isCurrentUser={member.user_id === user?.id}
+              {filteredTeamMembers.map((teamMember) => (
+                <TeamMemberCard
+                  key={teamMember.id}
+                  teamMember={teamMember}
+                  isCurrentUser={teamMember.member?.user_id === user?.id}
                   isOwner={isOwner}
                   onChangeRole={handleChangeRole}
                   onRemove={handleRemove}
+                  onRevoke={handleRevoke}
+                  onCopyLink={handleCopyLink}
+                  onResend={handleResend}
                 />
               ))}
             </div>
@@ -252,7 +343,7 @@ export function TeamMembersList() {
         onSuccess={handleAddSuccess}
       />
 
-      {selectedMember && (
+      {selectedMember && selectedMember.member && (
         <>
           <ChangeMemberRoleDialog
             isOpen={showRoleDialog}
@@ -260,7 +351,7 @@ export function TeamMembersList() {
               setShowRoleDialog(false);
               setSelectedMember(null);
             }}
-            member={selectedMember}
+            member={selectedMember.member}
             onSuccess={handleRoleChangeSuccess}
           />
 
@@ -270,7 +361,7 @@ export function TeamMembersList() {
               setShowRemoveDialog(false);
               setSelectedMember(null);
             }}
-            member={selectedMember}
+            member={selectedMember.member}
             onSuccess={handleRemoveSuccess}
           />
         </>

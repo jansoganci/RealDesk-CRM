@@ -1,4 +1,4 @@
-import type { Database } from './database';
+import type { Database } from './database.types';
 
 // contracts: rpc_create_contract_and_update_property
 export interface RpcCreateContractAndUpdatePropertyParams {
@@ -60,4 +60,28 @@ export interface RpcDeleteContractResult {
   property_id: string;
 }
 
+// organizations: accept_org_invitation
+export interface AcceptOrgInvitationParams {
+  p_token: string;
+}
+export interface AcceptOrgInvitationResult {
+  success: boolean;
+  message: string;
+  error?: string;
+  org_id?: string;
+}
 
+// organizations: get_invitation_info
+export interface GetInvitationInfoParams {
+  p_token: string;
+}
+export interface GetInvitationInfoResult {
+  valid: boolean;
+  org_name?: string;
+  org_logo?: string | null;
+  role?: string;
+  invited_by_name?: string | null;
+  invited_at?: string;
+  expires_at?: string;
+  expired?: boolean;
+}
