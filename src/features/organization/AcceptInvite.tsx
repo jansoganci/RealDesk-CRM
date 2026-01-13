@@ -8,6 +8,7 @@ import { organizationService } from '@/services/organization.service';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { ROUTES } from '@/config/constants';
+import { supabase } from '@/config/supabase';
 import type { InvitationInfo } from '@/types/org';
 
 export const AcceptInvite = () => {

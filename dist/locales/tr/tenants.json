@@ -7,7 +7,7 @@
   "noPropertyAssigned": "Mülke bağlı değil",
   "callTenant": "Kiracıyı ara",
   "emailTenant": "Kiracıya e-posta gönder",
-  "scheduleMeeting": "Toplantı planla",
+  "scheduleMeeting": "Randevu oluştur",
   "status": {
     "assigned": "Mülke Bağlı",
     "unassigned": "Mülke Bağlı Değil"
@@ -56,7 +56,7 @@
     "editDescription": "Aşağıdaki kiracı bilgilerini güncelleyin.",
     "form": {
       "name": "Ad Soyad",
-      "namePlaceholder": "John Doe",
+      "namePlaceholder": "Ahmet Yılmaz",
       "phone": "Telefon Numarası",
       "phonePlaceholder": "+90 555 555 5555",
       "email": "E-posta",

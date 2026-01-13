@@ -32,9 +32,9 @@
     "rentalOccupiedDescription": "Şu anda kirada",
     "saleProperties": "Satılık",
     "salePropertiesDescription": "Satılık mülkler",
-    "saleAvailable": "Satılabilir",
+    "saleAvailable": "Satışa Hazır",
     "saleAvailableDescription": "Satışa hazır",
-    "saleUnderOffer": "Teklif Altında",
+    "saleUnderOffer": "Teklif Alındı",
     "saleUnderOfferDescription": "Teklif alındı",
     "saleSold": "Satıldı",
     "saleSoldDescription": "Başarıyla satıldı",
@@ -54,8 +54,8 @@
     "rentalEmpty": "Kiralamaya Hazır",
     "rentalOccupied": "Kirada",
     "rentalInactive": "Pasif",
-    "saleAvailable": "Satılabilir",
-    "saleUnderOffer": "Teklif Altında",
+    "saleAvailable": "Satışa Hazır",
+    "saleUnderOffer": "Teklif Alındı",
     "saleSold": "Satıldı",
     "saleInactive": "Pasif"
   },
@@ -103,11 +103,11 @@
   "onboarding": {
     "title": "Başlangıç",
     "description": "Başlamak için bu görevleri tamamlayın",
-    "addProperty": "Takip etmeye başlamak için ilk mülkünü ekle",
-    "completeProfile": "Emlak ofisi profilini tamamla"
+    "addProperty": "Takip etmeye başlamak için ilk mülkünüzü ekleyin",
+    "completeProfile": "Emlak ofisi profilini tamamlayın"
   },
   "welcome": {
-    "title": "emlakcrm'e Hoş Geldiniz! 🎉",
+    "title": "Emlak CRM'e Hoş Geldiniz! 🎉",
     "description": "İlk mülkünüzü ekleyerek ve profilinizi ayarlayarak başlayın. Süreç boyunca size rehberlik edeceğiz.",
     "addProperty": "İlk Mülkünüzü Ekleyin",
     "addPropertyDesc": "Gayrimenkul portföyünüzü yönetmeye başlayın",

@@ -8,6 +8,7 @@
   "calendar": "Calendar",
   "inquiries": "Inquiries",
   "reminders": "Reminders",
+  "team": "Team",
   "profile": "Profile",
   "pricing": "Pricing",
   "signOut": "Sign Out",
@@ -19,6 +20,7 @@
   "viewAllCalendar": "View all calendar",
   "viewAllInquiries": "View all inquiries",
   "viewAllReminders": "View all reminders",
+  "viewAllTeam": "View all team members",
   "openUserMenu": "Open user menu",
   "userSettings": "User settings",
   "language": {

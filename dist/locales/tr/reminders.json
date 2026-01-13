@@ -68,10 +68,10 @@
     "updateFailed": "Hatırlatma güncellenemedi"
   },
   "dialogs": {
-    "confirmDelete": "Bu hatırlatmayı silmek istediğine emin misin?",
-    "confirmMark": "Bu hatırlatmayı iletişime geçildi olarak işaretlemek istiyor musun?",
+    "confirmDelete": "Bu hatırlatmayı silmek istediğinizden emin misiniz?",
+    "confirmMark": "Bu hatırlatmayı iletişime geçildi olarak işaretlemek istiyor musunuz?",
     "markTitle": "İletişime Geçildi Olarak İşaretle",
-    "markDescription": "Bu mülk için kira artışı hakkında mal sahibiyle görüştün mü? Bu işlem hatırlatmayı listenden kaldırır.",
+    "markDescription": "Bu mülk için kira artışı hakkında mal sahibiyle görüştünüz mü? Bu işlem hatırlatmayı listenden kaldırır.",
     "confirm": "Evet, İletişime Geçildi Olarak İşaretle"
   },
   "errors": {

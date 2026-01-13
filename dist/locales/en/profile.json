@@ -292,8 +292,12 @@
     },
     "fields": {
       "name": "Organization Name",
-      "namePlaceholder": "Enter your organization name"
+      "namePlaceholder": "Enter your organization name",
+      "createdAt": "Created Date",
+      "orgId": "Organization ID"
     },
+    "copyId": "Copy ID",
+    "idCopied": "Organization ID copied to clipboard",
     "validation": {
       "nameMin": "Organization name must be at least 2 characters",
       "nameMax": "Organization name must not exceed 255 characters"
@@ -301,5 +305,15 @@
     "errors": {
       "notOwner": "Only organization owner can change the name"
     }
+  },
+  "teamMembers": {
+    "title": "Team Members",
+    "count": "{{count}} members",
+    "count_one": "{{count}} member",
+    "count_other": "{{count}} members",
+    "viewAll": "View All",
+    "andMore": "+{{count}} more",
+    "empty": "No team members yet",
+    "addMember": "Add Team Member"
   }
 }

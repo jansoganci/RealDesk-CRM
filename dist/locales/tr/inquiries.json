@@ -11,11 +11,11 @@
     "all": "Tümü",
     "active": "Aktif",
     "matched": "Eşleşen",
-    "contacted": "İletişime Geçilen",
+    "contacted": "İletişime Geçildi",
     "closed": "Kapalı"
   },
   "table": {
-    "name": "İsim",
+    "name": "Ad Soyad",
     "preferences": "Tercihler",
     "budget": "Bütçe",
     "status": "Durum",
@@ -35,7 +35,7 @@
     "editDescription": "Müşteri talep bilgilerini güncelleyin.",
     "form": {
       "inquiryType": "Talep Tipi",
-      "name": "İsim",
+      "name": "Ad Soyad",
       "namePlaceholder": "Müşteri adını girin",
       "phone": "Telefon",
       "phonePlaceholder": "Telefon numarasını girin",
@@ -45,14 +45,14 @@
       "preferredCityPlaceholder": "Tercih edilen şehri girin",
       "preferredDistrict": "Tercih Edilen İlçe",
       "preferredDistrictPlaceholder": "Tercih edilen ilçeyi girin",
-      "minRentBudget": "Min Aylık Kira",
+      "minRentBudget": "Minimum Aylık Kira",
       "minRentBudgetPlaceholder": "Minimum aylık kira",
-      "maxRentBudget": "Max Aylık Kira",
-      "maxRentBudgetPlaceholder": "Maximum aylık kira",
-      "minSaleBudget": "Min Alış Fiyatı",
+      "maxRentBudget": "Maksimum Aylık Kira",
+      "maxRentBudgetPlaceholder": "Maksimum aylık kira",
+      "minSaleBudget": "Minimum Alış Fiyatı",
       "minSaleBudgetPlaceholder": "Minimum alış fiyatı",
-      "maxSaleBudget": "Max Alış Fiyatı",
-      "maxSaleBudgetPlaceholder": "Maximum alış fiyatı",
+      "maxSaleBudget": "Maksimum Alış Fiyatı",
+      "maxSaleBudgetPlaceholder": "Maksimum alış fiyatı",
       "notes": "Notlar",
       "notesPlaceholder": "Müşteri talebi hakkında ek notlar..."
     },
@@ -70,7 +70,7 @@
     "perMonth": "/ay"
   },
   "validations": {
-    "nameRequired": "İsim gereklidir",
+    "nameRequired": "Ad Soyad gereklidir",
     "phoneRequired": "Telefon gereklidir",
     "invalidEmail": "Geçersiz e-posta adresi"
   },
