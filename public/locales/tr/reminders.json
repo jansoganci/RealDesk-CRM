@@ -6,7 +6,9 @@
     "scheduled": "Planlanan",
     "expired": "Süresi Dolmuş",
     "active": "Aktif",
-    "completed": "Tamamlandı"
+    "completed": "Tamamlandı",
+    "critical": "Kritik (Son 30 Gün)",
+    "underWatch": "İzlemede (Aktif)"
   },
   "empty": {
     "globalTitle": "Aktif Hatırlatma Yok",
@@ -19,7 +21,12 @@
     "scheduled": "Planlanan Hatırlatma Yok",
     "scheduledDescription": "Gelecek tarihler için planlanmış hatırlatma bulunmuyor",
     "expiredTitle": "Süresi Dolmuş Sözleşme Yok",
-    "expiredDescription": "Bekleyen hatırlatması olan süresi dolmuş sözleşme bulunmuyor"
+    "expiredDescription": "Bekleyen hatırlatması olan süresi dolmuş sözleşme bulunmuyor",
+    "criticalDescription": "Kritik bölgede sözleşme yok. Harika iş!",
+    "underWatch": "İzlemede Sözleşme Yok",
+    "underWatchDescription": "Tüm sözleşmeler ya kritik bölgede ya da tamamlandı.",
+    "completed": "Tamamlanmış Hatırlatma Yok",
+    "completedDescription": "Henüz iletişime geçildi olarak işaretlenmiş hatırlatma yok."
   },
   "sections": {
     "overdue": {
@@ -33,6 +40,18 @@
     "expired": {
       "calloutTitle": "Süresi Dolmuş Sözleşmeler",
       "calloutDescription": "Bu sözleşmelerin süresi doldu. Hatırlatmaları temizlemek için iletişime geçildi olarak işaretleyin."
+    },
+    "critical": {
+      "calloutTitle": "Dikkat Gerektiren Kritik Sözleşmeler",
+      "calloutDescription": "{{count}} sözleşme önümüzdeki 30 gün içinde sona eriyor veya gecikmiş durumda."
+    },
+    "underWatch": {
+      "calloutTitle": "İzlemedeki Sözleşmeler",
+      "calloutDescription": "{{count}} sözleşme izleniyor. Kritik bölgeye girdiklerinde bildirim alacaksınız."
+    },
+    "completed": {
+      "calloutTitle": "Tamamlanmış Hatırlatmalar",
+      "calloutDescription": "{{count}} hatırlatma iletişime geçildi olarak işaretlendi."
     }
   },
   "badges": {
@@ -48,17 +67,29 @@
     "contractEndDate": "Sözleşme Bitiş Tarihi",
     "reminderDate": "Hatırlatma Tarihi",
     "noReminderDate": "Tarih yok",
+    "noDate": "Tarih yok",
     "currentRent": "Mevcut Kira",
     "expectedRent": "Beklenen Yeni Kira",
     "currency": "$ {{value}}",
     "currencyRange": "${{current}} → ${{expected}}",
     "ownerContact": "Mal Sahibi İletişim:",
-    "notes": "Notlar:"
+    "notes": "Notlar:",
+    "completedStatus": "Tamamlandı",
+    "overdue": "{{days}} gün gecikmiş",
+    "daysRemaining": "{{days}} gün kaldı",
+    "daysUntilAlert": "{{days}} gün sonra uyarı"
   },
   "actions": {
-    "markContacted": "İletişime Geçildi Olarak İşaretle",
+    "markContacted": "İletişime Geçildi",
     "delete": "Hatırlatmayı Sil",
-    "tryAgain": "Tekrar Dene"
+    "tryAgain": "Tekrar Dene",
+    "addNote": "Not Ekle",
+    "viewDetails": "Detayları Görüntüle",
+    "viewContract": "Sözleşmeyi Görüntüle",
+    "callOwner": "Mal Sahibini Ara",
+    "emailOwner": "E-posta Gönder",
+    "expand": "Detayları Göster",
+    "collapse": "Detayları Gizle"
   },
   "toasts": {
     "updated": "Hatırlatma başarıyla güncellendi",
@@ -80,5 +111,41 @@
   },
   "validation": {
     "required": "Bu alan zorunludur"
+  },
+  "progress": {
+    "contractProgress": "{{percentage}}% Tamamlandı",
+    "daysUntilCritical": "{{days}} gün sonra kritik bölge",
+    "inCriticalZone": "Kritik Bölgede",
+    "expired": "Süre Doldu",
+    "tooltip": {
+      "critical": "Bu sözleşme {{days}} gün içinde sona eriyor. Eylem gerekiyor."
+    }
+  },
+  "alarm": {
+    "armed": "Alarm Aktif",
+    "critical": "Kritik Uyarı",
+    "completed": "Tamamlandı",
+    "tooltip": {
+      "armed": "30 gün kala uyarılacak",
+      "critical": "Bu sözleşme {{days}} gün içinde sona eriyor. Eylem gerekiyor.",
+      "completed": "Hatırlatma tamamlandı. Başka bir işlem gerekmiyor."
+    }
+  },
+  "summary": {
+    "totalActive": "Toplam Aktif",
+    "totalActiveDescription": "Alarmı aktif olan hatırlatmalar",
+    "critical": "Kritik",
+    "criticalDescription": "Önümüzdeki 30 gün içinde sona erecek sözleşmeler",
+    "pendingActions": "Bekleyen İşlemler",
+    "pendingActionsDescription": "Dikkat gerektiren kritik hatırlatmalar"
+  },
+  "table": {
+    "property": "Mülk Adresi",
+    "tenant": "Kiracı",
+    "endDate": "Bitiş Tarihi",
+    "daysLeft": "Gün",
+    "rent": "Kira",
+    "progress": "İlerleme",
+    "actions": "İşlemler"
   }
 }

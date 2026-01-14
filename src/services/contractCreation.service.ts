@@ -113,7 +113,8 @@ export async function createContractWithEntities(
       end_date: toISODate(formData.end_date),
       rent_amount: formData.rent_amount,
       deposit: formData.deposit,
-      currency: formData.currency || 'TRY'
+      currency: formData.currency || 'TRY',
+      commission_amount: formData.commission_amount || null // Manual commission amount (null = use rent_amount)
     };
 
     // ========================================================================

@@ -30,7 +30,8 @@ export function useRemindersData(): UseRemindersDataReturn {
     try {
       setLoading(true);
       setErrorKey(null);
-      const data = await remindersService.getAllReminders();
+      // Use getAllRemindersIncludingContacted for new categorization (includes Completed tab)
+      const data = await remindersService.getAllRemindersIncludingContacted();
       setReminders(data);
     } catch (error) {
       console.error('Failed to load reminders:', error);

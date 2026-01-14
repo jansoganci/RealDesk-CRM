@@ -99,6 +99,7 @@ export interface ContractWithDetails {
   end_date: string;
   rent_amount: number;
   deposit: number;
+  commission_amount?: number | null; // Manual commission amount (null = use rent_amount)
   status: 'Active' | 'Archived' | 'Inactive';
   created_at: string;
   updated_at: string;
@@ -208,6 +209,7 @@ export interface ContractFormData {
   rent_amount: number;
   deposit: number;
   currency: 'TRY' | 'USD' | 'EUR';
+  commission_amount?: number; // Manual commission amount (optional, defaults to rent_amount if not provided)
 
   // Details (optional)
   payment_day_of_month?: number;
@@ -260,6 +262,7 @@ export interface CreateContractAtomicParams {
     end_date: string;
     rent_amount: number;
     deposit: number;
+    commission_amount?: number | null; // Manual commission amount (null = use rent_amount)
   };
   contract_details_data?: {
     payment_day_of_month?: number;
@@ -326,6 +329,6 @@ export interface ContractPdfData {
   fixtures: string;               // "Kombi, Klima, Ankastre Set..."
   
   // Tahliye Taahhütnamesi
-  evictionDate: string;           // "01 Ocak 2026"
+  evictionDate: string;           // Empty string "" (left blank for manual entry per legal requirements)
   commitmentDate: string;         // "01 Ocak 2025"
 }

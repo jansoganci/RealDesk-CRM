@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { remindersService } from '../../../lib/serviceProxy';
+import { useNotifications } from '../../../contexts/NotificationContext';
 
 /**
  * Reminder Actions Hook
@@ -27,6 +28,7 @@ export function useReminderActions({
   onActionComplete,
 }: UseReminderActionsOptions): UseReminderActionsReturn {
   const { t } = useTranslation('reminders');
+  const { refreshCounts } = useNotifications(); // Get refreshCounts to update badge counts immediately
   const [actionLoading, setActionLoading] = useState<string | null>(null);
 
   const handleMarkAsContacted = useCallback(
@@ -35,7 +37,13 @@ export function useReminderActions({
         setActionLoading(contractId);
         await remindersService.markAsContacted(contractId);
         toast.success(t('toasts.markedContacted'));
-        await refreshData();
+        
+        // Refresh both Reminders page data and NotificationContext badge counts
+        await Promise.all([
+          refreshData(), // Refresh Reminders page
+          refreshCounts(), // Immediately update Bell icon and Sidebar counter
+        ]);
+        
         onActionComplete?.();
       } catch (error) {
         console.error('Failed to mark as contacted:', error);
@@ -44,7 +52,7 @@ export function useReminderActions({
         setActionLoading(null);
       }
     },
-    [refreshData, onActionComplete, t]
+    [refreshData, refreshCounts, onActionComplete, t]
   );
 
   return {

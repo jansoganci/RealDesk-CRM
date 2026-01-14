@@ -18,7 +18,12 @@ export * as financialTransactionsService from '../services/finance';
 
 
 // Re-export types that components depend on
-export type { ReminderWithDetails } from '../services/reminders.service';
+export type { 
+  ReminderWithDetails,
+  ReminderCategories,
+  NewReminderCategories,
+  ProgressInfo,
+} from '../services/reminders.service';
 
 // Contract Management Services (V1)
 export { encrypt, decrypt, hashTC, isValidTC, isValidIBAN, generateEncryptionKey } from '../services/encryption.service';

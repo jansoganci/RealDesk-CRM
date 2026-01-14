@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
+import { FixturesSelector } from '../../components/FixturesSelector';
 import type { ReviewFormData } from '../types/reviewFormTypes';
 
 interface ContractSectionProps {
@@ -90,13 +90,11 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
         </div>
 
         <div>
-          <Label htmlFor="special_conditions">{t('import.sections.specialConditions')}</Label>
-          <Textarea
-            id="special_conditions"
-            value={formData.special_conditions}
-            onChange={(e) => onFieldUpdate('special_conditions', e.target.value)}
-            placeholder={t('import.placeholders.specialConditions')}
-            rows={3}
+          <Label htmlFor="fixtures-selector">{t('create.fields.fixtures')}</Label>
+          <FixturesSelector
+            value={formData.special_conditions || ''}
+            onChange={(value: string) => onFieldUpdate('special_conditions', value)}
+            error={fieldErrors.special_conditions}
           />
         </div>
       </CardContent>

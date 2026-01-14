@@ -148,6 +148,7 @@ export async function updateContractWithEntities(
       end_date: formData.end_date.toISOString().split('T')[0],
       rent_amount: formData.rent_amount,
       deposit: formData.deposit,
+      commission_amount: formData.commission_amount || null, // Save commission_amount (null = use rent_amount)
       updated_at: new Date().toISOString(),
     };
 

@@ -14,8 +14,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Separator } from '@/components/ui/separator';
 import { generateFullAddress } from '@/lib/serviceProxy';
 import { usePropertyActiveContract } from '../hooks/usePropertyActiveContract';
+import { FixturesSelector } from './FixturesSelector';
 import type { ContractFormData } from '../schemas/contractForm.schema';
 
 // Helper function to format date for display
@@ -266,6 +268,19 @@ export function AddressInput({ form }: AddressInputProps) {
             {form.formState.errors.use_purpose.message}
           </p>
         )}
+      </div>
+
+      {/* Fixtures Declaration (Demirbaş Beyanı) */}
+      <Separator />
+      <div>
+        <Label htmlFor="fixtures-selector">
+          {t('create.fields.fixtures')}
+        </Label>
+        <FixturesSelector
+          value={form.watch('special_conditions') || ''}
+          onChange={(value: string) => form.setValue('special_conditions', value, { shouldValidate: true })}
+          error={form.formState.errors.special_conditions?.message}
+        />
       </div>
 
       {/* Full Address Preview */}

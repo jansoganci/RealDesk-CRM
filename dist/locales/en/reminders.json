@@ -6,7 +6,9 @@
     "scheduled": "Scheduled",
     "expired": "Expired",
     "active": "Active",
-    "completed": "Completed"
+    "completed": "Completed",
+    "critical": "Critical (Next 30 Days)",
+    "underWatch": "Under Watch (Armed)"
   },
   "empty": {
     "globalTitle": "No Active Reminders",
@@ -19,7 +21,12 @@
     "scheduled": "No Scheduled Reminders",
     "scheduledDescription": "No reminders are scheduled for the future",
     "expiredTitle": "No Expired Contracts",
-    "expiredDescription": "No expired contracts with pending reminders"
+    "expiredDescription": "No expired contracts with pending reminders",
+    "criticalDescription": "No contracts in critical zone. Great job!",
+    "underWatch": "No Contracts Under Watch",
+    "underWatchDescription": "All contracts are either in critical zone or completed.",
+    "completed": "No Completed Reminders",
+    "completedDescription": "No reminders have been marked as contacted yet."
   },
   "sections": {
     "overdue": {
@@ -33,6 +40,18 @@
     "expired": {
       "calloutTitle": "Expired Contracts",
       "calloutDescription": "These contracts have ended. Mark as contacted to clear them from reminders."
+    },
+    "critical": {
+      "calloutTitle": "Critical Contracts Requiring Attention",
+      "calloutDescription": "{{count}} contract(s) expiring in the next 30 days or overdue."
+    },
+    "underWatch": {
+      "calloutTitle": "Contracts Under Watch",
+      "calloutDescription": "{{count}} contract(s) being monitored. You'll be notified when they enter the critical zone."
+    },
+    "completed": {
+      "calloutTitle": "Completed Reminders",
+      "calloutDescription": "{{count}} reminder(s) have been marked as contacted."
     }
   },
   "badges": {
@@ -48,17 +67,29 @@
     "contractEndDate": "Contract End Date",
     "reminderDate": "Reminder Set For",
     "noReminderDate": "No date set",
+    "noDate": "No date",
     "currentRent": "Current Rent",
     "expectedRent": "Expected New Rent",
     "currency": "$ {{value}}",
     "currencyRange": "${{current}} → ${{expected}}",
     "ownerContact": "Property Owner Contact:",
-    "notes": "Notes:"
+    "notes": "Notes:",
+    "completedStatus": "Completed",
+    "overdue": "{{days}} days overdue",
+    "daysRemaining": "{{days}} days remaining",
+    "daysUntilAlert": "{{days}} days until alert"
   },
   "actions": {
     "markContacted": "Mark as Contacted",
     "delete": "Delete Reminder",
-    "tryAgain": "Try Again"
+    "tryAgain": "Try Again",
+    "addNote": "Add Note",
+    "viewDetails": "View Details",
+    "viewContract": "View Contract",
+    "callOwner": "Call Owner",
+    "emailOwner": "Email Owner",
+    "expand": "Show Details",
+    "collapse": "Hide Details"
   },
   "toasts": {
     "updated": "Reminder updated successfully",
@@ -80,5 +111,41 @@
   },
   "validation": {
     "required": "This field is required"
+  },
+  "progress": {
+    "contractProgress": "{{percentage}}% Complete",
+    "daysUntilCritical": "{{days}} days until critical zone",
+    "inCriticalZone": "In Critical Zone",
+    "expired": "Expired",
+    "tooltip": {
+      "critical": "This contract expires in {{days}} days. Action required."
+    }
+  },
+  "alarm": {
+    "armed": "Alarm Armed",
+    "critical": "Critical Alert",
+    "completed": "Completed",
+    "tooltip": {
+      "armed": "30-day expiry reminder is active. You'll be notified when this contract enters the critical zone.",
+      "critical": "This contract expires in {{days}} days. Action required.",
+      "completed": "Reminder completed. No further action needed."
+    }
+  },
+  "summary": {
+    "totalActive": "Total Active",
+    "totalActiveDescription": "Reminders with alarm enabled",
+    "critical": "Critical",
+    "criticalDescription": "Contracts expiring in next 30 days",
+    "pendingActions": "Pending Actions",
+    "pendingActionsDescription": "Critical reminders requiring attention"
+  },
+  "table": {
+    "property": "Property Address",
+    "tenant": "Tenant",
+    "endDate": "End Date",
+    "daysLeft": "Days",
+    "rent": "Rent",
+    "progress": "Progress",
+    "actions": "Actions"
   }
 }

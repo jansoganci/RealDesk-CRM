@@ -117,6 +117,9 @@
     "duplicateTenant": "Tenant with this TC number already exists",
     "duplicateProperty": "Property at this address already exists",
     "activeContractExists": "Active contract exists for this property",
+    "fixtures": {
+      "maxItemsOrLength": "Maximum 20 fixtures can be selected and each must be less than 50 characters"
+    },
     "checkingOwner": "Checking owner...",
     "checkingTenant": "Checking tenant...",
     "ownerDataChanged": "Owner Data Changed",
@@ -147,6 +150,7 @@
     "invalidAmount": "Invalid amount",
     "depositRequired": "Deposit is required",
     "depositNonNegative": "Deposit must be 0 or greater",
+    "commissionNonNegative": "Commission amount cannot be negative",
     "currencyRequired": "Select a currency",
     "paymentDayRange": "Day must be between 1 and 31",
     "clauseContentRequired": "Clause content cannot be empty",
@@ -194,10 +198,14 @@
       "end_date": "End Date",
       "rent_amount": "Monthly Rent",
       "deposit": "Deposit",
+      "commission_amount": "Commission Amount",
       "payment_day": "Payment Day",
       "payment_method": "Payment Method",
       "special_conditions": "Special Conditions",
-      "currency": "Currency"
+      "currency": "Currency",
+      "fixtures": "Fixtures Declaration",
+      "fixturesCommonItems": "Common Fixtures",
+      "fixturesCustomItems": "Custom Fixtures"
     },
     "placeholders": {
       "owner_name": "John Doe",
@@ -213,7 +221,14 @@
       "ilce": "Kadıköy",
       "il": "Istanbul",
       "usePurpose": "Residential / Commercial",
-      "currency": "Select currency"
+      "currency": "Select currency",
+      "commission_amount": "Manual commission amount (optional)",
+      "fixtures": "Select fixtures or add custom",
+      "fixturesCustomInput": "Type custom fixture and press Enter",
+      "fixturesEmpty": "No fixtures selected"
+    },
+    "helpers": {
+      "commission_amount": "If left empty, 1 month rent will be used automatically"
     },
     "propertyTypes": {
       "apartment": "Apartment",
@@ -224,6 +239,22 @@
       "TRY": "₺ TRY (Turkish Lira)",
       "USD": "$ USD (US Dollar)",
       "EUR": "€ EUR (Euro)"
+    },
+    "labels": {
+      "fixturesAddCustom": "Add Custom",
+      "fixturesRemove": "Remove"
+    },
+    "commonFixtures": {
+      "kombi": "Boiler",
+      "klima": "Air Conditioner",
+      "buzdolabi": "Refrigerator",
+      "camasirMakinesi": "Washing Machine",
+      "ankastreSet": "Built-in Kitchen Set",
+      "bulasikMakinesi": "Dishwasher",
+      "firin": "Oven",
+      "mikrodalga": "Microwave",
+      "televizyon": "TV",
+      "mobilya": "Furniture"
     },
     "buttons": {
       "submit": "Create Contract",

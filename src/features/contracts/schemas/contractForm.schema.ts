@@ -143,6 +143,16 @@ export const contractFormSchema = z.object({
     errorMap: () => ({ message: t('currencyRequired') }),
   }).default('TRY'),
 
+  commission_amount: z.preprocess(
+    (val) => (val === '' ? undefined : val),
+    z.number({
+      invalid_type_error: t('validNumber'),
+    })
+      .min(0, t('commissionNonNegative'))
+      .max(1000000000, t('invalidAmount'))
+      .optional()
+  ),
+
   // ============================================================================
   // Optional Details Section
   // ============================================================================
@@ -158,6 +168,17 @@ export const contractFormSchema = z.object({
 
   special_conditions: z.string()
     .max(1000, t('maxChars', { max: 1000 }))
+    .refine((val) => {
+      if (!val || val.trim() === '') return true;
+      const items = val.split(',').map(s => s.trim()).filter(s => s.length > 0);
+      // Check max number of items (20)
+      if (items.length > 20) return false;
+      // Check max length per item (50 characters)
+      if (items.some(item => item.length > 50)) return false;
+      return true;
+    }, {
+      message: t('fixtures.maxItemsOrLength'),
+    })
     .optional()
     .or(z.literal('')),
 

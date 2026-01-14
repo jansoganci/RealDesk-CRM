@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 import { EmptyState } from '../../../components/common/EmptyState';
 import { ReminderCard } from './ReminderCard';
-import { AlertCircle, Bell, Check, Calendar, FileText } from 'lucide-react';
+import { CallListRow } from './CallListRow';
+import { AlertCircle, Bell, Check, Calendar, FileText, Shield, CheckCircle2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import type { ReminderWithDetails } from '../../../lib/serviceProxy';
+import { Card } from '../../../components/ui/card';
 
 /**
  * Reminder Sections Component
@@ -12,26 +14,126 @@ import type { ReminderWithDetails } from '../../../lib/serviceProxy';
 
 interface ReminderSectionsProps {
   activeTab: string;
-  overdueReminders: ReminderWithDetails[];
-  upcomingReminders: ReminderWithDetails[];
-  scheduledReminders: ReminderWithDetails[];
-  expiredContracts: ReminderWithDetails[];
+  // New structure (Contract Expiry Control Center)
+  criticalReminders?: ReminderWithDetails[];
+  underWatchReminders?: ReminderWithDetails[];
+  completedReminders?: ReminderWithDetails[];
+  // Old structure (backward compatible)
+  overdueReminders?: ReminderWithDetails[];
+  upcomingReminders?: ReminderWithDetails[];
+  scheduledReminders?: ReminderWithDetails[];
+  expiredContracts?: ReminderWithDetails[];
   actionLoading: string | null;
   onMarkAsContacted: (reminder: ReminderWithDetails) => void;
 }
 
 export function ReminderSections({
   activeTab,
-  overdueReminders,
-  upcomingReminders,
-  scheduledReminders,
-  expiredContracts,
+  // New structure
+  criticalReminders = [],
+  underWatchReminders = [],
+  completedReminders = [],
+  // Old structure (backward compatible)
+  overdueReminders = [],
+  upcomingReminders = [],
+  scheduledReminders = [],
+  expiredContracts = [],
   actionLoading,
   onMarkAsContacted,
 }: ReminderSectionsProps) {
   const { t } = useTranslation('reminders');
 
-  // Overdue section
+  // Critical section (new - Contract Expiry Control Center)
+  // Uses CallListRow for compact call checklist view
+  if (activeTab === 'critical') {
+    return (
+      <div className="space-y-0">
+        {criticalReminders.length === 0 ? (
+          <EmptyState
+            title={t('empty.allClear')}
+            description={t('empty.criticalDescription')}
+            icon={<Check className={`h-12 w-12 ${COLORS.success.text}`} />}
+            showAction={false}
+          />
+        ) : (
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+            {criticalReminders.map((reminder, index) => (
+              <CallListRow
+                key={reminder.id}
+                reminder={reminder}
+                actionLoading={actionLoading}
+                onMarkAsContacted={onMarkAsContacted}
+                isFirstItem={index === 0}
+                isCompleted={false}
+              />
+            ))}
+          </Card>
+        )}
+      </div>
+    );
+  }
+
+  // Under Watch section (new - Contract Expiry Control Center)
+  // Uses CallListRow for compact view
+  if (activeTab === 'underWatch') {
+    return (
+      <div className="space-y-0">
+        {underWatchReminders.length === 0 ? (
+          <EmptyState
+            title={t('empty.underWatch')}
+            description={t('empty.underWatchDescription')}
+            icon={<Shield className={`h-12 w-12 ${COLORS.success.text}`} />}
+            showAction={false}
+          />
+        ) : (
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+            {underWatchReminders.map((reminder) => (
+              <CallListRow
+                key={reminder.id}
+                reminder={reminder}
+                actionLoading={actionLoading}
+                onMarkAsContacted={onMarkAsContacted}
+                isFirstItem={false}
+                isCompleted={false}
+              />
+            ))}
+          </Card>
+        )}
+      </div>
+    );
+  }
+
+  // Completed section (new - Contract Expiry Control Center)
+  // Uses CallListRow with isCompleted=true for view-only mode
+  if (activeTab === 'completed') {
+    return (
+      <div className="space-y-0">
+        {completedReminders.length === 0 ? (
+          <EmptyState
+            title={t('empty.completed')}
+            description={t('empty.completedDescription')}
+            icon={<CheckCircle2 className={`h-12 w-12 ${COLORS.muted.text}`} />}
+            showAction={false}
+          />
+        ) : (
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+            {completedReminders.map((reminder) => (
+              <CallListRow
+                key={reminder.id}
+                reminder={reminder}
+                actionLoading={actionLoading}
+                onMarkAsContacted={onMarkAsContacted}
+                isFirstItem={false}
+                isCompleted={true}
+              />
+            ))}
+          </Card>
+        )}
+      </div>
+    );
+  }
+
+  // Overdue section (old - backward compatible)
   if (activeTab === 'overdue' || !activeTab) {
     return (
       <div className="space-y-4">

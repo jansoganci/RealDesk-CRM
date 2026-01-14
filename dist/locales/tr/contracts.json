@@ -117,6 +117,9 @@
     "duplicateTenant": "Bu TC numarasıyla kayıtlı kiracı mevcut",
     "duplicateProperty": "Bu adreste kayıtlı mülk mevcut",
     "activeContractExists": "Bu mülkte aktif sözleşme mevcut",
+    "fixtures": {
+      "maxItemsOrLength": "Maksimum 20 demirbaş seçilebilir ve her biri 50 karakterden kısa olmalıdır"
+    },
     "checkingOwner": "Mal sahibi kontrol ediliyor...",
     "checkingTenant": "Kiracı kontrol ediliyor...",
     "ownerDataChanged": "Mal Sahibi Bilgileri Değişti",
@@ -147,6 +150,7 @@
     "invalidAmount": "Geçersiz tutar",
     "depositRequired": "Depozito gerekli",
     "depositNonNegative": "Depozito 0 veya daha fazla olmalı",
+    "commissionNonNegative": "Komisyon tutarı negatif olamaz",
     "currencyRequired": "Para birimi seçiniz",
     "paymentDayRange": "Gün 1-31 arası olmalı",
     "clauseContentRequired": "Madde içeriği boş olamaz",
@@ -198,10 +202,14 @@
       "end_date": "Bitiş Tarihi",
       "rent_amount": "Aylık Kira",
       "deposit": "Depozito",
+      "commission_amount": "Komisyon Tutarı",
       "payment_day": "Ödeme Günü",
       "payment_method": "Ödeme Yöntemi",
       "special_conditions": "Özel Şartlar",
-      "currency": "Para Birimi"
+      "currency": "Para Birimi",
+      "fixtures": "Demirbaş Beyanı",
+      "fixturesCommonItems": "Yaygın Demirbaşlar",
+      "fixturesCustomItems": "Özel Demirbaşlar"
     },
     "placeholders": {
       "owner_name": "Ali Yılmaz",
@@ -220,7 +228,14 @@
       "payment_method": "Banka Transferi",
       "special_conditions": "Özel şartlar veya notlar...",
       "usePurpose": "Mesken / İşyeri",
-      "currency": "Para birimi seçin"
+      "currency": "Para birimi seçin",
+      "commission_amount": "Manuel komisyon tutarı (opsiyonel)",
+      "fixtures": "Demirbaş seçin veya özel ekleyin",
+      "fixturesCustomInput": "Özel demirbaş eklemek için yazın ve Enter'a basın",
+      "fixturesEmpty": "Demirbaş seçilmedi"
+    },
+    "helpers": {
+      "commission_amount": "Boş bırakılırsa 1 aylık kira tutarı otomatik kullanılır"
     },
     "propertyTypes": {
       "apartment": "Daire",
@@ -231,6 +246,22 @@
       "TRY": "₺ TRY (Türk Lirası)",
       "USD": "$ USD (Amerikan Doları)",
       "EUR": "€ EUR (Euro)"
+    },
+    "labels": {
+      "fixturesAddCustom": "Özel Ekle",
+      "fixturesRemove": "Kaldır"
+    },
+    "commonFixtures": {
+      "kombi": "Kombi",
+      "klima": "Klima",
+      "buzdolabi": "Buzdolabı",
+      "camasirMakinesi": "Çamaşır Makinesi",
+      "ankastreSet": "Ankastre Set",
+      "bulasikMakinesi": "Bulaşık Makinesi",
+      "firin": "Fırın",
+      "mikrodalga": "Mikrodalga",
+      "televizyon": "Televizyon",
+      "mobilya": "Mobilya"
     },
     "buttons": {
       "submit": "Sözleşme Oluştur",

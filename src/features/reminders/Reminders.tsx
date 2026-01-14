@@ -12,9 +12,9 @@ import { AnimatedTabs } from '../../components/ui/animated-tabs';
 import {
   AlertCircle,
   Bell,
-  Calendar,
-  FileText,
   RefreshCw,
+  Shield,
+  CheckCircle2,
 } from 'lucide-react';
 import { ReminderWithDetails } from '../../lib/serviceProxy';
 import { useTranslation } from 'react-i18next';
@@ -38,15 +38,20 @@ export const Reminders = () => {
   // Reminders data fetching hook
   const { reminders, loading, errorKey, refreshData } = useRemindersData();
 
-  // Reminder categorization hook
+  // Reminder categorization hook - use new categorization for Contract Expiry Control Center
   const {
+    // Old structure (backward compatible)
     overdueReminders,
     upcomingReminders,
     scheduledReminders,
     expiredContracts,
+    // New structure (Contract Expiry Control Center)
+    criticalReminders,
+    underWatchReminders,
+    completedReminders,
     activeTab,
     setActiveTab,
-  } = useReminderCategories({ reminders });
+  } = useReminderCategories({ reminders, useNewCategorization: true });
 
   // Reminder dialog hook
   const { selectedReminder, showContactDialog, openContactDialog, closeContactDialog } = useReminderDialog();
@@ -63,28 +68,24 @@ export const Reminders = () => {
     openContactDialog(reminder);
   }, [openContactDialog]);
 
+  // New tab structure for Contract Expiry Control Center
   const tabsConfig = useMemo(() => [
     { 
-      id: 'overdue', 
-      label: `${t('tabs.overdue')}${overdueReminders.length > 0 ? ` (${overdueReminders.length})` : ''}`,
+      id: 'critical', 
+      label: `${t('tabs.critical')}${criticalReminders.length > 0 ? ` (${criticalReminders.length})` : ''}`,
       icon: <AlertCircle className="h-4 w-4" />
     },
     { 
-      id: 'upcoming', 
-      label: `${t('tabs.upcoming')}${upcomingReminders.length > 0 ? ` (${upcomingReminders.length})` : ''}`,
-      icon: <Calendar className="h-4 w-4" />
+      id: 'underWatch', 
+      label: `${t('tabs.underWatch')}${underWatchReminders.length > 0 ? ` (${underWatchReminders.length})` : ''}`,
+      icon: <Shield className="h-4 w-4" />
     },
     { 
-      id: 'scheduled', 
-      label: `${t('tabs.scheduled')}${scheduledReminders.length > 0 ? ` (${scheduledReminders.length})` : ''}`,
-      icon: <Bell className="h-4 w-4" />
+      id: 'completed', 
+      label: `${t('tabs.completed')}${completedReminders.length > 0 ? ` (${completedReminders.length})` : ''}`,
+      icon: <CheckCircle2 className="h-4 w-4" />
     },
-    { 
-      id: 'expired', 
-      label: `${t('tabs.expired')}${expiredContracts.length > 0 ? ` (${expiredContracts.length})` : ''}`,
-      icon: <FileText className="h-4 w-4" />
-    },
-  ], [overdueReminders.length, upcomingReminders.length, scheduledReminders.length, expiredContracts.length, t]);
+  ], [criticalReminders.length, underWatchReminders.length, completedReminders.length, t]);
 
   const onConfirmMarkAsContacted = useCallback(() => {
     if (selectedReminder) {
@@ -134,14 +135,21 @@ export const Reminders = () => {
           />
         ) : (
           <div className="space-y-4">
+            {/* Tabs */}
             <AnimatedTabs
               tabs={tabsConfig}
               defaultTab={activeTab || undefined}
               onChange={(tabId) => setActiveTab(tabId)}
             />
 
+            {/* Reminder Sections */}
             <ReminderSections
-              activeTab={activeTab || 'overdue'}
+              activeTab={activeTab || 'critical'}
+              // New structure
+              criticalReminders={criticalReminders}
+              underWatchReminders={underWatchReminders}
+              completedReminders={completedReminders}
+              // Old structure (backward compatible)
               overdueReminders={overdueReminders}
               upcomingReminders={upcomingReminders}
               scheduledReminders={scheduledReminders}

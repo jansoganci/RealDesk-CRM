@@ -12,7 +12,6 @@ import { tr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -228,6 +227,27 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           </div>
         </div>
 
+        {/* Commission Amount (Optional) */}
+        <div>
+          <Label htmlFor="commission_amount">
+            {t('create.fields.commission_amount')}
+          </Label>
+          <Input
+            id="commission_amount"
+            type="number"
+            placeholder={t('create.placeholders.commission_amount')}
+            {...form.register('commission_amount', { valueAsNumber: true })}
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            {t('create.helpers.commission_amount')}
+          </p>
+          {form.formState.errors.commission_amount && (
+            <p className="text-sm text-red-600 mt-1">
+              {form.formState.errors.commission_amount.message}
+            </p>
+          )}
+        </div>
+
         {/* Payment Details */}
         <Separator />
         <h4 className="text-sm font-medium">{t('create.sections.paymentDetailsOptional')}</h4>
@@ -269,23 +289,6 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           </div>
         </div>
 
-        {/* Special Conditions */}
-        <div>
-          <Label htmlFor="special_conditions">
-            {t('create.fields.special_conditions')}
-          </Label>
-          <Textarea
-            id="special_conditions"
-            placeholder={t('create.placeholders.special_conditions')}
-            rows={4}
-            {...form.register('special_conditions')}
-          />
-          {form.formState.errors.special_conditions && (
-            <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.special_conditions.message}
-            </p>
-          )}
-        </div>
       </CardContent>
     </Card>
   );

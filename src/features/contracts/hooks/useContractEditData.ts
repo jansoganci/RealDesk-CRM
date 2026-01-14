@@ -76,6 +76,7 @@ interface ContractWithRelations {
   end_date: string;
   rent_amount?: number;
   deposit?: number;
+  commission_amount?: number | null; // Manual commission amount (null = use rent_amount)
   tenant?: TenantWithEncryption;
   property?: PropertyWithComponents;
   details?: ContractDetails;
@@ -200,6 +201,9 @@ export function useContractEditData(contractId: string | undefined): UseContract
         rent_amount: contract.rent_amount || 0,
         deposit: contract.deposit || 0,
         currency: (contractDetails?.deposit_currency as 'TRY' | 'USD' | 'EUR') || 'TRY',
+        commission_amount: contract.commission_amount && contract.commission_amount > 0 
+          ? contract.commission_amount 
+          : undefined, // Load from contract (0 or null = undefined, triggers fallback)
 
         // Optional details
         payment_day_of_month: contractDetails?.payment_day_of_month || undefined,

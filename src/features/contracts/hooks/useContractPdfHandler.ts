@@ -14,6 +14,7 @@ import { generateContractPDFBlob } from '@/services/contractPdf.service';
 import { numberToTurkishText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
+import { formatFixturesForPdf } from '../utils/fixturesUtils';
 
 const logger = createLogger('ContractPdf');
 
@@ -107,11 +108,11 @@ function preparePdfData(
     // Currency
     currency: formData.currency || 'TRY',
 
-    // Fixtures
-    fixtures: formData.special_conditions || 'Kombi, Klima',
+    // Fixtures (formatted for PDF: comma + space, or '-' if empty)
+    fixtures: formatFixturesForPdf(formData.special_conditions),
 
     // Eviction commitment
-    evictionDate: format(new Date(formData.end_date), 'dd MMMM yyyy', { locale: tr }),
+    evictionDate: '', // Left blank for manual entry (legal requirement)
     commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr })
   };
 }

@@ -393,6 +393,7 @@ export type Database = {
       }
       contracts: {
         Row: {
+          commission_amount: number | null
           contract_pdf_path: string | null
           created_at: string | null
           currency: string | null
@@ -416,6 +417,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          commission_amount?: number | null
           contract_pdf_path?: string | null
           created_at?: string | null
           currency?: string | null
@@ -439,6 +441,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          commission_amount?: number | null
           contract_pdf_path?: string | null
           created_at?: string | null
           currency?: string | null

@@ -30,7 +30,7 @@ export const EmailConfirmation = () => {
 
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {
-              navigate(ROUTES.DASHBOARD, { replace: true });
+              navigate(ROUTES.ONBOARDING, { replace: true });
             }, 2000);
           } else {
             // User has session but email not confirmed (shouldn't happen, but handle gracefully)
@@ -53,7 +53,7 @@ export const EmailConfirmation = () => {
               setStatus('confirmed');
               toast.success(t('emailConfirmation.confirmed'));
               setTimeout(() => {
-                navigate(ROUTES.DASHBOARD, { replace: true });
+                navigate(ROUTES.ONBOARDING, { replace: true });
               }, 2000);
             } else {
               setStatus('error');
@@ -79,7 +79,7 @@ export const EmailConfirmation = () => {
           setStatus('confirmed');
           toast.success(t('emailConfirmation.confirmed'));
           setTimeout(() => {
-            navigate(ROUTES.DASHBOARD, { replace: true });
+            navigate(ROUTES.ONBOARDING, { replace: true });
           }, 2000);
         }
       }
@@ -125,10 +125,10 @@ export const EmailConfirmation = () => {
                 {t('emailConfirmation.redirecting')}
               </p>
               <Link
-                to={ROUTES.DASHBOARD}
+                to={ROUTES.ONBOARDING}
                 className="text-sm text-blue-600 hover:text-blue-700 hover:underline"
               >
-                {t('emailConfirmation.goToDashboard')}
+                {t('emailConfirmation.goToOnboarding')}
               </Link>
             </div>
           </CardContent>
