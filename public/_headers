@@ -1,11 +1,34 @@
 /*
   X-Frame-Options: DENY
   X-Content-Type-Options: nosniff
+  Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
 
+# Cache Vite assets (hashed JS/CSS)
 /assets/*
   Cache-Control: public, max-age=31536000, immutable
 
-/locales/*
-  Cache-Control: public, max-age=0, must-revalidate
-  X-Content-Type-Options: nosniff
+# Cache images
+/*.png
+  Cache-Control: public, max-age=31536000
+/*.jpg
+  Cache-Control: public, max-age=31536000
+/*.jpeg
+  Cache-Control: public, max-age=31536000
+/*.svg
+  Cache-Control: public, max-age=31536000
+/*.webp
+  Cache-Control: public, max-age=31536000
 
+# Cache fonts
+/*.woff
+  Cache-Control: public, max-age=31536000
+/*.woff2
+  Cache-Control: public, max-age=31536000
+
+# Always fetch fresh index.html
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate
+
+# Cache locale JSON files for 1 day
+/*.json
+  Cache-Control: public, max-age=86400

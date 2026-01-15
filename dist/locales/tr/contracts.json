@@ -397,18 +397,18 @@
   },
   "import": {
     "title": "Eski Sözleşme Aktarma",
-    "subtitle": "PDF veya Word dosyanızdan sözleşme bilgilerini otomatik olarak çıkarıp sisteme aktarın",
-    "description": "PDF veya DOCX dosyasından sözleşme bilgilerini çıkarın",
+    "subtitle": "Word belgenizden sözleşme bilgilerini otomatik olarak çıkarıp sisteme aktarın",
+    "description": "Word dosyasından sözleşme bilgilerini çıkarın",
     "dropzone": {
       "title": "Dosya Yükle",
-      "description": "PDF veya DOCX dosyasını sürükleyip bırakın veya seçin",
-      "accept": "PDF, DOCX"
+      "description": "Word dosyanızı sürükleyip bırakın veya seçin",
+      "accept": "Word (.docx)"
     },
     "processing": "Dosya işleniyor...",
     "extracting": "Metin çıkarılıyor...",
     "parsing": "Sözleşme bilgileri ayrıştırılıyor...",
     "uploading": "Dosya yükleniyor...",
-    "reading": "PDF okunuyor...",
+    "reading": "Dosya okunuyor...",
     "dataExtracting": "Veriler çıkarılıyor...",
     "ready": "Hazır!",
     "error": "Hata",
@@ -419,7 +419,7 @@
       "completed": "{{progress}}% tamamlandı"
     },
     "progressSteps": {
-      "uploaded": "PDF Yüklendi",
+      "uploaded": "Dosya Yüklendi",
       "extracting": "Metin Çıkarılıyor",
       "ready": "Hazır"
     },
@@ -435,7 +435,7 @@
     "foundAddress": "Bulunan adres",
     "fieldsFilled": "({{extracted}}/{{total}} alan dolu)",
     "saving": "Kaydediliyor...",
-    "confirmAndSave": "✅ Onayla ve Kaydet",
+    "confirmAndSave": "Onayla ve Kaydet",
     "noData": "Veri bulunamadı",
     "waitMessage": "Lütfen bekleyin, bu işlem birkaç saniye sürebilir...",
     "extractedText": "Çıkarılan Metin ({{count}} karakter)",
@@ -446,37 +446,37 @@
       "parsingFailed": "Sözleşme bilgileri ayrıştırılamadı",
       "unsupportedFormat": "Desteklenmeyen dosya formatı",
       "fileTooLarge": "Dosya çok büyük (maksimum 10MB)",
-      "success": "PDF başarıyla okundu!",
+      "success": "Dosya başarıyla okundu!",
       "successDescription": "{{count}} alan çıkarıldı",
-      "readFailed": "PDF okunamadı",
+      "readFailed": "Dosya okunamadı",
       "readFailedDescription": "Bilinmeyen hata. Manuel olarak girebilirsiniz.",
       "noSession": "Oturum açmanız gerekiyor",
-      "pdfUploadFailed": "PDF kaydedilemedi",
-      "pdfUploadFailedDescription": "Sözleşme oluşturuldu ama PDF sisteme yüklenemedi.",
+      "documentUploadFailed": "Dosya kaydedilemedi",
+      "documentUploadFailedDescription": "Sözleşme oluşturuldu ama dosya sisteme yüklenemedi.",
       "saveFailed": "Sözleşme kaydedilemedi"
     },
     "upload": {
       "dropHere": "Dosyayı buraya bırakın",
-      "dragHere": "PDF dosyanızı buraya sürükleyin",
+      "dragHere": "Word belgenizi buraya sürükleyin",
       "orSelect": "veya bilgisayarınızdan seçin",
       "selectFromComputer": "Bilgisayardan Seç",
-      "helpText": "PDF veya Word dosyası yükleyebilirsiniz (Maks 10 MB)",
+      "helpText": "Word dosyası yükleyebilirsiniz (Maks 10 MB)",
       "autoExtract": "Sistem otomatik olarak ev sahibi, kiracı ve sözleşme bilgilerini çıkaracak",
       "invalidFileType": "Geçersiz dosya türü",
-      "invalidFileTypeDescription": "Sadece PDF veya Word (.docx) dosyası yükleyebilirsiniz",
+      "invalidFileTypeDescription": "Sadece Word dosyası (.docx) yükleyebilirsiniz",
       "fileTooLarge": "Dosya çok büyük",
       "fileTooLargeDescription": "Dosya boyutu: {{size}} MB. Maksimum: 10 MB"
     },
     "banner": {
       "title": "Eski Sözleşmeleri Sisteme Aktarın",
-      "description": "PDF veya Word dosyalarınızı yükleyin, sistem otomatik olarak bilgileri çıkarsın",
+      "description": "Word belgelerinizi yükleyin, sistem otomatik olarak bilgileri çıkarsın",
       "button": "Eski Sözleşme Aktar"
     },
     "alerts": {
       "extractedSuccess": "Başarıyla çıkarıldı!",
-      "extractedDescription": "{{count}} alan PDF'den otomatik olarak dolduruldu. Lütfen kontrol edip gerekirse düzeltin.",
+      "extractedDescription": "{{count}} alan dosyadan otomatik olarak dolduruldu. Lütfen kontrol edip gerekirse düzeltin.",
       "fewFieldsExtracted": "Bazı bilgiler bulunamadı",
-      "fewFieldsDescription": "PDF'den az sayıda bilgi çıkarılabildi. Lütfen eksik alanları manuel olarak doldurun."
+      "fewFieldsDescription": "Dosyadan az sayıda bilgi çıkarılabildi. Lütfen eksik alanları manuel olarak doldurun."
     },
     "success": {
       "title": "Tebrikler!",
@@ -485,8 +485,8 @@
       "owner": "Ev Sahibi",
       "tenant": "Kiracı",
       "property": "Mülk",
-      "pdfFile": "PDF Dosyası",
-      "pdfSaved": "Başarıyla kaydedildi",
+      "documentFile": "Sözleşme Dosyası",
+      "documentSaved": "Başarıyla kaydedildi",
       "createAnother": "Başka Sözleşme Aktar",
       "viewContract": "Sözleşmeleri Görüntüle",
       "helpText": "Sözleşme ve ilişkili kayıtlar başarıyla sisteme eklendi.\nArtık tüm bilgilere Sözleşmeler sayfasından erişebilirsiniz."
