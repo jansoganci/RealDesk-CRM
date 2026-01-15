@@ -36,7 +36,6 @@ import { Inquiries } from './features/inquiries/Inquiries';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
-import { TeamMembersList } from './features/organization/TeamMembersList';
 import { TeamPerformance } from './features/team/TeamPerformance';
 import { AcceptInvite } from './features/organization/AcceptInvite';
 import { Onboarding } from './features/onboarding/Onboarding';
