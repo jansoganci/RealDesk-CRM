@@ -1,13 +1,13 @@
 /**
  * Review Step Component
  * Shows extracted data with inline editing capability
- * Side-by-side layout: PDF preview + Editable form
+ * Side-by-side layout: Document preview + Editable form
  */
 
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { CheckCircle, Loader2 } from 'lucide-react';
-import { PDFPreviewSection } from './PDFPreviewSection';
+import { DocumentPreviewSection } from './DocumentPreviewSection';
 import { OwnerSection } from './OwnerSection';
 import { TenantSection } from './TenantSection';
 import { PropertySection } from './PropertySection';
@@ -67,8 +67,8 @@ export const ReviewStep = ({
       <ReviewAlerts parsedData={parsedData} />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* LEFT SIDE: PDF Preview (1/3 width on desktop) */}
-        <PDFPreviewSection uploadedFile={uploadedFile} extractedText={extractedText} />
+        {/* LEFT SIDE: Document Preview (1/3 width on desktop) */}
+        <DocumentPreviewSection uploadedFile={uploadedFile} extractedText={extractedText} />
 
         {/* RIGHT SIDE: Form (2/3 width on desktop) */}
         <div className="lg:col-span-2 space-y-6">
@@ -123,10 +123,7 @@ export const ReviewStep = ({
                   {t('import.saving')}
                 </>
               ) : (
-                <>
-                  <CheckCircle className="mr-2 h-5 w-5" />
-                  {t('import.confirmAndSave')}
-                </>
+                t('import.confirmAndSave')
               )}
             </Button>
 

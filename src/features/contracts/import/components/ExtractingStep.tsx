@@ -1,6 +1,6 @@
 /**
  * Extracting Step Component
- * Shows progress animation while extracting text from PDF
+ * Shows progress animation while extracting text from document
  */
 
 import { useTranslation } from 'react-i18next';

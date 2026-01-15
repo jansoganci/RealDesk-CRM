@@ -4,7 +4,7 @@
 
 /**
  * Convert date format from "01/01/2024" or "01.01.2024" to "2024-01-01"
- * Used when parsing dates from PDF documents
+ * Used when parsing dates from document files
  */
 export function convertDateFormat(dateStr: string): string {
   const parts = dateStr.split(/[./]/);

@@ -390,18 +390,18 @@
   },
   "import": {
     "title": "Import Legacy Contract",
-    "subtitle": "Automatically extract contract information from your PDF or Word file",
-    "description": "Extract contract information from PDF or DOCX file",
+    "subtitle": "Automatically extract contract information from your Word document",
+    "description": "Extract contract information from Word file",
     "dropzone": {
       "title": "Upload File",
-      "description": "Drag and drop a PDF or DOCX file, or click to select",
-      "accept": "PDF, DOCX"
+      "description": "Drag and drop your Word file, or click to select",
+      "accept": "Word (.docx)"
     },
     "processing": "Processing file...",
     "extracting": "Extracting text...",
     "parsing": "Parsing contract information...",
     "uploading": "Uploading file...",
-    "reading": "Reading PDF...",
+    "reading": "Reading file...",
     "dataExtracting": "Extracting data...",
     "ready": "Ready!",
     "error": "Error",
@@ -412,7 +412,7 @@
       "completed": "{{progress}}% completed"
     },
     "progressSteps": {
-      "uploaded": "PDF Uploaded",
+      "uploaded": "File Uploaded",
       "extracting": "Extracting Text",
       "ready": "Ready"
     },
@@ -439,37 +439,37 @@
       "parsingFailed": "Failed to parse contract information",
       "unsupportedFormat": "Unsupported file format",
       "fileTooLarge": "File too large (maximum 10MB)",
-      "success": "PDF read successfully!",
+      "success": "File read successfully!",
       "successDescription": "{{count}} fields extracted",
-      "readFailed": "Failed to read PDF",
+      "readFailed": "Failed to read file",
       "readFailedDescription": "Unknown error. You can enter data manually.",
       "noSession": "Please sign in",
-      "pdfUploadFailed": "Failed to save PDF",
-      "pdfUploadFailedDescription": "Contract created but PDF could not be uploaded to system.",
+      "documentUploadFailed": "Failed to save file",
+      "documentUploadFailedDescription": "Contract created but file could not be uploaded to system.",
       "saveFailed": "Failed to save contract"
     },
     "upload": {
       "dropHere": "Drop file here",
-      "dragHere": "Drag your PDF file here",
+      "dragHere": "Drag your Word document here",
       "orSelect": "or select from your computer",
       "selectFromComputer": "Select from Computer",
-      "helpText": "You can upload PDF or Word files (Max 10 MB)",
+      "helpText": "You can upload Word files (Max 10 MB)",
       "autoExtract": "System will automatically extract owner, tenant and contract information",
       "invalidFileType": "Invalid file type",
-      "invalidFileTypeDescription": "You can only upload PDF or Word (.docx) files",
+      "invalidFileTypeDescription": "You can only upload Word files (.docx)",
       "fileTooLarge": "File too large",
       "fileTooLargeDescription": "File size: {{size}} MB. Maximum: 10 MB"
     },
     "banner": {
       "title": "Import Legacy Contracts",
-      "description": "Upload your PDF or Word files, system will automatically extract the information",
+      "description": "Upload your Word documents, system will automatically extract the information",
       "button": "Import Legacy Contract"
     },
     "alerts": {
       "extractedSuccess": "Successfully extracted!",
-      "extractedDescription": "{{count}} fields were automatically filled from the PDF. Please review and correct if needed.",
+      "extractedDescription": "{{count}} fields were automatically filled from the file. Please review and correct if needed.",
       "fewFieldsExtracted": "Some information not found",
-      "fewFieldsDescription": "Few fields could be extracted from the PDF. Please fill in the missing fields manually."
+      "fewFieldsDescription": "Few fields could be extracted from the file. Please fill in the missing fields manually."
     },
     "success": {
       "title": "Congratulations!",
@@ -478,8 +478,8 @@
       "owner": "Owner",
       "tenant": "Tenant",
       "property": "Property",
-      "pdfFile": "PDF File",
-      "pdfSaved": "Successfully saved",
+      "documentFile": "Contract File",
+      "documentSaved": "Successfully saved",
       "createAnother": "Import Another Contract",
       "viewContract": "View Contracts",
       "helpText": "Contract and related records have been successfully added to the system.\nYou can now access all information from the Contracts page."

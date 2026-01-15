@@ -40,26 +40,48 @@ class OnboardingService {
    * Save primary use case (Step 1 selection)
    */
   async savePrimaryUseCase(orgId: string, useCase: string): Promise<void> {
-    if (!useCase || !useCase.trim()) {
-      throw new Error('Primary use case is required');
+    if (!['properties', 'clients', 'contracts', 'team', 'all'].includes(useCase)) {
+      throw new Error('Invalid primary use case');
     }
 
-    const validUseCases = ['properties', 'clients', 'contracts', 'team', 'all'];
-    if (!validUseCases.includes(useCase)) {
-      throw new Error(`Invalid use case. Must be one of: ${validUseCases.join(', ')}`);
-    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
 
-    const { error } = await supabase
-      .from('organizations')
-      .update({ 
-        primary_use_case: useCase,
-        onboarding_step: 1,
-      })
-      .eq('id', orgId);
+    // DUAL-WRITE: Save to both tables
+    const [orgUpdateResult, responseResult] = await Promise.allSettled([
+      // Write to organizations (existing - CRITICAL)
+      supabase
+        .from('organizations')
+        .update({ 
+          primary_use_case: useCase,
+          onboarding_step: 1,
+        })
+        .eq('id', orgId),
+      
+      // Write to user_onboarding_responses (new - optional)
+      supabase
+        .from('user_onboarding_responses')
+        .upsert({
+          user_id: user.id,
+          org_id: orgId,
+          question_key: 'primary_use_case',
+          answer: useCase,
+        }, {
+          onConflict: 'user_id,question_key'
+        })
+    ]);
 
-    if (error) {
-      logger.error('Error saving primary use case:', error);
+    // Organizations table write is CRITICAL - must succeed
+    if (orgUpdateResult.status === 'rejected' || 
+        (orgUpdateResult.status === 'fulfilled' && orgUpdateResult.value.error)) {
+      logger.error('Error saving primary use case to organizations:', orgUpdateResult);
       throw new Error('Failed to save primary use case');
+    }
+
+    // Response table write is optional - log but don't fail
+    if (responseResult.status === 'rejected' || 
+        (responseResult.status === 'fulfilled' && responseResult.value.error)) {
+      logger.warn('Failed to save to user_onboarding_responses (non-critical):', responseResult);
     }
   }
 
@@ -171,27 +193,129 @@ class OnboardingService {
    * Save team size (Step 2)
    */
   async saveTeamSize(orgId: string, teamSize: string): Promise<void> {
-    if (!teamSize || !teamSize.trim()) {
-      throw new Error('Team size is required');
+    if (!['1', '2-5', '6-20', '21+'].includes(teamSize)) {
+      throw new Error('Invalid team size');
     }
 
-    const validTeamSizes = ['1', '2-5', '6-20', '21+'];
-    if (!validTeamSizes.includes(teamSize)) {
-      throw new Error(`Invalid team size. Must be one of: ${validTeamSizes.join(', ')}`);
-    }
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
 
-    const { error } = await supabase
-      .from('organizations')
-      .update({ 
-        team_size_range: teamSize,
-        onboarding_step: 2,
-      })
-      .eq('id', orgId);
+    // DUAL-WRITE: Save to both tables
+    const [orgUpdateResult, responseResult] = await Promise.allSettled([
+      // Write to organizations (existing - CRITICAL)
+      supabase
+        .from('organizations')
+        .update({ 
+          team_size_range: teamSize,
+          onboarding_step: 2,
+        })
+        .eq('id', orgId),
+      
+      // Write to user_onboarding_responses (new - optional)
+      supabase
+        .from('user_onboarding_responses')
+        .upsert({
+          user_id: user.id,
+          org_id: orgId,
+          question_key: 'team_size',
+          answer: teamSize,
+        }, {
+          onConflict: 'user_id,question_key'
+        })
+    ]);
 
-    if (error) {
-      logger.error('Error saving team size:', error);
+    // Organizations table write is CRITICAL - must succeed
+    if (orgUpdateResult.status === 'rejected' || 
+        (orgUpdateResult.status === 'fulfilled' && orgUpdateResult.value.error)) {
+      logger.error('Error saving team size to organizations:', orgUpdateResult);
       throw new Error('Failed to save team size');
     }
+
+    // Response table write is optional - log but don't fail
+    if (responseResult.status === 'rejected' || 
+        (responseResult.status === 'fulfilled' && responseResult.value.error)) {
+      logger.warn('Failed to save to user_onboarding_responses (non-critical):', responseResult);
+    }
+  }
+
+  /**
+   * Save onboarding response to user_onboarding_responses table
+   */
+  async saveResponse(
+    orgId: string,
+    questionKey: string,
+    answer: string | number | boolean | object
+  ): Promise<void> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    const { error } = await supabase
+      .from('user_onboarding_responses')
+      .upsert({
+        user_id: user.id,
+        org_id: orgId,
+        question_key: questionKey,
+        answer: answer as any,
+      }, {
+        onConflict: 'user_id,question_key'
+      });
+
+    if (error) {
+      logger.error('Error saving onboarding response:', error);
+      throw new Error(`Failed to save response for ${questionKey}`);
+    }
+  }
+
+  /**
+   * Get all onboarding responses for current user
+   */
+  async getResponses(orgId: string): Promise<Record<string, any>> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase
+      .from('user_onboarding_responses')
+      .select('question_key, answer')
+      .eq('org_id', orgId)
+      .eq('user_id', user.id);
+
+    if (error) {
+      logger.error('Error fetching onboarding responses:', error);
+      throw new Error('Failed to fetch onboarding responses');
+    }
+
+    const responses: Record<string, any> = {};
+    data?.forEach(row => {
+      responses[row.question_key] = row.answer;
+    });
+
+    return responses;
+  }
+
+  /**
+   * Get specific onboarding response
+   */
+  async getResponse(
+    orgId: string,
+    questionKey: string
+  ): Promise<any | null> {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    const { data, error } = await supabase
+      .from('user_onboarding_responses')
+      .select('answer')
+      .eq('org_id', orgId)
+      .eq('user_id', user.id)
+      .eq('question_key', questionKey)
+      .maybeSingle();
+
+    if (error) {
+      logger.error('Error fetching onboarding response:', error);
+      throw new Error(`Failed to fetch response for ${questionKey}`);
+    }
+
+    return data?.answer ?? null;
   }
 }
 

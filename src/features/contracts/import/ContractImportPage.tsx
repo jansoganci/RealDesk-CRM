@@ -1,6 +1,6 @@
 /**
  * Contract Import Page
- * Allows users to import legacy contracts by uploading PDF/DOCX files
+ * Allows users to import legacy contracts by uploading Word documents
  *
  * Flow: Upload → Extract → Review → Success
  */

@@ -38,15 +38,20 @@ const navigationItems = [
   { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
   { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
-  { key: 'team', href: ROUTES.TEAM, icon: Users2 },
+  { key: 'team', href: ROUTES.TEAM, icon: Users2, ownerOnly: true },
   { key: 'profile', href: ROUTES.PROFILE, icon: UserCircle },
 ];
 
 export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const { t } = useTranslation('navigation');
   const { signOut } = useAuth();
-  const { currentOrg } = useOrg();
+  const { currentOrg, isOwner } = useOrg();
   const { reminderCount, unreadMatchesCount } = useNotifications();
+
+  // Filter navigation items based on user role
+  const filteredNavigationItems = navigationItems.filter(
+    (item) => !item.ownerOnly || isOwner
+  );
 
   const handleSignOut = async () => {
     try {
@@ -92,7 +97,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         </div>
 
         <nav className="flex-1 p-4 space-y-1.5 overflow-y-auto">
-          {navigationItems.map((item) => (
+          {filteredNavigationItems.map((item) => (
             <NavLink
               key={item.key}
               to={item.href}

@@ -2,13 +2,14 @@ import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Textarea } from '@/components/ui/textarea';
+import { FileText } from 'lucide-react';
 
-interface PDFPreviewSectionProps {
+interface DocumentPreviewSectionProps {
   uploadedFile: File | null;
   extractedText: string;
 }
 
-export function PDFPreviewSection({ uploadedFile, extractedText }: PDFPreviewSectionProps) {
+export function DocumentPreviewSection({ uploadedFile, extractedText }: DocumentPreviewSectionProps) {
   const { t } = useTranslation('contracts');
 
   return (
@@ -21,8 +22,8 @@ export function PDFPreviewSection({ uploadedFile, extractedText }: PDFPreviewSec
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-100 rounded flex items-center justify-center flex-shrink-0">
-                <span className="text-2xl">📄</span>
+              <div className="w-12 h-12 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
+                <FileText className="h-6 w-6 text-blue-600" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate">{uploadedFile.name}</p>

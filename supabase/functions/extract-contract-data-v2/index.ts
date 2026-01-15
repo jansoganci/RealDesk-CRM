@@ -21,8 +21,8 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB (your files are ~500KB max)
 const MIN_MEANINGFUL_TEXT_LENGTH = 100; // Minimum chars to consider extraction successful
 
-// SET TO TRUE FOR TESTING WITHOUT AUTH
-const SKIP_AUTH_FOR_TESTING = true;
+// Authentication required for production
+const SKIP_AUTH_FOR_TESTING = false;
 
 // CORS headers
 const corsHeaders = {

@@ -21,9 +21,12 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
   const [isDragging, setIsDragging] = useState(false);
 
   const validateFile = (file: File): boolean => {
-    // Validate file type
-    const allowedTypes = ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
-    const allowedExtensions = ['.pdf', '.docx'];
+    // Validate file type - only DOCX/DOC allowed
+    const allowedTypes = [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/msword'
+    ];
+    const allowedExtensions = ['.docx', '.doc'];
     const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
     if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
@@ -142,7 +145,7 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
       <input
         ref={fileInputRef}
         type="file"
-        accept=".pdf,.docx"
+        accept=".docx,.doc"
         onChange={handleInputChange}
         className="hidden"
       />

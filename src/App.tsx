@@ -6,6 +6,7 @@ import { OrgProvider } from './contexts/OrgContext';
 import { BillingProvider } from './contexts/BillingContext';
 import { NotificationProvider } from './contexts/NotificationContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+import { OwnerOnlyRoute } from './components/common/OwnerOnlyRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 import { Login } from './features/auth/Login';
 import { Register } from './features/auth/Register';
@@ -36,6 +37,7 @@ import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
 import { TeamMembersList } from './features/organization/TeamMembersList';
+import { TeamPerformance } from './features/team/TeamPerformance';
 import { AcceptInvite } from './features/organization/AcceptInvite';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
@@ -231,7 +233,9 @@ function AppContent() {
                   path={ROUTES.TEAM}
                   element={
                     <ProtectedRoute>
-                      <TeamMembersList />
+                      <OwnerOnlyRoute>
+                        <TeamPerformance />
+                      </OwnerOnlyRoute>
                     </ProtectedRoute>
                   }
                 />

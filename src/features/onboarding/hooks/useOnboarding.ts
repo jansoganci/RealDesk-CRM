@@ -53,17 +53,54 @@ export function useOnboarding(): UseOnboardingReturn {
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   // Load existing data if available
+  // Try loading from user_onboarding_responses first, fallback to organizations table
   useEffect(() => {
-    if (currentOrg?.primary_use_case) {
-      setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
-    }
-    if (currentOrg?.name) {
-      setOrganizationName(currentOrg.name);
-    }
-    if (currentOrg?.team_size_range) {
-      setTeamSize(currentOrg.team_size_range as TeamSize);
-    }
-  }, [currentOrg?.primary_use_case, currentOrg?.name, currentOrg?.team_size_range]);
+    const loadOnboardingData = async () => {
+      if (!currentOrg?.id) return;
+
+      try {
+        // Try to load from user_onboarding_responses first (new source)
+        const responses = await onboardingService.getResponses(currentOrg.id);
+        
+        // Load primary_use_case from new table, fallback to old table
+        if (responses.primary_use_case) {
+          setPrimaryUseCase(responses.primary_use_case as PrimaryUseCase);
+        } else if (currentOrg?.primary_use_case) {
+          // Fallback to organizations table (backward compatibility)
+          setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+        }
+
+        // Load team_size from new table, fallback to old table
+        if (responses.team_size) {
+          setTeamSize(responses.team_size as TeamSize);
+        } else if (currentOrg?.team_size_range) {
+          // Fallback to organizations table (backward compatibility)
+          setTeamSize(currentOrg.team_size_range as TeamSize);
+        }
+
+        // Organization name always comes from organizations table (not a survey response)
+        if (currentOrg?.name) {
+          setOrganizationName(currentOrg.name);
+        }
+      } catch (err) {
+        // If new table fails, fall back to old table (graceful degradation)
+        logger.warn('Failed to load from user_onboarding_responses, using fallback:', err);
+        
+        // Fallback to organizations table
+        if (currentOrg?.primary_use_case) {
+          setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+        }
+        if (currentOrg?.name) {
+          setOrganizationName(currentOrg.name);
+        }
+        if (currentOrg?.team_size_range) {
+          setTeamSize(currentOrg.team_size_range as TeamSize);
+        }
+      }
+    };
+
+    loadOnboardingData();
+  }, [currentOrg?.id, currentOrg?.primary_use_case, currentOrg?.name, currentOrg?.team_size_range]);
 
   // Load user preferences (language/currency)
   useEffect(() => {
@@ -250,7 +287,7 @@ export function useOnboarding(): UseOnboardingReturn {
     }
   }, [currentOrg?.id, primaryUseCase]);
 
-  const resumeFromStep = useCallback(() => {
+  const resumeFromStep = useCallback(async () => {
     if (!currentOrg) {
       setCurrentStep(1);
       return;
@@ -261,15 +298,39 @@ export function useOnboarding(): UseOnboardingReturn {
     const nextStep = Math.min(lastStep + 1, 3);
     setCurrentStep(nextStep);
 
-    // Load saved data
-    if (currentOrg.primary_use_case) {
-      setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+    // Load saved data - try new table first, fallback to old table
+    try {
+      const responses = await onboardingService.getResponses(currentOrg.id);
+      
+      // Load primary_use_case from new table, fallback to old table
+      if (responses.primary_use_case) {
+        setPrimaryUseCase(responses.primary_use_case as PrimaryUseCase);
+      } else if (currentOrg.primary_use_case) {
+        setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+      }
+
+      // Load team_size from new table, fallback to old table
+      if (responses.team_size) {
+        setTeamSize(responses.team_size as TeamSize);
+      } else if (currentOrg.team_size_range) {
+        setTeamSize(currentOrg.team_size_range as TeamSize);
+      }
+    } catch (err) {
+      // If new table fails, fall back to old table (graceful degradation)
+      logger.warn('Failed to load from user_onboarding_responses in resume, using fallback:', err);
+      
+      // Fallback to organizations table
+      if (currentOrg.primary_use_case) {
+        setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+      }
+      if (currentOrg.team_size_range) {
+        setTeamSize(currentOrg.team_size_range as TeamSize);
+      }
     }
+
+    // Organization name always comes from organizations table
     if (currentOrg.name) {
       setOrganizationName(currentOrg.name);
-    }
-    if (currentOrg.team_size_range) {
-      setTeamSize(currentOrg.team_size_range as TeamSize);
     }
 
     // Language/currency will be loaded from user_preferences via existing useEffect

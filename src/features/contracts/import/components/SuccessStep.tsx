@@ -122,17 +122,17 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
               </div>
             </div>
 
-            {/* PDF Saved */}
+            {/* Document Saved */}
             <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200">
               <div className="flex-shrink-0">
                 <FileCheck className="h-5 w-5 text-green-600 mt-0.5" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-gray-900">
-                  {t('import.success.pdfFile')}
+                  {t('import.success.documentFile')}
                 </p>
                 <p className="text-sm text-green-600">
-                  {t('import.success.pdfSaved')}
+                  {t('import.success.documentSaved')}
                 </p>
               </div>
             </div>

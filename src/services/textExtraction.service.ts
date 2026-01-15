@@ -7,6 +7,8 @@
  * 2. Supabase Edge Function proxy (recommended - secure)
  */
 
+import { supabase } from '@/config/supabase';
+
 export interface ExtractTextRequest {
   file: File;
 }
@@ -133,7 +135,7 @@ export async function extractTextFromFileViaProxy(
   const fileExtension = '.' + file.name.split('.').pop()?.toLowerCase();
 
   if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(fileExtension)) {
-    throw new Error('Desteklenmeyen dosya tipi. Lütfen PDF veya DOCX dosyası yükleyin.');
+    throw new Error('Desteklenmeyen dosya tipi. Lütfen Word dosyası (.docx) yükleyin.');
   }
 
   // Validate file size (10 MB limit for OCR)
@@ -147,13 +149,23 @@ export async function extractTextFromFileViaProxy(
   formData.append('file', file);
 
   try {
-    // Note: Auth is optional for testing (SKIP_AUTH_FOR_TESTING = true in edge function)
-    // In production, uncomment the auth header below
+    // Get user session for authentication
+    const { data: { session } } = await supabase.auth.getSession();
+    const authToken = session?.access_token;
+
+    if (!authToken) {
+      throw new Error('User not authenticated. Please log in.');
+    }
+
+    // Prepare headers with authentication
+    const headers: Record<string, string> = {};
+    if (authToken) {
+      headers['Authorization'] = `Bearer ${authToken}`;
+    }
+
     const response = await fetch(url, {
       method: 'POST',
-      // headers: {
-      //   'Authorization': `Bearer ${session.access_token}`,
-      // },
+      headers,
       body: formData,
     });
 

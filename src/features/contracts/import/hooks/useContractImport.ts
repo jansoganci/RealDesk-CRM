@@ -47,7 +47,7 @@ export const useContractImport = () => {
       const result = await extractTextFromFileViaProxy(file);
 
       if (!result.text || result.text.length === 0) {
-        throw new Error('PDF\'den metin çıkarılamadı. Dosya boş veya taranmış olabilir.');
+        throw new Error('Dosyadan metin çıkarılamadı. Dosya boş veya okunamaz olabilir.');
       }
 
       setState(prev => ({ ...prev, extractedText: result.text }));
@@ -101,7 +101,7 @@ export const useContractImport = () => {
       // Create contract with entities via RPC
       const result = await createContractWithEntities(formData, user.id);
 
-      // Upload PDF to storage
+      // Upload document to storage
       if (state.file) {
         try {
           await contractsService.uploadContractPdfAndPersist(
@@ -109,10 +109,10 @@ export const useContractImport = () => {
             result.contract_id
           );
         } catch (uploadError) {
-          console.error('PDF upload failed:', uploadError);
-          // Don't fail the whole operation - PDF is optional
-          toast.warning(t('import.toasts.pdfUploadFailed'), {
-            description: t('import.toasts.pdfUploadFailedDescription')
+          console.error('Document upload failed:', uploadError);
+          // Don't fail the whole operation - document upload is optional
+          toast.warning(t('import.toasts.documentUploadFailed'), {
+            description: t('import.toasts.documentUploadFailedDescription')
           });
         }
       }
