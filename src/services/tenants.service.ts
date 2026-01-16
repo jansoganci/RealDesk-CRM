@@ -117,11 +117,17 @@ class TenantsService {
     const orgId = await getActiveOrgId();
 
     // Inject user_id and org_id into tenant data
-    return insertRow('tenants', {
+    const newTenant = await insertRow('tenants', {
       ...tenant,
       user_id: userId,
       org_id: orgId,
     });
+
+    // Track tenant_added event (GA4)
+    const { trackTenantAdded } = await import('../utils/gtm');
+    trackTenantAdded(newTenant.id);
+
+    return newTenant;
   }
 
   async update(id: string, tenant: TenantUpdate): Promise<Tenant> {
@@ -314,6 +320,11 @@ class TenantsService {
       if (contractErr || !contractRow) {
         throw new AppError(ERROR_CONTRACT_NOT_FOUND);
       }
+
+      // Track tenant_added and contract_created events (GA4)
+      const { trackTenantAdded, trackContractCreated } = await import('../utils/gtm');
+      trackTenantAdded(resTyped.tenant_id);
+      trackContractCreated(resTyped.contract_id);
 
       return {
         tenant: tenantResult as Tenant,

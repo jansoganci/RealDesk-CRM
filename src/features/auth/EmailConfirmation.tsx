@@ -8,6 +8,7 @@ import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, CheckCircle, XCircle, Mail } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { supabase } from '../../config/supabase';
+import { trackSignUp } from '../../utils/gtm';
 
 export const EmailConfirmation = () => {
   const [status, setStatus] = useState<'checking' | 'confirmed' | 'error' | 'expired'>('checking');
@@ -27,6 +28,15 @@ export const EmailConfirmation = () => {
           if (confirmed) {
             setStatus('confirmed');
             toast.success(t('emailConfirmation.confirmed'));
+
+            // Track sign_up event (GA4) - registration is complete when email is confirmed
+            const signupMethod = localStorage.getItem('pending_login_method') || 'email';
+            if (signupMethod === 'google') {
+              trackSignUp('google');
+            } else {
+              trackSignUp('email');
+            }
+            localStorage.removeItem('pending_login_method');
 
             // Redirect to dashboard after 2 seconds
             setTimeout(() => {
@@ -52,6 +62,16 @@ export const EmailConfirmation = () => {
             if (newSession?.user && confirmed) {
               setStatus('confirmed');
               toast.success(t('emailConfirmation.confirmed'));
+
+              // Track sign_up event (GA4) - registration is complete when email is confirmed
+              const signupMethod = localStorage.getItem('pending_login_method') || 'email';
+              if (signupMethod === 'google') {
+                trackSignUp('google');
+              } else {
+                trackSignUp('email');
+              }
+              localStorage.removeItem('pending_login_method');
+
               setTimeout(() => {
                 navigate(ROUTES.ONBOARDING, { replace: true });
               }, 2000);
@@ -78,6 +98,16 @@ export const EmailConfirmation = () => {
         if (confirmed) {
           setStatus('confirmed');
           toast.success(t('emailConfirmation.confirmed'));
+
+          // Track sign_up event (GA4) - registration is complete when email is confirmed
+          const signupMethod = localStorage.getItem('pending_login_method') || 'email';
+          if (signupMethod === 'google') {
+            trackSignUp('google');
+          } else {
+            trackSignUp('email');
+          }
+          localStorage.removeItem('pending_login_method');
+
           setTimeout(() => {
             navigate(ROUTES.ONBOARDING, { replace: true });
           }, 2000);

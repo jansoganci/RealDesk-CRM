@@ -40,17 +40,17 @@ export function trackPageView(pagePath: string, pageTitle: string): void {
 }
 
 /**
- * Track successful login
+ * Track successful login (GA4 standard event: login)
  */
 export function trackLogin(method: 'email' | 'google' | 'magic_link' = 'email'): void {
-  trackEvent('login_success', {
+  trackEvent('login', {
     method,
     timestamp: new Date().toISOString(),
   });
 }
 
 /**
- * Track successful sign up
+ * Track successful sign up (GA4 standard event: sign_up)
  */
 export function trackSignUp(method: 'email' | 'google' = 'email'): void {
   trackEvent('sign_up', {
@@ -60,7 +60,7 @@ export function trackSignUp(method: 'email' | 'google' = 'email'): void {
 }
 
 /**
- * Track property creation
+ * Track property creation (GA4 standard event: property_created)
  */
 export function trackPropertyCreated(propertyId: string): void {
   trackEvent('property_created', {
@@ -80,7 +80,7 @@ export function trackPropertyUpdated(propertyId: string): void {
 }
 
 /**
- * Track contract creation
+ * Track contract creation (GA4 standard event: contract_created)
  */
 export function trackContractCreated(contractId: string): void {
   trackEvent('contract_created', {
@@ -100,13 +100,20 @@ export function trackContractUpdated(contractId: string): void {
 }
 
 /**
- * Track tenant creation
+ * Track tenant creation (GA4 standard event: tenant_added)
  */
-export function trackTenantCreated(tenantId: string): void {
-  trackEvent('tenant_created', {
+export function trackTenantAdded(tenantId: string): void {
+  trackEvent('tenant_added', {
     tenant_id: tenantId,
     timestamp: new Date().toISOString(),
   });
+}
+
+/**
+ * @deprecated Use trackTenantAdded instead (matches GA4 standard event name)
+ */
+export function trackTenantCreated(tenantId: string): void {
+  trackTenantAdded(tenantId);
 }
 
 /**

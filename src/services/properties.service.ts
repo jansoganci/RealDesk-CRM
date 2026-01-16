@@ -259,6 +259,10 @@ class PropertiesService {
       await inquiriesService.checkMatchesForNewProperty(newProperty.id);
     }
 
+    // Track property_created event (GA4)
+    const { trackPropertyCreated } = await import('../utils/gtm');
+    trackPropertyCreated(newProperty.id);
+
     return newProperty;
   }
 

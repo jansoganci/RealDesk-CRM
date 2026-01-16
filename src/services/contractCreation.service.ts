@@ -183,7 +183,15 @@ export async function createContractWithEntities(
 
     // Removed: console.log with contract data (security)
 
-    return data as unknown as ContractCreationResult;
+    const result = data as unknown as ContractCreationResult;
+
+    // Track contract_created event (GA4)
+    if (result.contract_id) {
+      const { trackContractCreated } = await import('../utils/gtm');
+      trackContractCreated(result.contract_id);
+    }
+
+    return result;
   } catch (error) {
     logger.error('Contract creation error:', error);
     throw error;
