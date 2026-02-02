@@ -113,7 +113,10 @@ function preparePdfData(
 
     // Eviction commitment
     evictionDate: '', // Left blank for manual entry (legal requirement)
-    commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr })
+    commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr }),
+
+    // Google Drive handover photos URL (for QR code)
+    handoverPhotosUrl: formData.handover_photos_url || undefined
   };
 }
 

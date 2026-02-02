@@ -182,6 +182,7 @@ export async function updateContractWithEntities(
         contract_duration_months: monthsDiff,
         usage_purpose: formData.use_purpose || 'Mesken',
         special_conditions: formData.special_conditions || null,
+        handover_photos_url: formData.handover_photos_url || null,
         updated_at: new Date().toISOString(),
       };
 

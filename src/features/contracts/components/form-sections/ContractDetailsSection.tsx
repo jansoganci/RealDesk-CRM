@@ -6,7 +6,7 @@
 
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { CalendarIcon } from 'lucide-react';
+import { CalendarIcon, QrCode } from 'lucide-react';
 import { format } from 'date-fns';
 import { tr } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
@@ -287,6 +287,33 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               </p>
             )}
           </div>
+        </div>
+
+        {/* Handover Photos URL (Optional) */}
+        <Separator />
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <QrCode className="h-4 w-4 text-muted-foreground" />
+            <h4 className="text-sm font-medium">{t('create.fields.handover_photos_url')}</h4>
+            <span className="text-xs text-muted-foreground">({t('create.optional')})</span>
+          </div>
+
+          <Input
+            id="handover_photos_url"
+            type="url"
+            placeholder={t('create.placeholders.handover_photos_url')}
+            {...form.register('handover_photos_url')}
+          />
+
+          <p className="text-xs text-muted-foreground">
+            {t('create.helpers.handover_photos_url')}
+          </p>
+
+          {form.formState.errors.handover_photos_url && (
+            <p className="text-sm text-red-600">
+              {form.formState.errors.handover_photos_url.message}
+            </p>
+          )}
         </div>
 
       </CardContent>

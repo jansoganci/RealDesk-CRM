@@ -222,6 +222,9 @@ export interface ContractFormData {
     clause_index: number;
     custom_content: string;
   }>;
+
+  // Google Drive Handover Photos URL (optional)
+  handover_photos_url?: string;
 }
 
 // ============================================================================
@@ -327,8 +330,11 @@ export interface ContractPdfData {
   
   // Demirbaş
   fixtures: string;               // "Kombi, Klima, Ankastre Set..."
-  
+
   // Tahliye Taahhütnamesi
   evictionDate: string;           // Empty string "" (left blank for manual entry per legal requirements)
   commitmentDate: string;         // "01 Ocak 2025"
+
+  // Google Drive klasör linki (QR kod için)
+  handoverPhotosUrl?: string;
 }

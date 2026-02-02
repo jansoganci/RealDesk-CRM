@@ -183,6 +183,17 @@ export const contractFormSchema = z.object({
     .or(z.literal('')),
 
   // ============================================================================
+  // Google Drive Handover Photos URL (Optional)
+  // ============================================================================
+  handover_photos_url: z.string()
+    .url(t('invalidUrl'))
+    .refine((url) => url.includes('drive.google.com'), {
+      message: t('invalidGoogleDriveUrl'),
+    })
+    .optional()
+    .or(z.literal('')),
+
+  // ============================================================================
   // Clause Overrides (Editable Clauses Feature)
   // ============================================================================
   clauseOverrides: z.array(z.object({
@@ -228,5 +239,6 @@ export const contractFormDefaultValues: Partial<ContractFormData> = {
   currency: 'TRY',
   payment_method: '',
   special_conditions: '',
+  handover_photos_url: '',
   clauseOverrides: [],
 };

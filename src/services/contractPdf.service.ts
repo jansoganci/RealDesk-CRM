@@ -5,6 +5,7 @@
 
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
+import QRCode from 'qrcode';
 import { ContractPdfData } from '@/types/contract.types';
 import { GENEL_SARTLAR, OZEL_SARTLAR, TAHLIYE_TAAHHUTNAMESI_TEXT } from '@/templates/contractContent';
 import { addTurkishFonts, setFontBold, setFontNormal } from './pdfFonts';
@@ -187,7 +188,13 @@ export async function generateContractPDFBlob(
   // Sayfa 5: Tahliye Taahhütnamesi
   doc.addPage();
   renderPage5_TahliyeTaahhutnamesi(doc, data, tahliyeText);
-  
+
+  // Sayfa 6: QR Kod Sayfası (sadece link varsa)
+  if (data.handoverPhotosUrl) {
+    doc.addPage();
+    await renderQRCodePage(doc, data);
+  }
+
   // Generate blob
   const pdfBlob = doc.output('blob');
   
@@ -427,6 +434,61 @@ function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData, tex
   doc.text(`Taahhüt Eden: ${data.tenantName}`, margins.left, y);
   y += 20;
   doc.text('İMZA:', margins.left, y);
+}
+
+// ============================================================================
+// PAGE 6: QR CODE PAGE (Optional - only if handoverPhotosUrl is provided)
+// ============================================================================
+async function renderQRCodePage(doc: jsPDF, data: ContractPdfData): Promise<void> {
+  const { margins, fontSize } = PDF_CONFIG;
+  const pageWidth = doc.internal.pageSize.width;
+  let y = margins.top;
+
+  // Başlık
+  doc.setFontSize(fontSize.title);
+  setFontBold(doc);
+  doc.text('MÜLK TESLİM ÖNCESİ DURUM BELGELERİ', pageWidth / 2, y, { align: 'center' });
+  y += 20;
+
+  // QR kod oluştur (5cm x 5cm = ~142 piksel @ 72 DPI)
+  const qrSize = 50; // mm
+  const qrDataUrl = await QRCode.toDataURL(data.handoverPhotosUrl!, {
+    width: 200,
+    margin: 1,
+    errorCorrectionLevel: 'H' // En yüksek hata düzeltme
+  });
+
+  // QR kodu ortala
+  const qrX = (pageWidth - qrSize) / 2;
+  doc.addImage(qrDataUrl, 'PNG', qrX, y, qrSize, qrSize);
+  y += qrSize + 15;
+
+  // Açıklama metni
+  doc.setFontSize(fontSize.body);
+  setFontNormal(doc);
+  const descText = 'Bu QR kodu akıllı telefonunuzla okutarak mülkün kiracıya teslim edilmeden önceki durumunu gösteren görsellere ulaşabilirsiniz.';
+  const descLines = doc.splitTextToSize(descText, pageWidth - margins.left - margins.right);
+  doc.text(descLines, pageWidth / 2, y, { align: 'center' });
+  y += descLines.length * 5 + 10;
+
+  // Link göster (kısaltılmış)
+  doc.setFontSize(fontSize.small);
+  const displayUrl = data.handoverPhotosUrl!.length > 60
+    ? data.handoverPhotosUrl!.substring(0, 57) + '...'
+    : data.handoverPhotosUrl!;
+  doc.text(`Link: ${displayUrl}`, pageWidth / 2, y, { align: 'center' });
+  y += 20;
+
+  // Çizgi
+  doc.setDrawColor(200);
+  doc.line(margins.left, y, pageWidth - margins.right, y);
+  y += 10;
+
+  // Sözleşme bilgileri
+  setFontBold(doc);
+  doc.text(`Sözleşme No: ${data.contractNumber}`, margins.left, y);
+  y += 7;
+  doc.text(`Oluşturma Tarihi: ${data.contractDate}`, margins.left, y);
 }
 
 // ============================================================================

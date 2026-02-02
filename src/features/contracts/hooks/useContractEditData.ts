@@ -66,6 +66,7 @@ interface ContractDetails {
   payment_method?: string;
   special_conditions?: string;
   deposit_currency?: 'TRY' | 'USD' | 'EUR';
+  handover_photos_url?: string;
 }
 
 interface ContractWithRelations {
@@ -209,6 +210,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         payment_day_of_month: contractDetails?.payment_day_of_month || undefined,
         payment_method: contractDetails?.payment_method || '',
         special_conditions: contractDetails?.special_conditions || '',
+        handover_photos_url: contractDetails?.handover_photos_url || '',
       };
 
       setData({
