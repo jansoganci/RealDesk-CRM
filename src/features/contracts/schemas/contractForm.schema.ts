@@ -144,7 +144,7 @@ export const contractFormSchema = z.object({
   }).default('TRY'),
 
   commission_amount: z.preprocess(
-    (val) => (val === '' ? undefined : val),
+    (val) => (val === '' || val === undefined || val === null || (typeof val === 'number' && isNaN(val)) ? undefined : val),
     z.number({
       invalid_type_error: t('validNumber'),
     })
@@ -181,6 +181,10 @@ export const contractFormSchema = z.object({
     })
     .optional()
     .or(z.literal('')),
+
+  is_painted: z.boolean({
+    required_error: t('paintConditionRequired'),
+  }),
 
   // ============================================================================
   // Google Drive Handover Photos URL (Optional)

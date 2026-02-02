@@ -157,7 +157,8 @@
     "endDateAfterStartStrict": "Bitiş tarihi başlangıç tarihinden sonra olmalı",
     "tcLengthStrict": "TC Kimlik No {{length}} haneli olmalı",
     "invalidUrl": "Geçerli bir URL giriniz",
-    "invalidGoogleDriveUrl": "Geçerli bir Google Drive linki giriniz"
+    "invalidGoogleDriveUrl": "Geçerli bir Google Drive linki giriniz",
+    "paintConditionRequired": "Boya durumu seçilmelidir"
   },
   "create": {
     "title": "Yeni Sözleşme Oluştur",
@@ -212,7 +213,8 @@
       "fixtures": "Demirbaş Beyanı",
       "fixturesCommonItems": "Yaygın Demirbaşlar",
       "fixturesCustomItems": "Özel Demirbaşlar",
-      "handover_photos_url": "Google Drive Klasör Linki"
+      "handover_photos_url": "Google Drive Klasör Linki",
+      "paintCondition": "Boya Durumu"
     },
     "placeholders": {
       "owner_name": "Ali Yılmaz",
@@ -260,14 +262,14 @@
     "commonFixtures": {
       "kombi": "Kombi",
       "klima": "Klima",
-      "buzdolabi": "Buzdolabı",
-      "camasirMakinesi": "Çamaşır Makinesi",
       "ankastreSet": "Ankastre Set",
-      "bulasikMakinesi": "Bulaşık Makinesi",
-      "firin": "Fırın",
-      "mikrodalga": "Mikrodalga",
-      "televizyon": "Televizyon",
-      "mobilya": "Mobilya"
+      "dusakabin": "Duşakabin",
+      "armaturBatarya": "Armatür ve Bataryalar",
+      "parkePvcDograma": "Parke ve PVC Doğrama"
+    },
+    "paintOptions": {
+      "painted": "Boyalı",
+      "unpainted": "Boyasız"
     },
     "buttons": {
       "submit": "Sözleşme Oluştur",

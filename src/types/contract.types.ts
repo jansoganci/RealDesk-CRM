@@ -215,6 +215,7 @@ export interface ContractFormData {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
+  is_painted: boolean;
 
   // Clause Overrides (editable clauses feature)
   clauseOverrides?: Array<{
@@ -330,6 +331,9 @@ export interface ContractPdfData {
   
   // Demirbaş
   fixtures: string;               // "Kombi, Klima, Ankastre Set..."
+
+  // Boya Durumu
+  isPainted: boolean;             // true: boyalı, false: boyasız
 
   // Tahliye Taahhütnamesi
   evictionDate: string;           // Empty string "" (left blank for manual entry per legal requirements)

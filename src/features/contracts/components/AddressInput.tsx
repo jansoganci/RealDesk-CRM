@@ -280,6 +280,9 @@ export function AddressInput({ form }: AddressInputProps) {
           value={form.watch('special_conditions') || ''}
           onChange={(value: string) => form.setValue('special_conditions', value, { shouldValidate: true })}
           error={form.formState.errors.special_conditions?.message}
+          isPainted={form.watch('is_painted')}
+          onPaintedChange={(value: boolean) => form.setValue('is_painted', value, { shouldValidate: true })}
+          paintedError={form.formState.errors.is_painted?.message}
         />
       </div>
 

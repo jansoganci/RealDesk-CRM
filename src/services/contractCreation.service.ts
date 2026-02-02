@@ -155,6 +155,7 @@ export async function createContractWithEntities(
           special_conditions: formData.special_conditions || null,
           furniture_list: null, // Can be added to form later
           utilities_included: null,
+          is_painted: formData.is_painted,
 
           // Google Drive handover photos URL
           handover_photos_url: formData.handover_photos_url || null

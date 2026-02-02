@@ -155,7 +155,9 @@
     "paymentDayRange": "Gün 1-31 arası olmalı",
     "clauseContentRequired": "Madde içeriği boş olamaz",
     "endDateAfterStartStrict": "Bitiş tarihi başlangıç tarihinden sonra olmalı",
-    "tcLengthStrict": "TC Kimlik No {{length}} haneli olmalı"
+    "tcLengthStrict": "TC Kimlik No {{length}} haneli olmalı",
+    "invalidUrl": "Geçerli bir URL giriniz",
+    "invalidGoogleDriveUrl": "Geçerli bir Google Drive linki giriniz"
   },
   "create": {
     "title": "Yeni Sözleşme Oluştur",
@@ -209,7 +211,8 @@
       "currency": "Para Birimi",
       "fixtures": "Demirbaş Beyanı",
       "fixturesCommonItems": "Yaygın Demirbaşlar",
-      "fixturesCustomItems": "Özel Demirbaşlar"
+      "fixturesCustomItems": "Özel Demirbaşlar",
+      "handover_photos_url": "Google Drive Klasör Linki"
     },
     "placeholders": {
       "owner_name": "Ali Yılmaz",
@@ -232,11 +235,14 @@
       "commission_amount": "Manuel komisyon tutarı (opsiyonel)",
       "fixtures": "Demirbaş seçin veya özel ekleyin",
       "fixturesCustomInput": "Özel demirbaş eklemek için yazın ve Enter'a basın",
-      "fixturesEmpty": "Demirbaş seçilmedi"
+      "fixturesEmpty": "Demirbaş seçilmedi",
+      "handover_photos_url": "https://drive.google.com/drive/folders/..."
     },
     "helpers": {
-      "commission_amount": "Boş bırakılırsa 1 aylık kira tutarı otomatik kullanılır"
+      "commission_amount": "Boş bırakılırsa 1 aylık kira tutarı otomatik kullanılır",
+      "handover_photos_url": "Mülkün teslim öncesi görsellerinin bulunduğu Google Drive klasör linkini girin. Sözleşmenin son sayfasına QR kod olarak eklenecektir."
     },
+    "optional": "Opsiyonel",
     "propertyTypes": {
       "apartment": "Daire",
       "house": "Müstakil Ev",

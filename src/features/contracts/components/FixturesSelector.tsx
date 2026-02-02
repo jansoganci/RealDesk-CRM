@@ -16,6 +16,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import { parseFixturesString, formatFixturesArray } from '../utils/fixturesUtils';
 
@@ -23,23 +25,22 @@ interface FixturesSelectorProps {
   value: string;
   onChange: (value: string) => void;
   error?: string;
+  isPainted: boolean | undefined;
+  onPaintedChange: (value: boolean) => void;
+  paintedError?: string;
 }
 
 // Common fixtures list (keys for translation)
 const COMMON_FIXTURES = [
   'kombi',
   'klima',
-  'buzdolabi',
-  'camasirMakinesi',
   'ankastreSet',
-  'bulasikMakinesi',
-  'firin',
-  'mikrodalga',
-  'televizyon',
-  'mobilya',
+  'dusakabin',
+  'armaturBatarya',
+  'parkePvcDograma',
 ] as const;
 
-export function FixturesSelector({ value, onChange, error }: FixturesSelectorProps) {
+export function FixturesSelector({ value, onChange, error, isPainted, onPaintedChange, paintedError }: FixturesSelectorProps) {
   const { t } = useTranslation('contracts');
   const [selectedItems, setSelectedItems] = useState<string[]>(() => parseFixturesString(value));
   const [customInput, setCustomInput] = useState('');
@@ -279,6 +280,34 @@ export function FixturesSelector({ value, onChange, error }: FixturesSelectorPro
       {error && (
         <p className="text-sm text-red-600 mt-1">{error}</p>
       )}
+
+      {/* Boyalı/Boyasız Seçimi (Zorunlu) */}
+      <Separator className="my-4" />
+      <div className="space-y-3">
+        <Label className="text-sm font-medium">
+          {t('create.fields.paintCondition')} *
+        </Label>
+        <RadioGroup
+          value={isPainted === true ? 'painted' : isPainted === false ? 'unpainted' : ''}
+          onValueChange={(val) => onPaintedChange(val === 'painted')}
+        >
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="painted" id="painted" />
+            <Label htmlFor="painted" className="font-normal cursor-pointer">
+              {t('create.paintOptions.painted')}
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <RadioGroupItem value="unpainted" id="unpainted" />
+            <Label htmlFor="unpainted" className="font-normal cursor-pointer">
+              {t('create.paintOptions.unpainted')}
+            </Label>
+          </div>
+        </RadioGroup>
+        {paintedError && (
+          <p className="text-sm text-red-600">{paintedError}</p>
+        )}
+      </div>
     </div>
   );
 }

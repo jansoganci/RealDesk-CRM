@@ -157,7 +157,8 @@
     "endDateAfterStartStrict": "End date must be after start date",
     "tcLengthStrict": "TC ID must be {{length}} digits",
     "invalidUrl": "Please enter a valid URL",
-    "invalidGoogleDriveUrl": "Please enter a valid Google Drive link"
+    "invalidGoogleDriveUrl": "Please enter a valid Google Drive link",
+    "paintConditionRequired": "Paint condition must be selected"
   },
   "create": {
     "title": "Create New Contract",
@@ -208,7 +209,8 @@
       "fixtures": "Fixtures Declaration",
       "fixturesCommonItems": "Common Fixtures",
       "fixturesCustomItems": "Custom Fixtures",
-      "handover_photos_url": "Google Drive Folder Link"
+      "handover_photos_url": "Google Drive Folder Link",
+      "paintCondition": "Paint Condition"
     },
     "placeholders": {
       "owner_name": "John Doe",
@@ -253,14 +255,14 @@
     "commonFixtures": {
       "kombi": "Boiler",
       "klima": "Air Conditioner",
-      "buzdolabi": "Refrigerator",
-      "camasirMakinesi": "Washing Machine",
       "ankastreSet": "Built-in Kitchen Set",
-      "bulasikMakinesi": "Dishwasher",
-      "firin": "Oven",
-      "mikrodalga": "Microwave",
-      "televizyon": "TV",
-      "mobilya": "Furniture"
+      "dusakabin": "Shower Cabin",
+      "armaturBatarya": "Faucets and Fixtures",
+      "parkePvcDograma": "Parquet and PVC Joinery"
+    },
+    "paintOptions": {
+      "painted": "Painted",
+      "unpainted": "Unpainted"
     },
     "buttons": {
       "submit": "Create Contract",

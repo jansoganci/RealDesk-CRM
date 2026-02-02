@@ -268,18 +268,31 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
     margin: { left: margins.left, right: margins.right }
   });
   
-  // Fixtures section
+  // TESLİM DURUMU section
   y = (doc as any).lastAutoTable.finalY + 10;
-  
+  const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
+
   doc.setFontSize(fontSize.body);
   setFontBold(doc);
-  doc.text('KİRALANAN ŞEY İLE BERABER TESLİM ALINAN DEMİRBAŞ BEYANI', margins.left, y);
+  doc.text('TESLİM DURUMU', margins.left, y);
   y += 7;
-  
+
   setFontNormal(doc);
-  const fixturesLines = doc.splitTextToSize(data.fixtures, doc.internal.pageSize.width - margins.left - margins.right);
-  doc.text(fixturesLines, margins.left, y);
-  y += fixturesLines.length * 5 + 10;
+
+  // Demirbaş satırı (sadece seçildiyse)
+  if (data.fixtures && data.fixtures !== '-') {
+    const fixturesText = `${data.fixtures} sağlam ve çalışır şekilde teslim edilmiştir.`;
+    const fixturesLines = doc.splitTextToSize(fixturesText, pageWidth);
+    doc.text(fixturesLines, margins.left, y);
+    y += fixturesLines.length * 5 + 5;
+  }
+
+  // Boya durumu satırı (her zaman)
+  const paintText = data.isPainted
+    ? 'Mülk boyalı şekilde teslim edilmiştir, aynı durumda teslim alınacaktır.'
+    : 'Mülk boyasız şekilde teslim edilmiştir, aynı durumda teslim alınacaktır.';
+  doc.text(paintText, margins.left, y);
+  y += 10;
   
   // TUFE note
   setFontBold(doc);

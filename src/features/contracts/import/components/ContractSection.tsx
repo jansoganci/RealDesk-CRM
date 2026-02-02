@@ -95,6 +95,9 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
             value={formData.special_conditions || ''}
             onChange={(value: string) => onFieldUpdate('special_conditions', value)}
             error={fieldErrors.special_conditions}
+            isPainted={formData.is_painted}
+            onPaintedChange={(value: boolean) => onFieldUpdate('is_painted', value)}
+            paintedError={fieldErrors.is_painted}
           />
         </div>
       </CardContent>

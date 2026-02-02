@@ -111,6 +111,9 @@ function preparePdfData(
     // Fixtures (formatted for PDF: comma + space, or '-' if empty)
     fixtures: formatFixturesForPdf(formData.special_conditions),
 
+    // Paint condition
+    isPainted: formData.is_painted,
+
     // Eviction commitment
     evictionDate: '', // Left blank for manual entry (legal requirement)
     commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr }),

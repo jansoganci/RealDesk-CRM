@@ -155,7 +155,9 @@
     "paymentDayRange": "Day must be between 1 and 31",
     "clauseContentRequired": "Clause content cannot be empty",
     "endDateAfterStartStrict": "End date must be after start date",
-    "tcLengthStrict": "TC ID must be {{length}} digits"
+    "tcLengthStrict": "TC ID must be {{length}} digits",
+    "invalidUrl": "Please enter a valid URL",
+    "invalidGoogleDriveUrl": "Please enter a valid Google Drive link"
   },
   "create": {
     "title": "Create New Contract",
@@ -205,7 +207,8 @@
       "currency": "Currency",
       "fixtures": "Fixtures Declaration",
       "fixturesCommonItems": "Common Fixtures",
-      "fixturesCustomItems": "Custom Fixtures"
+      "fixturesCustomItems": "Custom Fixtures",
+      "handover_photos_url": "Google Drive Folder Link"
     },
     "placeholders": {
       "owner_name": "John Doe",
@@ -225,11 +228,14 @@
       "commission_amount": "Manual commission amount (optional)",
       "fixtures": "Select fixtures or add custom",
       "fixturesCustomInput": "Type custom fixture and press Enter",
-      "fixturesEmpty": "No fixtures selected"
+      "fixturesEmpty": "No fixtures selected",
+      "handover_photos_url": "https://drive.google.com/drive/folders/..."
     },
     "helpers": {
-      "commission_amount": "If left empty, 1 month rent will be used automatically"
+      "commission_amount": "If left empty, 1 month rent will be used automatically",
+      "handover_photos_url": "Enter the Google Drive folder link containing property condition photos before tenant handover. A QR code will be added to the last page of the contract."
     },
+    "optional": "Optional",
     "propertyTypes": {
       "apartment": "Apartment",
       "house": "House",

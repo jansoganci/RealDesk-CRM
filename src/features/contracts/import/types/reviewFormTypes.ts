@@ -35,6 +35,7 @@ export interface ReviewFormData {
   payment_day_of_month: number;
   payment_method: string;
   special_conditions: string;
+  is_painted?: boolean;
 }
 
 export interface ParsedData {

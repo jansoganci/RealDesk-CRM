@@ -87,6 +87,7 @@ export function useReviewFormState(
     payment_day_of_month: 1,
     payment_method: getFieldValue(parsedData, 'contract.paymentMethod') || 'bank_transfer',
     special_conditions: '',
+    is_painted: undefined,
   }), [parsedData]);
 
   const [formData, setFormData] = useState<ReviewFormData>(initialFormData);
