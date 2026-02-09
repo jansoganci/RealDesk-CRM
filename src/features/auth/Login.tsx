@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Link, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -17,9 +17,16 @@ export const Login = () => {
   const [loading, setLoading] = useState(false);
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect');
-  const { signIn, signInWithGoogle } = useAuth();
+  const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
+
+  // Redirect if user is already logged in (e.g. after Google OAuth redirect)
+  useEffect(() => {
+    if (!authLoading && user) {
+      navigate(redirect || ROUTES.DASHBOARD, { replace: true });
+    }
+  }, [user, authLoading, navigate, redirect]);
 
   const loginSchema = getLoginSchema(t);
 

@@ -211,7 +211,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         payment_day_of_month: contractDetails?.payment_day_of_month || undefined,
         payment_method: contractDetails?.payment_method || '',
         special_conditions: contractDetails?.special_conditions || '',
-        is_painted: contractDetails?.is_painted ?? undefined,
+        is_painted: contractDetails?.is_painted ?? false,
         handover_photos_url: contractDetails?.handover_photos_url || '',
       };
 
