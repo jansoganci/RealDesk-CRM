@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
@@ -13,6 +13,7 @@ import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, Info } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { getRegisterSchema, RegisterFormData } from './authSchemas';
+import { useTurnstile } from '../../hooks/useTurnstile';
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -20,23 +21,12 @@ export const Register = () => {
   const [userEmail, setUserEmail] = useState<string>('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const { signUp, resendConfirmationEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
   const { t, i18n } = useTranslation(['auth', 'common']);
   const language = i18n.language || 'tr';
 
-  // Turnstile callback - called when verification succeeds
-  useEffect(() => {
-    (window as any).onTurnstileRegisterSuccess = (token: string) => {
-      console.log('[Register] Turnstile token received:', token.substring(0, 10) + '...');
-      setTurnstileToken(token);
-    };
-    
-    return () => {
-      delete (window as any).onTurnstileRegisterSuccess;
-    };
-  }, []);
+  const { token: turnstileToken, isReady: turnstileReady, resetWidget: resetTurnstile } = useTurnstile('turnstile-register');
 
   const registerSchema = getRegisterSchema(t);
 
@@ -66,44 +56,22 @@ export const Register = () => {
     }
     setTermsError(null);
 
-    // Check if Turnstile token exists
-    if (!turnstileToken) {
-      console.warn('[Register] Form submitted without Turnstile token');
-      toast.error(t('toast.verificationRequired') || 'Please complete verification');
-      return;
-    }
-
-    console.log('[Register] Starting registration with Turnstile verification...');
     setLoading(true);
     try {
       localStorage.setItem("pending_login_method", "email");
-      const result = await signUp(data.email, data.password, turnstileToken);
+      const result = await signUp(data.email, data.password, turnstileToken!);
 
       if (result.requiresEmailConfirmation) {
-        // Email confirmation required - show message
-        console.log('[Register] Registration successful, email confirmation required');
         setUserEmail(data.email);
         setEmailSent(true);
         toast.success(t('toast.emailConfirmationSent'));
       } else {
-        // No email confirmation needed (shouldn't happen if enabled, but handle gracefully)
-        console.log('[Register] Registration successful, no email confirmation needed');
         toast.success(t('toast.signUpSuccess'));
         navigate(ROUTES.LOGIN, { replace: true });
       }
     } catch (error) {
-      // Reset Turnstile on error
-      console.error('[Register] Registration failed:', {
-        error: error instanceof Error ? error.message : String(error),
-        hasTurnstile: !!turnstileToken,
-      });
-      setTurnstileToken(null);
-      if ((window as any).turnstile) {
-        console.log('[Register] Resetting Turnstile widget');
-        (window as any).turnstile.reset();
-      }
+      resetTurnstile();
       const errorMessage = error instanceof Error ? error.message : t('errors.generic');
-      // Check for specific error messages
       if (errorMessage.toLowerCase().includes('already registered') || errorMessage.toLowerCase().includes('already in use')) {
         toast.error(t('errors.emailInUse'));
       } else {
@@ -335,18 +303,13 @@ export const Register = () => {
                 </p>
               )}
 
-              {/* Cloudflare Turnstile - Invisible */}
-              <div 
-                className="cf-turnstile"
-                data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                data-callback="onTurnstileRegisterSuccess"
-                data-theme="light"
-              />
+              {/* Cloudflare Turnstile */}
+              <div id="turnstile-register" />
 
               <Button
                 className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
                 type="submit"
-                disabled={loading || !acceptTerms}
+                disabled={loading || !acceptTerms || !turnstileReady}
               >
                 {loading ? (
                   <>

@@ -12,15 +12,17 @@ import { ROUTES } from '../../config/constants';
 import { Loader2 } from 'lucide-react';
 import { supabase } from '../../config/supabase';
 import { getLoginSchema, LoginFormData } from './authSchemas';
+import { useTurnstile } from '../../hooks/useTurnstile';
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect');
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const { t } = useTranslation(['auth', 'common']);
+
+  const { token: turnstileToken, isReady: turnstileReady, resetWidget: resetTurnstile } = useTurnstile('turnstile-login');
 
   // Redirect if user is already logged in (e.g. after Google OAuth redirect)
   useEffect(() => {
@@ -28,18 +30,6 @@ export const Login = () => {
       navigate(redirect || ROUTES.DASHBOARD, { replace: true });
     }
   }, [user, authLoading, navigate, redirect]);
-
-  // Turnstile callback - called when verification succeeds
-  useEffect(() => {
-    (window as any).onTurnstileLoginSuccess = (token: string) => {
-      console.log('[Login] Turnstile token received:', token.substring(0, 10) + '...');
-      setTurnstileToken(token);
-    };
-    
-    return () => {
-      delete (window as any).onTurnstileLoginSuccess;
-    };
-  }, []);
 
   const loginSchema = getLoginSchema(t);
 
@@ -52,21 +42,12 @@ export const Login = () => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    // Check if Turnstile token exists
-    if (!turnstileToken) {
-      console.warn('[Login] Form submitted without Turnstile token');
-      toast.error(t('toast.verificationRequired') || 'Please complete verification');
-      return;
-    }
-    
-    console.log('[Login] Starting login with Turnstile verification...');
     setLoading(true);
     try {
       localStorage.setItem("pending_login_method", "email");
-      await signIn(data.email, data.password, turnstileToken);
+      await signIn(data.email, data.password, turnstileToken!);
 
       // Wait for auth state to sync (critical for iOS Safari/PWA)
-      // Check session directly to ensure it's available before navigation
       let sessionConfirmed = false;
       let attempts = 0;
       const maxAttempts = 10;
@@ -77,26 +58,14 @@ export const Login = () => {
           sessionConfirmed = true;
           break;
         }
-        // Small delay to allow auth state to sync (especially on iOS)
         await new Promise(resolve => setTimeout(resolve, 100));
         attempts++;
       }
 
-      console.log('[Login] Login successful');
       toast.success(t('toast.loginSuccess'));
-      // Use replace to prevent back navigation to login page
       navigate(redirect || ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
-      // Reset Turnstile on error
-      console.error('[Login] Login failed:', {
-        error: error instanceof Error ? error.message : String(error),
-        hasTurnstile: !!turnstileToken,
-      });
-      setTurnstileToken(null);
-      if ((window as any).turnstile) {
-        console.log('[Login] Resetting Turnstile widget');
-        (window as any).turnstile.reset();
-      }
+      resetTurnstile();
       const errorMessage = error instanceof Error ? error.message : t('errors.generic');
       toast.error(errorMessage);
     } finally {
@@ -217,18 +186,13 @@ export const Login = () => {
                 )}
               />
 
-              {/* Cloudflare Turnstile - Invisible */}
-              <div 
-                className="cf-turnstile"
-                data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
-                data-callback="onTurnstileLoginSuccess"
-                data-theme="light"
-              />
+              {/* Cloudflare Turnstile */}
+              <div id="turnstile-login" />
 
               <Button
                 className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
                 type="submit"
-                disabled={loading}
+                disabled={loading || !turnstileReady}
               >
                 {loading ? (
                   <>

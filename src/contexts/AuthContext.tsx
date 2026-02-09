@@ -5,7 +5,7 @@ import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
 import { getDetectedLanguage, getDetectedCurrency, SupportedLanguage, SupportedCurrency } from '../lib/localeDetection';
 import { createLogger } from '../lib/logger';
-import { verifyTurnstileToken } from '../services/turnstile.service';
+
 
 const authLogger = createLogger('Auth');
 
@@ -249,25 +249,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [updateUserPreferences]);
 
   const signIn = useCallback(async (email: string, password: string, turnstileToken?: string) => {
-    // Verify Turnstile token if provided
-    if (turnstileToken) {
-      await verifyTurnstileToken(turnstileToken);
-    }
-    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
+      options: { captchaToken: turnstileToken },
     });
-
     if (error) throw error;
   }, []);
 
   const signUp = useCallback(async (email: string, password: string, turnstileToken?: string) => {
-    // Verify Turnstile token if provided
-    if (turnstileToken) {
-      await verifyTurnstileToken(turnstileToken);
-    }
-    
     await supabase.auth.signOut();
 
     const { data, error } = await supabase.auth.signUp({
@@ -275,6 +265,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/confirm-email`,
+        captchaToken: turnstileToken,
       },
     });
 

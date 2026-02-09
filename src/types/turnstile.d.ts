@@ -25,6 +25,4 @@ interface TurnstileRenderOptions {
 
 interface Window {
   turnstile?: TurnstileWidget;
-  onTurnstileLoginSuccess?: (token: string) => void;
-  onTurnstileRegisterSuccess?: (token: string) => void;
 }
