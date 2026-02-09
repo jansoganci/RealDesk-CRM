@@ -5,6 +5,7 @@ import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
 import { getDetectedLanguage, getDetectedCurrency, SupportedLanguage, SupportedCurrency } from '../lib/localeDetection';
 import { createLogger } from '../lib/logger';
+import { verifyTurnstileToken } from '../services/turnstile.service';
 
 const authLogger = createLogger('Auth');
 
@@ -20,8 +21,8 @@ interface AuthContextType {
   phoneNumber: string | null;
   setLanguage: (language: string) => void;
   setCurrency: (currency: string) => void;
-  signIn: (email: string, password: string) => Promise<void>;
-  signUp: (email: string, password: string) => Promise<{ requiresEmailConfirmation: boolean }>;
+  signIn: (email: string, password: string, turnstileToken?: string) => Promise<void>;
+  signUp: (email: string, password: string, turnstileToken?: string) => Promise<{ requiresEmailConfirmation: boolean }>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   updatePassword: (newPassword: string) => Promise<{ success: boolean; error?: string }>;
@@ -247,7 +248,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await updateUserPreferences({ currency: newCurrency });
   }, [updateUserPreferences]);
 
-  const signIn = useCallback(async (email: string, password: string) => {
+  const signIn = useCallback(async (email: string, password: string, turnstileToken?: string) => {
+    // Verify Turnstile token if provided
+    if (turnstileToken) {
+      await verifyTurnstileToken(turnstileToken);
+    }
+    
     const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -256,7 +262,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (error) throw error;
   }, []);
 
-  const signUp = useCallback(async (email: string, password: string) => {
+  const signUp = useCallback(async (email: string, password: string, turnstileToken?: string) => {
+    // Verify Turnstile token if provided
+    if (turnstileToken) {
+      await verifyTurnstileToken(turnstileToken);
+    }
+    
     await supabase.auth.signOut();
 
     const { data, error } = await supabase.auth.signUp({

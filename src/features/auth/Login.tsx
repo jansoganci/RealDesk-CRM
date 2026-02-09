@@ -15,6 +15,7 @@ import { getLoginSchema, LoginFormData } from './authSchemas';
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
   const [searchParams] = useSearchParams();
   const redirect = searchParams.get('redirect');
   const { signIn, signInWithGoogle, user, loading: authLoading } = useAuth();
@@ -28,6 +29,18 @@ export const Login = () => {
     }
   }, [user, authLoading, navigate, redirect]);
 
+  // Turnstile callback - called when verification succeeds
+  useEffect(() => {
+    (window as any).onTurnstileLoginSuccess = (token: string) => {
+      console.log('[Login] Turnstile token received:', token.substring(0, 10) + '...');
+      setTurnstileToken(token);
+    };
+    
+    return () => {
+      delete (window as any).onTurnstileLoginSuccess;
+    };
+  }, []);
+
   const loginSchema = getLoginSchema(t);
 
   const form = useForm<LoginFormData>({
@@ -39,10 +52,18 @@ export const Login = () => {
   });
 
   const onSubmit = async (data: LoginFormData) => {
+    // Check if Turnstile token exists
+    if (!turnstileToken) {
+      console.warn('[Login] Form submitted without Turnstile token');
+      toast.error(t('toast.verificationRequired') || 'Please complete verification');
+      return;
+    }
+    
+    console.log('[Login] Starting login with Turnstile verification...');
     setLoading(true);
     try {
       localStorage.setItem("pending_login_method", "email");
-      await signIn(data.email, data.password);
+      await signIn(data.email, data.password, turnstileToken);
 
       // Wait for auth state to sync (critical for iOS Safari/PWA)
       // Check session directly to ensure it's available before navigation
@@ -61,10 +82,21 @@ export const Login = () => {
         attempts++;
       }
 
+      console.log('[Login] Login successful');
       toast.success(t('toast.loginSuccess'));
       // Use replace to prevent back navigation to login page
       navigate(redirect || ROUTES.DASHBOARD, { replace: true });
     } catch (error) {
+      // Reset Turnstile on error
+      console.error('[Login] Login failed:', {
+        error: error instanceof Error ? error.message : String(error),
+        hasTurnstile: !!turnstileToken,
+      });
+      setTurnstileToken(null);
+      if ((window as any).turnstile) {
+        console.log('[Login] Resetting Turnstile widget');
+        (window as any).turnstile.reset();
+      }
       const errorMessage = error instanceof Error ? error.message : t('errors.generic');
       toast.error(errorMessage);
     } finally {
@@ -183,6 +215,14 @@ export const Login = () => {
                     <FormMessage />
                   </FormItem>
                 )}
+              />
+
+              {/* Cloudflare Turnstile - Invisible */}
+              <div 
+                className="cf-turnstile"
+                data-sitekey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                data-callback="onTurnstileLoginSuccess"
+                data-theme="light"
               />
 
               <Button
