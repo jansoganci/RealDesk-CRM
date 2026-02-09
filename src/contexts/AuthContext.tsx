@@ -171,7 +171,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             // Clean URL hash after successful OAuth login
             if (window.location.hash) {
-              window.history.replaceState(null, '', window.location.pathname + window.location.search);
+              // Get the clean path, ensuring we have at least '/'
+              const cleanPath = window.location.pathname || '/';
+              const cleanSearch = window.location.search || '';
+              window.history.replaceState(null, '', cleanPath + cleanSearch);
             }
           }
         }
@@ -360,7 +363,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/dashboard`,
         },
       });
       if (error) {
