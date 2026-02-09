@@ -166,12 +166,22 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
         if (emailConfirmed) {
           if (event === "SIGNED_IN") {
-            const method = localStorage.getItem("pending_login_method") || "unknown";
-            localStorage.removeItem("pending_login_method");
-            trackLogin(method as 'email' | 'google' | 'magic_link');
+            // Check if this is an email confirmation signup (not OAuth login)
+            // Email confirmation tracking is handled in AuthCallback component
+            const hashParams = new URLSearchParams(window.location.hash.substring(1));
+            const type = hashParams.get('type');
+            const isEmailConfirmation = type === 'signup';
 
-            // Clean URL hash after successful OAuth login
-            if (window.location.hash) {
+            if (!isEmailConfirmation) {
+              // Track login event for OAuth or regular login (not email confirmation)
+              const method = localStorage.getItem("pending_login_method") || "unknown";
+              localStorage.removeItem("pending_login_method");
+              trackLogin(method as 'email' | 'google' | 'magic_link');
+            }
+
+            // Clean URL hash after successful auth (for OAuth flows)
+            // Email confirmation hash cleaning is handled in AuthCallback
+            if (!isEmailConfirmation && window.location.hash) {
               // Get the clean path, ensuring we have at least '/'
               const cleanPath = window.location.pathname || '/';
               const cleanSearch = window.location.search || '';
@@ -264,7 +274,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/confirm-email`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         captchaToken: turnstileToken,
       },
     });
@@ -350,7 +360,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       type: 'signup',
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/confirm-email`,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
       },
     });
     if (error) throw error;

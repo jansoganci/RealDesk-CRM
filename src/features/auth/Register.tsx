@@ -88,8 +88,9 @@ export const Register = () => {
         setEmailSent(true);
         toast.success(t('toast.emailConfirmationSent'));
       } else {
+        // Email confirmation not required - user is already logged in, redirect to onboarding
         toast.success(t('toast.signUpSuccess'));
-        navigate(ROUTES.LOGIN, { replace: true });
+        navigate(ROUTES.ONBOARDING, { replace: true });
       }
     } catch (error) {
       resetTurnstile();

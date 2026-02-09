@@ -4,11 +4,12 @@ import { useAuth } from '../../contexts/AuthContext';
 import { useOrg } from '../../contexts/OrgContext';
 import { ROUTES } from '../../config/constants';
 import { createLogger } from '../../lib/logger';
+import { trackSignUp } from '../../utils/gtm';
 
 const callbackLogger = createLogger('AuthCallback');
 
 /**
- * OAuth callback landing page.
+ * Unified callback landing page for OAuth and email confirmation.
  * Waits for auth + org contexts to settle, then routes the user
  * to the correct destination (onboarding vs dashboard).
  * Eliminates the flash that occurred when OAuth redirected directly to /dashboard.
@@ -19,8 +20,32 @@ export const AuthCallback = () => {
   const navigate = useNavigate();
   const [retryCount, setRetryCount] = useState(0);
   const maxRetries = 5;
+  const [hasTrackedSignup, setHasTrackedSignup] = useState(false);
 
   useEffect(() => {
+    // Detect email confirmation flow from URL hash
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const type = hashParams.get('type');
+    const isEmailConfirmation = accessToken && type === 'signup';
+
+    // Track signup event for email confirmation (only once)
+    if (isEmailConfirmation && user && !hasTrackedSignup) {
+      const signupMethod = localStorage.getItem('pending_login_method') || 'email';
+      if (signupMethod === 'google') {
+        trackSignUp('google');
+      } else {
+        trackSignUp('email');
+      }
+      localStorage.removeItem('pending_login_method');
+      setHasTrackedSignup(true);
+
+      // Clean URL hash after processing
+      const cleanPath = window.location.pathname || '/';
+      const cleanSearch = window.location.search || '';
+      window.history.replaceState(null, '', cleanPath + cleanSearch);
+    }
+
     // Wait for both contexts to finish loading
     if (authLoading || orgLoading) return;
 
@@ -62,7 +87,7 @@ export const AuthCallback = () => {
     callbackLogger.debug('Org not found after retries, redirecting to onboarding');
     localStorage.removeItem('oauth_redirect');
     navigate(ROUTES.ONBOARDING, { replace: true });
-  }, [authLoading, orgLoading, user, currentOrg, navigate, retryCount, refreshOrg]);
+  }, [authLoading, orgLoading, user, currentOrg, navigate, retryCount, refreshOrg, hasTrackedSignup]);
 
   return (
     <div className="flex items-center justify-center min-h-screen">
