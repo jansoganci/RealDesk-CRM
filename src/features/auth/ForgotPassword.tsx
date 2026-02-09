@@ -39,9 +39,9 @@ export const ForgotPassword = () => {
     const result = await requestPasswordReset(data.email);
 
     if (!result.success) {
-      setErrorMessage(`Şifre sıfırlama e-postası gönderilemedi: ${result.error}`);
+      setErrorMessage(t('forgotPassword.errorMessage', { error: result.error }));
     } else {
-      setSuccessMessage('Şifre sıfırlama bağlantısı e-posta adresine gönderildi.');
+      setSuccessMessage(t('forgotPassword.successMessageInline'));
       setEmailSent(true);
       toast.success(t('toast.resetEmailSent'));
     }

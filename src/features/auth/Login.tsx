@@ -74,6 +74,9 @@ export const Login = () => {
 
   const handleGoogleSignIn = async () => {
     localStorage.setItem("pending_login_method", "google");
+    if (redirect) {
+      localStorage.setItem("oauth_redirect", redirect);
+    }
     const result = await signInWithGoogle();
     if (!result.success) {
       toast.error(result.error ?? t('errors.generic'));

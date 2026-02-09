@@ -72,4 +72,5 @@ export const ROUTES = {
   BILLING_SUBSCRIBE: '/billing/subscribe',
   ONBOARDING: '/onboarding',
   ACCEPT_INVITE: '/accept-invite',
+  AUTH_CALLBACK: '/auth/callback',
 } as const;

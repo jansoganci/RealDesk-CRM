@@ -14,6 +14,7 @@ import { ForgotPassword } from './features/auth/ForgotPassword';
 import { ResetPassword } from './features/auth/ResetPassword';
 import { EmailConfirmation } from './features/auth/EmailConfirmation';
 import { EmailChanged } from './features/auth/EmailChanged';
+import { AuthCallback } from './features/auth/AuthCallback';
 import { BillingSubscribe } from './features/billing/BillingSubscribe';
 import { LandingPage } from './features/landing/LandingPage';
 import { PublicPricingPage } from './features/landing/PublicPricingPage';
@@ -71,6 +72,7 @@ function AppContent() {
               <Route path={ROUTES.ABOUT} element={<AboutPage />} />
               <Route path={ROUTES.CONTACT} element={<ContactPage />} />
               <Route path={ROUTES.ACCEPT_INVITE} element={<AcceptInvite />} />
+              <Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
               <Route
                 path={ROUTES.ONBOARDING}
                 element={

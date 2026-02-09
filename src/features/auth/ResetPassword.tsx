@@ -73,7 +73,7 @@ export const ResetPassword = () => {
     setErrorMessage(null);
 
     if (data.password !== data.confirmPassword) {
-      setErrorMessage('Şifreler eşleşmiyor.');
+      setErrorMessage(t('validation.passwordsMismatch'));
       setLoading(false);
       return;
     }
@@ -81,12 +81,12 @@ export const ResetPassword = () => {
     const result = await updatePassword(data.password);
 
     if (!result.success) {
-      setErrorMessage(`Şifre güncellenemedi: ${result.error}`);
+      setErrorMessage(t('resetPassword.updateError', { error: result.error }));
       setLoading(false);
     } else {
-      setSuccessMessage('Şifren başarıyla güncellendi. Şimdi giriş yapabilirsin.');
+      setSuccessMessage(t('resetPassword.successMessageInline'));
       setPasswordUpdated(true);
-      toast.success('Şifren başarıyla güncellendi. Şimdi giriş yapabilirsin.');
+      toast.success(t('toast.passwordUpdatedSuccess'));
       setTimeout(() => {
         navigate(ROUTES.LOGIN, { replace: true });
       }, 2500);

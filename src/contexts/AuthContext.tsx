@@ -325,12 +325,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { data, error: userError } = await supabase.auth.getUser();
       if (userError || !data.user?.email) {
         authLogger.error('reauthenticate getUser error:', userError);
-        return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
+        return { success: false, error: i18n.t('auth:errors.sessionNotFound') };
       }
       email = data.user.email;
     }
     if (!email) {
-      return { success: false, error: 'Oturum bulunamadı. Lütfen tekrar giriş yap.' };
+      return { success: false, error: i18n.t('auth:errors.sessionNotFound') };
     }
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -363,7 +363,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/dashboard`,
+          redirectTo: `${window.location.origin}/auth/callback`,
         },
       });
       if (error) {
