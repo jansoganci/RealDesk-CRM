@@ -7,6 +7,7 @@ import { TFunction } from 'i18next';
  * - At least one uppercase letter
  * - At least one lowercase letter
  * - At least one number
+ * - At least one special character
  */
 export const getPasswordSchema = (t: TFunction) =>
   z
@@ -14,7 +15,8 @@ export const getPasswordSchema = (t: TFunction) =>
     .min(8, t('validation.passwordMinLength'))
     .regex(/[A-Z]/, t('validation.passwordUppercase'))
     .regex(/[a-z]/, t('validation.passwordLowercase'))
-    .regex(/[0-9]/, t('validation.passwordNumber'));
+    .regex(/[0-9]/, t('validation.passwordNumber'))
+    .regex(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/, t('validation.passwordSpecialChar'));
 
 /**
  * Login form schema - simpler validation (just check not empty)

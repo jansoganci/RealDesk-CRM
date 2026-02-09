@@ -8,12 +8,31 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../../components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '../../components/ui/form';
+import { Progress } from '../../components/ui/progress';
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, Info } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { getRegisterSchema, RegisterFormData } from './authSchemas';
 import { useTurnstile } from '../../hooks/useTurnstile';
+
+const calculatePasswordStrength = (password: string): 'weak' | 'medium' | 'strong' => {
+  if (!password) return 'weak';
+  
+  const hasMinLength = password.length >= 8;
+  const hasUppercase = /[A-Z]/.test(password);
+  const hasLowercase = /[a-z]/.test(password);
+  const hasNumber = /[0-9]/.test(password);
+  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password);
+  const specialCharCount = (password.match(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/g) || []).length;
+  
+  const meetsRequirements = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
+  
+  if (!meetsRequirements) return 'weak';
+  if (password.length >= 12 && specialCharCount >= 2) return 'strong';
+  if (password.length >= 10) return 'medium';
+  return 'weak';
+};
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
@@ -39,6 +58,9 @@ export const Register = () => {
       acceptTerms: true,
     },
   });
+
+  const passwordValue = form.watch('password');
+  const passwordStrength = calculatePasswordStrength(passwordValue || '');
 
   const handleGoogleSignIn = async () => {
     localStorage.setItem("pending_login_method", "google");
@@ -235,6 +257,35 @@ export const Register = () => {
                   </FormItem>
                 )}
               />
+
+              {/* Password strength indicator */}
+              {passwordValue && (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between text-xs">
+                    <span className={`font-medium ${
+                      passwordStrength === 'weak'
+                        ? 'text-red-600 dark:text-red-400'
+                        : passwordStrength === 'medium'
+                        ? 'text-orange-600 dark:text-orange-400'
+                        : 'text-green-600 dark:text-green-400'
+                    }`}>
+                      {t(`register.passwordStrength.${passwordStrength}`)}
+                    </span>
+                  </div>
+                  <Progress
+                    value={
+                      passwordStrength === 'weak' ? 33 : passwordStrength === 'medium' ? 66 : 100
+                    }
+                    className={`h-1.5 ${
+                      passwordStrength === 'weak'
+                        ? '[&>div]:bg-red-500'
+                        : passwordStrength === 'medium'
+                        ? '[&>div]:bg-orange-500'
+                        : '[&>div]:bg-green-500'
+                    }`}
+                  />
+                </div>
+              )}
 
               <FormField
                 control={form.control}
