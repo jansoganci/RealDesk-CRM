@@ -168,6 +168,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             const method = localStorage.getItem("pending_login_method") || "unknown";
             localStorage.removeItem("pending_login_method");
             trackLogin(method as 'email' | 'google' | 'magic_link');
+
+            // Clean URL hash after successful OAuth login
+            if (window.location.hash) {
+              window.history.replaceState(null, '', window.location.pathname + window.location.search);
+            }
           }
         }
       } else {
