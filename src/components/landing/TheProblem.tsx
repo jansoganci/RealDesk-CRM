@@ -1,5 +1,6 @@
 // TheProblem – show the scattered chaos (WhatsApp, Excel, notes).
 import { useTranslation } from "react-i18next"
+import { MessageSquare, Table2, StickyNote } from "lucide-react"
 
 export const TheProblem = () => {
   const { t } = useTranslation('landing')
@@ -7,18 +8,30 @@ export const TheProblem = () => {
   return (
     <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-gray-50 text-gray-900 text-center py-20 relative overflow-hidden">
       {/* Background Glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-indigo-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-500/5 rounded-full blur-3xl -z-10 pointer-events-none" />
 
       <div className="max-w-4xl mx-auto space-y-12 z-10">
         <div className="space-y-6">
+          <p className="text-sm font-semibold text-blue-600 uppercase tracking-widest">
+            {t('problem.eyebrow')}
+          </p>
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
             {t('problem.title')}
           </h2>
-          
-          <div className="space-y-2 text-lg md:text-xl text-gray-600 font-light">
-            <p>• {t('problem.item1')}</p>
-            <p>• {t('problem.item2')}</p>
-            <p>• {t('problem.item3')}</p>
+
+          <div className="space-y-3 text-lg md:text-xl text-gray-600 font-light">
+            <p className="flex items-center justify-center gap-3">
+              <MessageSquare className="w-5 h-5 text-blue-600 shrink-0" />
+              {t('problem.item1')}
+            </p>
+            <p className="flex items-center justify-center gap-3">
+              <Table2 className="w-5 h-5 text-blue-600 shrink-0" />
+              {t('problem.item2')}
+            </p>
+            <p className="flex items-center justify-center gap-3">
+              <StickyNote className="w-5 h-5 text-blue-600 shrink-0" />
+              {t('problem.item3')}
+            </p>
           </div>
         </div>
 

@@ -10,6 +10,7 @@ import { FinalCTA } from "@/components/landing/FinalCTA"
 import { LandingHeader } from "@/components/landing/LandingHeader"
 import { LandingFooter } from "@/components/landing/LandingFooter"
 import { SEO } from "@/components/common/SEO"
+import PricingSection from "@/features/billing/components/PricingSection"
 
 export const LandingPage = () => {
   return (
@@ -30,6 +31,7 @@ export const LandingPage = () => {
           <Testimonial />
           <TheResult />
           <FAQ />
+          <PricingSection showHeader={true} />
           <FinalCTA />
         </main>
         <LandingFooter />

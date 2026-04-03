@@ -9,9 +9,9 @@ export const FinalCTA = () => {
   const navigate = useNavigate()
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-white text-center">
+    <section className="py-32 flex flex-col items-center justify-center px-6 bg-blue-600 text-center">
       <div className="max-w-4xl mx-auto space-y-8">
-        <h2 className="text-5xl md:text-6xl font-bold text-gray-900 tracking-tight">
+        <h2 className="text-5xl md:text-6xl font-bold text-white tracking-tight">
           {t('finalCta.title')}
         </h2>
         
@@ -19,17 +19,17 @@ export const FinalCTA = () => {
             <div className="flex flex-col items-center gap-4">
               <Button
                 size="lg"
-                className="text-lg px-12 py-8 h-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+                className="text-lg px-12 py-8 h-auto bg-white text-blue-600 hover:bg-blue-50 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
                 onClick={() => navigate(ROUTES.REGISTER)}
               >
                   {t('finalCta.cta')}
               </Button>
-              <p className="text-sm text-gray-500">
+              <p className="text-sm text-blue-100">
                   {t('finalCta.reassurance')}
               </p>
             </div>
             
-            <p className="text-xs text-gray-400 font-light tracking-widest uppercase">
+            <p className="text-xs text-blue-200 font-light tracking-widest uppercase">
               {t('shared.complianceBadge')}
             </p>
         </div>

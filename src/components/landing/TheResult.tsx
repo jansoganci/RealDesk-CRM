@@ -5,16 +5,13 @@ export const TheResult = () => {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-slate-950 text-white text-center py-20 relative overflow-hidden">
-      {/* Background Gradient */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-slate-900 via-slate-950 to-slate-950 -z-10" />
-      
+    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-blue-900 text-white text-center py-20 relative overflow-hidden">
       <div className="max-w-4xl mx-auto space-y-16">
         <div className="space-y-6 z-10">
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-b from-white to-gray-400 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white">
             {t('result.title')}
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+          <p className="text-xl text-blue-200 max-w-2xl mx-auto font-light leading-relaxed">
             {t('result.description')}
           </p>
         </div>

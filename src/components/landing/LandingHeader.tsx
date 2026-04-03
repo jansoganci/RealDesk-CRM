@@ -45,7 +45,7 @@ export const LandingHeader = () => {
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
+          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
             <span className="text-white font-bold text-sm">E</span>
           </div>
           <span className="text-lg font-bold tracking-tight text-gray-900">emlakcrm</span>
@@ -169,7 +169,7 @@ export const LandingHeader = () => {
           {/* Primary CTA */}
           <Button
             onClick={() => handleNavigation(ROUTES.REGISTER)}
-            className="mt-2 w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-lg py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+            className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200"
           >
             {t('header.cta')}
           </Button>

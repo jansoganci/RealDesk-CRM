@@ -1,0 +1,290 @@
+# CLAUDE.md — Emlak CRM
+
+Mobile-first Real Estate CRM for Turkish real estate agents. Built with **Vite + React + TypeScript**, backed by **Supabase** (Postgres, Auth, Storage, Edge Functions), deployed to **Cloudflare Pages**.
+
+---
+
+## Commands
+
+```bash
+npm run dev          # Start dev server → http://localhost:5173
+npm run build        # TypeScript check + Vite production build
+npm run typecheck    # TypeScript only, no emit
+npm run lint         # ESLint
+npm run preview      # Preview the dist/ build locally
+npm run gen:types    # Regenerate Supabase types → src/types/database.ts
+npm run deploy       # Build + deploy to Cloudflare Pages (staging)
+npm run deploy:prod  # Build + deploy to Cloudflare Pages (production)
+```
+
+**Supabase CLI:**
+```bash
+supabase db push             # Apply local migrations to remote
+supabase functions deploy     # Deploy edge functions
+```
+
+---
+
+## Tech Stack
+
+| Layer | Tech |
+|-------|------|
+| UI | React 18.3, TypeScript 5.5, Vite 5.4 |
+| Styling | Tailwind CSS 3.4, Radix UI, Lucide React, Framer Motion |
+| Routing | React Router 7.9 |
+| Forms | React Hook Form + Zod |
+| Backend | Supabase (PostgreSQL, RLS, Auth, Storage) |
+| Edge Functions | Supabase Edge Functions (Deno) |
+| PDF | jsPDF + jspdf-autotable |
+| i18n | i18next (18 namespaces, TR + EN) |
+| Deploy | Cloudflare Pages via Wrangler 3 |
+
+---
+
+## Project Structure
+
+```
+src/
+├── components/        # Shared, reusable UI components only
+│   ├── ui/            # 60+ Radix UI base components
+│   ├── layout/        # MainLayout, Sidebar, Navbar, PageContainer
+│   └── common/        # EmptyState, ErrorBoundary, Skeletons
+├── features/          # One folder per domain feature
+│   ├── auth/          # Login, AuthCallback
+│   ├── dashboard/     # Dashboard with stats
+│   ├── properties/    # Rental + sale property management
+│   ├── owners/        # Property owner management
+│   ├── tenants/       # Tenant management (multi-step creation)
+│   ├── contracts/     # Rental contracts + PDF + import wizard
+│   ├── finance/       # Financial tracking, categories, analytics
+│   ├── inquiries/     # Lead/inquiry + auto property matching
+│   ├── calendar/      # Meetings and appointments
+│   ├── reminders/     # Auto-generated reminders from contracts
+│   ├── quick-add/     # Quick entity creation shortcut
+│   ├── profile/       # User profile settings
+│   └── landing/       # Public landing page
+├── services/          # 23 service classes (Supabase API + business logic)
+├── lib/               # Utilities: auth, db, dates, rpc, currency, errors
+├── config/            # colors.ts, constants.ts, supabase.ts
+├── contexts/          # AuthContext, OrgContext, BillingContext
+├── hooks/             # Custom React hooks
+├── types/             # index.ts, database.ts (generated), contract.types.ts
+└── templates/         # PDF contract text templates (Turkish)
+
+supabase/
+├── migrations/        # 70+ chronological SQL migration files
+└── functions/         # Deno edge functions (Stripe, OCR, email, etc.)
+
+public/
+└── locales/           # i18n JSON files (tr/, en/) — 18 namespaces each
+```
+
+---
+
+## Code Style & Conventions
+
+- **TypeScript strict mode** — no `any` types
+- **Named exports only** — never `export default`
+- **Functional components** with hooks — no class components
+- **Service proxy pattern** — always import services from `src/lib/serviceProxy.ts`, never directly from `src/services/`
+- **Zod schemas** for all form validation; pair with `zodResolver` from `@hookform/resolvers`
+- **`cn()` utility** from `src/lib/utils.ts` for merging Tailwind classes
+- **i18n required** — all user-facing strings must use `useTranslation('[namespace]')` and have both `tr/` and `en/` translations
+
+---
+
+## Architecture Rules
+
+### Adding a New Feature
+
+1. Create `src/features/[feature-name]/[FeatureName].tsx`
+2. Create `src/services/[feature-name].service.ts` as a class, export an instance
+3. Export service from `src/lib/serviceProxy.ts`
+4. Add types to `src/types/index.ts`
+5. Add route constant to `src/config/constants.ts`
+6. Register route in `src/App.tsx`
+7. Add nav item to `src/components/layout/Sidebar.tsx`
+8. Create `public/locales/tr/[feature-name].json` and `en/` counterpart
+
+### Adding a Database Table
+
+1. Create `supabase/migrations/[timestamp]_description.sql`
+2. Add RLS policies for all 4 operations (SELECT, INSERT, UPDATE, DELETE)
+3. Run `supabase db push`
+4. Run `npm run gen:types` to regenerate `src/types/database.ts`
+5. Update service layer
+
+### Service Pattern
+
+```typescript
+// src/services/example.service.ts
+class ExampleService {
+  async getAll() {
+    const userId = await getAuthenticatedUserId();
+    const { data, error } = await supabase
+      .from('example_table')
+      .select('*')
+      .eq('user_id', userId);
+    if (error) throw error;
+    return data;
+  }
+}
+export const exampleService = new ExampleService();
+```
+
+Services **always** call `getAuthenticatedUserId()` — never trust client-supplied user IDs.
+
+---
+
+## Database Key Tables
+
+| Table | Purpose |
+|-------|---------|
+| `properties` | Properties with `property_type: 'rental' \| 'sale'` |
+| `property_owners` | Owners — TC + IBAN stored AES-256-GCM encrypted |
+| `tenants` | Tenants — TC encrypted, SHA-256 hash for duplicate check |
+| `contracts` | Rental contracts with PDF path in Supabase Storage |
+| `contract_details` | Extra contract fields for PDF generation |
+| `property_inquiries` | Leads/inquiries with auto-matching to properties |
+| `inquiry_matches` | Match results between inquiries and properties |
+| `meetings` | Calendar appointments linked to property/tenant/owner |
+| `commissions` | Rental and sale commission tracking |
+| `financial_transactions` | Income/expense ledger with receipt storage |
+| `expense_categories` | Customizable categories with monthly budgets |
+| `user_preferences` | User settings, business info, commission rates |
+| `organizations` | Multi-tenant org support (newer schema) |
+
+All tables have **Row Level Security** with `user_id` column. Standard RLS pattern:
+```sql
+ALTER TABLE table_name ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "select" ON table_name FOR SELECT USING (auth.uid() = user_id);
+CREATE POLICY "insert" ON table_name FOR INSERT WITH CHECK (auth.uid() = user_id);
+CREATE POLICY "update" ON table_name FOR UPDATE USING (auth.uid() = user_id);
+CREATE POLICY "delete" ON table_name FOR DELETE USING (auth.uid() = user_id);
+```
+
+---
+
+## Environment Variables
+
+```env
+# Required — Vite client-side
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+VITE_ENCRYPTION_KEY=64_hex_chars_32_bytes_for_AES256GCM
+VITE_TURNSTILE_SITE_KEY=cloudflare_turnstile_key
+
+# Supabase Edge Functions secrets (not Vite-prefixed)
+# STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, OCR_SPACE_API_KEY
+```
+
+---
+
+## Edge Functions (Supabase)
+
+Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
+
+| Function | Purpose |
+|----------|---------|
+| `extract-contract-data-v2` | OCR text extraction from PDF/DOCX |
+| `create-checkout-session` | Stripe subscription checkout |
+| `create-portal-session` | Stripe customer portal |
+| `stripe-webhook` | Handle Stripe events |
+| `fetch-exchange-rates` | Auto-update TRY/USD/EUR rates |
+| `send-invitation-email` | Org team invite emails |
+| `extract-text` | Raw text extraction helper |
+
+---
+
+## Design System
+
+- **Primary color**: `blue-600` (#2563EB)
+- **Secondary**: `emerald-600` (#059669)
+- **Dark mode**: Supported via `next-themes` and Tailwind `dark:` variants
+- **Mobile-first**: 44px touch targets on mobile; card-based views < 768px, table layouts ≥ 768px
+- **Color tokens**: Use `src/config/colors.ts` constants — never hardcode hex values directly
+- **Status badges**: Use `getStatusBadgeClasses()` from `src/config/colors.ts`
+
+---
+
+## Security Rules
+
+- **NEVER** commit `.env` files
+- **NEVER** modify `supabase/migrations/` files after they are applied — always create new migrations
+- Sensitive data (TC ID, IBAN) must use `encrypt()` from `encryption.service.ts` before storing
+- TC ID must also be hashed with `hashTC()` for duplicate detection (never stored in plain text)
+- All user input must be validated with Zod before hitting the service layer
+- Signed URLs (15 min expiry) for all PDF and photo access via Supabase Storage
+
+---
+
+## Common Gotchas
+
+- **`database.ts` may be stale** — after schema changes, run `npm run gen:types`. If org/v2 tables are missing, check `database.types.ts` instead.
+- **Property statuses differ by type**: Rental → `Empty | Occupied | Inactive`; Sale → `Available | Under Offer | Sold | Inactive`
+- **i18n namespace must match file name**: `useTranslation('properties')` loads `public/locales/tr/properties.json`
+- **Photo limit**: Max 10 photos per property — enforced in application logic, not DB
+- **PDF Turkish characters**: Must call `addTurkishFonts(doc)` from `pdfFonts.service.ts` before any text rendering
+- **Atomic contract creation**: Use `createContractWithEntities()` RPC to create owner + tenant + property + contract in one transaction — never create these entities separately
+- **File upload limits**: 5MB max; allowed image types: `jpeg, jpg, png, webp`
+
+---
+
+## Error Handling Pattern
+
+User-facing errors use `useToast` — never `alert()` or bare `console.error`:
+
+```typescript
+import { useToast } from '@/components/ui/use-toast';
+
+const { toast } = useToast();
+
+try {
+  await someService.doSomething();
+} catch (err) {
+  toast({
+    title: t('error.title'),
+    description: err instanceof Error ? err.message : t('error.unknown'),
+    variant: 'destructive',
+  });
+}
+```
+
+---
+
+## Data Fetching Pattern
+
+Components **never** call services directly — always through a feature-local hook:
+
+```
+src/features/[feature-name]/hooks/use[FeatureName]Data.ts
+```
+
+The hook owns `loading`, `error`, and `data` state and calls the service. Components consume the hook. See `src/features/dashboard/hooks/useDashboardData.ts` as the canonical example.
+
+---
+
+## Billing / Access Gates
+
+Use `useBilling()` from `BillingContext` to gate premium features:
+
+```typescript
+import { useBilling } from '@/contexts/BillingContext';
+
+const { billingStatus } = useBilling();
+
+if (!billingStatus?.hasActiveAccess) {
+  // show upgrade prompt — do NOT render the feature
+}
+```
+
+`hasActiveAccess` is `true` for active subscribers **and** users within their trial period. Check `ProtectedRoute.tsx` for the app-level gate pattern.
+
+---
+
+## Detailed Reference
+
+See `@docs/design/claude.md` for full schema, service examples, type definitions, and feature deep-dives.
+See `@docs/reference/ARCHITECTURE.md` for system architecture diagrams.
+See `@docs/reference/API.md` for service/API documentation.
+See `@CHANGELOG.md` for version history.

@@ -5,14 +5,14 @@ export const ThePivot = () => {
   const { t } = useTranslation('landing')
 
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-slate-950 text-white text-center border-t border-slate-900 py-24 relative overflow-hidden">
-      
+    <section className="min-h-screen flex flex-col items-center justify-center px-6 bg-blue-600 text-white text-center border-t border-blue-700 py-24 relative overflow-hidden">
+
       <div className="max-w-4xl mx-auto space-y-12 relative z-10">
         <div className="space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight bg-gradient-to-br from-white via-white to-gray-500 bg-clip-text text-transparent">
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white">
                 {t('pivot.title')}
             </h2>
-            <p className="text-xl text-gray-400 max-w-2xl mx-auto font-light leading-relaxed">
+            <p className="text-xl text-blue-100 max-w-2xl mx-auto font-light leading-relaxed">
                 {t('pivot.description')}
             </p>
         </div>
