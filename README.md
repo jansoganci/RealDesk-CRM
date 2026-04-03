@@ -374,7 +374,7 @@ emlak-crm/
 │   └── index.css           # Global styles
 ├── supabase/
 │   └── migrations/         # Database migration files
-├── docs/                   # Documentation
+├── docs/                   # Documentation, drafts (content/), samples (PDFs/media)
 ├── index.html             # HTML template
 ├── package.json           # Dependencies and scripts
 ├── tsconfig.json          # TypeScript configuration

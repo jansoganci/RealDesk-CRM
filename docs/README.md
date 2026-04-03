@@ -40,6 +40,16 @@ This directory contains all project documentation organized by purpose and statu
 - `EmlakCRM_Portfolio.md` - Executive overview (English)
 - `EmlakCRM_Detayli_Analiz_Raporu.md` - Detailed product analysis (Turkish)
 
+### `/content/`
+**Long-form text drafts** (not app source):
+- `duz-metin.txt` - Plain-text draft / export
+
+### `/samples/`
+**Reference assets** moved out of repo root (contracts, media, legal HTML samples):
+- `contracts/` - Example PDFs for sale contract work
+- `media/` - Images kept for reference (favicon variant, SEO, misc.)
+- `legal/` - e.g. KVKK HTML sample drafts
+
 ### `/design/`
 **Design documentation** - UI/UX design rules and guidelines:
 - `claude.md` - Design rulebook and guidelines

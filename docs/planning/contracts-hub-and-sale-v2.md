@@ -694,7 +694,7 @@ getInstanceCounts(): Promise<Record<ContractTypeV2, number>>
 ```typescript
 /**
  * Sales Contract Template Content
- * Source: Manually extracted from satis.sozlesmesi.pdf
+ * Source: Manually extracted from docs/samples/contracts/satis.sozlesmesi.pdf
  * Placeholders use {{variable}} syntax
  */
 
