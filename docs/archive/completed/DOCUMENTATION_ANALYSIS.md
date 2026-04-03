@@ -42,7 +42,7 @@
 | `docs/planning/PRIORITY_1_IMPLEMENTATION_PLAN.md` | Active planning | DEV_DOC | KEEP | Active planning document |
 | `docs/planning/ONBOARDING_STRATEGY.md` | Active planning | DEV_DOC | KEEP | Active planning document |
 | `docs/planning/ONBOARDING_IMPLEMENTATION_PLAN.md` | Active planning | DEV_DOC | KEEP | Active planning document |
-| `docs/planning/AGENCY_EKLEME.MD` | Active planning | DEV_DOC | KEEP | Active planning document |
+| `docs/planning/agency-ekleme.md` | Active planning | DEV_DOC | KEEP | Active planning document |
 | `docs/planning/contracts-hub-and-sale-v2.md` | Active planning | DEV_DOC | KEEP | Active planning document |
 | `docs/planning/global_performance_master_plan.md` | Active planning | DEV_DOC | KEEP | Active planning document |
 | `docs/planning/owners_optimization_plan.md` | Active planning | DEV_DOC | KEEP | Active planning document |

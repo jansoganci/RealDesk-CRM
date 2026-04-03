@@ -481,7 +481,7 @@ properties (1) ────> (many) contracts (many) <─── (1) tenants
 
 ## 🔌 API & Services
 
-The application uses a service layer pattern. For complete API documentation, see [docs/API.md](./docs/API.md).
+The application uses a service layer pattern. For complete API documentation, see [docs/reference/API.md](./docs/reference/API.md).
 
 ### Service Files
 
@@ -511,7 +511,7 @@ The database includes custom RPC functions for complex operations:
 - Contract validation functions
 - Photo ordering atomic operations
 
-For detailed API documentation including method signatures, parameters, return types, and examples, see [docs/API.md](./docs/API.md).
+For detailed API documentation including method signatures, parameters, return types, and examples, see [docs/reference/API.md](./docs/reference/API.md).
 
 ## 💻 Development
 
@@ -551,7 +551,7 @@ This creates an optimized production build in the `dist` folder.
 
 ### Deployment
 
-For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+For detailed deployment instructions, see [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md).
 
 The application can be deployed to:
 
@@ -572,30 +572,38 @@ VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_anon_key
 ```
 
-For platform-specific deployment guides, troubleshooting, and best practices, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+For platform-specific deployment guides, troubleshooting, and best practices, see [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md).
 
 ## 📚 Documentation
 
 Comprehensive documentation is available for developers:
 
 - **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
-- **[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)** - Technical architecture and system design
-- **[docs/API.md](./docs/API.md)** - Complete API documentation for all services
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment guides for various platforms
-- **[docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)** - Contribution guidelines and development workflow
-- **[docs/design_rulebook.md](./docs/design_rulebook.md)** - Design system and UI guidelines
+- **[docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md)** - Technical architecture and system design
+- **[docs/reference/API.md](./docs/reference/API.md)** - Complete API documentation for all services
+- **[docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)** - Deployment guides for various platforms
+- **[docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)** - Contribution guidelines and development workflow
+- **[docs/design/claude.md](./docs/design/claude.md)** - Design notes and UI guidelines
+- **[docs/design/EmlakCRM_Tasarim_Sistemi_Analizi.md](./docs/design/EmlakCRM_Tasarim_Sistemi_Analizi.md)** - Design system (colors, typography, components)
+
+### Product & planning
+
+- **[docs/marketing/EmlakCRM_Portfolio.md](./docs/marketing/EmlakCRM_Portfolio.md)** - Executive overview and impact narrative (English)
+- **[docs/marketing/EmlakCRM_Detayli_Analiz_Raporu.md](./docs/marketing/EmlakCRM_Detayli_Analiz_Raporu.md)** - Detailed product analysis (Turkish)
+- **[docs/planning/onboarding-migration-analysis.md](./docs/planning/onboarding-migration-analysis.md)** - Onboarding data storage architecture review
+- **[docs/security/SECURITY_INCIDENT_REPORT.md](./docs/security/SECURITY_INCIDENT_REPORT.md)** - Security incident record and remediation checklist
 
 ### Quick Links
 
 - **Getting Started**: See [Installation](#installation) section
-- **Architecture**: See [docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)
-- **API Reference**: See [docs/API.md](./docs/API.md)
-- **Deploying**: See [DEPLOYMENT.md](./DEPLOYMENT.md)
-- **Contributing**: See [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+- **Architecture**: See [docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md)
+- **API Reference**: See [docs/reference/API.md](./docs/reference/API.md)
+- **Deploying**: See [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)
+- **Contributing**: See [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please read our [Contributing Guide](./docs/CONTRIBUTING.md) for details on:
+Contributions are welcome! Please read our [Contributing Guide](./docs/reference/CONTRIBUTING.md) for details on:
 
 - Code of conduct
 - Development workflow
@@ -606,14 +614,14 @@ Contributions are welcome! Please read our [Contributing Guide](./docs/CONTRIBUT
 ### Quick Start for Contributors
 
 1. Fork the repository
-2. Read [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md)
+2. Read [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)
 3. Create a feature branch (`git checkout -b feature/amazing-feature`)
 4. Make your changes following our coding standards
 5. Commit your changes (`git commit -m 'feat: add amazing feature'`)
 6. Push to the branch (`git push origin feature/amazing-feature`)
 7. Open a Pull Request
 
-For detailed guidelines, see [docs/CONTRIBUTING.md](./docs/CONTRIBUTING.md).
+For detailed guidelines, see [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md).
 
 ## 📄 License
 

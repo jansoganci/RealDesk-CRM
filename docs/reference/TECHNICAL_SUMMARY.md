@@ -735,7 +735,7 @@ npm run gen:types
 - **API Documentation:** `docs/API.md`
 - **Deployment Guide:** `DEPLOYMENT.md`
 - **Contributing Guide:** `docs/CONTRIBUTING.md`
-- **Design System:** `docs/design_rulebook.md`
+- **Design System:** `docs/design/claude.md`, `docs/design/EmlakCRM_Tasarim_Sistemi_Analizi.md`
 
 ---
 

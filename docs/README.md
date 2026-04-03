@@ -22,6 +22,8 @@ This directory contains all project documentation organized by purpose and statu
 - `STRIPE_*.md` - Stripe-related planning docs
 - `*_optimization_plan.md` - Performance optimization plans
 - `todos.md` - Active task list
+- `onboarding-migration-analysis.md` - Onboarding data storage architecture review
+- `agency-ekleme.md` - Agency onboarding notes (Turkish)
 
 ### `/implementation/`
 **Active implementation guides** - Step-by-step guides for ongoing work:
@@ -33,9 +35,19 @@ This directory contains all project documentation organized by purpose and statu
 - `marketing-strategy-*.md` - Marketing strategy documents
 - `real-estate-market-research.md` - Market research
 
+### `/marketing/`
+**Product narrative and analysis** (portfolio-style and stakeholder-facing):
+- `EmlakCRM_Portfolio.md` - Executive overview (English)
+- `EmlakCRM_Detayli_Analiz_Raporu.md` - Detailed product analysis (Turkish)
+
 ### `/design/`
 **Design documentation** - UI/UX design rules and guidelines:
 - `claude.md` - Design rulebook and guidelines
+- `EmlakCRM_Tasarim_Sistemi_Analizi.md` - Design system (colors, typography, components)
+
+### `/security/`
+**Security records** - Incident notes and remediation checklists:
+- `SECURITY_INCIDENT_REPORT.md` - GitGuardian / secret rotation record
 
 ### `/archive/`
 **Completed and historical documents** - See `/archive/README.md` for details
@@ -50,6 +62,7 @@ This directory contains all project documentation organized by purpose and statu
 ### For Planning
 - Active plans: `/planning/`
 - Research: `/research/`
+- Marketing & narrative: `/marketing/`
 
 ### For Implementation
 - Implementation guides: `/implementation/`
