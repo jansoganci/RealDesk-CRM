@@ -1,4 +1,4 @@
-// FeatureProperties – focus on property / portfolio management.
+// FeatureProperties – LIGHT section. Portfolio management feature.
 import { useTranslation } from "react-i18next"
 import { MiniDashboardMockup } from "./MiniDashboardMockup"
 
@@ -6,18 +6,24 @@ export const FeatureProperties = () => {
   const { t } = useTranslation('landing')
 
   return (
-    <section id="features" className="min-h-screen flex flex-col items-center justify-center px-6 bg-white text-center py-20">
+    <section id="features" className="bg-[#f8fafc] text-center py-32 px-6">
       <div className="max-w-5xl mx-auto space-y-16">
         <div className="max-w-2xl mx-auto space-y-6">
-            <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 tracking-tight">
+          <div className="flex justify-center">
+            <span className="ld-eyebrow">
+              <span className="ld-eyebrow-dot" />
+              {t('featureProperties.eyebrow')}
+            </span>
+          </div>
+
+          <h2 className="ld-serif text-4xl md:text-5xl lg:text-6xl text-slate-900">
             {t('featureProperties.title')}
-            </h2>
-            <p className="text-lg text-gray-600 leading-relaxed">
+          </h2>
+          <p className="text-lg text-slate-500 font-light leading-relaxed">
             {t('featureProperties.description')}
-            </p>
+          </p>
         </div>
 
-        {/* Minimal Dashboard Mockup */}
         <div className="w-full flex items-center justify-center">
           <MiniDashboardMockup />
         </div>

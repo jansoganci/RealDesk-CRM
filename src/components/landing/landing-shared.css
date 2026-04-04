@@ -1,0 +1,56 @@
+/* ── Shared landing section styles ───────────────────────────────────────────
+   Import this file ONCE from LandingPage.tsx.
+   Classes are used across all non-hero landing sections.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+/* ── Dark section base (matches hero --hero-bg) ───────────────────────────── */
+.ld-dark {
+  position: relative;
+  overflow: hidden;
+  background-color: #0c1829;
+}
+
+/* Dot-grid — same pattern as hero */
+.ld-dark::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+  background-size: 28px 28px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Gold eyebrow badge — identical to hero-badge ──────────────────────────── */
+.ld-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,169,110,0.10);
+  border: 1px solid rgba(200,169,110,0.28);
+  border-radius: 999px;
+  padding: 5px 14px;
+  margin-bottom: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: #c8a96e;
+}
+
+.ld-eyebrow-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #c8a96e;
+  opacity: 0.8;
+  flex-shrink: 0;
+}
+
+/* ── Serif headline — Instrument Serif, weight 400 ─────────────────────────── */
+.ld-serif {
+  font-family: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}

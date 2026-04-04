@@ -1,5 +1,4 @@
-// FinalCTA – last push to sign up / start.
-import { Button } from "@/components/ui/button"
+// FinalCTA – DARK section. Last push to sign up.
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/config/constants"
@@ -9,29 +8,35 @@ export const FinalCTA = () => {
   const navigate = useNavigate()
 
   return (
-    <section className="py-32 flex flex-col items-center justify-center px-6 bg-blue-600 text-center">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <h2 className="text-5xl md:text-6xl font-bold text-white tracking-tight">
+    <section className="ld-dark text-center py-32 px-6">
+      <div className="relative z-10 max-w-4xl mx-auto space-y-8">
+        <div className="flex justify-center">
+          <span className="ld-eyebrow">
+            <span className="ld-eyebrow-dot" />
+            {t('finalCta.eyebrow')}
+          </span>
+        </div>
+
+        <h2 className="ld-serif text-5xl md:text-6xl text-[#f0ece4]">
           {t('finalCta.title')}
         </h2>
-        
+
         <div className="flex flex-col items-center gap-6">
-            <div className="flex flex-col items-center gap-4">
-              <Button
-                size="lg"
-                className="text-lg px-12 py-8 h-auto bg-white text-blue-600 hover:bg-blue-50 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all"
-                onClick={() => navigate(ROUTES.REGISTER)}
-              >
-                  {t('finalCta.cta')}
-              </Button>
-              <p className="text-sm text-blue-100">
-                  {t('finalCta.reassurance')}
-              </p>
-            </div>
-            
-            <p className="text-xs text-blue-200 font-light tracking-widest uppercase">
-              {t('shared.complianceBadge')}
+          <div className="flex flex-col items-center gap-4">
+            <button
+              className="inline-flex items-center justify-center bg-[#f0ece4] text-[#0c1829] text-base font-semibold px-12 py-4 rounded-full shadow-lg hover:bg-white hover:scale-105 hover:shadow-xl transition-all cursor-pointer"
+              onClick={() => navigate(ROUTES.REGISTER)}
+            >
+              {t('finalCta.cta')}
+            </button>
+            <p className="text-sm text-[#f0ece4]/50 font-light">
+              {t('finalCta.reassurance')}
             </p>
+          </div>
+
+          <p className="text-xs text-[#f0ece4]/28 font-light tracking-widest uppercase">
+            {t('shared.complianceBadge')}
+          </p>
         </div>
       </div>
     </section>

@@ -16,12 +16,88 @@
     "cta": "Start for Free",
     "placeholder": "Dashboard Screenshot",
     "trustLine": "Manage contracts and rent tracking from one place, in an organized way",
-    "imageAlt": "Emlak CRM dashboard preview"
+    "imageAlt": "Emlak CRM dashboard preview",
+    "badge": "Built for Turkish Real Estate Professionals",
+    "scrollHint": "Scroll",
+    "canvas": {
+      "scene1": {
+        "label": "Your Portfolio",
+        "card1": {
+          "label": "Bağdat Caddesi No:142",
+          "sub": "Istanbul, Kadıköy · Rental",
+          "status": "Occupied",
+          "price": "₺45,000/mo"
+        },
+        "card2": {
+          "label": "Nispetiye Cad. 28/4",
+          "sub": "Istanbul, Beşiktaş · For Sale",
+          "status": "Under Offer",
+          "price": "₺12,500,000"
+        },
+        "card3": {
+          "label": "Tunalı Hilmi Cad. 67",
+          "sub": "Ankara, Çankaya · Rental",
+          "status": "Vacant",
+          "price": "₺28,000/mo"
+        }
+      },
+      "scene2": {
+        "label": "Contracts",
+        "card1": {
+          "label": "Lease — Ayşe Kaya",
+          "sub": "Bağdat Cad. 142 · Active",
+          "status": "280 days left",
+          "price": "₺45,000/mo"
+        },
+        "card2": {
+          "label": "Sale — Mehmet Demir",
+          "sub": "Nispetiye 28/4 · Closing",
+          "status": "Closing Apr 18",
+          "price": "₺12,500,000"
+        },
+        "card3": {
+          "label": "Lease — New Inquiry",
+          "sub": "Tunalı Hilmi 67 · Draft",
+          "status": "Awaiting sign",
+          "price": "₺28,000/mo"
+        }
+      },
+      "scene3": {
+        "label": "Commissions",
+        "card1": {
+          "label": "Sale Comm. — Nispetiye",
+          "sub": "Mehmet Demir · Mar 14",
+          "status": "Earned",
+          "price": "₺187,500"
+        },
+        "card2": {
+          "label": "Finder's Fee — Bağdat",
+          "sub": "Ayşe Kaya · Mar 3",
+          "status": "Earned",
+          "price": "₺45,000"
+        },
+        "card3": {
+          "label": "Referral — A. Yılmaz",
+          "sub": "Sale referral · Mar 22",
+          "status": "Earned",
+          "price": "₺25,000"
+        }
+      },
+      "stats": {
+        "revenueLabel": "March Revenue",
+        "contractsLabel": "Active Contracts",
+        "commissionsLabel": "Commissions YTD",
+        "revenueValue": "₺875,000",
+        "contractsValue": "14",
+        "commissionsValue": "₺257,500"
+      }
+    }
   },
   "shared": {
     "complianceBadge": "KVKK COMPLIANT · ENCRYPTED DATA · DAILY BACKUPS"
   },
   "problem": {
+    "eyebrow": "Sound familiar?",
     "title": "Everything is scattered everywhere.",
     "item1": "Client requests lost in WhatsApp messages",
     "item2": "Rent increase dates forgotten in Excel files",
@@ -30,6 +106,7 @@
     "imageAlt": "Chaotic workflow representation"
   },
   "pivot": {
+    "eyebrow": "The Solution",
     "title": "We unify them all.",
     "description": "emlakcrm brings all these scattered pieces into one professional system. No more searching, no more losing.",
     "placeholder": "Unification Animation",
@@ -37,25 +114,30 @@
     "videoFallback": "Your browser does not support video. The video shows how EmlakCRM unifies all your property management tasks."
   },
   "featureProperties": {
+    "eyebrow": "Portfolio Management",
     "title": "Your entire portfolio on one screen.",
     "description": "Your listings, tenants, and property owners. All at your fingertips, accessible anytime.",
     "placeholder": "Property List UI"
   },
   "featureReminders": {
+    "eyebrow": "Smart Reminders",
     "title": "Never miss important dates again.",
     "description": "Rent increases, contract expirations, and appointments. The system warns you in time."
   },
   "result": {
+    "eyebrow": "The Results",
     "title": "Less chaos, more success.",
     "description": "Take control of your business. Look professional, manage more clients.",
     "imageAlt": "Portfolio performance growth chart"
   },
   "testimonial": {
+    "eyebrow": "Our Users",
     "quote": "\"Now my entire portfolio and contracts are in my pocket. Wherever I am, I can access them instantly.\"",
     "name": "Ahmet S.",
     "role": "Sisli/Istanbul · Real Estate Consultant"
   },
   "faq": {
+    "eyebrow": "FAQ",
     "title": "Frequently Asked Questions",
     "items": [
       {
@@ -73,6 +155,7 @@
     ]
   },
   "finalCta": {
+    "eyebrow": "Ready?",
     "title": "Ready to take control?",
     "cta": "Start for Free",
     "reassurance": "14 days free, no credit card required."

@@ -16,12 +16,88 @@
     "cta": "Ücretsiz Başla",
     "placeholder": "Dashboard Ekran Görüntüsü",
     "trustLine": "Sözleşme ve kira takibini tek yerden, düzenli şekilde yönetmenizi sağlar",
-    "imageAlt": "Emlak CRM kontrol paneli önizlemesi"
+    "imageAlt": "Emlak CRM kontrol paneli önizlemesi",
+    "badge": "Türk Emlak Profesyonelleri İçin",
+    "scrollHint": "Kaydır",
+    "canvas": {
+      "scene1": {
+        "label": "Portföyünüz",
+        "card1": {
+          "label": "Bağdat Caddesi No:142",
+          "sub": "İstanbul, Kadıköy · Kiralık",
+          "status": "Dolu",
+          "price": "₺45,000/ay"
+        },
+        "card2": {
+          "label": "Nispetiye Cad. 28/4",
+          "sub": "İstanbul, Beşiktaş · Satılık",
+          "status": "Teklifte",
+          "price": "₺12,500,000"
+        },
+        "card3": {
+          "label": "Tunalı Hilmi Cad. 67",
+          "sub": "Ankara, Çankaya · Kiralık",
+          "status": "Boş",
+          "price": "₺28,000/ay"
+        }
+      },
+      "scene2": {
+        "label": "Sözleşmeler",
+        "card1": {
+          "label": "Kira — Ayşe Kaya",
+          "sub": "Bağdat Cad. 142 · Aktif",
+          "status": "280 gün kaldı",
+          "price": "₺45,000/ay"
+        },
+        "card2": {
+          "label": "Satış — Mehmet Demir",
+          "sub": "Nispetiye 28/4 · Kapanıyor",
+          "status": "Kapanış 18 Nis",
+          "price": "₺12,500,000"
+        },
+        "card3": {
+          "label": "Kira — Yeni Talep",
+          "sub": "Tunalı Hilmi 67 · Taslak",
+          "status": "İmza bekliyor",
+          "price": "₺28,000/ay"
+        }
+      },
+      "scene3": {
+        "label": "Komisyonlar",
+        "card1": {
+          "label": "Satış Kom. — Nispetiye",
+          "sub": "Mehmet Demir · 14 Mar",
+          "status": "Kazanıldı",
+          "price": "₺187,500"
+        },
+        "card2": {
+          "label": "Kiracı Bulma — Bağdat",
+          "sub": "Ayşe Kaya · 3 Mar",
+          "status": "Kazanıldı",
+          "price": "₺45,000"
+        },
+        "card3": {
+          "label": "Referans — A. Yılmaz",
+          "sub": "Satış referansı · 22 Mar",
+          "status": "Kazanıldı",
+          "price": "₺25,000"
+        }
+      },
+      "stats": {
+        "revenueLabel": "Mart Geliri",
+        "contractsLabel": "Aktif Sözleşme",
+        "commissionsLabel": "Komisyon YTD",
+        "revenueValue": "₺875,000",
+        "contractsValue": "14",
+        "commissionsValue": "₺257,500"
+      }
+    }
   },
   "shared": {
     "complianceBadge": "KVKK UYUMLU · ŞİFRELİ VERİ · GÜNLÜK YEDEKLEME"
   },
   "problem": {
+    "eyebrow": "Tanıdık geliyor mu?",
     "title": "Her şey bir yere dağılmış durumda.",
     "item1": "WhatsApp mesajları arasında kaybolan müşteri talepleri",
     "item2": "Excel dosyalarında unutulan kira artış tarihleri",
@@ -30,6 +106,7 @@
     "imageAlt": "Dağınık iş akışı temsili"
   },
   "pivot": {
+    "eyebrow": "Çözüm",
     "title": "Biz onları birleştiriyoruz.",
     "description": "Emlak CRM, tüm bu dağınık parçaları tek bir profesyonel sistemde toplar. Artık aramak yok, kaybetmek yok.",
     "placeholder": "Birleşim Animasyonu",
@@ -37,25 +114,30 @@
     "videoFallback": "Tarayıcınız video desteklemiyor. Video, EmlakCRM'in tüm gayrimenkul yönetim görevlerini nasıl birleştirdiğini gösterir."
   },
   "featureProperties": {
+    "eyebrow": "Portföy Yönetimi",
     "title": "Tüm portföyünüz tek ekranda.",
     "description": "İlanlarınız, kiracılarınız ve mülk sahipleriniz. Hepsi parmaklarınızın ucunda, her an erişilebilir.",
     "placeholder": "Emlak Listesi Arayüzü"
   },
   "featureReminders": {
+    "eyebrow": "Hatırlatmalar",
     "title": "Önemli tarihleri bir daha kaçırmayın.",
     "description": "Kira artışları, sözleşme bitişleri ve randevular. Sistem sizi zamanında uyarır."
   },
   "result": {
+    "eyebrow": "Sonuçlar",
     "title": "Daha az kaos, daha çok başarı.",
     "description": "İşinizin kontrolünü elinize alın. Profesyonel görünün, daha fazla müşteri yönetin.",
     "imageAlt": "Portföy performans büyüme grafiği"
   },
   "testimonial": {
+    "eyebrow": "Müşterilerimiz",
     "quote": "\"Artık tüm portföyüm ve sözleşmelerim cebimde. Nerede olursam olayım, anında erişebiliyorum.\"",
     "name": "Ahmet S.",
     "role": "Şişli/İstanbul · Gayrimenkul Danışmanı"
   },
   "faq": {
+    "eyebrow": "Sorular",
     "title": "Sıkça Sorulan Sorular",
     "items": [
       {
@@ -73,6 +155,7 @@
     ]
   },
   "finalCta": {
+    "eyebrow": "Hazır Mısınız?",
     "title": "Kontrolü ele almaya hazır mısınız?",
     "cta": "Ücretsiz Başla",
     "reassurance": "14 gün ücretsiz, kredi kartı gerekmez."

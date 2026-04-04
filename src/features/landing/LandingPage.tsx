@@ -1,3 +1,4 @@
+import "@/components/landing/landing-shared.css"
 import { Hero } from "@/components/landing/Hero"
 import { TheProblem } from "@/components/landing/TheProblem"
 import { ThePivot } from "@/components/landing/ThePivot"
