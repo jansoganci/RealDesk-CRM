@@ -50,12 +50,20 @@ interface TenantWithEncryption {
 interface PropertyWithComponents {
   id: string;
   address?: string;
+  // Turkish format (legacy)
   mahalle?: string;
   cadde_sokak?: string;
   bina_no?: string;
   daire_no?: string;
   ilce?: string;
   il?: string;
+  // US format (new)
+  street_address?: string;
+  unit?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
+  // Common
   type?: string;
   use_purpose?: string;
   owner?: OwnerWithEncryption;
@@ -153,7 +161,8 @@ export function useContractEditData(contractId: string | undefined): UseContract
 
       // Decrypt sensitive fields
       let ownerTC = '';
-      let ownerIBAN = '';
+      let ownerRouting = '';
+      let ownerAccount = '';
       let tenantTC = '';
 
       try {
@@ -161,7 +170,14 @@ export function useContractEditData(contractId: string | undefined): UseContract
           ownerTC = await decrypt(owner.tc_encrypted);
         }
         if (owner.iban_encrypted) {
-          ownerIBAN = await decrypt(owner.iban_encrypted);
+          const bankPayload = await decrypt(owner.iban_encrypted);
+          const pipe = bankPayload.indexOf('|');
+          if (pipe >= 0) {
+            ownerRouting = bankPayload.slice(0, pipe);
+            ownerAccount = bankPayload.slice(pipe + 1);
+          } else {
+            ownerAccount = bankPayload;
+          }
         }
         if (contract.tenant.tc_encrypted) {
           tenantTC = await decrypt(contract.tenant.tc_encrypted);
@@ -171,29 +187,29 @@ export function useContractEditData(contractId: string | undefined): UseContract
         throw new Error('Failed to decrypt sensitive data');
       }
 
-      // Transform to form data format
+      // Transform to form data format (US Format)
       const formData: ContractFormData = {
         // Owner fields
         owner_name: owner.name || '',
-        owner_tc: ownerTC,
-        owner_iban: ownerIBAN,
+        owner_tax_id: ownerTC,
+        owner_routing_number: ownerRouting,
+        owner_account_number: ownerAccount,
         owner_phone: owner.phone || '',
         owner_email: owner.email || '',
 
         // Tenant fields
         tenant_name: contract.tenant.name || '',
-        tenant_tc: tenantTC,
+        tenant_tax_id: tenantTC,
         tenant_phone: contract.tenant.phone || '',
         tenant_email: contract.tenant.email || '',
         tenant_address: contract.tenant.address || '',
 
-        // Property fields
-        mahalle: contract.property.mahalle || '',
-        cadde_sokak: contract.property.cadde_sokak || '',
-        bina_no: contract.property.bina_no || '',
-        daire_no: contract.property.daire_no || '',
-        ilce: contract.property.ilce || '',
-        il: contract.property.il || 'İstanbul',
+        // Property fields (US Format - fallback to Turkish if US fields not yet migrated)
+        street_address: contract.property.street_address || contract.property.cadde_sokak || '',
+        unit: contract.property.unit || contract.property.daire_no || '',
+        city: contract.property.city || contract.property.ilce || '',
+        state: contract.property.state || contract.property.il || 'TX',
+        zip_code: contract.property.zip_code || '',
         property_type: (contract.property.type as 'apartment' | 'house' | 'commercial') || 'apartment',
         use_purpose: contract.property.use_purpose || '',
 

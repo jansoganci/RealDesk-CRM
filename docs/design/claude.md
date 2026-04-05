@@ -1236,12 +1236,14 @@ npm run deploy:prod  # Cloudflare Pages (production)
 
 ### Database Changes
 
-1. Create migration: `supabase/migrations/[timestamp]_[description].sql`
+**Naming (RealDesk rule):** migrations use **4-digit sequence prefixes**, not `YYYYMMDDHHmmss`: `0001_description.sql`, `0002_description.sql`, … Full policy: root **`CLAUDE.md` → “Database migrations (naming)”**.
+
+1. Create migration: `supabase/migrations/[NNNN]_[description].sql` (next number in sequence)
 2. Add table/column changes with SQL
 3. Add RLS policies (all 4 operations: SELECT, INSERT, UPDATE, DELETE)
 4. Update `src/types/database.ts` (regenerate if needed)
 5. Update service layer
-6. Run: `supabase db push`
+6. Apply to the database (`supabase db push` may skip `000N_` names — see **CLAUDE.md**; use SQL Editor / `psql` if needed)
 
 ### Adding a Form
 

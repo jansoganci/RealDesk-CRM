@@ -1,15 +1,12 @@
 import { useTranslation } from "react-i18next"
-import { useAuth } from "@/contexts/AuthContext"
 import { Link } from "react-router-dom"
 import { CookieSettingsLink } from "@/components/ui/cookie-settings-link"
 
 export const LandingFooter = () => {
   const { t } = useTranslation('landing')
-  const { language } = useAuth()
-
   const currentYear = new Date().getFullYear()
-  const privacyLink = `/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`
-  const termsLink = `/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`
+  const privacyLink = '/legal/privacy-policy-en.html'
+  const termsLink = '/legal/terms-of-service-en.html'
 
   return (
     <footer className="bg-gray-50 border-t border-gray-200 py-16 px-6">

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Loader2 } from 'lucide-react';
-import i18n from '@/i18n';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -31,11 +30,9 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
   const {
     organizationName,
     teamSize,
-    language,
     currency,
     setOrganizationName,
     setTeamSize,
-    setLanguage,
     setCurrency,
     saveStep2,
     isLoading,
@@ -45,12 +42,6 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
     name?: string;
     teamSize?: string;
   }>({});
-
-  const handleLanguageChange = (newLanguage: 'tr' | 'en') => {
-    setLanguage(newLanguage);
-    // Update i18n immediately
-    i18n.changeLanguage(newLanguage);
-  };
 
   const validate = (): boolean => {
     const newErrors: typeof errors = {};
@@ -197,26 +188,6 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
             </p>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-              {/* Language */}
-              <div className="space-y-2">
-                <Label htmlFor="language" className="text-sm">
-                  {t('step2.preferences.language')}
-                </Label>
-                <Select
-                  value={language}
-                  onValueChange={handleLanguageChange}
-                  disabled={saving || isLoading}
-                >
-                  <SelectTrigger id="language">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="tr">Türkçe</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
               {/* Currency */}
               <div className="space-y-2">
                 <Label htmlFor="currency" className="text-sm">

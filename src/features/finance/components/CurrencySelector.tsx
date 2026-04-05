@@ -35,7 +35,7 @@ export function CurrencySelector() {
       <label className="text-sm text-gray-600 whitespace-nowrap">
         {t('finance:currency.displayCurrency')}:
       </label>
-      <Select value={currency || 'TRY'} onValueChange={handleCurrencyChange}>
+      <Select value={currency || 'USD'} onValueChange={handleCurrencyChange}>
         <SelectTrigger className="w-24 h-8 md:h-10">
           <SelectValue />
         </SelectTrigger>

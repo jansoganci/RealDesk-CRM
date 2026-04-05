@@ -20,7 +20,7 @@ export const FinancialTrends = ({
   const { currency: userCurrency } = useAuth();
 
   const formatCurrencyLocal = (value: number) => {
-    return formatCurrency(value, userCurrency || 'TRY');
+    return formatCurrency(value, userCurrency || 'USD');
   };
 
   const formatMonth = (month: string) => {

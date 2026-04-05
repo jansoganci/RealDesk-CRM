@@ -2,27 +2,14 @@ import { Menu, X, ChevronRight } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { useTranslation } from "react-i18next"
-import { useAuth } from "@/contexts/AuthContext"
 import { useNavigate } from "react-router-dom"
 import { ROUTES } from "@/config/constants"
 
 export const LandingHeader = () => {
   const { t } = useTranslation('landing')
   const { t: tNav } = useTranslation('navigation')
-  const { language, setLanguage } = useAuth()
   const navigate = useNavigate()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-
-  const changeLanguage = async (lng: string) => {
-    try {
-      // Import setManualLanguage dynamically to mark as manual selection
-      const { setManualLanguage } = await import('@/lib/localeDetection')
-      setManualLanguage(lng as 'tr' | 'en')
-      await setLanguage(lng)
-    } catch (error) {
-      console.error('Failed to change language:', error)
-    }
-  }
 
   const scrollToFeatures = () => {
     const featuresSection = document.getElementById('features')
@@ -114,33 +101,6 @@ export const LandingHeader = () => {
         }`}
       >
         <div className="p-4 flex flex-col gap-2">
-          {/* Language Switcher */}
-          <div className="flex items-center justify-between py-3 px-3 bg-gray-50 rounded-lg">
-            <span className="text-sm font-medium text-gray-600">{tNav('language.label')}</span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => changeLanguage('tr')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
-                  language === 'tr'
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                TR
-              </button>
-              <button
-                onClick={() => changeLanguage('en')}
-                className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
-                  language === 'en'
-                    ? 'bg-gray-900 text-white'
-                    : 'bg-white text-gray-600 border border-gray-200 hover:border-gray-300'
-                }`}
-              >
-                EN
-              </button>
-            </div>
-          </div>
-
           {/* Nav Links */}
           <button
             onClick={scrollToFeatures}

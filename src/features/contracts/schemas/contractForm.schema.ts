@@ -5,8 +5,14 @@
 
 import { z } from 'zod';
 import i18n from '@/i18n';
-import { isValidTC, isValidIBAN } from '@/lib/serviceProxy';
-import { isValidPhone } from '@/lib/serviceProxy';
+import {
+  isValidPhone,
+  isValidRoutingNumber,
+  isValidAccountNumber,
+  isValidTaxId,
+  isValidState,
+  isValidZipCode,
+} from '@/lib/serviceProxy';
 
 // ============================================================================
 // Contract Form Schema
@@ -23,16 +29,20 @@ export const contractFormSchema = z.object({
     .min(2, t('minChars', { min: 2 }))
     .max(100, t('maxChars', { max: 100 })),
 
-  owner_tc: z.string()
-    .length(11, t('tcLengthStrict', { length: 11 }))
-    .regex(/^\d+$/, t('digitsOnly'))
-    .refine((tc) => isValidTC(tc), {
+  owner_tax_id: z.string()
+    .refine((v) => isValidTaxId(v), {
       message: t('invalidTcFormat'),
     }),
 
-  owner_iban: z.string()
-    .regex(/^TR\d{24}$/, t('ibanFormat'))
-    .refine((iban) => isValidIBAN(iban), {
+  owner_routing_number: z.string()
+    .min(1, t('minChars', { min: 1 }))
+    .refine((v) => isValidRoutingNumber(v), {
+      message: t('invalidIbanFormat'),
+    }),
+
+  owner_account_number: z.string()
+    .min(1, t('minChars', { min: 1 }))
+    .refine((v) => isValidAccountNumber(v), {
       message: t('invalidIbanFormat'),
     }),
 
@@ -54,10 +64,8 @@ export const contractFormSchema = z.object({
     .min(2, t('minChars', { min: 2 }))
     .max(100, t('maxChars', { max: 100 })),
 
-  tenant_tc: z.string()
-    .length(11, t('tcLengthStrict', { length: 11 }))
-    .regex(/^\d+$/, t('digitsOnly'))
-    .refine((tc) => isValidTC(tc), {
+  tenant_tax_id: z.string()
+    .refine((v) => isValidTaxId(v), {
       message: t('invalidTcFormat'),
     }),
 
@@ -78,30 +86,31 @@ export const contractFormSchema = z.object({
   // ============================================================================
   // Property Section
   // ============================================================================
-  mahalle: z.string()
-    .min(2, t('neighborhoodRequired'))
-    .max(100, t('maxChars', { max: 100 })),
+  street_address: z.string()
+    .min(3, t('minChars', { min: 3 }))
+    .max(200, t('maxChars', { max: 200 })),
 
-  cadde_sokak: z.string()
-    .min(2, t('streetRequired'))
-    .max(100, t('maxChars', { max: 100 })),
-
-  bina_no: z.string()
-    .min(1, t('buildingNoRequired'))
-    .max(20, t('maxChars', { max: 20 })),
-
-  daire_no: z.string()
-    .max(20, t('maxChars', { max: 20 }))
+  unit: z.string()
+    .max(100, t('maxChars', { max: 100 }))
     .optional()
     .or(z.literal('')),
 
-  ilce: z.string()
+  city: z.string()
     .min(2, t('districtRequired'))
     .max(50, t('maxChars', { max: 50 })),
 
-  il: z.string()
-    .min(2, t('cityRequired'))
-    .max(50, t('maxChars', { max: 50 })),
+  state: z.string()
+    .min(2, t('minChars', { min: 2 }))
+    .max(2, t('maxChars', { max: 2 }))
+    .refine((s) => isValidState(s), {
+      message: t('propertyTypeRequired'),
+    }),
+
+  zip_code: z.string()
+    .min(1, t('minChars', { min: 1 }))
+    .refine((z) => isValidZipCode(z), {
+      message: t('minChars', { min: 5 }),
+    }),
 
   property_type: z.enum(['apartment', 'house', 'commercial'], {
     errorMap: () => ({ message: t('propertyTypeRequired') }),
@@ -141,7 +150,7 @@ export const contractFormSchema = z.object({
 
   currency: z.enum(['TRY', 'USD', 'EUR'], {
     errorMap: () => ({ message: t('currencyRequired') }),
-  }).default('TRY'),
+  }).default('USD'),
 
   commission_amount: z.preprocess(
     (val) => (val === '' || val === undefined || val === null || (typeof val === 'number' && isNaN(val)) ? undefined : val),
@@ -223,24 +232,24 @@ export type ContractFormData = z.infer<typeof contractFormSchema>;
 
 export const contractFormDefaultValues: Partial<ContractFormData> = {
   owner_name: '',
-  owner_tc: '',
-  owner_iban: '',
+  owner_tax_id: '',
+  owner_routing_number: '',
+  owner_account_number: '',
   owner_phone: '',
   owner_email: '',
   tenant_name: '',
-  tenant_tc: '',
+  tenant_tax_id: '',
   tenant_phone: '',
   tenant_email: '',
   tenant_address: '',
-  mahalle: '',
-  cadde_sokak: '',
-  bina_no: '',
-  daire_no: '',
-  ilce: '',
-  il: 'İstanbul', // Default to Istanbul
+  street_address: '',
+  unit: '',
+  city: '',
+  state: '',
+  zip_code: '',
   property_type: 'apartment',
   use_purpose: '',
-  currency: 'TRY',
+  currency: 'USD',
   payment_method: '',
   special_conditions: '',
   handover_photos_url: '',

@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Cookie } from "lucide-react";
 
 export default function CookieNotice() {
-  const { t, i18n } = useTranslation("cookie");
+  const { t } = useTranslation("cookie");
   const {
     showBanner,
     acceptAll,
@@ -17,12 +17,9 @@ export default function CookieNotice() {
 
   if (!showBanner) return null;
 
-  const cookiePolicyLink = `/legal/cookie-policy-${i18n.language}.html`;
-  const privacyPolicyLink = `/legal/privacy-policy-${i18n.language}.html`;
-  const kvkkLink =
-    i18n.language === "tr"
-      ? `/legal/kvkk-aydinlatma-metni-tr.html`
-      : `/legal/cookie-disclosure-en.html`;
+  const cookiePolicyLink = "/legal/cookie-policy-en.html";
+  const privacyPolicyLink = "/legal/privacy-policy-en.html";
+  const kvkkLink = "/legal/cookie-disclosure-en.html";
 
   return (
     <>
@@ -49,12 +46,7 @@ export default function CookieNotice() {
                 </h2>
               </div>
               <p id="cookie-banner-description" className="text-sm text-muted-foreground leading-relaxed">
-                {t("banner.description")}{" "}
-                {i18n.language === "tr" && (
-                  <span className="block mt-1 text-xs font-medium text-gray-700">
-                    {t("banner.kvkkNotice")}
-                  </span>
-                )}
+                {t("banner.description")}
               </p>
               <div className="flex flex-wrap gap-2 text-xs">
                 <a

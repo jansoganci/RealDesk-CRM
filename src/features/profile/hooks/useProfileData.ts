@@ -76,7 +76,7 @@ export function useProfileData({
         });
 
         const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
-        setManualLanguage(data.language as 'tr' | 'en');
+        setManualLanguage('en');
         setManualCurrency(data.currency as 'TRY' | 'USD');
         await setLanguage(data.language);
         await setCurrency(data.currency);

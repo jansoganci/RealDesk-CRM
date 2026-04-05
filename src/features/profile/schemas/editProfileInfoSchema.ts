@@ -22,9 +22,6 @@ export const getEditProfileInfoSchema = (t: TFunction) => {
       .optional()
       .nullable()
       .or(z.literal('')),
-    language: z.enum(['en', 'tr'], {
-      required_error: t('profile:validation.languageRequired'),
-    }),
     currency: z.enum(['USD', 'TRY', 'EUR'], {
       required_error: t('profile:validation.currencyRequired'),
     }),

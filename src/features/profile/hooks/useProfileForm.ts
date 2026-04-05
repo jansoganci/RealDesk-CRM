@@ -15,7 +15,7 @@ type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>;
 
 interface UseProfileFormReturn {
   form: UseFormReturn<ProfileFormData>;
-  normalizeLanguage: (lang: string | null | undefined) => ProfileFormData['language'];
+  normalizeLanguage: (_lang?: string | null | undefined) => ProfileFormData['language'];
   normalizeCurrency: (value: string | null | undefined) => ProfileFormData['currency'];
 }
 
@@ -33,22 +33,18 @@ export function useProfileForm(): UseProfileFormReturn {
     defaultValues: {
       full_name: '',
       phone_number: '',
-      language: 'tr',
-      currency: 'TRY',
+      language: 'en',
+      currency: 'USD',
       meeting_reminder_minutes: 30,
       commission_rate: 4.0,
     },
   });
 
-  const normalizeLanguage = useCallback(
-    (lang: string | null | undefined): ProfileFormData['language'] =>
-      lang === 'tr' || lang === 'en' ? lang : 'tr',
-    []
-  );
+  const normalizeLanguage = useCallback((_lang?: string | null | undefined): ProfileFormData['language'] => 'en', []);
 
   const normalizeCurrency = useCallback(
     (value: string | null | undefined): ProfileFormData['currency'] =>
-      value === 'TRY' || value === 'USD' || value === 'EUR' ? value : 'TRY',
+      value === 'TRY' || value === 'USD' || value === 'EUR' ? value : 'USD',
     []
   );
 

@@ -1,13 +1,16 @@
 /**
- * Encryption Service for TC Kimlik No and IBAN
+ * Encryption Service for US bank accounts and Tax IDs
  * Uses Web Crypto API with AES-GCM for encryption
- * Uses SHA-256 for hashing (lookups)
+ * Uses SHA-256 for hashing (duplicate detection lookups)
  *
  * IMPORTANT: This runs in the browser, not Node.js
  */
 
 const ALGORITHM = 'AES-GCM';
 const IV_LENGTH = 12; // 96 bits for GCM
+
+/** Weights for ABA routing number checksum (positions 1–9) */
+const ROUTING_CHECKSUM_WEIGHTS = [3, 7, 1, 3, 7, 1, 3, 7, 1] as const;
 
 /**
  * Get or generate encryption key
@@ -46,11 +49,11 @@ async function getEncryptionKey(): Promise<CryptoKey> {
  * Encrypt plaintext using AES-256-GCM
  * Returns: iv:ciphertext (both hex-encoded)
  *
- * @param plaintext - String to encrypt (TC or IBAN)
+ * @param plaintext - String to encrypt (e.g. Tax ID, bank payload)
  * @returns Encrypted string in format "iv:ciphertext"
  *
  * @example
- * const encrypted = await encrypt('12345678901');
+ * const encrypted = await encrypt('12-3456789');
  * // Returns: "a1b2c3d4e5f6....:1a2b3c4d5e6f...."
  */
 export async function encrypt(plaintext: string): Promise<string> {
@@ -93,7 +96,7 @@ export async function encrypt(plaintext: string): Promise<string> {
  *
  * @example
  * const decrypted = await decrypt('a1b2c3...:1a2b3c...');
- * // Returns: "12345678901"
+ * // Returns: "12-3456789"
  */
 export async function decrypt(ciphertext: string): Promise<string> {
   try {
@@ -131,20 +134,21 @@ export async function decrypt(ciphertext: string): Promise<string> {
 }
 
 /**
- * Hash TC Kimlik No for lookups
- * Uses SHA-256 (one-way, cannot be reversed)
+ * Hash a Tax ID (EIN) for duplicate detection
+ * Normalizes to digits-only before hashing so "12-3456789" and "123456789" yield the same hash
  *
- * @param tc - TC Kimlik No to hash
+ * @param taxId - Tax ID (EIN) as entered
  * @returns SHA-256 hash as hex string
  *
  * @example
- * const hash = await hashTC('12345678901');
- * // Always returns same hash for same TC
- * // Cannot reverse hash to get original TC
+ * const hash = await hashTaxId('12-3456789');
+ * const same = await hashTaxId('123456789');
+ * // hash === same
  */
-export async function hashTC(tc: string): Promise<string> {
+export async function hashTaxId(taxId: string): Promise<string> {
+  const normalized = taxId.replace(/\D/g, '');
   const encoder = new TextEncoder();
-  const data = encoder.encode(tc);
+  const data = encoder.encode(normalized);
   const hashBuffer = await crypto.subtle.digest('SHA-256', data);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray
@@ -154,35 +158,67 @@ export async function hashTC(tc: string): Promise<string> {
 }
 
 /**
- * Validate TC Kimlik No format
- * Must be exactly 11 digits
+ * Validate US ABA routing transit number
+ * Exactly 9 digits; checksum: weighted sum (3,7,1,3,7,1,3,7,1) divisible by 10
  *
- * @param tc - TC Kimlik No to validate
- * @returns true if valid format
+ * @param routing - Routing number (digits only)
+ * @returns true if format and checksum are valid
  *
  * @example
- * isValidTC('12345678901') // true
- * isValidTC('123456789')   // false (too short)
- * isValidTC('1234567890a') // false (not all digits)
+ * isValidRoutingNumber('021000021') // true (Federal Reserve example pattern / valid checksum)
+ * isValidRoutingNumber('123456789') // false if checksum fails
  */
-export function isValidTC(tc: string): boolean {
-  return /^\d{11}$/.test(tc);
+export function isValidRoutingNumber(routing: string): boolean {
+  const digits = routing.replace(/\D/g, '');
+  if (digits.length !== 9 || !/^\d{9}$/.test(digits)) {
+    return false;
+  }
+  let sum = 0;
+  for (let i = 0; i < 9; i++) {
+    sum += parseInt(digits[i]!, 10) * ROUTING_CHECKSUM_WEIGHTS[i]!;
+  }
+  return sum % 10 === 0;
 }
 
 /**
- * Validate IBAN format (Turkey)
- * Must be TR followed by 24 digits
+ * Validate US bank account number length
+ * Strips dashes and spaces; requires 4–17 digits
  *
- * @param iban - IBAN to validate
- * @returns true if valid format
+ * @param account - Account number as entered
+ */
+export function isValidAccountNumber(account: string): boolean {
+  const digits = account.replace(/[\s-]/g, '');
+  if (!/^\d+$/.test(digits)) {
+    return false;
+  }
+  return digits.length >= 4 && digits.length <= 17;
+}
+
+/**
+ * Validate Employer Identification Number (EIN) format
+ * Empty string is valid (optional field). If provided: `XX-XXXXXXX` or 9 consecutive digits.
+ * Does not validate SSN.
+ *
+ * @param taxId - EIN / Tax ID string
  *
  * @example
- * isValidIBAN('TR123456789012345678901234') // true
- * isValidIBAN('TR12345678901234567890123')  // false (too short)
- * isValidIBAN('US123456789012345678901234') // false (not TR)
+ * isValidTaxId('') // true
+ * isValidTaxId('12-3456789') // true
+ * isValidTaxId('123456789') // true
+ * isValidTaxId('12345') // false
  */
-export function isValidIBAN(iban: string): boolean {
-  return /^TR\d{24}$/.test(iban);
+export function isValidTaxId(taxId: string): boolean {
+  if (taxId === '') {
+    return true;
+  }
+  const trimmed = taxId.trim();
+  if (/^\d{2}-\d{7}$/.test(trimmed)) {
+    return true;
+  }
+  if (/^\d{9}$/.test(trimmed)) {
+    return true;
+  }
+  return false;
 }
 
 /**

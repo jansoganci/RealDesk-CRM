@@ -1,5 +1,5 @@
 /**
- * Test Contract Data
+ * Test Contract Data - US Market Version
  *
  * Sample contract data for development and testing purposes.
  * Used by fillTestData() in ContractCreateForm.tsx
@@ -16,26 +16,26 @@ import type { ContractFormData } from '@/types/contract.types';
 export interface TestContractData {
   owner: {
     name: string;
-    tc: string;
+    taxId: string; // EIN or Tax ID (Optional for V1)
     phone: string;
     email: string;
-    iban: string;
+    routingNumber: string;
+    accountNumber: string;
   };
   tenant: {
     name: string;
-    tc: string;
+    taxId: string;
     phone: string;
     email: string;
-    address: string;
+    permanentAddress: string;
   };
   property: {
-    mahalle: string;
-    cadde: string;
-    bina: string;
-    daire: string;
-    ilce: string;
-    il: string;
-    type: string;
+    street: string;
+    unit?: string;
+    city: string;
+    state: string;
+    zip: string;
+    type: 'apartment' | 'house' | 'condo' | 'townhouse';
   };
   contract: {
     rent: string;
@@ -45,70 +45,175 @@ export interface TestContractData {
   };
 }
 
+/** Maps US sample property labels to the contract form enum. */
+function mapTestPropertyTypeToForm(
+  type: TestContractData['property']['type']
+): ContractFormData['property_type'] {
+  if (type === 'house' || type === 'townhouse') return 'house';
+  if (type === 'condo' || type === 'apartment') return 'apartment';
+  return 'apartment';
+}
+
+/** Valid ABA routing (checksum) for test fills */
+const TEST_ROUTING = '021000021';
+
 // ============================================================================
-// Test Data
+// Test Data (US Samples)
 // ============================================================================
 
 export const TEST_CONTRACTS: TestContractData[] = [
   {
-    owner: { name: 'Ahmet Yılmaz', tc: '12345678901', phone: '0555 123 45 67', email: 'ahmet@example.com', iban: 'TR330006100519786457841326' },
-    tenant: { name: 'Mehmet Demir', tc: '98765432109', phone: '0532 987 65 43', email: 'mehmet@example.com', address: 'Koşuyolu Mah, Kadıköy, İstanbul' },
-    property: { mahalle: 'Moda', cadde: 'Bahariye Caddesi', bina: '123', daire: '5', ilce: 'Kadıköy', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '15000', deposit: '30000', paymentDay: '1', conditions: 'Aidat ve faturalar kiracıya aittir.' }
+    owner: {
+      name: 'John Smith',
+      taxId: '12-3456789',
+      phone: '(512) 555-0101',
+      email: 'jsmith.properties@example.com',
+      routingNumber: TEST_ROUTING,
+      accountNumber: '88223344',
+    },
+    tenant: {
+      name: 'Michael Chen',
+      taxId: '98-7654321',
+      phone: '(512) 555-0202',
+      email: 'm.chen88@example.com',
+      permanentAddress: '4502 West Ave, San Antonio, TX 78213',
+    },
+    property: {
+      street: '1201 Spyglass Dr',
+      unit: '304',
+      city: 'Austin',
+      state: 'TX',
+      zip: '78746',
+      type: 'apartment',
+    },
+    contract: {
+      rent: '2450',
+      deposit: '2450',
+      paymentDay: '1',
+      conditions: 'No smoking. Pet deposit of $500 required.',
+    },
   },
   {
-    owner: { name: 'Ayşe Kaya', tc: '23456789012', phone: '0532 234 56 78', email: 'ayse@example.com', iban: 'TR440006200519786457841327' },
-    tenant: { name: 'Zeynep Arslan', tc: '87654321098', phone: '0533 876 54 32', email: 'zeynep@example.com', address: 'Cihangir Mah, Beyoğlu, İstanbul' },
-    property: { mahalle: 'Cihangir', cadde: 'Sıraselviler Caddesi', bina: '45', daire: '12', ilce: 'Beyoğlu', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '22000', deposit: '44000', paymentDay: '5', conditions: 'Evcil hayvan beslenemez.' }
+    owner: {
+      name: 'Sarah Johnson',
+      taxId: '45-9988776',
+      phone: '(305) 555-1122',
+      email: 's.johnson@realestate.com',
+      routingNumber: TEST_ROUTING,
+      accountNumber: '11223344',
+    },
+    tenant: {
+      name: 'David Rodriguez',
+      taxId: '11-2223334',
+      phone: '(305) 555-3344',
+      email: 'drod_miami@example.com',
+      permanentAddress: '888 Brickell Ave, Miami, FL 33131',
+    },
+    property: {
+      street: '420 Ocean Drive',
+      unit: 'PH2',
+      city: 'Miami Beach',
+      state: 'FL',
+      zip: '33139',
+      type: 'condo',
+    },
+    contract: {
+      rent: '5800',
+      deposit: '11600',
+      paymentDay: '1',
+      conditions: 'Full service building. Includes 2 parking spots.',
+    },
   },
   {
-    owner: { name: 'Mustafa Öztürk', tc: '34567890123', phone: '0544 345 67 89', email: 'mustafa@example.com', iban: 'TR550006300519786457841328' },
-    tenant: { name: 'Can Yıldız', tc: '76543210987', phone: '0535 765 43 21', email: 'can@example.com', address: 'Etiler Mah, Beşiktaş, İstanbul' },
-    property: { mahalle: 'Etiler', cadde: 'Nispetiye Caddesi', bina: '78', daire: '3', ilce: 'Beşiktaş', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '35000', deposit: '70000', paymentDay: '10', conditions: 'Mobilyalı kiralama.' }
+    owner: {
+      name: 'Robert Wilson',
+      taxId: '55-4433221',
+      phone: '(615) 555-9876',
+      email: 'bwilson@example.com',
+      routingNumber: TEST_ROUTING,
+      accountNumber: '99887766',
+    },
+    tenant: {
+      name: 'Emily Davis',
+      taxId: '66-7778889',
+      phone: '(615) 555-4433',
+      email: 'emily.davis@example.com',
+      permanentAddress: '120 2nd Ave N, Nashville, TN 37201',
+    },
+    property: {
+      street: '714 Sweetgum Lane',
+      city: 'Nashville',
+      state: 'TN',
+      zip: '37206',
+      type: 'house',
+    },
+    contract: {
+      rent: '3200',
+      deposit: '3200',
+      paymentDay: '5',
+      conditions: 'Tenant responsible for landscaping and utilities.',
+    },
   },
   {
-    owner: { name: 'Fatma Çelik', tc: '45678901234', phone: '0536 456 78 90', email: 'fatma@example.com', iban: 'TR660006400519786457841329' },
-    tenant: { name: 'Deniz Aydın', tc: '65432109876', phone: '0537 654 32 10', email: 'deniz@example.com', address: 'Acıbadem Mah, Üsküdar, İstanbul' },
-    property: { mahalle: 'Acıbadem', cadde: 'Acıbadem Caddesi', bina: '90', daire: '8', ilce: 'Üsküdar', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '18000', deposit: '36000', paymentDay: '15', conditions: 'Sigara içilmez.' }
+    owner: {
+      name: 'James Miller',
+      taxId: '22-3334445',
+      phone: '(206) 555-6677',
+      email: 'jmiller@example.com',
+      routingNumber: TEST_ROUTING,
+      accountNumber: '55446677',
+    },
+    tenant: {
+      name: 'Jessica Taylor',
+      taxId: '33-4445556',
+      phone: '(206) 555-8899',
+      email: 'jtaylor@example.com',
+      permanentAddress: '1901 4th Ave, Seattle, WA 98101',
+    },
+    property: {
+      street: '550 Terry Ave N',
+      unit: '1210',
+      city: 'Seattle',
+      state: 'WA',
+      zip: '98109',
+      type: 'apartment',
+    },
+    contract: {
+      rent: '2950',
+      deposit: '1500',
+      paymentDay: '1',
+      conditions: 'Renters insurance required. 12-month lease.',
+    },
   },
   {
-    owner: { name: 'Hasan Şahin', tc: '56789012345', phone: '0538 567 89 01', email: 'hasan@example.com', iban: 'TR770006500519786457841330' },
-    tenant: { name: 'Ece Polat', tc: '54321098765', phone: '0539 543 21 09', email: 'ece@example.com', address: 'Fenerbahçe Mah, Kadıköy, İstanbul' },
-    property: { mahalle: 'Fenerbahçe', cadde: 'Bağdat Caddesi', bina: '234', daire: '15', ilce: 'Kadıköy', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '28000', deposit: '56000', paymentDay: '3', conditions: 'Deniz manzaralı.' }
-  },
-  {
-    owner: { name: 'Emine Akar', tc: '67890123456', phone: '0541 678 90 12', email: 'emine@example.com', iban: 'TR880006600519786457841331' },
-    tenant: { name: 'Burak Koç', tc: '43210987654', phone: '0542 432 10 98', email: 'burak@example.com', address: 'Nişantaşı Mah, Şişli, İstanbul' },
-    property: { mahalle: 'Nişantaşı', cadde: 'Teşvikiye Caddesi', bina: '56', daire: '7', ilce: 'Şişli', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '45000', deposit: '90000', paymentDay: '1', conditions: 'Lüks rezidans.' }
-  },
-  {
-    owner: { name: 'Ali Bulut', tc: '78901234567', phone: '0543 789 01 23', email: 'ali@example.com', iban: 'TR990006700519786457841332' },
-    tenant: { name: 'Selin Yurt', tc: '32109876543', phone: '0545 321 09 87', email: 'selin@example.com', address: 'Suadiye Mah, Kadıköy, İstanbul' },
-    property: { mahalle: 'Suadiye', cadde: 'Plaj Yolu', bina: '12', daire: '2', ilce: 'Kadıköy', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '32000', deposit: '64000', paymentDay: '7', conditions: 'Kapalı otopark mevcut.' }
-  },
-  {
-    owner: { name: 'Mehmet Aydın', tc: '89012345678', phone: '0546 890 12 34', email: 'mehmet2@example.com', iban: 'TR110006800519786457841333' },
-    tenant: { name: 'Aylin Kara', tc: '21098765432', phone: '0547 210 98 76', email: 'aylin@example.com', address: 'Bebek Mah, Beşiktaş, İstanbul' },
-    property: { mahalle: 'Bebek', cadde: 'Cevdetpaşa Caddesi', bina: '89', daire: '4', ilce: 'Beşiktaş', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '55000', deposit: '110000', paymentDay: '1', conditions: 'Boğaz manzaralı, yüzme havuzu.' }
-  },
-  {
-    owner: { name: 'Zehra Tunç', tc: '90123456789', phone: '0548 901 23 45', email: 'zehra@example.com', iban: 'TR220006900519786457841334' },
-    tenant: { name: 'Kerem Şen', tc: '10987654321', phone: '0549 109 87 65', email: 'kerem@example.com', address: 'Yeşilköy Mah, Bakırköy, İstanbul' },
-    property: { mahalle: 'Yeşilköy', cadde: 'Sahil Yolu', bina: '67', daire: '9', ilce: 'Bakırköy', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '20000', deposit: '40000', paymentDay: '12', conditions: 'Havaalanına yakın.' }
-  },
-  {
-    owner: { name: 'İsmail Eren', tc: '01234567890', phone: '0551 012 34 56', email: 'ismail@example.com', iban: 'TR330007000519786457841335' },
-    tenant: { name: 'Merve Taş', tc: '09876543210', phone: '0552 098 76 54', email: 'merve@example.com', address: 'Levent Mah, Beşiktaş, İstanbul' },
-    property: { mahalle: 'Levent', cadde: 'Büyükdere Caddesi', bina: '101', daire: '20', ilce: 'Beşiktaş', il: 'İstanbul', type: 'Daire' },
-    contract: { rent: '38000', deposit: '76000', paymentDay: '5', conditions: 'İş merkezine yakın, güvenlik.' }
+    owner: {
+      name: 'Linda Martinez',
+      taxId: '88-7776665',
+      phone: '(602) 555-4321',
+      email: 'lmartinez@example.com',
+      routingNumber: TEST_ROUTING,
+      accountNumber: '22331100',
+    },
+    tenant: {
+      name: 'William Brown',
+      taxId: '77-6665554',
+      phone: '(602) 555-1234',
+      email: 'wbrown@example.com',
+      permanentAddress: '1 N Central Ave, Phoenix, AZ 85004',
+    },
+    property: {
+      street: '1422 E Camelback Rd',
+      city: 'Phoenix',
+      state: 'AZ',
+      zip: '85014',
+      type: 'townhouse',
+    },
+    contract: {
+      rent: '2100',
+      deposit: '2100',
+      paymentDay: '1',
+      conditions: 'Access to community pool included.',
+    },
   }
 ];
 
@@ -117,7 +222,7 @@ export const TEST_CONTRACTS: TestContractData[] = [
 // ============================================================================
 
 /**
- * Fill form with random test contract data
+ * Fill form with random US test contract data
  * Only available in development mode
  */
 export function fillFormWithTestData(form: UseFormReturn<ContractFormData>): void {
@@ -125,42 +230,44 @@ export function fillFormWithTestData(form: UseFormReturn<ContractFormData>): voi
   const oneYearLater = new Date(today);
   oneYearLater.setFullYear(oneYearLater.getFullYear() + 1);
 
-  // Random pick one
+  // Random pick one from US samples
   const randomIndex = Math.floor(Math.random() * TEST_CONTRACTS.length);
   const data = TEST_CONTRACTS[randomIndex];
 
-  // Owner fields
+  // Owner fields (US localized)
   form.setValue('owner_name', data.owner.name);
-  form.setValue('owner_tc', data.owner.tc);
+  form.setValue('owner_tax_id', data.owner.taxId);
   form.setValue('owner_phone', data.owner.phone);
   form.setValue('owner_email', data.owner.email);
-  form.setValue('owner_iban', data.owner.iban);
+  form.setValue('owner_routing_number', data.owner.routingNumber);
+  form.setValue('owner_account_number', data.owner.accountNumber);
 
-  // Tenant fields
+  // Tenant fields (US localized)
   form.setValue('tenant_name', data.tenant.name);
-  form.setValue('tenant_tc', data.tenant.tc);
+  form.setValue('tenant_tax_id', data.tenant.taxId);
   form.setValue('tenant_phone', data.tenant.phone);
   form.setValue('tenant_email', data.tenant.email);
-  form.setValue('tenant_address', data.tenant.address);
+  form.setValue('tenant_address', data.tenant.permanentAddress);
 
-  // Property fields
-  form.setValue('mahalle', data.property.mahalle);
-  form.setValue('cadde_sokak', data.property.cadde);
-  form.setValue('bina_no', data.property.bina);
-  form.setValue('daire_no', data.property.daire);
-  form.setValue('ilce', data.property.ilce);
-  form.setValue('il', data.property.il);
-  form.setValue('property_type', data.property.type as 'apartment' | 'house' | 'commercial');
-  form.setValue('use_purpose', 'Mesken');
+  // Property fields (US standard: street, unit, city, state, zip)
+  form.setValue('street_address', data.property.street);
+  form.setValue('unit', data.property.unit || '');
+  form.setValue('city', data.property.city);
+  form.setValue('state', data.property.state);
+  form.setValue('zip_code', data.property.zip);
+  form.setValue('property_type', mapTestPropertyTypeToForm(data.property.type));
 
   // Contract fields
   form.setValue('start_date', today);
   form.setValue('end_date', oneYearLater);
   form.setValue('rent_amount', parseFloat(data.contract.rent));
   form.setValue('deposit', parseFloat(data.contract.deposit));
-  form.setValue('payment_day_of_month', parseInt(data.contract.paymentDay));
-  form.setValue('payment_method', 'Banka Transferi');
+  form.setValue('currency', 'USD'); // V1 is USD only
+  form.setValue('payment_day_of_month', parseInt(data.contract.paymentDay, 10));
   form.setValue('special_conditions', data.contract.conditions);
-
-  toast.success(`Test verileri dolduruldu! (${data.owner.name} - ${data.property.mahalle})`);
+  
+  // US specific disclosures / defaults
+  form.setValue('is_painted', true);
+  
+  toast.success(`Loaded test data: ${data.property.city} - ${data.owner.name}`);
 }

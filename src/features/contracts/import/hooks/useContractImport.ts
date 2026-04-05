@@ -13,6 +13,7 @@ import {
   contractsService
 } from '@/lib/serviceProxy';
 import { useAuth } from '@/contexts/AuthContext';
+import { mapReviewToContractForm } from '../utils/mapReviewToContractForm';
 
 interface ImportState {
   file: File | null;
@@ -99,7 +100,7 @@ export const useContractImport = () => {
 
     try {
       // Create contract with entities via RPC
-      const result = await createContractWithEntities(formData, user.id);
+      const result = await createContractWithEntities(mapReviewToContractForm(formData), user.id);
 
       // Upload document to storage
       if (state.file) {

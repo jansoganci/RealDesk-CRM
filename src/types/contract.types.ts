@@ -4,16 +4,15 @@
  */
 
 // ============================================================================
-// Address Types
+// Address Types (US Format)
 // ============================================================================
 
 export interface AddressComponents {
-  mahalle: string;
-  cadde_sokak: string;
-  bina_no: string;
-  daire_no?: string;
-  ilce: string;
-  il: string;
+  street_address: string;
+  unit?: string;
+  city: string;
+  state: string;
+  zip_code: string;
 }
 
 // ============================================================================
@@ -41,9 +40,10 @@ export interface EncryptedOwner {
   id: string;
   user_id: string;
   name: string;
-  tc_encrypted: string;
-  tc_hash: string;
-  iban_encrypted: string;
+  tax_id_encrypted: string;
+  tax_id_hash: string;
+  routing_number_encrypted: string;
+  account_number_encrypted: string;
   phone: string;
   email?: string;
   created_at: string;
@@ -54,8 +54,8 @@ export interface EncryptedTenant {
   id: string;
   user_id: string;
   name: string;
-  tc_encrypted: string;
-  tc_hash: string;
+  tax_id_encrypted: string;
+  tax_id_hash: string;
   phone: string;
   email?: string;
   address: string;
@@ -71,12 +71,20 @@ export interface PropertyWithComponents {
   id: string;
   user_id: string;
   owner_id: string;
-  mahalle: string;
-  cadde_sokak: string;
-  bina_no: string;
+  // Database columns (Turkish format - legacy)
+  mahalle?: string;
+  cadde_sokak?: string;
+  bina_no?: string;
   daire_no?: string;
-  ilce: string;
-  il: string;
+  ilce?: string;
+  il?: string;
+  // US format columns (will be added in migration)
+  street_address?: string;
+  unit?: string;
+  city?: string;
+  state?: string;
+  zip_code?: string;
+  // Common fields
   full_address: string;
   normalized_address: string;
   type: 'apartment' | 'house' | 'commercial';
@@ -175,58 +183,10 @@ export interface TemplateVariables {
 }
 
 // ============================================================================
-// Form Data Types (used by React Hook Form)
+// Form Data Types (used by React Hook Form) — source of truth: contractForm.schema.ts
 // ============================================================================
 
-export interface ContractFormData {
-  // Owner
-  owner_name: string;
-  owner_tc: string;
-  owner_iban: string;
-  owner_phone: string;
-  owner_email?: string;
-
-  // Tenant
-  tenant_name: string;
-  tenant_tc: string;
-  tenant_phone: string;
-  tenant_email?: string;
-  tenant_address: string;
-
-  // Property
-  mahalle: string;
-  cadde_sokak: string;
-  bina_no: string;
-  daire_no?: string;
-  ilce: string;
-  il: string;
-  property_type: 'apartment' | 'house' | 'commercial';
-  use_purpose?: string;
-
-  // Contract
-  start_date: Date;
-  end_date: Date;
-  rent_amount: number;
-  deposit: number;
-  currency: 'TRY' | 'USD' | 'EUR';
-  commission_amount?: number; // Manual commission amount (optional, defaults to rent_amount if not provided)
-
-  // Details (optional)
-  payment_day_of_month?: number;
-  payment_method?: string;
-  special_conditions?: string;
-  is_painted: boolean;
-
-  // Clause Overrides (editable clauses feature)
-  clauseOverrides?: Array<{
-    clause_type: ClauseType;
-    clause_index: number;
-    custom_content: string;
-  }>;
-
-  // Google Drive Handover Photos URL (optional)
-  handover_photos_url?: string;
-}
+export type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
 
 // ============================================================================
 // RPC Function Types
@@ -235,27 +195,27 @@ export interface ContractFormData {
 export interface CreateContractAtomicParams {
   owner_data: {
     name: string;
-    tc_encrypted: string;
-    tc_hash: string;
-    iban_encrypted: string;
+    tax_id_encrypted: string;
+    tax_id_hash: string;
+    routing_number_encrypted: string;
+    account_number_encrypted: string;
     phone: string;
     email?: string;
   };
   tenant_data: {
     name: string;
-    tc_encrypted: string;
-    tc_hash: string;
+    tax_id_encrypted: string;
+    tax_id_hash: string;
     phone: string;
     email?: string;
     address: string;
   };
   property_data: {
-    mahalle: string;
-    cadde_sokak: string;
-    bina_no: string;
-    daire_no?: string;
-    ilce: string;
-    il: string;
+    street_address: string;
+    unit?: string;
+    city: string;
+    state: string;
+    zip_code: string;
     full_address: string;
     normalized_address: string;
     type: string;
@@ -266,7 +226,7 @@ export interface CreateContractAtomicParams {
     end_date: string;
     rent_amount: number;
     deposit: number;
-    commission_amount?: number | null; // Manual commission amount (null = use rent_amount)
+    commission_amount?: number | null;
   };
   contract_details_data?: {
     payment_day_of_month?: number;
@@ -285,60 +245,60 @@ export interface CreateContractAtomicParams {
 // ============================================================================
 
 export interface ContractPdfData {
-  // Sözleşme
+  // Contract
   contractNumber: string;
-  contractDate: string;           // "01/01/2025" formatında
+  contractDate: string;           // "01/01/2025" format
   
-  // Mülk Bilgileri
-  mahalle: string;
-  ilce: string;
-  il: string;
-  sokak: string;
-  binaNo: string;
-  daireNo: string;
-  propertyType: string;           // "Daire", "Dükkan", etc.
-  propertyUsage: string;          // "Mesken", "İşyeri", etc.
+  // Property Information (US Format)
+  streetAddress: string;
+  unit?: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  propertyType: string;           // "Apartment", "House", "Commercial"
+  propertyUsage: string;          // "Residential", "Office", "Retail", etc.
   
-  // Kiraya Veren (Mal Sahibi)
+  // Landlord (Owner)
   ownerName: string;
-  ownerTC?: string;               // TC Kimlik No (PDF için gerekli)
+  ownerTaxId?: string;            // Tax ID (EIN/SSN) for PDF
   ownerPhone?: string;
-  ownerIBAN: string;
+  ownerRoutingNumber: string;
+  ownerAccountNumber: string;
 
-  // Kiracı
+  // Tenant
   tenantName: string;
-  tenantTC?: string;              // TC Kimlik No (PDF için gerekli)
+  tenantTaxId?: string;           // Tax ID (SSN/EIN) for PDF
   tenantAddress: string;
   tenantPhone: string;
   
-  // Kira Detayları
-  monthlyRentNumber: number;      // 15000
-  monthlyRentText: string;        // "ONBEŞBİN"
-  yearlyRentNumber: number;       // 180000
-  yearlyRentText: string;         // "YÜZSEKSENBİN"
+  // Rent Details
+  monthlyRentNumber: number;      // 1500
+  monthlyRentText: string;        // "One Thousand Five Hundred"
+  yearlyRentNumber: number;       // 18000
+  yearlyRentText: string;         // "Eighteen Thousand"
   
-  // Tarihler
-  startDate: string;              // "01 Ocak 2025"
-  endDate: string;                // "01 Ocak 2026"
-  paymentDay: string;             // "1" veya "5" etc.
+  // Dates
+  startDate: string;              // "January 01, 2025"
+  endDate: string;                // "January 01, 2026"
+  paymentDay: string;             // "1" or "5" etc.
   
-  // Depozito
-  depositAmount: number;          // 30000
-  depositText: string;            // "OTUZBİN"
+  // Deposit
+  depositAmount: number;          // 3000
+  depositText: string;            // "Three Thousand"
   
-  // Para Birimi
-  currency: 'TRY' | 'USD' | 'EUR'; // Currency code
+  // Currency
+  currency: 'TRY' | 'USD' | 'EUR';
   
-  // Demirbaş
-  fixtures: string;               // "Kombi, Klima, Ankastre Set..."
+  // Fixtures & Appliances
+  fixtures: string;               // "HVAC, Refrigerator, Dishwasher..."
 
-  // Boya Durumu
-  isPainted: boolean;             // true: boyalı, false: boyasız
+  // Paint Condition
+  isPainted: boolean;             // true: painted, false: not painted
 
-  // Tahliye Taahhütnamesi
-  evictionDate: string;           // Empty string "" (left blank for manual entry per legal requirements)
-  commitmentDate: string;         // "01 Ocak 2025"
+  // Eviction Commitment
+  evictionDate: string;           // Empty string "" (left blank for manual entry)
+  commitmentDate: string;         // "January 01, 2025"
 
-  // Google Drive klasör linki (QR kod için)
+  // Google Drive folder link (for QR code)
   handoverPhotosUrl?: string;
 }

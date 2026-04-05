@@ -30,8 +30,8 @@ class UserPreferencesService {
     if (!data) {
       return {
         user_id: userId,
-        language: 'tr',
-        currency: 'TRY',
+        language: 'en',
+        currency: 'USD',
         meeting_reminder_minutes: 30,
         full_name: null,
         phone_number: null,

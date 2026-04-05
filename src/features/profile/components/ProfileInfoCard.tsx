@@ -13,7 +13,6 @@ interface ProfileInfoData {
   fullName: string;
   email: string;
   phoneNumber?: string | null;
-  language: 'tr' | 'en';
   currency: string;
   meetingReminderMinutes: number;
   commissionRate: number;
@@ -33,10 +32,6 @@ export function ProfileInfoCard({
   const { t } = useTranslation('profile');
 
   // Format display values
-  const formatLanguage = (lang: 'tr' | 'en') => {
-    return t(`profileInfo.languages.${lang}`);
-  };
-
   const formatCurrency = (currency: string) => {
     return t(`profileInfo.currencies.${currency}`);
   };
@@ -62,7 +57,7 @@ export function ProfileInfoCard({
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[...Array(7)].map((_, i) => (
+            {[...Array(6)].map((_, i) => (
               <div
                 key={i}
                 className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 pb-3 border-b border-border/50 last:border-0 last:pb-0"
@@ -93,11 +88,6 @@ export function ProfileInfoCard({
       label: t('profileInfo.fields.phone'),
       value: data.phoneNumber || t('fields.notSet'),
       isEmpty: !data.phoneNumber,
-    },
-    {
-      label: t('profileInfo.fields.language'),
-      value: formatLanguage(data.language),
-      isEmpty: false,
     },
     {
       label: t('profileInfo.fields.currency'),

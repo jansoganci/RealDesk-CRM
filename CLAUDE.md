@@ -19,9 +19,24 @@ npm run deploy:prod  # Build + deploy to Cloudflare Pages (production)
 
 **Supabase CLI:**
 ```bash
-supabase db push             # Apply local migrations to remote
+supabase db push             # Apply local migrations to remote (see Migration naming below)
 supabase functions deploy     # Deploy edge functions
 ```
+
+---
+
+## Database migrations (naming) — **project rule**
+
+This repo **does not** use Supabase’s default `YYYYMMDDHHmmss_description.sql` naming.
+
+- Every file in `supabase/migrations/` **must** use a **4-digit, zero-padded sequence** prefix, then an underscore, then a short slug:
+  - `0001_init_schema.sql`
+  - `0002_add_foo.sql`
+  - `0003_alter_bar.sql`
+- Numbers increase by one for each new migration. **Never** reorder applied migrations; add a new higher number instead.
+- **Do not** rename or edit a migration file after it has been applied to any shared environment — add `000N_...` as a follow-up.
+
+**Supabase CLI caveat:** Upstream `supabase db push` only auto-applies filenames that match its own timestamp pattern; it may **skip** `0001_`-style names. If that happens, apply SQL in order via **Supabase SQL Editor**, **`psql`**, or your team’s chosen runner — the **source of truth** for order is still the `0001`, `0002`, `0003` sequence in this folder.
 
 ---
 
@@ -78,7 +93,7 @@ src/
 └── templates/         # PDF contract text templates (US lease + purchase agreement)
 
 supabase/
-├── migrations/        # 70+ chronological SQL migration files
+├── migrations/        # SQL migrations: 0001_foo.sql, 0002_bar.sql, … (see “Database migrations”)
 └── functions/         # Deno edge functions (Stripe, OCR, email, etc.)
 
 public/
@@ -114,9 +129,9 @@ public/
 
 ### Adding a Database Table
 
-1. Create `supabase/migrations/[timestamp]_description.sql`
+1. Create `supabase/migrations/[NNNN]_description.sql` with the **next** 4-digit index (e.g. `0007_add_widget_table.sql`). See **Database migrations (naming)** above.
 2. Add RLS policies for all 4 operations (SELECT, INSERT, UPDATE, DELETE)
-3. Run `supabase db push`
+3. Apply the migration to your database (see CLI caveat under **Database migrations** if `db push` skips numbered files)
 4. Run `npm run gen:types` to regenerate `src/types/database.ts`
 5. Update service layer
 
@@ -232,7 +247,7 @@ Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
 ## Security Rules
 
 - **NEVER** commit `.env` files
-- **NEVER** modify `supabase/migrations/` files after they are applied — always create new migrations
+- **NEVER** modify applied migration files — always add the next numbered file (`000N_...`). See **Database migrations (naming)**.
 - Sensitive data (bank routing number, account number) must use `encrypt()` from `encryption.service.ts` before storing (AES-256-GCM)
 - All user input must be validated with Zod before hitting the service layer
 - Signed URLs (15 min expiry) for all PDF and photo access via Supabase Storage

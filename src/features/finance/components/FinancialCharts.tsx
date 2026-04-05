@@ -21,7 +21,7 @@ export const FinancialCharts = ({
   const [breakdownTab, setBreakdownTab] = useState<'income' | 'expense'>('expense');
 
   const formatCurrencyLocal = (value: number) => {
-    return formatCurrency(value, userCurrency || 'TRY');
+    return formatCurrency(value, userCurrency || 'USD');
   };
 
   // Prepare data for category breakdown - top 5 categories

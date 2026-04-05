@@ -45,20 +45,19 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
           )}
         </div>
 
-        {/* Tenant TC */}
+        {/* Tenant Tax ID */}
         <div>
-          <Label htmlFor="tenant_tc">
-            {t('create.fields.tenant_tc')} *
+          <Label htmlFor="tenant_tax_id">
+            Tax ID (SSN/EIN)
           </Label>
           <Input
-            id="tenant_tc"
-            placeholder={t('create.placeholders.owner_tc')}
-            maxLength={11}
-            {...form.register('tenant_tc')}
+            id="tenant_tax_id"
+            placeholder="XXX-XX-XXXX or XX-XXXXXXX"
+            {...form.register('tenant_tax_id')}
           />
-          {form.formState.errors.tenant_tc && (
+          {form.formState.errors.tenant_tax_id && (
             <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.tenant_tc.message}
+              {form.formState.errors.tenant_tax_id.message}
             </p>
           )}
         </div>

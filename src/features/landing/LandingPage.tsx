@@ -18,7 +18,7 @@ export const LandingPage = () => {
     <>
       <SEO
         title="Emlak CRM | Gayrimenkul Yönetim Sistemi"
-        description="Modern, mobile-first real estate CRM for Turkish agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system."
+        description="Modern, mobile-first real estate CRM for US agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system."
         keywords="emlak crm, gayrimenkul yönetim sistemi, emlak yazılımı, kiracı takip programı, sözleşme yönetimi, real estate crm, property management, tenant tracking, contract management"
       />
       <div className="min-h-screen bg-white">

@@ -66,27 +66,27 @@ function preparePdfData(
 
   return {
     contractNumber: contractId.slice(0, 8).toUpperCase(),
-    contractDate: format(new Date(), 'dd/MM/yyyy'),
+    contractDate: format(new Date(), 'MM/dd/yyyy'),
 
-    // Property
-    mahalle: formData.mahalle,
-    ilce: formData.ilce,
-    il: formData.il,
-    sokak: formData.cadde_sokak,
-    binaNo: formData.bina_no,
-    daireNo: formData.daire_no || '',
-    propertyType: formData.property_type || 'Daire',
-    propertyUsage: formData.use_purpose || 'Mesken',
+    // Property (US Format)
+    streetAddress: formData.street_address,
+    unit: formData.unit,
+    city: formData.city,
+    state: formData.state,
+    zipCode: formData.zip_code,
+    propertyType: formData.property_type || 'apartment',
+    propertyUsage: formData.use_purpose || 'Residential',
 
     // Owner
     ownerName: formData.owner_name,
-    ownerTC: formData.owner_tc,
+    ownerTaxId: formData.owner_tax_id,
     ownerPhone: formData.owner_phone,
-    ownerIBAN: formData.owner_iban || '',
+    ownerRoutingNumber: formData.owner_routing_number,
+    ownerAccountNumber: formData.owner_account_number,
 
     // Tenant
     tenantName: formData.tenant_name,
-    tenantTC: formData.tenant_tc,
+    tenantTaxId: formData.tenant_tax_id,
     tenantAddress: formData.tenant_address,
     tenantPhone: formData.tenant_phone,
 

@@ -18,7 +18,6 @@ interface UseOnboardingReturn {
   primaryUseCase: PrimaryUseCase | null;
   organizationName: string;
   teamSize: TeamSize | null;
-  language: 'tr' | 'en';
   currency: 'TRY' | 'USD' | 'EUR';
   isLoading: boolean;
   error: string | null;
@@ -27,7 +26,6 @@ interface UseOnboardingReturn {
   setPrimaryUseCase: (useCase: PrimaryUseCase) => void;
   setOrganizationName: (name: string) => void;
   setTeamSize: (size: TeamSize) => void;
-  setLanguage: (lang: 'tr' | 'en') => void;
   setCurrency: (curr: 'TRY' | 'USD' | 'EUR') => void;
   goToStep: (step: number) => void;
   nextStep: () => void;
@@ -46,8 +44,7 @@ export function useOnboarding(): UseOnboardingReturn {
   const [primaryUseCase, setPrimaryUseCase] = useState<PrimaryUseCase | null>(null);
   const [organizationName, setOrganizationName] = useState('');
   const [teamSize, setTeamSize] = useState<TeamSize | null>(null);
-  const [language, setLanguage] = useState<'tr' | 'en'>('tr');
-  const [currency, setCurrency] = useState<'TRY' | 'USD' | 'EUR'>('TRY');
+  const [currency, setCurrency] = useState<'TRY' | 'USD' | 'EUR'>('USD');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
@@ -109,7 +106,6 @@ export function useOnboarding(): UseOnboardingReturn {
       
       try {
         const prefs = await userPreferencesService.getPreferences();
-        setLanguage(prefs.language as 'tr' | 'en');
         setCurrency(prefs.currency as 'TRY' | 'USD' | 'EUR');
         setPreferencesLoaded(true);
       } catch (err) {
@@ -222,7 +218,7 @@ export function useOnboarding(): UseOnboardingReturn {
 
       // 3. Save preferences (always, even if defaults)
       await userPreferencesService.updatePreferences({
-        language,
+        language: 'en',
         currency,
       });
 
@@ -236,7 +232,7 @@ export function useOnboarding(): UseOnboardingReturn {
         {
           organization_name: organizationName.trim(),
           team_size: teamSize,
-          language,
+          language: 'en',
           currency,
         }
       );
@@ -251,7 +247,7 @@ export function useOnboarding(): UseOnboardingReturn {
     } finally {
       setIsLoading(false);
     }
-  }, [currentOrg?.id, organizationName, teamSize, language, currency, nextStep]);
+  }, [currentOrg?.id, organizationName, teamSize, currency, nextStep]);
 
   const completeOnboarding = useCallback(async () => {
     if (!currentOrg?.id) {
@@ -342,14 +338,12 @@ export function useOnboarding(): UseOnboardingReturn {
     primaryUseCase,
     organizationName,
     teamSize,
-    language,
     currency,
     isLoading: isLoading || orgLoading,
     error,
     setPrimaryUseCase,
     setOrganizationName,
     setTeamSize,
-    setLanguage,
     setCurrency,
     goToStep,
     nextStep,

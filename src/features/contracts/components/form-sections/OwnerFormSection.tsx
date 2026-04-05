@@ -44,40 +44,61 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
           )}
         </div>
 
-        {/* Owner TC */}
+        {/* Owner Tax ID (EIN/SSN) */}
         <div>
-          <Label htmlFor="owner_tc">
-            {t('create.fields.owner_tc')} *
+          <Label htmlFor="owner_tax_id">
+            Tax ID (EIN/SSN)
           </Label>
           <Input
-            id="owner_tc"
-            placeholder={t('create.placeholders.owner_tc')}
-            maxLength={11}
-            {...form.register('owner_tc')}
+            id="owner_tax_id"
+            placeholder="XX-XXXXXXX or XXX-XX-XXXX"
+            {...form.register('owner_tax_id')}
           />
-          {form.formState.errors.owner_tc && (
+          {form.formState.errors.owner_tax_id && (
             <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.owner_tc.message}
+              {form.formState.errors.owner_tax_id.message}
             </p>
           )}
         </div>
 
-        {/* Owner IBAN */}
-        <div>
-          <Label htmlFor="owner_iban">
-            {t('create.fields.owner_iban')} *
-          </Label>
-          <Input
-            id="owner_iban"
-            placeholder={t('create.placeholders.owner_iban')}
-            maxLength={26}
-            {...form.register('owner_iban')}
-          />
-          {form.formState.errors.owner_iban && (
-            <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.owner_iban.message}
-            </p>
-          )}
+        {/* Owner Bank (ABA Routing + Account) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <Label htmlFor="owner_routing_number">
+              Routing Number *
+            </Label>
+            <Input
+              id="owner_routing_number"
+              placeholder="9 digits"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={9}
+              {...form.register('owner_routing_number')}
+            />
+            {form.formState.errors.owner_routing_number && (
+              <p className="text-sm text-red-600 mt-1">
+                {form.formState.errors.owner_routing_number.message}
+              </p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="owner_account_number">
+              Account Number *
+            </Label>
+            <Input
+              id="owner_account_number"
+              placeholder="4-17 digits"
+              inputMode="numeric"
+              autoComplete="off"
+              maxLength={17}
+              {...form.register('owner_account_number')}
+            />
+            {form.formState.errors.owner_account_number && (
+              <p className="text-sm text-red-600 mt-1">
+                {form.formState.errors.owner_account_number.message}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Owner Phone and Email */}

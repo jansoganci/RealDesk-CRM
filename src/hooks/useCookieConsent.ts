@@ -154,7 +154,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
         categories: categories,
         sessionId: getSessionId(),
         userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : undefined,
-        language: (i18n.language === 'tr' || i18n.language === 'en') ? i18n.language : 'tr',
+        language: 'en',
       };
 
       // Fire and forget - don't await to avoid blocking UI

@@ -5,6 +5,7 @@
 
 import { supabase } from '../../config/supabase';
 import { createLogger } from '@/lib/logger';
+import { formatCurrency } from '@/lib/currency';
 
 const logger = createLogger('ExchangeRates');
 
@@ -379,5 +380,53 @@ export async function backfillRatesForDateRange(
   }
   
   return { fetched, skipped };
+}
+
+/**
+ * Format currency with dual display (original + converted) for finance views.
+ * Uses historical rates from DB via {@link getRateForDate}.
+ */
+export async function formatCurrencyWithConversion(
+  amount: number,
+  originalCurrency: string,
+  displayCurrency: string,
+  transactionDate: string | Date
+): Promise<{
+  original: string;
+  converted: string;
+  rateInfo: RateInfo;
+}> {
+  const normalizedOriginal = originalCurrency?.toUpperCase().trim();
+  const normalizedDisplay = displayCurrency?.toUpperCase().trim();
+
+  const original = formatCurrency(amount, normalizedOriginal || 'USD');
+
+  if (normalizedOriginal === normalizedDisplay || !normalizedDisplay) {
+    return {
+      original,
+      converted: original,
+      rateInfo: {
+        rate: 1.0,
+        rate_date_used:
+          typeof transactionDate === 'string'
+            ? transactionDate.split('T')[0]
+            : transactionDate.toISOString().split('T')[0],
+      },
+    };
+  }
+
+  const rateInfo = await getRateForDate(
+    normalizedOriginal || 'USD',
+    normalizedDisplay,
+    transactionDate
+  );
+  const convertedAmount = amount * rateInfo.rate;
+  const converted = formatCurrency(convertedAmount, normalizedDisplay);
+
+  return {
+    original,
+    converted,
+    rateInfo,
+  };
 }
 

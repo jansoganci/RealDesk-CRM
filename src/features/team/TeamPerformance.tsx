@@ -40,7 +40,7 @@ export function TeamPerformance() {
   const { isOwner, loading: orgLoading } = useOrg();
   const { data, loading, error, periodFilter, setPeriodFilter, refetch } = useTeamPerformance();
 
-  const userCurrency = currency || 'TRY';
+  const userCurrency = currency || 'USD';
 
   const periodOptions: { value: PeriodFilter; label: string }[] = useMemo(
     () => [

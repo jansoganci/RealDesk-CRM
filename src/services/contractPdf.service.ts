@@ -142,10 +142,10 @@ export async function generateContractPDFBlob(
     // This is called AFTER Phase 6 saves overrides, so database has latest data
     const merged = await clausesService.getMergedClauses(contractId);
 
-    // Build template variable map
+    // Build template variable map (US Format)
     const variables = {
       paymentDay: data.paymentDay,
-      ownerIBAN: data.ownerIBAN,
+      ownerIBAN: `${data.ownerRoutingNumber} / ${data.ownerAccountNumber}`,
       ownerName: data.ownerName,
       tenantName: data.tenantName,
       contractDate: data.contractDate,
@@ -221,27 +221,30 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
   doc.text('KİRA SÖZLEŞMESİ', doc.internal.pageSize.width / 2, y, { align: 'center' });
   y += 15;
   
-  // Build owner and tenant info with TC on same line
-  const ownerInfo = data.ownerTC
-    ? `${data.ownerName} - T.C.: ${data.ownerTC}`
+  // Build owner and tenant info with Tax ID on same line
+  const ownerInfo = data.ownerTaxId
+    ? `${data.ownerName} - Tax ID: ${data.ownerTaxId}`
     : data.ownerName;
-  const tenantInfo = data.tenantTC
-    ? `${data.tenantName} - T.C.: ${data.tenantTC}`
+  const tenantInfo = data.tenantTaxId
+    ? `${data.tenantName} - Tax ID: ${data.tenantTaxId}`
     : data.tenantName;
 
-  // Main info table
+  // Main info table (US Format - keeping Turkish labels for now)
+  const fullAddress = data.unit 
+    ? `${data.streetAddress}, ${data.unit}, ${data.city}, ${data.state} ${data.zipCode}`
+    : `${data.streetAddress}, ${data.city}, ${data.state} ${data.zipCode}`;
+
   const tableData = [
     ['NUMARASI', data.contractNumber],
-    ['MAHALLESİ/İLÇE/İL', `${data.mahalle} / ${data.ilce} / ${data.il}`],
-    ['SOKAĞI/NUMARASI', `${data.sokak} No: ${data.binaNo} Daire: ${data.daireNo}`],
+    ['ADRES', fullAddress],
     ['KİRALANAN ŞEYİN CİNSİ', translatePropertyType(data.propertyType)],
     ['KİRAYA VERENİN ADI SOYADI', ownerInfo],
     ['KİRACININ ADI SOYADI', tenantInfo],
     ['KİRACININ İKAMETGAHI', data.tenantAddress],
     ['KİRACININ TELEFONU', data.tenantPhone],
-    ['BİR AYLIK KİRA KARŞILIĞI', `${data.monthlyRentNumber.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.monthlyRentText} ${getCurrencyText(data.currency)})`],
-    ['BİR SENELİK KİRA KARŞILIĞI', `${data.yearlyRentNumber.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.yearlyRentText} ${getCurrencyText(data.currency)})`],
-    ['KİRANIN NE ŞEKİLDE ÖDENECEĞİ', `IBAN: ${data.ownerIBAN}`],
+    ['BİR AYLIK KİRA KARŞILIĞI', `${data.monthlyRentNumber.toLocaleString('en-US')} ${getCurrencySymbol(data.currency)} (${data.monthlyRentText} ${getCurrencyText(data.currency)})`],
+    ['BİR SENELİK KİRA KARŞILIĞI', `${data.yearlyRentNumber.toLocaleString('en-US')} ${getCurrencySymbol(data.currency)} (${data.yearlyRentText} ${getCurrencyText(data.currency)})`],
+    ['KİRANIN NE ŞEKİLDE ÖDENECEĞİ', `Routing: ${data.ownerRoutingNumber} / Account: ${data.ownerAccountNumber}`],
     ['KİRA MÜDDETİ', '1 YIL'],
     ['KİRANIN BAŞLANGICI', data.startDate],
     ['DEPOZİTO', `${data.depositAmount.toLocaleString('tr-TR')} ${getCurrencySymbol(data.currency)} (${data.depositText} ${getCurrencyText(data.currency)})`],
@@ -396,19 +399,24 @@ function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData, tex
   doc.text('TAHLİYE TAAHHÜTNAMESİ', doc.internal.pageSize.width / 2, y, { align: 'center' });
   y += 20;
 
-  // Build names with TC on same line
-  const tenantWithTC = data.tenantTC
-    ? `${data.tenantName} - T.C.: ${data.tenantTC}`
+  // Build names with Tax ID on same line (US Format)
+  const tenantWithTaxId = data.tenantTaxId
+    ? `${data.tenantName} - Tax ID: ${data.tenantTaxId}`
     : data.tenantName;
-  const ownerWithTC = data.ownerTC
-    ? `${data.ownerName} - T.C.: ${data.ownerTC}`
+  const ownerWithTaxId = data.ownerTaxId
+    ? `${data.ownerName} - Tax ID: ${data.ownerTaxId}`
     : data.ownerName;
 
-  // Info table
+  // Full US address
+  const fullAddress = data.unit 
+    ? `${data.streetAddress}, ${data.unit}, ${data.city}, ${data.state} ${data.zipCode}`
+    : `${data.streetAddress}, ${data.city}, ${data.state} ${data.zipCode}`;
+
+  // Info table (US Format - keeping Turkish labels for now)
   const tableData = [
-    ['Taahhüt Edenin Adı Soyadı', tenantWithTC],
-    ['Mal Sahibinin Adı Soyadı', ownerWithTC],
-    ['Tahliye Edilecek Kiralananın Adresi', `${data.mahalle} ${data.sokak} No:${data.binaNo} D:${data.daireNo} ${data.ilce}/${data.il}`],
+    ['Taahhüt Edenin Adı Soyadı', tenantWithTaxId],
+    ['Mal Sahibinin Adı Soyadı', ownerWithTaxId],
+    ['Tahliye Edilecek Kiralananın Adresi', fullAddress],
     ['Tahliye Tarihi', data.evictionDate]
   ];
 

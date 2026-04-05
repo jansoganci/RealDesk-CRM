@@ -27,7 +27,7 @@ export const PerformanceSummaryComponent = ({
   const { currency: displayCurrency } = useAuth();
 
   const formatMetric = (metric: CalculatedMetric) => {
-    const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'TRY';
+    const normalizedCurrency = displayCurrency?.toUpperCase().trim() || 'USD';
     const formatted = formatCurrency(metric.value, normalizedCurrency);
 
     if (metric.isComplete) {

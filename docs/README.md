@@ -75,6 +75,7 @@ Notable archived items:
 - Start with: `/reference/ARCHITECTURE.md`
 - API docs: `/reference/API.md`
 - Contributing: `/reference/CONTRIBUTING.md`
+- **DB migrations naming:** root `CLAUDE.md` → *Database migrations (naming)* — files are `0001_…sql`, `0002_…sql`, … (not `YYYYMMDDHHmmss`).
 
 ### For Planning
 - Active plans: `/planning/`

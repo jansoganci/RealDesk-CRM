@@ -3,27 +3,27 @@
  */
 
 export interface ReviewFormData {
-  // Owner
+  // Owner (US Format)
   owner_name: string;
-  owner_tc: string;
+  owner_tax_id: string;
   owner_phone: string;
   owner_email: string;
-  owner_iban: string;
+  owner_routing_number: string;
+  owner_account_number: string;
 
-  // Tenant
+  // Tenant (US Format)
   tenant_name: string;
-  tenant_tc: string;
+  tenant_tax_id: string;
   tenant_phone: string;
   tenant_email: string;
   tenant_address: string;
 
-  // Property
-  mahalle: string;
-  cadde_sokak: string;
-  bina_no: string;
-  daire_no: string;
-  ilce: string;
-  il: string;
+  // Property (US Format)
+  street_address: string;
+  unit?: string;
+  city: string;
+  state: string;
+  zip_code: string;
   property_type: string;
   use_purpose: string;
 

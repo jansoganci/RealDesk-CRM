@@ -9,7 +9,7 @@ import type { ReviewFormData } from '../types/reviewFormTypes';
 interface OwnerSectionProps {
   formData: ReviewFormData;
   fieldErrors: Record<string, string>;
-  onFieldUpdate: (field: keyof ReviewFormData, value: any) => void;
+  onFieldUpdate: (field: keyof ReviewFormData, value: unknown) => void;
 }
 
 /**
@@ -33,8 +33,8 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
             id="owner_name"
             value={formData.owner_name}
             onChange={(e) => onFieldUpdate('owner_name', e.target.value)}
-            placeholder={formData.owner_name ? "" : t('import.placeholders.notFound')}
-            className={cn(fieldErrors.owner_name && "border-red-500")}
+            placeholder={formData.owner_name ? '' : t('import.placeholders.notFound')}
+            className={cn(fieldErrors.owner_name && 'border-red-500')}
           />
           {fieldErrors.owner_name && (
             <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
@@ -46,19 +46,18 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="owner_tc">
-              {t('create.fields.owner_tc')} <span className="text-red-500">*</span>
+            <Label htmlFor="owner_tax_id">
+              Tax ID (EIN/SSN) <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="owner_tc"
-              value={formData.owner_tc}
-              onChange={(e) => onFieldUpdate('owner_tc', e.target.value.replace(/\D/g, '').slice(0, 11))}
-              placeholder="12345678901"
-              maxLength={11}
-              className={cn(fieldErrors.owner_tc && "border-red-500")}
+              id="owner_tax_id"
+              value={formData.owner_tax_id}
+              onChange={(e) => onFieldUpdate('owner_tax_id', e.target.value)}
+              placeholder="XX-XXXXXXX or XXX-XX-XXXX"
+              className={cn(fieldErrors.owner_tax_id && 'border-red-500')}
             />
-            {fieldErrors.owner_tc && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_tc}</p>
+            {fieldErrors.owner_tax_id && (
+              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_tax_id}</p>
             )}
           </div>
 
@@ -68,7 +67,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
               id="owner_phone"
               value={formData.owner_phone}
               onChange={(e) => onFieldUpdate('owner_phone', e.target.value)}
-              placeholder="0555 123 4567"
+              placeholder={t('create.placeholders.owner_phone')}
             />
           </div>
         </div>
@@ -84,19 +83,43 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
               placeholder="ornek@email.com"
             />
           </div>
+        </div>
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="owner_iban">{t('create.fields.owner_iban')}</Label>
+            <Label htmlFor="owner_routing_number">
+              {t('create.fields.owner_routing_number')} <span className="text-red-500">*</span>
+            </Label>
             <Input
-              id="owner_iban"
-              value={formData.owner_iban}
-              onChange={(e) => onFieldUpdate('owner_iban', e.target.value)}
-              placeholder="TR00 0000 0000 0000 0000 0000 00"
+              id="owner_routing_number"
+              value={formData.owner_routing_number}
+              onChange={(e) => onFieldUpdate('owner_routing_number', e.target.value)}
+              placeholder={t('create.placeholders.owner_routing_number')}
+              inputMode="numeric"
+              className={cn(fieldErrors.owner_routing_number && 'border-red-500')}
             />
+            {fieldErrors.owner_routing_number && (
+              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_routing_number}</p>
+            )}
+          </div>
+          <div>
+            <Label htmlFor="owner_account_number">
+              {t('create.fields.owner_account_number')} <span className="text-red-500">*</span>
+            </Label>
+            <Input
+              id="owner_account_number"
+              value={formData.owner_account_number}
+              onChange={(e) => onFieldUpdate('owner_account_number', e.target.value)}
+              placeholder={t('create.placeholders.owner_account_number')}
+              inputMode="numeric"
+              className={cn(fieldErrors.owner_account_number && 'border-red-500')}
+            />
+            {fieldErrors.owner_account_number && (
+              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_account_number}</p>
+            )}
           </div>
         </div>
       </CardContent>
     </Card>
   );
 }
-

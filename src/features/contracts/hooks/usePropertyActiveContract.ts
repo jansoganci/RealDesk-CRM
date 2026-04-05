@@ -45,9 +45,8 @@ export function usePropertyActiveContract(): UsePropertyActiveContractResult {
   const [lastCheckedAddress, setLastCheckedAddress] = useState<string | null>(null);
 
   const checkAddress = useCallback(async (components: AddressComponents) => {
-    // Validate required fields
-    if (!components.mahalle || !components.cadde_sokak || !components.bina_no ||
-        !components.ilce || !components.il) {
+    // Validate required fields (US Format)
+    if (!components.street_address || !components.city || !components.state || !components.zip_code) {
       setActiveContract(null);
       return;
     }

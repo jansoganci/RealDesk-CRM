@@ -18,35 +18,30 @@ interface ProfileData {
   fullName: string;
   email: string;
   phoneNumber: string | null;
-  language: 'tr' | 'en';
   currency: string;
   meetingReminderMinutes: number;
   commissionRate: number;
 }
 
 export const Profile = () => {
-  const { t, i18n } = useTranslation(['profile', 'common']);
+  const { t } = useTranslation(['profile', 'common']);
   const { 
     user, 
     loading: authLoading,
     fullName,
     phoneNumber,
-    language: prefLanguage,
     currency,
     meetingReminderMinutes,
     commissionRate
   } = useAuth();
   const { currentOrg, isOwner } = useOrg();
-  const language = i18n.language === 'tr' ? 'tr' : 'en';
-
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isEditOrgDialogOpen, setIsEditOrgDialogOpen] = useState(false);
   const [profileData, setProfileData] = useState<ProfileData>({
     fullName: '',
     email: user?.email || '',
     phoneNumber: null,
-    language: 'tr',
-    currency: 'TRY',
+    currency: 'USD',
     meetingReminderMinutes: 30,
     commissionRate: 4.0,
   });
@@ -58,13 +53,12 @@ export const Profile = () => {
         fullName: fullName || '',
         email: user.email || '',
         phoneNumber: phoneNumber || null,
-        language: (prefLanguage === 'tr' || prefLanguage === 'en') ? prefLanguage : 'tr',
-        currency: currency || 'TRY',
+        currency: currency || 'USD',
         meetingReminderMinutes: meetingReminderMinutes || 30,
         commissionRate: commissionRate || 4.0,
       });
     }
-  }, [authLoading, user, fullName, phoneNumber, prefLanguage, currency, meetingReminderMinutes, commissionRate]);
+  }, [authLoading, user, fullName, phoneNumber, currency, meetingReminderMinutes, commissionRate]);
 
   const handleEditClick = () => {
     setIsEditDialogOpen(true);
@@ -123,7 +117,7 @@ export const Profile = () => {
           </div>
 
           {/* Legal Documents - Full Width */}
-          <LegalDocumentsCard language={language} />
+          <LegalDocumentsCard language="en" />
         </div>
 
         {/* Edit Profile Dialog/Drawer */}

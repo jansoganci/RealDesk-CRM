@@ -16,9 +16,7 @@ export const getProfileSchema = (t: TFunction) => {
       .max(20, { message: t('profile.validation.phoneMax', 'Phone number must not exceed 20 characters') })
       .optional()
       .or(z.literal('')),
-    language: z.enum(['en', 'tr'], {
-      required_error: t('profile.validation.languageRequired', 'Language is required'),
-    }),
+    language: z.literal('en'),
     currency: z.enum(['USD', 'TRY', 'EUR'], {
       required_error: t('profile.validation.currencyRequired', 'Currency is required'),
     }),

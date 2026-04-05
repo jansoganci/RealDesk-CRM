@@ -29,7 +29,7 @@ export const MarketingROIComponent = ({
   const { currency } = useAuth();
 
   const formatMetric = (value: number) => {
-    return formatCurrency(value, currency || 'TRY');
+    return formatCurrency(value, currency || 'USD');
   };
 
   if (loading) {

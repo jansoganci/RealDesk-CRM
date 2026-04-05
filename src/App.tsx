@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
@@ -47,7 +46,6 @@ import CookieNotice from './components/ui/cookie-notice';
 import { CookieErrorBoundary } from './components/ui/cookie-error-boundary';
 import { CookiePreferences } from './components/ui/cookie-preferences';
 import { useCookieConsent } from './hooks/useCookieConsent';
-import { initializeExchangeRates } from './lib/currency';
 import './App.css';
 
 function AppContent() {
@@ -247,12 +245,6 @@ function AppContent() {
 }
 
 function App() {
-  // Initialize exchange rates on app start
-  useEffect(() => {
-    initializeExchangeRates().catch(err => {
-      console.warn('Failed to initialize exchange rates on app start:', err);
-    });
-  }, []);
   return (
     <HelmetProvider>
       <ErrorBoundary>

@@ -40,16 +40,18 @@ export function ExchangeRatesCard({
             <div className="text-center">
               <div className="text-xs text-gray-500 mb-0.5">{t('exchangeRates.usd_try')}</div>
               <div className="text-sm md:text-base font-semibold text-gray-900">
-                {exchangeRates.TRY?.toFixed(2) || '42.30'}
+                {exchangeRates.TRY != null
+                  ? exchangeRates.TRY.toFixed(2)
+                  : '—'}
               </div>
             </div>
             <div className="w-px h-6 md:h-8 bg-gray-200"></div>
             <div className="text-center">
               <div className="text-xs text-gray-500 mb-0.5">{t('exchangeRates.eur_try')}</div>
               <div className="text-sm md:text-base font-semibold text-gray-900">
-                {(exchangeRates.TRY && exchangeRates.EUR) 
-                  ? (exchangeRates.TRY / exchangeRates.EUR).toFixed(2) 
-                  : '49.09'}
+                {exchangeRates.TRY != null && exchangeRates.EUR != null
+                  ? (exchangeRates.TRY / exchangeRates.EUR).toFixed(2)
+                  : '—'}
               </div>
             </div>
           </div>

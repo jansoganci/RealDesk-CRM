@@ -1,5 +1,6 @@
 import { useState, useCallback } from 'react';
 import type { ReviewFormData } from '../types/reviewFormTypes';
+import { isValidTaxId, isValidRoutingNumber, isValidAccountNumber } from '@/lib/serviceProxy';
 
 interface UseReviewFormValidationReturn {
   fieldErrors: Record<string, string>;
@@ -18,25 +19,32 @@ export function useReviewFormValidation(): UseReviewFormValidationReturn {
   const validateForm = useCallback((formData: ReviewFormData): boolean => {
     const errors: Record<string, string> = {};
 
-    // Owner validation
-    if (!formData.owner_name) errors.owner_name = 'Ev sahibi ismi gerekli';
-    if (!formData.owner_tc) errors.owner_tc = 'TC Kimlik No gerekli';
-    else if (formData.owner_tc.length !== 11) errors.owner_tc = 'TC Kimlik No 11 rakam olmalı';
+    // Owner validation (US Format)
+    if (!formData.owner_name) errors.owner_name = 'Owner name required';
+    if (!formData.owner_tax_id) errors.owner_tax_id = 'Tax ID (EIN/SSN) required';
+    else if (!isValidTaxId(formData.owner_tax_id)) errors.owner_tax_id = 'Invalid Tax ID format';
+    if (!isValidRoutingNumber(formData.owner_routing_number)) {
+      errors.owner_routing_number = 'Invalid routing number';
+    }
+    if (!isValidAccountNumber(formData.owner_account_number)) {
+      errors.owner_account_number = 'Invalid account number';
+    }
 
-    // Tenant validation
-    if (!formData.tenant_name) errors.tenant_name = 'Kiracı ismi gerekli';
-    if (!formData.tenant_tc) errors.tenant_tc = 'TC Kimlik No gerekli';
-    else if (formData.tenant_tc.length !== 11) errors.tenant_tc = 'TC Kimlik No 11 rakam olmalı';
+    // Tenant validation (US Format)
+    if (!formData.tenant_name) errors.tenant_name = 'Tenant name required';
+    if (!formData.tenant_tax_id) errors.tenant_tax_id = 'Tax ID (SSN/EIN) required';
+    else if (!isValidTaxId(formData.tenant_tax_id)) errors.tenant_tax_id = 'Invalid Tax ID format';
 
-    // Property validation
-    if (!formData.mahalle) errors.mahalle = 'Mahalle gerekli';
-    if (!formData.ilce) errors.ilce = 'İlçe gerekli';
-    if (!formData.il) errors.il = 'İl gerekli';
+    // Property validation (US Format)
+    if (!formData.street_address) errors.street_address = 'Street address required';
+    if (!formData.city) errors.city = 'City required';
+    if (!formData.state) errors.state = 'State required';
+    if (!formData.zip_code) errors.zip_code = 'ZIP code required';
 
     // Contract validation
-    if (!formData.start_date) errors.start_date = 'Başlangıç tarihi gerekli';
-    if (!formData.end_date) errors.end_date = 'Bitiş tarihi gerekli';
-    if (!formData.rent_amount) errors.rent_amount = 'Kira bedeli gerekli';
+    if (!formData.start_date) errors.start_date = 'Start date required';
+    if (!formData.end_date) errors.end_date = 'End date required';
+    if (!formData.rent_amount) errors.rent_amount = 'Rent amount required';
 
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;

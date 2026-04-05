@@ -38,7 +38,7 @@ const DashboardMock = () => (
         <div className="dash-card-icon">🏙️</div>
         <div className="dash-card-body">
           <div className="dash-card-label">Bağdat Cad. No:142</div>
-          <div className="dash-card-sub">İstanbul, Kadıköy · Kiralık</div>
+          <div className="dash-card-sub">Austin, TX · For Rent</div>
         </div>
         <div className="dash-card-right">
           <div className="dash-card-price">₺45.000/ay</div>
@@ -48,23 +48,23 @@ const DashboardMock = () => (
       <div className="dash-card">
         <div className="dash-card-icon">🏡</div>
         <div className="dash-card-body">
-          <div className="dash-card-label">Nispetiye Cad. 28/4</div>
-          <div className="dash-card-sub">İstanbul, Beşiktaş · Satılık</div>
+          <div className="dash-card-label">123 Park Avenue #4B</div>
+          <div className="dash-card-sub">New York, NY · For Sale</div>
         </div>
         <div className="dash-card-right">
-          <div className="dash-card-price">₺12.500.000</div>
-          <span className="dash-card-status dash-card-status-yellow">Teklifte</span>
+          <div className="dash-card-price">$2,450,000</div>
+          <span className="dash-card-status dash-card-status-yellow">Under Offer</span>
         </div>
       </div>
       <div className="dash-card">
         <div className="dash-card-icon">🌆</div>
         <div className="dash-card-body">
-          <div className="dash-card-label">Tunalı Hilmi Cad. 67</div>
-          <div className="dash-card-sub">Ankara, Çankaya · Kiralık</div>
+          <div className="dash-card-label">456 Market Street</div>
+          <div className="dash-card-sub">San Francisco, CA · For Rent</div>
         </div>
         <div className="dash-card-right">
-          <div className="dash-card-price">₺28.000/ay</div>
-          <span className="dash-card-status dash-card-status-blue">Boş</span>
+          <div className="dash-card-price">$4,200/mo</div>
+          <span className="dash-card-status dash-card-status-blue">Available</span>
         </div>
       </div>
     </div>
@@ -73,10 +73,10 @@ const DashboardMock = () => (
     <div className="dash-reminder">
       <div className="dash-reminder-icon">🔔</div>
       <div className="dash-reminder-body">
-        <div className="dash-reminder-title">Sözleşme Bitişi — Nispetiye</div>
-        <div className="dash-reminder-sub">Kiracı: Mehmet D. · EmlakCRM tarafından oluşturuldu</div>
+        <div className="dash-reminder-title">Lease Expiring — Park Avenue</div>
+        <div className="dash-reminder-sub">Tenant: John Smith · Created by EmlakCRM</div>
       </div>
-      <div className="dash-reminder-time">3 gün</div>
+      <div className="dash-reminder-time">3 days</div>
     </div>
 
   </div>
@@ -131,7 +131,7 @@ export const Hero = () => {
 
           <div className="hero-badge">
             <span className="hero-badge-dot" />
-            Türk Emlak Profesyonelleri İçin
+            For US Real Estate Professionals
           </div>
 
           <h1 className="hero-headline">

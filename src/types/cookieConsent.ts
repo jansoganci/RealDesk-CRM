@@ -38,7 +38,7 @@ export interface ConsentRecord {
   /** Browser user agent string */
   userAgent?: string;
   /** Language in which consent was given */
-  language: 'tr' | 'en';
+  language: 'en';
   /** Database record creation timestamp */
   createdAt?: Date;
 }

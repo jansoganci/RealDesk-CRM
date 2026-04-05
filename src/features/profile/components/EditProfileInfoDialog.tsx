@@ -65,7 +65,6 @@ interface EditProfileInfoDialogProps {
   initialData: {
     fullName: string;
     phoneNumber?: string | null;
-    language: 'tr' | 'en';
     currency: string;
     meetingReminderMinutes: number;
     commissionRate: number;
@@ -93,7 +92,6 @@ export function EditProfileInfoDialog({
     defaultValues: {
       full_name: initialData.fullName || '',
       phone_number: initialData.phoneNumber || '',
-      language: initialData.language,
       currency: initialData.currency as 'USD' | 'TRY' | 'EUR',
       meeting_reminder_minutes: initialData.meetingReminderMinutes,
       commission_rate: initialData.commissionRate,
@@ -106,7 +104,6 @@ export function EditProfileInfoDialog({
       form.reset({
         full_name: initialData.fullName || '',
         phone_number: initialData.phoneNumber || '',
-        language: initialData.language,
         currency: initialData.currency as 'USD' | 'TRY' | 'EUR',
         meeting_reminder_minutes: initialData.meetingReminderMinutes,
         commission_rate: initialData.commissionRate,
@@ -134,7 +131,7 @@ export function EditProfileInfoDialog({
       await userPreferencesService.updatePreferences({
         full_name: data.full_name || null,
         phone_number: data.phone_number || null,
-        language: data.language,
+        language: 'en',
         currency: data.currency,
         meeting_reminder_minutes: data.meeting_reminder_minutes,
         commission_rate: data.commission_rate,
@@ -142,9 +139,9 @@ export function EditProfileInfoDialog({
 
       // Update auth context
       const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
-      setManualLanguage(data.language as 'tr' | 'en');
+      setManualLanguage('en');
       setManualCurrency(data.currency as 'TRY' | 'USD');
-      await setLanguage(data.language);
+      await setLanguage('en');
       await setCurrency(data.currency);
 
       toast.success(t('profile:profileInfo.updateSuccess'));
@@ -218,39 +215,6 @@ export function EditProfileInfoDialog({
                   value={field.value || ''}
                 />
               </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        {/* Language */}
-        <FormField
-          control={form.control}
-          name="language"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('profile:profileInfo.fields.language')}</FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                value={field.value}
-                disabled={isSubmitting}
-              >
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue
-                      placeholder={t('profile:fields.languagePlaceholder')}
-                    />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="tr">
-                    {t('profile:profileInfo.languages.tr')}
-                  </SelectItem>
-                  <SelectItem value="en">
-                    {t('profile:profileInfo.languages.en')}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
               <FormMessage />
             </FormItem>
           )}

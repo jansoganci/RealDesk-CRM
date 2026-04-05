@@ -47,19 +47,18 @@ export function TenantSection({ formData, fieldErrors, onFieldUpdate }: TenantSe
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="tenant_tc">
-              {t('create.fields.tenant_tc')} <span className="text-red-500">*</span>
+            <Label htmlFor="tenant_tax_id">
+              Tax ID (SSN/EIN) <span className="text-red-500">*</span>
             </Label>
             <Input
-              id="tenant_tc"
-              value={formData.tenant_tc}
-              onChange={(e) => onFieldUpdate('tenant_tc', e.target.value.replace(/\D/g, '').slice(0, 11))}
-              placeholder="12345678901"
-              maxLength={11}
-              className={cn(fieldErrors.tenant_tc && "border-red-500")}
+              id="tenant_tax_id"
+              value={formData.tenant_tax_id}
+              onChange={(e) => onFieldUpdate('tenant_tax_id', e.target.value)}
+              placeholder="XXX-XX-XXXX or XX-XXXXXXX"
+              className={cn(fieldErrors.tenant_tax_id && "border-red-500")}
             />
-            {fieldErrors.tenant_tc && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.tenant_tc}</p>
+            {fieldErrors.tenant_tax_id && (
+              <p className="text-sm text-red-600 mt-1">{fieldErrors.tenant_tax_id}</p>
             )}
           </div>
 

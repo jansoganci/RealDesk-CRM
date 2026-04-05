@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '@/config/supabase';
-import { encrypt, hashTC } from './encryption.service';
+import { encrypt, hashTaxId } from './encryption.service';
 import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
 import { getActiveOrgId } from '@/lib/orgHelpers';
@@ -49,13 +49,14 @@ export async function updateContractWithEntities(
 
   try {
     // ========================================================================
-    // Update Owner
+    // Update Owner (US Format)
     // ========================================================================
     const ownerData = {
       name: formData.owner_name,
-      tc_encrypted: await encrypt(formData.owner_tc),
-      tc_hash: await hashTC(formData.owner_tc),
-      iban_encrypted: await encrypt(formData.owner_iban),
+      tax_id_encrypted: await encrypt(formData.owner_tax_id),
+      tax_id_hash: await hashTaxId(formData.owner_tax_id),
+      routing_number_encrypted: await encrypt(formData.owner_routing_number.replace(/\D/g, '')),
+      account_number_encrypted: await encrypt(formData.owner_account_number.replace(/[\s-]/g, '')),
       phone: normalizePhone(formData.owner_phone),
       email: formData.owner_email || null,
       updated_at: new Date().toISOString(),
@@ -74,12 +75,12 @@ export async function updateContractWithEntities(
     ownerUpdated = true;
 
     // ========================================================================
-    // Update Tenant
+    // Update Tenant (US Format)
     // ========================================================================
     const tenantData = {
       name: formData.tenant_name,
-      tc_encrypted: await encrypt(formData.tenant_tc),
-      tc_hash: await hashTC(formData.tenant_tc),
+      tax_id_encrypted: await encrypt(formData.tenant_tax_id),
+      tax_id_hash: await hashTaxId(formData.tenant_tax_id),
       phone: normalizePhone(formData.tenant_phone),
       email: formData.tenant_email || null,
       address: formData.tenant_address,
@@ -99,27 +100,25 @@ export async function updateContractWithEntities(
     tenantUpdated = true;
 
     // ========================================================================
-    // Update Property
+    // Update Property (US Format)
     // ========================================================================
     const addressComponents = {
-      mahalle: formData.mahalle,
-      cadde_sokak: formData.cadde_sokak,
-      bina_no: formData.bina_no,
-      daire_no: formData.daire_no,
-      ilce: formData.ilce,
-      il: formData.il,
+      street_address: formData.street_address,
+      unit: formData.unit,
+      city: formData.city,
+      state: formData.state,
+      zip_code: formData.zip_code,
     };
 
     const fullAddress = generateFullAddress(addressComponents);
-    const normalizedAddressStr = normalizeAddress(addressComponents);
+    const normalizedAddressStr = normalizeAddress(fullAddress);
 
     const propertyData = {
-      mahalle: formData.mahalle,
-      cadde_sokak: formData.cadde_sokak,
-      bina_no: formData.bina_no,
-      daire_no: formData.daire_no || null,
-      ilce: formData.ilce,
-      il: formData.il,
+      street_address: formData.street_address,
+      unit: formData.unit || null,
+      city: formData.city,
+      state: formData.state,
+      zip_code: formData.zip_code,
       full_address: fullAddress,
       normalized_address: normalizedAddressStr,
       address: fullAddress,

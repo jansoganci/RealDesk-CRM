@@ -42,8 +42,7 @@ export const Register = () => {
   const [termsError, setTermsError] = useState<string | null>(null);
   const { signUp, resendConfirmationEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation(['auth', 'common']);
-  const language = i18n.language || 'tr';
+  const { t } = useTranslation(['auth', 'common']);
 
   const { token: turnstileToken, isReady: turnstileReady, resetWidget: resetTurnstile } = useTurnstile('turnstile-register');
 
@@ -331,7 +330,7 @@ export const Register = () => {
                 <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
                   {t('termsLabel')}{' '}
                   <a
-                    href={`/legal/terms-of-service-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    href="/legal/terms-of-service-en.html"
                     target="_blank"
                     rel="noreferrer"
                     className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
@@ -340,7 +339,7 @@ export const Register = () => {
                   </a>{' '}
                   {t('termsAnd')}{' '}
                   <a
-                    href={`/legal/privacy-policy-${language === 'tr' ? 'tr' : 'en'}.html`}
+                    href="/legal/privacy-policy-en.html"
                     target="_blank"
                     rel="noreferrer"
                     className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"

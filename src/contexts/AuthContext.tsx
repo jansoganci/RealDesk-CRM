@@ -3,7 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
-import { getDetectedLanguage, getDetectedCurrency, SupportedLanguage, SupportedCurrency } from '../lib/localeDetection';
+import { getDetectedLanguage, getDetectedCurrency, SupportedCurrency, SupportedLanguage } from '../lib/localeDetection';
 import { createLogger } from '../lib/logger';
 
 
@@ -42,7 +42,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   
   // Batched preferences state
-  const [preferences, setPreferences] = useState({
+  const coercePreferenceLanguage = (lang: string | null | undefined): SupportedLanguage =>
+    lang === 'tr' ? 'en' : 'en';
+
+  const [preferences, setPreferences] = useState<{
+    language: SupportedLanguage;
+    currency: SupportedCurrency | string;
+    meetingReminderMinutes: number;
+    commissionRate: number;
+    fullName: string;
+    phoneNumber: string | null;
+  }>({
     language: getDetectedLanguage(),
     currency: getDetectedCurrency(),
     meetingReminderMinutes: 30,
@@ -124,8 +134,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (prefsRes && prefsRes.data) {
         const prefs = prefsRes.data;
         setPreferences({
-          language: prefs.language || 'tr',
-          currency: prefs.currency || 'TRY',
+          language: coercePreferenceLanguage(prefs.language),
+          currency: prefs.currency || 'USD',
           meetingReminderMinutes: prefs.meeting_reminder_minutes || 30,
           commissionRate: prefs.commission_rate || 4.0,
           fullName: prefs.full_name || '',
@@ -191,7 +201,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         }
       } else {
         setPreferences({
-          language: getDetectedLanguage(),
+          language: 'en',
           currency: getDetectedCurrency(),
           meetingReminderMinutes: 30,
           commissionRate: 4.0,
@@ -218,8 +228,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         .upsert(
           {
             user_id: currentUserId,
-            language: 'tr',
-            currency: 'TRY',
+            language: 'en',
+            currency: 'USD',
           },
           {
             onConflict: 'user_id',
@@ -249,8 +259,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, [user?.id]);
 
   const setLanguage = useCallback(async (newLanguage: string) => {
-    setPreferences(prev => ({ ...prev, language: newLanguage as SupportedLanguage }));
-    await updateUserPreferences({ language: newLanguage });
+    const normalized: SupportedLanguage = newLanguage === 'tr' ? 'en' : 'en';
+    setPreferences(prev => ({ ...prev, language: normalized }));
+    await updateUserPreferences({ language: normalized });
   }, [updateUserPreferences]);
 
   const setCurrency = useCallback(async (newCurrency: string) => {

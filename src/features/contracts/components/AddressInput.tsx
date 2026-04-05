@@ -1,5 +1,5 @@
 /**
- * Address Input Component
+ * Address Input Component (US Format)
  * Component-based address input with real-time preview
  * Includes active contract warning for duplicate detection
  */
@@ -15,7 +15,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Separator } from '@/components/ui/separator';
-import { generateFullAddress } from '@/lib/serviceProxy';
+import { generateFullAddress, US_STATES } from '@/lib/serviceProxy';
 import { usePropertyActiveContract } from '../hooks/usePropertyActiveContract';
 import { FixturesSelector } from './FixturesSelector';
 import type { ContractFormData } from '../schemas/contractForm.schema';
@@ -23,7 +23,7 @@ import type { ContractFormData } from '../schemas/contractForm.schema';
 // Helper function to format date for display
 const formatDisplayDate = (dateString: string): string => {
   try {
-    return format(parseISO(dateString), 'dd.MM.yyyy');
+    return format(parseISO(dateString), 'MM/dd/yyyy');
   } catch {
     return dateString;
   }
@@ -40,23 +40,28 @@ export function AddressInput({ form }: AddressInputProps) {
 
   const { watch, setValue } = form;
 
-  // Watch all address fields
-  const mahalle = watch('mahalle');
-  const cadde_sokak = watch('cadde_sokak');
-  const bina_no = watch('bina_no');
-  const daire_no = watch('daire_no');
-  const ilce = watch('ilce');
-  const il = watch('il');
+  // Watch all US address fields
+  const street_address = watch('street_address');
+  const unit = watch('unit');
+  const city = watch('city');
+  const state = watch('state');
+  const zip_code = watch('zip_code');
 
   // Check for active contract when address fields change
   useEffect(() => {
     // Only check if all required fields are filled
-    if (mahalle && cadde_sokak && bina_no && ilce && il) {
-      checkAddress({ mahalle, cadde_sokak, bina_no, daire_no, ilce, il });
+    if (street_address && city && state && zip_code) {
+      checkAddress({
+        street_address,
+        unit: unit || undefined,
+        city,
+        state,
+        zip_code,
+      });
     } else {
       clearWarning();
     }
-  }, [mahalle, cadde_sokak, bina_no, daire_no, ilce, il, checkAddress, clearWarning]);
+  }, [street_address, unit, city, state, zip_code, checkAddress, clearWarning]);
 
   // Show toast when active contract is detected (only once per contract)
   useEffect(() => {
@@ -73,21 +78,20 @@ export function AddressInput({ form }: AddressInputProps) {
 
   // Generate full address preview
   const fullAddressPreview = useMemo(() => {
-    if (!mahalle || !cadde_sokak || !bina_no || !ilce || !il) {
-      return t('create.preview.fullAddress') + ': -';
+    if (!street_address || !city || !state || !zip_code) {
+      return 'Full Address: -';
     }
 
     const address = generateFullAddress({
-      mahalle,
-      cadde_sokak,
-      bina_no,
-      daire_no: daire_no || undefined,
-      ilce,
-      il,
+      street_address,
+      unit: unit || undefined,
+      city,
+      state,
+      zip_code,
     });
 
     return address;
-  }, [mahalle, cadde_sokak, bina_no, daire_no, ilce, il, t]);
+  }, [street_address, unit, city, state, zip_code]);
 
   return (
     <div className="space-y-4">
@@ -118,105 +122,100 @@ export function AddressInput({ form }: AddressInputProps) {
         </Alert>
       )}
 
-      {/* Mahalle */}
+      {/* Street Address */}
       <div>
-        <Label htmlFor="mahalle">
-          {t('create.fields.mahalle')} *
+        <Label htmlFor="street_address">
+          Street Address *
         </Label>
         <Input
-          id="mahalle"
-          placeholder={t('create.placeholders.mahalle')}
-          {...form.register('mahalle')}
+          id="street_address"
+          placeholder="123 Main Street"
+          {...form.register('street_address')}
         />
-        {form.formState.errors.mahalle && (
+        {form.formState.errors.street_address && (
           <p className="text-sm text-red-600 mt-1">
-            {form.formState.errors.mahalle.message}
+            {form.formState.errors.street_address.message}
           </p>
         )}
       </div>
 
-      {/* Cadde/Sokak */}
+      {/* Unit/Apt (Optional) */}
       <div>
-        <Label htmlFor="cadde_sokak">
-          {t('create.fields.cadde_sokak')} *
+        <Label htmlFor="unit">
+          Unit/Apt
         </Label>
         <Input
-          id="cadde_sokak"
-          placeholder={t('create.placeholders.cadde_sokak')}
-          {...form.register('cadde_sokak')}
+          id="unit"
+          placeholder="Apt 4B, Suite 200, etc."
+          {...form.register('unit')}
         />
-        {form.formState.errors.cadde_sokak && (
+        {form.formState.errors.unit && (
           <p className="text-sm text-red-600 mt-1">
-            {form.formState.errors.cadde_sokak.message}
+            {form.formState.errors.unit.message}
           </p>
         )}
       </div>
 
-      {/* Bina No and Daire No - Side by side */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="bina_no">
-            {t('create.fields.bina_no')} *
+      {/* City, State, ZIP - Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        {/* City */}
+        <div className="md:col-span-1">
+          <Label htmlFor="city">
+            City *
           </Label>
           <Input
-            id="bina_no"
-            placeholder={t('create.placeholders.bina_no')}
-            {...form.register('bina_no')}
+            id="city"
+            placeholder="Austin"
+            {...form.register('city')}
           />
-          {form.formState.errors.bina_no && (
+          {form.formState.errors.city && (
             <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.bina_no.message}
+              {form.formState.errors.city.message}
             </p>
           )}
         </div>
 
-        <div>
-          <Label htmlFor="daire_no">
-            {t('create.fields.daire_no')}
+        {/* State */}
+        <div className="md:col-span-1">
+          <Label htmlFor="state">
+            State *
           </Label>
-          <Input
-            id="daire_no"
-            placeholder={t('create.placeholders.daire_no')}
-            {...form.register('daire_no')}
-          />
-          {form.formState.errors.daire_no && (
+          <Select
+            value={watch('state')}
+            onValueChange={(value) => setValue('state', value, { shouldValidate: true })}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select state" />
+            </SelectTrigger>
+            <SelectContent>
+              {US_STATES.map((state) => (
+                <SelectItem key={state.code} value={state.code}>
+                  {state.code} - {state.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          {form.formState.errors.state && (
             <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.daire_no.message}
-            </p>
-          )}
-        </div>
-      </div>
-
-      {/* İlçe and İl - Side by side */}
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label htmlFor="ilce">
-            {t('create.fields.ilce')} *
-          </Label>
-          <Input
-            id="ilce"
-            placeholder={t('create.placeholders.ilce')}
-            {...form.register('ilce')}
-          />
-          {form.formState.errors.ilce && (
-            <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.ilce.message}
+              {form.formState.errors.state.message}
             </p>
           )}
         </div>
 
-        <div>
-          <Label htmlFor="il">
-            {t('create.fields.il')} *
+        {/* ZIP Code */}
+        <div className="md:col-span-1">
+          <Label htmlFor="zip_code">
+            ZIP Code *
           </Label>
           <Input
-            id="il"
-            placeholder={t('create.placeholders.il')}
-            {...form.register('il')}
+            id="zip_code"
+            placeholder="78701"
+            maxLength={10}
+            {...form.register('zip_code')}
           />
-          {form.formState.errors.il && (
+          {form.formState.errors.zip_code && (
             <p className="text-sm text-red-600 mt-1">
-              {form.formState.errors.il.message}
+              {form.formState.errors.zip_code.message}
             </p>
           )}
         </div>
@@ -225,7 +224,7 @@ export function AddressInput({ form }: AddressInputProps) {
       {/* Property Type */}
       <div>
         <Label htmlFor="property_type">
-          {t('create.fields.property_type')} *
+          Property Type *
         </Label>
         <Select
           value={watch('property_type')}
@@ -236,13 +235,13 @@ export function AddressInput({ form }: AddressInputProps) {
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="apartment">
-              {t('create.propertyTypes.apartment')}
+              Apartment
             </SelectItem>
             <SelectItem value="house">
-              {t('create.propertyTypes.house')}
+              House
             </SelectItem>
             <SelectItem value="commercial">
-              {t('create.propertyTypes.commercial')}
+              Commercial
             </SelectItem>
           </SelectContent>
         </Select>
@@ -256,11 +255,11 @@ export function AddressInput({ form }: AddressInputProps) {
       {/* Use Purpose */}
       <div>
         <Label htmlFor="use_purpose">
-          {t('create.fields.use_purpose')}
+          Use Purpose
         </Label>
         <Input
           id="use_purpose"
-          placeholder={t('create.placeholders.usePurpose')}
+          placeholder="Residential, Office, Retail, etc."
           {...form.register('use_purpose')}
         />
         {form.formState.errors.use_purpose && (
@@ -270,11 +269,11 @@ export function AddressInput({ form }: AddressInputProps) {
         )}
       </div>
 
-      {/* Fixtures Declaration (Demirbaş Beyanı) */}
+      {/* Fixtures Declaration */}
       <Separator />
       <div>
         <Label htmlFor="fixtures-selector">
-          {t('create.fields.fixtures')}
+          Fixtures & Appliances
         </Label>
         <FixturesSelector
           value={form.watch('special_conditions') || ''}
@@ -289,7 +288,7 @@ export function AddressInput({ form }: AddressInputProps) {
       {/* Full Address Preview */}
       <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
         <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-          {t('create.preview.fullAddress')}
+          Full Address Preview
         </p>
         <p className="text-sm text-slate-900 dark:text-slate-100">
           {fullAddressPreview}

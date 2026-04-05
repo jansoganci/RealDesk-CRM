@@ -227,7 +227,9 @@ You can find these values in your Supabase project settings under "API" → "Pro
 
 The project uses Supabase with PostgreSQL. Database migrations are located in `supabase/migrations/`.
 
-#### Option 1: Using Supabase CLI (Recommended)
+**Naming:** migrations are numbered sequentially: `0001_something.sql`, `0002_something.sql`, … (see root **`CLAUDE.md` → “Database migrations (naming)”**). Do not use `YYYYMMDDHHmmss` prefixes for new files in this repo.
+
+#### Option 1: Using Supabase CLI
 
 1. **Install Supabase CLI**
    ```bash
@@ -244,36 +246,17 @@ The project uses Supabase with PostgreSQL. Database migrations are located in `s
    supabase db push
    ```
 
+   Note: upstream CLI may skip `000N_*.sql` filenames; if so, use Option 2 or apply SQL manually in numeric order (see **CLAUDE.md**).
+
 #### Option 2: Manual Migration
 
 1. Open your Supabase dashboard
 2. Go to SQL Editor
-3. Run the migration files in order (from `supabase/migrations/`)
+3. Run the migration files **in numeric order** (`0001`, then `0002`, …)
 
-#### Migration Files
+#### Migration files
 
-The project includes the following migrations:
-
-- `20251027212110_create_property_owners_table.sql`
-- `20251027212128_create_properties_table.sql`
-- `20251027212207_create_property_photos_table.sql`
-- `20251027212222_create_tenants_table.sql`
-- `20251027212239_create_contracts_table.sql`
-- `20251027214804_add_address_to_property_owners.sql`
-- `20251027221845_create_contract_pdfs_storage_policies.sql`
-- `20251027223441_add_rent_increase_reminders_to_contracts.sql`
-- `20251028072523_create_property_photos_storage_bucket.sql`
-- `20251028125634_fix_security_issues.sql`
-- `20251030_create_tenant_with_contract_rpc.sql`
-- `20250103000000_add_contract_validation_rpcs.sql`
-- `20251030120000_add_contract_create_rpc.sql`
-- `20251030123000_photo_ordering_atomic.sql`
-- `20251102*.sql` - Multi-currency support
-- `20251104*.sql` - Meetings table
-- `20251110*.sql` - User preferences updates
-- `20251111*.sql` - Financial system
-- `20250105*.sql` - Property inquiries and commissions
-- `20251120*.sql` - Contract management enhancements
+See `supabase/migrations/` — filenames are `0001_…`, `0002_…`, etc.
 
 ### Running the Application
 

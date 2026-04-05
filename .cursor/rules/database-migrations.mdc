@@ -1,0 +1,11 @@
+---
+description: SQL migration file naming for supabase/migrations
+globs: supabase/migrations/**/*.sql
+---
+
+# Migration naming (RealDesk)
+
+- Use **4-digit zero-padded sequence** + underscore + slug: `0001_init.sql`, `0002_add_foo.sql`, `0003_…`
+- Never use `YYYYMMDDHHmmss` timestamps for new migrations in this repo.
+- Never edit an applied migration; add the next `000N_` file.
+- Full policy: root `CLAUDE.md` section **Database migrations (naming)**.

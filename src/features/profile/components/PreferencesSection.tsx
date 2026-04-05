@@ -124,7 +124,6 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
               </FormControl>
               <SelectContent>
                 <SelectItem value="en">{t('profile:languages.en')}</SelectItem>
-                <SelectItem value="tr">{t('profile:languages.tr')}</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage className="text-xs" />

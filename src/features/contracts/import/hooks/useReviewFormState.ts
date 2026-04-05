@@ -49,29 +49,29 @@ export function useReviewFormState(
 
   // Create initial form data from parsed data
   const initialFormData = useMemo<ReviewFormData>(() => ({
-    // Owner - from owner object
+    // Owner - from owner object (US Format)
     owner_name: getFieldValue(parsedData, 'owner.name', 'ownerName'),
-    owner_tc: getFieldValue(parsedData, 'owner.tc'),
+    owner_tax_id: getFieldValue(parsedData, 'owner.taxId', 'owner.tc'),
     owner_phone: getFieldValue(parsedData, 'owner.phone'),
     owner_email: '',
-    owner_iban: getFieldValue(parsedData, 'owner.iban'),
+    owner_routing_number: getFieldValue(parsedData, 'owner.routing'),
+    owner_account_number: getFieldValue(parsedData, 'owner.account'),
 
-    // Tenant - from tenant object
+    // Tenant - from tenant object (US Format)
     tenant_name: getFieldValue(parsedData, 'tenant.name', 'tenantName'),
-    tenant_tc: getFieldValue(parsedData, 'tenant.tc'),
+    tenant_tax_id: getFieldValue(parsedData, 'tenant.taxId', 'tenant.tc'),
     tenant_phone: getFieldValue(parsedData, 'tenant.phone'),
     tenant_email: '',
     tenant_address: getFieldValue(parsedData, 'tenant.address'),
 
-    // Property - from property object
-    mahalle: getFieldValue(parsedData, 'property.mahalle'),
-    cadde_sokak: getFieldValue(parsedData, 'property.sokak'),
-    bina_no: getFieldValue(parsedData, 'property.binaNo'),
-    daire_no: getFieldValue(parsedData, 'property.daireNo'),
-    ilce: getFieldValue(parsedData, 'property.ilce'),
-    il: getFieldValue(parsedData, 'property.il'),
-    property_type: getFieldValue(parsedData, 'property.type') || 'Daire',
-    use_purpose: getFieldValue(parsedData, 'property.usePurpose') || 'Mesken',
+    // Property - from property object (US Format)
+    street_address: getFieldValue(parsedData, 'property.streetAddress', 'property.sokak'),
+    unit: getFieldValue(parsedData, 'property.unit', 'property.daireNo'),
+    city: getFieldValue(parsedData, 'property.city', 'property.ilce'),
+    state: getFieldValue(parsedData, 'property.state', 'property.il') || 'TX',
+    zip_code: getFieldValue(parsedData, 'property.zipCode'),
+    property_type: getFieldValue(parsedData, 'property.type') || 'apartment',
+    use_purpose: getFieldValue(parsedData, 'property.usePurpose') || 'Residential',
 
     // Contract - from contract object
     start_date: (() => {

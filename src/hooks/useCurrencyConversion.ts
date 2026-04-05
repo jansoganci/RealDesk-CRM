@@ -6,9 +6,9 @@
 import { useCallback, useMemo } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import {
+  getRateForDate,
   formatCurrencyWithConversion,
-  getRateInfo,
-} from '../lib/currency';
+} from '../services/finance/exchangeRates.service';
 import type { RateInfo } from '../services/finance/exchangeRates.service';
 
 interface ConversionResult {
@@ -28,8 +28,8 @@ interface FormatResult {
  */
 export function useCurrencyConversion() {
   const { currency: displayCurrency } = useAuth();
-  const normalizedDisplayCurrency = useMemo(() => 
-    displayCurrency?.toUpperCase().trim() || 'TRY',
+  const normalizedDisplayCurrency = useMemo(
+    () => displayCurrency?.toUpperCase().trim() || 'USD',
     [displayCurrency]
   );
 
@@ -42,13 +42,14 @@ export function useCurrencyConversion() {
       originalCurrency: string,
       transactionDate: string | Date
     ): Promise<ConversionResult> => {
-      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'TRY';
+      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'USD';
 
       // If same currency, return as-is
       if (normalizedOriginal === normalizedDisplayCurrency) {
-        const dateStr = typeof transactionDate === 'string'
-          ? transactionDate.split('T')[0]
-          : transactionDate.toISOString().split('T')[0];
+        const dateStr =
+          typeof transactionDate === 'string'
+            ? transactionDate.split('T')[0]
+            : transactionDate.toISOString().split('T')[0];
         return {
           convertedAmount: amount,
           rateInfo: {
@@ -58,7 +59,7 @@ export function useCurrencyConversion() {
         };
       }
 
-      const rateInfo = await getRateInfo(
+      const rateInfo = await getRateForDate(
         normalizedOriginal,
         normalizedDisplayCurrency,
         transactionDate
@@ -99,17 +100,23 @@ export function useCurrencyConversion() {
       originalCurrency: string,
       transactionDate: string | Date
     ): Promise<RateInfo> => {
-      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'TRY';
-      return getRateInfo(normalizedOriginal, normalizedDisplayCurrency, transactionDate);
+      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'USD';
+      return getRateForDate(
+        normalizedOriginal,
+        normalizedDisplayCurrency,
+        transactionDate
+      );
     },
     [normalizedDisplayCurrency]
   );
 
-  return useMemo(() => ({
-    displayCurrency: normalizedDisplayCurrency,
-    convert,
-    formatWithConversion,
-    getRate,
-  }), [normalizedDisplayCurrency, convert, formatWithConversion, getRate]);
+  return useMemo(
+    () => ({
+      displayCurrency: normalizedDisplayCurrency,
+      convert,
+      formatWithConversion,
+      getRate,
+    }),
+    [normalizedDisplayCurrency, convert, formatWithConversion, getRate]
+  );
 }
-

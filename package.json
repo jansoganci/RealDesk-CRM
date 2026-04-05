@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit -p tsconfig.app.json",
-    "gen:types": "npx supabase gen types typescript --project-id jglxczzxliaiigccavnb > src/types/database.ts",
+    "gen:types": "npx supabase gen types typescript --project-id esmldgmwahhhplswmkui > src/types/database.ts",
     "deploy": "npm run build && wrangler pages deploy dist",
     "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=emlak-crm-app"
   },

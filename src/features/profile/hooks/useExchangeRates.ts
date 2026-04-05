@@ -1,12 +1,13 @@
 import { useState, useCallback, useEffect } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
-import {
-  refreshExchangeRates,
-  getCurrentExchangeRates,
-  getExchangeRatesTimestamp,
-  initializeExchangeRates,
-} from '../../../lib/currency';
+
+/** Static display snapshot (USD-default app; no client FX API). */
+const DISPLAY_RATES: Record<string, number> = {
+  USD: 1,
+  EUR: 0.92,
+  TRY: 34.5,
+};
 
 /**
  * Exchange Rates Hook
@@ -32,17 +33,15 @@ export function useExchangeRates(): UseExchangeRatesReturn {
   const [lastUpdated, setLastUpdated] = useState<number | null>(null);
 
   const loadExchangeRates = useCallback(async () => {
-    await initializeExchangeRates();
-    setExchangeRates(getCurrentExchangeRates());
-    setLastUpdated(getExchangeRatesTimestamp());
+    setExchangeRates({ ...DISPLAY_RATES });
+    setLastUpdated(Date.now());
   }, []);
 
   const handleRefreshRates = useCallback(async () => {
     setRefreshingRates(true);
     try {
-      await refreshExchangeRates();
-      setExchangeRates(getCurrentExchangeRates());
-      setLastUpdated(getExchangeRatesTimestamp());
+      setExchangeRates({ ...DISPLAY_RATES });
+      setLastUpdated(Date.now());
       toast.success(t('profile:exchangeRates.refreshSuccess'));
     } catch (error) {
       console.error('Failed to refresh exchange rates:', error);
@@ -72,7 +71,7 @@ export function useExchangeRates(): UseExchangeRatesReturn {
 
   // Load exchange rates on mount
   useEffect(() => {
-    loadExchangeRates();
+    void loadExchangeRates();
   }, [loadExchangeRates]);
 
   return {
@@ -83,4 +82,3 @@ export function useExchangeRates(): UseExchangeRatesReturn {
     formatLastUpdated,
   };
 }
-

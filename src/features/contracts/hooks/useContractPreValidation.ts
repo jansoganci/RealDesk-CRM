@@ -14,7 +14,7 @@
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import {
-  hashTC,
+  hashTaxId,
   normalizePhone,
   checkDuplicateName,
   checkDataChanges,
@@ -28,8 +28,8 @@ import type { ContractFormData } from '@/types/contract.types';
 
 export interface PreValidationResult {
   canProceed: boolean;
-  ownerTcHash: string;
-  tenantTcHash: string;
+  ownerTaxIdHash: string;
+  tenantTaxIdHash: string;
 }
 
 export type ShowConfirmationFn = (title: string, message: string) => Promise<boolean>;
@@ -55,15 +55,15 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     showConfirmation: ShowConfirmationFn
   ): Promise<PreValidationResult> => {
 
-    // Step 1: Hash TC numbers for lookups
-    const ownerTcHash = await hashTC(data.owner_tc);
-    const tenantTcHash = await hashTC(data.tenant_tc);
+    // Step 1: Hash Tax IDs for lookups
+    const ownerTaxIdHash = await hashTaxId(data.owner_tax_id);
+    const tenantTaxIdHash = await hashTaxId(data.tenant_tax_id);
 
     // Step 2: Check owner duplicate names
     toast.info(t('validation.checkingOwner'));
     const ownerDuplicate = await checkDuplicateName(
       data.owner_name,
-      ownerTcHash,
+      ownerTaxIdHash,
       'owner'
     );
 
@@ -75,7 +75,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
     toast.info(t('validation.checkingTenant'));
     const tenantDuplicate = await checkDuplicateName(
       data.tenant_name,
-      tenantTcHash,
+      tenantTaxIdHash,
       'tenant'
     );
 
@@ -85,7 +85,7 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
 
     // Step 4: Check owner data changes
     const ownerChanges = await checkDataChanges(
-      ownerTcHash,
+      ownerTaxIdHash,
       {
         phone: normalizePhone(data.owner_phone),
         email: data.owner_email
@@ -99,13 +99,13 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
         ownerChanges.message
       );
       if (!confirmed) {
-        return { canProceed: false, ownerTcHash, tenantTcHash };
+        return { canProceed: false, ownerTaxIdHash, tenantTaxIdHash };
       }
     }
 
     // Step 5: Check tenant data changes
     const tenantChanges = await checkDataChanges(
-      tenantTcHash,
+      tenantTaxIdHash,
       {
         phone: normalizePhone(data.tenant_phone),
         email: data.tenant_email,
@@ -120,12 +120,12 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
         tenantChanges.message
       );
       if (!confirmed) {
-        return { canProceed: false, ownerTcHash, tenantTcHash };
+        return { canProceed: false, ownerTaxIdHash, tenantTaxIdHash };
       }
     }
 
     // Step 6: Check multiple active contracts
-    const multipleContracts = await checkMultipleContracts(tenantTcHash);
+    const multipleContracts = await checkMultipleContracts(tenantTaxIdHash);
 
     if (multipleContracts.hasMultiple && multipleContracts.message) {
       const confirmed = await showConfirmation(
@@ -133,12 +133,12 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
         multipleContracts.message
       );
       if (!confirmed) {
-        return { canProceed: false, ownerTcHash, tenantTcHash };
+        return { canProceed: false, ownerTaxIdHash, tenantTaxIdHash };
       }
     }
 
     // All checks passed
-    return { canProceed: true, ownerTcHash, tenantTcHash };
+    return { canProceed: true, ownerTaxIdHash, tenantTaxIdHash };
   };
 
   return {
