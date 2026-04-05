@@ -29,7 +29,7 @@
 | `docs/ORG_V1_PLAN.md` | Original org migration plan (LOCKED) | DEV_DOC | KEEP | Permanent reference, marked as LOCKED |
 | `docs/REORGANIZATION_SUMMARY.md` | Documentation reorganization summary | DEV_DOC | KEEP | Reference for docs structure |
 | `docs/IMPL-SPEC-contract-pdf-engine-v2.md` | Implementation spec for PDF engine | DEV_DOC | KEEP | Permanent technical specification |
-| `docs/ADR-002-contract-engine-v2-architecture.md` | Architecture decision record | DEV_DOC | KEEP | Permanent ADR document |
+| `docs/reference/ADR-002-contract-engine-v2-architecture.md` | Architecture decision record | DEV_DOC | KEEP | Permanent ADR document |
 | `docs/README.md` | Documentation index | DEV_DOC | KEEP | Essential navigation document |
 | `docs/research/RECURRING_EXPENSES_PHASE1_UNDERSTANDING.md` | Research document | DEV_DOC | KEEP | Research reference |
 | `docs/research/RECURRING_EXPENSES_PHASE1_AUDIT.md` | Implementation audit | DEV_DOC | KEEP | Reference for completed work |

@@ -142,5 +142,5 @@ Step 5 — Test
 ## Related Documents
 
 - `docs/PRICING_STRATEGY_2026.md` — pricing plan details
-- `docs/i18n_AUDIT_REPORT.md` — current i18n coverage
+- `docs/archive/audits/i18n_AUDIT_REPORT.md` — i18n audit snapshot (archived)
 - `CLAUDE.md` — environment variables, deployment commands

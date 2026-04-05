@@ -9,7 +9,7 @@
  * - Browser download triggers
  *
  * Reference: IMPL-SPEC-contract-pdf-engine-v2.md
- * Architecture: ADR-002-contract-engine-v2-architecture.md
+ * Architecture: docs/reference/ADR-002-contract-engine-v2-architecture.md
  * Font System: See src/services/pdfFonts.ts for font registration details
  *
  * IMPORTANT: This service is for v2 contract types ONLY (sale, commission, showing).

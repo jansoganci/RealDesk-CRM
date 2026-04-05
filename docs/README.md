@@ -6,6 +6,7 @@ This directory contains all project documentation organized by purpose and statu
 
 ### `/reference/`
 **Active reference documentation** - Core architecture, APIs, and guides:
+- `ADR-002-contract-engine-v2-architecture.md` - Contract engine v2 ADR (rent vs v2 isolation)
 - `API.md` - API documentation
 - `ARCHITECTURE.md` - System architecture overview
 - `CONTRIBUTING.md` - Contribution guidelines
@@ -61,6 +62,12 @@ This directory contains all project documentation organized by purpose and statu
 
 ### `/archive/`
 **Completed and historical documents** - See `/archive/README.md` for details
+
+Notable archived items:
+- `/archive/completed/DOCS_REORGANIZATION_REPORT.md` — one-time docs filing report
+- `/archive/completed/ONBOARDING_DATA_PERSISTENCE_REPORT.md` — onboarding DB persistence investigation
+- `/archive/completed/TEAM_PERFORMANCE_DASHBOARD_DESIGN.md` — team dashboard design spec
+- `/archive/audits/i18n_AUDIT_REPORT.md` — i18n hardcoded-string audit snapshot
 
 ## 🚀 Quick Links
 

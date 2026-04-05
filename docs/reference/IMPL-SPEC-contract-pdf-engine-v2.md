@@ -1,6 +1,6 @@
 # Implementation Specification: Contract PDF Engine v2
 
-**Parent Document:** ADR-002-contract-engine-v2-architecture.md
+**Parent Document:** `docs/reference/ADR-002-contract-engine-v2-architecture.md`
 **Status:** Ready for Implementation
 **Date:** 2024-12-24
 **Scope:** PDF generation, storage, and download for v2 contract types

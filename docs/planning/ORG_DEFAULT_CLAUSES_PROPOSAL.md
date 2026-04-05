@@ -217,7 +217,7 @@ Before implementing, ask customers:
 ## Related Documents
 
 - Previous analysis in this conversation (2026-01-12)
-- `docs/ADR-002-contract-engine-v2-architecture.md` - Contract isolation rules
+- `docs/reference/ADR-002-contract-engine-v2-architecture.md` - Contract isolation rules
 - `supabase/migrations/20251224000000_create_editable_clauses_system.sql` - Current clause tables
 
 ---

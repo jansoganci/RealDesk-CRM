@@ -1,6 +1,6 @@
-# CLAUDE.md — Emlak CRM
+# CLAUDE.md — RealDesk CRM
 
-Mobile-first Real Estate CRM for Turkish real estate agents. Built with **Vite + React + TypeScript**, backed by **Supabase** (Postgres, Auth, Storage, Edge Functions), deployed to **Cloudflare Pages**.
+Mobile-first Real Estate CRM for US solo agents. Built with **Vite + React + TypeScript**, backed by **Supabase** (Postgres, Auth, Storage, Edge Functions), deployed to **Cloudflare Pages**.
 
 ---
 
@@ -36,7 +36,7 @@ supabase functions deploy     # Deploy edge functions
 | Backend | Supabase (PostgreSQL, RLS, Auth, Storage) |
 | Edge Functions | Supabase Edge Functions (Deno) |
 | PDF | jsPDF + jspdf-autotable |
-| i18n | i18next (18 namespaces, TR + EN) |
+| i18n | i18next (18 namespaces, EN primary + TR legacy) |
 | Deploy | Cloudflare Pages via Wrangler 3 |
 
 ---
@@ -51,13 +51,19 @@ src/
 │   └── common/        # EmptyState, ErrorBoundary, Skeletons
 ├── features/          # One folder per domain feature
 │   ├── auth/          # Login, AuthCallback
-│   ├── dashboard/     # Dashboard with stats
-│   ├── properties/    # Rental + sale property management
-│   ├── owners/        # Property owner management
+│   ├── dashboard/     # Dashboard with stats + multi-deal overview
+│   ├── properties/    # Rental + sale property management (US address)
+│   ├── owners/        # Property owner management (US bank fields)
 │   ├── tenants/       # Tenant management (multi-step creation)
 │   ├── contracts/     # Rental contracts + PDF + import wizard
 │   ├── finance/       # Financial tracking, categories, analytics
-│   ├── inquiries/     # Lead/inquiry + auto property matching
+│   ├── inquiries/     # Lead pipeline with source tracking + auto-matching
+│   ├── deals/         # Deal records (lead → closing), offer tracker
+│   ├── timeline/      # Transaction timeline (milestones, deadlines, docs)
+│   ├── agreements/    # Buyer-agent agreement tracker (post-NAR)
+│   ├── showings/      # Showing log with buyer feedback
+│   ├── commission/    # Dual-side commission calculator + forecast
+│   ├── screening/     # Rental applicant screening tracker
 │   ├── calendar/      # Meetings and appointments
 │   ├── reminders/     # Auto-generated reminders from contracts
 │   ├── quick-add/     # Quick entity creation shortcut
@@ -69,7 +75,7 @@ src/
 ├── contexts/          # AuthContext, OrgContext, BillingContext
 ├── hooks/             # Custom React hooks
 ├── types/             # index.ts, database.ts (generated), contract.types.ts
-└── templates/         # PDF contract text templates (Turkish)
+└── templates/         # PDF contract text templates (US lease + purchase agreement)
 
 supabase/
 ├── migrations/        # 70+ chronological SQL migration files
@@ -89,7 +95,7 @@ public/
 - **Service proxy pattern** — always import services from `src/lib/serviceProxy.ts`, never directly from `src/services/`
 - **Zod schemas** for all form validation; pair with `zodResolver` from `@hookform/resolvers`
 - **`cn()` utility** from `src/lib/utils.ts` for merging Tailwind classes
-- **i18n required** — all user-facing strings must use `useTranslation('[namespace]')` and have both `tr/` and `en/` translations
+- **i18n required** — all user-facing strings must use `useTranslation('[namespace]')`. English (`en/`) is the primary locale; Turkish (`tr/`) is legacy-only. New features only need `en/` translations.
 
 ---
 
@@ -104,7 +110,7 @@ public/
 5. Add route constant to `src/config/constants.ts`
 6. Register route in `src/App.tsx`
 7. Add nav item to `src/components/layout/Sidebar.tsx`
-8. Create `public/locales/tr/[feature-name].json` and `en/` counterpart
+8. Create `public/locales/en/[feature-name].json` (Turkish counterpart only if updating existing feature)
 
 ### Adding a Database Table
 
@@ -138,21 +144,37 @@ Services **always** call `getAuthenticatedUserId()` — never trust client-suppl
 
 ## Database Key Tables
 
+### Core (existing, adapted for US)
+
 | Table | Purpose |
 |-------|---------|
-| `properties` | Properties with `property_type: 'rental' \| 'sale'` |
-| `property_owners` | Owners — TC + IBAN stored AES-256-GCM encrypted |
-| `tenants` | Tenants — TC encrypted, SHA-256 hash for duplicate check |
-| `contracts` | Rental contracts with PDF path in Supabase Storage |
+| `properties` | Properties with `property_type: 'rental' \| 'sale'`; US address fields (street_address, city, state, zip_code, mls_id, year_built) |
+| `property_owners` | Owners — routing_number + account_number stored AES-256-GCM encrypted (TC/IBAN removed) |
+| `tenants` | Tenants — US address fields; TC fields removed |
+| `contracts` | Rental contracts + deal_id FK, deposit_amount, deposit_return_deadline |
 | `contract_details` | Extra contract fields for PDF generation |
-| `property_inquiries` | Leads/inquiries with auto-matching to properties |
+| `property_inquiries` | Lead pipeline with source tracking + auto-matching to properties |
 | `inquiry_matches` | Match results between inquiries and properties |
 | `meetings` | Calendar appointments linked to property/tenant/owner |
-| `commissions` | Rental and sale commission tracking |
+| `commissions` | Dual-side commission tracking (listing-side + buyer-side, post-NAR) |
 | `financial_transactions` | Income/expense ledger with receipt storage |
 | `expense_categories` | Customizable categories with monthly budgets |
 | `user_preferences` | User settings, business info, commission rates |
-| `organizations` | Multi-tenant org support (newer schema) |
+| `organizations` | Multi-tenant org support |
+
+### New (US V1)
+
+| Table | Purpose |
+|-------|---------|
+| `deals` | Unified deal record (lead → closing): deal_type, status, offer_price, closing_date, commission rates |
+| `deal_milestones` | Transaction timeline milestones with due_date, status, responsible_party (enum: mutual_acceptance … closing_day) |
+| `deal_documents` | Per-milestone document uploads linked to deal + milestone |
+| `deal_parties` | Contact directory per deal: buyer, seller, lender, title_co, inspector, etc. |
+| `deal_amendments` | Contract amendments log with effective_date |
+| `buyer_agent_agreements` | Buyer-agent agreement tracker (post-NAR Aug 2024): commission_rate, expiration_date, exclusivity_type |
+| `offers` | Offer tracking with counter-offer history (self-referencing counter_of FK) |
+| `showing_logs` | Property showing records with buyer feedback (loved/interested/pass) |
+| `applicant_screenings` | Rental applicant tracking: credit_check, background_check, income_verified, decision |
 
 All tables have **Row Level Security** with `user_id` column. Standard RLS pattern:
 ```sql
@@ -190,7 +212,7 @@ Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
 | `create-checkout-session` | Stripe subscription checkout |
 | `create-portal-session` | Stripe customer portal |
 | `stripe-webhook` | Handle Stripe events |
-| `fetch-exchange-rates` | Auto-update TRY/USD/EUR rates |
+| `fetch-exchange-rates` | Auto-update exchange rates (legacy — USD is base currency in US build) |
 | `send-invitation-email` | Org team invite emails |
 | `extract-text` | Raw text extraction helper |
 
@@ -211,10 +233,10 @@ Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
 
 - **NEVER** commit `.env` files
 - **NEVER** modify `supabase/migrations/` files after they are applied — always create new migrations
-- Sensitive data (TC ID, IBAN) must use `encrypt()` from `encryption.service.ts` before storing
-- TC ID must also be hashed with `hashTC()` for duplicate detection (never stored in plain text)
+- Sensitive data (bank routing number, account number) must use `encrypt()` from `encryption.service.ts` before storing (AES-256-GCM)
 - All user input must be validated with Zod before hitting the service layer
 - Signed URLs (15 min expiry) for all PDF and photo access via Supabase Storage
+- **CCPA compliance** required for California users — personal data access/deletion flows must be supported
 
 ---
 
@@ -222,11 +244,16 @@ Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
 
 - **`database.ts` may be stale** — after schema changes, run `npm run gen:types`. If org/v2 tables are missing, check `database.types.ts` instead.
 - **Property statuses differ by type**: Rental → `Empty | Occupied | Inactive`; Sale → `Available | Under Offer | Sold | Inactive`
-- **i18n namespace must match file name**: `useTranslation('properties')` loads `public/locales/tr/properties.json`
+- **i18n namespace must match file name**: `useTranslation('properties')` loads `public/locales/en/properties.json` (English is primary locale)
 - **Photo limit**: Max 10 photos per property — enforced in application logic, not DB
-- **PDF Turkish characters**: Must call `addTurkishFonts(doc)` from `pdfFonts.service.ts` before any text rendering
+- **PDF generation**: US PDFs use standard Latin fonts — no Turkish font setup needed for new features. Legacy contracts may still call `addTurkishFonts(doc)`.
 - **Atomic contract creation**: Use `createContractWithEntities()` RPC to create owner + tenant + property + contract in one transaction — never create these entities separately
 - **File upload limits**: 5MB max; allowed image types: `jpeg, jpg, png, webp`
+- **Transaction Timeline auto-generation**: When an offer status → `Accepted`, the system must auto-create all `deal_milestones` rows with calculated due dates based on closing_date and contingency periods
+- **Buyer-agent agreement required before showings** (post-NAR Aug 2024): Always check `buyer_agent_agreements` status before creating a `showing_log` entry
+- **US state code**: Always store as 2-letter uppercase (e.g. `CA`, `TX`, `NY`) — validated at form layer
+- **Lead paint disclosure**: Auto-include for properties with `year_built < 1978` — enforced in lease PDF generator
+- **Deposit return deadline**: State-specific (CA: 21 days, NY: 14 days, TX: 30 days) — apply via state rules engine, not hardcoded
 
 ---
 

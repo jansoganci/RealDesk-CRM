@@ -625,7 +625,7 @@ For detailed guidelines, see [docs/reference/CONTRIBUTING.md](./docs/reference/C
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](./docs/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
