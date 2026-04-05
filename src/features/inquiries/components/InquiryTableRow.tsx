@@ -5,9 +5,10 @@ import { Button } from '@/components/ui/button';
 import { TableActionButtons } from '@/components/common/TableActionButtons';
 import { Phone, Mail, MapPin, Eye, Loader2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import { cn } from '@/lib/utils';
 import { useOrg } from '@/contexts/OrgContext';
 import type { PropertyInquiry } from '@/types';
-import { getInquiryStatusBadgeClasses } from '../utils/statusUtils';
+import { getLeadStatusBadgeClasses } from '../utils/statusUtils';
 
 // Helper function to format budget with currency symbol
 const formatBudget = (min: number | null, max: number | null, currencyType: string = 'TRY'): string => {
@@ -36,6 +37,8 @@ interface InquiryTableRowProps {
   onDelete: (inquiry: PropertyInquiry) => void;
   onViewMatches: (inquiry: PropertyInquiry) => void;
   matchesLoading?: string | null;
+  /** Opens lead detail panel (e.g. list + pipeline). */
+  onOpenDetail?: (inquiry: PropertyInquiry) => void;
 }
 
 export function InquiryTableRow({
@@ -44,15 +47,30 @@ export function InquiryTableRow({
   onDelete,
   onViewMatches,
   matchesLoading,
+  onOpenDetail,
 }: InquiryTableRowProps) {
-  const { t } = useTranslation(['inquiries', 'common']);
+  const { t } = useTranslation(['leads', 'common']);
   const { isMember } = useOrg();
 
   return (
     <TableRow key={inquiry.id}>
       <TableCell>
         <div className="space-y-1">
-          <div className={`font-medium ${COLORS.gray.text900}`}>{inquiry.name}</div>
+          {onOpenDetail ? (
+            <button
+              type="button"
+              className={cn(
+                'text-left font-medium',
+                COLORS.gray.text900,
+                'hover:underline cursor-pointer'
+              )}
+              onClick={() => onOpenDetail(inquiry)}
+            >
+              {inquiry.name}
+            </button>
+          ) : (
+            <div className={`font-medium ${COLORS.gray.text900}`}>{inquiry.name}</div>
+          )}
           <div className={`text-sm ${COLORS.gray.text500} flex items-center gap-1`}>
             <Phone className="h-3 w-3" />
             {inquiry.phone}
@@ -98,8 +116,8 @@ export function InquiryTableRow({
         })()}
       </TableCell>
       <TableCell>
-        <Badge className={getInquiryStatusBadgeClasses(inquiry.status)}>
-          {t(`status.${inquiry.status}`)}
+        <Badge className={getLeadStatusBadgeClasses(inquiry.status)}>
+          {t(`status.${inquiry.status}`, { defaultValue: inquiry.status })}
         </Badge>
       </TableCell>
       <TableCell>

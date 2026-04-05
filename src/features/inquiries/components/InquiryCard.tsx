@@ -6,7 +6,7 @@ import { Phone, Mail, MapPin, Eye, Loader2 } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { useOrg } from '@/contexts/OrgContext';
 import type { PropertyInquiry } from '@/types';
-import { getInquiryStatusBadgeClasses } from '../utils/statusUtils';
+import { getLeadStatusBadgeClasses } from '../utils/statusUtils';
 
 // Helper function to format budget with currency symbol
 const formatBudget = (min: number | null, max: number | null, currencyType: string = 'TRY'): string => {
@@ -35,6 +35,7 @@ interface InquiryCardProps {
   onDelete: (inquiry: PropertyInquiry) => void;
   onViewMatches: (inquiry: PropertyInquiry) => void;
   matchesLoading?: string | null;
+  onOpenDetail?: (inquiry: PropertyInquiry) => void;
 }
 
 export function InquiryCard({
@@ -43,15 +44,26 @@ export function InquiryCard({
   onDelete,
   onViewMatches,
   matchesLoading,
+  onOpenDetail,
 }: InquiryCardProps) {
-  const { t } = useTranslation(['inquiries', 'common']);
+  const { t } = useTranslation(['leads', 'common']);
   const { isMember } = useOrg();
 
   return (
     <div key={inquiry.id} className={`p-4 rounded-lg border ${COLORS.gray.border200} space-y-3`}>
       <div className="flex items-start justify-between">
         <div className="space-y-1 flex-1">
-          <div className={`font-medium ${COLORS.gray.text900}`}>{inquiry.name}</div>
+          {onOpenDetail ? (
+            <button
+              type="button"
+              className={`text-left font-medium ${COLORS.gray.text900} hover:underline`}
+              onClick={() => onOpenDetail(inquiry)}
+            >
+              {inquiry.name}
+            </button>
+          ) : (
+            <div className={`font-medium ${COLORS.gray.text900}`}>{inquiry.name}</div>
+          )}
           <div className={`text-sm ${COLORS.gray.text500} flex items-center gap-1`}>
             <Phone className="h-3 w-3" />
             {inquiry.phone}
@@ -63,8 +75,8 @@ export function InquiryCard({
             </div>
           )}
         </div>
-        <Badge className={getInquiryStatusBadgeClasses(inquiry.status)}>
-          {t(`status.${inquiry.status}`)}
+        <Badge className={getLeadStatusBadgeClasses(inquiry.status)}>
+          {t(`status.${inquiry.status}`, { defaultValue: inquiry.status })}
         </Badge>
       </div>
 

@@ -10,10 +10,70 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.5"
+    PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
+      buyer_agent_agreements: {
+        Row: {
+          commission_rate: number | null
+          commission_type: string | null
+          created_at: string | null
+          expiration_date: string
+          flat_fee_amount: number | null
+          id: string
+          lead_id: string
+          org_id: string
+          pdf_url: string | null
+          signed_date: string
+          status: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          commission_rate?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          expiration_date: string
+          flat_fee_amount?: number | null
+          id?: string
+          lead_id: string
+          org_id: string
+          pdf_url?: string | null
+          signed_date: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          commission_rate?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          expiration_date?: string
+          flat_fee_amount?: number | null
+          id?: string
+          lead_id?: string
+          org_id?: string
+          pdf_url?: string | null
+          signed_date?: string
+          status?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buyer_agent_agreements_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "property_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buyer_agent_agreements_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           amount: number
@@ -37,7 +97,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           property_address: string
           property_id: string
           type: string
@@ -138,7 +198,7 @@ export type Database = {
           custom_content: string
           deleted_at?: string | null
           id?: string
-          org_id?: string
+          org_id: string
           updated_at?: string | null
           user_id: string
         }
@@ -192,7 +252,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           is_active?: boolean | null
-          org_id?: string
+          org_id: string
           updated_at?: string | null
           user_id: string
         }
@@ -228,6 +288,7 @@ export type Database = {
           deposit_amount: number | null
           deposit_currency: string | null
           furniture_list: Json | null
+          handover_photos_url: string | null
           id: string
           org_id: string
           payment_day_of_month: number | null
@@ -248,8 +309,9 @@ export type Database = {
           deposit_amount?: number | null
           deposit_currency?: string | null
           furniture_list?: Json | null
+          handover_photos_url?: string | null
           id?: string
-          org_id?: string
+          org_id: string
           payment_day_of_month?: number | null
           payment_method?: string | null
           rent_increase_rate?: number | null
@@ -268,6 +330,7 @@ export type Database = {
           deposit_amount?: number | null
           deposit_currency?: string | null
           furniture_list?: Json | null
+          handover_photos_url?: string | null
           id?: string
           org_id?: string
           payment_day_of_month?: number | null
@@ -427,7 +490,7 @@ export type Database = {
           expected_new_rent?: number | null
           id?: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           property_id: string
           reminder_notes?: string | null
           rent_amount?: number | null
@@ -616,7 +679,7 @@ export type Database = {
           invoice_number?: string | null
           is_recurring?: boolean
           notes?: string | null
-          org_id?: string
+          org_id: string
           parent_transaction_id?: string | null
           payment_method?: string | null
           payment_status?: string
@@ -716,7 +779,7 @@ export type Database = {
           inquiry_id: string
           matched_at?: string | null
           notification_sent?: boolean | null
-          org_id?: string
+          org_id: string
           property_id: string
           user_id: string
         }
@@ -776,7 +839,7 @@ export type Database = {
           deleted_at?: string | null
           id?: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           owner_id?: string | null
           property_id?: string | null
           reminder_minutes?: number | null
@@ -832,10 +895,51 @@ export type Database = {
           },
         ]
       }
+      onboarding_events: {
+        Row: {
+          action_taken: string
+          created_at: string | null
+          data: Json | null
+          id: string
+          org_id: string
+          step_name: string
+          step_number: number
+          user_id: string
+        }
+        Insert: {
+          action_taken: string
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          org_id: string
+          step_name: string
+          step_number: number
+          user_id: string
+        }
+        Update: {
+          action_taken?: string
+          created_at?: string | null
+          data?: Json | null
+          id?: string
+          org_id?: string
+          step_name?: string
+          step_number?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_events_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       org_invitations: {
         Row: {
           accepted_at: string | null
-          created_at: string
+          created_at: string | null
           email: string
           expires_at: string
           id: string
@@ -844,11 +948,11 @@ export type Database = {
           invited_by: string | null
           org_id: string
           role: string
-          updated_at: string
+          updated_at: string | null
         }
         Insert: {
           accepted_at?: string | null
-          created_at?: string
+          created_at?: string | null
           email: string
           expires_at: string
           id?: string
@@ -857,11 +961,11 @@ export type Database = {
           invited_by?: string | null
           org_id: string
           role?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Update: {
           accepted_at?: string | null
-          created_at?: string
+          created_at?: string | null
           email?: string
           expires_at?: string
           id?: string
@@ -870,16 +974,9 @@ export type Database = {
           invited_by?: string | null
           org_id?: string
           role?: string
-          updated_at?: string
+          updated_at?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "org_invitations_invited_by_fkey"
-            columns: ["invited_by"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "org_invitations_org_id_fkey"
             columns: ["org_id"]
@@ -929,92 +1026,6 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "org_members_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      onboarding_events: {
-        Row: {
-          action_taken: string
-          created_at: string
-          data: Json | null
-          id: string
-          org_id: string
-          step_name: string
-          step_number: number
-          user_id: string
-        }
-        Insert: {
-          action_taken: string
-          created_at?: string
-          data?: Json | null
-          id?: string
-          org_id: string
-          step_name: string
-          step_number: number
-          user_id: string
-        }
-        Update: {
-          action_taken?: string
-          created_at?: string
-          data?: Json | null
-          id?: string
-          org_id?: string
-          step_name?: string
-          step_number?: number
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "onboarding_events_org_id_fkey"
-            columns: ["org_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      user_onboarding_responses: {
-        Row: {
-          id: string
-          user_id: string
-          org_id: string
-          question_key: string
-          answer: Json
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          org_id: string
-          question_key: string
-          answer: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          org_id?: string
-          question_key?: string
-          answer?: Json
-          created_at?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "user_onboarding_responses_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_onboarding_responses_org_id_fkey"
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
@@ -1133,7 +1144,7 @@ export type Database = {
           notes?: string | null
           offer_amount?: number | null
           offer_date?: string | null
-          org_id?: string
+          org_id: string
           owner_id: string
           property_type?: string
           rent_amount?: number | null
@@ -1206,6 +1217,7 @@ export type Database = {
           email: string | null
           id: string
           inquiry_type: string
+          lead_source: string | null
           max_rent_budget: number | null
           max_sale_budget: number | null
           min_rent_budget: number | null
@@ -1214,8 +1226,10 @@ export type Database = {
           notes: string | null
           org_id: string
           phone: string
+          pre_approved: boolean | null
           preferred_city: string | null
           preferred_district: string | null
+          preferred_state: string | null
           status: string
           updated_at: string | null
           user_id: string
@@ -1226,16 +1240,19 @@ export type Database = {
           email?: string | null
           id?: string
           inquiry_type?: string
+          lead_source?: string | null
           max_rent_budget?: number | null
           max_sale_budget?: number | null
           min_rent_budget?: number | null
           min_sale_budget?: number | null
           name: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           phone: string
+          pre_approved?: boolean | null
           preferred_city?: string | null
           preferred_district?: string | null
+          preferred_state?: string | null
           status?: string
           updated_at?: string | null
           user_id: string
@@ -1246,6 +1263,7 @@ export type Database = {
           email?: string | null
           id?: string
           inquiry_type?: string
+          lead_source?: string | null
           max_rent_budget?: number | null
           max_sale_budget?: number | null
           min_rent_budget?: number | null
@@ -1254,8 +1272,10 @@ export type Database = {
           notes?: string | null
           org_id?: string
           phone?: string
+          pre_approved?: boolean | null
           preferred_city?: string | null
           preferred_district?: string | null
+          preferred_state?: string | null
           status?: string
           updated_at?: string | null
           user_id?: string
@@ -1296,7 +1316,7 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           phone?: string | null
           tc_encrypted?: string | null
           tc_hash?: string | null
@@ -1404,7 +1424,7 @@ export type Database = {
           name: string
           next_due_date: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           payment_method?: string | null
           reminder_days_before?: number | null
           start_date: string
@@ -1443,6 +1463,67 @@ export type Database = {
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      showing_logs: {
+        Row: {
+          created_at: string | null
+          duration_minutes: number | null
+          feedback: string | null
+          id: string
+          interest_level: string | null
+          lead_id: string
+          org_id: string
+          property_id: string
+          showing_date: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          feedback?: string | null
+          id?: string
+          interest_level?: string | null
+          lead_id: string
+          org_id: string
+          property_id: string
+          showing_date: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          feedback?: string | null
+          id?: string
+          interest_level?: string | null
+          lead_id?: string
+          org_id?: string
+          property_id?: string
+          showing_date?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "showing_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "property_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "showing_logs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "showing_logs_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]
@@ -1552,7 +1633,7 @@ export type Database = {
           id?: string
           name: string
           notes?: string | null
-          org_id?: string
+          org_id: string
           phone?: string | null
           tc_encrypted?: string | null
           tc_hash?: string | null
@@ -1653,6 +1734,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_onboarding_responses: {
+        Row: {
+          answer: Json
+          created_at: string | null
+          id: string
+          org_id: string
+          question_key: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          answer: Json
+          created_at?: string | null
+          id?: string
+          org_id: string
+          question_key: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          answer?: Json
+          created_at?: string | null
+          id?: string
+          org_id?: string
+          question_key?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_onboarding_responses_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_preferences: {
         Row: {
           commission_rate: number | null
@@ -1660,7 +1779,7 @@ export type Database = {
           full_name: string | null
           language: string | null
           meeting_reminder_minutes: number | null
-          onboarding_banner_dismissed_at: string | null
+          onboarding_banner_dismissed_at: number | null
           phone_number: string | null
           user_id: string
         }
@@ -1670,7 +1789,7 @@ export type Database = {
           full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
-          onboarding_banner_dismissed_at?: string | null
+          onboarding_banner_dismissed_at?: number | null
           phone_number?: string | null
           user_id: string
         }
@@ -1680,7 +1799,7 @@ export type Database = {
           full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
-          onboarding_banner_dismissed_at?: string | null
+          onboarding_banner_dismissed_at?: number | null
           phone_number?: string | null
           user_id?: string
         }
@@ -1691,10 +1810,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      accept_org_invitation: {
-        Args: { p_token: string }
-        Returns: Json
-      }
+      accept_org_invitation: { Args: { p_token: string }; Returns: Json }
       calculate_next_due_date: {
         Args: { current_due_date: string; day_of_month?: number; freq: string }
         Returns: string
@@ -1705,14 +1821,6 @@ export type Database = {
           p_device_id?: string
           p_user_id?: string
         }
-        Returns: Json
-      }
-      generate_invitation_token: {
-        Args: Record<string, never>
-        Returns: string
-      }
-      get_invitation_info: {
-        Args: { p_token: string }
         Returns: Json
       }
       create_contract_atomic: {
@@ -1726,6 +1834,10 @@ export type Database = {
         }
         Returns: Json
       }
+      create_first_organization: {
+        Args: { p_org_name?: string }
+        Returns: string
+      }
       create_sale_commission: {
         Args: {
           p_currency?: string
@@ -1734,22 +1846,52 @@ export type Database = {
         }
         Returns: string
       }
-      get_quota: {
-        Args: { p_device_id?: string; p_user_id?: string }
+      ensure_user_trial: { Args: never; Returns: undefined }
+      generate_invitation_token: { Args: never; Returns: string }
+      get_invitation_info: { Args: { p_token: string }; Returns: Json }
+      get_invitation_with_inviter: {
+        Args: { p_invitation_id: string }
         Returns: Json
       }
       get_org_members_with_users: {
         Args: { p_org_id: string }
+        Returns: {
+          created_at: string
+          id: string
+          invited_at: string
+          invited_by: string
+          joined_at: string
+          org_id: string
+          role: string
+          status: string
+          updated_at: string
+          user_avatar_url: string
+          user_email: string
+          user_full_name: string
+          user_id: string
+        }[]
+      }
+      get_quota: {
+        Args: { p_device_id?: string; p_user_id?: string }
+        Returns: Json
+      }
+      get_team_performance: {
+        Args: { p_end_date?: string; p_org_id: string; p_start_date?: string }
         Returns: Json
       }
       get_user_id_by_email: {
         Args: { email_input: string }
-        Returns: { id: string }[]
+        Returns: {
+          email: string
+          id: string
+        }[]
       }
+      get_user_org_ids: { Args: never; Returns: string[] }
       has_active_subscription: {
         Args: { check_user_id: string }
         Returns: boolean
       }
+      is_org_owner: { Args: { check_org_id: string }; Returns: boolean }
       rpc_create_contract_and_update_property: {
         Args: { p_contract: Json }
         Returns: Json
@@ -1790,6 +1932,7 @@ export type Database = {
       rpc_update_contract_status: {
         Args: { p_contract_id: string; p_new_status: string }
         Returns: {
+          commission_amount: number | null
           contract_pdf_path: string | null
           created_at: string | null
           currency: string | null

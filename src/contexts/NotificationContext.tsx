@@ -8,6 +8,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { useAuth } from './AuthContext';
+import { useOrg } from './OrgContext';
 import { remindersService, inquiriesService } from '@/lib/serviceProxy';
 
 // ============================================================================
@@ -40,6 +41,7 @@ const NotificationContext = createContext<NotificationContextValue | undefined>(
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
+  const { currentOrg, loading: orgLoading } = useOrg();
   const userId = user?.id;
 
   const [reminderCount, setReminderCount] = useState(0);
@@ -52,9 +54,9 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const isFetchingRef = useRef(false);
 
   const refreshCounts = useCallback(async () => {
-    // Don't fetch if no user is logged in or already fetching
-    if (!userId || isFetchingRef.current) {
-      if (!userId) {
+    // Don't fetch if no user is logged in, no organization is active, or already fetching
+    if (!userId || !currentOrg || isFetchingRef.current) {
+      if (!userId || !currentOrg) {
         setReminderCount(0);
         setUnreadMatchesCount(0);
         setIsLoading(false);
@@ -95,14 +97,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     isMountedRef.current = true;
 
-    // Fetch immediately on mount (if user exists)
-    if (userId) {
+    // Fetch immediately on mount (if user and org exist)
+    if (userId && currentOrg) {
       refreshCounts();
     }
 
     // Set up interval for periodic refresh
     const intervalId = setInterval(() => {
-      if (userId) {
+      if (userId && currentOrg) {
         refreshCounts();
       }
     }, REFRESH_INTERVAL_MS);
@@ -114,14 +116,14 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
     };
   }, [userId, refreshCounts]);
 
-  // Reset counts when user logs out
+  // Reset counts when user logs out or org is cleared
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !currentOrg) {
       setReminderCount(0);
       setUnreadMatchesCount(0);
       setError(null);
     }
-  }, [userId]);
+  }, [userId, currentOrg]);
 
   const value = useMemo(() => ({
     reminderCount,

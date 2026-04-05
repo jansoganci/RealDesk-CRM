@@ -16,7 +16,7 @@ export function useInquiryActions(
   refreshInquiries: () => Promise<void>,
   options?: UseInquiryActionsOptions
 ) {
-  const { t } = useTranslation('inquiries');
+  const { t } = useTranslation('leads');
   const [isLoading, setIsLoading] = useState(false);
   const [matchesLoading, setMatchesLoading] = useState<string | null>(null);
 
@@ -71,7 +71,7 @@ export function useInquiryActions(
         options.onOpenMatchesDialog(inquiryWithMatches);
       }
     } catch (error) {
-      toast.error(t('toasts.loadError'));
+      toast.error(t('toasts.loadMatchesError'));
       console.error(error);
     } finally {
       setMatchesLoading(null);

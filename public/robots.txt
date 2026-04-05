@@ -11,6 +11,7 @@ Disallow: /finance
 Disallow: /calendar
 Disallow: /reminders
 Disallow: /inquiries
+Disallow: /leads
 Disallow: /profile
 Disallow: /api/
 

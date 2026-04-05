@@ -1,10 +1,20 @@
+/**
+ * @deprecated Use schemas from @/features/leads/schemas/lead-form instead.
+ * Kept for backward compatibility with existing InquiryDialog component.
+ */
 import * as z from 'zod';
+import { isValidPhone } from '@/services/phone.service';
 
 // Base inquiry schema (common fields for both rental and sale)
 const baseInquirySchema = (t: (key: string, options?: any) => string) =>
   z.object({
     name: z.string().min(1, t('validations.nameRequired')),
-    phone: z.string().min(1, t('validations.phoneRequired')),
+    phone: z
+      .string()
+      .min(1, t('validations.phoneRequired'))
+      .refine(isValidPhone, {
+        message: t('validations.invalidPhone', 'Invalid US phone number'),
+      }),
     email: z
       .union([z.string().email(t('validations.invalidEmail')), z.literal('')])
       .optional()

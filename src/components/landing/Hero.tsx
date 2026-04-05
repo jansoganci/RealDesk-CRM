@@ -12,37 +12,37 @@ const DashboardMock = () => (
     {/* Stats */}
     <div className="dash-stats">
       <div className="dash-stat">
-        <div className="dash-stat-label">Portföy</div>
+        <div className="dash-stat-label">PORTFOLIO</div>
         <div className="dash-stat-value">24</div>
-        <div className="dash-stat-delta">+3 bu ay</div>
+        <div className="dash-stat-delta">+3 this month</div>
       </div>
       <div className="dash-stat">
-        <div className="dash-stat-label">Gelir</div>
-        <div className="dash-stat-value">₺875k</div>
-        <div className="dash-stat-delta">+12% aylık</div>
+        <div className="dash-stat-label">REVENUE</div>
+        <div className="dash-stat-value">$875k</div>
+        <div className="dash-stat-delta">+12% monthly</div>
       </div>
       <div className="dash-stat">
-        <div className="dash-stat-label">Sözleşme</div>
+        <div className="dash-stat-label">CONTRACTS</div>
         <div className="dash-stat-value">18</div>
-        <div className="dash-stat-delta">2 bitiyor</div>
+        <div className="dash-stat-delta">2 expiring</div>
       </div>
     </div>
 
     {/* Properties */}
     <div className="dash-section-header">
-      <span className="dash-section-title">Aktif Mülkler</span>
-      <span className="dash-section-badge">24 toplam</span>
+      <span className="dash-section-title">ACTIVE PROPERTIES</span>
+      <span className="dash-section-badge">24 total</span>
     </div>
     <div className="dash-cards">
       <div className="dash-card">
         <div className="dash-card-icon">🏙️</div>
         <div className="dash-card-body">
-          <div className="dash-card-label">Bağdat Cad. No:142</div>
+          <div className="dash-card-label">742 Evergreen Terrace</div>
           <div className="dash-card-sub">Austin, TX · For Rent</div>
         </div>
         <div className="dash-card-right">
-          <div className="dash-card-price">₺45.000/ay</div>
-          <span className="dash-card-status dash-card-status-green">Dolu</span>
+          <div className="dash-card-price">$4,500/mo</div>
+          <span className="dash-card-status dash-card-status-green">Occupied</span>
         </div>
       </div>
       <div className="dash-card">
@@ -135,13 +135,13 @@ export const Hero = () => {
           </div>
 
           <h1 className="hero-headline">
-            Emlak işiniz,<br />
-            <em>tek bir yerde.</em>
+            Your real estate business,<br />
+            <em>all in one place.</em>
           </h1>
 
           <p className="hero-subtitle">
-            Kaostan kurtulun. Portföyünüzü, sözleşmelerinizi ve
-            müşterilerinizi tek bir panelden yönetin — Excel'e gerek yok.
+            Ditch the chaos. Manage your portfolio, contracts, and
+            clients from a single dashboard — no spreadsheets required.
           </p>
 
           <div className="hero-cta-row">
@@ -149,14 +149,14 @@ export const Hero = () => {
               className="hero-cta-primary"
               onClick={() => navigate(ROUTES.REGISTER)}
             >
-              Ücretsiz Başla
+              Start Free Trial
             </button>
-            <span className="hero-cta-secondary">14 gün ücretsiz · kredi kartı gerekmez</span>
+            <span className="hero-cta-secondary">14 days free · no credit card required</span>
           </div>
 
           <div className="hero-trust">
             <span className="hero-trust-dot" />
-            KVKK Uyumlu · Şifreli Veri · Günlük Yedekleme
+            CCPA COMPLIANT · ENCRYPTED DATA · DAILY BACKUPS
           </div>
 
         </div>
@@ -174,7 +174,7 @@ export const Hero = () => {
               </div>
               <div className="browser-address">
                 <div className="browser-address-lock" />
-                <span className="browser-address-text">emlakcrm.app/kontrol-paneli</span>
+                <span className="browser-address-text">realdesk.app/dashboard</span>
               </div>
             </div>
 

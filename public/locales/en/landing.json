@@ -16,85 +16,85 @@
     "cta": "Start for Free",
     "placeholder": "Dashboard Screenshot",
     "trustLine": "Manage contracts and rent tracking from one place, in an organized way",
-    "imageAlt": "Emlak CRM dashboard preview",
-    "badge": "Built for Turkish Real Estate Professionals",
+    "imageAlt": "RealDesk dashboard preview",
+    "badge": "Built for US Real Estate Professionals",
     "scrollHint": "Scroll",
     "canvas": {
-      "scene1": {
-        "label": "Your Portfolio",
-        "card1": {
-          "label": "Bağdat Caddesi No:142",
-          "sub": "Istanbul, Kadıköy · Rental",
-          "status": "Occupied",
-          "price": "₺45,000/mo"
-        },
-        "card2": {
-          "label": "Nispetiye Cad. 28/4",
-          "sub": "Istanbul, Beşiktaş · For Sale",
-          "status": "Under Offer",
-          "price": "₺12,500,000"
-        },
-        "card3": {
-          "label": "Tunalı Hilmi Cad. 67",
-          "sub": "Ankara, Çankaya · Rental",
-          "status": "Vacant",
-          "price": "₺28,000/mo"
-        }
+    "scene1": {
+      "label": "Your Portfolio",
+      "card1": {
+        "label": "742 Evergreen Terrace",
+        "sub": "Austin, TX · Rental",
+        "status": "Occupied",
+        "price": "$4,500/mo"
       },
-      "scene2": {
-        "label": "Contracts",
-        "card1": {
-          "label": "Lease — Ayşe Kaya",
-          "sub": "Bağdat Cad. 142 · Active",
-          "status": "280 days left",
-          "price": "₺45,000/mo"
-        },
-        "card2": {
-          "label": "Sale — Mehmet Demir",
-          "sub": "Nispetiye 28/4 · Closing",
-          "status": "Closing Apr 18",
-          "price": "₺12,500,000"
-        },
-        "card3": {
-          "label": "Lease — New Inquiry",
-          "sub": "Tunalı Hilmi 67 · Draft",
-          "status": "Awaiting sign",
-          "price": "₺28,000/mo"
-        }
+      "card2": {
+        "label": "123 Park Avenue #4B",
+        "sub": "New York, NY · For Sale",
+        "status": "Under Offer",
+        "price": "$2,450,000"
       },
-      "scene3": {
-        "label": "Commissions",
-        "card1": {
-          "label": "Sale Comm. — Nispetiye",
-          "sub": "Mehmet Demir · Mar 14",
-          "status": "Earned",
-          "price": "₺187,500"
-        },
-        "card2": {
-          "label": "Finder's Fee — Bağdat",
-          "sub": "Ayşe Kaya · Mar 3",
-          "status": "Earned",
-          "price": "₺45,000"
-        },
-        "card3": {
-          "label": "Referral — A. Yılmaz",
-          "sub": "Sale referral · Mar 22",
-          "status": "Earned",
-          "price": "₺25,000"
-        }
-      },
-      "stats": {
-        "revenueLabel": "March Revenue",
-        "contractsLabel": "Active Contracts",
-        "commissionsLabel": "Commissions YTD",
-        "revenueValue": "₺875,000",
-        "contractsValue": "14",
-        "commissionsValue": "₺257,500"
+      "card3": {
+        "label": "456 Market Street",
+        "sub": "San Francisco, CA · Rental",
+        "status": "Vacant",
+        "price": "$4,200/mo"
       }
+    },
+    "scene2": {
+      "label": "Contracts",
+      "card1": {
+        "label": "Lease — Sarah Jenkins",
+        "sub": "742 Evergreen · Active",
+        "status": "280 days left",
+        "price": "$4,500/mo"
+      },
+      "card2": {
+        "label": "Sale — Michael Brown",
+        "sub": "Park Ave 4B · Closing",
+        "status": "Closing Apr 18",
+        "price": "$2,450,000"
+      },
+      "card3": {
+        "label": "Lease — New Inquiry",
+        "sub": "Market Street · Draft",
+        "status": "Awaiting sign",
+        "price": "$4,200/mo"
+      }
+    },
+    "scene3": {
+      "label": "Commissions",
+      "card1": {
+        "label": "Sale Comm. — Park Ave",
+        "sub": "Michael Brown · Mar 14",
+        "status": "Earned",
+        "price": "$73,500"
+      },
+      "card2": {
+        "label": "Lease Fee — Evergreen",
+        "sub": "Sarah Jenkins · Mar 3",
+        "status": "Earned",
+        "price": "$4,500"
+      },
+      "card3": {
+        "label": "Referral — J. Williams",
+        "sub": "Sale referral · Mar 22",
+        "status": "Earned",
+        "price": "$2,500"
+      }
+    },
+    "stats": {
+      "revenueLabel": "March Revenue",
+      "contractsLabel": "Active Contracts",
+      "commissionsLabel": "Commissions YTD",
+      "revenueValue": "$875,000",
+      "contractsValue": "14",
+      "commissionsValue": "$257,500"
+    }
     }
   },
   "shared": {
-    "complianceBadge": "KVKK COMPLIANT · ENCRYPTED DATA · DAILY BACKUPS"
+    "complianceBadge": "CCPA COMPLIANT · ENCRYPTED DATA · DAILY BACKUPS"
   },
   "problem": {
     "eyebrow": "Sound familiar?",
@@ -108,10 +108,10 @@
   "pivot": {
     "eyebrow": "The Solution",
     "title": "We unify them all.",
-    "description": "emlakcrm brings all these scattered pieces into one professional system. No more searching, no more losing.",
+    "description": "RealDesk brings all these scattered pieces into one professional system. No more searching, no more losing.",
     "placeholder": "Unification Animation",
-    "videoAriaLabel": "EmlakCRM dashboard demonstration showing unified property management",
-    "videoFallback": "Your browser does not support video. The video shows how EmlakCRM unifies all your property management tasks."
+    "videoAriaLabel": "RealDesk dashboard demonstration showing unified property management",
+    "videoFallback": "Your browser does not support video. The video shows how RealDesk unifies all your property management tasks."
   },
   "featureProperties": {
     "eyebrow": "Portfolio Management",
@@ -161,7 +161,7 @@
     "reassurance": "14 days free, no credit card required."
   },
   "pricing": {
-    "title": "Pricing & plans for Emlak CRM",
+    "title": "Pricing & plans for RealDesk",
     "subtitle": "Try all features for 14 days, no credit card required. Designed for real estate agents and small agencies.",
     "loading": "Loading..."
   },
@@ -178,12 +178,12 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "cookies": "Cookies",
-    "copyright": "© 2025 emlakcrm. Built with React, TypeScript, Tailwind CSS, and Supabase.",
+    "copyright": "© 2025 RealDesk. Built with React, TypeScript, Tailwind CSS, and Supabase.",
     "allRightsReserved": "All rights reserved."
   },
   "about": {
     "title": "About Us",
-    "description": "emlakcrm is a modern real estate management system designed for Turkish real estate professionals.",
+    "description": "RealDesk is a modern real estate management system designed for US real estate professionals.",
     "mission": {
       "title": "Our Mission",
       "description": "To eliminate the chaos in real estate businesses and provide a professional management experience. We enable you to manage your portfolio, contracts, and clients from a single place."
@@ -231,22 +231,22 @@
       "urgent": "Urgent",
       "soon": "Soon",
       "today": "Today",
-      "item1": {
-        "title": "Contract Expiry",
-        "detail": "Unit 12 • Mehmet Yılmaz",
-        "time": "Expires in 3 days"
-      },
-      "item2": {
-        "title": "Rent Increase",
-        "detail": "Apt #5 • %65.0 Rate",
-        "time": "Due in 20 days"
-      },
-      "item3": {
-        "title": "Property Viewing",
-        "detail": "Kadıköy Flat • 14:30",
-        "time": "In 2 hours"
-      }
+        "item1": {
+          "title": "Contract Expiry",
+          "detail": "Unit 12 • John Smith",
+          "time": "Expires in 3 days"
+        },
+        "item2": {
+          "title": "Rent Increase",
+          "detail": "Apt #5 • %5.0 Rate",
+          "time": "Due in 20 days"
+        },
+        "item3": {
+          "title": "Property Viewing",
+          "detail": "Park Avenue Flat • 14:30",
+          "time": "In 2 hours"
+        }
     },
-    "generatedBy": "Auto-generated by EmlakCRM"
+    "generatedBy": "Auto-generated by RealDesk"
   }
 }

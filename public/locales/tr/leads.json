@@ -1,0 +1,211 @@
+{
+  "title": "Potansiyel Müşteriler",
+  "addNew": "Yeni Lead Ekle",
+  "searchPlaceholder": "Müşteri adı, konum ile ara...",
+  "view": {
+    "pipeline": "Pipeline",
+    "list": "Liste",
+    "switchToPipeline": "Pipeline görünümü",
+    "switchToList": "Liste görünümü"
+  },
+  "pipeline": {
+    "emptyColumn": "Lead yok",
+    "loading": "Pipeline yükleniyor..."
+  },
+  "detail": {
+    "title": "Lead detayı",
+    "tabs": {
+      "overview": "Özet",
+      "agreements": "Anlaşmalar",
+      "showings": "Gösterimler"
+    },
+    "fields": {
+      "phone": "Telefon",
+      "email": "E-posta",
+      "type": "Tip",
+      "status": "Durum",
+      "source": "Kaynak",
+      "notes": "Notlar",
+      "budget": "Bütçe"
+    },
+    "actions": {
+      "edit": "Lead düzenle",
+      "matches": "Eşleşmeleri gör",
+      "close": "Kapat"
+    },
+    "agreements": {
+      "empty": "Kayıtlı alıcı temsilcisi anlaşması yok.",
+      "signed": "İmza",
+      "expires": "Bitiş",
+      "commission": "Komisyon",
+      "status": "Durum"
+    },
+    "showings": {
+      "empty": "Henüz gösterim kaydı yok.",
+      "date": "Tarih",
+      "property": "Mülk",
+      "interest": "İlgi",
+      "feedback": "Geri bildirim"
+    },
+    "statusPlaceholder": "Durumu değiştir"
+  },
+  "typeFilter": {
+    "all": "Tüm Leadler",
+    "rental": "Kiralık",
+    "sale": "Satılık"
+  },
+  "tabs": {
+    "all": "Tümü",
+    "active": "Aktif",
+    "matched": "Eşleşen",
+    "contacted": "İletişime Geçildi",
+    "closed": "Kapalı"
+  },
+  "table": {
+    "name": "Ad Soyad",
+    "preferences": "Tercihler",
+    "budget": "Bütçe",
+    "status": "Durum",
+    "actions": "İşlemler",
+    "viewMatches": "Eşleşmeleri Gör"
+  },
+  "status": {
+    "new": "Yeni",
+    "contacted": "İletişimde",
+    "qualified": "Nitelikli",
+    "active": "Aktif",
+    "matched": "Eşleşen",
+    "under_contract": "Sözleşmede",
+    "closed_won": "Kazanıldı",
+    "closed_lost": "Kaybedildi",
+    "converted": "Dönüştürüldü",
+    "closed": "Kapalı"
+  },
+  "dialog": {
+    "addTitle": "Yeni Lead Ekle",
+    "editTitle": "Lead Düzenle",
+    "addDescription": "Lead bilgilerini aşağıda doldurun.",
+    "editDescription": "Lead bilgilerini güncelleyin.",
+    "form": {
+      "inquiryType": "Lead tipi",
+      "name": "Ad Soyad",
+      "namePlaceholder": "Müşteri adını girin",
+      "phone": "Telefon",
+      "phonePlaceholder": "Telefon numarasını girin",
+      "email": "E-posta",
+      "emailPlaceholder": "E-posta adresini girin",
+      "preferredCity": "Tercih edilen şehir",
+      "preferredCityPlaceholder": "Tercih edilen şehri girin",
+      "preferredDistrict": "Tercih edilen ilçe",
+      "preferredDistrictPlaceholder": "Tercih edilen ilçeyi girin",
+      "minRentBudget": "Minimum aylık kira",
+      "minRentBudgetPlaceholder": "Minimum aylık kira",
+      "maxRentBudget": "Maksimum aylık kira",
+      "maxRentBudgetPlaceholder": "Maksimum aylık kira",
+      "minSaleBudget": "Minimum alış fiyatı",
+      "minSaleBudgetPlaceholder": "Minimum alış fiyatı",
+      "maxSaleBudget": "Maksimum alış fiyatı",
+      "maxSaleBudgetPlaceholder": "Maksimum alış fiyatı",
+      "notes": "Notlar",
+      "notesPlaceholder": "Lead hakkında ek notlar..."
+    },
+    "addButton": "Lead ekle",
+    "updateButton": "Lead güncelle"
+  },
+  "matches": {
+    "title": "Eşleşen mülkler",
+    "description": "{{name}} için eşleşen mülkler",
+    "matchedProperties": "Eşleşen mülkler",
+    "noMatches": "Eşleşme bulunamadı",
+    "contact": "İletişim",
+    "contacted": "İletişime geçildi",
+    "markAsContacted": "İletişime geçildi olarak işaretle",
+    "perMonth": "/ay"
+  },
+  "validations": {
+    "nameRequired": "Ad Soyad gereklidir",
+    "phoneRequired": "Telefon gereklidir",
+    "invalidEmail": "Geçersiz e-posta adresi",
+    "invalidPhone": "Geçerli bir ABD telefon numarası girin (örn: (512) 555-1234). Ortadaki üç rakam 0 veya 1 ile başlayamaz.",
+    "minBudget": "Minimum bütçe pozitif olmalıdır",
+    "maxBudget": "Maksimum bütçe pozitif olmalıdır",
+    "budgetRange": "Minimum bütçe maksimum bütçeyi geçemez",
+    "invalidState": "Geçerli bir ABD eyaleti seçin",
+    "typeRequired": "Kiralık veya satılık seçin"
+  },
+  "agreements": {
+    "title": "Alıcı Temsilcisi Anlaşması",
+    "create": "Anlaşma Oluştur",
+    "edit": "Anlaşmayı Düzenle",
+    "status": "Durum",
+    "signedDate": "İmza Tarihi",
+    "expirationDate": "Bitiş Tarihi",
+    "commission": "Komisyon",
+    "commissionType": "Komisyon Tipi",
+    "commissionRate": "Komisyon Oranı (%)",
+    "flatFeeAmount": "Sabit Ücret Tutarı ($)",
+    "pdfUrl": "Anlaşma PDF URL",
+    "downloadPdf": "Anlaşma PDF İndir",
+    "noAgreement": "Bu lead için kayıtlı alıcı temsilcisi anlaşması yok.",
+    "expiresIn": "{{days}} gün içinde sona eriyor",
+    "expired": "Süresi doldu",
+    "terminated": "Sonlandırıldı",
+    "active": "Aktif",
+    "tiered": "Kademeli"
+  },
+  "showings": {
+    "title": "Mülk Gösterimleri",
+    "logShowing": "Gösterim Kaydet",
+    "logFirstShowing": "İlk Gösterimi Kaydet",
+    "updateShowing": "Gösterimi Güncelle",
+    "noShowings": "Bu lead için henüz mülk gösterimi kaydedilmedi.",
+    "selectProperty": "Mülk seç",
+    "searchProperties": "Mülk ara...",
+    "noProperties": "Mülk bulunamadı.",
+    "showingDate": "Gösterim Tarihi ve Saati",
+    "duration": "Süre (dakika)",
+    "durationHint": "Gösterim ne kadar sürdü?",
+    "interestLevel": "İlgi Seviyesi",
+    "selectInterest": "İlgi seviyesi seç",
+    "feedback": "Geri Bildirim",
+    "feedbackPlaceholder": "Alıcının mülk hakkındaki yorumları...",
+    "feedbackHint": "Alıcı bu mülk hakkında ne düşündü?",
+    "highInterest": "Yüksek İlgi",
+    "mediumInterest": "Orta İlgi",
+    "lowInterest": "Düşük İlgi",
+    "noInterest": "İlgi Yok",
+    "minutes": "dakika"
+  },
+  "toasts": {
+    "addSuccess": "Lead başarıyla eklendi",
+    "updateSuccess": "Lead başarıyla güncellendi",
+    "deleteSuccess": "Lead başarıyla silindi",
+    "loadError": "Leadler yüklenemedi",
+    "addError": "Lead eklenemedi",
+    "updateError": "Lead güncellenemedi",
+    "deleteError": "Lead silinemedi",
+    "loadMatchesError": "Eşleşmeler yüklenemedi",
+    "markContactedSuccess": "Lead iletişime geçildi olarak işaretlendi",
+    "markContactedError": "İşaretlenemedi",
+    "statusUpdated": "Durum güncellendi",
+    "statusUpdateError": "Durum güncellenemedi",
+    "loadDetailError": "Lead detayı yüklenemedi",
+    "agreementCreated": "Anlaşma başarıyla oluşturuldu",
+    "agreementUpdated": "Anlaşma başarıyla güncellendi",
+    "agreementCreateError": "Anlaşma oluşturulamadı",
+    "agreementUpdateError": "Anlaşma güncellenemedi",
+    "showingCreated": "Gösterim başarıyla kaydedildi",
+    "showingUpdated": "Gösterim başarıyla güncellendi",
+    "showingCreateError": "Gösterim kaydedilemedi",
+    "showingUpdateError": "Gösterim güncellenemedi"
+  },
+  "emptyState": {
+    "noInquiriesYet": "Henüz lead yok",
+    "noInquiriesYetDescription": "İlk leadinizi ekleyerek başlayın",
+    "addActionLabel": "İlk leadinizi ekleyin"
+  },
+  "deleteDialog": {
+    "title": "Lead sil",
+    "description": "{{inquiryName}} için olan leadi silmek istediğinizden emin misiniz? Bu işlem geri alınamaz."
+  }
+}

@@ -16,9 +16,9 @@ export const LandingFooter = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-sm">
-                <span className="text-white font-bold text-sm">E</span>
+                <span className="text-white font-bold text-sm">R</span>
               </div>
-              <span className="text-xl font-bold text-gray-900">emlakcrm</span>
+              <span className="text-xl font-bold text-gray-900">realdesk</span>
             </div>
             <p className="text-gray-500 max-w-xs leading-relaxed">
               {t('footer.tagline')}
@@ -63,7 +63,7 @@ export const LandingFooter = () => {
         </div>
 
         <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-500">
-          <p>© {currentYear} emlakcrm. {t('footer.allRightsReserved')}</p>
+          <p>© {currentYear} realdesk. {t('footer.allRightsReserved')}</p>
         </div>
       </div>
     </footer>

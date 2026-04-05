@@ -13,7 +13,7 @@ import {
   Users2,
   UserCheck,
   Bell,
-  Search,
+  UserPlus,
   LogOut,
   X,
   Calendar,
@@ -35,7 +35,7 @@ const navigationItems = [
   { key: 'tenants', href: ROUTES.TENANTS, icon: UserCheck },
   { key: 'contracts', href: ROUTES.CONTRACTS_HUB, icon: FileText },
   { key: 'calendar', href: ROUTES.CALENDAR, icon: Calendar },
-  { key: 'inquiries', href: ROUTES.INQUIRIES, icon: Search },
+  { key: 'leads', href: ROUTES.LEADS, icon: UserPlus },
   { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
   { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
   { key: 'team', href: ROUTES.TEAM, icon: Users2, ownerOnly: true },
@@ -117,7 +117,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 <>
                   <item.icon className={cn('h-5 w-5 transition-transform', isActive && 'scale-110')} />
                   <span className="flex-1">{t(item.key)}</span>
-                  {item.key === 'inquiries' && unreadMatchesCount > 0 && (
+                  {item.key === 'leads' && unreadMatchesCount > 0 && (
                     <Badge
                       className={cn(
                         'ml-auto h-5 px-2.5 text-xs font-bold shadow-md',
@@ -125,7 +125,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                           ? 'bg-white text-blue-700'
                           : 'bg-blue-600 text-white'
                       )}
-                      aria-label={`${unreadMatchesCount} ${t('inquiries')}`}
+                      aria-label={`${unreadMatchesCount} ${t('leads')}`}
                     >
                       {unreadMatchesCount > 9 ? '9+' : unreadMatchesCount}
                     </Badge>

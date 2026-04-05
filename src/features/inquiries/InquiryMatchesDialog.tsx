@@ -50,7 +50,7 @@ export const InquiryMatchesDialog = ({
   inquiry,
   onInquiryUpdate,
 }: InquiryMatchesDialogProps) => {
-  const { t } = useTranslation(['inquiries', 'common']);
+  const { t } = useTranslation(['leads', 'common']);
   const [matches, setMatches] = useState<InquiryMatchWithProperty[]>([]);
   const [loading, setLoading] = useState(false);
 

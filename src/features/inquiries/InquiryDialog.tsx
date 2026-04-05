@@ -35,7 +35,7 @@ export const InquiryDialog = ({
   onSubmit,
   loading = false,
 }: InquiryDialogProps) => {
-  const { t } = useTranslation(['inquiries', 'common']);
+  const { t } = useTranslation(['leads', 'common']);
   const [inquiryType, setInquiryType] = useState<'rental' | 'sale'>('rental');
 
   // Conditional schema based on inquiry type

@@ -83,7 +83,15 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // so this check is mainly for edge cases
 
   // Step 2: Check onboarding FIRST (before billing)
-  // Only check if org is loaded (not null)
+  // If user is authenticated but has NO organization, redirect to onboarding
+  if (!currentOrg && !orgLoading) {
+    if (location.pathname !== ROUTES.ONBOARDING) {
+      return <Navigate to={ROUTES.ONBOARDING} replace />;
+    }
+    return <>{children}</>;
+  }
+
+  // If user has an organization, check onboarding status
   if (currentOrg) {
     // If already on onboarding page and onboarding is complete, redirect to dashboard
     if (location.pathname === ROUTES.ONBOARDING && currentOrg.onboarding_completed) {
@@ -107,8 +115,18 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     return <>{children}</>;
   }
 
-  // Redirect to billing subscribe if no active access
-  if (hasActiveAccess === false && !isTrialActive) {
+  // BILLING CHECK: Only block if explicitly no access AND no trial
+  // This allows:
+  // 1. Active subscribers (hasActiveAccess === true)
+  // 2. Users in trial period (isTrialActive === true)
+  // 3. Users whose billing hasn't loaded yet (hasActiveAccess === null)
+  //
+  // Only blocks when:
+  // - hasActiveAccess is explicitly false (subscription expired/canceled)
+  // - AND isTrialActive is false (trial expired or never existed)
+  const shouldBlockAccess = hasActiveAccess === false && isTrialActive === false;
+
+  if (shouldBlockAccess) {
     return (
       <Navigate
         to={ROUTES.BILLING_SUBSCRIBE}
@@ -121,11 +139,9 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     );
   }
 
-  // Render children if user has active access
-  if (hasActiveAccess === true || isTrialActive) {
-    return <>{children}</>;
-  }
-
-  // Fallback: render children if billing status is still null (shouldn't happen, but safe fallback)
+  // Allow access for:
+  // - Active subscribers
+  // - Trial users
+  // - Users whose billing status is still loading (null)
   return <>{children}</>;
 };

@@ -11,7 +11,7 @@ interface UseInquiriesDataReturn {
 }
 
 export function useInquiriesData(): UseInquiriesDataReturn {
-  const { t } = useTranslation('inquiries');
+  const { t } = useTranslation('leads');
   const [inquiries, setInquiries] = useState<PropertyInquiry[]>([]);
   const [loading, setLoading] = useState(true);
 

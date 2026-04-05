@@ -1,0 +1,211 @@
+{
+  "title": "Leads",
+  "addNew": "Add Lead",
+  "searchPlaceholder": "Search by client name, location...",
+  "view": {
+    "pipeline": "Pipeline",
+    "list": "List",
+    "switchToPipeline": "Pipeline view",
+    "switchToList": "List view"
+  },
+  "pipeline": {
+    "emptyColumn": "No leads",
+    "loading": "Loading pipeline..."
+  },
+  "detail": {
+    "title": "Lead details",
+    "tabs": {
+      "overview": "Overview",
+      "agreements": "Agreements",
+      "showings": "Showings"
+    },
+    "fields": {
+      "phone": "Phone",
+      "email": "Email",
+      "type": "Type",
+      "status": "Status",
+      "source": "Source",
+      "notes": "Notes",
+      "budget": "Budget"
+    },
+    "actions": {
+      "edit": "Edit lead",
+      "matches": "View matches",
+      "close": "Close"
+    },
+    "agreements": {
+      "empty": "No buyer-agent agreement on file.",
+      "signed": "Signed",
+      "expires": "Expires",
+      "commission": "Commission",
+      "status": "Status"
+    },
+    "showings": {
+      "empty": "No showings recorded yet.",
+      "date": "Date",
+      "property": "Property",
+      "interest": "Interest",
+      "feedback": "Feedback"
+    },
+    "statusPlaceholder": "Change status"
+  },
+  "typeFilter": {
+    "all": "All Leads",
+    "rental": "Rentals",
+    "sale": "Sales"
+  },
+  "tabs": {
+    "all": "All",
+    "active": "Active",
+    "matched": "Matched",
+    "contacted": "Contacted",
+    "closed": "Closed"
+  },
+  "table": {
+    "name": "Name",
+    "preferences": "Preferences",
+    "budget": "Budget",
+    "status": "Status",
+    "actions": "Actions",
+    "viewMatches": "View Matches"
+  },
+  "status": {
+    "new": "New",
+    "contacted": "Contacted",
+    "qualified": "Qualified",
+    "active": "Active",
+    "matched": "Matched",
+    "under_contract": "Under contract",
+    "closed_won": "Closed won",
+    "closed_lost": "Closed lost",
+    "converted": "Converted",
+    "closed": "Closed"
+  },
+  "dialog": {
+    "addTitle": "Add Lead",
+    "editTitle": "Edit Lead",
+    "addDescription": "Fill in the lead details below.",
+    "editDescription": "Update the lead information.",
+    "form": {
+      "inquiryType": "Lead type",
+      "name": "Name",
+      "namePlaceholder": "Enter customer name",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter phone number",
+      "email": "Email",
+      "emailPlaceholder": "Enter email address",
+      "preferredCity": "Preferred city",
+      "preferredCityPlaceholder": "Enter preferred city",
+      "preferredDistrict": "Preferred district",
+      "preferredDistrictPlaceholder": "Enter preferred district",
+      "minRentBudget": "Min monthly rent",
+      "minRentBudgetPlaceholder": "Minimum monthly rent",
+      "maxRentBudget": "Max monthly rent",
+      "maxRentBudgetPlaceholder": "Maximum monthly rent",
+      "minSaleBudget": "Min purchase price",
+      "minSaleBudgetPlaceholder": "Minimum purchase price",
+      "maxSaleBudget": "Max purchase price",
+      "maxSaleBudgetPlaceholder": "Maximum purchase price",
+      "notes": "Notes",
+      "notesPlaceholder": "Additional notes about the lead..."
+    },
+    "addButton": "Add lead",
+    "updateButton": "Update lead"
+  },
+  "matches": {
+    "title": "Matched properties",
+    "description": "Properties matching the lead for {{name}}",
+    "matchedProperties": "Matched properties",
+    "noMatches": "No matches found",
+    "contact": "Contact",
+    "contacted": "Contacted",
+    "markAsContacted": "Mark as contacted",
+    "perMonth": "/month"
+  },
+  "validations": {
+    "nameRequired": "Name is required",
+    "phoneRequired": "Phone is required",
+    "invalidEmail": "Invalid email address",
+    "invalidPhone": "Please enter a valid US phone number (e.g., (512) 555-1234). The middle three digits cannot start with 0 or 1.",
+    "minBudget": "Minimum budget must be positive",
+    "maxBudget": "Maximum budget must be positive",
+    "budgetRange": "Minimum budget cannot exceed maximum budget",
+    "invalidState": "Please select a valid US state",
+    "typeRequired": "Please select rental or sale"
+  },
+  "agreements": {
+    "title": "Buyer-Agent Agreement",
+    "create": "Create Agreement",
+    "edit": "Edit Agreement",
+    "status": "Status",
+    "signedDate": "Signed Date",
+    "expirationDate": "Expiration Date",
+    "commission": "Commission",
+    "commissionType": "Commission Type",
+    "commissionRate": "Commission Rate (%)",
+    "flatFeeAmount": "Flat Fee Amount ($)",
+    "pdfUrl": "Agreement PDF URL",
+    "downloadPdf": "Download Agreement PDF",
+    "noAgreement": "No buyer-agent agreement on file for this lead.",
+    "expiresIn": "Expires in {{days}} days",
+    "expired": "Expired",
+    "terminated": "Terminated",
+    "active": "Active",
+    "tiered": "Tiered"
+  },
+  "showings": {
+    "title": "Property Showings",
+    "logShowing": "Log Showing",
+    "logFirstShowing": "Log First Showing",
+    "updateShowing": "Update Showing",
+    "noShowings": "No property showings logged yet for this lead.",
+    "selectProperty": "Select property",
+    "searchProperties": "Search properties...",
+    "noProperties": "No properties found.",
+    "showingDate": "Showing Date & Time",
+    "duration": "Duration (minutes)",
+    "durationHint": "How long did the showing last?",
+    "interestLevel": "Interest Level",
+    "selectInterest": "Select interest level",
+    "feedback": "Feedback",
+    "feedbackPlaceholder": "Buyer's comments about the property...",
+    "feedbackHint": "What did the buyer think about this property?",
+    "highInterest": "High Interest",
+    "mediumInterest": "Medium Interest",
+    "lowInterest": "Low Interest",
+    "noInterest": "No Interest",
+    "minutes": "minutes"
+  },
+  "toasts": {
+    "addSuccess": "Lead added successfully",
+    "updateSuccess": "Lead updated successfully",
+    "deleteSuccess": "Lead deleted successfully",
+    "loadError": "Failed to load leads",
+    "addError": "Failed to add lead",
+    "updateError": "Failed to update lead",
+    "deleteError": "Failed to delete lead",
+    "loadMatchesError": "Failed to load matches",
+    "markContactedSuccess": "Lead marked as contacted",
+    "markContactedError": "Failed to mark as contacted",
+    "statusUpdated": "Status updated",
+    "statusUpdateError": "Could not update status",
+    "loadDetailError": "Failed to load lead details",
+    "agreementCreated": "Agreement created successfully",
+    "agreementUpdated": "Agreement updated successfully",
+    "agreementCreateError": "Failed to create agreement",
+    "agreementUpdateError": "Failed to update agreement",
+    "showingCreated": "Showing logged successfully",
+    "showingUpdated": "Showing updated successfully",
+    "showingCreateError": "Failed to log showing",
+    "showingUpdateError": "Failed to update showing"
+  },
+  "emptyState": {
+    "noInquiriesYet": "No leads yet",
+    "noInquiriesYetDescription": "Get started by adding your first lead",
+    "addActionLabel": "Add your first lead"
+  },
+  "deleteDialog": {
+    "title": "Delete lead",
+    "description": "Are you sure you want to delete the lead for {{inquiryName}}? This action cannot be undone."
+  }
+}

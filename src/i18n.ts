@@ -16,7 +16,7 @@ i18n
     react: {
       useSuspense: false,
     },
-    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing', 'calendar', 'finance', 'inquiries', 'profile', 'billing', 'cookie', 'onboarding'],
+    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing', 'calendar', 'finance', 'leads', 'profile', 'billing', 'cookie', 'onboarding'],
     defaultNS: 'common',
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json?v=1.1',

@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
 import { OrgProvider } from './contexts/OrgContext';
@@ -32,7 +32,7 @@ import { SaleContractsList } from './features/contractsSale/SaleContractsList';
 import { SaleContractBuilder } from './features/contractsSale/SaleContractBuilder';
 import { SaleContractEdit } from './features/contractsSale/SaleContractEdit';
 import { Reminders } from './features/reminders/Reminders';
-import { Inquiries } from './features/inquiries/Inquiries';
+import { Leads } from './features/leads/Leads';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
@@ -196,11 +196,12 @@ function AppContent() {
                   </ProtectedRoute>
                 }
               />
+              <Route path={ROUTES.INQUIRIES} element={<Navigate to={ROUTES.LEADS} replace />} />
               <Route
-                path={ROUTES.INQUIRIES}
+                path={ROUTES.LEADS}
                 element={
                   <ProtectedRoute>
-                    <Inquiries />
+                    <Leads />
                   </ProtectedRoute>
                 }
               />

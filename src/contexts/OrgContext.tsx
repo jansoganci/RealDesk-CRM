@@ -84,9 +84,11 @@ export const OrgProvider = ({ children }: { children: React.ReactNode }) => {
       if (!data) {
         // User has no active org membership
         orgLogger.warn('User has no active org membership:', user.id);
-        setError('No organization found');
+        // Do NOT set error here, as this is a valid state for new users
+        // who need to go through onboarding
         setCurrentOrg(null);
         setMembership(null);
+        setLoading(false); // Make sure to set loading false
         return;
       }
 

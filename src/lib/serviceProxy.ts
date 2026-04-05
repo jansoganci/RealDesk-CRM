@@ -3,6 +3,8 @@
  * Previously handled demo mode routing, now simplified to direct exports
  */
 
+export { handleServiceError } from './handleServiceError';
+
 // Direct service exports
 export { ownersService } from '../services/owners.service';
 export { propertiesService } from '../services/properties.service';
@@ -11,6 +13,7 @@ export { contractsService } from '../services/contracts.service';
 export { remindersService } from '../services/reminders.service';
 export { photosService } from '../services/photos.service';
 export { inquiriesService } from '../services/inquiries.service';
+export { leadsService } from '../services/leads.service';
 export { meetingsService } from '../services/meetings.service';
 export { commissionsService } from '../services/commissions.service';
 export { userPreferencesService } from '../services/userPreferences.service';

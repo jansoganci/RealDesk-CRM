@@ -17,6 +17,39 @@ function getSupabaseUrl(): string {
 
 class OrganizationService {
   /**
+   * Create user's first organization during onboarding
+   * Uses RPC function to bypass RLS (only works if user has no existing org)
+   */
+  async createFirstOrganization(name: string = 'My Organization'): Promise<string> {
+    if (!name || name.trim().length < 2) {
+      throw new Error('Organization name must be at least 2 characters');
+    }
+
+    if (name.length > 255) {
+      throw new Error('Organization name must not exceed 255 characters');
+    }
+
+    const { data, error } = await supabase
+      .rpc('create_first_organization', { p_org_name: name.trim() });
+
+    if (error) {
+      logger.error('Error creating first organization:', error);
+      
+      if (error.message?.includes('already has an organization')) {
+        throw new Error('You already have an organization');
+      }
+      
+      throw new Error('Failed to create organization');
+    }
+
+    if (!data) {
+      throw new Error('Failed to create organization - no ID returned');
+    }
+
+    return data as string;
+  }
+
+  /**
    * Update organization name
    * Only owners can update (enforced by RLS)
    */

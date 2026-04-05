@@ -17,9 +17,9 @@ export const LandingPage = () => {
   return (
     <>
       <SEO
-        title="Emlak CRM | Gayrimenkul Yönetim Sistemi"
+        title="RealDesk | The CRM for US Real Estate Agents"
         description="Modern, mobile-first real estate CRM for US agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system."
-        keywords="emlak crm, gayrimenkul yönetim sistemi, emlak yazılımı, kiracı takip programı, sözleşme yönetimi, real estate crm, property management, tenant tracking, contract management"
+        keywords="realdesk, real estate crm, property management, tenant tracking, contract management, US real estate software"
       />
       <div className="min-h-screen bg-white">
         <LandingHeader />

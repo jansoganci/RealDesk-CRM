@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useOnboarding, type PrimaryUseCase } from '../hooks/useOnboarding';
 import { useOrg } from '@/contexts/OrgContext';
 import { onboardingService } from '../services/onboarding.service';
+import { organizationService } from '@/services/organization.service';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -32,24 +33,27 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
   const { t } = useTranslation('onboarding');
   const { primaryUseCase, setPrimaryUseCase, isLoading } = useOnboarding();
   const [saving, setSaving] = useState(false);
-  const { currentOrg } = useOrg();
+  const { currentOrg, refreshOrg } = useOrg();
 
   const handleSkip = async () => {
-    if (!currentOrg?.id) {
-      toast.error('Organization not found');
-      return;
-    }
-
     setSaving(true);
     try {
       const userId = await getAuthenticatedUserId();
+      let orgId = currentOrg?.id;
+
+      // If no organization exists, create one first
+      if (!orgId) {
+        orgId = await organizationService.createFirstOrganization('My Organization');
+        // Refresh org context to load the newly created organization
+        await refreshOrg();
+      }
       
       // Default to "all" when skipping
-      await onboardingService.savePrimaryUseCase(currentOrg.id, 'all');
+      await onboardingService.savePrimaryUseCase(orgId, 'all');
       
       // Track skip event
       await onboardingService.trackEvent(
-        currentOrg.id,
+        orgId,
         userId,
         1,
         'goal_selection',
@@ -73,19 +77,22 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
       return;
     }
 
-    if (!currentOrg?.id) {
-      toast.error('Organization not found');
-      return;
-    }
-
     setSaving(true);
     try {
       const userId = await getAuthenticatedUserId();
+      let orgId = currentOrg?.id;
+
+      // If no organization exists, create one first
+      if (!orgId) {
+        orgId = await organizationService.createFirstOrganization('My Organization');
+        // Refresh org context to load the newly created organization
+        await refreshOrg();
+      }
       
-      await onboardingService.savePrimaryUseCase(currentOrg.id, primaryUseCase);
+      await onboardingService.savePrimaryUseCase(orgId, primaryUseCase);
       
       await onboardingService.trackEvent(
-        currentOrg.id,
+        orgId,
         userId,
         1,
         'goal_selection',

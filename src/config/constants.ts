@@ -64,6 +64,9 @@ export const ROUTES = {
   CONTRACT_IMPORT: '/contracts/rent/import',
 
   REMINDERS: '/reminders',
+  /** Lead pipeline (replaces legacy inquiries UI). */
+  LEADS: '/leads',
+  /** @deprecated Use ROUTES.LEADS — kept for redirects and bookmarks */
   INQUIRIES: '/inquiries',
   CALENDAR: '/calendar',
   FINANCE: '/finance',

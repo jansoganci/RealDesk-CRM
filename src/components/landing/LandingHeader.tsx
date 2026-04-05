@@ -33,9 +33,9 @@ export const LandingHeader = () => {
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
           <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
-            <span className="text-white font-bold text-sm">E</span>
+            <span className="text-white font-bold text-sm">R</span>
           </div>
-          <span className="text-lg font-bold tracking-tight text-gray-900">emlakcrm</span>
+          <span className="text-lg font-bold tracking-tight text-gray-900">realdesk</span>
         </div>
 
         {/* Desktop Navigation */}
