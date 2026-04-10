@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { LayoutDashboard, Receipt, BarChart3, Repeat, Plus } from 'lucide-react';
+import { LayoutDashboard, Receipt, BarChart3, Repeat, Plus, CircleDollarSign } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
 import { MainLayout } from '../../components/layout/MainLayout';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { AnimatedTabs } from '../../components/ui/animated-tabs';
@@ -13,6 +14,7 @@ import { FinanceAnalytics } from './components/FinanceAnalytics';
 import { TransactionDialog } from './components/TransactionDialog';
 import { RecurringExpensesList } from './components/RecurringExpensesList';
 import { RecurringExpenseDialog } from './components/RecurringExpenseDialog';
+import { CommissionDashboard } from './components/CommissionDashboard';
 import { useFinanceData } from './hooks/useFinanceData';
 import { useFinanceActions } from './hooks/useFinanceActions';
 import { financialTransactionsService } from '../../lib/serviceProxy';
@@ -25,13 +27,30 @@ import type {
   UpdateRecurringExpenseInput,
 } from '../../types/financial';
 
-type TabValue = 'overview' | 'transactions' | 'analytics' | 'recurring';
+type TabValue = 'overview' | 'transactions' | 'analytics' | 'recurring' | 'commission';
 
 export const FinanceDashboard = () => {
   const { t } = useTranslation(['finance', 'common']);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   // Tab state - default to overview
-  const [activeTab, setActiveTab] = useState<TabValue>('overview');
+  const [activeTab, setActiveTab] = useState<TabValue>(
+    (searchParams.get('tab') as TabValue) || 'overview'
+  );
+  useEffect(() => {
+    const tab = searchParams.get('tab') as TabValue | null;
+    if (tab && tab !== activeTab) {
+      setActiveTab(tab);
+    }
+  }, [searchParams, activeTab]);
+
+  const handleTabChange = (tabId: TabValue) => {
+    setActiveTab(tabId);
+    const next = new URLSearchParams(searchParams);
+    next.set('tab', tabId);
+    setSearchParams(next, { replace: true });
+  };
+
   const [analyticsLoaded, setAnalyticsLoaded] = useState(false);
   const [recurringExpensesLoaded, setRecurringExpensesLoaded] = useState(false);
 
@@ -239,9 +258,14 @@ export const FinanceDashboard = () => {
                 label: t('finance:recurring.title', { defaultValue: 'Recurring Expenses' }),
                 icon: <Repeat className="h-3.5 w-3.5 md:h-4 md:w-4" />,
               },
+              {
+                id: 'commission',
+                label: t('finance:tabs.commission'),
+                icon: <CircleDollarSign className="h-3.5 w-3.5 md:h-4 md:w-4" />,
+              },
             ]}
             defaultTab={activeTab}
-            onChange={(tabId) => setActiveTab(tabId as TabValue)}
+            onChange={(tabId) => handleTabChange(tabId as TabValue)}
           />
 
           {/* Right: Action Buttons */}
@@ -327,6 +351,13 @@ export const FinanceDashboard = () => {
                 onEdit={handleEditRecurringExpense}
                 onDelete={handleDeleteRecurringExpense}
               />
+            </div>
+          )}
+
+          {/* Commission Tab */}
+          {activeTab === 'commission' && (
+            <div className="mt-6">
+              <CommissionDashboard />
             </div>
           )}
         </div>

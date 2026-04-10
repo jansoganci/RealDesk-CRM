@@ -30,15 +30,24 @@ export function BuyerAgentAgreementList({
   };
 
   const getExpirationBadge = (agreement: BuyerAgentAgreement) => {
-    if (agreement.status === 'expired') {
+    if (agreement.status === 'draft') {
+      return <Badge variant="secondary">{t('agreements.draft', 'Draft')}</Badge>;
+    }
+    if (agreement.status === 'sent') {
       return (
-        <Badge variant="destructive">{t('agreements.expired', 'Expired')}</Badge>
+        <Badge className="bg-blue-600 hover:bg-blue-600 text-white">
+          {t('agreements.sent', 'Sent')}
+        </Badge>
       );
     }
+    if (agreement.status === 'signed') {
+      return <Badge variant="success">{t('agreements.signed', 'Signed')}</Badge>;
+    }
+    if (agreement.status === 'expired') {
+      return <Badge variant="destructive">{t('agreements.expired', 'Expired')}</Badge>;
+    }
     if (agreement.status === 'terminated') {
-      return (
-        <Badge variant="secondary">{t('agreements.terminated', 'Terminated')}</Badge>
-      );
+      return <Badge variant="secondary">{t('agreements.terminated', 'Terminated')}</Badge>;
     }
 
     const daysLeft = getDaysUntilExpiration(agreement.expiration_date);
@@ -48,7 +57,7 @@ export function BuyerAgentAgreementList({
         <Badge variant="destructive">{t('agreements.expired', 'Expired')}</Badge>
       );
     }
-    if (daysLeft <= 7) {
+    if (daysLeft <= 14) {
       return (
         <Badge variant="warning" className="gap-1">
           <AlertCircle className="h-3 w-3" />

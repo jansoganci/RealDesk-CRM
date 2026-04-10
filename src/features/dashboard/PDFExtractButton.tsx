@@ -198,13 +198,13 @@ export const PDFExtractButton = ({
                       {parsedData.rentAmount && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
                           <div className="text-xs text-gray-600">{t('pdfExtract.rentAmount')}</div>
-                          <div className="text-sm font-medium">{parsedData.rentAmount.toLocaleString('tr-TR')} ₺</div>
+                          <div className="text-sm font-medium">{parsedData.rentAmount.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</div>
                         </div>
                       )}
                       {parsedData.deposit && (
                         <div className="p-2 bg-blue-50 rounded border border-blue-200">
                           <div className="text-xs text-gray-600">{t('pdfExtract.deposit')}</div>
-                          <div className="text-sm font-medium">{parsedData.deposit.toLocaleString('tr-TR')} ₺</div>
+                          <div className="text-sm font-medium">{parsedData.deposit.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</div>
                         </div>
                       )}
                       {parsedData.startDate && (

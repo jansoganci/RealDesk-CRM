@@ -10,7 +10,7 @@ describe('createLeadSchema', () => {
   it('validates a complete rental lead', () => {
     const validLead = {
       name: 'John Doe',
-      phone: '5551234567',
+      phone: '5125551234',
       email: 'john@example.com',
       inquiry_type: 'rental' as const,
       lead_source: 'zillow' as const,
@@ -25,7 +25,7 @@ describe('createLeadSchema', () => {
     const result = createLeadSchema.safeParse(validLead);
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data.phone).toBe('(555) 123-4567'); // Auto-formatted
+      expect(result.data.phone).toBe('(512) 555-1234'); // Auto-formatted
       expect(result.data.preferred_state).toBe('TX'); // Uppercase
     }
   });

@@ -1,176 +1,57 @@
-# 🏢 Real Estate CRM
+# RealDesk CRM
 
-Modern, mobile-first Real Estate Customer Relationship Management (CRM) system built for Turkish real estate agents. Manage properties, owners, tenants, contracts, and reminders with an intuitive, responsive interface optimized for mobile devices.
+Mobile-first real estate CRM for **US solo agents**: properties, rentals, deals (lead → closing), finance, and commissions on **React + Supabase**, packaged for **Cloudflare Pages**. Active development — wire your own Supabase project and deploy using the steps below.
 
-![Version](https://img.shields.io/badge/version-1.1.1-blue.svg)
+## What it does
+
+- **Runs the listing and rental stack in one app** — US-style addresses and property types, owners (sensitive bank fields encrypted at rest), tenants, and **atomic** tenant+contract creation so half-finished records do not land in Postgres.
+- **Tracks purchase and lease deals end-to-end** — deal records, offer rounds and contingencies, transaction milestones and documents, parties, amendments, and notifications tied to the same `user_id` RLS boundary as the rest of the app.
+- **Produces and ingests contract paperwork** — PDF generation (US templates), uploads to Supabase Storage with short-lived signed URLs, and **OCR/import** paths via Supabase Edge Functions for legacy PDF/DOCX.
+- **Keeps money honest** — income/expense ledger, categories and recurring expenses, commission calculator and recording aligned with post-NAR buyer/listing-side thinking, plus dashboard and finance views built on the same transaction model.
+- **Supports the front of the funnel** — lead/inquiry pipeline with property matching, calendar/meetings, buyer-agent agreements and showing logs where the product enforces your workflow rules.
+
+## How I built this
+
+The bulk of the codebase was built with **AI-orchestrated development**: **Cursor** for navigation and multi-file edits, **Claude** for schema/migrations, feature scaffolding, and refactors across `src/features/` and `src/services/`, and **Copilot** for small local completions. I owned what actually shipped: **Postgres/RLS policies** and migration order (`000N_slug.sql` convention), **Zod** boundaries at forms, the **service proxy** rule (consumers import from `src/lib/serviceProxy.ts` only), **English-only i18n** keys under `public/locales/en/`, and product scope for the US solo-agent workflow (deals, commissions, compliance-adjacent flows like buyer-agent agreements). AI drafts; I review diffs, run the app, and decide what merges.
+
+## Tech stack
+
+| Layer | Details |
+|--------|---------|
+| **Frontend** | React 18.3, TypeScript 5.5, Vite 5.4, React Router 7.9, Tailwind CSS 3.4, Radix UI, Lucide React, Framer Motion, React Hook Form + Zod, i18next (English namespaces in `public/locales/en/`) |
+| **Backend** | Supabase (Auth, PostgreSQL, Row Level Security, Storage, Edge Functions/Deno) |
+| **Database** | PostgreSQL via Supabase; sequential migrations in `supabase/migrations/` (see **Database Setup** and `CLAUDE.md`) |
+| **Integrations** | Stripe (billing/checkout via Edge Functions), Cloudflare Turnstile (site key from env), OCR/text extraction endpoints as documented in `CLAUDE.md` |
+| **Deployment** | Static build in `dist/`; **Cloudflare Pages** via Wrangler (`npm run deploy` / `deploy:prod`). Other hosts are covered in `docs/reference/DEPLOYMENT.md`. |
+
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)
 ![React](https://img.shields.io/badge/React-18.3-blue.svg)
 ![Supabase](https://img.shields.io/badge/Supabase-2.58-green.svg)
 
-## 📋 Table of Contents
+## Table of contents
 
-- [Features](#-features)
-- [Technology Stack](#-technology-stack)
-- [Screenshots](#-screenshots)
-- [Getting Started](#-getting-started)
+- [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
   - [Environment Variables](#environment-variables)
   - [Database Setup](#database-setup)
   - [Running the Application](#running-the-application)
-- [Project Structure](#-project-structure)
-- [Key Features](#-key-features)
-- [Mobile-First Design](#-mobile-first-design)
-- [Database Schema](#-database-schema)
-- [API & Services](#-api--services)
-- [Development](#-development)
-- [Build & Deployment](#-build--deployment)
-- [Documentation](#-documentation)
-- [Contributing](#-contributing)
-- [License](#-license)
+- [Project Structure](#project-structure)
+- [Key Features](#key-features)
+- [Mobile-First Design](#mobile-first-design)
+- [Database Schema](#database-schema)
+- [API & Services](#api--services)
+- [Development](#development)
+- [Build & Deployment](#build--deployment)
+- [Documentation](#documentation)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+- [Support](#support)
 
-## ✨ Features
-
-### Core Modules
-
-- **🏠 Properties Management**
-  - Create, edit, and delete properties
-  - Property photos management (up to 10 photos per property)
-  - Property status tracking (Empty, Occupied, Inactive)
-  - Location management (City, District)
-  - Photo upload, reordering, and deletion
-  - Property-owner relationships
-
-- **👥 Owners Management**
-  - Owner profiles with contact information
-  - Address management
-  - Property count tracking
-  - Owner-property relationships
-
-- **🏘️ Tenants Management**
-  - Comprehensive tenant profiles
-  - Contact information (phone, email)
-  - Property assignment
-  - Enhanced tenant dialog with contract creation
-  - Assignment status tracking
-
-- **📄 Contracts Management**
-  - Rental contract creation and management
-  - Auto-generated contract PDFs with Turkish template
-  - Contract PDF upload and storage
-  - Legacy contract import from PDF/DOCX (OCR-based extraction)
-  - Start/end date tracking
-  - Rent amount management with multi-currency support
-  - Contract status (Active, Archived, Inactive)
-  - Rent increase reminders
-  - Expiration warnings (30 days before expiry)
-  - Download/upload PDFs directly from list
-
-- **🔔 Reminders System**
-  - Contract expiration reminders
-  - Rent increase notifications
-  - Reminder settings per contract
-  - Visual indicators for upcoming/overdue reminders
-
-- **📊 Dashboard**
-  - Property statistics
-  - Occupancy rates
-  - Contract overview
-  - Quick insights and metrics
-  - Real-time currency exchange rates (USD/EUR/TRY)
-  - Quick add button for rapid entity creation
-
-- **💰 Finance Management**
-  - Income and expense tracking
-  - Multi-currency support (TRY, USD, EUR)
-  - Expense categorization with custom categories
-  - Recurring expenses management
-  - Budget tracking per category
-  - Financial analytics and reports
-  - Receipt upload and storage
-  - Property and contract linkage
-
-- **📅 Calendar & Meetings**
-  - Meeting and appointment scheduling
-  - Property viewings management
-  - Tenant and client associations
-  - Location tracking
-  - Calendar view interface
-
-- **💼 Commissions Tracking**
-  - Sales commission tracking
-  - Rental commission management
-  - Multi-currency support
-  - Commission history and reports
-
-- **🔍 Property Inquiries**
-  - Lead management system
-  - Property matching algorithm
-  - Client requirements tracking
-  - Inquiry status management
-
-### User Experience
-
-- **🔐 Authentication**
-  - Secure login system
-  - Protected routes
-  - Session management
-
-- **📱 Mobile-First Design**
-  - Responsive layouts for all screen sizes
-  - Touch-friendly interface (44px+ touch targets)
-  - Card-based layout for mobile devices
-  - Optimized forms for mobile input
-  - Progressive Web App (PWA) support
-  - "Add to Home Screen" functionality
-
-- **🎨 Modern UI/UX**
-  - Clean, intuitive interface
-  - Consistent design system
-  - Smooth animations and transitions
-  - Toast notifications
-  - Loading states and skeletons
-  - Empty state handling
-
-## 🛠️ Technology Stack
-
-### Frontend
-
-- **React 18.3** - UI library
-- **TypeScript 5.5** - Type safety
-- **Vite 5.4** - Build tool and dev server
-- **React Router 7.9** - Client-side routing
-- **Tailwind CSS 3.4** - Utility-first CSS framework
-- **Radix UI** - Accessible component primitives
-- **Lucide React** - Icon library
-- **React Hook Form 7.53** - Form management
-- **Zod 3.23** - Schema validation
-- **Sonner** - Toast notifications
-- **date-fns 3.6** - Date utilities
-- **html2pdf.js** - PDF generation
-- **i18next** - Internationalization (TR/EN)
-
-### Backend & Database
-
-- **Supabase 2.58** - Backend as a Service
-  - PostgreSQL database
-  - Row Level Security (RLS)
-  - Storage for photos and PDFs
-  - Authentication
-
-### Development Tools
-
-- **ESLint** - Code linting
-- **TypeScript** - Type checking
-- **PostCSS** - CSS processing
-- **Autoprefixer** - CSS vendor prefixes
-
-## 📸 Screenshots
-
-> Add screenshots here when available
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
@@ -197,6 +78,7 @@ Before you begin, ensure you have the following installed:
    ```bash
    cp .env.example .env
    ```
+   If `.env.example` is not present, create `.env` manually (see [Environment Variables](#environment-variables)).
 
 4. **Configure environment variables** (see [Environment Variables](#environment-variables))
 
@@ -214,14 +96,29 @@ Before you begin, ensure you have the following installed:
 
 ### Environment Variables
 
-Create a `.env` file in the root directory:
+Create a `.env` file in the root directory.
+
+**Vite (client-side — required for local dev and production builds):**
 
 ```env
-VITE_SUPABASE_URL=your_supabase_project_url
-VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your_anon_key
+VITE_ENCRYPTION_KEY=64_hex_chars_32_bytes_for_AES256GCM
+VITE_TURNSTILE_SITE_KEY=cloudflare_turnstile_site_key
 ```
 
-You can find these values in your Supabase project settings under "API" → "Project API keys".
+You can find `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your Supabase project settings under **API** → **Project API keys**.
+
+`VITE_ENCRYPTION_KEY` is used for encrypting sensitive owner bank fields before storage (AES-256-GCM). `VITE_TURNSTILE_SITE_KEY` is used where Cloudflare Turnstile is wired in the app (e.g. public forms).
+
+**Supabase Edge Functions (server-side secrets — not `VITE_` prefixed):**
+
+Configure in the Supabase dashboard or CLI as needed for your deployment, for example:
+
+- `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (billing)
+- `OCR_SPACE_API_KEY` (or other OCR provider as used by your functions)
+
+See **`CLAUDE.md` → Environment Variables** for the canonical list.
 
 ### Database Setup
 
@@ -258,6 +155,12 @@ The project uses Supabase with PostgreSQL. Database migrations are located in `s
 
 See `supabase/migrations/` — filenames are `0001_…`, `0002_…`, etc.
 
+After schema changes, regenerate types:
+
+```bash
+npm run gen:types
+```
+
 ### Running the Application
 
 #### Development Mode
@@ -274,7 +177,7 @@ Starts the Vite dev server with hot module replacement (HMR).
 npm run build
 ```
 
-Builds the app for production to the `dist` folder.
+Builds the app for production to the `dist` folder (TypeScript project build + Vite).
 
 #### Preview Production Build
 
@@ -290,7 +193,14 @@ Preview the production build locally.
 npm run typecheck
 ```
 
-Run TypeScript type checking without emitting files.
+Run TypeScript type checking without emitting files (includes Vitest test files per project config).
+
+#### Tests
+
+```bash
+npm run test
+npm run test:watch
+```
 
 #### Linting
 
@@ -298,74 +208,78 @@ Run TypeScript type checking without emitting files.
 npm run lint
 ```
 
-Run ESLint to check code quality.
+#### i18n audit
 
-## 📁 Project Structure
+```bash
+npm run check:translations
+```
+
+Audits `public/locales/en/*.json` (parse + no empty strings).
+
+#### Cloudflare Pages (Wrangler)
+
+```bash
+npm run deploy       # build + deploy (staging/default project)
+npm run deploy:prod  # build + deploy with production project name
+```
+
+Requires Wrangler configuration and Cloudflare credentials appropriate for your account.
+
+## Project Structure
 
 ```
 emlak-crm/
-├── public/                  # Static assets
-│   ├── manifest.json       # PWA manifest
-│   └── vite.svg            # App icon
+├── public/
+│   ├── locales/
+│   │   └── en/                 # i18n JSON (English only; one file per namespace)
+│   ├── manifest.json           # PWA manifest
+│   └── …                       # Static assets
 ├── src/
-│   ├── components/         # Reusable UI components
-│   │   ├── common/         # Common components (EmptyState, etc.)
-│   │   ├── dashboard/      # Dashboard-specific components
-│   │   ├── layout/         # Layout components (Sidebar, Navbar, etc.)
-│   │   ├── properties/     # Property-related components
-│   │   ├── templates/      # Page templates (ListPageTemplate)
-│   │   └── ui/             # Base UI components (from Radix UI)
-│   ├── config/             # Configuration files
-│   │   ├── colors.ts       # Color scheme and design tokens
-│   │   ├── constants.ts    # App constants and routes
-│   │   └── supabase.ts     # Supabase client configuration
-│   ├── contexts/           # React contexts
-│   │   └── AuthContext.tsx # Authentication context
-│   ├── features/           # Feature modules
-│   │   ├── auth/           # Authentication
-│   │   ├── calendar/       # Calendar and meetings
-│   │   ├── contracts/      # Contracts management
-│   │   │   └── import/     # Legacy contract import
-│   │   ├── dashboard/      # Dashboard
-│   │   ├── finance/        # Financial tracking
-│   │   ├── inquiries/      # Property inquiries
-│   │   ├── owners/         # Owners management
-│   │   ├── properties/     # Properties management
-│   │   ├── reminders/      # Reminders system
-│   │   └── tenants/        # Tenants management
-│   ├── hooks/              # Custom React hooks
-│   ├── lib/                # Utility functions
-│   │   ├── dates.ts       # Date utilities
-│   │   ├── db.ts           # Database helpers
-│   │   ├── rpc.ts          # RPC function helpers
-│   │   ├── serviceProxy.ts # Service abstraction layer
-│   │   └── utils.ts        # General utilities
-│   ├── services/           # API service layers
-│   │   ├── contracts.service.ts
-│   │   ├── owners.service.ts
-│   │   ├── photos.service.ts
-│   │   ├── properties.service.ts
-│   │   ├── reminders.service.ts
-│   │   ├── tenants.service.ts
-│   │   └── mockServices/   # Mock services for development
-│   ├── types/              # TypeScript type definitions
-│   │   ├── database.ts     # Database types
-│   │   ├── index.ts        # General types
-│   │   └── rpc.ts          # RPC function types
-│   ├── App.tsx             # Main App component
-│   ├── main.tsx            # Application entry point
-│   └── index.css           # Global styles
+│   ├── components/             # Shared UI only
+│   │   ├── ui/                 # Radix-based primitives
+│   │   ├── layout/             # MainLayout, Sidebar, Navbar, PageContainer
+│   │   └── common/             # EmptyState, ErrorBoundary, Skeletons
+│   ├── config/                 # colors.ts, constants.ts, supabase.ts
+│   ├── contexts/               # AuthContext, OrgContext, BillingContext, …
+│   ├── features/               # One folder per domain feature
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── properties/
+│   │   ├── owners/
+│   │   ├── tenants/
+│   │   ├── contracts/          # Includes import wizard subfolder
+│   │   ├── finance/
+│   │   ├── inquiries/
+│   │   ├── deals/
+│   │   ├── leads/
+│   │   ├── calendar/
+│   │   ├── reminders/
+│   │   ├── quick-add/
+│   │   ├── profile/
+│   │   ├── landing/
+│   │   └── …                   # Other domains as present in repo
+│   ├── hooks/
+│   ├── lib/                    # auth, db, dates, rpc, currency, serviceProxy, …
+│   ├── services/               # Supabase service classes (import via serviceProxy)
+│   ├── types/                  # index.ts, database.ts (generated), contract.types.ts, …
+│   ├── templates/              # PDF / contract text templates (US)
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
 ├── supabase/
-│   └── migrations/         # Database migration files
-├── docs/                   # Documentation, drafts (content/), samples (PDFs/media)
-├── index.html             # HTML template
-├── package.json           # Dependencies and scripts
-├── tsconfig.json          # TypeScript configuration
-├── vite.config.ts         # Vite configuration
-└── tailwind.config.js     # Tailwind CSS configuration
+│   ├── migrations/             # 0001_foo.sql, 0002_bar.sql, …
+│   └── functions/              # Deno Edge Functions
+├── scripts/                    # e.g. check-translations.cjs
+├── docs/                       # Documentation, drafts, samples
+├── index.html
+├── package.json
+├── tsconfig.json
+├── vite.config.ts
+├── tailwind.config.js
+└── CLAUDE.md                   # Project conventions (migrations, stack, security)
 ```
 
-## 🔑 Key Features
+## Key Features
 
 ### Enhanced Tenant Dialog
 
@@ -387,116 +301,110 @@ This eliminates the need to navigate between separate pages, creating a streamli
 
 ### Contract PDF Management
 
-- **Auto-generated PDFs** - Turkish rental contract template with html2pdf.js
-- **PDF Upload** - Upload existing contract PDFs
-- **PDF Download** - Download contracts with signed URLs
-- **Legacy Import** - Import existing contracts from PDF/DOCX with OCR
-- **Turkish Font Support** - Proper rendering of Turkish characters (İ, Ş, Ğ, Ü, Ö, Ç)
+- **Generated PDFs** — US-oriented lease/purchase flows (see `src/templates/` and PDF services)
+- **PDF Upload** — Upload existing contract PDFs
+- **PDF Download** — Download contracts with signed URLs
+- **Legacy Import** — Import existing contracts from PDF/DOCX with OCR (Edge Functions)
 - Store in Supabase Storage
 - Secure access with RLS policies
 
-### Mobile-First Design
-
-The application is fully optimized for mobile devices:
-
-- **Touch Targets**: All interactive elements meet 44px minimum touch target size
-- **Responsive Layouts**: Cards on mobile, tables on desktop
-- **Form Optimization**: Single-column forms on mobile, multi-column on desktop
-- **Truncation**: Smart text truncation to prevent overflow
-- **PWA Support**: Installable as a Progressive Web App
-
-## 📱 Mobile-First Design
+## Mobile-First Design
 
 The application follows a mobile-first approach with the following optimizations:
 
 ### Touch Targets
+
 - All buttons meet 44px minimum size on mobile
 - Icon buttons sized appropriately for touch interaction
 - Desktop sizes preserved using responsive classes
 
 ### Layouts
+
 - **Mobile (< 768px)**: Card-based layouts for lists
 - **Desktop (≥ 768px)**: Traditional table layouts
 - Responsive form grids (1 column mobile, 2 columns desktop)
 
 ### Text Handling
+
 - Consistent truncation patterns
 - Responsive max-widths (smaller on mobile, larger on desktop)
 - Line-clamping for long text
 
 ### PWA Features
+
 - Manifest.json configured
 - Theme color for browser chrome
 - Apple iOS meta tags
 - "Add to Home Screen" support
 
-## 🗄️ Database Schema
+## Database Schema
 
-### Core Tables
+### Core tables (US-adapted)
 
-- **property_owners** - Property owner information
-- **properties** - Property details and status
-- **property_photos** - Property photo references
-- **tenants** - Tenant profiles
-- **contracts** - Rental contracts with relationships
-- **meetings** - Calendar appointments and property viewings
-- **property_inquiries** - Lead management and property matching
-- **commissions** - Sales and rental commission tracking
-- **financial_transactions** - Income and expense tracking
-- **expense_categories** - Financial categorization system
-- **recurring_expenses** - Recurring financial obligations
-- **user_preferences** - User settings and preferences
+| Table | Purpose |
+|-------|---------|
+| `properties` | `property_type: 'rental' \| 'sale'`; US address fields (street, city, state, zip, MLS, year_built) |
+| `property_owners` | Owners; routing/account numbers encrypted (AES-256-GCM) |
+| `tenants` | Tenant profiles; US address fields |
+| `contracts` | Rental contracts; links to `deal_id` where applicable; deposit fields |
+| `contract_details` | Extra fields for PDF generation |
+| `property_inquiries` | Lead pipeline + auto-matching |
+| `inquiry_matches` | Match results |
+| `meetings` | Calendar appointments |
+| `commissions` | Dual-side commission tracking |
+| `financial_transactions` | Income/expense ledger |
+| `expense_categories` | Categories and budgets |
+| `user_preferences` | Settings, business info, commission defaults |
+| `organizations` | Multi-tenant org support |
 
-### Key Relationships
+### Deal and transaction tables (US V1)
+
+| Table | Purpose |
+|-------|---------|
+| `deals` | Unified deal (lead → closing), offer/closing fields, commission rates |
+| `deal_milestones` | Timeline milestones, due dates, responsible party |
+| `deal_documents` | Documents per deal/milestone |
+| `deal_parties` | Contacts on a deal (buyer, seller, lender, title, etc.) |
+| `deal_amendments` | Amendment log |
+| `buyer_agent_agreements` | Post-NAR buyer representation tracking |
+| `offers` | Offers / counter-offers (`counter_of` self-FK) |
+| `showing_logs` | Showings with buyer feedback |
+| `applicant_screenings` | Rental applicant screening fields |
+
+### Key relationships (simplified)
 
 ```
 property_owners (1) ──┐
-                       ├──> (many) properties (1) ──> (many) property_photos
-                       │
+                      ├──> (many) properties (1) ──> (many) property_photos
+                      │
 properties (1) ────> (many) contracts (many) <─── (1) tenants
 ```
 
 ### Security
 
-- Row Level Security (RLS) policies on all tables
+- Row Level Security (RLS) policies on tables (standard pattern: `auth.uid() = user_id` for CRUD)
 - Secure file storage with access policies
 - Authenticated user context for data access
 
-## 🔌 API & Services
+For migration source of truth, see `supabase/migrations/` and **`CLAUDE.md`**.
 
-The application uses a service layer pattern. For complete API documentation, see [docs/reference/API.md](./docs/reference/API.md).
+## API & Services
 
-### Service Files
+The application uses a **service layer** pattern. For method-level documentation, see [docs/reference/API.md](./docs/reference/API.md).
 
-- `properties.service.ts` - Property CRUD operations
-- `owners.service.ts` - Owner management
-- `tenants.service.ts` - Tenant operations
-- `contracts.service.ts` - Contract management
-- `contractPdf.service.ts` - PDF generation and management
-- `textExtraction.service.ts` - OCR text extraction from PDFs
-- `photos.service.ts` - Photo upload and management
-- `reminders.service.ts` - Reminder operations
-- `inquiries.service.ts` - Property inquiry management
-- `meetings.service.ts` - Calendar and meeting management
-- `commissions.service.ts` - Commission tracking
-- `financialTransactions.service.ts` - Financial tracking
-- `userPreferences.service.ts` - User settings management
+### Service proxy
 
-### Service Proxy
+Import services **only** from `src/lib/serviceProxy.ts` (not directly from `src/services/*`) so mocks, swaps, and conventions stay centralized.
 
-The `serviceProxy.ts` provides a unified interface for services, allowing easy switching between mock and real services during development.
+### Representative service modules
 
-### RPC Functions
+Includes (non-exhaustive): `properties`, `owners`, `tenants`, `contracts`, `contractPdf` / `contractPdfEngine`, `contractCreation`, `contractUpdate`, `textExtraction`, `photos`, `reminders`, `inquiries`, `leads`, `meetings`, `commissions`, `commissionCalculator`, `deals`, `dealParties`, `offerRounds`, `offerContingencies`, `timelineMilestones`, `buyerAgentAgreements`, `showingLogs`, `notifications`, `dailyBrief`, finance (`transactions`, `analytics`, `recurring`, `categories`, `exchangeRates`, `reportCalculator`), `billingService`, `stripeCheckout`, `userPreferences`, `encryption`, `organization`, and related helpers.
 
-The database includes custom RPC functions for complex operations:
+### RPC functions
 
-- `create_tenant_with_contract` - Atomic tenant and contract creation
-- Contract validation functions
-- Photo ordering atomic operations
+The database includes RPCs for atomic and complex operations (e.g. tenant+contract creation, photo ordering). See [docs/reference/API.md](./docs/reference/API.md) and `src/lib/rpc.ts` / types for names and usage.
 
-For detailed API documentation including method signatures, parameters, return types, and examples, see [docs/reference/API.md](./docs/reference/API.md).
-
-## 💻 Development
+## Development
 
 ### Code Style
 
@@ -504,14 +412,16 @@ For detailed API documentation including method signatures, parameters, return t
 - ESLint for code quality
 - Consistent component structure
 - Feature-based folder organization
+- Named exports only (no `export default` for app code — see `CLAUDE.md`)
 
 ### Adding a New Feature
 
 1. Create feature folder in `src/features/`
-2. Add service in `src/services/`
+2. Add service in `src/services/` and export through `src/lib/serviceProxy.ts`
 3. Update routes in `src/config/constants.ts`
 4. Add route in `src/App.tsx`
 5. Add navigation item in `src/components/layout/Sidebar.tsx`
+6. Add `public/locales/en/<namespace>.json` for UI strings
 
 ### Component Guidelines
 
@@ -520,9 +430,9 @@ For detailed API documentation including method signatures, parameters, return t
 - Use Radix UI components from `src/components/ui/`
 - Implement responsive design patterns
 - Add loading and empty states
-- Handle errors gracefully
+- Handle errors gracefully (e.g. toast pattern in `CLAUDE.md`)
 
-## 🚢 Build & Deployment
+## Build & Deployment
 
 ### Build for Production
 
@@ -534,36 +444,38 @@ This creates an optimized production build in the `dist` folder.
 
 ### Deployment
 
-For detailed deployment instructions, see [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md).
+**Cloudflare Pages (this repo’s npm scripts):**
 
-The application can be deployed to:
+```bash
+npm run deploy
+npm run deploy:prod
+```
 
-- **Vercel** - Zero-config deployment (recommended)
-- **Netlify** - Automatic deployments
-- **Supabase Hosting** - Integrated with backend
-- **GitHub Pages** - Free hosting for public repos
-- **AWS S3 + CloudFront** - Scalable static hosting
-- **Docker** - Containerized deployment
-- **Any static hosting service**
+Uses Wrangler after `npm run build`. Configure your Cloudflare project and secrets to match your setup.
+
+**Other platforms:** For Vercel, Netlify, Supabase Hosting, GitHub Pages, S3/CloudFront, Docker, and troubleshooting, see [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md).
 
 ### Environment Variables for Production
 
-Ensure your production environment has:
+Ensure your production environment includes at least:
 
 ```
 VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_anon_key
+VITE_ENCRYPTION_KEY=your_production_encryption_key
+VITE_TURNSTILE_SITE_KEY=your_turnstile_site_key
 ```
 
 For platform-specific deployment guides, troubleshooting, and best practices, see [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md).
 
-## 📚 Documentation
+## Documentation
 
 Comprehensive documentation is available for developers:
 
 - **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
+- **[CLAUDE.md](./CLAUDE.md)** - Stack, commands, migration naming, RLS patterns, env vars, edge functions
 - **[docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md)** - Technical architecture and system design
-- **[docs/reference/API.md](./docs/reference/API.md)** - Complete API documentation for all services
+- **[docs/reference/API.md](./docs/reference/API.md)** - API documentation for services
 - **[docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)** - Deployment guides for various platforms
 - **[docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)** - Contribution guidelines and development workflow
 - **[docs/design/claude.md](./docs/design/claude.md)** - Design notes and UI guidelines
@@ -584,7 +496,7 @@ Comprehensive documentation is available for developers:
 - **Deploying**: See [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)
 - **Contributing**: See [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! Please read our [Contributing Guide](./docs/reference/CONTRIBUTING.md) for details on:
 
@@ -606,23 +518,18 @@ Contributions are welcome! Please read our [Contributing Guide](./docs/reference
 
 For detailed guidelines, see [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md).
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Supabase](https://supabase.com) - Backend infrastructure
 - [Radix UI](https://www.radix-ui.com) - Accessible component primitives
 - [Tailwind CSS](https://tailwindcss.com) - Utility-first CSS framework
-- [Vite](https://vitejs.dev) - Next-generation frontend tooling
+- [Vite](https://vitejs.dev) - Frontend tooling
 - [React](https://react.dev) - UI library
 
-## 📞 Support
+## Support
 
 For issues, questions, or contributions, please open an issue on the GitHub repository.
-
----
-
-**Built with ❤️ for Turkish Real Estate Agents**
-

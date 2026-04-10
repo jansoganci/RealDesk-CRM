@@ -15,6 +15,7 @@ import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { MarketingROI } from '../../../services/finance/analytics.service';
+import { COLORS } from '@/config/colors';
 
 interface MarketingROIProps {
   data: MarketingROI | null;
@@ -76,7 +77,7 @@ export const MarketingROIComponent = ({
       name: t(`finance:categories.expense.${cat.category}`) || cat.category,
       spend: cat.spend.value,
       roi: cat.roi,
-      color: cat.roi >= 0 ? '#10b981' : '#ef4444',
+      color: cat.roi >= 0 ? COLORS.success.hex : COLORS.danger.hex,
     }));
 
   const CustomTooltip = ({ active, payload }: any) => {
@@ -151,20 +152,20 @@ export const MarketingROIComponent = ({
               </p>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                  <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 11, fill: '#64748b' }}
+                    tick={{ fontSize: 11, fill: COLORS.muted.hex }}
                     tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
+                    axisLine={{ stroke: COLORS.border.hex }}
                     angle={-45}
                     textAnchor="end"
                     height={80}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: '#64748b' }}
+                    tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                     tickLine={false}
-                    axisLine={{ stroke: '#e2e8f0' }}
+                    axisLine={{ stroke: COLORS.border.hex }}
                     tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
                   />
                   <Tooltip content={<CustomTooltip />} />

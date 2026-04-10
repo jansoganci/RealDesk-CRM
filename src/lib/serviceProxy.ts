@@ -14,8 +14,45 @@ export { remindersService } from '../services/reminders.service';
 export { photosService } from '../services/photos.service';
 export { inquiriesService } from '../services/inquiries.service';
 export { leadsService } from '../services/leads.service';
+export { buyerAgentAgreementsService } from '../services/buyerAgentAgreements.service';
+export type { BuyerAgentAgreement, CreateAgreementInput, AgreementStatus } from '../services/buyerAgentAgreements.service';
+export { showingLogsService } from '../services/showingLogs.service';
+export type { ShowingLog, CreateShowingLogInput, InterestLevel, ShowingFeedback } from '../services/showingLogs.service';
+export { dealsService } from '../services/deals.service';
+export type {
+  CreateDealInput,
+  DealWithRelations,
+  DealStats,
+  UpdateDealInput,
+} from '../services/deals.service';
+export { offerRoundsService } from '../services/offerRounds.service';
+export type {
+  CreateFirstOfferInput,
+  AddCounterOfferInput,
+  OfferedBy,
+} from '../services/offerRounds.service';
+export { offerContingenciesService } from '../services/offerContingencies.service';
+export type {
+  ContingencyResolution,
+  DefaultContingencyTemplate,
+} from '../services/offerContingencies.service';
+export { dailyBriefService } from '../services/dailyBrief.service';
+export { notificationsService } from '../services/notifications.service';
+export { dealPartiesService } from '../services/dealParties.service';
+export {
+  addCustomMilestone,
+  addMilestoneNote,
+  getByDeal,
+  getMilestoneDocument,
+  regenerateTimelineMilestones,
+  sendNudge,
+  updateMilestoneDueDate,
+  updateMilestoneStatus,
+  uploadMilestoneDocument,
+} from '../services/timelineMilestones.service';
 export { meetingsService } from '../services/meetings.service';
 export { commissionsService } from '../services/commissions.service';
+export { calculateCommission } from '../services/commissionCalculator';
 export { userPreferencesService } from '../services/userPreferences.service';
 export * as financialTransactionsService from '../services/finance';
 

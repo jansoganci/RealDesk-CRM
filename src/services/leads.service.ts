@@ -8,6 +8,7 @@ import type {
   InquiryWithMatches,
   InquiryMatchWithProperty,
   Property,
+  BuyerAgentAgreementStatus,
 } from '@/types';
 import { insertRow, updateRow } from '@/lib/db';
 import { getAuthenticatedUserId } from '@/lib/auth';
@@ -23,7 +24,9 @@ export type BuyerAgentAgreement = Database['public']['Tables']['buyer_agent_agre
 export type BuyerAgentAgreementInsert = Database['public']['Tables']['buyer_agent_agreements']['Insert'];
 export type BuyerAgentAgreementUpdate = Database['public']['Tables']['buyer_agent_agreements']['Update'];
 
-export type ShowingLog = Database['public']['Tables']['showing_logs']['Row'];
+export type ShowingLog = Database['public']['Tables']['showing_logs']['Row'] & {
+  feedback_enum?: ShowingFeedback | null;
+};
 export type ShowingLogInsert = Database['public']['Tables']['showing_logs']['Insert'];
 export type ShowingLogUpdate = Database['public']['Tables']['showing_logs']['Update'];
 
@@ -49,15 +52,17 @@ export type LeadSource =
   | 'open_house'
   | 'other';
 
-export type AgreementStatus = 'active' | 'expired' | 'terminated';
+export type AgreementStatus = BuyerAgentAgreementStatus;
 
 export type InterestLevel = 'high' | 'medium' | 'low' | 'none';
+export type ShowingFeedback = 'loved' | 'interested' | 'pass';
 
 export interface CreateLeadInput {
   name: string;
   phone: string;
   email?: string;
   inquiry_type: 'rental' | 'sale';
+  status?: LeadStatus;
   lead_source?: LeadSource;
   preferred_city?: string;
   preferred_state?: string;
@@ -77,6 +82,7 @@ export interface CreateAgreementInput {
   commission_type: 'percentage' | 'flat_fee' | 'tiered';
   flat_fee_amount?: number;
   pdf_url?: string;
+  status?: BuyerAgentAgreementStatus;
 }
 
 export interface CreateShowingLogInput {
@@ -84,7 +90,8 @@ export interface CreateShowingLogInput {
   property_id: string;
   showing_date: Date;
   duration_minutes?: number;
-  feedback?: string;
+  feedback: ShowingFeedback;
+  feedback_enum?: ShowingFeedback;
   interest_level?: InterestLevel;
 }
 
@@ -145,6 +152,12 @@ export class LeadsService {
     if (uid !== userId) {
       throw new Error('User mismatch.');
     }
+  }
+
+  private mapFeedbackToInterestLevel(feedback: ShowingFeedback): InterestLevel {
+    if (feedback === 'loved') return 'high';
+    if (feedback === 'interested') return 'medium';
+    return 'low';
   }
 
   // ---------------------------------------------------------------------------
@@ -249,6 +262,7 @@ export class LeadsService {
 
       return insertRow('property_inquiries', {
         ...inquiry,
+        status: inquiry.status ?? 'new',
         user_id: userId,
         org_id: orgId,
       });
@@ -682,7 +696,7 @@ export class LeadsService {
         max_sale_budget: data.max_sale_budget ?? null,
         pre_approved: data.pre_approved ?? null,
         notes: data.notes ?? null,
-        status: 'new',
+        status: data.status ?? 'new',
         user_id: userId,
         org_id: orgId,
       };
@@ -834,8 +848,9 @@ export class LeadsService {
       await this.assertUserMatches(userId);
       await this.assertOrgMatchesActive(orgId);
 
-      const insert: BuyerAgentAgreementInsert = {
+      const insert = {
         lead_id: data.lead_id,
+        user_id: userId,
         org_id: orgId,
         signed_date: formatDateForDb(data.signed_date),
         expiration_date: formatDateForDb(data.expiration_date),
@@ -843,10 +858,10 @@ export class LeadsService {
         commission_type: data.commission_type,
         flat_fee_amount: data.flat_fee_amount ?? null,
         pdf_url: data.pdf_url ?? null,
-        status: 'active',
+        status: data.status ?? 'draft',
       };
 
-      return insertRow('buyer_agent_agreements', insert);
+      return insertRow('buyer_agent_agreements', insert as unknown as BuyerAgentAgreementInsert);
     } catch (error) {
       throw handleServiceError(error, 'Failed to create buyer-agent agreement');
     }
@@ -905,7 +920,30 @@ export class LeadsService {
     }
   }
 
-  /** Updates agreement status (active / expired / terminated). */
+  async getExpiringSoon(daysThreshold: number = 14): Promise<BuyerAgentAgreement[]> {
+    try {
+      const orgId = await getActiveOrgId();
+      const userId = await getAuthenticatedUserId();
+      const cutoff = new Date();
+      cutoff.setDate(cutoff.getDate() + daysThreshold);
+
+      const { data, error } = await supabase
+        .from('buyer_agent_agreements')
+        .select('*')
+        .eq('org_id', orgId)
+        .eq('user_id', userId)
+        .eq('status', 'active')
+        .lte('expiration_date', cutoff.toISOString().split('T')[0])
+        .gte('expiration_date', new Date().toISOString().split('T')[0]);
+
+      if (error) throw error;
+      return (data || []) as BuyerAgentAgreement[];
+    } catch (error) {
+      throw handleServiceError(error, 'Failed to fetch expiring-soon agreements');
+    }
+  }
+
+  /** Updates agreement status (draft / sent / signed / active / expired / terminated). */
   async updateAgreementStatus(
     agreementId: string,
     status: AgreementStatus
@@ -943,17 +981,19 @@ export class LeadsService {
       await this.assertUserMatches(userId);
       await this.assertOrgMatchesActive(orgId);
 
-      const insert: ShowingLogInsert = {
+      const insert = {
         lead_id: data.lead_id,
         property_id: data.property_id,
+        user_id: userId,
         org_id: orgId,
         showing_date: data.showing_date.toISOString(),
         duration_minutes: data.duration_minutes ?? null,
-        feedback: data.feedback ?? null,
-        interest_level: data.interest_level ?? null,
+        feedback_enum: data.feedback_enum ?? data.feedback,
+        interest_level: data.interest_level ?? this.mapFeedbackToInterestLevel(data.feedback),
       };
 
-      return insertRow('showing_logs', insert);
+      const row = await insertRow('showing_logs', insert as unknown as ShowingLogInsert);
+      return row as ShowingLog;
     } catch (error) {
       throw handleServiceError(error, 'Failed to create showing log');
     }
@@ -1002,15 +1042,17 @@ export class LeadsService {
   /** Updates feedback and interest on a showing row. */
   async updateShowingFeedback(
     showingId: string,
-    feedback: string,
-    interestLevel: InterestLevel
+    feedback: ShowingFeedback
   ): Promise<ShowingLog> {
     try {
       const orgId = await getActiveOrgId();
 
       const { data, error } = await supabase
         .from('showing_logs')
-        .update({ feedback, interest_level: interestLevel })
+        .update({
+          feedback_enum: feedback,
+          interest_level: this.mapFeedbackToInterestLevel(feedback),
+        })
         .eq('id', showingId)
         .eq('org_id', orgId)
         .select()

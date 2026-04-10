@@ -84,7 +84,7 @@ export const TransactionsTable = ({
       lastProcessedRef.current = fingerprint;
       const conversions: ConversionCache = {};
       const needsConversion = transactions.filter(t => {
-        const normalizedOriginal = t.currency?.toUpperCase().trim() || 'TRY';
+        const normalizedOriginal = t.currency?.toUpperCase().trim() || 'USD';
         return normalizedOriginal !== displayCurrency;
       });
 
@@ -130,7 +130,7 @@ export const TransactionsTable = ({
   }, [transactions, displayCurrency, formatWithConversion]);
 
   const formatCurrencyLocal = (amount: number, currencyCode: string) => {
-    const normalizedCurrency = currencyCode?.toUpperCase().trim() || 'TRY';
+    const normalizedCurrency = currencyCode?.toUpperCase().trim() || 'USD';
     if (!normalizedCurrency || normalizedCurrency === 'MIXED') {
       return new Intl.NumberFormat('tr-TR', {
         minimumFractionDigits: 0,

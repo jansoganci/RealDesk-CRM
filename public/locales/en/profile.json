@@ -7,6 +7,10 @@
     "preferencesDescription": "Manage your personal details, language, currency and business preferences",
     "security": "Security"
   },
+  "tabs": {
+    "general": "General",
+    "commission": "Commission"
+  },
   "fields": {
     "email": "Email Address",
     "emailLocked": "Email (managed by your account)",
@@ -28,8 +32,7 @@
     "notAvailable": "N/A"
   },
   "languages": {
-    "en": "English",
-    "tr": "Turkish"
+    "en": "English"
   },
   "currencies": {
     "USD": "US Dollar (USD)",
@@ -261,7 +264,6 @@
       "commissionRate": "Commission Rate"
     },
     "languages": {
-      "tr": "Turkish",
       "en": "English"
     },
     "currencies": {
@@ -315,5 +317,75 @@
     "andMore": "+{{count}} more",
     "empty": "No team members yet",
     "addMember": "Add Team Member"
+  },
+  "commissionSettings": {
+    "title": "Commission Settings",
+    "loading": "Loading commission settings...",
+    "save": "Save Commission Settings",
+    "saving": "Saving...",
+    "messages": {
+      "loadError": "Failed to load commission settings",
+      "saveSuccess": "Commission settings updated successfully",
+      "saveError": "Failed to update commission settings"
+    },
+    "fields": {
+      "brokerModel": "Broker Model",
+      "brokerSplitPct": "Broker Split (%)",
+      "annualCapAmount": "Annual Cap Amount",
+      "capAnniversaryDate": "Cap Anniversary Date",
+      "franchiseEnabled": "Enable Franchise / Royalty Fee",
+      "franchiseFeePct": "Franchise Fee (%)",
+      "franchiseFeeCap": "Franchise Fee Cap",
+      "defaultTransactionFee": "Default Transaction Fee",
+      "eoFeeType": "E&O Fee Type",
+      "eoFeeAmount": "E&O Fee Amount (Per Deal)",
+      "defaultTcFee": "Default TC Fee",
+      "defaultRentalType": "Default Rental Commission Type",
+      "defaultRentalRate": "Default Rental Commission Rate (%)",
+      "defaultRentalFlatFee": "Default Rental Flat Fee"
+    },
+    "options": {
+      "brokerModel": {
+        "splitWithCap": "Percentage Split + Annual Cap",
+        "traditionalSplit": "Traditional Split (No Cap)",
+        "flatFee100": "100% Commission + Flat Fees"
+      },
+      "eoFeeType": {
+        "perDeal": "Per Deal",
+        "monthly": "Included in Monthly",
+        "annualExcluded": "Paid Annually (Excluded)"
+      },
+      "rentalType": {
+        "oneMonth": "1 Month's Rent",
+        "annualPct": "% of Annual Rent",
+        "flatFee": "Flat Fee"
+      }
+    },
+    "preview": {
+      "title": "Live Settings Preview",
+      "example": "For a $400,000 sale at 2.75%:",
+      "dealGci": "Deal GCI",
+      "broker": "Broker Split",
+      "franchise": "Franchise Fee",
+      "transaction": "Transaction Fee",
+      "eo": "E&O Fee",
+      "tc": "TC Fee",
+      "net": "Net to Agent"
+    },
+    "cap": {
+      "title": "Cap Progress Tracker",
+      "capped": "CAPPED",
+      "ytdPaid": "YTD Company Dollar Paid",
+      "remaining": "Remaining to Cap",
+      "dealsToCap": "Deals to cap (est.)",
+      "gciToCap": "GCI to cap (est.)",
+      "resetDate": "Cap reset",
+      "daysAway": "days away",
+      "showHistory": "Show per-deal cap history",
+      "hideHistory": "Hide cap history",
+      "noHistory": "No closed commissions in this cap year yet.",
+      "cumulative": "Cumulative",
+      "triggeredCap": "Cap triggered on this deal"
+    }
   }
 }

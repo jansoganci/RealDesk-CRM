@@ -32,7 +32,7 @@ class ContractsService {
         rent_increase_reminder_enabled,
         rent_increase_reminder_days,
         tenant:tenants(id, name, email, phone),
-        property:properties(id, address, city, district, il, ilce)
+        property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
       .is('deleted_at', null)
@@ -59,7 +59,7 @@ class ContractsService {
         rent_increase_reminder_enabled,
         rent_increase_reminder_days,
         tenant:tenants(id, name, email, phone),
-        property:properties(id, address, city, district, il, ilce)
+        property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('id', id)
       .eq('org_id', orgId)
@@ -116,7 +116,7 @@ class ContractsService {
         rent_increase_reminder_enabled,
         rent_increase_reminder_days,
         tenant:tenants(id, name, email, phone),
-        property:properties(id, address, city, district, il, ilce)
+        property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
       .is('deleted_at', null)
@@ -145,7 +145,7 @@ class ContractsService {
         rent_increase_reminder_enabled,
         rent_increase_reminder_days,
         tenant:tenants(id, name, email, phone),
-        property:properties(id, address, city, district, il, ilce)
+        property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
       .is('deleted_at', null)

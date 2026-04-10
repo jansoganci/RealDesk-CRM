@@ -15,14 +15,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import {
   Form,
   FormControl,
@@ -45,7 +37,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   createShowingLogSchema,
-  INTEREST_LEVEL_OPTIONS,
+  SHOWING_FEEDBACK_OPTIONS,
   type CreateShowingLogFormData,
 } from '../schemas/showing-log-form';
 import type { ShowingLog } from '@/services/leads.service';
@@ -84,19 +76,28 @@ export function ShowingLogDialog({
   useEffect(() => {
     if (open) {
       if (existingShowing) {
+        const mappedFeedback =
+          existingShowing.feedback_enum ??
+          (existingShowing.interest_level === 'high'
+            ? 'loved'
+            : existingShowing.interest_level === 'medium'
+            ? 'interested'
+            : existingShowing.interest_level === 'low' || existingShowing.interest_level === 'none'
+            ? 'pass'
+            : 'interested');
         form.reset({
           lead_id: leadId,
           property_id: existingShowing.property_id,
           showing_date: new Date(existingShowing.showing_date),
           duration_minutes: existingShowing.duration_minutes ?? undefined,
-          feedback: existingShowing.feedback ?? '',
+          feedback: mappedFeedback,
           interest_level: existingShowing.interest_level as any,
         });
       } else {
         form.reset({
           lead_id: leadId,
           showing_date: new Date(),
-          feedback: '',
+          feedback: 'interested',
         });
       }
     }
@@ -127,18 +128,16 @@ export function ShowingLogDialog({
 
     try {
       if (existingShowing) {
-        await leadsService.updateShowingFeedback(
-          existingShowing.id,
-          data.feedback || '',
-          (data.interest_level || 'none') as 'high' | 'medium' | 'low' | 'none'
-        );
+        await leadsService.updateShowingFeedback(existingShowing.id, data.feedback);
         toast.success(t('toasts.showingUpdated', 'Showing updated'));
       } else {
-        // Convert null to undefined for service call
+        const mappedInterestLevel =
+          data.feedback === 'loved' ? 'high' : data.feedback === 'interested' ? 'medium' : 'low';
+
         const serviceData = {
           ...data,
           duration_minutes: data.duration_minutes ?? undefined,
-          interest_level: data.interest_level ?? undefined,
+          interest_level: mappedInterestLevel as 'high' | 'medium' | 'low' | 'none',
         };
         await leadsService.createShowingLog(serviceData, user.id, currentOrg.id);
         toast.success(t('toasts.showingCreated', 'Showing logged successfully'));
@@ -296,54 +295,29 @@ export function ShowingLogDialog({
 
             <FormField
               control={form.control}
-              name="interest_level"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('showings.interestLevel', 'Interest Level')}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value ?? undefined}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue
-                          placeholder={t('showings.selectInterest', 'Select interest level')}
-                        />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {INTEREST_LEVEL_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
               name="feedback"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>
-                    {t('showings.feedback', 'Feedback')}{' '}
-                    <span className="text-muted-foreground">(Optional)</span>
-                  </FormLabel>
+                  <FormLabel>{t('showings.feedbackLabel', 'Showing Feedback')}</FormLabel>
                   <FormControl>
-                    <Textarea
-                      placeholder={t(
-                        'showings.feedbackPlaceholder',
-                        "Buyer's comments about the property..."
-                      )}
-                      className="min-h-[100px]"
-                      {...field}
-                      value={field.value ?? ''}
-                    />
+                    <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+                      {SHOWING_FEEDBACK_OPTIONS.map((option) => (
+                        <Button
+                          key={option.value}
+                          type="button"
+                          variant={field.value === option.value ? 'default' : 'outline'}
+                          className="justify-start"
+                          onClick={() => field.onChange(option.value)}
+                        >
+                          <span className="mr-2" aria-hidden="true">
+                            {option.emoji}
+                          </span>
+                          {option.label}
+                        </Button>
+                      ))}
+                    </div>
                   </FormControl>
-                  <FormDescription>
-                    {t('showings.feedbackHint', 'What did the buyer think about this property?')}
-                  </FormDescription>
+                  <FormDescription>{t('showings.feedbackHint', 'How did the buyer react?')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

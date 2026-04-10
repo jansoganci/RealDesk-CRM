@@ -31,7 +31,9 @@ import { CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import { ownersService, tenantsService, meetingsService } from '@/lib/serviceProxy';
-import { PropertyOwner, Tenant, MeetingInsert } from '@/types';
+import { PropertyOwner, Tenant, type MeetingInsert } from '@/types';
+
+type MeetingCreatePayload = Omit<MeetingInsert, 'user_id' | 'org_id'>;
 
 // Zod schema for validation
 const meetingSchema = z.object({
@@ -112,7 +114,7 @@ export const AddMeetingDialog = ({
       const startDate = new Date(values.start_time_date);
       startDate.setHours(hours, minutes);
 
-      const meetingPayload: MeetingInsert = {
+      const meetingPayload: MeetingCreatePayload = {
         title: values.title,
         start_time: startDate.toISOString(),
         notes: values.notes,

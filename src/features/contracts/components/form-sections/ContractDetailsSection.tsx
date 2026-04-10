@@ -207,16 +207,16 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           <div>
             <Label>{t('create.fields.currency')} *</Label>
             <Select
-              value={form.watch('currency') || 'TRY'}
-              onValueChange={(value) => form.setValue('currency', value as 'TRY' | 'USD' | 'EUR')}
+              value={form.watch('currency') || 'USD'}
+              onValueChange={(value) => form.setValue('currency', value as 'USD' | 'EUR' | 'TRY')}
             >
               <SelectTrigger>
                 <SelectValue placeholder={t('create.placeholders.currency')} />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="TRY">{t('create.currencyOptions.TRY')}</SelectItem>
                 <SelectItem value="USD">{t('create.currencyOptions.USD')}</SelectItem>
                 <SelectItem value="EUR">{t('create.currencyOptions.EUR')}</SelectItem>
+                <SelectItem value="TRY">{t('create.currencyOptions.TRY')}</SelectItem>
               </SelectContent>
             </Select>
             {form.formState.errors.currency && (

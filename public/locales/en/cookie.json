@@ -2,10 +2,10 @@
   "banner": {
     "title": "Cookie Notice",
     "description": "We use cookies to enhance your experience. Essential cookies are always active. Optional cookies help us improve our service.",
-    "kvkkNotice": "",
+    "additionalPrivacyNotice": "Additional privacy disclosures may apply depending on your state (e.g. California). See our Privacy Policy.",
     "cookiePolicy": "Cookie Policy",
     "privacyPolicy": "Privacy Policy",
-    "kvkkLink": "Cookie Disclosure",
+    "privacyPolicyLink": "Cookie Disclosure",
     "managePreferences": "Manage your preferences",
     "acceptAll": "Accept All",
     "rejectAll": "Reject All",

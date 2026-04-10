@@ -6,6 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { NormalizedYearlySummary } from '../../../services/finance/analytics.service';
 import { formatCurrency } from '../../../lib/currency';
 import { YearOverYearIndicator } from './YearOverYearIndicator';
+import { COLORS } from '@/config/colors';
 
 interface FinancialTrendsProps {
   yearlySummary: NormalizedYearlySummary | null;
@@ -52,7 +53,7 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.revenue'),
         data: yearlySummary.months.map(month => month.total_income.value),
-        borderColor: '#10b981',
+        borderColor: COLORS.success.hex,
         backgroundColor: 'rgba(16, 185, 129, 0.1)',
         fill: true,
         tension: 0.4,
@@ -62,7 +63,7 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.expenses'),
         data: yearlySummary.months.map(month => month.total_expense.value),
-        borderColor: '#ef4444',
+        borderColor: COLORS.danger.hex,
         backgroundColor: 'rgba(239, 68, 68, 0.1)',
         fill: true,
         tension: 0.4,
@@ -72,7 +73,7 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.profit'),
         data: yearlySummary.months.map(month => month.net_income.value),
-        borderColor: '#3b82f6',
+        borderColor: COLORS.primary.hex,
         backgroundColor: 'rgba(59, 130, 246, 0.1)',
         fill: true,
         tension: 0.4,
@@ -105,7 +106,7 @@ export const FinancialTrends = ({
           display: false,
         },
         ticks: {
-          color: '#6b7280',
+          color: COLORS.muted.hex,
           font: {
             size: 12,
           },
@@ -113,11 +114,11 @@ export const FinancialTrends = ({
       },
       y: {
         grid: {
-          color: '#e5e7eb',
+          color: COLORS.border.hex,
           borderDash: [3, 3],
         },
         ticks: {
-          color: '#6b7280',
+          color: COLORS.muted.hex,
           font: {
             size: 12,
           },

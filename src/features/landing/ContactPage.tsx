@@ -5,18 +5,13 @@ import { SEO } from "@/components/common/SEO";
 import { Mail, MessageSquare } from "lucide-react";
 
 export const ContactPage = () => {
-  const { t, i18n } = useTranslation("landing");
-  const isTurkish = i18n.language === "tr";
+  const { t } = useTranslation("landing");
 
   return (
     <>
       <SEO
         title={`${t("contact.title")} - emlakcrm`}
-        description={
-          isTurkish
-            ? "emlakcrm ile iletişime geçin. Sorularınız ve destek talepleriniz için bizimle iletişime geçebilirsiniz."
-            : "Contact emlakcrm. Get in touch with us for questions and support requests."
-        }
+        description={t("contact.metaDescription")}
       />
       <div className="min-h-screen bg-white">
         <LandingHeader />

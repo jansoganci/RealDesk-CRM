@@ -3,9 +3,83 @@ import type { PropertyOwner, PropertyOwnerInsert, PropertyOwnerUpdate } from '..
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
+import { encrypt, isValidRoutingNumber, isValidAccountNumber } from './encryption.service';
 
 interface OwnerWithPropertyCount extends PropertyOwner {
   property_count: number;
+}
+
+/** Form sends plain routing/account; DB stores encrypted columns. */
+export type OwnerCreatePayload = Omit<
+  PropertyOwnerInsert,
+  'user_id' | 'org_id' | 'routing_number_encrypted' | 'account_number_encrypted'
+> & {
+  routing_number?: string;
+  account_number?: string;
+};
+
+export type OwnerUpdatePayload = PropertyOwnerUpdate & {
+  routing_number?: string;
+  account_number?: string;
+};
+
+async function buildInsertPayload(
+  owner: OwnerCreatePayload,
+  userId: string,
+  orgId: string
+): Promise<PropertyOwnerInsert> {
+  const { routing_number, account_number, ...rest } = owner;
+
+  const payload: PropertyOwnerInsert = {
+    ...rest,
+    user_id: userId,
+    org_id: orgId,
+  };
+
+  const r = routing_number?.trim();
+  if (r) {
+    const digits = r.replace(/\D/g, '');
+    if (!isValidRoutingNumber(digits)) {
+      throw new Error('INVALID_ROUTING_NUMBER');
+    }
+    payload.routing_number_encrypted = await encrypt(digits);
+  }
+
+  const a = account_number?.trim();
+  if (a) {
+    if (!isValidAccountNumber(a)) {
+      throw new Error('INVALID_ACCOUNT_NUMBER');
+    }
+    const normalized = a.replace(/[\s-]/g, '');
+    payload.account_number_encrypted = await encrypt(normalized);
+  }
+
+  return payload;
+}
+
+async function buildUpdatePayload(owner: OwnerUpdatePayload): Promise<PropertyOwnerUpdate> {
+  const { routing_number, account_number, ...rest } = owner;
+  const payload: PropertyOwnerUpdate = { ...rest };
+
+  const r = routing_number?.trim();
+  if (r) {
+    const digits = r.replace(/\D/g, '');
+    if (!isValidRoutingNumber(digits)) {
+      throw new Error('INVALID_ROUTING_NUMBER');
+    }
+    payload.routing_number_encrypted = await encrypt(digits);
+  }
+
+  const a = account_number?.trim();
+  if (a) {
+    if (!isValidAccountNumber(a)) {
+      throw new Error('INVALID_ACCOUNT_NUMBER');
+    }
+    const normalized = a.replace(/[\s-]/g, '');
+    payload.account_number_encrypted = await encrypt(normalized);
+  }
+
+  return payload;
 }
 
 export const ownersService = {
@@ -38,21 +112,16 @@ export const ownersService = {
     return data as PropertyOwner | null;
   },
 
-  async create(owner: PropertyOwnerInsert) {
-    // Get authenticated user ID and org ID
+  async create(owner: OwnerCreatePayload) {
     const userId = await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();
-
-    // Inject user_id and org_id into owner data
-    return insertRow('property_owners', {
-      ...owner,
-      user_id: userId,
-      org_id: orgId,
-    });
+    const payload = await buildInsertPayload(owner, userId, orgId);
+    return insertRow('property_owners', payload);
   },
 
-  async update(id: string, owner: PropertyOwnerUpdate) {
-    return updateRow('property_owners', id, owner);
+  async update(id: string, owner: OwnerUpdatePayload) {
+    const payload = await buildUpdatePayload(owner);
+    return updateRow('property_owners', id, payload);
   },
 
   async delete(id: string) {

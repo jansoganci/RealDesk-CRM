@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
-import { Home, Plus, Clock, MessageSquare } from 'lucide-react';
+import { Home, Plus, Clock, MessageSquare, Heart } from 'lucide-react';
 import { format } from 'date-fns';
 import { ShowingLogDialog } from './ShowingLogDialog';
 import type { ShowingLog } from '@/services/leads.service';
@@ -26,22 +26,23 @@ export function ShowingLogList({ showings, leadId, onRefresh }: ShowingLogListPr
     (a, b) => new Date(b.showing_date).getTime() - new Date(a.showing_date).getTime()
   );
 
-  const getInterestBadge = (level?: string) => {
-    switch (level) {
-      case 'high':
+  const getFeedbackBadge = (feedback?: string | null) => {
+    switch (feedback) {
+      case 'loved':
         return (
-          <Badge variant="success">{t('showings.highInterest', 'High Interest')}</Badge>
+          <Badge variant="success" className="gap-1">
+            <Heart className="h-3 w-3" />
+            {t('showings.loved', 'Loved')}
+          </Badge>
         );
-      case 'medium':
+      case 'interested':
         return (
-          <Badge variant="secondary">{t('showings.mediumInterest', 'Medium Interest')}</Badge>
+          <Badge className="bg-blue-600 hover:bg-blue-600 text-white">
+            {t('showings.interested', 'Interested')}
+          </Badge>
         );
-      case 'low':
-        return (
-          <Badge variant="secondary">{t('showings.lowInterest', 'Low Interest')}</Badge>
-        );
-      case 'none':
-        return <Badge variant="outline">{t('showings.noInterest', 'No Interest')}</Badge>;
+      case 'pass':
+        return <Badge variant="secondary">{t('showings.pass', 'Pass')}</Badge>;
       default:
         return null;
     }
@@ -89,7 +90,7 @@ export function ShowingLogList({ showings, leadId, onRefresh }: ShowingLogListPr
                   <Clock className={`h-4 w-4 ${COLORS.muted.text}`} />
                   {format(new Date(showing.showing_date), 'MMM d, yyyy · h:mm a')}
                 </div>
-                {showing.interest_level && getInterestBadge(showing.interest_level)}
+                {showing.feedback_enum && getFeedbackBadge(showing.feedback_enum)}
               </div>
 
               <div className={`flex items-center gap-2 text-sm ${COLORS.muted.text}`}>

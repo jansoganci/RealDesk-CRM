@@ -50,7 +50,7 @@ const getTransactionSchema = (t: any) =>
     }),
     category: z.string().min(1, t('finance:validation.categoryRequired')),
     amount: z.coerce.number().positive(t('finance:validation.amountPositive')),
-    currency: z.enum(['TRY', 'USD', 'EUR'], {
+    currency: z.enum(['USD', 'EUR'], {
       required_error: t('finance:validation.currencyRequired'),
     }),
     description: z.string().min(1, t('finance:validation.descriptionRequired')),
@@ -74,10 +74,10 @@ export const TransactionDialog = ({
   const transactionSchema = getTransactionSchema(t);
 
   // Normalize user currency to uppercase and ensure it's valid
-  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'TRY') as 'TRY' | 'USD' | 'EUR';
-  const normalizedDefaultCurrency = ['TRY', 'USD', 'EUR'].includes(defaultCurrency) 
-    ? defaultCurrency 
-    : 'TRY';
+  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'USD') as 'USD' | 'EUR';
+  const normalizedDefaultCurrency = ['USD', 'EUR'].includes(defaultCurrency)
+    ? defaultCurrency
+    : 'USD';
 
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
@@ -98,9 +98,10 @@ export const TransactionDialog = ({
   useEffect(() => {
     if (transaction) {
       // When editing: use transaction's currency or fallback to user preference
-      const transactionCurrency = transaction.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
-      const normalizedTransactionCurrency = ['TRY', 'USD', 'EUR'].includes(transactionCurrency)
-        ? (transactionCurrency as 'TRY' | 'USD' | 'EUR')
+      let transactionCurrency = transaction.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
+      if (transactionCurrency === 'TRY') transactionCurrency = 'USD';
+      const normalizedTransactionCurrency = ['USD', 'EUR'].includes(transactionCurrency)
+        ? (transactionCurrency as 'USD' | 'EUR')
         : normalizedDefaultCurrency;
 
       form.reset({
@@ -115,7 +116,7 @@ export const TransactionDialog = ({
         payment_status: transaction.payment_status as any,
       });
     } else {
-      // When creating new: use user preference or 'TRY'
+      // When creating new: use user preference or 'USD'
       form.reset({
         transaction_date: new Date().toISOString().split('T')[0],
         type: 'expense',
@@ -289,7 +290,6 @@ export const TransactionDialog = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="TRY">TRY</SelectItem>
                         <SelectItem value="USD">USD</SelectItem>
                         <SelectItem value="EUR">EUR</SelectItem>
                       </SelectContent>

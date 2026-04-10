@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import type { MonthlyCommissionData } from '../../../types';
+import { COLORS } from '@/config/colors';
 
 interface CommissionTrendsProps {
   data: MonthlyCommissionData[];
@@ -28,7 +29,7 @@ export const CommissionTrends = ({
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: 'TRY',
+      currency: 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -94,25 +95,25 @@ export const CommissionTrends = ({
               data={chartData}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+              <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
               <XAxis
                 dataKey="monthName"
-                tick={{ fontSize: 12, fill: '#64748b' }}
+                tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                 tickLine={false}
-                axisLine={{ stroke: '#e2e8f0' }}
+                axisLine={{ stroke: COLORS.border.hex }}
               />
               <YAxis
-                tick={{ fontSize: 12, fill: '#64748b' }}
+                tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                 tickLine={false}
-                axisLine={{ stroke: '#e2e8f0' }}
+                axisLine={{ stroke: COLORS.border.hex }}
                 tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
               />
               <Tooltip
                 formatter={(value: number) => formatCurrency(value)}
-                labelStyle={{ color: '#334155', fontWeight: 600 }}
+                labelStyle={{ color: COLORS.text.hex, fontWeight: 600 }}
                 contentStyle={{
                   backgroundColor: 'white',
-                  border: '1px solid #e2e8f0',
+                  border: `1px solid ${COLORS.border.hex}`,
                   borderRadius: '8px',
                   boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
                 }}
@@ -131,18 +132,18 @@ export const CommissionTrends = ({
                 type="monotone"
                 dataKey="rental"
                 name="rental"
-                stroke="#3b82f6"
+                stroke={COLORS.primary.hex}
                 strokeWidth={2}
-                dot={{ fill: '#3b82f6', r: 4 }}
+                dot={{ fill: COLORS.primary.hex, r: 4 }}
                 activeDot={{ r: 6 }}
               />
               <Line
                 type="monotone"
                 dataKey="sale"
                 name="sale"
-                stroke="#10b981"
+                stroke={COLORS.success.hex}
                 strokeWidth={2}
-                dot={{ fill: '#10b981', r: 4 }}
+                dot={{ fill: COLORS.success.hex, r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>

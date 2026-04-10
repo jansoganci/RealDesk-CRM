@@ -14,46 +14,172 @@ export type Database = {
   }
   public: {
     Tables: {
+      buyer_agent_agreements: {
+        Row: {
+          commission_rate: number | null
+          commission_type: string | null
+          created_at: string | null
+          expiration_date: string
+          flat_fee_amount: number | null
+          id: string
+          lead_id: string
+          org_id: string
+          pdf_url: string | null
+          signed_date: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          commission_rate?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          expiration_date: string
+          flat_fee_amount?: number | null
+          id?: string
+          lead_id: string
+          org_id: string
+          pdf_url?: string | null
+          signed_date: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          commission_rate?: number | null
+          commission_type?: string | null
+          created_at?: string | null
+          expiration_date?: string
+          flat_fee_amount?: number | null
+          id?: string
+          lead_id?: string
+          org_id?: string
+          pdf_url?: string | null
+          signed_date?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "buyer_agent_agreements_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "property_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "buyer_agent_agreements_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       commissions: {
         Row: {
           amount: number
+          broker_dollar: number | null
+          broker_split_pct: number | null
+          capped_at_close: boolean | null
+          closing_date: string | null
+          commission_rate: number | null
+          commission_side: string | null
+          commission_type: string | null
           contract_id: string | null
           created_at: string
           currency: string
+          deal_id: string | null
           deleted_at: string | null
+          eo_fee: number | null
+          franchise_fee_amount: number | null
+          gross_commission: number | null
           id: string
+          net_commission: number | null
           notes: string | null
           org_id: string
+          other_fees: number | null
+          other_fees_notes: string | null
+          post_referral_gci: number | null
           property_address: string
           property_id: string
+          referral_fee_amount: number | null
+          referral_fee_pct: number | null
+          referral_to: string | null
+          sale_price: number | null
+          tc_fee: number | null
+          transaction_fee: number | null
           type: string
           user_id: string
         }
         Insert: {
           amount: number
+          broker_dollar?: number | null
+          broker_split_pct?: number | null
+          capped_at_close?: boolean | null
+          closing_date?: string | null
+          commission_rate?: number | null
+          commission_side?: string | null
+          commission_type?: string | null
           contract_id?: string | null
           created_at?: string
           currency?: string
+          deal_id?: string | null
           deleted_at?: string | null
+          eo_fee?: number | null
+          franchise_fee_amount?: number | null
+          gross_commission?: number | null
           id?: string
+          net_commission?: number | null
           notes?: string | null
           org_id: string
+          other_fees?: number | null
+          other_fees_notes?: string | null
+          post_referral_gci?: number | null
           property_address: string
           property_id: string
+          referral_fee_amount?: number | null
+          referral_fee_pct?: number | null
+          referral_to?: string | null
+          sale_price?: number | null
+          tc_fee?: number | null
+          transaction_fee?: number | null
           type: string
           user_id: string
         }
         Update: {
           amount?: number
+          broker_dollar?: number | null
+          broker_split_pct?: number | null
+          capped_at_close?: boolean | null
+          closing_date?: string | null
+          commission_rate?: number | null
+          commission_side?: string | null
+          commission_type?: string | null
           contract_id?: string | null
           created_at?: string
           currency?: string
+          deal_id?: string | null
           deleted_at?: string | null
+          eo_fee?: number | null
+          franchise_fee_amount?: number | null
+          gross_commission?: number | null
           id?: string
+          net_commission?: number | null
           notes?: string | null
           org_id?: string
+          other_fees?: number | null
+          other_fees_notes?: string | null
+          post_referral_gci?: number | null
           property_address?: string
           property_id?: string
+          referral_fee_amount?: number | null
+          referral_fee_pct?: number | null
+          referral_to?: string | null
+          sale_price?: number | null
+          tc_fee?: number | null
+          transaction_fee?: number | null
           type?: string
           user_id?: string
         }
@@ -63,6 +189,13 @@ export type Database = {
             columns: ["contract_id"]
             isOneToOne: false
             referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
             referencedColumns: ["id"]
           },
           {
@@ -491,6 +624,346 @@ export type Database = {
           },
         ]
       }
+      deal_amendments: {
+        Row: {
+          amendment_type: string | null
+          created_at: string | null
+          deal_id: string
+          description: string
+          effective_date: string
+          id: string
+          new_value: string | null
+          old_value: string | null
+          org_id: string
+          signed_at: string | null
+        }
+        Insert: {
+          amendment_type?: string | null
+          created_at?: string | null
+          deal_id: string
+          description: string
+          effective_date: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          org_id: string
+          signed_at?: string | null
+        }
+        Update: {
+          amendment_type?: string | null
+          created_at?: string | null
+          deal_id?: string
+          description?: string
+          effective_date?: string
+          id?: string
+          new_value?: string | null
+          old_value?: string | null
+          org_id?: string
+          signed_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_amendments_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_amendments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_milestones: {
+        Row: {
+          alert_sent_1d: boolean
+          alert_sent_3d: boolean
+          alert_sent_7d: boolean
+          alert_sent_today: boolean
+          completed_at: string | null
+          contingency_id: string | null
+          created_at: string | null
+          days_offset: number | null
+          deal_id: string
+          document_path: string | null
+          document_required: boolean
+          document_uploaded_at: string | null
+          due_date: string
+          due_time: string | null
+          id: string
+          is_cfpb_required: boolean | null
+          last_nudge_sent_at: string | null
+          milestone_type: string
+          notes: string | null
+          offset_basis: string | null
+          org_id: string
+          responsible_party: string | null
+          status: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          alert_sent_1d?: boolean
+          alert_sent_3d?: boolean
+          alert_sent_7d?: boolean
+          alert_sent_today?: boolean
+          completed_at?: string | null
+          contingency_id?: string | null
+          created_at?: string | null
+          days_offset?: number | null
+          deal_id: string
+          document_path?: string | null
+          document_required?: boolean
+          document_uploaded_at?: string | null
+          due_date: string
+          due_time?: string | null
+          id?: string
+          is_cfpb_required?: boolean | null
+          last_nudge_sent_at?: string | null
+          milestone_type: string
+          notes?: string | null
+          offset_basis?: string | null
+          org_id: string
+          responsible_party?: string | null
+          status?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          alert_sent_1d?: boolean
+          alert_sent_3d?: boolean
+          alert_sent_7d?: boolean
+          alert_sent_today?: boolean
+          completed_at?: string | null
+          contingency_id?: string | null
+          created_at?: string | null
+          days_offset?: number | null
+          deal_id?: string
+          document_path?: string | null
+          document_required?: boolean
+          document_uploaded_at?: string | null
+          due_date?: string
+          due_time?: string | null
+          id?: string
+          is_cfpb_required?: boolean | null
+          last_nudge_sent_at?: string | null
+          milestone_type?: string
+          notes?: string | null
+          offset_basis?: string | null
+          org_id?: string
+          responsible_party?: string | null
+          status?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_milestones_contingency_id_fkey"
+            columns: ["contingency_id"]
+            isOneToOne: false
+            referencedRelation: "offer_contingencies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_milestones_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_milestones_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deal_parties: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          deal_id: string
+          email: string | null
+          id: string
+          name: string
+          notes: string | null
+          org_id: string
+          phone: string | null
+          role: string
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          deal_id: string
+          email?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          org_id: string
+          phone?: string | null
+          role: string
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          deal_id?: string
+          email?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          org_id?: string
+          phone?: string | null
+          role?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_parties_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deal_parties_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deals: {
+        Row: {
+          accepted_offer_price: number | null
+          actual_close_date: string | null
+          buyer_agent_agreement_id: string | null
+          client_role: string
+          created_at: string | null
+          deal_name: string
+          deal_stage: string
+          deal_type: string
+          deleted_at: string | null
+          earnest_money_actual: number | null
+          earnest_money_planned: number | null
+          fell_through_reason: string | null
+          financing_type: string | null
+          id: string
+          intended_offer_price: number | null
+          lead_id: string | null
+          lender_contact_id: string | null
+          list_price: number | null
+          mutual_acceptance_date: string | null
+          notes: string | null
+          org_id: string
+          preapproval_status: string | null
+          projected_close_date: string | null
+          property_id: string | null
+          property_snapshot: Json | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          accepted_offer_price?: number | null
+          actual_close_date?: string | null
+          buyer_agent_agreement_id?: string | null
+          client_role: string
+          created_at?: string | null
+          deal_name: string
+          deal_stage?: string
+          deal_type?: string
+          deleted_at?: string | null
+          earnest_money_actual?: number | null
+          earnest_money_planned?: number | null
+          fell_through_reason?: string | null
+          financing_type?: string | null
+          id?: string
+          intended_offer_price?: number | null
+          lead_id?: string | null
+          lender_contact_id?: string | null
+          list_price?: number | null
+          mutual_acceptance_date?: string | null
+          notes?: string | null
+          org_id: string
+          preapproval_status?: string | null
+          projected_close_date?: string | null
+          property_id?: string | null
+          property_snapshot?: Json | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          accepted_offer_price?: number | null
+          actual_close_date?: string | null
+          buyer_agent_agreement_id?: string | null
+          client_role?: string
+          created_at?: string | null
+          deal_name?: string
+          deal_stage?: string
+          deal_type?: string
+          deleted_at?: string | null
+          earnest_money_actual?: number | null
+          earnest_money_planned?: number | null
+          fell_through_reason?: string | null
+          financing_type?: string | null
+          id?: string
+          intended_offer_price?: number | null
+          lead_id?: string | null
+          lender_contact_id?: string | null
+          list_price?: number | null
+          mutual_acceptance_date?: string | null
+          notes?: string | null
+          org_id?: string
+          preapproval_status?: string | null
+          projected_close_date?: string | null
+          property_id?: string | null
+          property_snapshot?: Json | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_buyer_agent_agreement_id_fkey"
+            columns: ["buyer_agent_agreement_id"]
+            isOneToOne: false
+            referencedRelation: "buyer_agent_agreements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "property_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_lender_contact_id_fkey"
+            columns: ["lender_contact_id"]
+            isOneToOne: false
+            referencedRelation: "deal_parties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "deals_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       exchange_rates: {
         Row: {
           fetched_at: string
@@ -835,6 +1308,338 @@ export type Database = {
           },
         ]
       }
+      notifications: {
+        Row: {
+          action_url: string | null
+          alert_type: string
+          body: string
+          created_at: string
+          deal_id: string | null
+          id: string
+          is_dismissed: boolean
+          is_read: boolean
+          milestone_id: string | null
+          org_id: string
+          snoozed_until: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          action_url?: string | null
+          alert_type: string
+          body: string
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          is_dismissed?: boolean
+          is_read?: boolean
+          milestone_id?: string | null
+          org_id: string
+          snoozed_until?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          action_url?: string | null
+          alert_type?: string
+          body?: string
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          is_dismissed?: boolean
+          is_read?: boolean
+          milestone_id?: string | null
+          org_id?: string
+          snoozed_until?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "deal_milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      offer_contingencies: {
+        Row: {
+          business_days_only: boolean | null
+          contingency_type: string
+          created_at: string | null
+          days_offset: number | null
+          deadline_date: string | null
+          deal_id: string
+          id: string
+          included_in_offer: boolean
+          label_override: string | null
+          notes: string | null
+          notice_required: boolean | null
+          notice_sent_date: string | null
+          offer_round_id: string
+          org_id: string
+          resolution_type: string | null
+          resolved_date: string | null
+          response_due_date: string | null
+          status: string
+          type_specific_data: Json | null
+          updated_at: string | null
+          waived_after_acceptance: boolean
+          waived_at_offer: boolean
+        }
+        Insert: {
+          business_days_only?: boolean | null
+          contingency_type: string
+          created_at?: string | null
+          days_offset?: number | null
+          deadline_date?: string | null
+          deal_id: string
+          id?: string
+          included_in_offer?: boolean
+          label_override?: string | null
+          notes?: string | null
+          notice_required?: boolean | null
+          notice_sent_date?: string | null
+          offer_round_id: string
+          org_id: string
+          resolution_type?: string | null
+          resolved_date?: string | null
+          response_due_date?: string | null
+          status?: string
+          type_specific_data?: Json | null
+          updated_at?: string | null
+          waived_after_acceptance?: boolean
+          waived_at_offer?: boolean
+        }
+        Update: {
+          business_days_only?: boolean | null
+          contingency_type?: string
+          created_at?: string | null
+          days_offset?: number | null
+          deadline_date?: string | null
+          deal_id?: string
+          id?: string
+          included_in_offer?: boolean
+          label_override?: string | null
+          notes?: string | null
+          notice_required?: boolean | null
+          notice_sent_date?: string | null
+          offer_round_id?: string
+          org_id?: string
+          resolution_type?: string | null
+          resolved_date?: string | null
+          response_due_date?: string | null
+          status?: string
+          type_specific_data?: Json | null
+          updated_at?: string | null
+          waived_after_acceptance?: boolean
+          waived_at_offer?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offer_contingencies_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_contingencies_offer_round_id_fkey"
+            columns: ["offer_round_id"]
+            isOneToOne: false
+            referencedRelation: "offer_rounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_contingencies_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      offer_negotiations: {
+        Row: {
+          accepted_round_id: string | null
+          created_at: string | null
+          deal_id: string
+          id: string
+          org_id: string
+          status: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          accepted_round_id?: string | null
+          created_at?: string | null
+          deal_id: string
+          id?: string
+          org_id: string
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          accepted_round_id?: string | null
+          created_at?: string | null
+          deal_id?: string
+          id?: string
+          org_id?: string
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offer_negotiations_accepted_round_id_fkey"
+            columns: ["accepted_round_id"]
+            isOneToOne: false
+            referencedRelation: "offer_rounds"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_negotiations_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_negotiations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      offer_rounds: {
+        Row: {
+          appraisal_gap_coverage: number | null
+          closing_date: string | null
+          created_at: string | null
+          deal_id: string
+          emd_amount: number | null
+          expiration_date: string | null
+          expiration_time: string | null
+          financing_type: string | null
+          id: string
+          mutual_acceptance_at: string | null
+          negotiation_id: string
+          notes: string | null
+          offer_price: number
+          offered_by: string
+          org_id: string
+          parent_round_id: string | null
+          personal_property_notes: string | null
+          possession_date: string | null
+          round_number: number
+          seller_credits: number | null
+          status: string
+          submitted_at: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          appraisal_gap_coverage?: number | null
+          closing_date?: string | null
+          created_at?: string | null
+          deal_id: string
+          emd_amount?: number | null
+          expiration_date?: string | null
+          expiration_time?: string | null
+          financing_type?: string | null
+          id?: string
+          mutual_acceptance_at?: string | null
+          negotiation_id: string
+          notes?: string | null
+          offer_price: number
+          offered_by: string
+          org_id: string
+          parent_round_id?: string | null
+          personal_property_notes?: string | null
+          possession_date?: string | null
+          round_number: number
+          seller_credits?: number | null
+          status: string
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          appraisal_gap_coverage?: number | null
+          closing_date?: string | null
+          created_at?: string | null
+          deal_id?: string
+          emd_amount?: number | null
+          expiration_date?: string | null
+          expiration_time?: string | null
+          financing_type?: string | null
+          id?: string
+          mutual_acceptance_at?: string | null
+          negotiation_id?: string
+          notes?: string | null
+          offer_price?: number
+          offered_by?: string
+          org_id?: string
+          parent_round_id?: string | null
+          personal_property_notes?: string | null
+          possession_date?: string | null
+          round_number?: number
+          seller_credits?: number | null
+          status?: string
+          submitted_at?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "offer_rounds_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_rounds_negotiation_id_fkey"
+            columns: ["negotiation_id"]
+            isOneToOne: false
+            referencedRelation: "offer_negotiations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_rounds_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "offer_rounds_parent_round_id_fkey"
+            columns: ["parent_round_id"]
+            isOneToOne: false
+            referencedRelation: "offer_rounds"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       onboarding_events: {
         Row: {
           action_taken: string
@@ -1038,12 +1843,13 @@ export type Database = {
           daire_no: string | null
           deleted_at: string | null
           district: string | null
+          district_legacy: string | null
           full_address: string | null
           id: string
           il: string | null
-          ilce: string | null
           listing_url: string | null
           mahalle: string | null
+          mls_id: string | null
           normalized_address: string | null
           notes: string | null
           offer_amount: number | null
@@ -1055,11 +1861,18 @@ export type Database = {
           sale_price: number | null
           sold_at: string | null
           sold_price: number | null
+          state: string | null
           status: string
+          street_address: string | null
           type: string | null
+          under_contract_deal_id: string | null
+          under_offer_at: string | null
+          unit: string | null
           updated_at: string | null
           use_purpose: string | null
           user_id: string
+          year_built: number | null
+          zip_code: string | null
         }
         Insert: {
           address: string
@@ -1074,12 +1887,13 @@ export type Database = {
           daire_no?: string | null
           deleted_at?: string | null
           district?: string | null
+          district_legacy?: string | null
           full_address?: string | null
           id?: string
           il?: string | null
-          ilce?: string | null
           listing_url?: string | null
           mahalle?: string | null
+          mls_id?: string | null
           normalized_address?: string | null
           notes?: string | null
           offer_amount?: number | null
@@ -1091,11 +1905,18 @@ export type Database = {
           sale_price?: number | null
           sold_at?: string | null
           sold_price?: number | null
+          state?: string | null
           status?: string
+          street_address?: string | null
           type?: string | null
+          under_contract_deal_id?: string | null
+          under_offer_at?: string | null
+          unit?: string | null
           updated_at?: string | null
           use_purpose?: string | null
           user_id: string
+          year_built?: number | null
+          zip_code?: string | null
         }
         Update: {
           address?: string
@@ -1110,12 +1931,13 @@ export type Database = {
           daire_no?: string | null
           deleted_at?: string | null
           district?: string | null
+          district_legacy?: string | null
           full_address?: string | null
           id?: string
           il?: string | null
-          ilce?: string | null
           listing_url?: string | null
           mahalle?: string | null
+          mls_id?: string | null
           normalized_address?: string | null
           notes?: string | null
           offer_amount?: number | null
@@ -1127,11 +1949,18 @@ export type Database = {
           sale_price?: number | null
           sold_at?: string | null
           sold_price?: number | null
+          state?: string | null
           status?: string
+          street_address?: string | null
           type?: string | null
+          under_contract_deal_id?: string | null
+          under_offer_at?: string | null
+          unit?: string | null
           updated_at?: string | null
           use_purpose?: string | null
           user_id?: string
+          year_built?: number | null
+          zip_code?: string | null
         }
         Relationships: [
           {
@@ -1148,15 +1977,24 @@ export type Database = {
             referencedRelation: "property_owners"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "properties_under_contract_deal_id_fkey"
+            columns: ["under_contract_deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
         ]
       }
       property_inquiries: {
         Row: {
           created_at: string | null
+          deal_id: string | null
           deleted_at: string | null
           email: string | null
           id: string
           inquiry_type: string
+          lead_source: string | null
           max_rent_budget: number | null
           max_sale_budget: number | null
           min_rent_budget: number | null
@@ -1165,18 +2003,23 @@ export type Database = {
           notes: string | null
           org_id: string
           phone: string
+          pipeline_stage: string | null
+          pre_approved: boolean | null
           preferred_city: string | null
           preferred_district: string | null
+          preferred_state: string | null
           status: string
           updated_at: string | null
           user_id: string
         }
         Insert: {
           created_at?: string | null
+          deal_id?: string | null
           deleted_at?: string | null
           email?: string | null
           id?: string
           inquiry_type?: string
+          lead_source?: string | null
           max_rent_budget?: number | null
           max_sale_budget?: number | null
           min_rent_budget?: number | null
@@ -1185,18 +2028,23 @@ export type Database = {
           notes?: string | null
           org_id: string
           phone: string
+          pipeline_stage?: string | null
+          pre_approved?: boolean | null
           preferred_city?: string | null
           preferred_district?: string | null
+          preferred_state?: string | null
           status?: string
           updated_at?: string | null
           user_id: string
         }
         Update: {
           created_at?: string | null
+          deal_id?: string | null
           deleted_at?: string | null
           email?: string | null
           id?: string
           inquiry_type?: string
+          lead_source?: string | null
           max_rent_budget?: number | null
           max_sale_budget?: number | null
           min_rent_budget?: number | null
@@ -1205,13 +2053,23 @@ export type Database = {
           notes?: string | null
           org_id?: string
           phone?: string
+          pipeline_stage?: string | null
+          pre_approved?: boolean | null
           preferred_city?: string | null
           preferred_district?: string | null
+          preferred_state?: string | null
           status?: string
           updated_at?: string | null
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "property_inquiries_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "property_inquiries_org_id_fkey"
             columns: ["org_id"]
@@ -1223,6 +2081,7 @@ export type Database = {
       }
       property_owners: {
         Row: {
+          account_number_encrypted: string | null
           address: string | null
           created_at: string | null
           deleted_at: string | null
@@ -1233,12 +2092,15 @@ export type Database = {
           notes: string | null
           org_id: string
           phone: string | null
+          routing_number_encrypted: string | null
+          tax_id: string | null
           tc_encrypted: string | null
           tc_hash: string | null
           updated_at: string | null
           user_id: string
         }
         Insert: {
+          account_number_encrypted?: string | null
           address?: string | null
           created_at?: string | null
           deleted_at?: string | null
@@ -1249,12 +2111,15 @@ export type Database = {
           notes?: string | null
           org_id: string
           phone?: string | null
+          routing_number_encrypted?: string | null
+          tax_id?: string | null
           tc_encrypted?: string | null
           tc_hash?: string | null
           updated_at?: string | null
           user_id: string
         }
         Update: {
+          account_number_encrypted?: string | null
           address?: string | null
           created_at?: string | null
           deleted_at?: string | null
@@ -1265,6 +2130,8 @@ export type Database = {
           notes?: string | null
           org_id?: string
           phone?: string | null
+          routing_number_encrypted?: string | null
+          tax_id?: string | null
           tc_encrypted?: string | null
           tc_hash?: string | null
           updated_at?: string | null
@@ -1394,6 +2261,76 @@ export type Database = {
             columns: ["org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      showing_logs: {
+        Row: {
+          created_at: string | null
+          duration_minutes: number | null
+          feedback: string | null
+          feedback_enum: string | null
+          id: string
+          interest_level: string | null
+          lead_id: string
+          notes: string | null
+          org_id: string
+          property_id: string
+          showing_date: string
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          feedback?: string | null
+          feedback_enum?: string | null
+          id?: string
+          interest_level?: string | null
+          lead_id: string
+          notes?: string | null
+          org_id: string
+          property_id: string
+          showing_date: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_minutes?: number | null
+          feedback?: string | null
+          feedback_enum?: string | null
+          id?: string
+          interest_level?: string | null
+          lead_id?: string
+          notes?: string | null
+          org_id?: string
+          property_id?: string
+          showing_date?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "showing_logs_lead_id_fkey"
+            columns: ["lead_id"]
+            isOneToOne: false
+            referencedRelation: "property_inquiries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "showing_logs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "showing_logs_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
             referencedColumns: ["id"]
           },
         ]
@@ -1644,8 +2581,22 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          annual_cap_amount: number | null
+          broker_model: string | null
+          broker_split_pct: number | null
+          cap_anniversary_date: string | null
           commission_rate: number | null
           currency: string | null
+          default_rental_commission_rate: number | null
+          default_rental_commission_type: string | null
+          default_rental_flat_fee: number | null
+          default_tc_fee: number | null
+          default_transaction_fee: number | null
+          eo_fee_amount: number | null
+          eo_fee_type: string | null
+          franchise_fee_cap: number | null
+          franchise_fee_enabled: boolean | null
+          franchise_fee_pct: number | null
           full_name: string | null
           language: string | null
           meeting_reminder_minutes: number | null
@@ -1654,8 +2605,22 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          annual_cap_amount?: number | null
+          broker_model?: string | null
+          broker_split_pct?: number | null
+          cap_anniversary_date?: string | null
           commission_rate?: number | null
           currency?: string | null
+          default_rental_commission_rate?: number | null
+          default_rental_commission_type?: string | null
+          default_rental_flat_fee?: number | null
+          default_tc_fee?: number | null
+          default_transaction_fee?: number | null
+          eo_fee_amount?: number | null
+          eo_fee_type?: string | null
+          franchise_fee_cap?: number | null
+          franchise_fee_enabled?: boolean | null
+          franchise_fee_pct?: number | null
           full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
@@ -1664,8 +2629,22 @@ export type Database = {
           user_id: string
         }
         Update: {
+          annual_cap_amount?: number | null
+          broker_model?: string | null
+          broker_split_pct?: number | null
+          cap_anniversary_date?: string | null
           commission_rate?: number | null
           currency?: string | null
+          default_rental_commission_rate?: number | null
+          default_rental_commission_type?: string | null
+          default_rental_flat_fee?: number | null
+          default_tc_fee?: number | null
+          default_transaction_fee?: number | null
+          eo_fee_amount?: number | null
+          eo_fee_type?: string | null
+          franchise_fee_cap?: number | null
+          franchise_fee_enabled?: boolean | null
+          franchise_fee_pct?: number | null
           full_name?: string | null
           language?: string | null
           meeting_reminder_minutes?: number | null
@@ -1704,6 +2683,10 @@ export type Database = {
         }
         Returns: Json
       }
+      create_first_organization: {
+        Args: { p_org_name?: string }
+        Returns: string
+      }
       create_sale_commission: {
         Args: {
           p_currency?: string
@@ -1712,6 +2695,7 @@ export type Database = {
         }
         Returns: string
       }
+      ensure_user_trial: { Args: never; Returns: undefined }
       generate_invitation_token: { Args: never; Returns: string }
       get_invitation_info: { Args: { p_token: string }; Returns: Json }
       get_invitation_with_inviter: {
@@ -1789,6 +2773,10 @@ export type Database = {
       rpc_property_photos_reorder: {
         Args: { p_photo_ids: string[]; p_property_id: string }
         Returns: undefined
+      }
+      rpc_record_commission_and_close_deal: {
+        Args: { p_commission: Json }
+        Returns: string
       }
       rpc_rollback_tenant_with_contract: {
         Args: { p_contract_id: string; p_tenant_id: string }

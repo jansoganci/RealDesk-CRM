@@ -113,8 +113,7 @@ Update `src/components/layout/Sidebar.tsx`:
 
 ### 9. Create i18n Translation Files
 
-Create both:
-- `public/locales/tr/[feature-name].json`
+English only (US product):
 - `public/locales/en/[feature-name].json`
 
 Include standard keys:
@@ -134,7 +133,7 @@ Include standard keys:
 }
 ```
 
-Also update `public/locales/tr/navigation.json` and `public/locales/en/navigation.json` with navigation item.
+Also update `public/locales/en/navigation.json` with the navigation item.
 
 ### 10. Create Main Page Component
 

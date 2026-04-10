@@ -33,6 +33,7 @@ import {
 import {
   createBuyerAgentAgreementSchema,
   COMMISSION_TYPE_OPTIONS,
+  AGREEMENT_STATUS_OPTIONS,
   type CreateBuyerAgentAgreementFormData,
 } from '../schemas/buyer-agent-agreement-form';
 import type { BuyerAgentAgreement } from '@/services/leads.service';
@@ -57,6 +58,16 @@ export function BuyerAgentAgreementDialog({
   const { user } = useAuth();
   const { currentOrg } = useOrg();
 
+  const getDateInputValue = (value: unknown): string => {
+    if (value instanceof Date) {
+      return Number.isNaN(value.getTime()) ? '' : value.toISOString().split('T')[0];
+    }
+    if (typeof value === 'string') {
+      return value;
+    }
+    return '';
+  };
+
   const form = useForm<CreateBuyerAgentAgreementFormData>({
     resolver: zodResolver(createBuyerAgentAgreementSchema),
     defaultValues: {
@@ -65,7 +76,7 @@ export function BuyerAgentAgreementDialog({
       expiration_date: addMonths(new Date(), 6),
       commission_type: 'percentage',
       commission_rate: 2.5,
-      status: 'active',
+      status: 'draft',
     },
   });
 
@@ -74,13 +85,17 @@ export function BuyerAgentAgreementDialog({
       if (existingAgreement) {
         form.reset({
           lead_id: leadId,
-          signed_date: new Date(existingAgreement.signed_date),
-          expiration_date: new Date(existingAgreement.expiration_date),
+          signed_date: existingAgreement.signed_date
+            ? new Date(existingAgreement.signed_date)
+            : undefined,
+          expiration_date: existingAgreement.expiration_date
+            ? new Date(existingAgreement.expiration_date)
+            : undefined,
           commission_type: existingAgreement.commission_type as any,
           commission_rate: existingAgreement.commission_rate ?? undefined,
           flat_fee_amount: existingAgreement.flat_fee_amount ?? undefined,
           pdf_url: existingAgreement.pdf_url ?? '',
-          status: (existingAgreement.status as any) ?? 'active',
+          status: (existingAgreement.status as any) ?? 'draft',
         });
       } else {
         form.reset({
@@ -89,7 +104,7 @@ export function BuyerAgentAgreementDialog({
           expiration_date: addMonths(new Date(), 6),
           commission_type: 'percentage',
           commission_rate: 2.5,
-          status: 'active',
+          status: 'draft',
         });
       }
     }
@@ -151,12 +166,8 @@ export function BuyerAgentAgreementDialog({
                   <FormControl>
                     <Input
                       type="date"
-                      value={
-                        field.value instanceof Date
-                          ? field.value.toISOString().split('T')[0]
-                          : ''
-                      }
-                      onChange={(e) => field.onChange(new Date(e.target.value))}
+                      value={getDateInputValue(field.value)}
+                      onChange={(e) => field.onChange(e.target.value || undefined)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -174,12 +185,8 @@ export function BuyerAgentAgreementDialog({
                   <FormControl>
                     <Input
                       type="date"
-                      value={
-                        field.value instanceof Date
-                          ? field.value.toISOString().split('T')[0]
-                          : ''
-                      }
-                      onChange={(e) => field.onChange(new Date(e.target.value))}
+                      value={getDateInputValue(field.value)}
+                      onChange={(e) => field.onChange(e.target.value || undefined)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -283,6 +290,32 @@ export function BuyerAgentAgreementDialog({
                       value={field.value ?? ''}
                     />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* Status */}
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('agreements.status', 'Status')}</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder={t('agreements.status', 'Status')} />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {AGREEMENT_STATUS_OPTIONS.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                   <FormMessage />
                 </FormItem>
               )}

@@ -42,8 +42,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState(true);
   
   // Batched preferences state
-  const coercePreferenceLanguage = (lang: string | null | undefined): SupportedLanguage =>
-    lang === 'tr' ? 'en' : 'en';
+  /** English-only UI; normalize any stored legacy value to `en`. */
+  const coercePreferenceLanguage = (_lang: string | null | undefined): SupportedLanguage => 'en';
 
   const [preferences, setPreferences] = useState<{
     language: SupportedLanguage;
@@ -258,9 +258,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [user?.id]);
 
-  const setLanguage = useCallback(async (newLanguage: string) => {
-    const normalized: SupportedLanguage = newLanguage === 'tr' ? 'en' : 'en';
-    setPreferences(prev => ({ ...prev, language: normalized }));
+  const setLanguage = useCallback(async (_newLanguage: string) => {
+    const normalized: SupportedLanguage = 'en';
+    setPreferences((prev) => ({ ...prev, language: normalized }));
     await updateUserPreferences({ language: normalized });
   }, [updateUserPreferences]);
 

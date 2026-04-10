@@ -33,6 +33,9 @@ import { SaleContractBuilder } from './features/contractsSale/SaleContractBuilde
 import { SaleContractEdit } from './features/contractsSale/SaleContractEdit';
 import { Reminders } from './features/reminders/Reminders';
 import { Leads } from './features/leads/Leads';
+import { LeadDetailPage } from './features/leads/LeadDetailPage';
+import { Deals } from './features/deals/Deals';
+import { DealDetail } from './features/deals/DealDetail';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
@@ -202,6 +205,31 @@ function AppContent() {
                 element={
                   <ProtectedRoute>
                     <Leads />
+                  </ProtectedRoute>
+                }
+              />
+              {/* /leads/:id deep-link route */}
+              <Route
+                path={ROUTES.LEAD_DETAIL}
+                element={
+                  <ProtectedRoute>
+                    <LeadDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DEALS}
+                element={
+                  <ProtectedRoute>
+                    <Deals />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.DEAL_DETAIL}
+                element={
+                  <ProtectedRoute>
+                    <DealDetail />
                   </ProtectedRoute>
                 }
               />

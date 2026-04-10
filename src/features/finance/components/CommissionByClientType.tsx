@@ -15,6 +15,7 @@ import { Users } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { CommissionByClientType } from '../../../services/finance/analytics.service';
+import { COLORS } from '@/config/colors';
 
 interface CommissionByClientTypeProps {
   data: CommissionByClientType | null;
@@ -85,19 +86,19 @@ export const CommissionByClientTypeComponent = ({
       name: t('finance:analytics.ownerCommissions'),
       value: data.owner.value,
       percentage: ownerPercentage,
-      color: '#3b82f6', // blue
+      color: COLORS.primary.hex,
     },
     {
       name: t('finance:analytics.tenantCommissions'),
       value: data.tenant.value,
       percentage: tenantPercentage,
-      color: '#10b981', // green
+      color: COLORS.success.hex,
     },
     {
       name: t('finance:analytics.buyerCommissions'),
       value: data.buyer.value,
       percentage: buyerPercentage,
-      color: '#f59e0b', // amber
+      color: COLORS.warning.hex,
     },
   ];
 
@@ -174,17 +175,17 @@ export const CommissionByClientTypeComponent = ({
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                   tickLine={false}
-                  axisLine={{ stroke: '#e2e8f0' }}
+                  axisLine={{ stroke: COLORS.border.hex }}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                   tickLine={false}
-                  axisLine={{ stroke: '#e2e8f0' }}
+                  axisLine={{ stroke: COLORS.border.hex }}
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
                 />
                 <Tooltip content={<CustomTooltip />} />

@@ -60,7 +60,7 @@ export const UpcomingBills = ({
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: currency || 'TRY',
+      currency: currency || 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);

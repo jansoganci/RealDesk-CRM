@@ -21,9 +21,19 @@ export const COMMISSION_TYPE_OPTIONS = [
 // Agreement Status Enum & Options
 // ============================================================================
 
-export const agreementStatusSchema = z.enum(['active', 'expired', 'terminated']);
+export const agreementStatusSchema = z.enum([
+  'draft',
+  'sent',
+  'signed',
+  'active',
+  'expired',
+  'terminated',
+]);
 
 export const AGREEMENT_STATUS_OPTIONS = [
+  { value: 'draft', label: 'Draft' },
+  { value: 'sent', label: 'Sent' },
+  { value: 'signed', label: 'Signed' },
   { value: 'active', label: 'Active' },
   { value: 'expired', label: 'Expired' },
   { value: 'terminated', label: 'Terminated' },
@@ -37,11 +47,11 @@ export const createBuyerAgentAgreementSchema = z
   .object({
     lead_id: z.string().uuid('Invalid lead ID'),
 
-    signed_date: z.date({
+    signed_date: z.coerce.date({
       required_error: 'Signed date is required',
     }),
 
-    expiration_date: z.date({
+    expiration_date: z.coerce.date({
       required_error: 'Expiration date is required',
     }),
 
@@ -62,7 +72,7 @@ export const createBuyerAgentAgreementSchema = z
 
     pdf_url: z.string().url('Invalid URL').optional().or(z.literal('')),
 
-    status: agreementStatusSchema.default('active'),
+    status: agreementStatusSchema.default('draft'),
   })
   .refine(
     (data) => {
@@ -108,9 +118,9 @@ export const createBuyerAgentAgreementSchema = z
 export const updateBuyerAgentAgreementSchema = z.object({
   lead_id: z.string().uuid('Invalid lead ID'),
 
-  signed_date: z.date().optional(),
+  signed_date: z.coerce.date().optional(),
 
-  expiration_date: z.date().optional(),
+  expiration_date: z.coerce.date().optional(),
 
   commission_type: commissionTypeSchema.optional(),
 

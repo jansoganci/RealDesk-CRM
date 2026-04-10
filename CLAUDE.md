@@ -9,10 +9,13 @@ Mobile-first Real Estate CRM for US solo agents. Built with **Vite + React + Typ
 ```bash
 npm run dev          # Start dev server → http://localhost:5173
 npm run build        # TypeScript check + Vite production build
-npm run typecheck    # TypeScript only, no emit
+npm run typecheck    # TypeScript only, no emit (includes Vitest test files)
+npm run test         # Vitest once (`vitest run`)
+npm run test:watch   # Vitest watch mode
 npm run lint         # ESLint
 npm run preview      # Preview the dist/ build locally
 npm run gen:types    # Regenerate Supabase types → src/types/database.ts
+npm run check:translations  # Audit public/locales/en/*.json (parse + no empty strings)
 npm run deploy       # Build + deploy to Cloudflare Pages (staging)
 npm run deploy:prod  # Build + deploy to Cloudflare Pages (production)
 ```
@@ -51,7 +54,7 @@ This repo **does not** use Supabase’s default `YYYYMMDDHHmmss_description.sql`
 | Backend | Supabase (PostgreSQL, RLS, Auth, Storage) |
 | Edge Functions | Supabase Edge Functions (Deno) |
 | PDF | jsPDF + jspdf-autotable |
-| i18n | i18next (18 namespaces, EN primary + TR legacy) |
+| i18n | i18next — **English only** (`public/locales/en/`); no Turkish locale in repo |
 | Deploy | Cloudflare Pages via Wrangler 3 |
 
 ---
@@ -97,7 +100,8 @@ supabase/
 └── functions/         # Deno edge functions (Stripe, OCR, email, etc.)
 
 public/
-└── locales/           # i18n JSON files (tr/, en/) — 18 namespaces each
+└── locales/
+    └── en/            # i18n JSON files (English only; one folder per namespace)
 ```
 
 ---
@@ -110,7 +114,7 @@ public/
 - **Service proxy pattern** — always import services from `src/lib/serviceProxy.ts`, never directly from `src/services/`
 - **Zod schemas** for all form validation; pair with `zodResolver` from `@hookform/resolvers`
 - **`cn()` utility** from `src/lib/utils.ts` for merging Tailwind classes
-- **i18n required** — all user-facing strings must use `useTranslation('[namespace]')`. English (`en/`) is the primary locale; Turkish (`tr/`) is legacy-only. New features only need `en/` translations.
+- **i18n required** — all user-facing strings must use `useTranslation('[namespace]')` with keys in `public/locales/en/` only. **No hardcoded English in UI.** Do not add or maintain `public/locales/tr/` or other locales unless the product explicitly adds a second language.
 
 ---
 
@@ -125,7 +129,7 @@ public/
 5. Add route constant to `src/config/constants.ts`
 6. Register route in `src/App.tsx`
 7. Add nav item to `src/components/layout/Sidebar.tsx`
-8. Create `public/locales/en/[feature-name].json` (Turkish counterpart only if updating existing feature)
+8. Create `public/locales/en/[feature-name].json` (English only)
 
 ### Adding a Database Table
 
@@ -259,7 +263,7 @@ Called via `${VITE_SUPABASE_URL}/functions/v1/<name>`:
 
 - **`database.ts` may be stale** — after schema changes, run `npm run gen:types`. If org/v2 tables are missing, check `database.types.ts` instead.
 - **Property statuses differ by type**: Rental → `Empty | Occupied | Inactive`; Sale → `Available | Under Offer | Sold | Inactive`
-- **i18n namespace must match file name**: `useTranslation('properties')` loads `public/locales/en/properties.json` (English is primary locale)
+- **i18n namespace must match file name**: `useTranslation('properties')` loads `public/locales/en/properties.json`
 - **Photo limit**: Max 10 photos per property — enforced in application logic, not DB
 - **PDF generation**: US PDFs use standard Latin fonts — no Turkish font setup needed for new features. Legacy contracts may still call `addTurkishFonts(doc)`.
 - **Atomic contract creation**: Use `createContractWithEntities()` RPC to create owner + tenant + property + contract in one transaction — never create these entities separately

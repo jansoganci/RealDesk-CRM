@@ -8,9 +8,7 @@ import { getTransactions } from './transactions.service';
 import { getCategories } from './categories.service';
 import { getUpcomingRecurringExpenses } from './recurring.service';
 import { calculateCategoryBreakdown, NormalizedCategoryBreakdown, calculateNormalizedSum, CalculatedMetric } from './reportCalculator';
-import { getRatesForBatchFromTry } from './exchangeRates.service';
 import { getActiveOrgId } from '../../lib/orgHelpers';
-import { getRateForDate } from './exchangeRates.service';
 import type {
   MonthlySummary,
   CategoryBreakdown,
@@ -142,24 +140,6 @@ export const getFinancialDashboardNormalized = async (
 
   const currentMonthTransactions = allTransactionsCurrent.data || [];
   const previousMonthTransactions = allTransactionsPrevious.data || [];
-  
-  // PRE-FLIGHT: Collect all unique date/currency pairs from all transaction sets
-  const rateRequests: Array<{ currency: string; date: string }> = [];
-  const allSets = [...currentMonthTransactions, ...previousMonthTransactions, ...yearToDateTransactions];
-  
-  allSets.forEach(t => {
-    if (t.currency !== 'TRY') {
-      rateRequests.push({ currency: t.currency, date: t.transaction_date });
-    }
-    if (displayCurrency !== 'TRY') {
-      rateRequests.push({ currency: displayCurrency, date: t.transaction_date });
-    }
-  });
-
-  // Pre-fetch all rates in one go to warm the cache
-  if (rateRequests.length > 0) {
-    await getRatesForBatchFromTry(rateRequests);
-  }
 
   // Calculate normalized summaries locally instead of re-fetching
   const [currentSummary, previousSummary, ytdIncome, ytdExpense, incomeBreakdown, expenseBreakdown] = await Promise.all([
@@ -300,7 +280,7 @@ export const getCashFlowForecastNormalized = async (
       .filter(r => !r.is_overdue)
       .map(r => ({
         amount: r.recurring_expense.amount,
-        currency: r.recurring_expense.currency || 'TRY',
+        currency: r.recurring_expense.currency || 'USD',
         date: todayStr
       })),
     displayCurrency
@@ -441,53 +421,16 @@ export const getTransactionVolumeNormalized = async (
       return { value: 0, isComplete: true, missingDates: [] };
     }
 
-    // Group by currency and convert
-    const currencyGroups: Record<string, number> = {};
-    const missingDates: string[] = [];
-
+    void displayCurrency;
+    let totalValue = 0;
     for (const property of data) {
-      const currency = (property.currency || 'TRY').toUpperCase().trim();
-      const amount = Number(property.sold_price) || 0;
-      
-      if (amount > 0) {
-        if (!currencyGroups[currency]) {
-          currencyGroups[currency] = 0;
-        }
-        currencyGroups[currency] += amount;
-      }
+      totalValue += Number(property.sold_price) || 0;
     }
-
-    // Convert all to display currency
-    const normalizedDisplayCurrency = displayCurrency.toUpperCase().trim();
-    const conversionPromises = Object.entries(currencyGroups).map(
-      async ([currency, amount]) => {
-        if (currency === normalizedDisplayCurrency) {
-          return amount;
-        }
-        // Use exchange rate service with mid-year date as average
-        try {
-          const rateInfo = await getRateForDate(
-            currency,
-            normalizedDisplayCurrency,
-            `${year}-06-15`
-          );
-          return amount * rateInfo.rate;
-        } catch (error) {
-          console.warn(`Failed to convert ${currency} to ${normalizedDisplayCurrency}:`, error);
-          // If conversion fails, still include the amount (will show as incomplete)
-          missingDates.push(`${year}-06-15`);
-          return amount; // Return original amount, will be marked as incomplete
-        }
-      }
-    );
-
-    const convertedAmounts = await Promise.all(conversionPromises);
-    const totalValue = convertedAmounts.reduce((sum, val) => sum + val, 0);
 
     return {
       value: totalValue,
-      isComplete: missingDates.length === 0,
-      missingDates: Array.from(new Set(missingDates))
+      isComplete: true,
+      missingDates: [],
     };
   } catch (error) {
     console.error('Error in getTransactionVolumeNormalized:', error);
@@ -1158,16 +1101,16 @@ export const getBudgetVsActualNormalized = async (
   const normalizedBreakdown = await calculateCategoryBreakdown(transactions as FinancialTransaction[], displayCurrency, 'expense');
   const actualByCategory = new Map(normalizedBreakdown.map(b => [b.category, b.total_amount.value]));
 
-  // Convert all budgets to displayCurrency (budgets are stored in TRY)
+  // Convert all budgets to displayCurrency (budgets are stored in USD)
   const comparisons: BudgetVsActual[] = await Promise.all(
     categoriesWithBudget.map(async category => {
       const budgetedRaw = category.monthly_budget || 0;
 
-      // Convert budget from TRY to displayCurrency using end-of-month rate
+      // Convert budget from USD to displayCurrency using end-of-month rate
       let budgeted = budgetedRaw;
-      if (displayCurrency !== 'TRY' && budgetedRaw > 0) {
+      if (displayCurrency !== 'USD' && budgetedRaw > 0) {
         const budgetMetric = await calculateNormalizedSum(
-          [{ amount: budgetedRaw, currency: 'TRY', transaction_date: endDate }],
+          [{ amount: budgetedRaw, currency: 'USD', transaction_date: endDate }],
           displayCurrency
         );
         budgeted = budgetMetric.value;

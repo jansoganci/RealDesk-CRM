@@ -1,0 +1,18 @@
+---
+description: i18n is English-only; no Turkish locale files or hardcoded UI strings
+globs:
+  - src/**/*.tsx
+  - src/**/*.ts
+  - public/locales/en/**/*.json
+  - src/i18n.ts
+---
+
+# Internationalization (RealDesk — US market)
+
+- **Locales:** Only `public/locales/en/`. Do **not** add `public/locales/tr/` or other language folders unless the product explicitly ships a second locale.
+- **Config:** `supportedLngs` must remain English-only (see `src/i18n.ts`). No Turkish references in i18n init or language switchers.
+- **UI strings:** Every user-visible string goes through `useTranslation('namespace')` (or `useTranslation(['ns','common'])`) and lives in `public/locales/en/<namespace>.json`. **No hardcoded English** in JSX/TS (except truly non-UI constants, e.g. route paths).
+- **New features:** Add keys only under `en/`. Namespace file name must match `useTranslation('…')` (see root `CLAUDE.md`).
+- **User prefs:** App language is effectively `en` only; `AuthContext` / `localeDetection` normalize stored legacy values to `en`.
+
+Full policy: root `CLAUDE.md` → **Internationalization (English-only)**.

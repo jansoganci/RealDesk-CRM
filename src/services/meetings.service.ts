@@ -70,10 +70,9 @@ class MeetingsService {
 
   /**
    * Creates a new meeting for the authenticated user.
-   * @param meetingData The data for the new meeting.
-   * @returns A promise that resolves to the newly created meeting.
+   * `user_id` and `org_id` are set inside the service.
    */
-  async create(meetingData: MeetingInsert): Promise<Meeting> {
+  async create(meetingData: Omit<MeetingInsert, 'user_id' | 'org_id'>): Promise<Meeting> {
     // Get authenticated user ID with session fallback
     const userId = await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();

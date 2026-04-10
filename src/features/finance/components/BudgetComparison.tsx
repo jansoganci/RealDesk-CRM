@@ -6,6 +6,7 @@ import { Bar } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { AlertTriangle, CheckCircle2, TrendingUp } from 'lucide-react';
 import type { BudgetVsActual } from '../../../types/financial';
+import { COLORS } from '@/config/colors';
 
 interface BudgetComparisonProps {
   budgetComparison: BudgetVsActual[];
@@ -24,7 +25,7 @@ export const BudgetComparison = ({
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
-      currency: currency || 'TRY',
+      currency: currency || 'USD',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     }).format(value);
@@ -76,7 +77,7 @@ export const BudgetComparison = ({
       {
         label: t('finance:analytics.budgeted'),
         data: topCategories.map(item => item.budgeted),
-        backgroundColor: '#94a3b8',
+        backgroundColor: COLORS.disabled.hex,
         borderRadius: 8,
       },
       {
@@ -85,13 +86,13 @@ export const BudgetComparison = ({
         backgroundColor: topCategories.map(item => {
           switch (item.status) {
             case 'under':
-              return '#10b981';
+              return COLORS.success.hex;
             case 'on_track':
-              return '#3b82f6';
+              return COLORS.primary.hex;
             case 'over':
-              return '#ef4444';
+              return COLORS.danger.hex;
             default:
-              return '#6b7280';
+              return COLORS.muted.hex;
           }
         }),
         borderRadius: 8,
@@ -121,7 +122,7 @@ export const BudgetComparison = ({
           display: false,
         },
         ticks: {
-          color: '#6b7280',
+          color: COLORS.muted.hex,
           font: {
             size: 11,
           },
@@ -131,11 +132,11 @@ export const BudgetComparison = ({
       },
       y: {
         grid: {
-          color: '#e5e7eb',
+          color: COLORS.border.hex,
           borderDash: [3, 3],
         },
         ticks: {
-          color: '#6b7280',
+          color: COLORS.muted.hex,
           font: {
             size: 12,
           },

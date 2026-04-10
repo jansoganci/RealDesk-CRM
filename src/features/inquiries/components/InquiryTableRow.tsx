@@ -11,10 +11,10 @@ import type { PropertyInquiry } from '@/types';
 import { getLeadStatusBadgeClasses } from '../utils/statusUtils';
 
 // Helper function to format budget with currency symbol
-const formatBudget = (min: number | null, max: number | null, currencyType: string = 'TRY'): string => {
-  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'TRY';
-  
-  const formatter = new Intl.NumberFormat('tr-TR', {
+const formatBudget = (min: number | null, max: number | null, currencyType: string = 'USD'): string => {
+  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'USD';
+
+  const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: normalizedCurrency,
     minimumFractionDigits: 0,
@@ -102,8 +102,7 @@ export function InquiryTableRow({
           const isRental = inquiry.inquiry_type === 'rental';
           const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
           const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
-          // Get currency_type from inquiry, default to 'TRY' if not present
-          const currencyType = (inquiry as any).currency_type || 'TRY';
+          const currencyType = (inquiry as any).currency_type || 'USD';
 
           if (minBudget || maxBudget) {
             return (

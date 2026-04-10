@@ -76,7 +76,7 @@ export interface PropertyWithComponents {
   cadde_sokak?: string;
   bina_no?: string;
   daire_no?: string;
-  ilce?: string;
+  district_legacy?: string;
   il?: string;
   // US format columns (will be added in migration)
   street_address?: string;

@@ -6,16 +6,15 @@
 import { z } from 'zod';
 
 // ============================================================================
-// Interest Level Enum & Options
+// Feedback Enum & Options
 // ============================================================================
 
-export const interestLevelSchema = z.enum(['high', 'medium', 'low', 'none']);
+export const showingFeedbackSchema = z.enum(['loved', 'interested', 'pass']);
 
-export const INTEREST_LEVEL_OPTIONS = [
-  { value: 'high', label: 'High Interest' },
-  { value: 'medium', label: 'Medium Interest' },
-  { value: 'low', label: 'Low Interest' },
-  { value: 'none', label: 'No Interest' },
+export const SHOWING_FEEDBACK_OPTIONS = [
+  { value: 'loved', label: 'Loved', emoji: '🏠' },
+  { value: 'interested', label: 'Interested', emoji: '👍' },
+  { value: 'pass', label: 'Pass', emoji: '👎' },
 ] as const;
 
 // ============================================================================
@@ -39,13 +38,9 @@ export const createShowingLogSchema = z.object({
     .optional()
     .nullable(),
 
-  feedback: z
-    .string()
-    .max(1000, 'Feedback must be less than 1000 characters')
-    .optional()
-    .or(z.literal('')),
+  feedback: showingFeedbackSchema.default('interested'),
 
-  interest_level: interestLevelSchema.optional().nullable(),
+  interest_level: z.string().optional(),
 });
 
 // ============================================================================
@@ -67,13 +62,9 @@ export const updateShowingLogSchema = z.object({
     .optional()
     .nullable(),
 
-  feedback: z
-    .string()
-    .max(1000, 'Feedback must be less than 1000 characters')
-    .optional()
-    .or(z.literal('')),
+  feedback: showingFeedbackSchema.optional(),
 
-  interest_level: interestLevelSchema.optional().nullable(),
+  interest_level: z.string().optional(),
 });
 
 // ============================================================================

@@ -66,6 +66,10 @@ export const ROUTES = {
   REMINDERS: '/reminders',
   /** Lead pipeline (replaces legacy inquiries UI). */
   LEADS: '/leads',
+  LEAD_DETAIL: '/leads/:id',
+  /** Sprint 3 — deal pipeline (offers, milestones). */
+  DEALS: '/deals',
+  DEAL_DETAIL: '/deals/:id',
   /** @deprecated Use ROUTES.LEADS — kept for redirects and bookmarks */
   INQUIRIES: '/inquiries',
   CALENDAR: '/calendar',

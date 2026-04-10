@@ -23,7 +23,9 @@
   "validations": {
     "nameRequired": "Name is required",
     "invalidEmail": "Invalid email address",
-    "phoneRequired": "Phone is required"
+    "phoneRequired": "Phone is required",
+    "invalidRouting": "Enter a valid 9-digit ABA routing number",
+    "invalidAccount": "Account number must be 4–17 digits"
   },
   "emptyState": {
     "noOwnersFound": "No owners found",
@@ -48,6 +50,14 @@
       "emailPlaceholder": "owner@example.com",
       "phone": "Phone",
       "phonePlaceholder": "Phone number",
+      "routingNumber": "Routing number",
+      "routingPlaceholder": "9-digit ABA routing number",
+      "accountNumber": "Account number",
+      "accountPlaceholder": "Bank account number",
+      "taxId": "Tax ID / EIN (optional)",
+      "taxIdPlaceholder": "e.g. 12-3456789",
+      "taxIdHint": "Optional business tax identifier — not SSN.",
+      "bankEditHint": "Leave routing and account blank to keep existing saved bank details.",
       "address": "Address",
       "addressPlaceholder": "Owner address",
       "notes": "Notes",

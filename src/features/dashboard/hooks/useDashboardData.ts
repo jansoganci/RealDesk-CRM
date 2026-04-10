@@ -8,6 +8,7 @@ import {
   contractsService,
   remindersService,
   inquiriesService,
+  dealsService,
   ReminderWithDetails,
 } from '@/lib/serviceProxy';
 import { transformDashboardData } from '../utils/transformDashboardData';
@@ -38,6 +39,9 @@ export interface DashboardStats {
   };
   rentalInquiries: number;
   saleInquiries: number;
+  activeDeals: number;
+  closingsThisMonth: number;
+  overdueMilestones: number;
 }
 
 interface ActionItems {
@@ -97,6 +101,9 @@ export function useDashboardData(): UseDashboardDataReturn {
     },
     rentalInquiries: 0,
     saleInquiries: 0,
+    activeDeals: 0,
+    closingsThisMonth: 0,
+    overdueMilestones: 0,
   });
 
   const [actionItems, setActionItems] = useState<ActionItems>({
@@ -135,6 +142,7 @@ export function useDashboardData(): UseDashboardDataReturn {
         tenantsMissingInfo,
         ownersMissingInfo,
         inquiryStats,
+        dealStats,
       ] = await Promise.all([
         propertiesService.getStats(),
         ownersService.getAll(),
@@ -145,6 +153,7 @@ export function useDashboardData(): UseDashboardDataReturn {
         tenantsService.getTenantsWithMissingInfo(),
         ownersService.getOwnersWithMissingInfo(),
         inquiriesService.getStats(),
+        dealsService.getStats(),
       ]);
 
       // Transform raw data into stats object
@@ -155,6 +164,7 @@ export function useDashboardData(): UseDashboardDataReturn {
           tenantStats,
           contractStats,
           inquiryStats,
+          dealStats,
         })
       );
 

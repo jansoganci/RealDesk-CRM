@@ -117,7 +117,7 @@ export const createRecurringExpense = async (
     description: data.description || null,
     category: data.category,
     amount: data.amount,
-    currency: data.currency || 'TRY',
+    currency: data.currency || 'USD',
     frequency: data.frequency,
     day_of_month: data.day_of_month || null,
     start_date: data.start_date,

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { OwnerDialog } from './OwnerDialog';
 import { ownersService } from '../../lib/serviceProxy';
+import type { OwnerCreatePayload } from '@/services/owners.service';
 import { PropertyOwner } from '../../types';
 import { toast } from 'sonner';
 import { Mail, Phone, MapPin, User } from 'lucide-react';
@@ -10,15 +11,9 @@ import { COLORS } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import { useOrg } from '@/contexts/OrgContext';
-import * as z from 'zod';
-import { getOwnerSchema } from './ownerSchema';
-
 export const Owners = () => {
   const { t } = useTranslation(['owners', 'common']);
   const { isMember } = useOrg();
-  
-  const ownerSchema = useMemo(() => getOwnerSchema(t), [t]);
-  type OwnerFormData = z.infer<typeof ownerSchema>;
 
   const [owners, setOwners] = useState<(PropertyOwner & { property_count?: number })[]>([]);
   const [filteredOwners, setFilteredOwners] = useState<(PropertyOwner & { property_count?: number })[]>([]);
@@ -96,15 +91,14 @@ export const Owners = () => {
     }
   }, [ownerToDelete, t, loadOwners]);
 
-  const handleSubmit = useCallback(async (data: OwnerFormData) => {
+  const handleSubmit = useCallback(async (data: OwnerCreatePayload) => {
     try {
       setActionLoading(true);
       if (selectedOwner) {
         await ownersService.update(selectedOwner.id, data);
         toast.success(t('toasts.updateSuccess'));
       } else {
-        // user_id is injected automatically by the service
-        await ownersService.create(data as any);
+        await ownersService.create(data);
         toast.success(t('toasts.addSuccess'));
       }
       await loadOwners();

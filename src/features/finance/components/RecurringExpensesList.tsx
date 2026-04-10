@@ -84,7 +84,7 @@ export const RecurringExpensesList = ({
   }, [recurringExpenses, searchTerm]);
 
   const formatCurrency = (amount: number, currency: string) => {
-    const normalizedCurrency = currency?.toUpperCase().trim() || 'TRY';
+    const normalizedCurrency = currency?.toUpperCase().trim() || 'USD';
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
       currency: normalizedCurrency,

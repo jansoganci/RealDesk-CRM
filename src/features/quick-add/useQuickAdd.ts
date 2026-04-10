@@ -5,7 +5,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { useAuth } from '@/contexts/AuthContext';
 import { ownersService, propertiesService, tenantsService } from '@/lib/serviceProxy';
-import { PropertyOwner, PropertyOwnerInsert, TenantWithContractData } from '@/types';
+import { PropertyOwner, TenantWithContractData } from '@/types';
 import { getQuickAddSchema, QuickAddFormData } from './quickAddSchema';
 import { format } from 'date-fns';
 
@@ -76,7 +76,7 @@ export const useQuickAdd = (onSuccess?: () => void) => {
           name: data.ownerName!,
           phone: data.ownerPhone || null,
           email: data.ownerEmail || null,
-        } as PropertyOwnerInsert);
+        });
         ownerId = newOwner.id;
       }
 

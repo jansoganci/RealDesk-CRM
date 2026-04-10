@@ -19,7 +19,7 @@ export default function CookieNotice() {
 
   const cookiePolicyLink = "/legal/cookie-policy-en.html";
   const privacyPolicyLink = "/legal/privacy-policy-en.html";
-  const kvkkLink = "/legal/cookie-disclosure-en.html";
+  const cookieDisclosureLink = "/legal/cookie-disclosure-en.html";
 
   return (
     <>
@@ -68,12 +68,12 @@ export default function CookieNotice() {
                 </a>
                 <span className="text-muted-foreground">•</span>
                 <a
-                  href={kvkkLink}
+                  href={cookieDisclosureLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="underline text-blue-600 hover:text-blue-700 transition-colors"
                 >
-                  {t("banner.kvkkLink")}
+                  {t("banner.privacyPolicyLink")}
                 </a>
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:justify-between sm:items-center pt-2">

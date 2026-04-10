@@ -26,7 +26,60 @@
   "tabs": {
     "overview": "Overview",
     "transactions": "Transactions",
-    "analytics": "Analytics"
+    "analytics": "Analytics",
+    "commission": "Commission"
+  },
+  "commissionDashboard": {
+    "loading": "Loading commission dashboard...",
+    "stats": {
+      "ytdGci": "YTD GCI",
+      "ytdNet": "YTD Net",
+      "dealsClosed": "YTD Deals Closed",
+      "avgNetPerDeal": "Avg Net Per Deal",
+      "capProgress": "Cap Progress"
+    },
+    "salesVsRental": {
+      "title": "Sales vs Rental Breakdown",
+      "sales": "Sales",
+      "rental": "Rental",
+      "gci": "GCI",
+      "net": "Net"
+    },
+    "monthlyChart": {
+      "title": "Monthly GCI Chart",
+      "gci": "GCI",
+      "net": "Net"
+    }
+  },
+  "commissionHistory": {
+    "title": "Commission History",
+    "export": "Export CSV",
+    "loading": "Loading commission history...",
+    "empty": "No commissions found for this filter.",
+    "sortByDate": "Sort by date",
+    "editTitle": "Edit Commission",
+    "editDescription": "Update commission details and save changes.",
+    "save": "Save Changes",
+    "saving": "Saving...",
+    "columns": {
+      "date": "Closing Date",
+      "address": "Property",
+      "type": "Type",
+      "gci": "GCI",
+      "net": "Net"
+    },
+    "filters": {
+      "allTypes": "All Types",
+      "sale": "Sale",
+      "rental": "Rental",
+      "allSides": "All Sides"
+    },
+    "messages": {
+      "loadError": "Failed to load commission history",
+      "exportError": "Failed to export commission CSV",
+      "updateSuccess": "Commission updated successfully",
+      "updateError": "Failed to update commission"
+    }
   },
 
   "sections": {

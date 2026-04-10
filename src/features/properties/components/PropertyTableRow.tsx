@@ -86,9 +86,9 @@ export function PropertyTableRow({
       </TableCell>
       {/* Location - Hidden on tablet, visible on laptop+ */}
       <TableCell className="hidden lg:table-cell">
-        {property.city || property.district || propertyTyped.il || propertyTyped.ilce ? (
+        {property.city || property.district || propertyTyped.il || propertyTyped.district_legacy ? (
           <span className={`${COLORS.gray.text600} text-sm truncate max-w-[150px] md:max-w-none block`}>
-            {[property.district || propertyTyped.ilce, property.city || propertyTyped.il].filter(Boolean).join(', ')}
+            {[property.district || propertyTyped.district_legacy, property.city || propertyTyped.il].filter(Boolean).join(', ')}
           </span>
         ) : (
           <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>

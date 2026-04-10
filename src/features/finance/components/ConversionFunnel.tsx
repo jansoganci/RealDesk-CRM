@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { Target } from 'lucide-react';
 import type { ConversionFunnelMetrics } from '../../../services/finance/analytics.service';
+import { COLORS } from '@/config/colors';
 
 interface ConversionFunnelProps {
   data: ConversionFunnelMetrics | null;
@@ -67,17 +68,17 @@ export const ConversionFunnelComponent = ({
     {
       name: t('finance:analytics.totalInquiries'),
       value: data.inquiries,
-      fill: '#3b82f6', // blue
+      fill: COLORS.primary.hex,
     },
     {
       name: t('finance:analytics.appointments'),
       value: data.appointments,
-      fill: '#10b981', // green
+      fill: COLORS.success.hex,
     },
     {
       name: t('finance:analytics.contracts'),
       value: data.contracts,
-      fill: '#f59e0b', // amber
+      fill: COLORS.warning.hex,
     },
   ];
 
@@ -142,12 +143,12 @@ export const ConversionFunnelComponent = ({
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={funnelData} layout="vertical" margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis type="number" tick={{ fontSize: 12, fill: '#64748b' }} />
+                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
+                <XAxis type="number" tick={{ fontSize: 12, fill: COLORS.muted.hex }} />
                 <YAxis 
                   dataKey="name" 
                   type="category" 
-                  tick={{ fontSize: 12, fill: '#64748b' }}
+                  tick={{ fontSize: 12, fill: COLORS.muted.hex }}
                   width={100}
                 />
                 <Tooltip content={<CustomTooltip />} />

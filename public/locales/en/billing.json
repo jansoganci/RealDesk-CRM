@@ -132,5 +132,14 @@
     "monthly": "/month",
     "yearly": "/year",
     "yearlyDiscount": "instead of"
+  },
+  "pricingToasts": {
+    "cancelledDescription": "Payment canceled",
+    "cancelledMessage": "Your subscription checkout was canceled. You can try again when you're ready.",
+    "loginRequiredTitle": "Login required",
+    "loginRequiredDescription": "You must be signed in to purchase a subscription.",
+    "checkoutErrorTitle": "Error",
+    "checkoutErrorMessage": "Couldn't open checkout. Please try again.",
+    "loading": "Loading..."
   }
 }

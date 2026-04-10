@@ -4,18 +4,13 @@ import { LandingFooter } from "@/components/landing/LandingFooter";
 import { SEO } from "@/components/common/SEO";
 
 export const AboutPage = () => {
-  const { t, i18n } = useTranslation("landing");
-  const isTurkish = i18n.language === "tr";
+  const { t } = useTranslation("landing");
 
   return (
     <>
       <SEO
         title={`${t("about.title")} - emlakcrm`}
-        description={
-          isTurkish
-            ? "emlakcrm hakkında bilgi edinin. Modern gayrimenkul yönetim sistemi."
-            : "Learn about emlakcrm. Modern real estate management system."
-        }
+        description={t("about.metaDescription")}
       />
       <div className="min-h-screen bg-white">
         <LandingHeader />

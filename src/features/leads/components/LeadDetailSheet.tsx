@@ -25,11 +25,14 @@ import type { LeadWithRelations, LeadStatus } from '@/services/leads.service';
 import { LEAD_PIPELINE_COLUMNS } from '@/services/leads.service';
 import type { PropertyInquiry } from '@/types';
 import { getLeadStatusBadgeClasses } from '@/features/inquiries/utils/statusUtils';
-import { Eye, Pencil } from 'lucide-react';
+import { Eye, ExternalLink, Handshake, Pencil } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { cn } from '@/lib/utils';
 import { BuyerAgentAgreementList } from './BuyerAgentAgreementList';
 import { ShowingLogList } from './ShowingLogList';
+import { DealCreationSheet } from '@/features/deals/components/DealCreationSheet';
+import { ROUTES } from '@/config/constants';
+import { useNavigate } from 'react-router-dom';
 
 interface LeadDetailSheetProps {
   leadId: string | null;
@@ -48,12 +51,15 @@ export function LeadDetailSheet({
   onViewMatches,
   onUpdated,
 }: LeadDetailSheetProps) {
+  const navigate = useNavigate();
   const { t } = useTranslation('leads');
+  const { t: tDeals } = useTranslation('deals');
   const { user } = useAuth();
   const { isMember } = useOrg();
   const [detail, setDetail] = useState<LeadWithRelations | null>(null);
   const [loading, setLoading] = useState(false);
   const [statusSaving, setStatusSaving] = useState(false);
+  const [dealSheetOpen, setDealSheetOpen] = useState(false);
 
   const load = useCallback(async () => {
     if (!leadId) {
@@ -78,6 +84,7 @@ export function LeadDetailSheet({
     }
     if (!open) {
       setDetail(null);
+      setDealSheetOpen(false);
     }
   }, [open, leadId, load]);
 
@@ -103,10 +110,25 @@ export function LeadDetailSheet({
   const lead = detail;
 
   return (
+    <>
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
         <SheetHeader className="pr-8">
-          <SheetTitle>{t('detail.title')}</SheetTitle>
+          <div className="flex items-center justify-between gap-2">
+            <SheetTitle>{t('detail.title')}</SheetTitle>
+            {lead?.id && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => navigate(ROUTES.LEAD_DETAIL.replace(':id', lead.id))}
+                className="shrink-0"
+              >
+                <ExternalLink className="h-4 w-4 mr-1" />
+                {t('detail.actions.openFullPage', 'Open full page')}
+              </Button>
+            )}
+          </div>
         </SheetHeader>
 
         {loading && (
@@ -144,6 +166,18 @@ export function LeadDetailSheet({
                     <Button type="button" variant="secondary" size="sm" onClick={() => onViewMatches(lead)}>
                       <Eye className="h-4 w-4 mr-1" />
                       {t('detail.actions.matches')}
+                    </Button>
+                  )}
+                  {lead.status === 'active' && !lead.deal_id && (
+                    <Button
+                      type="button"
+                      variant="default"
+                      size="sm"
+                      onClick={() => setDealSheetOpen(true)}
+                      disabled={isMember}
+                    >
+                      <Handshake className="h-4 w-4 mr-1" />
+                      {tDeals('creation.convertFromLead')}
                     </Button>
                   )}
                 </div>
@@ -225,5 +259,18 @@ export function LeadDetailSheet({
         )}
       </SheetContent>
     </Sheet>
+    {detail && (
+      <DealCreationSheet
+        lead={detail}
+        open={dealSheetOpen}
+        onOpenChange={setDealSheetOpen}
+        disabled={isMember}
+        onSuccess={async () => {
+          await onUpdated();
+          await load();
+        }}
+      />
+    )}
+    </>
   );
 }

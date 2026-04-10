@@ -67,7 +67,10 @@ export function useReviewFormState(
     // Property - from property object (US Format)
     street_address: getFieldValue(parsedData, 'property.streetAddress', 'property.sokak'),
     unit: getFieldValue(parsedData, 'property.unit', 'property.daireNo'),
-    city: getFieldValue(parsedData, 'property.city', 'property.ilce'),
+    city:
+      getFieldValue(parsedData, 'property.city') ||
+      getFieldValue(parsedData, 'property.district_legacy') ||
+      getFieldValue(parsedData, 'property.ilce'),
     state: getFieldValue(parsedData, 'property.state', 'property.il') || 'TX',
     zip_code: getFieldValue(parsedData, 'property.zipCode'),
     property_type: getFieldValue(parsedData, 'property.type') || 'apartment',

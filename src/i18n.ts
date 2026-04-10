@@ -9,6 +9,7 @@ i18n
     debug: false,
     fallbackLng: 'en',
     lng: 'en',
+    // US product: ship English strings only under public/locales/en/ (see CLAUDE.md).
     supportedLngs: ['en'],
     interpolation: {
       escapeValue: false,
@@ -16,7 +17,7 @@ i18n
     react: {
       useSuspense: false,
     },
-    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing', 'calendar', 'finance', 'leads', 'profile', 'billing', 'cookie', 'onboarding'],
+    ns: ['common', 'tenants', 'properties', 'owners', 'contracts', 'reminders', 'navigation', 'dashboard', 'auth', 'photo', 'errors', 'components.tableActions', 'landing', 'calendar', 'finance', 'leads', 'deals', 'profile', 'billing', 'cookie', 'onboarding'],
     defaultNS: 'common',
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json?v=1.1',

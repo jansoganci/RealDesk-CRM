@@ -125,7 +125,7 @@ export function usePropertyActiveContract(): UsePropertyActiveContractResult {
         start_date: contract.start_date,
         end_date: contract.end_date,
         rent_amount: contract.rent_amount || 0,
-        currency: contract.currency || 'TRY',
+        currency: contract.currency || 'USD',
         property_id: property.id,
         property_address: property.address || fullAddress,
       });

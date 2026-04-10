@@ -211,7 +211,6 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="TRY">{t('currencies.TRY')}</SelectItem>
                   <SelectItem value="USD">{t('currencies.USD')}</SelectItem>
                   <SelectItem value="EUR">{t('currencies.EUR')}</SelectItem>
                 </SelectContent>

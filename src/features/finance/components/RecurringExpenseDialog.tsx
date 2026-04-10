@@ -52,7 +52,7 @@ const getRecurringExpenseSchema = (_t: any) =>
   z.object({
     name: z.string().min(1, 'Name is required'),
     amount: z.coerce.number().positive('Amount must be greater than 0'),
-    currency: z.enum(['TRY', 'USD', 'EUR'], {
+    currency: z.enum(['USD', 'EUR'], {
       required_error: 'Currency is required',
     }),
     category: z.string().min(1, 'Category is required'),
@@ -82,10 +82,10 @@ export const RecurringExpenseDialog = ({
   const recurringExpenseSchema = getRecurringExpenseSchema(t);
 
   // Normalize user currency to uppercase and ensure it's valid
-  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'TRY') as 'TRY' | 'USD' | 'EUR';
-  const normalizedDefaultCurrency = ['TRY', 'USD', 'EUR'].includes(defaultCurrency)
+  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'USD') as 'USD' | 'EUR';
+  const normalizedDefaultCurrency = ['USD', 'EUR'].includes(defaultCurrency)
     ? defaultCurrency
-    : 'TRY';
+    : 'USD';
 
   const form = useForm<RecurringExpenseFormData>({
     resolver: zodResolver(recurringExpenseSchema),
@@ -108,9 +108,10 @@ export const RecurringExpenseDialog = ({
   useEffect(() => {
     if (recurringExpense) {
       // When editing: use expense's currency or fallback to user preference
-      const expenseCurrency = recurringExpense.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
-      const normalizedExpenseCurrency = ['TRY', 'USD', 'EUR'].includes(expenseCurrency)
-        ? (expenseCurrency as 'TRY' | 'USD' | 'EUR')
+      let expenseCurrency = recurringExpense.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
+      if (expenseCurrency === 'TRY') expenseCurrency = 'USD';
+      const normalizedExpenseCurrency = ['USD', 'EUR'].includes(expenseCurrency)
+        ? (expenseCurrency as 'USD' | 'EUR')
         : normalizedDefaultCurrency;
 
       form.reset({
@@ -127,7 +128,7 @@ export const RecurringExpenseDialog = ({
         notes: recurringExpense.notes || '',
       });
     } else {
-      // When creating new: use user preference or 'TRY'
+      // When creating new: use user preference or 'USD'
       form.reset({
         name: '',
         amount: 0,
@@ -244,7 +245,6 @@ export const RecurringExpenseDialog = ({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="TRY">TRY</SelectItem>
                         <SelectItem value="USD">USD</SelectItem>
                         <SelectItem value="EUR">EUR</SelectItem>
                       </SelectContent>

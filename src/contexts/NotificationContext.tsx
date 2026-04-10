@@ -41,7 +41,7 @@ const NotificationContext = createContext<NotificationContextValue | undefined>(
 
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
-  const { currentOrg, loading: orgLoading } = useOrg();
+  const { currentOrg } = useOrg();
   const userId = user?.id;
 
   const [reminderCount, setReminderCount] = useState(0);

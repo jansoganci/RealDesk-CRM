@@ -13,6 +13,7 @@ import { Building2 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { CommissionByPropertyType } from '../../../services/finance/analytics.service';
+import { COLORS } from '@/config/colors';
 
 interface CommissionByPropertyTypeProps {
   data: CommissionByPropertyType | null;
@@ -80,13 +81,13 @@ export const CommissionByPropertyTypeComponent = ({
       name: t('finance:analytics.rentalCommissions'),
       value: data.rental.value,
       percentage: rentalPercentage,
-      color: '#3b82f6', // blue
+      color: COLORS.primary.hex,
     },
     {
       name: t('finance:analytics.saleCommissions'),
       value: data.sale.value,
       percentage: salePercentage,
-      color: '#10b981', // green
+      color: COLORS.success.hex,
     },
   ];
 
@@ -179,7 +180,7 @@ export const CommissionByPropertyTypeComponent = ({
                   labelLine={false}
                   label={CustomLabel}
                   outerRadius={80}
-                  fill="#8884d8"
+                  fill={COLORS.primary.hex}
                   dataKey="value"
                 >
                   {chartData.map((entry, index) => (

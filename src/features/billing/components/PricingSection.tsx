@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { createCheckoutSession } from '@/services/stripeCheckout.service';
-import { toast } from 'sonner';
+import { useToast } from '@/components/ui/use-toast';
 import {
   Building2,
   Users,
@@ -95,32 +95,28 @@ interface PricingSectionProps {
 }
 
 export default function PricingSection({ title, subtitle, showHeader = true }: PricingSectionProps) {
-  const { t, i18n } = useTranslation('billing');
+  const { t } = useTranslation('billing');
+  const { toast } = useToast();
   const { session } = useAuth();
   const [billingPeriod, setBillingPeriod] = useState<BillingPeriod>('monthly');
   const [loading, setLoading] = useState<string | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const isTurkish = i18n.language === 'tr';
 
   // Handle checkout cancellation
   useEffect(() => {
     const cancelled = searchParams.get('cancelled');
 
     if (cancelled === 'true') {
-      toast.info(
-        isTurkish
-          ? 'Abonelik işleminiz iptal edildi. Hazır olduğunuzda tekrar deneyebilirsiniz.'
-          : 'Your subscription was canceled. You can try again when ready.',
-        {
-          description: isTurkish ? 'Ödeme İptal Edildi' : 'Payment Canceled',
-        }
-      );
+      toast({
+        title: t('pricingToasts.cancelledMessage'),
+        description: t('pricingToasts.cancelledDescription'),
+      });
 
       // Clear query parameter
       searchParams.delete('cancelled');
       setSearchParams(searchParams, { replace: true });
     }
-  }, [searchParams, setSearchParams, isTurkish]);
+  }, [searchParams, setSearchParams, toast, t]);
 
   const handleSelectPlan = async (planId: 'baslangic' | 'profesyonel' | 'ofis_plus') => {
     console.log('🎯 [PricingSection] User clicked plan:', {
@@ -133,14 +129,11 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
     // Require authentication
     if (!session) {
       console.warn('⚠️ [PricingSection] No session found, blocking checkout');
-      toast.error(
-        isTurkish
-          ? 'Abonelik satın almak için giriş yapmalısınız'
-          : 'You must be logged in to purchase a subscription',
-        {
-          description: isTurkish ? 'Giriş Gerekli' : 'Login Required',
-        }
-      );
+      toast({
+        title: t('pricingToasts.loginRequiredTitle'),
+        description: t('pricingToasts.loginRequiredDescription'),
+        variant: 'destructive',
+      });
       return;
     }
 
@@ -150,8 +143,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
     setLoading(planId);
 
     try {
-      // Determine currency from language
-      const currency = isTurkish ? 'try' : 'usd';
+      const currency = 'usd';
 
       console.log('💰 [PricingSection] Calling createCheckoutSession...', {
         plan: planId,
@@ -175,20 +167,18 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
     } catch (error) {
       console.error('❌ [PricingSection] Checkout error:', error);
 
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : (isTurkish ? 'Ödeme sayfası açılamadı' : 'Failed to open checkout'),
-        {
-          description: isTurkish ? 'Hata' : 'Error',
-        }
-      );
+      toast({
+        title: t('pricingToasts.checkoutErrorTitle'),
+        description:
+          error instanceof Error ? error.message : t('pricingToasts.checkoutErrorMessage'),
+        variant: 'destructive',
+      });
 
       setLoading(null);
     }
   };
 
-  const getCurrencySymbol = () => (isTurkish ? '₺' : '$');
+  const currencySymbol = '$';
 
   // Determine if we should show the header.
   // If title/subtitle are provided (even empty strings), we use them.
@@ -245,10 +235,9 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
         {/* Plans Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 lg:gap-8">
           {plans.map((plan) => {
-            const monthlyPrice = isTurkish ? plan.monthlyPriceTL : plan.monthlyPriceUSD;
-            const yearlyPrice = isTurkish ? plan.yearlyPriceTL : plan.yearlyPriceUSD;
+            const monthlyPrice = plan.monthlyPriceUSD;
+            const yearlyPrice = plan.yearlyPriceUSD;
             const price = billingPeriod === 'monthly' ? monthlyPrice : yearlyPrice;
-            const currencySymbol = getCurrencySymbol();
             const periodText = billingPeriod === 'monthly'
               ? t('price.monthly')
               : t('price.yearly');
@@ -332,7 +321,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                     {loading === plan.id ? (
                       <span className="flex items-center gap-2">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                        <span className="text-xs sm:text-sm">{isTurkish ? 'Yükleniyor...' : 'Loading...'}</span>
+                        <span className="text-xs sm:text-sm">{t('pricingToasts.loading')}</span>
                       </span>
                     ) : (
                       <span className="font-semibold text-xs sm:text-sm">{t('cta.selectPlan')}</span>

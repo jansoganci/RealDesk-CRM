@@ -6,6 +6,10 @@
   "quickActions": "Quick Actions",
   "getStarted": "Get started by adding your first property or owner",
   "navigationTip": "Use the navigation menu to manage properties, owners, tenants, and contracts.",
+  "checkoutSuccess": {
+    "title": "Subscription activated!",
+    "description": "Your subscription is now active. Welcome aboard!"
+  },
   "stats": {
     "totalProperties": "Total Properties",
     "totalPropertiesDescription": "Total properties",
@@ -41,7 +45,13 @@
     "rentalInquiries": "Rental Inquiries",
     "rentalInquiriesDescription": "Looking to rent",
     "saleInquiries": "Sale Inquiries",
-    "saleInquiriesDescription": "Looking to buy"
+    "saleInquiriesDescription": "Looking to buy",
+    "activeDeals": "Active Deals",
+    "activeDealsDescription": "Open transactions (not closed)",
+    "closingsThisMonth": "Closings This Month",
+    "closingsThisMonthDescription": "Scheduled closing dates this calendar month",
+    "overdueMilestones": "Overdue Milestones",
+    "overdueMilestonesDescription": "Past-due timeline items needing attention"
   },
   "propertiesSummary": {
     "title": "Properties Summary",
@@ -115,5 +125,63 @@
     "completeProfileDesc": "Set up your agency information",
     "quickTip": "Quick Tip",
     "quickTipDesc": "After adding a property, you can create contracts, track tenants, and manage all your real estate operations from one place."
+  },
+  "dailyBrief": {
+    "loading": "Loading Daily Brief...",
+    "common": {
+      "unassigned": "Unassigned",
+      "unknown": "Unknown"
+    },
+    "actions": {
+      "openDeal": "Open deal",
+      "sendReminder": "Send reminder"
+    },
+    "empty": {
+      "noDeals": "No active deals. Convert a qualified lead to get started."
+    },
+    "overdue": {
+      "title": "Overdue / Due Today",
+      "empty": "Nothing overdue. You're on top of it.",
+      "days": "{{count}} day overdue"
+    },
+    "horizon": {
+      "title": "72-Hour Horizon",
+      "empty": "No milestones due in the next 3 days.",
+      "days": "Due in {{count}} days"
+    },
+    "waiting": {
+      "title": "Waiting on Others",
+      "empty": "No pending stakeholder responses. All parties up to date.",
+      "counterparty": "Waiting on: {{name}}",
+      "nudged": "Nudged",
+      "notNudged": "No nudge sent"
+    },
+    "thisWeek": {
+      "title": "This Week",
+      "empty": "No milestones due in 4-7 days.",
+      "days": "{{count}} days"
+    },
+    "forecast": {
+      "title": "Income Forecast",
+      "loading": "Loading forecast...",
+      "committedGross": "Committed This Month (Gross)",
+      "committedNet": "Committed This Month (Net)",
+      "weightedGross": "Weighted 90-Day Pipeline (Gross)",
+      "weightedNet": "Weighted 90-Day Pipeline (Net)",
+      "activeDeals": "{{count}} active deal(s) included"
+    },
+    "header": {
+      "greeting": "Good morning. You have {{count}} items needing attention today.",
+      "meta": "{{date}} · {{count}} active deals"
+    },
+    "dealCard": {
+      "title": "Deal Health Cards",
+      "phase": "Phase {{phase}}",
+      "closingCountdown": "Closing in {{count}} days",
+      "noClosingDate": "No closing date set",
+      "nextMilestone": "Next: {{title}}",
+      "noNextMilestone": "No upcoming milestone",
+      "overdueCount": "{{count}} overdue"
+    }
   }
 }

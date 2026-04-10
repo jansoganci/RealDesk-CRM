@@ -13,6 +13,8 @@ import { AccountSecurityCard } from './components/AccountSecurityCard';
 import { LegalDocumentsCard } from './components/LegalDocumentsCard';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { BrokerSettingsForm } from './components/BrokerSettingsForm';
 
 interface ProfileData {
   fullName: string;
@@ -93,31 +95,44 @@ export const Profile = () => {
           {/* User Info Header - Full Width */}
           <UserInfoHeader />
 
-          {/* Profile Information Card - Read-only with Edit button */}
-          <ProfileInfoCard
-            data={profileData}
-            onEditClick={handleEditClick}
-            isLoading={authLoading}
-          />
+          <Tabs defaultValue="general" className="w-full">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger value="general">{t('profile:tabs.general')}</TabsTrigger>
+              <TabsTrigger value="commission">{t('profile:tabs.commission')}</TabsTrigger>
+            </TabsList>
 
-          {/* Organization Settings Card - Only show if user is owner */}
-          {isOwner && currentOrg && (
-            <OrganizationSettingsCard
-              onEditClick={handleEditOrgClick}
-            />
-          )}
+            <TabsContent value="general" className="space-y-6 mt-4">
+              {/* Profile Information Card - Read-only with Edit button */}
+              <ProfileInfoCard
+                data={profileData}
+                onEditClick={handleEditClick}
+                isLoading={authLoading}
+              />
 
-          {/* Account Security - Full Width */}
-          <AccountSecurityCard />
+              {/* Organization Settings Card - Only show if user is owner */}
+              {isOwner && currentOrg && (
+                <OrganizationSettingsCard
+                  onEditClick={handleEditOrgClick}
+                />
+              )}
 
-          {/* Subscription & Billing - Side by Side */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <SubscriptionStatusCard />
-            <BillingHistoryCard />
-          </div>
+              {/* Account Security - Full Width */}
+              <AccountSecurityCard />
 
-          {/* Legal Documents - Full Width */}
-          <LegalDocumentsCard language="en" />
+              {/* Subscription & Billing - Side by Side */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                <SubscriptionStatusCard />
+                <BillingHistoryCard />
+              </div>
+
+              {/* Legal Documents - Full Width */}
+              <LegalDocumentsCard language="en" />
+            </TabsContent>
+
+            <TabsContent value="commission" className="mt-4">
+              <BrokerSettingsForm />
+            </TabsContent>
+          </Tabs>
         </div>
 
         {/* Edit Profile Dialog/Drawer */}

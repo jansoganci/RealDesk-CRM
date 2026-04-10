@@ -106,7 +106,7 @@ function preparePdfData(
     depositText: numberToTurkishText(deposit),
 
     // Currency
-    currency: formData.currency || 'TRY',
+    currency: formData.currency || 'USD',
 
     // Fixtures (formatted for PDF: comma + space, or '-' if empty)
     fixtures: formatFixturesForPdf(formData.special_conditions),

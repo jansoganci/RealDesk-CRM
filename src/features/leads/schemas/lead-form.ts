@@ -149,6 +149,20 @@ export const createLeadSchema = z
 
     lead_source: leadSourceSchema,
 
+    status: z
+      .enum([
+        'new',
+        'contacted',
+        'qualified',
+        'active',
+        'matched',
+        'under_contract',
+        'closed_won',
+        'closed_lost',
+        'converted',
+      ])
+      .default('new'),
+
     preferred_city: z
       .string()
       .max(100, 'City must be less than 100 characters')

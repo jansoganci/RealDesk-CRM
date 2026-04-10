@@ -1,15 +1,14 @@
-// =====================================================
-// useCurrencyConversion Hook
-// Provides currency conversion functions using user's display currency preference
-// =====================================================
+// V1: USD-only. Currency conversion disabled.
+// This hook is preserved for V1.5 multi-currency support.
 
 import { useCallback, useMemo } from 'react';
-import { useAuth } from '../contexts/AuthContext';
-import {
-  getRateForDate,
-  formatCurrencyWithConversion,
-} from '../services/finance/exchangeRates.service';
-import type { RateInfo } from '../services/finance/exchangeRates.service';
+import { formatCurrency } from '@/lib/currency';
+
+export interface RateInfo {
+  rate: number;
+  rate_date_used: string;
+  source?: string;
+}
 
 interface ConversionResult {
   convertedAmount: number;
@@ -22,92 +21,62 @@ interface FormatResult {
   rateInfo: RateInfo;
 }
 
+const V1_DISPLAY = 'USD';
+
+function toDateStr(transactionDate: string | Date): string {
+  return typeof transactionDate === 'string'
+    ? transactionDate.split('T')[0]
+    : transactionDate.toISOString().split('T')[0];
+}
+
 /**
  * Hook that provides currency conversion functions using user's display currency preference
  * Memoizes conversions for performance
  */
 export function useCurrencyConversion() {
-  const { currency: displayCurrency } = useAuth();
-  const normalizedDisplayCurrency = useMemo(
-    () => displayCurrency?.toUpperCase().trim() || 'USD',
-    [displayCurrency]
-  );
+  const normalizedDisplayCurrency = useMemo(() => V1_DISPLAY, []);
 
-  /**
-   * Convert amount using historical rate
-   */
   const convert = useCallback(
     async (
       amount: number,
-      originalCurrency: string,
+      _originalCurrency: string,
       transactionDate: string | Date
     ): Promise<ConversionResult> => {
-      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'USD';
-
-      // If same currency, return as-is
-      if (normalizedOriginal === normalizedDisplayCurrency) {
-        const dateStr =
-          typeof transactionDate === 'string'
-            ? transactionDate.split('T')[0]
-            : transactionDate.toISOString().split('T')[0];
-        return {
-          convertedAmount: amount,
-          rateInfo: {
-            rate: 1.0,
-            rate_date_used: dateStr,
-          },
-        };
-      }
-
-      const rateInfo = await getRateForDate(
-        normalizedOriginal,
-        normalizedDisplayCurrency,
-        transactionDate
-      );
-
+      const dateStr = toDateStr(transactionDate);
       return {
-        convertedAmount: amount * rateInfo.rate,
-        rateInfo,
+        convertedAmount: amount,
+        rateInfo: {
+          rate: 1.0,
+          rate_date_used: dateStr,
+        },
       };
     },
-    [normalizedDisplayCurrency]
+    []
   );
 
-  /**
-   * Format currency with dual display (original + converted)
-   */
   const formatWithConversion = useCallback(
     async (
       amount: number,
       originalCurrency: string,
       transactionDate: string | Date
     ): Promise<FormatResult> => {
-      return formatCurrencyWithConversion(
-        amount,
-        originalCurrency,
-        normalizedDisplayCurrency,
-        transactionDate
-      );
+      const dateStr = toDateStr(transactionDate);
+      const rateInfo: RateInfo = { rate: 1.0, rate_date_used: dateStr };
+      const original = formatCurrency(amount, originalCurrency || V1_DISPLAY);
+      const converted = formatCurrency(amount, normalizedDisplayCurrency);
+      return { original, converted, rateInfo };
     },
     [normalizedDisplayCurrency]
   );
 
-  /**
-   * Get rate info for tooltips
-   */
   const getRate = useCallback(
-    async (
-      originalCurrency: string,
-      transactionDate: string | Date
-    ): Promise<RateInfo> => {
-      const normalizedOriginal = originalCurrency?.toUpperCase().trim() || 'USD';
-      return getRateForDate(
-        normalizedOriginal,
-        normalizedDisplayCurrency,
-        transactionDate
-      );
+    async (_originalCurrency: string, transactionDate: string | Date): Promise<RateInfo> => {
+      return {
+        rate: 1.0,
+        rate_date_used: toDateStr(transactionDate),
+      };
     },
-    [normalizedDisplayCurrency]
+    []
   );
 
   return useMemo(

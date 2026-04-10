@@ -195,7 +195,7 @@ export const createTransaction = async (
     category: data.category,
     subcategory: data.subcategory || null,
     amount: data.amount,
-    currency: data.currency || 'TRY',
+    currency: data.currency || 'USD',
     description: data.description,
     notes: data.notes || null,
     payment_method: data.payment_method || null,

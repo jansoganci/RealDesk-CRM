@@ -46,7 +46,7 @@ class TenantsService {
         contracts(
           id,
           status,
-          property:properties(id, address, city, district, il, ilce)
+          property:properties(id, address, city, district, il, district_legacy)
         )
       `)
       .eq('org_id', orgId)

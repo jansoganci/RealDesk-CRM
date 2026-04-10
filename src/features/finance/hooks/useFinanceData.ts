@@ -2,9 +2,7 @@ import { useState, useCallback, useMemo } from 'react';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { financialTransactionsService, commissionsService } from '../../../lib/serviceProxy';
-import { fetchAndStoreDailyRates, hasRatesForDate, getRatesForBatchFromTry } from '../../../services/finance/exchangeRates.service';
 import { calculatePerformanceSummary, NormalizedPerformanceSummary } from '../../../services/finance/reportCalculator';
-import { useAuth } from '../../../contexts/AuthContext';
 import { NormalizedFinancialDashboard, NormalizedYearlySummary, getTransactionVolumeNormalized, getCommissionByPropertyType, CommissionByPropertyType, getAverageDaysToClose, AverageDaysToClose, getCommissionByClientType, CommissionByClientType, getMarketingROI, MarketingROI, getConversionFunnelMetrics, ConversionFunnelMetrics } from '../../../services/finance/analytics.service';
 import type {
   FinancialTransaction,
@@ -19,6 +17,9 @@ const logger = createLogger('Finance');
 
 const DEFAULT_PAGE_SIZE = 25;
 
+/** V1: USD-only — no client FX; ignore user currency preference for finance aggregates. */
+const V1_DISPLAY_CURRENCY = 'USD';
+
 export interface PaginationState {
   page: number;
   pageSize: number;
@@ -28,7 +29,6 @@ export interface PaginationState {
 
 export const useFinanceData = (filters: TransactionFilters) => {
   const { t } = useTranslation(['finance']);
-  const { currency: displayCurrency } = useAuth();
 
   // Core data state
   const [dashboard, setDashboard] = useState<NormalizedFinancialDashboard | null>(null);
@@ -66,24 +66,10 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const startDate = `${currentYear}-01-01`;
       const endDate = `${currentYear}-12-31`;
 
-      // Check if today's rates exist before fetching (optimization)
-      const today = new Date();
-      try {
-        const hasRates = await hasRatesForDate(today);
-        if (!hasRates) {
-          fetchAndStoreDailyRates(today).catch(error => {
-            logger.error("Failed to fetch today's exchange rates:", error);
-          });
-        }
-      } catch (error) {
-        logger.warn('Error checking rates, attempting fetch:', error);
-        fetchAndStoreDailyRates(today).catch(() => {});
-      }
-
       const paginatedFilters = { ...filters, page, pageSize: DEFAULT_PAGE_SIZE };
 
       const [dashboardData, categoriesData, paginatedResult, rawCommissions] = await Promise.all([
-        financialTransactionsService.getFinancialDashboardNormalized(displayCurrency || 'TRY'),
+        financialTransactionsService.getFinancialDashboardNormalized(V1_DISPLAY_CURRENCY),
         financialTransactionsService.getCategories(),
         financialTransactionsService.getTransactionsPaginated(paginatedFilters),
         commissionsService.getByDateRange(startDate, endDate),
@@ -97,16 +83,16 @@ export const useFinanceData = (filters: TransactionFilters) => {
         calculatePerformanceSummary(
           rawCommissions,
           currentYear,
-          displayCurrency || 'TRY'
+          V1_DISPLAY_CURRENCY
         ),
         getTransactionVolumeNormalized(
           currentYear,
-          displayCurrency || 'TRY'
+          V1_DISPLAY_CURRENCY
         ),
         commissionsService.getByDateRange(previousYearStartDate, previousYearEndDate),
         getTransactionVolumeNormalized(
           previousYear,
-          displayCurrency || 'TRY'
+          V1_DISPLAY_CURRENCY
         )
       ]);
 
@@ -114,7 +100,7 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const previousYearPerformance = await calculatePerformanceSummary(
         previousYearCommissions,
         previousYear,
-        displayCurrency || 'TRY'
+        V1_DISPLAY_CURRENCY
       );
 
       const previousYearWithVolume = {
@@ -138,30 +124,13 @@ export const useFinanceData = (filters: TransactionFilters) => {
         totalPages: paginatedResult.totalPages,
       });
       setPerformanceSummary(performanceWithVolume);
-
-      // PROACTIVE RATE HYDRATION: Pre-fetch rates for the transactions table
-      if (paginatedResult.data.length > 0) {
-        const rateRequests = paginatedResult.data
-          .filter(t => t.currency !== 'TRY' || displayCurrency !== 'TRY')
-          .map(t => [
-            { currency: t.currency, date: t.transaction_date },
-            { currency: displayCurrency || 'TRY', date: t.transaction_date }
-          ])
-          .flat();
-
-        if (rateRequests.length > 0) {
-          getRatesForBatchFromTry(rateRequests).catch(err => {
-            logger.warn('Failed to pre-fetch table rates:', err);
-          });
-        }
-      }
     } catch (error) {
       logger.error('Error loading finance data:', error);
       toast.error(t('finance:messages.loadError'));
     } finally {
       setLoading(false);
     }
-  }, [filters, t, displayCurrency]);
+  }, [filters, t]);
 
   // Load transactions only (paginated)
   const loadTransactions = useCallback(async (page: number = pagination.page) => {
@@ -198,14 +167,14 @@ export const useFinanceData = (filters: TransactionFilters) => {
       const previousYear = currentYear - 1;
 
       const [ratiosData, yearlyData, previousYearData, commissionsData, commissionByPropertyTypeData, averageDaysToCloseData, commissionByClientTypeData, marketingROIData, conversionFunnelData] = await Promise.all([
-        financialTransactionsService.getFinancialRatiosNormalized(displayCurrency || 'TRY', currentMonth),
-        financialTransactionsService.getYearlySummaryNormalized(currentYear, displayCurrency || 'TRY'),
-        financialTransactionsService.getYearlySummaryNormalized(previousYear, displayCurrency || 'TRY'),
+        financialTransactionsService.getFinancialRatiosNormalized(V1_DISPLAY_CURRENCY, currentMonth),
+        financialTransactionsService.getYearlySummaryNormalized(currentYear, V1_DISPLAY_CURRENCY),
+        financialTransactionsService.getYearlySummaryNormalized(previousYear, V1_DISPLAY_CURRENCY),
         commissionsService.getMonthlyCommissionData(currentYear),
-        getCommissionByPropertyType(currentYear, displayCurrency || 'TRY'),
+        getCommissionByPropertyType(currentYear, V1_DISPLAY_CURRENCY),
         getAverageDaysToClose(currentYear),
-        getCommissionByClientType(currentYear, displayCurrency || 'TRY'),
-        getMarketingROI(currentYear, displayCurrency || 'TRY'),
+        getCommissionByClientType(currentYear, V1_DISPLAY_CURRENCY),
+        getMarketingROI(currentYear, V1_DISPLAY_CURRENCY),
         getConversionFunnelMetrics(currentYear),
       ]);
 
@@ -229,17 +198,17 @@ export const useFinanceData = (filters: TransactionFilters) => {
     } finally {
       setAnalyticsLoading(false);
     }
-  }, [t, displayCurrency]);
+  }, [t]);
 
   // Refresh dashboard only
   const refreshDashboard = useCallback(async () => {
     try {
-      const dashboardData = await financialTransactionsService.getFinancialDashboardNormalized(displayCurrency || 'TRY');
+      const dashboardData = await financialTransactionsService.getFinancialDashboardNormalized(V1_DISPLAY_CURRENCY);
       setDashboard(dashboardData);
     } catch (error) {
       logger.error('Error refreshing dashboard:', error);
     }
-  }, [displayCurrency]);
+  }, []);
 
   return useMemo(() => ({
     // Data
@@ -294,4 +263,3 @@ export const useFinanceData = (filters: TransactionFilters) => {
     setPage,
   ]);
 };
-

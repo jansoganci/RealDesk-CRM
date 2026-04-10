@@ -133,8 +133,8 @@
   "testimonial": {
     "eyebrow": "Our Users",
     "quote": "\"Now my entire portfolio and contracts are in my pocket. Wherever I am, I can access them instantly.\"",
-    "name": "Ahmet S.",
-    "role": "Sisli/Istanbul · Real Estate Consultant"
+    "name": "Alex S.",
+    "role": "Austin, TX · Real Estate Consultant"
   },
   "faq": {
     "eyebrow": "FAQ",
@@ -183,6 +183,7 @@
   },
   "about": {
     "title": "About Us",
+    "metaDescription": "Learn about RealDesk. Modern real estate management for US professionals.",
     "description": "RealDesk is a modern real estate management system designed for US real estate professionals.",
     "mission": {
       "title": "Our Mission",
@@ -190,7 +191,7 @@
     },
     "vision": {
       "title": "Our Vision",
-      "description": "To make the work of all real estate professionals in Turkey easier and more efficient."
+      "description": "To make US real estate professionals more productive with calmer, clearer workflows."
     },
     "contact": {
       "title": "Contact",
@@ -199,6 +200,7 @@
   },
   "contact": {
     "title": "Contact",
+    "metaDescription": "Contact RealDesk for questions and support.",
     "description": "You can contact us for your questions, suggestions, or support requests.",
     "email": {
       "title": "Email",

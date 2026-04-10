@@ -1,6 +1,5 @@
 import { Commission } from '../../types';
 import { FinancialTransaction, CategoryBreakdown } from '../../types/financial';
-import { getRateFromTry, getRatesForBatchFromTry, RateInfo } from './exchangeRates.service';
 
 /**
  * Result of a normalized calculation
@@ -51,66 +50,17 @@ interface CurrencyAware {
 }
 
 /**
- * Normalizes a batch of items to a target currency using historical rates.
- * Standardized to TRY-Anchor: (Amount / Rate_Source) * Rate_Target
+ * V1: USD-only — no FX. Amounts are summed in display units as-is.
  */
 export async function normalizeBatch(
   items: CurrencyAware[],
-  toCurrency: string
+  _toCurrency: string
 ): Promise<{ value: number; isComplete: boolean; missingDates: string[] }[]> {
-  const to = toCurrency.toUpperCase().trim();
-  
-  // Prepare all unique rate requests (all relative to TRY anchor)
-  const rateRequests: Array<{ currency: string; date: string }> = [];
-  items.forEach(item => {
-    const date = (item.transaction_date || item.created_at || item.date || new Date().toISOString()).split('T')[0];
-    const from = item.currency.toUpperCase().trim();
-    
-    if (from !== 'TRY') {
-      rateRequests.push({ currency: from, date });
-    }
-    if (to !== 'TRY') {
-      rateRequests.push({ currency: to, date });
-    }
-  });
-
-  const rateLookup = await getRatesForBatchFromTry(rateRequests);
-
-  return Promise.all(items.map(async (item) => {
-    const from = item.currency.toUpperCase().trim();
-    const date = (item.transaction_date || item.created_at || item.date || new Date().toISOString()).split('T')[0];
-    
-    if (from === to) {
-      return { value: item.amount, isComplete: true, missingDates: [] };
-    }
-
-    // Get rates from TRY anchor
-    const getRate = async (currency: string): Promise<RateInfo> => {
-      if (currency === 'TRY') return { rate: 1.0, rate_date_used: date };
-      
-      const key = `${currency}-${date}`;
-      const cached = rateLookup[key];
-      if (cached) return cached;
-      
-      // Fallback to single fetch
-      return await getRateFromTry(currency, date);
-    };
-
-    const [rSource, rTarget] = await Promise.all([getRate(from), getRate(to)]);
-    
-    // Financial Completeness Check
-    const sourceComplete = from === 'TRY' || rSource.rate_date_used === date;
-    const targetComplete = to === 'TRY' || rTarget.rate_date_used === date;
-    const isComplete = sourceComplete && targetComplete;
-
-    // Canonical Formula: (Amount / rSource) * rTarget
-    const value = (item.amount / rSource.rate) * rTarget.rate;
-
-    return {
-      value,
-      isComplete,
-      missingDates: isComplete ? [] : [date]
-    };
+  void _toCurrency;
+  return items.map((item) => ({
+    value: item.amount,
+    isComplete: true,
+    missingDates: [] as string[],
   }));
 }
 

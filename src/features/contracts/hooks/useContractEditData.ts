@@ -55,7 +55,7 @@ interface PropertyWithComponents {
   cadde_sokak?: string;
   bina_no?: string;
   daire_no?: string;
-  ilce?: string;
+  district_legacy?: string;
   il?: string;
   // US format (new)
   street_address?: string;
@@ -73,7 +73,7 @@ interface ContractDetails {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
-  deposit_currency?: 'TRY' | 'USD' | 'EUR';
+  deposit_currency?: 'USD' | 'EUR' | 'TRY';
   handover_photos_url?: string;
   is_painted?: boolean;
 }
@@ -207,7 +207,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         // Property fields (US Format - fallback to Turkish if US fields not yet migrated)
         street_address: contract.property.street_address || contract.property.cadde_sokak || '',
         unit: contract.property.unit || contract.property.daire_no || '',
-        city: contract.property.city || contract.property.ilce || '',
+        city: contract.property.city || contract.property.district_legacy || '',
         state: contract.property.state || contract.property.il || 'TX',
         zip_code: contract.property.zip_code || '',
         property_type: (contract.property.type as 'apartment' | 'house' | 'commercial') || 'apartment',
@@ -218,7 +218,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         end_date: new Date(contract.end_date),
         rent_amount: contract.rent_amount || 0,
         deposit: contract.deposit || 0,
-        currency: (contractDetails?.deposit_currency as 'TRY' | 'USD' | 'EUR') || 'TRY',
+        currency: (contractDetails?.deposit_currency as 'USD' | 'EUR' | 'TRY') || 'USD',
         commission_amount: contract.commission_amount && contract.commission_amount > 0 
           ? contract.commission_amount 
           : undefined, // Load from contract (0 or null = undefined, triggers fallback)

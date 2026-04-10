@@ -37,7 +37,7 @@
     "price": "Price",
     "contractEndDate": "End Date",
     "actions": "Actions",
-    "noTenant": "",
+    "noTenant": "—",
     "noRent": "-",
     "noPrice": "-",
     "noContract": "-",

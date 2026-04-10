@@ -1,16 +1,15 @@
 ---
-description: Add i18n translation keys for Turkish and English
+description: Add i18n translation keys (English only)
 ---
 
 # Add Translation Keys
 
-You are adding translation keys to the Real Estate CRM i18n system. The application supports Turkish (tr) and English (en).
+You are adding translation keys to the Real Estate CRM i18n system. The product is **English-only** (`en`). Do not add `public/locales/tr/`.
 
 ## Translation Structure
 
 Translations are organized by namespace in:
-- `public/locales/tr/[namespace].json` (Turkish)
-- `public/locales/en/[namespace].json` (English)
+- `public/locales/en/[namespace].json`
 
 ## Available Namespaces
 
@@ -35,8 +34,7 @@ Translations are organized by namespace in:
 Ask the user:
 1. **Which namespace?** (or create new one for new feature)
 2. **What keys to add?** (provide the structure)
-3. **Turkish translations**
-4. **English translations**
+3. **English copy** (final US-market strings — no other locale files)
 
 ## Translation Key Structure
 
@@ -99,90 +97,25 @@ Follow these patterns:
 
 ### Navigation Items
 
-Add to `public/locales/tr/navigation.json` and `public/locales/en/navigation.json`:
+Add to `public/locales/en/navigation.json` only:
 
 ```json
 {
-  "dashboard": "Panel / Dashboard",
-  "properties": "Mülkler / Properties",
-  "owners": "Mülk Sahipleri / Owners",
-  "tenants": "Kiracılar / Tenants",
-  "contracts": "Sözleşmeler / Contracts",
-  "finance": "Finans / Finance",
-  "calendar": "Takvim / Calendar",
-  "inquiries": "Talepler / Inquiries",
-  "reminders": "Hatırlatmalar / Reminders",
-  "profile": "Profil / Profile",
-  "[new-item]": "Turkish / English"
+  "dashboard": "Dashboard",
+  "properties": "Properties",
+  "[new-item]": "New feature"
 }
 ```
 
-## Common Translation Patterns
+## Copy guidelines (English, US market)
 
-### Turkish Patterns
+1. **Titles**: Title case where it fits the design system (e.g. page headers).
+2. **Actions**: Short imperatives — "Add", "Save", "Cancel".
+3. **Status**: Same terms across features (Active, Vacant, Under contract, etc.).
+4. **Dates**: Prefer formatting in code (`date-fns` + `enUS`); strings can say "Closing date", "Due date", etc.
+5. **Messages**: Clear, professional; avoid idioms that confuse non-native readers.
 
-1. **Titles**: Use title case
-   - "Mülk Listesi", "Kiracı Ekle", "Sözleşme Detayları"
-
-2. **Actions**: Use imperative form
-   - "Ekle" (Add), "Düzenle" (Edit), "Sil" (Delete), "Kaydet" (Save)
-
-3. **Status**: Use descriptive adjectives
-   - "Aktif" (Active), "Pasif" (Inactive), "Arşivlendi" (Archived)
-
-4. **Dates**: Use Turkish format
-   - "Gün/Ay/Yıl" format
-
-5. **Messages**: Be polite and clear
-   - "Silmek istediğinize emin misiniz?"
-   - "İşlem başarıyla tamamlandı"
-
-### English Patterns
-
-1. **Titles**: Use title case
-   - "Property List", "Add Tenant", "Contract Details"
-
-2. **Actions**: Use imperative verbs
-   - "Add", "Edit", "Delete", "Save"
-
-3. **Status**: Use descriptive adjectives
-   - "Active", "Inactive", "Archived"
-
-4. **Messages**: Be clear and concise
-   - "Are you sure you want to delete?"
-   - "Operation completed successfully"
-
-## Real Estate Specific Terms
-
-Common real estate terminology:
-
-| English | Turkish |
-|---------|---------|
-| Property | Mülk / Gayrimenkul |
-| Owner | Mülk Sahibi |
-| Tenant | Kiracı |
-| Contract | Sözleşme |
-| Rent | Kira |
-| Lease | Kiralama |
-| Deposit | Depozito / Kapora |
-| Commission | Komisyon |
-| Listing | İlan |
-| Inquiry | Talep |
-| Vacant | Boş |
-| Occupied | Dolu |
-| Address | Adres |
-| District | İlçe / Semt |
-| City | Şehir / İl |
-| Price | Fiyat |
-| Monthly Rent | Aylık Kira |
-| Square Meters | Metrekare (m²) |
-| Bedroom | Yatak Odası |
-| Bathroom | Banyo |
-| Floor | Kat |
-| Building | Bina |
-| Apartment | Daire |
-| Villa | Villa |
-| Office | Ofis |
+Use standard US real estate terms (listing, lease, earnest money, closing, MLS) consistently.
 
 ## Usage in Components
 
@@ -236,38 +169,20 @@ function MyComponent() {
 
 ## Creating New Namespace
 
-If adding a new feature, create both files:
+If adding a new feature:
 
-1. Create `public/locales/tr/[feature-name].json`
-2. Create `public/locales/en/[feature-name].json`
-3. Add same keys to both files
-4. Translate appropriately
+1. Create `public/locales/en/[feature-name].json`
+2. Register the namespace in `src/i18n.ts` `ns` array if it is new
 
 ## Translation Checklist
 
-- [ ] Created/updated Turkish translation file
-- [ ] Created/updated English translation file
-- [ ] Both files have identical key structure
-- [ ] Used appropriate terminology
-- [ ] Added to navigation.json if it's a nav item
-- [ ] Tested in UI with both languages
+- [ ] Created/updated `public/locales/en/[namespace].json`
+- [ ] No hardcoded user-visible strings in components (use `t(...)`)
+- [ ] Added to `en/navigation.json` if it's a nav item
 - [ ] No missing keys or typos
-- [ ] Follows naming conventions (camelCase for keys)
+- [ ] Keys use camelCase
 
 ## Example: Adding Property Type Translations
-
-**File**: `public/locales/tr/properties.json`
-```json
-{
-  "types": {
-    "apartment": "Daire",
-    "villa": "Villa",
-    "office": "Ofis",
-    "commercial": "Ticari",
-    "land": "Arsa"
-  }
-}
-```
 
 **File**: `public/locales/en/properties.json`
 ```json

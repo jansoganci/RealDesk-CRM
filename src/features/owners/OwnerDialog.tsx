@@ -23,12 +23,13 @@ import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
 import { PropertyOwner } from '../../types';
 import { getOwnerSchema } from './ownerSchema';
+import type { OwnerCreatePayload } from '@/services/owners.service';
 
 interface OwnerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   owner?: PropertyOwner | null;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: OwnerCreatePayload) => Promise<void>;
   loading?: boolean;
 }
 
@@ -36,10 +37,7 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
   const { t } = useTranslation(['owners', 'common']);
   const ownerSchema = getOwnerSchema(t);
   type OwnerFormData = z.infer<typeof ownerSchema>;
-  
-  // Type assertion for onSubmit to maintain type safety
-  const typedOnSubmit = onSubmit as (data: OwnerFormData) => Promise<void>;
-  
+
   const form = useForm<OwnerFormData>({
     resolver: zodResolver(ownerSchema),
     defaultValues: {
@@ -48,6 +46,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
       phone: '',
       address: '',
       notes: '',
+      routing_number: '',
+      account_number: '',
+      tax_id: '',
     },
   });
 
@@ -60,6 +61,9 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
           phone: owner.phone || '',
           address: owner.address || '',
           notes: owner.notes || '',
+          routing_number: '',
+          account_number: '',
+          tax_id: owner.tax_id || '',
         });
       } else {
         form.reset({
@@ -68,18 +72,26 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
           phone: '',
           address: '',
           notes: '',
+          routing_number: '',
+          account_number: '',
+          tax_id: '',
         });
       }
     }
   }, [open, owner, form]);
 
   const handleSubmit = async (data: OwnerFormData) => {
-    const cleanedData = {
-      ...data,
-      address: data.address?.trim() || undefined,
-      notes: data.notes?.trim() || undefined,
+    const cleanedData: OwnerCreatePayload = {
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      address: data.address?.trim() || null,
+      notes: data.notes?.trim() || null,
+      tax_id: data.tax_id?.trim() ? data.tax_id.trim() : null,
+      routing_number: data.routing_number?.trim() || undefined,
+      account_number: data.account_number?.trim() || undefined,
     };
-    await typedOnSubmit(cleanedData);
+    await onSubmit(cleanedData);
   };
 
   return (
@@ -135,6 +147,59 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="routing_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('dialog.form.routingNumber')}</FormLabel>
+                  <FormControl>
+                    <Input
+                      inputMode="numeric"
+                      autoComplete="off"
+                      placeholder={t('dialog.form.routingPlaceholder')}
+                      {...field}
+                      disabled={loading}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="account_number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('dialog.form.accountNumber')}</FormLabel>
+                  <FormControl>
+                    <Input autoComplete="off" placeholder={t('dialog.form.accountPlaceholder')} {...field} disabled={loading} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="tax_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('dialog.form.taxId')}</FormLabel>
+                  <FormControl>
+                    <Input autoComplete="off" placeholder={t('dialog.form.taxIdPlaceholder')} {...field} disabled={loading} />
+                  </FormControl>
+                  <p className="text-xs text-muted-foreground">{t('dialog.form.taxIdHint')}</p>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {owner ? (
+              <p className="text-xs text-muted-foreground">{t('dialog.form.bankEditHint')}</p>
+            ) : null}
 
             <FormField
               control={form.control}

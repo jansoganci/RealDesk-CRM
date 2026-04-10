@@ -34,13 +34,18 @@ interface RawDashboardData {
     rental?: { active: number };
     sale?: { active: number };
   };
+  dealStats: {
+    activeDeals: number;
+    closingsThisMonth: number;
+    overdueMilestones: number;
+  };
 }
 
 /**
  * Transforms raw dashboard data from multiple API calls into a unified stats object
  */
 export function transformDashboardData(rawData: RawDashboardData): DashboardStats {
-  const { propertyStats, owners, tenantStats, contractStats, inquiryStats } = rawData;
+  const { propertyStats, owners, tenantStats, contractStats, inquiryStats, dealStats } = rawData;
 
   return {
     totalProperties: propertyStats.total,
@@ -68,6 +73,9 @@ export function transformDashboardData(rawData: RawDashboardData): DashboardStat
     },
     rentalInquiries: inquiryStats.rental?.active || 0,
     saleInquiries: inquiryStats.sale?.active || 0,
+    activeDeals: dealStats.activeDeals,
+    closingsThisMonth: dealStats.closingsThisMonth,
+    overdueMilestones: dealStats.overdueMilestones,
   };
 }
 

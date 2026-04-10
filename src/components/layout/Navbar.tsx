@@ -1,13 +1,12 @@
-import { Menu, Bell, Sparkles } from 'lucide-react';
+import { Menu, Sparkles } from 'lucide-react';
 import { Button } from '../ui/button';
-import { Badge } from '../ui/badge';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { COLORS } from '@/config/colors';
 import { ROUTES } from '@/config/constants';
 import { useBilling } from '@/contexts/BillingContext';
-import { useNotifications } from '@/contexts/NotificationContext';
 import { calculateTrialDaysRemaining } from '@/utils/trial';
+import { AlertCenter } from '@/features/deals/components/AlertCenter';
 
 interface NavbarProps {
   title: string;
@@ -15,11 +14,9 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
-  const { t } = useTranslation('navigation');
   const { t: tBilling } = useTranslation('billing');
   const navigate = useNavigate();
   const { billingStatus } = useBilling();
-  const { reminderCount, unreadMatchesCount } = useNotifications();
   const trialDaysRemaining = calculateTrialDaysRemaining(billingStatus?.trialEndsAt ?? null);
   const showTrialBadge = billingStatus?.isTrial;
 
@@ -52,20 +49,7 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
             </button>
           )}
 
-          {/* Notifications Button - Square (like StatCard icons) */}
-          {/* Mobile/Tablet: 44px for touch targets, Desktop: 40px for mouse */}
-          <button
-            className="h-11 w-11 md:h-10 md:w-10 relative flex items-center justify-center rounded-md border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            onClick={() => navigate('/reminders')}
-            aria-label={t('notifications')}
-          >
-            <Bell className="h-6 w-6" />
-            {(reminderCount + unreadMatchesCount) > 0 && (
-              <Badge className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white rounded-full`}>
-                {(reminderCount + unreadMatchesCount) > 9 ? '9+' : (reminderCount + unreadMatchesCount)}
-              </Badge>
-            )}
-          </button>
+          <AlertCenter />
         </div>
       </div>
     </header>
