@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { ArrowLeft, Eye, Handshake, Pencil } from 'lucide-react';
+import { ArrowLeft, Eye, Handshake, Pencil, FileText } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrg } from '@/contexts/OrgContext';
 import { leadsService } from '@/lib/serviceProxy';
@@ -112,6 +112,33 @@ export function LeadDetailPage() {
                       {tDeals('creation.convertFromLead')}
                     </Button>
                   )}
+                  {(lead.status === 'qualified' || lead.status === 'active') && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={isMember}
+                      onClick={() => navigate(`/contracts/lease/new?leadId=${lead.id}`)}
+                    >
+                      <FileText className="h-4 w-4 mr-1" />
+                      {t('detail.actions.createLease')}
+                    </Button>
+                  )}
+                  {lead.inquiry_type === 'sale' &&
+                    (lead.status === 'qualified' || lead.status === 'active') && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isMember}
+                        onClick={() =>
+                          navigate(`${ROUTES.CONTRACTS_PURCHASE_NEW}?leadId=${lead.id}`)
+                        }
+                      >
+                        <FileText className="h-4 w-4 mr-1" />
+                        {t('detail.actions.createPurchaseAgreement')}
+                      </Button>
+                    )}
                 </div>
               </div>
 

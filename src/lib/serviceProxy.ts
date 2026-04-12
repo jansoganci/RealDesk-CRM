@@ -10,6 +10,29 @@ export { ownersService } from '../services/owners.service';
 export { propertiesService } from '../services/properties.service';
 export { tenantsService } from '../services/tenants.service';
 export { contractsService } from '../services/contracts.service';
+export { leaseAgreementService } from '../services/leaseAgreement.service';
+export type {
+  CreateLeaseAgreementInput,
+  LeaseDetailsPatch,
+  LeaseContractWithDetails,
+  RegenerateLeasePdfResult,
+} from '../services/leaseAgreement.service';
+export { purchaseAgreementService } from '../services/purchaseAgreement.service';
+export type {
+  CloseDealResult,
+  CreatePurchaseWithDetailsInput,
+  CreatePurchaseAgreementInput,
+  PurchaseCounterOfferInput,
+  PurchaseContractWithDetailsRelation,
+  PurchaseContractWithDetails,
+  PurchaseCounterOfferSync,
+  PurchaseDetailsWithContract,
+  UploadAddendumResult,
+} from '../services/purchaseAgreement.service';
+export { leaseAgreementPdfService } from '../services/leaseAgreementPdf.service';
+export type { LeaseAgreementPdfInput } from '../services/leaseAgreementPdf.service';
+export { purchaseAgreementPdfService } from '../services/purchaseAgreementPdf.service';
+export type { PurchaseAgreementPdfInput } from '../services/purchaseAgreementPdf.service';
 export { remindersService } from '../services/reminders.service';
 export { photosService } from '../services/photos.service';
 export { inquiriesService } from '../services/inquiries.service';

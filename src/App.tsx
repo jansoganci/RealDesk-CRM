@@ -25,7 +25,10 @@ import { Properties } from './features/properties/Properties';
 import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
 import ContractCreate from './features/contracts/ContractCreate';
+import { LeaseWizardPage } from './features/contracts/leaseWizard';
+import { PurchaseContractDetailPage, PurchaseWizardPage } from './features/contracts/purchaseWizard';
 import ContractEdit from './features/contracts/ContractEdit';
+import { LeaseDetailPage } from './features/contracts/LeaseDetail';
 import { ContractImportPage } from './features/contracts/import/ContractImportPage';
 import { ContractsHub } from './features/contractsHub/ContractsHub';
 import { SaleContractsList } from './features/contractsSale/SaleContractsList';
@@ -154,6 +157,54 @@ function AppContent() {
                 element={
                   <ProtectedRoute>
                     <ContractImportPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_LEASE_NEW}
+                element={
+                  <ProtectedRoute>
+                    <OwnerOnlyRoute>
+                      <LeaseWizardPage />
+                    </OwnerOnlyRoute>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_LEASE_WIZARD}
+                element={<Navigate to={ROUTES.CONTRACTS_LEASE_NEW} replace />}
+              />
+              <Route
+                path={ROUTES.CONTRACTS_PURCHASE_NEW}
+                element={
+                  <ProtectedRoute>
+                    <OwnerOnlyRoute>
+                      <PurchaseWizardPage />
+                    </OwnerOnlyRoute>
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_PURCHASE_DETAIL}
+                element={
+                  <ProtectedRoute>
+                    <PurchaseContractDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACTS_LEASE_DETAIL}
+                element={
+                  <ProtectedRoute>
+                    <LeaseDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path={ROUTES.CONTRACT_DETAIL}
+                element={
+                  <ProtectedRoute>
+                    <LeaseDetailPage />
                   </ProtectedRoute>
                 }
               />

@@ -36,6 +36,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { CommissionWaterfall } from './CommissionWaterfall';
+import { getLatestPurchaseContractIdFromDeal } from '@/features/deals/utils/purchaseDealHelpers';
 import {
   commissionSheetSchema,
   type CommissionSheetFormValues,
@@ -46,6 +47,27 @@ interface CommissionSheetProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onSuccess: () => void | Promise<void>;
+}
+
+/** Linked property row, or manual snapshot / deal name for off-system addresses. */
+function commissionPropertyAddressLabel(deal: DealWithRelations): string {
+  const props = deal.properties;
+  const fromLinked = Array.isArray(props) ? props[0]?.address : props?.address;
+  if (fromLinked) return fromLinked;
+
+  const snap = deal.property_snapshot;
+  if (snap && typeof snap === 'object') {
+    const s = snap as Record<string, unknown>;
+    const street = typeof s.street_address === 'string' ? s.street_address.trim() : '';
+    const city = typeof s.city === 'string' ? s.city.trim() : '';
+    const state = typeof s.state === 'string' ? s.state.trim() : '';
+    const zip = typeof s.zip_code === 'string' ? s.zip_code.trim() : '';
+    const tail = [city, state, zip].filter(Boolean).join(', ');
+    if (street && tail) return `${street}, ${tail}`;
+    if (street) return street;
+    if (tail) return tail;
+  }
+  return deal.deal_name ?? '';
 }
 
 const defaultBrokerSettings: BrokerSettings = {
@@ -145,22 +167,16 @@ export const CommissionSheet = ({
   }, [values, effectiveBrokerSettings]);
 
   const onSubmit = async (data: CommissionSheetFormValues) => {
-    if (!deal.property_id) {
-      toast.error(t('commissionSheet.messages.noPropertyLinked'));
-      return;
-    }
-
     setSaving(true);
     try {
       await commissionsService.recordCommission({
-        property_id: deal.property_id,
+        property_id: deal.property_id ?? null,
         deal_id: deal.id,
-        contract_id: null,
+        contract_id: getLatestPurchaseContractIdFromDeal(deal),
         type: (deal.deal_type === 'rental' ? 'rental' : 'sale'),
         amount: calculation.netCommission,
         currency: 'USD',
-        property_address:
-          (Array.isArray(deal.properties) ? deal.properties[0]?.address : deal.properties?.address) ?? '',
+        property_address: commissionPropertyAddressLabel(deal),
         commission_side: data.commission_side,
         commission_type: data.commission_type,
         commission_rate: data.commission_type === 'percentage' ? data.commission_rate : null,

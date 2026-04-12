@@ -31,6 +31,8 @@
     "actions": {
       "edit": "Edit lead",
       "matches": "View matches",
+      "createLease": "Create Lease",
+      "createPurchaseAgreement": "Create purchase agreement",
       "close": "Close"
     },
     "agreements": {

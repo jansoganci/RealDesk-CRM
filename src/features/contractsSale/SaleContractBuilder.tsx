@@ -1,6 +1,7 @@
 /**
  * Sale Contract Builder
  * 3-step wizard: Form → Editor → Save
+ * Sprint 6B T16 — Org owners get a shortcut to the US purchase wizard (same guard as `/contracts/purchase/new`).
  */
 
 import { useState, useCallback } from 'react';
@@ -18,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ROUTES } from '@/config/constants';
+import { useOrg } from '@/contexts/OrgContext';
 import { ArrowLeft, ArrowRight, Check, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { contractBuilderService } from '@/services/contractBuilder.service';
@@ -30,6 +32,8 @@ type Step = 1 | 2 | 3;
 export function SaleContractBuilder() {
   const navigate = useNavigate();
   const { t } = useTranslation(['contractsSale', 'common']);
+  const { t: tContracts } = useTranslation('contracts');
+  const { isOwner, loading: orgLoading } = useOrg();
   const [step, setStep] = useState<Step>(1);
   const [renderedContent, setRenderedContent] = useState('');
   const [saving, setSaving] = useState(false);
@@ -175,6 +179,17 @@ export function SaleContractBuilder() {
           <div className="mb-6">
             <PageHeader
               backTo={{ href: ROUTES.CONTRACTS_SALE, label: t('builder.backToList') }}
+              actions={
+                !orgLoading && isOwner ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
+                  >
+                    {tContracts('purchaseWizard.entry.openWizard')}
+                  </Button>
+                ) : undefined
+              }
             />
           </div>
 

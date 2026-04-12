@@ -20,6 +20,19 @@ export type Contract = Database['public']['Tables']['contracts']['Row'];
 export type ContractInsert = Database['public']['Tables']['contracts']['Insert'];
 export type ContractUpdate = Database['public']['Tables']['contracts']['Update'];
 
+export type LeaseDetails = Database['public']['Tables']['lease_details']['Row'];
+export type LeaseDetailsInsert = Database['public']['Tables']['lease_details']['Insert'];
+export type LeaseDetailsUpdate = Database['public']['Tables']['lease_details']['Update'];
+
+export type PurchaseDetails = Database['public']['Tables']['purchase_details']['Row'];
+export type PurchaseDetailsInsert = Database['public']['Tables']['purchase_details']['Insert'];
+export type PurchaseDetailsUpdate = Database['public']['Tables']['purchase_details']['Update'];
+
+/** Rental lease amendment row (Sprint 6A `lease_amendments`; not `deal_amendments`). */
+export type LeaseAmendment = Database['public']['Tables']['lease_amendments']['Row'];
+export type LeaseAmendmentInsert = Database['public']['Tables']['lease_amendments']['Insert'];
+export type LeaseAmendmentUpdate = Database['public']['Tables']['lease_amendments']['Update'];
+
 export type PropertyInquiry = Database['public']['Tables']['property_inquiries']['Row'];
 export type PropertyInquiryInsert = Database['public']['Tables']['property_inquiries']['Insert'];
 export type PropertyInquiryUpdate = Database['public']['Tables']['property_inquiries']['Update'];
@@ -35,6 +48,12 @@ export type OfferNegotiationUpdate = Database['public']['Tables']['offer_negotia
 export type OfferRound = Database['public']['Tables']['offer_rounds']['Row'];
 export type OfferRoundInsert = Database['public']['Tables']['offer_rounds']['Insert'];
 export type OfferRoundUpdate = Database['public']['Tables']['offer_rounds']['Update'];
+
+/**
+ * Same row as `OfferRound`; includes optional `contract_id` linking a round to a
+ * Sprint 6B purchase agreement contract (counter-offer / PDF versioning).
+ */
+export type OfferRoundExtended = OfferRound;
 
 export type OfferContingency = Database['public']['Tables']['offer_contingencies']['Row'];
 export type OfferContingencyInsert = Database['public']['Tables']['offer_contingencies']['Insert'];
@@ -107,7 +126,8 @@ export type OfferRoundStatus =
   | 'mutual_acceptance'
   | 'rejected'
   | 'expired'
-  | 'withdrawn';
+  | 'withdrawn'
+  | 'superseded';
 export type OfferedBy = 'buyer' | 'seller';
 export type ContingencyStatus =
   | 'proposed'
@@ -137,6 +157,111 @@ export type ShowingLogFeedback = 'loved' | 'interested' | 'pass';
 // Other status types
 export type ContractStatus = 'Active' | 'Archived' | 'Inactive';
 export type InquiryStatus = 'active' | 'matched' | 'contacted' | 'closed';
+
+// Sprint 6A — US Lease Agreement Wizard (aligns with DB CHECK constraints + T6 Zod)
+export type LeaseResidenceType = 'apartment' | 'house' | 'condo' | 'other';
+export type LeaseLateFeeType = 'none' | 'fixed' | 'interest';
+export type LeaseLateFeePer = 'occurrence' | 'day';
+export type LeaseCoSignerRole = 'co_signer' | 'guarantor';
+export type LeaseSublettingPolicy = 'not_allowed' | 'with_consent' | 'no_restriction';
+export type LeadPaintPamphletDeliveryMethod = 'in_person' | 'email' | 'mail';
+export type LeaseAgreementLeaseType = 'standard' | 'month_to_month';
+export type LeaseAfterTermAction = 'terminate' | 'convert_to_month_to_month';
+
+/** `contracts` fields collected in the lease wizard alongside `lease_details`. */
+export type LeaseContractWizardFields = Pick<
+  Contract,
+  | 'lease_type'
+  | 'after_term_action'
+  | 'termination_notice_days'
+  | 'start_date'
+  | 'end_date'
+  | 'rent_amount'
+  | 'deposit'
+>;
+
+/** `lease_details` columns from the wizard (excludes ids and timestamps). */
+export type LeaseDetailsFormFields = Omit<
+  LeaseDetails,
+  'id' | 'contract_id' | 'org_id' | 'user_id' | 'created_at' | 'updated_at'
+>;
+
+/**
+ * Full 8-step lease wizard form. T6 `leaseAgreementFormSchema` should match this shape.
+ */
+export type LeaseAgreementFormData = LeaseDetailsFormFields &
+  LeaseContractWizardFields & {
+    linkedPropertyId: string | null;
+    linkedTenant1Id: string | null;
+    linkedTenant2Id: string | null;
+    linkedLandlordOwnerId: string | null;
+  };
+
+// Sprint 6B — US Purchase Agreement Wizard (DB CHECK constraints + T4 Zod)
+export type PurchasePropertyType =
+  | 'single_family'
+  | 'condominium'
+  | 'pud'
+  | 'duplex'
+  | 'triplex'
+  | 'fourplex'
+  | 'other';
+export type PurchaseFinancingType = 'all_cash' | 'bank_financing' | 'seller_financing';
+export type PurchaseTitleType = 'tenancy_in_common' | 'joint_tenancy' | 'tenancy_by_entirety';
+export type PurchaseClosingCostsResponsibility = 'buyer' | 'seller' | 'both';
+export type PurchaseBankLoanType = 'conventional' | 'fha' | 'va' | 'other';
+export type PurchaseSellerFinancingTermUnit = 'months' | 'years';
+export type PurchaseDealStatus =
+  | 'draft'
+  | 'active'
+  | 'under_contract'
+  | 'closed'
+  | 'cancelled';
+
+/** `contracts` fields collected with `purchase_details` in the purchase wizard. */
+export type PurchaseContractWizardFields = Pick<
+  Contract,
+  | 'effective_date'
+  | 'closing_date'
+  | 'purchase_price'
+  | 'earnest_money_amount'
+  | 'earnest_money_due_date'
+  | 'governing_law_state'
+  | 'deal_status'
+  | 'buyer_name_2'
+  | 'seller_name_2'
+  | 'seller_id'
+>;
+
+/** `purchase_details` columns from the wizard (excludes ids and timestamps). */
+export type PurchaseDetailsFormFields = Omit<
+  PurchaseDetails,
+  'id' | 'contract_id' | 'org_id' | 'user_id' | 'created_at' | 'updated_at'
+>;
+
+/**
+ * Full 9-step purchase wizard shape. T4 `purchaseAgreementFormSchema` should match this.
+ */
+export type PurchaseAgreementFormData = PurchaseDetailsFormFields &
+  PurchaseContractWizardFields & {
+    linkedPropertyId: string | null;
+    /** When seller is chosen from Owners directory (optional). */
+    linkedSellerOwnerId: string | null;
+  };
+
+/**
+ * Key dates for Step 9 summary card and timeline seeding (ISO `yyyy-MM-dd` or null).
+ * Sourced from `contracts` + `purchase_details` depending on field.
+ */
+export interface KeyDatesData {
+  effective_date: string | null;
+  earnest_money_due_date: string | null;
+  bank_preapproval_letter_date: string | null;
+  inspection_contractor_deadline_date: string | null;
+  inspection_disclosures_deadline_date: string | null;
+  closing_date: string | null;
+  offer_expiration_date: string | null;
+}
 
 // Type-specific property interfaces
 export interface RentalProperty extends Omit<Property, 'property_type' | 'status'> {
@@ -311,7 +436,7 @@ export type CommissionType = 'rental' | 'sale';
 
 export interface Commission {
   id: string;
-  property_id: string;
+  property_id: string | null;
   deal_id?: string | null;
   contract_id?: string | null;
   type: CommissionType;
@@ -345,7 +470,7 @@ export interface Commission {
 }
 
 export interface CommissionInsert {
-  property_id: string;
+  property_id: string | null;
   deal_id?: string | null;
   contract_id?: string | null;
   type: CommissionType;

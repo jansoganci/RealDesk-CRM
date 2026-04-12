@@ -9,11 +9,13 @@ import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { ContractTypeCard } from './components/ContractTypeCard';
 import { ROUTES } from '@/config/constants';
+import { useOrg } from '@/contexts/OrgContext';
 import { FileText, Home, DollarSign, Eye } from 'lucide-react';
 
 export function ContractsHub() {
   const { t } = useTranslation(['contractsHub', 'common']);
   const navigate = useNavigate();
+  const { isOwner, loading: orgLoading } = useOrg();
 
   return (
     <MainLayout title={t('title')}>
@@ -27,6 +29,14 @@ export function ContractsHub() {
             badge={t('cards.rent.badge', { count: 0 })}
             onClick={() => navigate(ROUTES.CONTRACTS_RENT)}
             actionLabel={t('actions.view')}
+            secondaryAction={
+              !orgLoading && isOwner
+                ? {
+                    label: t('actions.leaseWizard'),
+                    onClick: () => navigate(ROUTES.CONTRACTS_LEASE_NEW),
+                  }
+                : undefined
+            }
           />
 
           {/* Sale Contracts */}
@@ -37,6 +47,14 @@ export function ContractsHub() {
             badge={t('cards.sale.badge', { count: 0 })}
             onClick={() => navigate(ROUTES.CONTRACTS_SALE)}
             actionLabel={t('actions.view')}
+            secondaryAction={
+              !orgLoading && isOwner
+                ? {
+                    label: t('actions.purchaseWizard'),
+                    onClick: () => navigate(ROUTES.CONTRACTS_PURCHASE_NEW),
+                  }
+                : undefined
+            }
           />
 
           {/* Commission Contracts (Coming Soon) */}

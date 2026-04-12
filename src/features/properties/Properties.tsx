@@ -1,6 +1,7 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { AnimatedTabs } from '../../components/ui/animated-tabs';
 import { PropertyDialog } from './PropertyDialog';
 import { EnhancedTenantDialog } from '../tenants/EnhancedTenantDialog';
@@ -11,6 +12,7 @@ import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
 import { Building2, TrendingUp, Home } from 'lucide-react';
 import { COLORS } from '@/config/colors';
+import { ROUTES } from '@/config/constants';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import * as z from 'zod';
 import { getPropertySchema } from './propertySchemas';
@@ -26,6 +28,7 @@ import { QuickAddButton } from '@/features/quick-add';
 
 export const Properties = () => {
   const { t } = useTranslation(['properties', 'common']);
+  const navigate = useNavigate();
   const { currency, commissionRate } = useAuth();
   const propertySchema = useMemo(() => getPropertySchema(t), [t]);
   type PropertyFormData = z.infer<typeof propertySchema>;
@@ -133,6 +136,17 @@ export const Properties = () => {
     openTenantDialog(propertyId);
   }, [openTenantDialog]);
 
+  const handleCreateLeaseFromProperty = useCallback((propertyId: string) => {
+    navigate(`/contracts/lease/new?propertyId=${propertyId}`);
+  }, [navigate]);
+
+  const handleStartPurchaseFromProperty = useCallback(
+    (propertyId: string) => {
+      navigate(`${ROUTES.CONTRACTS_PURCHASE_NEW}?propertyId=${propertyId}`);
+    },
+    [navigate],
+  );
+
   const handleTenantCreated = useCallback(async (result: TenantWithContractResult) => {
     toast.success(t('toasts.addTenantToPropertySuccess', { tenantName: result.tenant.name }));
     await loadProperties();
@@ -166,9 +180,11 @@ export const Properties = () => {
       onEdit={handleEditProperty}
       onDelete={handleDeleteClick}
       onAddTenant={handleAddTenantToProperty}
+      onCreateLease={handleCreateLeaseFromProperty}
+      onStartPurchase={handleStartPurchaseFromProperty}
       currency={currency}
     />
-  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, currency]);
+  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, handleCreateLeaseFromProperty, handleStartPurchaseFromProperty, currency]);
 
   const renderCardContent = useCallback((property: any, _index: number) => (
     <PropertyCard
@@ -177,9 +193,11 @@ export const Properties = () => {
       onEdit={handleEditProperty}
       onDelete={() => handleDeleteClick(property)}
       onAddTenant={handleAddTenantToProperty}
+      onCreateLease={handleCreateLeaseFromProperty}
+      onStartPurchase={handleStartPurchaseFromProperty}
       currency={currency}
     />
-  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, currency]);
+  ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, handleCreateLeaseFromProperty, handleStartPurchaseFromProperty, currency]);
 
   const emptyStateConfig = useMemo(() => ({
     title: searchQuery || statusFilter !== 'all' ? t('emptyState.noPropertiesFound') : t('emptyState.noPropertiesYet'),

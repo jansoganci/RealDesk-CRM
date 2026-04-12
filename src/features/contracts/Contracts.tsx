@@ -18,6 +18,7 @@ import { formatCurrency, convertCurrency } from '../../lib/currency';
 import { useTranslation } from 'react-i18next';
 import { isExpiringSoon } from './utils/contractUtils';
 import { useNavigate } from 'react-router-dom';
+import { Button } from '@/components/ui/button';
 import { ROUTES } from '../../config/constants';
 
 export const Contracts = () => {
@@ -272,6 +273,17 @@ export const Contracts = () => {
     <div className="space-y-4">
       <PageHeader
         backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('edit.backToList') }}
+        actions={
+          !isMember ? (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(ROUTES.CONTRACTS_LEASE_NEW)}
+            >
+              {t('leaseWizard.entry.openWizard')}
+            </Button>
+          ) : undefined
+        }
       />
       <ContractImportBanner
         onImportClick={() => navigate(ROUTES.CONTRACT_IMPORT)}

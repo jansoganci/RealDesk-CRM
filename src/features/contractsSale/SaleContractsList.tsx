@@ -1,6 +1,7 @@
 /**
  * Sale Contracts List Page
  * Displays all sale contract instances with filtering and actions
+ * Sprint 6B T16 — Org owners get a shortcut to the US purchase wizard (same guard as `/contracts/purchase/new`).
  */
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
@@ -13,6 +14,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ROUTES } from '@/config/constants';
+import { useOrg } from '@/contexts/OrgContext';
 import { Plus, FileText, Pencil, Trash2, FileDown, RefreshCw, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { contractBuilderService } from '@/services/contractBuilder.service';
@@ -22,7 +24,9 @@ import { useSaleContractPdf } from './hooks/useSaleContractPdf';
 
 export function SaleContractsList() {
   const { t } = useTranslation(['contractsSale', 'common']);
+  const { t: tContracts } = useTranslation('contracts');
   const navigate = useNavigate();
+  const { isOwner, loading: orgLoading } = useOrg();
   const [instances, setInstances] = useState<ContractInstanceV2[]>([]);
   const [loading, setLoading] = useState(true);
   const { isGenerating, isDownloading, generatePdf, downloadPdf } = useSaleContractPdf();
@@ -94,13 +98,25 @@ export function SaleContractsList() {
           <PageHeader
             backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('list.backToHub') }}
             actions={(
-              <Button
-                onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}
-                className="w-full md:w-auto"
-              >
-                <Plus className="h-4 w-4 mr-2" />
-                {t('list.newContract')}
-              </Button>
+              <div className="flex w-full flex-col gap-2 sm:ml-auto sm:w-auto sm:flex-row sm:items-center">
+                {!orgLoading && isOwner && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
+                    className="w-full md:w-auto"
+                  >
+                    {tContracts('purchaseWizard.entry.openWizard')}
+                  </Button>
+                )}
+                <Button
+                  onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}
+                  className="w-full md:w-auto"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  {t('list.newContract')}
+                </Button>
+              </div>
             )}
           />
         </div>

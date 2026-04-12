@@ -25,7 +25,7 @@ import type { LeadWithRelations, LeadStatus } from '@/services/leads.service';
 import { LEAD_PIPELINE_COLUMNS } from '@/services/leads.service';
 import type { PropertyInquiry } from '@/types';
 import { getLeadStatusBadgeClasses } from '@/features/inquiries/utils/statusUtils';
-import { Eye, ExternalLink, Handshake, Pencil } from 'lucide-react';
+import { Eye, ExternalLink, Handshake, Pencil, FileText } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { cn } from '@/lib/utils';
 import { BuyerAgentAgreementList } from './BuyerAgentAgreementList';
@@ -180,6 +180,32 @@ export function LeadDetailSheet({
                       {tDeals('creation.convertFromLead')}
                     </Button>
                   )}
+                  <div className="flex gap-2">
+                    {(lead.status === 'qualified' || lead.status === 'active') && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isMember}
+                        onClick={() => navigate(`/contracts/lease/new?leadId=${lead.id}`)}
+                      >
+                        <FileText className="h-4 w-4 mr-1" />
+                        {t('detail.actions.createLease')}
+                      </Button>
+                    )}
+                    {(lead.status === 'active' || lead.status === 'under_contract') && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={isMember}
+                        onClick={() => navigate(`${ROUTES.CONTRACTS_PURCHASE_NEW}?leadId=${lead.id}`)}
+                      >
+                        <FileText className="h-4 w-4 mr-1" />
+                        {t('detail.actions.createPurchaseAgreement')}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
 

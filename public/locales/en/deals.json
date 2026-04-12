@@ -20,6 +20,7 @@
     "emptyDescription": "Create a deal to track offers, milestones, and closing.",
     "emptyDescriptionSearch": "Try a different search or stage filter.",
     "emptyAction": "Create deal",
+    "newPurchaseAgreement": "New purchase agreement",
     "tableName": "Deal",
     "tableType": "Type",
     "tableStage": "Stage",
@@ -86,6 +87,11 @@
     "errorNotFound": "This deal may have been removed or you may not have access.",
     "backToList": "Back to deals",
     "subtitle": "Overview, offers, and timeline",
+    "verbalAcceptedPurchasePrompt": {
+      "title": "Offer accepted — draft the purchase agreement",
+      "description": "Create a purchase agreement to capture terms and link this deal to a contract.",
+      "cta": "Start purchase wizard"
+    },
     "tabs": {
       "overview": "Overview",
       "milestones": "Timeline",
@@ -93,7 +99,8 @@
       "offers": "Offers",
       "documents": "Documents",
       "parties": "Parties",
-      "amendments": "Amendments"
+      "amendments": "Amendments",
+      "purchase": "Purchase"
     },
     "section": {
       "details": "Deal details",
@@ -201,8 +208,12 @@
       "mutual_acceptance": "Mutual acceptance",
       "rejected": "Rejected",
       "expired": "Expired",
-      "withdrawn": "Withdrawn"
-    }
+      "withdrawn": "Withdrawn",
+      "superseded": "Superseded"
+    },
+    "historyTitle": "Offer history",
+    "historyParent": "Counter to round {{n}}",
+    "historyPurchaseLink": "Purchase agreement PDF updated when this round was saved."
   },
   "milestones": {
     "actions": "Actions",
@@ -441,9 +452,86 @@
     },
     "messages": {
       "loadSettingsError": "Failed to load broker settings.",
-      "noPropertyLinked": "This deal needs a linked property before recording commission.",
       "recorded": "Deal closed. ${{amount}} net commission recorded.",
       "recordError": "Failed to record commission."
+    }
+  },
+  "purchaseDetail": {
+    "loading": "Loading purchase agreement…",
+    "loadError": "Could not load purchase agreement.",
+    "errorTitle": "Purchase agreement unavailable",
+    "missingDetails": "Purchase details are missing for this contract.",
+    "tabs": {
+      "overview": "Overview",
+      "contingencies": "Contingencies",
+      "keyDates": "Key dates",
+      "documents": "Documents"
+    },
+    "overview": {
+      "title": "Purchase summary",
+      "price": "Purchase price",
+      "financing": "Financing",
+      "property": "Property",
+      "openPdf": "Open agreement PDF"
+    },
+    "financing": {
+      "allCash": "All cash",
+      "seller": "Seller financing",
+      "bank": "Bank financing",
+      "fha": "FHA",
+      "va": "VA",
+      "conventional": "Conventional",
+      "other": "Other"
+    },
+    "keyDates": {
+      "title": "Key dates",
+      "effective": "Effective date",
+      "earnestMoney": "Earnest money due",
+      "preapproval": "Pre-approval letter",
+      "inspectionAccess": "Inspection access",
+      "disclosures": "Disclosures",
+      "offerExpiration": "Offer expiration",
+      "closing": "Closing"
+    },
+    "contingencySummary": {
+      "title": "Contingency snapshot",
+      "openFull": "Open contingencies tab",
+      "empty": "No contingencies on file for this deal.",
+      "more": "+ {{count}} more"
+    },
+    "addenda": {
+      "title": "FHA / VA addenda",
+      "incompleteTitle": "Addenda may be required",
+      "incompleteDescription": "FHA or VA financing often requires a signed addendum on file before appraisal or for compliance.",
+      "fha": "FHA amendatory clause / addendum",
+      "fhaHelp": "Upload a PDF of the executed FHA addendum.",
+      "va": "VA escape clause / addendum",
+      "vaHelp": "Upload a PDF of the executed VA addendum.",
+      "uploaded": "On file",
+      "uploadSuccess": "Addendum saved.",
+      "uploadError": "Could not upload addendum."
+    },
+    "counterOffer": {
+      "add": "+ Add Counter-Offer"
+    },
+    "dealActions": {
+      "markClosed": "Mark as Closed",
+      "cancelDeal": "Cancel Deal",
+      "closeConfirmTitle": "Mark this deal as closed?",
+      "closeConfirmBody": "You will be prompted to record the commission.",
+      "closeDeal": "Close Deal",
+      "cancelConfirmTitle": "Cancel this deal?",
+      "cancelConfirmBody": "You can add an optional reason before cancelling.",
+      "cancelReasonPlaceholder": "Reason (optional)",
+      "confirmCancelDeal": "Cancel Deal",
+      "commissionTitle": "Deal Closed - Record Commission",
+      "commissionBody": "This deal closed at {{price}}. Would you like to record the commission now?",
+      "recordCommission": "Record Commission",
+      "later": "Later",
+      "cancel": "Cancel",
+      "closeError": "Could not close deal.",
+      "cancelError": "Could not cancel deal.",
+      "cancelSuccess": "Deal cancelled."
     }
   }
 }

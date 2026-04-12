@@ -5,6 +5,10 @@
   "addPropertyButton": "Add Property",
   "addPropertyButtonShort": "Property",
   "addTenantButton": "Add Tenant",
+  "actions": {
+    "createLease": "Create Lease",
+    "createPurchaseAgreement": "Purchase agreement"
+  },
   "typeFilter": {
     "all": "All Properties",
     "rental": "Rentals",

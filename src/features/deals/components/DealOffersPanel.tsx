@@ -36,6 +36,8 @@ import { COLORS } from '@/config/colors';
 import { formatCurrency } from '@/lib/currency';
 import { offerRoundsService, type DealWithRelations } from '@/lib/serviceProxy';
 import type { OfferRound } from '@/types';
+import { CounterOfferModal } from '@/features/deals/components/CounterOfferModal';
+import { OfferHistoryTimeline } from '@/features/deals/components/OfferHistoryTimeline';
 import { OfferRoundSheet } from '@/features/deals/components/OfferRoundSheet';
 
 function formatOptionalDate(iso: string | null | undefined): string {
@@ -315,7 +317,8 @@ export function DealOffersPanel({
             </div>
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-6">
+          {rounds.length > 0 && <OfferHistoryTimeline rounds={rounds} />}
           {rounds.length === 0 ? (
             <p className={`text-sm ${COLORS.muted.text}`}>
               {t('detail.offersEmpty')}
@@ -383,16 +386,30 @@ export function DealOffersPanel({
         </CardContent>
       </Card>
 
-      <OfferRoundSheet
-        dealId={deal.id}
-        deal={deal}
-        mode={sheetMode}
-        priorRound={sheetMode === 'counter' ? priorRound : null}
-        open={sheetOpen}
-        onOpenChange={setSheetOpen}
-        onSuccess={runRefresh}
-        disabled={readOnly}
-      />
+      {sheetMode === 'first' ? (
+        <OfferRoundSheet
+          dealId={deal.id}
+          deal={deal}
+          mode="first"
+          priorRound={null}
+          open={sheetOpen}
+          onOpenChange={setSheetOpen}
+          onSuccess={runRefresh}
+          disabled={readOnly}
+        />
+      ) : (
+        priorRound && (
+          <CounterOfferModal
+            dealId={deal.id}
+            deal={deal}
+            priorRound={priorRound}
+            open={sheetOpen}
+            onOpenChange={setSheetOpen}
+            onSuccess={runRefresh}
+            disabled={readOnly}
+          />
+        )
+      )}
 
       <AlertDialog open={maOpen} onOpenChange={setMaOpen}>
         <AlertDialogContent>

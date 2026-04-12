@@ -108,7 +108,7 @@ function defaultsFromPrior(prior: OfferRound): FirstOfferFormData {
   };
 }
 
-interface OfferRoundSheetProps {
+export interface OfferRoundSheetProps {
   dealId: string;
   deal: DealWithRelations;
   mode: 'first' | 'counter';

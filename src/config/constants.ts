@@ -50,6 +50,15 @@ export const ROUTES = {
   CONTRACTS_RENT_CREATE: '/contracts/rent/create',
   CONTRACTS_RENT_EDIT: '/contracts/rent/:id/edit',
   CONTRACTS_RENT_IMPORT: '/contracts/rent/import',
+  CONTRACTS_LEASE_NEW: '/contracts/lease/new',
+  CONTRACTS_LEASE_DETAIL: '/contracts/lease/:id',
+  /** Sprint 6A — US lease agreement wizard (8 steps + PDF / save). */
+  CONTRACTS_LEASE_WIZARD: '/contracts/rent/lease-wizard',
+
+  /** Sprint 6B — US purchase agreement wizard (9 steps + PDF; CRM save in T12). */
+  CONTRACTS_PURCHASE_NEW: '/contracts/purchase/new',
+  /** Sprint 6B T15 — Read-only purchase contract summary + links (contract UUID). */
+  CONTRACTS_PURCHASE_DETAIL: '/contracts/purchase/:id',
 
   // Sale contracts (NEW v2)
   CONTRACTS_SALE: '/contracts/sale',

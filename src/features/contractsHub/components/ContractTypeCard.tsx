@@ -17,6 +17,8 @@ interface ContractTypeCardProps {
   disabled?: boolean;
   onClick?: () => void;
   actionLabel: string;
+  /** Optional second action (e.g. lease wizard on rent card). Clicks do not trigger card `onClick`. */
+  secondaryAction?: { label: string; onClick: () => void };
 }
 
 export function ContractTypeCard({
@@ -27,6 +29,7 @@ export function ContractTypeCard({
   disabled = false,
   onClick,
   actionLabel,
+  secondaryAction,
 }: ContractTypeCardProps) {
   return (
     <Card
@@ -68,7 +71,7 @@ export function ContractTypeCard({
         <CardTitle className="text-lg mt-4">{title}</CardTitle>
         <CardDescription className="text-sm">{description}</CardDescription>
       </CardHeader>
-      <CardContent className="pt-0">
+      <CardContent className="pt-0 space-y-2">
         <Button
           variant={disabled ? 'ghost' : 'default'}
           className="w-full"
@@ -80,6 +83,19 @@ export function ContractTypeCard({
         >
           {actionLabel}
         </Button>
+        {secondaryAction && !disabled && (
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={(e) => {
+              e.stopPropagation();
+              secondaryAction.onClick();
+            }}
+          >
+            {secondaryAction.label}
+          </Button>
+        )}
       </CardContent>
     </Card>
   );

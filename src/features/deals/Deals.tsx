@@ -2,7 +2,8 @@ import { useCallback, useMemo, useState } from 'react';
 import { generatePath, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
-import { Handshake } from 'lucide-react';
+import { FileText, Handshake } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { ListPageTemplate } from '@/components/templates/ListPageTemplate';
 import { TableCell, TableHead, TableRow } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
@@ -75,6 +76,22 @@ export function Deals() {
   }, [deals, stageFilter, searchQuery]);
 
   const hasActiveFilters = searchQuery.trim() !== '' || stageFilter !== 'all';
+
+  const purchaseEntryButton = useMemo(
+    () =>
+      !isMember ? (
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
+        >
+          <FileText className="mr-2 h-4 w-4" />
+          {t('deals:list.newPurchaseAgreement')}
+        </Button>
+      ) : undefined,
+    [isMember, navigate, t],
+  );
 
   const emptyStateConfig = useMemo(
     () => ({
@@ -240,6 +257,7 @@ export function Deals() {
         addButtonLabel={t('deals:list.addDeal')}
         disabledAdd={isMember}
         addDisabledTooltip={isMember ? t('common:readOnlyMode') : undefined}
+        leftAction={purchaseEntryButton}
         skeletonColumnCount={4}
         emptyState={emptyStateConfig}
         renderTableHeaders={renderTableHeaders}

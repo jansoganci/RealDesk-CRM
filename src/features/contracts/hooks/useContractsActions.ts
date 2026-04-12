@@ -88,7 +88,7 @@ export function useContractsActions({
   }, []);
 
   const handleEditContract = useCallback((contract: ContractWithDetails) => {
-    window.location.href = `/contracts/${contract.id}/edit`;
+    window.location.href = `/contracts/lease/${contract.id}`;
   }, []);
 
   return useMemo(() => ({

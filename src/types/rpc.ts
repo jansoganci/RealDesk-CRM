@@ -1,4 +1,23 @@
-import type { Database } from './database.types';
+import type { Database, Json } from './database.types';
+
+// contracts: rpc_create_lease_contract (Sprint 6A US lease wizard)
+export interface RpcCreateLeaseContractParams {
+  p_contract: Json;
+  p_lease_details: Json;
+}
+export type RpcCreateLeaseContractResult = string;
+
+// contracts: rpc_create_purchase_contract (Sprint 6B purchase wizard)
+export interface RpcCreatePurchaseContractParams {
+  p_contract: Json;
+  p_purchase_details: Json;
+  p_deal_id?: string | null;
+}
+export interface RpcCreatePurchaseContractResult {
+  contract_id: string;
+  deal_id: string;
+  offer_round_id: string;
+}
 
 // contracts: rpc_create_contract_and_update_property
 export interface RpcCreateContractAndUpdatePropertyParams {

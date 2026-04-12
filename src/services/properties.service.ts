@@ -162,7 +162,12 @@ class PropertiesService {
       .select(`
         id,
         address,
+        street_address,
+        unit,
         city,
+        state,
+        zip_code,
+        year_built,
         district,
         status,
         property_type,

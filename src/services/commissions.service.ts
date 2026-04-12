@@ -439,10 +439,15 @@ class CommissionsService {
 
   async recordCommission(commission: CommissionInsert): Promise<string> {
     const userId = await getAuthenticatedUserId();
+    let closingDate = commission.closing_date;
+    if (typeof closingDate === 'string' && closingDate.includes('T')) {
+      closingDate = closingDate.slice(0, 10);
+    }
     const { data, error } = await (supabase as any).rpc('rpc_record_commission_and_close_deal', {
       p_commission: {
         ...commission,
         user_id: userId,
+        closing_date: closingDate,
       } as unknown as Record<string, unknown>,
     });
 

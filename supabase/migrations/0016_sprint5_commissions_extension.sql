@@ -25,16 +25,26 @@ ALTER TABLE public.commissions
 
 -- Optional details for custom per-deal costs can continue to use existing `notes`.
 
+-- Idempotent: safe if a previous partial run or another migration already created these.
+ALTER TABLE public.commissions
+  DROP CONSTRAINT IF EXISTS commissions_deal_id_fkey;
+
 ALTER TABLE public.commissions
   ADD CONSTRAINT commissions_deal_id_fkey
   FOREIGN KEY (deal_id) REFERENCES public.deals(id)
   ON DELETE SET NULL;
 
 ALTER TABLE public.commissions
+  DROP CONSTRAINT IF EXISTS commissions_commission_side_check;
+
+ALTER TABLE public.commissions
   ADD CONSTRAINT commissions_commission_side_check
   CHECK (commission_side IN ('listing', 'buyer', 'dual', 'rental_listing', 'rental_tenant'));
 
 -- V1 scope explicitly excludes tiered commission type.
+ALTER TABLE public.commissions
+  DROP CONSTRAINT IF EXISTS commissions_commission_type_check;
+
 ALTER TABLE public.commissions
   ADD CONSTRAINT commissions_commission_type_check
   CHECK (commission_type IN ('percentage', 'flat_fee'));

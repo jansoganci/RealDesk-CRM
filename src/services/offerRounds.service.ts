@@ -5,6 +5,7 @@ import { getAuthenticatedUserId } from '@/lib/auth';
 import { getActiveOrgId } from '@/lib/orgHelpers';
 import { handleServiceError } from '@/lib/handleServiceError';
 import { dealsService } from '@/services/deals.service';
+import { purchaseAgreementService } from '@/services/purchaseAgreement.service';
 
 type DealRow = Database['public']['Tables']['deals']['Row'];
 type OfferRoundRow = Database['public']['Tables']['offer_rounds']['Row'];
@@ -204,13 +205,43 @@ class OfferRoundsService {
         expiration_date: merged.expiration_date,
         expiration_time: merged.expiration_time,
         notes: merged.notes,
+        contract_id: prior.contract_id,
       };
 
       const round = (await insertRow('offer_rounds', roundValues)) as OfferRoundRow;
 
+      const now = new Date().toISOString();
+
+      if (prior.contract_id) {
+        await purchaseAgreementService.syncPurchaseContractAfterCounterOffer(prior.contract_id, prior.deal_id, {
+          offer_price: merged.offer_price,
+          closing_date: merged.closing_date,
+          emd_amount: merged.emd_amount,
+          expiration_date: merged.expiration_date,
+          expiration_time: merged.expiration_time,
+          personal_property_notes: merged.personal_property_notes,
+          notes: merged.notes,
+        });
+        await purchaseAgreementService.regeneratePurchaseAgreementPdf(prior.contract_id);
+      }
+
+      const terminal = new Set([
+        'mutual_acceptance',
+        'rejected',
+        'expired',
+        'withdrawn',
+        'superseded',
+      ]);
+      if (!terminal.has(prior.status)) {
+        await updateRow('offer_rounds', priorRoundId, {
+          status: 'superseded',
+          updated_at: now,
+        });
+      }
+
       await updateRow('deals', prior.deal_id, {
         deal_stage: 'negotiating',
-        updated_at: new Date().toISOString(),
+        updated_at: now,
       });
 
       return round;

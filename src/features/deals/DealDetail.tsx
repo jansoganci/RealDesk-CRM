@@ -1,4 +1,4 @@
-import { type ReactNode } from 'react';
+import { type ReactNode, useEffect, useMemo, useState } from 'react';
 import { useOrg } from '@/contexts/OrgContext';
 import { Link, generatePath, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -24,6 +24,8 @@ import { DealOutcomeActions } from '@/features/deals/components/DealOutcomeActio
 import { DocumentsTab } from '@/features/deals/components/DocumentsTab';
 import { PartiesTab } from '@/features/deals/components/PartiesTab';
 import { AmendmentsTab } from '@/features/deals/components/AmendmentsTab';
+import { PurchaseDetailView } from '@/features/deals/components/PurchaseDetailView';
+import { getLatestPurchaseContractIdFromDeal } from '@/features/deals/utils/purchaseDealHelpers';
 import type { DealStage } from '@/types';
 import type { DealWithRelations } from '@/lib/serviceProxy';
 
@@ -70,10 +72,14 @@ function DealDetailBody({
   deal,
   onRefresh,
   readOnly,
+  activeTab,
+  onTabChange,
 }: {
   deal: DealWithRelations;
   onRefresh: () => void | Promise<void>;
   readOnly?: boolean;
+  activeTab: string;
+  onTabChange: (value: string) => void;
 }) {
   const { t } = useTranslation('deals');
 
@@ -83,15 +89,21 @@ function DealDetailBody({
   const negotiations = deal.offer_negotiations ?? [];
   const parties = deal.deal_parties ?? [];
 
+  const purchaseContractId = useMemo(() => getLatestPurchaseContractIdFromDeal(deal), [deal]);
+  const showPurchaseTab = deal.deal_type === 'sale' && purchaseContractId != null;
+
   return (
-    <Tabs defaultValue="overview" className="w-full">
-      <TabsList className="grid w-full max-w-4xl grid-cols-2 sm:grid-cols-7 gap-1">
+    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+      <TabsList className="flex w-full max-w-4xl flex-wrap gap-1 h-auto">
         <TabsTrigger value="overview">{t('detail.tabs.overview')}</TabsTrigger>
         <TabsTrigger value="milestones">{t('detail.tabs.milestones')}</TabsTrigger>
         <TabsTrigger value="contingencies">
           {t('detail.tabs.contingencies')}
         </TabsTrigger>
         <TabsTrigger value="offers">{t('detail.tabs.offers')}</TabsTrigger>
+        {showPurchaseTab && (
+          <TabsTrigger value="purchase">{t('detail.tabs.purchase')}</TabsTrigger>
+        )}
         <TabsTrigger value="documents">{t('detail.tabs.documents')}</TabsTrigger>
         <TabsTrigger value="parties">{t('detail.tabs.parties')}</TabsTrigger>
         <TabsTrigger value="amendments">{t('detail.tabs.amendments')}</TabsTrigger>
@@ -274,6 +286,18 @@ function DealDetailBody({
         />
       </TabsContent>
 
+      {showPurchaseTab && purchaseContractId && (
+        <TabsContent value="purchase" className="mt-6">
+          <PurchaseDetailView
+            deal={deal}
+            contractId={purchaseContractId}
+            onRefresh={onRefresh}
+            readOnly={readOnly}
+            onOpenContingenciesTab={() => onTabChange('contingencies')}
+          />
+        </TabsContent>
+      )}
+
       <TabsContent value="documents" className="mt-6">
         <DocumentsTab dealId={deal.id} readOnly={readOnly} />
       </TabsContent>
@@ -294,6 +318,16 @@ export function DealDetail() {
   const { id } = useParams<{ id: string }>();
   const { deal, loading, error, refresh } = useDealDetail(id);
   const { isMember } = useOrg();
+  const [activeTab, setActiveTab] = useState('overview');
+
+  const linkedPurchaseContractId = useMemo(() => {
+    if (!deal) return null;
+    return getLatestPurchaseContractIdFromDeal(deal);
+  }, [deal]);
+
+  useEffect(() => {
+    setActiveTab('overview');
+  }, [id]);
 
   if (loading) {
     return (
@@ -358,6 +392,22 @@ export function DealDetail() {
               {t(`clientRole.${deal.client_role as 'buyer' | 'seller' | 'dual'}`)}
             </span>
           </div>
+          {deal.deal_type === 'sale' &&
+            deal.deal_stage === 'verbal_accepted' &&
+            linkedPurchaseContractId == null &&
+            !isMember && (
+              <Alert className="mb-4 border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40">
+                <AlertTitle>{t('detail.verbalAcceptedPurchasePrompt.title')}</AlertTitle>
+                <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <span>{t('detail.verbalAcceptedPurchasePrompt.description')}</span>
+                  <Button size="sm" asChild className="shrink-0">
+                    <Link to={`${ROUTES.CONTRACTS_PURCHASE_NEW}?dealId=${deal.id}`}>
+                      {t('detail.verbalAcceptedPurchasePrompt.cta')}
+                    </Link>
+                  </Button>
+                </AlertDescription>
+              </Alert>
+            )}
           <DealOutcomeActions
             deal={deal}
             onSuccess={refresh}
@@ -367,6 +417,8 @@ export function DealDetail() {
             deal={deal}
             onRefresh={refresh}
             readOnly={isMember}
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
           />
         </div>
       </PageContainer>

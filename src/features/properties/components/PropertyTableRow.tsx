@@ -6,7 +6,7 @@ import { TableActionButtons } from '@/components/common/TableActionButtons';
 import { formatCurrency, convertCurrency } from '@/lib/currency';
 import { format } from 'date-fns';
 import { getToday, daysDifference } from '@/lib/dates';
-import { Images, AlertCircle, ExternalLink } from 'lucide-react';
+import { Images, AlertCircle, ExternalLink, FileText } from 'lucide-react';
 import { COLORS, getStatusBadgeClasses } from '@/config/colors';
 import type { PropertyWithOwner } from '@/types';
 
@@ -15,6 +15,8 @@ interface PropertyTableRowProps {
   onEdit: (property: PropertyWithOwner) => void;
   onDelete: (property: PropertyWithOwner) => void;
   onAddTenant: (propertyId: string) => void;
+  onCreateLease?: (propertyId: string) => void;
+  onStartPurchase?: (propertyId: string) => void;
   currency?: string;
 }
 
@@ -23,6 +25,8 @@ export function PropertyTableRow({
   onEdit,
   onDelete,
   onAddTenant,
+  onCreateLease,
+  onStartPurchase,
   currency = 'USD',
 }: PropertyTableRowProps) {
   const { t } = useTranslation('properties');
@@ -194,6 +198,28 @@ export function PropertyTableRow({
               className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
             >
               + Tenant
+            </Button>
+          )}
+          {isRental && onCreateLease && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onCreateLease(property.id)}
+            >
+              <FileText className="h-3.5 w-3.5 mr-1" />
+              {t('actions.createLease')}
+            </Button>
+          )}
+          {isSale && onStartPurchase && property.status !== 'Sold' && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={() => onStartPurchase(property.id)}
+            >
+              <FileText className="h-3.5 w-3.5 mr-1" />
+              {t('actions.createPurchaseAgreement')}
             </Button>
           )}
           <TableActionButtons

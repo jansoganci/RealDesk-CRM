@@ -26,6 +26,8 @@
   "actions": {
     "view": "View",
     "create": "Create New",
-    "comingSoon": "Coming Soon"
+    "comingSoon": "Coming Soon",
+    "leaseWizard": "US lease wizard",
+    "purchaseWizard": "Purchase agreement wizard"
   }
 }

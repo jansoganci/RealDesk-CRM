@@ -15,8 +15,8 @@ const optionalDateStr = z.preprocess(
 );
 
 /**
- * Create first offer or counter-offer from the deal detail sheet (T13).
- * Maps to `CreateFirstOfferInput` / `AddCounterOfferInput`.
+ * Create first offer or counter-offer from the deal detail sheet.
+ * Maps to `CreateFirstOfferInput` / `AddCounterOfferInput` (Sprint 6B T13: counter sync + PDF in `offerRoundsService`).
  */
 export const firstOfferFormSchema = z.object({
   offer_price: z.coerce.number().positive('Enter a valid offer price'),

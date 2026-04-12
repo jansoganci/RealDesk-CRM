@@ -13,7 +13,8 @@ import {
   DollarSign, 
   Calendar, 
   AlertCircle, 
-  ExternalLink 
+  ExternalLink,
+  FileText,
 } from 'lucide-react';
 import { getStatusBadgeClasses } from '@/config/colors';
 import type { PropertyWithOwner } from '@/types';
@@ -23,6 +24,9 @@ interface PropertyCardProps {
   onEdit: (property: PropertyWithOwner) => void;
   onDelete: () => void;
   onAddTenant?: (propertyId: string) => void;
+  onCreateLease?: (propertyId: string) => void;
+  /** Opens purchase wizard with `propertyId` query (sale listings). */
+  onStartPurchase?: (propertyId: string) => void;
   currency?: string;
 }
 
@@ -31,6 +35,8 @@ export function PropertyCard({
   onEdit,
   onDelete,
   onAddTenant,
+  onCreateLease,
+  onStartPurchase,
   currency = 'USD',
 }: PropertyCardProps) {
   const { t } = useTranslation('properties');
@@ -218,6 +224,30 @@ export function PropertyCard({
 
       {/* Footer - Actions */}
       <div className="flex flex-col gap-2.5 pt-1">
+        {isRental && onCreateLease && (
+          <Button
+            type="button"
+            variant="outline"
+            size="default"
+            onClick={() => onCreateLease(property.id)}
+            className="w-full justify-center"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            {t('actions.createLease')}
+          </Button>
+        )}
+        {isSale && onStartPurchase && property.status !== 'Sold' && (
+          <Button
+            type="button"
+            variant="outline"
+            size="default"
+            onClick={() => onStartPurchase(property.id)}
+            className="w-full justify-center"
+          >
+            <FileText className="h-4 w-4 mr-2" />
+            {t('actions.createPurchaseAgreement')}
+          </Button>
+        )}
         {property.status === 'Empty' && onAddTenant && (
           <Button
             variant="secondary"

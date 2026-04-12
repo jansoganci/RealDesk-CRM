@@ -88,7 +88,7 @@ export type Database = {
           notes: string | null
           org_id: string
           property_address: string
-          property_id: string
+          property_id: string | null
           type: string
           user_id: string
         }
@@ -102,7 +102,7 @@ export type Database = {
           notes?: string | null
           org_id: string
           property_address: string
-          property_id: string
+          property_id?: string | null
           type: string
           user_id: string
         }
@@ -116,7 +116,7 @@ export type Database = {
           notes?: string | null
           org_id?: string
           property_address?: string
-          property_id?: string
+          property_id?: string | null
           type?: string
           user_id?: string
         }
@@ -459,78 +459,139 @@ export type Database = {
       }
       contracts: {
         Row: {
+          after_term_action: string | null
+          buyer_name_2: string | null
+          closing_date: string | null
           commission_amount: number | null
           contract_pdf_path: string | null
+          contract_type: string
           created_at: string | null
           currency: string | null
+          deal_status: string | null
           deleted_at: string | null
           deposit: number | null
+          earnest_money_amount: number | null
+          earnest_money_due_date: string | null
+          effective_date: string | null
           end_date: string
           expected_new_rent: number | null
+          governing_law_state: string | null
           id: string
+          landlord_id: string | null
+          lease_type: string
           notes: string | null
           org_id: string
+          pdf_generated_at: string | null
+          prior_contract_id: string | null
           property_id: string
+          purchase_price: number | null
           reminder_notes: string | null
           rent_amount: number | null
           rent_increase_reminder_contacted: boolean | null
           rent_increase_reminder_days: number | null
           rent_increase_reminder_enabled: boolean | null
+          seller_id: string | null
+          seller_name_2: string | null
           start_date: string
           status: string
-          tenant_id: string
+          tenant_id: string | null
+          termination_notice_days: number | null
           updated_at: string | null
           user_id: string
+          wizard_completed: boolean
         }
         Insert: {
+          after_term_action?: string | null
+          buyer_name_2?: string | null
+          closing_date?: string | null
           commission_amount?: number | null
           contract_pdf_path?: string | null
+          contract_type?: string
           created_at?: string | null
           currency?: string | null
+          deal_status?: string | null
           deleted_at?: string | null
           deposit?: number | null
+          earnest_money_amount?: number | null
+          earnest_money_due_date?: string | null
+          effective_date?: string | null
           end_date: string
           expected_new_rent?: number | null
+          governing_law_state?: string | null
           id?: string
+          landlord_id?: string | null
+          lease_type?: string
           notes?: string | null
           org_id: string
+          pdf_generated_at?: string | null
+          prior_contract_id?: string | null
           property_id: string
+          purchase_price?: number | null
           reminder_notes?: string | null
           rent_amount?: number | null
           rent_increase_reminder_contacted?: boolean | null
           rent_increase_reminder_days?: number | null
           rent_increase_reminder_enabled?: boolean | null
+          seller_id?: string | null
+          seller_name_2?: string | null
           start_date: string
           status?: string
-          tenant_id: string
+          tenant_id?: string | null
+          termination_notice_days?: number | null
           updated_at?: string | null
           user_id: string
+          wizard_completed?: boolean
         }
         Update: {
+          after_term_action?: string | null
+          buyer_name_2?: string | null
+          closing_date?: string | null
           commission_amount?: number | null
           contract_pdf_path?: string | null
+          contract_type?: string
           created_at?: string | null
           currency?: string | null
+          deal_status?: string | null
           deleted_at?: string | null
           deposit?: number | null
+          earnest_money_amount?: number | null
+          earnest_money_due_date?: string | null
+          effective_date?: string | null
           end_date?: string
           expected_new_rent?: number | null
+          governing_law_state?: string | null
           id?: string
+          landlord_id?: string | null
+          lease_type?: string
           notes?: string | null
           org_id?: string
+          pdf_generated_at?: string | null
+          prior_contract_id?: string | null
           property_id?: string
+          purchase_price?: number | null
           reminder_notes?: string | null
           rent_amount?: number | null
           rent_increase_reminder_contacted?: boolean | null
           rent_increase_reminder_days?: number | null
           rent_increase_reminder_enabled?: boolean | null
+          seller_id?: string | null
+          seller_name_2?: string | null
           start_date?: string
           status?: string
-          tenant_id?: string
+          tenant_id?: string | null
+          termination_notice_days?: number | null
           updated_at?: string | null
           user_id?: string
+          wizard_completed?: boolean
         }
         Relationships: [
+          {
+            foreignKeyName: "contracts_landlord_id_fkey"
+            columns: ["landlord_id"]
+            isOneToOne: false
+            referencedRelation: "property_owners"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "contracts_org_id_fkey"
             columns: ["org_id"]
@@ -539,10 +600,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "contracts_prior_contract_id_fkey"
+            columns: ["prior_contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
             foreignKeyName: "contracts_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_seller_id_fkey"
+            columns: ["seller_id"]
+            isOneToOne: false
+            referencedRelation: "property_owners"
             referencedColumns: ["id"]
           },
           {
@@ -1137,6 +1212,351 @@ export type Database = {
           },
         ]
       }
+      lease_amendments: {
+        Row: {
+          amendment_date: string
+          contract_id: string
+          created_at: string
+          description: string
+          id: string
+          org_id: string
+          user_id: string
+        }
+        Insert: {
+          amendment_date: string
+          contract_id: string
+          created_at?: string
+          description: string
+          id?: string
+          org_id: string
+          user_id: string
+        }
+        Update: {
+          amendment_date?: string
+          contract_id?: string
+          created_at?: string
+          description?: string
+          id?: string
+          org_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lease_amendments_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lease_amendments_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lease_details: {
+        Row: {
+          additional_occupants: string[]
+          additional_terms: string | null
+          appliances_enabled: boolean
+          appliances_list: string[] | null
+          appliances_other: string | null
+          bathrooms: number
+          bedrooms: number
+          co_signer_email: string | null
+          co_signer_name: string | null
+          co_signer_phone: string | null
+          co_signer_role: string | null
+          common_areas_description: string | null
+          common_areas_enabled: boolean
+          contract_id: string
+          created_at: string
+          early_move_in_date: string | null
+          early_move_in_enabled: boolean
+          early_move_in_prorated_rent: number | null
+          furnished_enabled: boolean
+          furnished_rooms: string[] | null
+          id: string
+          landlord_email: string | null
+          landlord_mailing_city: string | null
+          landlord_mailing_state: string | null
+          landlord_mailing_street: string | null
+          landlord_mailing_zip: string | null
+          landlord_name: string
+          landlord_notice_custom_address: string | null
+          landlord_phone: string | null
+          late_fee_amount: number | null
+          late_fee_interest_pct: number | null
+          late_fee_per: string | null
+          late_fee_type: string
+          lead_paint_disclosure_required: boolean
+          lead_paint_hazard_description: string | null
+          lead_paint_known_hazards: boolean | null
+          lead_paint_pamphlet_delivered: boolean
+          lead_paint_pamphlet_delivery_date: string | null
+          lead_paint_pamphlet_delivery_method: string | null
+          lead_paint_records_available: boolean | null
+          lead_paint_records_description: string | null
+          move_in_inspection_required: boolean
+          nsf_fee_amount: number | null
+          nsf_fee_enabled: boolean
+          org_id: string
+          parking_enabled: boolean
+          parking_fee_amount: number | null
+          parking_fee_enabled: boolean
+          parking_spaces: number | null
+          payment_method_other: string | null
+          payment_methods: string[]
+          paypal_email: string | null
+          pets_allowed: boolean
+          pets_count: number | null
+          pets_deposit_amount: number | null
+          pets_deposit_refundable: boolean | null
+          pets_max_weight_lbs: number | null
+          pets_types: string | null
+          prepaid_rent_amount: number | null
+          prepaid_rent_enabled: boolean
+          prepaid_rent_end: string | null
+          prepaid_rent_start: string | null
+          property_city: string
+          property_state: string
+          property_street: string
+          property_timezone: string
+          property_unit: string | null
+          property_zip: string
+          renters_insurance_min_coverage: number | null
+          renters_insurance_required: boolean
+          rent_due_day: number
+          residence_type: string
+          residence_type_other: string | null
+          security_deposit_amount: number | null
+          security_deposit_enabled: boolean
+          security_deposit_return_days: number | null
+          smoking_allowed: boolean
+          subletting_policy: string
+          tenant_email: string | null
+          tenant_email_2: string | null
+          tenant_name: string
+          tenant_name_2: string | null
+          tenant_notice_custom_address: string | null
+          tenant_phone: string | null
+          tenant_phone_2: string | null
+          utilities_landlord_covered: string[]
+          utilities_other: string | null
+          user_id: string
+          venmo_handle: string | null
+          year_built: number | null
+          zelle_contact: string | null
+          updated_at: string
+        }
+        Insert: {
+          additional_occupants?: string[]
+          additional_terms?: string | null
+          appliances_enabled?: boolean
+          appliances_list?: string[] | null
+          appliances_other?: string | null
+          bathrooms?: number
+          bedrooms?: number
+          co_signer_email?: string | null
+          co_signer_name?: string | null
+          co_signer_phone?: string | null
+          co_signer_role?: string | null
+          common_areas_description?: string | null
+          common_areas_enabled?: boolean
+          contract_id: string
+          created_at?: string
+          early_move_in_date?: string | null
+          early_move_in_enabled?: boolean
+          early_move_in_prorated_rent?: number | null
+          furnished_enabled?: boolean
+          furnished_rooms?: string[] | null
+          id?: string
+          landlord_email?: string | null
+          landlord_mailing_city?: string | null
+          landlord_mailing_state?: string | null
+          landlord_mailing_street?: string | null
+          landlord_mailing_zip?: string | null
+          landlord_name: string
+          landlord_notice_custom_address?: string | null
+          landlord_phone?: string | null
+          late_fee_amount?: number | null
+          late_fee_interest_pct?: number | null
+          late_fee_per?: string | null
+          late_fee_type?: string
+          lead_paint_disclosure_required?: boolean
+          lead_paint_hazard_description?: string | null
+          lead_paint_known_hazards?: boolean | null
+          lead_paint_pamphlet_delivered?: boolean
+          lead_paint_pamphlet_delivery_date?: string | null
+          lead_paint_pamphlet_delivery_method?: string | null
+          lead_paint_records_available?: boolean | null
+          lead_paint_records_description?: string | null
+          move_in_inspection_required?: boolean
+          nsf_fee_amount?: number | null
+          nsf_fee_enabled?: boolean
+          org_id: string
+          parking_enabled?: boolean
+          parking_fee_amount?: number | null
+          parking_fee_enabled?: boolean
+          parking_spaces?: number | null
+          payment_method_other?: string | null
+          payment_methods?: string[]
+          paypal_email?: string | null
+          pets_allowed?: boolean
+          pets_count?: number | null
+          pets_deposit_amount?: number | null
+          pets_deposit_refundable?: boolean | null
+          pets_max_weight_lbs?: number | null
+          pets_types?: string | null
+          prepaid_rent_amount?: number | null
+          prepaid_rent_enabled?: boolean
+          prepaid_rent_end?: string | null
+          prepaid_rent_start?: string | null
+          property_city: string
+          property_state: string
+          property_street: string
+          property_timezone: string
+          property_unit?: string | null
+          property_zip: string
+          renters_insurance_min_coverage?: number | null
+          renters_insurance_required?: boolean
+          rent_due_day?: number
+          residence_type?: string
+          residence_type_other?: string | null
+          security_deposit_amount?: number | null
+          security_deposit_enabled?: boolean
+          security_deposit_return_days?: number | null
+          smoking_allowed?: boolean
+          subletting_policy?: string
+          tenant_email?: string | null
+          tenant_email_2?: string | null
+          tenant_name: string
+          tenant_name_2?: string | null
+          tenant_notice_custom_address?: string | null
+          tenant_phone?: string | null
+          tenant_phone_2?: string | null
+          utilities_landlord_covered?: string[]
+          utilities_other?: string | null
+          user_id: string
+          venmo_handle?: string | null
+          year_built?: number | null
+          zelle_contact?: string | null
+          updated_at?: string
+        }
+        Update: {
+          additional_occupants?: string[]
+          additional_terms?: string | null
+          appliances_enabled?: boolean
+          appliances_list?: string[] | null
+          appliances_other?: string | null
+          bathrooms?: number
+          bedrooms?: number
+          co_signer_email?: string | null
+          co_signer_name?: string | null
+          co_signer_phone?: string | null
+          co_signer_role?: string | null
+          common_areas_description?: string | null
+          common_areas_enabled?: boolean
+          contract_id?: string
+          created_at?: string
+          early_move_in_date?: string | null
+          early_move_in_enabled?: boolean
+          early_move_in_prorated_rent?: number | null
+          furnished_enabled?: boolean
+          furnished_rooms?: string[] | null
+          id?: string
+          landlord_email?: string | null
+          landlord_mailing_city?: string | null
+          landlord_mailing_state?: string | null
+          landlord_mailing_street?: string | null
+          landlord_mailing_zip?: string | null
+          landlord_name?: string
+          landlord_notice_custom_address?: string | null
+          landlord_phone?: string | null
+          late_fee_amount?: number | null
+          late_fee_interest_pct?: number | null
+          late_fee_per?: string | null
+          late_fee_type?: string
+          lead_paint_disclosure_required?: boolean
+          lead_paint_hazard_description?: string | null
+          lead_paint_known_hazards?: boolean | null
+          lead_paint_pamphlet_delivered?: boolean
+          lead_paint_pamphlet_delivery_date?: string | null
+          lead_paint_pamphlet_delivery_method?: string | null
+          lead_paint_records_available?: boolean | null
+          lead_paint_records_description?: string | null
+          move_in_inspection_required?: boolean
+          nsf_fee_amount?: number | null
+          nsf_fee_enabled?: boolean
+          org_id?: string
+          parking_enabled?: boolean
+          parking_fee_amount?: number | null
+          parking_fee_enabled?: boolean
+          parking_spaces?: number | null
+          payment_method_other?: string | null
+          payment_methods?: string[]
+          paypal_email?: string | null
+          pets_allowed?: boolean
+          pets_count?: number | null
+          pets_deposit_amount?: number | null
+          pets_deposit_refundable?: boolean | null
+          pets_max_weight_lbs?: number | null
+          pets_types?: string | null
+          prepaid_rent_amount?: number | null
+          prepaid_rent_enabled?: boolean
+          prepaid_rent_end?: string | null
+          prepaid_rent_start?: string | null
+          property_city?: string
+          property_state?: string
+          property_street?: string
+          property_timezone?: string
+          property_unit?: string | null
+          property_zip?: string
+          renters_insurance_min_coverage?: number | null
+          renters_insurance_required?: boolean
+          rent_due_day?: number
+          residence_type?: string
+          residence_type_other?: string | null
+          security_deposit_amount?: number | null
+          security_deposit_enabled?: boolean
+          security_deposit_return_days?: number | null
+          smoking_allowed?: boolean
+          subletting_policy?: string
+          tenant_email?: string | null
+          tenant_email_2?: string | null
+          tenant_name?: string
+          tenant_name_2?: string | null
+          tenant_notice_custom_address?: string | null
+          tenant_phone?: string | null
+          tenant_phone_2?: string | null
+          utilities_landlord_covered?: string[]
+          utilities_other?: string | null
+          user_id?: string
+          venmo_handle?: string | null
+          year_built?: number | null
+          zelle_contact?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lease_details_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: true
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lease_details_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       meetings: {
         Row: {
           created_at: string | null
@@ -1370,6 +1790,7 @@ export type Database = {
         Row: {
           appraisal_gap_coverage: number | null
           closing_date: string | null
+          contract_id: string | null
           created_at: string | null
           deal_id: string
           emd_amount: number | null
@@ -1396,6 +1817,7 @@ export type Database = {
         Insert: {
           appraisal_gap_coverage?: number | null
           closing_date?: string | null
+          contract_id?: string | null
           created_at?: string | null
           deal_id: string
           emd_amount?: number | null
@@ -1422,6 +1844,7 @@ export type Database = {
         Update: {
           appraisal_gap_coverage?: number | null
           closing_date?: string | null
+          contract_id?: string | null
           created_at?: string | null
           deal_id?: string
           emd_amount?: number | null
@@ -1446,6 +1869,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "offer_rounds_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: false
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "offer_rounds_deal_id_fkey"
             columns: ["deal_id"]
@@ -2012,6 +2442,327 @@ export type Database = {
           },
         ]
       }
+      purchase_details: {
+        Row: {
+          additional_terms: string | null
+          all_cash_proof_deadline_date: string | null
+          all_cash_proof_deadline_time: string | null
+          appraisal_contingency: boolean
+          appraisal_negotiation_days: number | null
+          bank_contingent_on_sale: boolean
+          bank_loan_type: string | null
+          bank_loan_type_other: string | null
+          bank_preapproval_letter_date: string | null
+          bank_seller_notification_days: number | null
+          buyer_agent_name: string | null
+          buyer_email: string | null
+          buyer_email_2: string | null
+          buyer_mailing_city: string | null
+          buyer_mailing_city_2: string | null
+          buyer_mailing_state: string | null
+          buyer_mailing_state_2: string | null
+          buyer_mailing_street: string | null
+          buyer_mailing_street_2: string | null
+          buyer_mailing_zip: string | null
+          buyer_mailing_zip_2: string | null
+          buyer_name: string
+          buyer_name_2: string | null
+          buyer_phone: string | null
+          buyer_phone_2: string | null
+          closing_costs_responsibility: string
+          closing_time: string | null
+          contingent_on_other_property: boolean
+          contingent_property_address: string | null
+          contingent_property_days: number | null
+          contract_id: string
+          created_at: string
+          custom_addendums: string[] | null
+          earnest_money_deadline_time: string | null
+          earnest_money_escrow_required: boolean
+          earnest_money_return_days: number
+          fha_addendum_path: string | null
+          fha_addendum_uploaded: boolean
+          financing_type: string
+          id: string
+          inspection_contractor_deadline_date: string | null
+          inspection_contractor_deadline_time: string | null
+          inspection_disclosures_deadline_date: string | null
+          inspection_disclosures_deadline_time: string | null
+          inspection_negotiation_days: number | null
+          land_included: boolean
+          lead_paint_disclosure_required: boolean
+          lead_paint_hazard_description: string | null
+          lead_paint_known_hazards: boolean | null
+          lead_paint_pamphlet_delivered: boolean
+          lead_paint_pamphlet_delivery_date: string | null
+          lead_paint_pamphlet_delivery_method: string | null
+          lead_paint_records_available: boolean | null
+          mineral_rights_transferred: boolean
+          offer_expiration_date: string | null
+          offer_expiration_time: string | null
+          org_id: string
+          other_description: string | null
+          other_property_info: string | null
+          pdf_generated_at: string | null
+          personal_property_description: string | null
+          property_city: string
+          property_state: string
+          property_street: string
+          property_timezone: string
+          property_type: string
+          property_type_other: string | null
+          property_zip: string
+          seller_agent_name: string | null
+          seller_email: string | null
+          seller_email_2: string | null
+          seller_financing_approval_deadline: string | null
+          seller_financing_doc_deadline: string | null
+          seller_financing_down_payment: number | null
+          seller_financing_interest_rate: number | null
+          seller_financing_loan_amount: number | null
+          seller_financing_term_unit: string | null
+          seller_financing_term_value: number | null
+          seller_mailing_city: string | null
+          seller_mailing_state: string | null
+          seller_mailing_street: string | null
+          seller_mailing_zip: string | null
+          seller_name: string
+          seller_name_2: string | null
+          seller_phone: string | null
+          seller_phone_2: string | null
+          survey_buyer_notification_days: number | null
+          survey_seller_remedy_days: number | null
+          tax_parcel_info: string | null
+          title_buyer_review_days: number | null
+          title_company: string | null
+          title_seller_remedy_days: number | null
+          title_type: string | null
+          updated_at: string
+          user_id: string
+          va_addendum_path: string | null
+          va_addendum_uploaded: boolean
+          wizard_completed: boolean
+          year_built: number | null
+        }
+        Insert: {
+          additional_terms?: string | null
+          all_cash_proof_deadline_date?: string | null
+          all_cash_proof_deadline_time?: string | null
+          appraisal_contingency?: boolean
+          appraisal_negotiation_days?: number | null
+          bank_contingent_on_sale?: boolean
+          bank_loan_type?: string | null
+          bank_loan_type_other?: string | null
+          bank_preapproval_letter_date?: string | null
+          bank_seller_notification_days?: number | null
+          buyer_agent_name?: string | null
+          buyer_email?: string | null
+          buyer_email_2?: string | null
+          buyer_mailing_city?: string | null
+          buyer_mailing_city_2?: string | null
+          buyer_mailing_state?: string | null
+          buyer_mailing_state_2?: string | null
+          buyer_mailing_street?: string | null
+          buyer_mailing_street_2?: string | null
+          buyer_mailing_zip?: string | null
+          buyer_mailing_zip_2?: string | null
+          buyer_name: string
+          buyer_name_2?: string | null
+          buyer_phone?: string | null
+          buyer_phone_2?: string | null
+          closing_costs_responsibility?: string
+          closing_time?: string | null
+          contingent_on_other_property?: boolean
+          contingent_property_address?: string | null
+          contingent_property_days?: number | null
+          contract_id: string
+          created_at?: string
+          custom_addendums?: string[] | null
+          earnest_money_deadline_time?: string | null
+          earnest_money_escrow_required?: boolean
+          earnest_money_return_days?: number
+          fha_addendum_path?: string | null
+          fha_addendum_uploaded?: boolean
+          financing_type?: string
+          id?: string
+          inspection_contractor_deadline_date?: string | null
+          inspection_contractor_deadline_time?: string | null
+          inspection_disclosures_deadline_date?: string | null
+          inspection_disclosures_deadline_time?: string | null
+          inspection_negotiation_days?: number | null
+          land_included?: boolean
+          lead_paint_disclosure_required?: boolean
+          lead_paint_hazard_description?: string | null
+          lead_paint_known_hazards?: boolean | null
+          lead_paint_pamphlet_delivered?: boolean
+          lead_paint_pamphlet_delivery_date?: string | null
+          lead_paint_pamphlet_delivery_method?: string | null
+          lead_paint_records_available?: boolean | null
+          mineral_rights_transferred?: boolean
+          offer_expiration_date?: string | null
+          offer_expiration_time?: string | null
+          org_id: string
+          other_description?: string | null
+          other_property_info?: string | null
+          pdf_generated_at?: string | null
+          personal_property_description?: string | null
+          property_city: string
+          property_state: string
+          property_street: string
+          property_timezone: string
+          property_type?: string
+          property_type_other?: string | null
+          property_zip: string
+          seller_agent_name?: string | null
+          seller_email?: string | null
+          seller_email_2?: string | null
+          seller_financing_approval_deadline?: string | null
+          seller_financing_doc_deadline?: string | null
+          seller_financing_down_payment?: number | null
+          seller_financing_interest_rate?: number | null
+          seller_financing_loan_amount?: number | null
+          seller_financing_term_unit?: string | null
+          seller_financing_term_value?: number | null
+          seller_mailing_city?: string | null
+          seller_mailing_state?: string | null
+          seller_mailing_street?: string | null
+          seller_mailing_zip?: string | null
+          seller_name: string
+          seller_name_2?: string | null
+          seller_phone?: string | null
+          seller_phone_2?: string | null
+          survey_buyer_notification_days?: number | null
+          survey_seller_remedy_days?: number | null
+          tax_parcel_info?: string | null
+          title_buyer_review_days?: number | null
+          title_company?: string | null
+          title_seller_remedy_days?: number | null
+          title_type?: string | null
+          updated_at?: string
+          user_id: string
+          va_addendum_path?: string | null
+          va_addendum_uploaded?: boolean
+          wizard_completed?: boolean
+          year_built?: number | null
+        }
+        Update: {
+          additional_terms?: string | null
+          all_cash_proof_deadline_date?: string | null
+          all_cash_proof_deadline_time?: string | null
+          appraisal_contingency?: boolean
+          appraisal_negotiation_days?: number | null
+          bank_contingent_on_sale?: boolean
+          bank_loan_type?: string | null
+          bank_loan_type_other?: string | null
+          bank_preapproval_letter_date?: string | null
+          bank_seller_notification_days?: number | null
+          buyer_agent_name?: string | null
+          buyer_email?: string | null
+          buyer_email_2?: string | null
+          buyer_mailing_city?: string | null
+          buyer_mailing_city_2?: string | null
+          buyer_mailing_state?: string | null
+          buyer_mailing_state_2?: string | null
+          buyer_mailing_street?: string | null
+          buyer_mailing_street_2?: string | null
+          buyer_mailing_zip?: string | null
+          buyer_mailing_zip_2?: string | null
+          buyer_name?: string
+          buyer_name_2?: string | null
+          buyer_phone?: string | null
+          buyer_phone_2?: string | null
+          closing_costs_responsibility?: string
+          closing_time?: string | null
+          contingent_on_other_property?: boolean
+          contingent_property_address?: string | null
+          contingent_property_days?: number | null
+          contract_id?: string
+          created_at?: string
+          custom_addendums?: string[] | null
+          earnest_money_deadline_time?: string | null
+          earnest_money_escrow_required?: boolean
+          earnest_money_return_days?: number
+          fha_addendum_path?: string | null
+          fha_addendum_uploaded?: boolean
+          financing_type?: string
+          id?: string
+          inspection_contractor_deadline_date?: string | null
+          inspection_contractor_deadline_time?: string | null
+          inspection_disclosures_deadline_date?: string | null
+          inspection_disclosures_deadline_time?: string | null
+          inspection_negotiation_days?: number | null
+          land_included?: boolean
+          lead_paint_disclosure_required?: boolean
+          lead_paint_hazard_description?: string | null
+          lead_paint_known_hazards?: boolean | null
+          lead_paint_pamphlet_delivered?: boolean
+          lead_paint_pamphlet_delivery_date?: string | null
+          lead_paint_pamphlet_delivery_method?: string | null
+          lead_paint_records_available?: boolean | null
+          mineral_rights_transferred?: boolean
+          offer_expiration_date?: string | null
+          offer_expiration_time?: string | null
+          org_id?: string
+          other_description?: string | null
+          other_property_info?: string | null
+          pdf_generated_at?: string | null
+          personal_property_description?: string | null
+          property_city?: string
+          property_state?: string
+          property_street?: string
+          property_timezone?: string
+          property_type?: string
+          property_type_other?: string | null
+          property_zip?: string
+          seller_agent_name?: string | null
+          seller_email?: string | null
+          seller_email_2?: string | null
+          seller_financing_approval_deadline?: string | null
+          seller_financing_doc_deadline?: string | null
+          seller_financing_down_payment?: number | null
+          seller_financing_interest_rate?: number | null
+          seller_financing_loan_amount?: number | null
+          seller_financing_term_unit?: string | null
+          seller_financing_term_value?: number | null
+          seller_mailing_city?: string | null
+          seller_mailing_state?: string | null
+          seller_mailing_street?: string | null
+          seller_mailing_zip?: string | null
+          seller_name?: string
+          seller_name_2?: string | null
+          seller_phone?: string | null
+          seller_phone_2?: string | null
+          survey_buyer_notification_days?: number | null
+          survey_seller_remedy_days?: number | null
+          tax_parcel_info?: string | null
+          title_buyer_review_days?: number | null
+          title_company?: string | null
+          title_seller_remedy_days?: number | null
+          title_type?: string | null
+          updated_at?: string
+          user_id?: string
+          va_addendum_path?: string | null
+          va_addendum_uploaded?: boolean
+          wizard_completed?: boolean
+          year_built?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_details_contract_id_fkey"
+            columns: ["contract_id"]
+            isOneToOne: true
+            referencedRelation: "contracts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_details_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       recurring_expenses: {
         Row: {
           amount: number
@@ -2538,6 +3289,14 @@ export type Database = {
       }
       rpc_create_tenant_with_contract: {
         Args: { p_contract: Json; p_tenant: Json }
+        Returns: Json
+      }
+      rpc_create_lease_contract: {
+        Args: { p_contract: Json; p_lease_details: Json }
+        Returns: string
+      }
+      rpc_create_purchase_contract: {
+        Args: { p_contract: Json; p_deal_id?: string | null; p_purchase_details: Json }
         Returns: Json
       }
       rpc_delete_contract: { Args: { p_contract_id: string }; Returns: Json }
