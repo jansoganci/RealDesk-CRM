@@ -1,9 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useSearchParams } from 'react-router-dom';
 import { AlertTriangle } from 'lucide-react';
-import { toast } from 'sonner';
 
 import {
   AlertDialog,
@@ -33,12 +31,15 @@ import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
 import { KeyDatesCard } from '@/features/contracts/components/KeyDatesCard';
 import type { PurchaseAgreementFormValues } from '@/features/contracts/schemas/purchaseAgreementForm.schema';
-import { purchaseAgreementService } from '@/lib/serviceProxy';
 
 export type PurchaseStep9DisclosuresProps = {
   onEditStep?: (step: number) => void;
   onGenerate?: () => void;
   isGenerating?: boolean;
+  pendingFhaFile?: File | null;
+  pendingVaFile?: File | null;
+  onPendingFhaFile?: (file: File | null) => void;
+  onPendingVaFile?: (file: File | null) => void;
 };
 
 function notProvided(v: string | null | undefined, fallback: string): string {
@@ -50,15 +51,17 @@ export function PurchaseStep9Disclosures({
   onEditStep,
   onGenerate,
   isGenerating = false,
+  pendingFhaFile = null,
+  pendingVaFile = null,
+  onPendingFhaFile = () => {},
+  onPendingVaFile = () => {},
 }: PurchaseStep9DisclosuresProps) {
   const { t } = useTranslation('contracts');
-  const [searchParams] = useSearchParams();
   const { control, watch, setValue } = useFormContext<PurchaseAgreementFormValues>();
+  const fhaPendingFlag = watch('fha_addendum_pending');
+  const vaPendingFlag = watch('va_addendum_pending');
   const [leadOptionalOpen, setLeadOptionalOpen] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
-  const [uploading, setUploading] = useState<'fha' | 'va' | null>(null);
-
-  const contractId = searchParams.get('contractId') ?? '';
   const yearBuilt = watch('year_built');
   const isPre1978 = !yearBuilt || yearBuilt < 1978;
 
@@ -125,30 +128,6 @@ export function PurchaseStep9Disclosures({
     [t, watch],
   );
 
-  const handleUpload = async (kind: 'fha' | 'va', file: File | null) => {
-    if (!file) return;
-    if (!contractId) {
-      toast.warning(t('purchaseWizard.step9.addenda.saveFirst'));
-      return;
-    }
-    setUploading(kind);
-    try {
-      if (kind === 'fha') {
-        await purchaseAgreementService.uploadFHAAddendum(contractId, file);
-        setValue('fha_addendum_uploaded', true, { shouldDirty: true, shouldValidate: true });
-        toast.success(t('purchaseWizard.step9.addenda.uploadSuccess'));
-      } else {
-        await purchaseAgreementService.uploadVAAddendum(contractId, file);
-        setValue('va_addendum_uploaded', true, { shouldDirty: true, shouldValidate: true });
-        toast.success(t('purchaseWizard.step9.addenda.uploadSuccess'));
-      }
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : t('purchaseWizard.step9.addenda.uploadError'));
-    } finally {
-      setUploading(null);
-    }
-  };
-
   const addCustomAddendum = () => {
     if (customAddendums.length >= 5) return;
     setValue('custom_addendums', [...customAddendums, ''], { shouldDirty: true, shouldValidate: true });
@@ -166,7 +145,8 @@ export function PurchaseStep9Disclosures({
   };
 
   const handleGenerate = () => {
-    const needsWarning = (fhaRequired && !fhaUploaded) || (vaRequired && !vaUploaded);
+    const needsWarning =
+      (fhaRequired && !fhaUploaded && !fhaPendingFlag) || (vaRequired && !vaUploaded && !vaPendingFlag);
     if (needsWarning) {
       setWarningOpen(true);
       return;
@@ -368,17 +348,23 @@ export function PurchaseStep9Disclosures({
       {(fhaRequired || vaRequired) && (
         <section className="space-y-4 rounded-lg border p-4">
           <h4 className="text-sm font-medium">{t('purchaseWizard.step9.addenda.title')}</h4>
-          {!contractId && <p className="text-xs text-muted-foreground">{t('purchaseWizard.step9.addenda.saveFirst')}</p>}
+          <p className="text-xs text-muted-foreground">{t('purchaseWizard.step9.addenda.willUploadOnGenerate')}</p>
 
           {fhaRequired && (
             <Card>
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
                   {t('purchaseWizard.step9.addenda.fhaTitle')}
-                  <Badge variant={fhaUploaded ? 'secondary' : 'destructive'}>
+                  <Badge
+                    variant={
+                      fhaUploaded || fhaPendingFlag ? 'secondary' : 'destructive'
+                    }
+                  >
                     {fhaUploaded
                       ? t('purchaseWizard.step9.addenda.uploaded')
-                      : t('purchaseWizard.step9.addenda.requiredMissing')}
+                      : fhaPendingFlag
+                        ? t('purchaseWizard.step9.addenda.selectedPending')
+                        : t('purchaseWizard.step9.addenda.requiredMissing')}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -386,12 +372,36 @@ export function PurchaseStep9Disclosures({
                 <Input
                   type="file"
                   accept=".pdf,application/pdf"
-                  disabled={!contractId || uploading === 'fha'}
+                  disabled={isGenerating}
                   onChange={(e) => {
-                    void handleUpload('fha', e.target.files?.[0] ?? null);
+                    const f = e.target.files?.[0] ?? null;
+                    onPendingFhaFile(f);
+                    setValue('fha_addendum_pending', Boolean(f), {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
                     e.target.value = '';
                   }}
                 />
+                {pendingFhaFile ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs text-muted-foreground truncate">{pendingFhaFile.name}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        onPendingFhaFile(null);
+                        setValue('fha_addendum_pending', false, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}
+                    >
+                      {t('purchaseWizard.step9.addenda.clearFile')}
+                    </Button>
+                  </div>
+                ) : null}
                 <p className="text-xs text-muted-foreground">{t('purchaseWizard.step9.addenda.fhaHelp')}</p>
               </CardContent>
             </Card>
@@ -402,10 +412,16 @@ export function PurchaseStep9Disclosures({
               <CardHeader>
                 <CardTitle className="text-sm flex items-center gap-2">
                   {t('purchaseWizard.step9.addenda.vaTitle')}
-                  <Badge variant={vaUploaded ? 'secondary' : 'destructive'}>
+                  <Badge
+                    variant={
+                      vaUploaded || vaPendingFlag ? 'secondary' : 'destructive'
+                    }
+                  >
                     {vaUploaded
                       ? t('purchaseWizard.step9.addenda.uploaded')
-                      : t('purchaseWizard.step9.addenda.requiredMissing')}
+                      : vaPendingFlag
+                        ? t('purchaseWizard.step9.addenda.selectedPending')
+                        : t('purchaseWizard.step9.addenda.requiredMissing')}
                   </Badge>
                 </CardTitle>
               </CardHeader>
@@ -413,12 +429,36 @@ export function PurchaseStep9Disclosures({
                 <Input
                   type="file"
                   accept=".pdf,application/pdf"
-                  disabled={!contractId || uploading === 'va'}
+                  disabled={isGenerating}
                   onChange={(e) => {
-                    void handleUpload('va', e.target.files?.[0] ?? null);
+                    const f = e.target.files?.[0] ?? null;
+                    onPendingVaFile(f);
+                    setValue('va_addendum_pending', Boolean(f), {
+                      shouldDirty: true,
+                      shouldValidate: true,
+                    });
                     e.target.value = '';
                   }}
                 />
+                {pendingVaFile ? (
+                  <div className="flex items-center justify-between gap-2">
+                    <p className="text-xs text-muted-foreground truncate">{pendingVaFile.name}</p>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        onPendingVaFile(null);
+                        setValue('va_addendum_pending', false, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        });
+                      }}
+                    >
+                      {t('purchaseWizard.step9.addenda.clearFile')}
+                    </Button>
+                  </div>
+                ) : null}
                 <p className="text-xs text-muted-foreground">{t('purchaseWizard.step9.addenda.vaHelp')}</p>
               </CardContent>
             </Card>

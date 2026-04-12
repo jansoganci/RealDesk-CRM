@@ -76,7 +76,7 @@ export const purchaseAgreementFieldsWithoutFinancing = z.object({
     errorMap: () => ({ message: 'Please select a valid US state' }),
   }),
   deal_status: z
-    .enum(['draft', 'active', 'under_contract', 'closed', 'cancelled'])
+    .enum(['draft', 'active', 'under_contract', 'closed', 'cancelled', 'incomplete'])
     .nullable()
     .optional(),
   buyer_name_2: z.string().nullable(),
@@ -152,6 +152,9 @@ export const purchaseAgreementFieldsWithoutFinancing = z.object({
   fha_addendum_path: z.string().nullable(),
   va_addendum_uploaded: z.boolean(),
   va_addendum_path: z.string().nullable(),
+  /** Wizard-only: user chose a PDF to upload on Generate (not in DB until submit). */
+  fha_addendum_pending: z.boolean().optional(),
+  va_addendum_pending: z.boolean().optional(),
 
   seller_financing_loan_amount: z.coerce.number().min(0).nullable(),
   seller_financing_down_payment: z.coerce.number().min(0).nullable(),
@@ -488,14 +491,24 @@ export const purchaseAgreementFormSchema = purchaseAgreementFormObjectSchema.sup
     }
   }
 
-  if (data.financing_type === 'bank_financing' && data.bank_loan_type === 'fha' && !data.fha_addendum_uploaded) {
+  if (
+    data.financing_type === 'bank_financing' &&
+    data.bank_loan_type === 'fha' &&
+    !data.fha_addendum_uploaded &&
+    !data.fha_addendum_pending
+  ) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: lt('fhaAddendumRequired'),
       path: ['fha_addendum_uploaded'],
     });
   }
-  if (data.financing_type === 'bank_financing' && data.bank_loan_type === 'va' && !data.va_addendum_uploaded) {
+  if (
+    data.financing_type === 'bank_financing' &&
+    data.bank_loan_type === 'va' &&
+    !data.va_addendum_uploaded &&
+    !data.va_addendum_pending
+  ) {
     ctx.addIssue({
       code: z.ZodIssueCode.custom,
       message: lt('vaAddendumRequired'),

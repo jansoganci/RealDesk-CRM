@@ -5,7 +5,7 @@
  */
 
 import { useCallback, useMemo, useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { generatePath, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
@@ -21,26 +21,31 @@ import { contractBuilderService } from '@/services/contractBuilder.service';
 import type { ContractInstanceV2 } from '@/types/contractBuilder.types';
 import { toast } from 'sonner';
 import { useSaleContractPdf } from './hooks/useSaleContractPdf';
+import { contractsService } from '@/lib/serviceProxy';
+import type { PurchaseContractListRow } from '@/services/contracts.service';
+import { formatCurrency, convertCurrency } from '@/lib/currency';
+import { useAuth } from '@/contexts/AuthContext';
 
 export function SaleContractsList() {
   const { t } = useTranslation(['contractsSale', 'common']);
   const { t: tContracts } = useTranslation('contracts');
   const navigate = useNavigate();
+  const { currency } = useAuth();
   const { isOwner, loading: orgLoading } = useOrg();
+  const [purchaseRows, setPurchaseRows] = useState<PurchaseContractListRow[]>([]);
   const [instances, setInstances] = useState<ContractInstanceV2[]>([]);
   const [loading, setLoading] = useState(true);
   const { isGenerating, isDownloading, generatePdf, downloadPdf } = useSaleContractPdf();
 
-  // Fetch instances on mount
-  useEffect(() => {
-    loadInstances();
-  }, []);
-
-  const loadInstances = useCallback(async () => {
+  const loadData = useCallback(async () => {
     try {
       setLoading(true);
-      const data = await contractBuilderService.listInstances('sale');
-      setInstances(data);
+      const [purchases, legacy] = await Promise.all([
+        contractsService.getAllPurchases(),
+        contractBuilderService.listInstances('sale'),
+      ]);
+      setPurchaseRows(purchases);
+      setInstances(legacy);
     } catch (error) {
       console.error('Failed to load sale contracts:', error);
       toast.error(t('toasts.list.loadFailed'));
@@ -49,18 +54,42 @@ export function SaleContractsList() {
     }
   }, [t]);
 
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
+
   const handleDelete = useCallback(async (id: string) => {
     if (!confirm(t('list.confirmDelete'))) return;
 
     try {
       await contractBuilderService.deleteInstance(id);
       toast.success(t('toasts.list.deleteSuccess'));
-      loadInstances();
+      loadData();
     } catch (error) {
       console.error('Failed to delete:', error);
       toast.error(t('toasts.list.deleteFailed'));
     }
-  }, [loadInstances, t]);
+  }, [loadData, t]);
+
+  const getDealStatusBadge = useCallback((dealStatus: string | null) => {
+    const key = (dealStatus ?? 'active') as
+      | 'draft'
+      | 'active'
+      | 'under_contract'
+      | 'closed'
+      | 'cancelled'
+      | 'incomplete';
+    const variants: Record<string, { label: string; className: string }> = {
+      draft: { label: t('dealStatus.draft'), className: 'bg-slate-100 text-slate-700' },
+      active: { label: t('dealStatus.active'), className: 'bg-blue-100 text-blue-800' },
+      under_contract: { label: t('dealStatus.under_contract'), className: 'bg-indigo-100 text-indigo-800' },
+      closed: { label: t('dealStatus.closed'), className: 'bg-green-100 text-green-800' },
+      cancelled: { label: t('dealStatus.cancelled'), className: 'bg-red-100 text-red-700' },
+      incomplete: { label: t('dealStatus.incomplete'), className: 'bg-amber-100 text-amber-800' },
+    };
+    const v = variants[key] ?? variants.active;
+    return <Badge className={v.className}>{v.label}</Badge>;
+  }, [t]);
 
   const getStatusBadge = useCallback((status: string) => {
     const variants: Record<string, { label: string; className: string }> = {
@@ -83,12 +112,23 @@ export function SaleContractsList() {
       <p className="text-gray-500 mb-6">
         {t('list.emptyState.description')}
       </p>
-      <Button onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}>
-        <Plus className="h-4 w-4 mr-2" />
-        {t('list.emptyState.action')}
-      </Button>
+      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+        {!orgLoading && isOwner && (
+          <Button
+            type="button"
+            variant="default"
+            onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
+          >
+            {tContracts('purchaseWizard.entry.openWizard')}
+          </Button>
+        )}
+        <Button variant={!orgLoading && isOwner ? 'outline' : 'default'} onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}>
+          <Plus className="h-4 w-4 mr-2" />
+          {t('list.emptyState.action')}
+        </Button>
+      </div>
     </div>
-  ), [navigate, t]);
+  ), [navigate, t, tContracts, isOwner, orgLoading]);
 
   return (
     <MainLayout title={t('list.pageTitle')}>
@@ -133,10 +173,84 @@ export function SaleContractsList() {
               </Card>
             ))}
           </div>
-        ) : instances.length === 0 ? (
+        ) : purchaseRows.length === 0 && instances.length === 0 ? (
           emptyState
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-10">
+            {purchaseRows.length > 0 && (
+              <section className="space-y-4">
+                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                  {t('list.purchaseSection.title')}
+                </h2>
+                <div className="space-y-4">
+                  {purchaseRows.map((row) => {
+                    const buyer = row.purchase_details?.buyer_name?.trim();
+                    const seller = row.purchase_details?.seller_name?.trim();
+                    const address = row.property?.address?.trim();
+                    const title = buyer || t('list.purchaseCard.titleFallback');
+                    return (
+                      <Card
+                        key={row.id}
+                        className="hover:shadow-md transition-shadow cursor-pointer"
+                        onClick={() => navigate(generatePath(ROUTES.CONTRACTS_PURCHASE_DETAIL, { id: row.id }))}
+                      >
+                        <CardContent className="p-6">
+                          <div className="flex items-start justify-between gap-4">
+                            <div className="flex-1 min-w-0">
+                              <div className="flex flex-wrap items-center gap-3 mb-2">
+                                <h3 className="font-semibold text-lg truncate">{title}</h3>
+                                {getDealStatusBadge(row.deal_status)}
+                              </div>
+                              <div className="text-sm text-gray-600 space-y-1">
+                                {address ? (
+                                  <p>
+                                    <span className="text-gray-500">{t('list.purchaseCard.property')}: </span>
+                                    {address}
+                                  </p>
+                                ) : null}
+                                {seller ? (
+                                  <p>
+                                    {t('list.card.seller')} {seller}
+                                  </p>
+                                ) : null}
+                                {row.purchase_price != null ? (
+                                  <p>
+                                    {t('list.card.amount')}{' '}
+                                    {formatCurrency(
+                                      convertCurrency(Number(row.purchase_price), row.currency || 'USD', currency),
+                                      currency,
+                                    )}
+                                  </p>
+                                ) : null}
+                                {row.closing_date ? (
+                                  <p>
+                                    {t('list.purchaseCard.closing')}: {format(new Date(row.closing_date), 'MMM d, yyyy')}
+                                  </p>
+                                ) : null}
+                                {row.created_at ? (
+                                  <p className="text-xs text-gray-400 mt-2">
+                                    {t('list.purchaseCard.created')}: {format(new Date(row.created_at), 'MMM d, yyyy p')}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </section>
+            )}
+
+            {instances.length > 0 && (
+              <section className="space-y-4">
+                {purchaseRows.length > 0 && (
+                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                    {t('list.legacySection.title')}
+                  </h2>
+                )}
+                <div className="space-y-4">
             {instances.map((instance) => {
               const formData = instance.form_data as Record<string, unknown>;
               return (
@@ -214,6 +328,9 @@ export function SaleContractsList() {
                 </Card>
               );
             })}
+                </div>
+              </section>
+            )}
           </div>
         )}
       </PageContainer>

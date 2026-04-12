@@ -99,6 +99,8 @@ export function purchaseAgreementFormValuesFromDb(
     fha_addendum_path: d.fha_addendum_path,
     va_addendum_uploaded: d.va_addendum_uploaded,
     va_addendum_path: d.va_addendum_path,
+    fha_addendum_pending: false,
+    va_addendum_pending: false,
 
     seller_financing_loan_amount: d.seller_financing_loan_amount,
     seller_financing_down_payment: d.seller_financing_down_payment,

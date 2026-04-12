@@ -9,8 +9,15 @@ import type {
   RpcCreatePurchaseContractParams,
   RpcCreatePurchaseContractResult,
 } from '@/types/rpc';
-import type { Contract, PurchaseDetails, PurchaseDetailsUpdate } from '@/types';
-import type { OfferRound } from '@/types';
+import type {
+  Contract,
+  ContractUpdate,
+  DealUpdate,
+  OfferRound,
+  OfferRoundUpdate,
+  PurchaseDetails,
+  PurchaseDetailsUpdate,
+} from '@/types';
 import { toast } from 'sonner';
 import { purchaseAgreementFormValuesFromDb } from '@/services/purchaseFormFromDb';
 
@@ -28,6 +35,8 @@ const CONTRACT_AND_LINK_KEYS = new Set([
   'seller_id',
   'linkedPropertyId',
   'linkedSellerOwnerId',
+  'fha_addendum_pending',
+  'va_addendum_pending',
 ]);
 
 function purchaseDetailsJsonFromForm(form: PurchaseAgreementFormValues): Json {
@@ -40,7 +49,22 @@ function purchaseDetailsJsonFromForm(form: PurchaseAgreementFormValues): Json {
   return o as Json;
 }
 
-function contractJsonFromForm(form: PurchaseAgreementFormValues, propertyId: string): Json {
+function offerFinancingTypeFromForm(form: PurchaseAgreementFormValues): string {
+  const fin = form.financing_type;
+  const bank = form.bank_loan_type;
+  if (fin === 'all_cash') return 'cash';
+  if (fin === 'seller_financing') return 'seller_financing';
+  if (fin === 'bank_financing' && bank === 'fha') return 'fha';
+  if (fin === 'bank_financing' && bank === 'va') return 'va';
+  if (fin === 'bank_financing' && bank === 'other') return 'other';
+  return 'conventional';
+}
+
+function contractJsonFromForm(
+  form: PurchaseAgreementFormValues,
+  propertyId: string,
+  opts?: { wizardCompleted?: boolean },
+): Json {
   const sellerId = form.seller_id ?? form.linkedSellerOwnerId;
   return {
     property_id: propertyId,
@@ -55,7 +79,7 @@ function contractJsonFromForm(form: PurchaseAgreementFormValues, propertyId: str
     seller_name_2: form.seller_name_2,
     seller_id: sellerId,
     currency: 'USD',
-    wizard_completed: true,
+    wizard_completed: opts?.wizardCompleted ?? true,
   };
 }
 
@@ -77,6 +101,11 @@ export interface CreatePurchaseAgreementInput {
   form: PurchaseAgreementFormValues;
   /** When set, links the purchase contract to an existing deal instead of creating a new deal. */
   dealId?: string | null;
+  /**
+   * When true, creates the CRM rows with `wizard_completed = false` so step 9 can attach FHA/VA addenda
+   * before `syncPurchaseContractFromWizardComplete` runs on final save.
+   */
+  wizardDraft?: boolean;
 }
 
 export type PurchaseContractWithDetails = Contract & {
@@ -176,7 +205,9 @@ class PurchaseAgreementService {
     }
 
     const params: RpcCreatePurchaseContractParams = {
-      p_contract: contractJsonFromForm(input.form, propertyId),
+      p_contract: contractJsonFromForm(input.form, propertyId, {
+        wizardCompleted: input.wizardDraft !== true,
+      }),
       p_purchase_details: purchaseDetailsJsonFromForm(input.form),
       p_deal_id: input.dealId ?? null,
     };
@@ -186,6 +217,96 @@ class PurchaseAgreementService {
       params,
     );
     return parseRpcPurchaseResult(data);
+  }
+
+  /**
+   * Writes the latest wizard form to an existing purchase contract created with `wizardDraft: true`,
+   * then marks the wizard complete. Used on final "Save contract" when `contractId` is already in the URL.
+   */
+  async syncPurchaseContractFromWizardComplete(
+    contractId: string,
+    form: PurchaseAgreementFormValues,
+  ): Promise<{ deal_id: string }> {
+    await getAuthenticatedUserId();
+    const orgId = await getActiveOrgId();
+
+    const bundle = await this.getPurchaseByContractId(contractId);
+    if (!bundle?.purchase_details) {
+      throw new Error('Purchase contract not found');
+    }
+
+    const now = new Date().toISOString();
+    const sellerId = form.seller_id ?? form.linkedSellerOwnerId;
+    const fin = offerFinancingTypeFromForm(form);
+
+    const contractPatch: ContractUpdate = {
+      effective_date: form.effective_date,
+      closing_date: form.closing_date,
+      start_date: form.effective_date,
+      end_date: form.closing_date,
+      purchase_price: form.purchase_price,
+      earnest_money_amount: form.earnest_money_amount,
+      earnest_money_due_date: form.earnest_money_due_date,
+      governing_law_state: form.governing_law_state,
+      deal_status: form.deal_status ?? 'active',
+      buyer_name_2: form.buyer_name_2,
+      seller_name_2: form.seller_name_2,
+      seller_id: sellerId,
+      wizard_completed: true,
+      updated_at: now,
+    };
+    await updateRow('contracts', contractId, contractPatch);
+
+    const rawDetail = purchaseDetailsJsonFromForm(form) as Record<string, unknown>;
+    delete rawDetail.id;
+    delete rawDetail.contract_id;
+    delete rawDetail.org_id;
+    delete rawDetail.user_id;
+    delete rawDetail.created_at;
+    rawDetail.wizard_completed = true;
+    rawDetail.updated_at = now;
+
+    await updateRow('purchase_details', bundle.purchase_details.id, rawDetail as PurchaseDetailsUpdate);
+
+    const deal_id = await this.getDealIdForPurchaseContract(contractId);
+    if (!deal_id) {
+      throw new Error('Deal not found');
+    }
+
+    const dealPatch: DealUpdate = {
+      intended_offer_price: form.purchase_price,
+      projected_close_date: form.closing_date,
+      earnest_money_planned: form.earnest_money_amount,
+      financing_type: fin,
+      updated_at: now,
+    };
+    await updateRow('deals', deal_id, dealPatch);
+
+    const { data: round, error: roundErr } = await supabase
+      .from('offer_rounds')
+      .select('id')
+      .eq('contract_id', contractId)
+      .eq('org_id', orgId)
+      .order('round_number', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    if (roundErr) throw roundErr;
+
+    if (round?.id) {
+      const roundPatch: OfferRoundUpdate = {
+        offer_price: form.purchase_price,
+        closing_date: form.closing_date,
+        emd_amount: form.earnest_money_amount,
+        expiration_date: form.offer_expiration_date,
+        expiration_time: form.offer_expiration_time,
+        personal_property_notes: form.personal_property_description,
+        financing_type: fin,
+        updated_at: now,
+      };
+      await updateRow('offer_rounds', round.id, roundPatch);
+    }
+
+    return { deal_id };
   }
 
   async createPurchaseWithDetails(input: CreatePurchaseWithDetailsInput): Promise<{ contractId: string }> {
@@ -630,12 +751,13 @@ class PurchaseAgreementService {
     await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();
 
-    const path = `purchases/${orgId}/${contractId}/fha_addendum_${Date.now()}.pdf`;
+    const path = `purchases/${orgId}/${contractId}/fha_addendum.pdf`;
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')
       .upload(path, file, {
         cacheControl: '3600',
-        upsert: false,
+        upsert: true,
+        contentType: 'application/pdf',
       });
     if (uploadError) throw uploadError;
 
@@ -673,12 +795,13 @@ class PurchaseAgreementService {
     await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();
 
-    const path = `purchases/${orgId}/${contractId}/va_addendum_${Date.now()}.pdf`;
+    const path = `purchases/${orgId}/${contractId}/va_addendum.pdf`;
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')
       .upload(path, file, {
         cacheControl: '3600',
-        upsert: false,
+        upsert: true,
+        contentType: 'application/pdf',
       });
     if (uploadError) throw uploadError;
 
@@ -710,6 +833,18 @@ class PurchaseAgreementService {
     }
 
     return { path, uploaded: true };
+  }
+
+  /**
+   * Wizard completion: FHA or VA addendum PDF was required but not attached — mark purchase contract for follow-up.
+   */
+  async markPurchaseContractIncompleteForMissingAddendum(contractId: string): Promise<void> {
+    await getAuthenticatedUserId();
+    await getActiveOrgId();
+    await updateRow('contracts', contractId, {
+      deal_status: 'incomplete',
+      updated_at: new Date().toISOString(),
+    });
   }
 
   /** Regenerates storage PDF from DB-backed wizard fields (e.g. after counter-offer). */

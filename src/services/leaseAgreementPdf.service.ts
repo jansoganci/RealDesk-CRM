@@ -143,10 +143,11 @@ function drawSignatureRow(
 }
 
 function shouldIncludeLeadPaintAddendum(form: LeaseAgreementFormValues): boolean {
-  return (
-    form.lead_paint_disclosure_required ||
-    (form.year_built != null && form.year_built < 1978)
-  );
+  if (form.lead_paint_disclosure_required) return true;
+  const y = form.year_built;
+  if (y == null) return true;
+  if (typeof y === 'number' && Number.isNaN(y)) return true;
+  return y < 1978;
 }
 
 function buildPropertyAddress(form: LeaseAgreementFormValues): string {

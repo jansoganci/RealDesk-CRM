@@ -28,22 +28,27 @@ function triStateToBool(v: 'yes' | 'no' | 'unknown'): boolean | null {
   return null;
 }
 
+/** Pre-1978 or unknown year → federal lead paint disclosure required (EPA). */
+function showLeadPaintDisclosure(yearBuilt: LeaseAgreementFormValues['year_built']): boolean {
+  return !yearBuilt || parseInt(String(yearBuilt), 10) < 1978;
+}
+
 export function Step8NoticesDisclosures() {
   const { t } = useTranslation('contracts');
   const { control, watch } = useFormContext<LeaseAgreementFormValues>();
 
   const yearBuilt = watch('year_built');
-  const disclosureOptIn = watch('lead_paint_disclosure_required');
   const knownHazards = watch('lead_paint_known_hazards');
   const recordsAvail = watch('lead_paint_records_available');
   const pamphletDelivered = watch('lead_paint_pamphlet_delivered');
   const additionalTerms = watch('additional_terms') ?? '';
 
-  const leadRequired =
-    yearBuilt == null || yearBuilt < 1978 || disclosureOptIn;
+  const showLeadPaint = showLeadPaintDisclosure(yearBuilt);
+  const yearUnknown =
+    yearBuilt == null || (typeof yearBuilt === 'number' && Number.isNaN(yearBuilt));
 
   const yearLabel =
-    yearBuilt == null
+    yearUnknown
       ? t('leaseWizard.step8.yearUnknown')
       : t('leaseWizard.step8.yearBuiltValue', { year: yearBuilt });
 
@@ -93,31 +98,23 @@ export function Step8NoticesDisclosures() {
           <p className="text-xs text-muted-foreground">{t('leaseWizard.step8.leadYearBuiltLine', { label: yearLabel })}</p>
         </div>
 
-        {leadRequired && (
-          <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-950 dark:border-amber-900 dark:bg-amber-950/40 dark:text-amber-100">
-            {t('leaseWizard.step8.leadBannerRequired')}
+        {showLeadPaint && (
+          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-950 dark:border-red-900 dark:bg-red-950/40 dark:text-red-100">
+            {t('leaseWizard.step8.leadBannerFederal')}
           </p>
         )}
 
-        {yearBuilt != null && yearBuilt >= 1978 && (
-          <div className="space-y-2">
-            <p className="text-xs text-muted-foreground">{t('leaseWizard.step8.leadBannerOptional')}</p>
-            <FormField
-              control={control}
-              name="lead_paint_disclosure_required"
-              render={({ field }) => (
-                <div className="flex items-center gap-2">
-                  <Switch id="lead-disclosure-opt" checked={field.value} onCheckedChange={field.onChange} />
-                  <Label htmlFor="lead-disclosure-opt" className="text-sm font-normal">
-                    {t('leaseWizard.step8.leadDisclosureToggle')}
-                  </Label>
-                </div>
-              )}
-            />
-          </div>
+        {showLeadPaint && yearUnknown && (
+          <p className="text-sm text-muted-foreground">{t('leaseWizard.step8.leadUnknownYearNote')}</p>
         )}
 
-        {leadRequired && (
+        {!showLeadPaint && (
+          <p className="rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
+            {t('leaseWizard.step8.leadPost1978Note')}
+          </p>
+        )}
+
+        {showLeadPaint && (
           <>
             <div className="space-y-2">
               <FormLabel className="text-base">{t('leaseWizard.step8.knownHazards')}</FormLabel>

@@ -295,8 +295,10 @@ export const leaseAgreementFormSchema = leaseAgreementFormObjectSchema.superRefi
       }
     }
 
+    const y = data.year_built;
     const leadRequired =
-      data.year_built == null || data.year_built < 1978 || data.lead_paint_disclosure_required;
+      y == null ||
+      (typeof y === 'number' && (Number.isNaN(y) || y < 1978));
     if (leadRequired) {
       if (!data.lead_paint_pamphlet_delivered) {
         ctx.addIssue({

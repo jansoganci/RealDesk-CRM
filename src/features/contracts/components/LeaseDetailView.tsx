@@ -42,17 +42,40 @@ export function LeaseDetailView({ contractId }: LeaseDetailViewProps) {
   const [amendmentDescription, setAmendmentDescription] = useState('');
   const [timelineKey, setTimelineKey] = useState(0);
 
-  const amountDueAtSigning = useMemo(() => {
-    if (!leaseDetails || !contract) return 0;
+  const amountDueAtSigningBreakdown = useMemo(() => {
+    if (!leaseDetails || !contract) {
+      return { lines: [] as { key: string; label: string; amount: number }[], total: 0 };
+    }
     const n = (v: number | null | undefined) => (typeof v === 'number' && !Number.isNaN(v) ? v : 0);
-    let total = 0;
-    total += n(contract.rent_amount);
-    if (leaseDetails.security_deposit_enabled) total += n(leaseDetails.security_deposit_amount);
-    total += n(contract.deposit);
-    if (leaseDetails.early_move_in_enabled) total += n(leaseDetails.early_move_in_prorated_rent);
-    if (leaseDetails.prepaid_rent_enabled) total += n(leaseDetails.prepaid_rent_amount);
-    if (leaseDetails.pets_allowed) total += n(leaseDetails.pets_deposit_amount);
-    return total;
+    const lines: { key: string; label: string; amount: number }[] = [];
+
+    const firstMonth = n(contract.rent_amount);
+    if (firstMonth > 0) {
+      lines.push({ key: 'firstMonth', label: 'leaseDetail.financials.breakdown.firstMonthRent', amount: firstMonth });
+    }
+
+    const security = n(leaseDetails.security_deposit_amount);
+    if (security > 0) {
+      lines.push({ key: 'security', label: 'leaseDetail.financials.breakdown.securityDeposit', amount: security });
+    }
+
+    const pet = n(leaseDetails.pets_deposit_amount);
+    if (pet > 0) {
+      lines.push({ key: 'pet', label: 'leaseDetail.financials.breakdown.petDeposit', amount: pet });
+    }
+
+    const early = n(leaseDetails.early_move_in_prorated_rent);
+    if (early > 0) {
+      lines.push({ key: 'early', label: 'leaseDetail.financials.breakdown.earlyMoveIn', amount: early });
+    }
+
+    const prepaid = n(leaseDetails.prepaid_rent_amount);
+    if (prepaid > 0) {
+      lines.push({ key: 'prepaid', label: 'leaseDetail.financials.breakdown.prepaidRent', amount: prepaid });
+    }
+
+    const total = lines.reduce((sum, row) => sum + row.amount, 0);
+    return { lines, total };
   }, [leaseDetails, contract]);
 
   const isPdfStale =
@@ -204,7 +227,24 @@ export function LeaseDetailView({ contractId }: LeaseDetailViewProps) {
               <p><span className="font-medium">{t('leaseDetail.fields.securityReturnDays')}:</span> {leaseDetails.security_deposit_return_days ?? '—'}</p>
               <p><span className="font-medium">{t('leaseDetail.fields.lateFee')}:</span> {leaseDetails.late_fee_type}</p>
               <Separator />
-              <p className="font-semibold">{t('leaseDetail.financials.amountDue')}: {formatCurrency(amountDueAtSigning, USD)}</p>
+              <div className="space-y-2">
+                <p className="text-sm font-medium">{t('leaseDetail.financials.amountDue')}</p>
+                {amountDueAtSigningBreakdown.lines.map((row) => (
+                  <div
+                    key={row.key}
+                    className="flex justify-between gap-4 text-sm"
+                  >
+                    <span className="text-muted-foreground">{t(row.label)}</span>
+                    <span className="tabular-nums">{formatCurrency(row.amount, USD)}</span>
+                  </div>
+                ))}
+                <div className="flex justify-between gap-4 border-t border-border pt-2 text-base font-semibold">
+                  <span>{t('leaseDetail.financials.breakdown.total')}</span>
+                  <span className="tabular-nums">
+                    {formatCurrency(amountDueAtSigningBreakdown.total, USD)}
+                  </span>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

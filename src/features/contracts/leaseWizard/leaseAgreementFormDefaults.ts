@@ -37,7 +37,7 @@ export function getLeaseAgreementFormDefaults(): LeaseAgreementFormValues {
     property_city: 'Los Angeles',
     property_state: 'CA',
     property_zip: '90210',
-    year_built: 2000,
+    year_built: null,
     bedrooms: 2,
     bathrooms: 1,
 

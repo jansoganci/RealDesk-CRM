@@ -1,5 +1,12 @@
 import { supabase } from '../config/supabase';
-import type { Contract, ContractInsert, ContractUpdate, ContractWithDetails } from '../types';
+import type {
+  Contract,
+  ContractInsert,
+  ContractUpdate,
+  ContractWithDetails,
+  Property,
+  PurchaseDetails,
+} from '../types';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId } from '../lib/orgHelpers';
 import type {
@@ -13,6 +20,12 @@ import type {
 import { callRpc } from '../lib/rpc';
 import { insertRow, updateRow } from '../lib/db';
 import { getToday, addDaysToDate, formatDateForDb, isDateInRange } from '../lib/dates';
+
+/** Purchase row with list/detail joins (lease helpers use `ContractWithDetails`). */
+export type PurchaseContractListRow = Contract & {
+  property?: Property | null;
+  purchase_details?: PurchaseDetails | null;
+};
 
 class ContractsService {
   async getAll(): Promise<ContractWithDetails[]> {
@@ -35,11 +48,66 @@ class ContractsService {
         property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
     if (error) throw error;
     return (data || []) as ContractWithDetails[];
+  }
+
+  /**
+   * All purchase agreements for the active org (`contract_type = 'purchase'`).
+   * Used by sale list and purchase overview; excludes soft-deleted rows.
+   */
+  async getAllPurchases(): Promise<PurchaseContractListRow[]> {
+    const orgId = await getActiveOrgId();
+
+    const { data, error } = await supabase
+      .from('contracts')
+      .select(`
+        id,
+        status,
+        start_date,
+        end_date,
+        purchase_price,
+        currency,
+        created_at,
+        contract_pdf_path,
+        deal_status,
+        closing_date,
+        effective_date,
+        property:properties(id, address, city, district, il, district_legacy),
+        purchase_details:purchase_details(buyer_name, seller_name)
+      `)
+      .eq('org_id', orgId)
+      .eq('contract_type', 'purchase')
+      .is('deleted_at', null)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || []) as PurchaseContractListRow[];
+  }
+
+  /** Single purchase contract by id (org-scoped). Returns null if not found or wrong type. */
+  async getPurchaseById(id: string): Promise<PurchaseContractListRow | null> {
+    const orgId = await getActiveOrgId();
+
+    const { data, error } = await supabase
+      .from('contracts')
+      .select(`
+        *,
+        property:properties(id, address, city, district, il, district_legacy),
+        purchase_details:purchase_details(*)
+      `)
+      .eq('id', id)
+      .eq('org_id', orgId)
+      .eq('contract_type', 'purchase')
+      .is('deleted_at', null)
+      .maybeSingle();
+
+    if (error) throw error;
+    return data as PurchaseContractListRow | null;
   }
 
   async getById(id: string): Promise<ContractWithDetails | null> {
@@ -63,6 +131,7 @@ class ContractsService {
       `)
       .eq('id', id)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .maybeSingle();
 
@@ -78,6 +147,7 @@ class ContractsService {
       .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('tenant_id', tenantId)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
@@ -93,6 +163,7 @@ class ContractsService {
       .select('id, status, start_date, end_date, rent_amount, currency, property_id, tenant_id')
       .eq('property_id', propertyId)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .order('created_at', { ascending: false });
 
@@ -119,6 +190,7 @@ class ContractsService {
         property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .eq('status', 'Active')
       .order('end_date', { ascending: true });
@@ -148,6 +220,7 @@ class ContractsService {
         property:properties(id, address, city, district, il, district_legacy)
       `)
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null)
       .eq('status', 'Active')
       .gte('end_date', formatDateForDb(today))
@@ -287,6 +360,7 @@ class ContractsService {
       .from('contracts')
       .select('status, end_date')
       .eq('org_id', orgId)
+      .eq('contract_type', 'lease')
       .is('deleted_at', null);
 
     if (error) throw error;

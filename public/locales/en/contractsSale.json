@@ -12,6 +12,26 @@
       "description": "Click the button below to create your first sale contract.",
       "action": "New Sale Contract"
     },
+    "purchaseSection": {
+      "title": "Purchase agreements"
+    },
+    "legacySection": {
+      "title": "Template sale drafts"
+    },
+    "purchaseCard": {
+      "titleFallback": "Purchase agreement",
+      "property": "Property",
+      "closing": "Closing",
+      "created": "Created"
+    },
+    "dealStatus": {
+      "draft": "Draft",
+      "active": "Active",
+      "under_contract": "Under contract",
+      "closed": "Closed",
+      "cancelled": "Cancelled",
+      "incomplete": "Incomplete"
+    },
     "card": {
       "untitled": "Untitled Contract",
       "seller": "Seller:",

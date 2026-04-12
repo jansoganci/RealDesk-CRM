@@ -960,9 +960,9 @@
       "leadYearBuiltLine": "Year built (from step 1): {{label}}",
       "yearUnknown": "Unknown",
       "yearBuiltValue": "{{year}}",
-      "leadBannerRequired": "Complete the lead-based paint disclosure below. It is required for most pre-1978 housing, when year built is unknown, or when you include disclosure for newer homes.",
-      "leadBannerOptional": "For homes built in 1978 or later, disclosure is optional unless you turn it on below.",
-      "leadDisclosureToggle": "Include lead-based paint disclosure in this lease",
+      "leadBannerFederal": "FEDERAL LAW REQUIRES lead paint disclosure for this property. This section cannot be skipped.",
+      "leadUnknownYearNote": "Year built unknown — lead paint disclosure required by federal law as a precaution.",
+      "leadPost1978Note": "Post-1978 property — lead paint disclosure not required.",
       "knownHazards": "Known lead-based paint hazards",
       "knownHazardsHelp": "Answer based on your knowledge and any seller or prior-landlord disclosures.",
       "hazardDescription": "Describe known hazards",
@@ -1299,7 +1299,11 @@
       "leadPaintPurchaseNote": "Federal law grants the buyer a 10-day opportunity to conduct a risk assessment or inspection for lead hazards before being obligated under this contract. Buyer may waive this right in writing.",
       "addenda": {
         "title": "FHA / VA Addendum Upload",
-        "saveFirst": "Save agreement first to upload addenda.",
+        "willUploadOnGenerate": "Choose a PDF now. It uploads when you generate the agreement, after your contract is saved.",
+        "selectedPending": "Selected — uploads on generate",
+        "clearFile": "Remove",
+        "saveFirst": "Hang tight — we're saving your agreement so you can upload addenda.",
+        "draftPreparing": "Please wait a few seconds while we prepare your agreement for addenda upload.",
         "uploaded": "Uploaded ✓",
         "requiredMissing": "Required - Missing ⚠",
         "uploadSuccess": "Addendum uploaded.",
@@ -1371,6 +1375,12 @@
       "backToHub": "Contracts hub",
       "openWizard": "Purchase agreement wizard"
     },
+    "submitPhase": {
+      "savingContract": "Saving contract…",
+      "generatingPdf": "Generating PDF…",
+      "uploadingDocuments": "Uploading documents…",
+      "almostDone": "Almost done…"
+    },
     "complete": {
       "summary": "Download a summary PDF for signing, or save the purchase agreement to your account. You must link a saved sale property in step 1 to save.",
       "linkHint": "To save in the CRM, link a saved sale property in step 1.",
@@ -1384,7 +1394,9 @@
       "savedButPdfFailedDescription": "You can upload a PDF from the deal or contract record, or use Download PDF if you still have the draft.",
       "validationFailed": "Fix the highlighted fields, then try again.",
       "linkRequired": "Link a sale property in step 1 before saving.",
-      "saveFailed": "Could not save the purchase agreement."
+      "saveFailed": "Could not save the purchase agreement.",
+      "fhaUploadFailed": "Contract saved. FHA addendum upload failed — upload from the deal detail page.",
+      "vaUploadFailed": "Contract saved. VA addendum upload failed — upload from the deal detail page."
     }
   },
   "leaseDetail": {
@@ -1411,7 +1423,15 @@
     },
     "financials": {
       "title": "Financial details",
-      "amountDue": "Amount due at signing"
+      "amountDue": "Amount due at signing",
+      "breakdown": {
+        "firstMonthRent": "First month's rent",
+        "securityDeposit": "Security deposit",
+        "petDeposit": "Pet deposit",
+        "earlyMoveIn": "Early move-in (prorated)",
+        "prepaidRent": "Prepaid rent",
+        "total": "Total"
+      }
     },
     "policies": {
       "title": "Policies and utilities"

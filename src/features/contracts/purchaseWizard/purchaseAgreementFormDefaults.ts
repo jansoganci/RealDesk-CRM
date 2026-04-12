@@ -99,6 +99,8 @@ export function getPurchaseAgreementFormDefaults(): PurchaseAgreementFormValues 
     fha_addendum_path: null,
     va_addendum_uploaded: false,
     va_addendum_path: null,
+    fha_addendum_pending: false,
+    va_addendum_pending: false,
 
     seller_financing_loan_amount: null,
     seller_financing_down_payment: null,

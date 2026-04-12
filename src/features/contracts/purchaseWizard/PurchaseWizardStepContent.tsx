@@ -19,6 +19,10 @@ type PurchaseWizardStepContentProps = {
   onEditStep?: (targetStep: number) => void;
   onGenerate?: () => void;
   isGenerating?: boolean;
+  pendingFhaFile?: File | null;
+  pendingVaFile?: File | null;
+  onPendingFhaFile?: (file: File | null) => void;
+  onPendingVaFile?: (file: File | null) => void;
 };
 
 export function PurchaseWizardStepContent({
@@ -26,6 +30,10 @@ export function PurchaseWizardStepContent({
   onEditStep,
   onGenerate,
   isGenerating,
+  pendingFhaFile = null,
+  pendingVaFile = null,
+  onPendingFhaFile = () => {},
+  onPendingVaFile = () => {},
 }: PurchaseWizardStepContentProps) {
   const { t } = useTranslation('contracts');
 
@@ -52,6 +60,10 @@ export function PurchaseWizardStepContent({
           onEditStep={onEditStep}
           onGenerate={onGenerate}
           isGenerating={isGenerating}
+          pendingFhaFile={pendingFhaFile}
+          pendingVaFile={pendingVaFile}
+          onPendingFhaFile={onPendingFhaFile}
+          onPendingVaFile={onPendingVaFile}
         />
       );
     default:
