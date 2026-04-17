@@ -26,7 +26,7 @@ export const PublicPricingPage = () => {
     <>
       <SEO
         title="Fiyatlandırma | Emlak CRM Pricing"
-        description="Emlak CRM pricing plans for real estate agencies. Start with a free trial, then choose the plan that fits your needs. Transparent pricing, no hidden fees."
+        description="Emlak CRM pricing plans for real estate agencies. Compare plans and choose the one that fits your needs. Transparent pricing, no hidden fees."
         keywords="emlak crm fiyat, gayrimenkul yazılımı fiyatları, real estate crm pricing, emlak programı ücretsiz deneme, property management software cost"
       />
       <div className="min-h-screen bg-white">

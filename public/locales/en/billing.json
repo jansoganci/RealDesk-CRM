@@ -1,18 +1,18 @@
 {
   "header": {
     "title": "Choose your plan for Emlak CRM",
-    "subtitle": "Try all features for 14 days, no credit card required."
+    "subtitle": "Explore all features and choose the plan that fits your team."
   },
   "billingPeriod": {
     "monthly": "Monthly",
     "yearly": "Yearly",
     "yearlySavings": "2 months free"
   },
-  "trialBadge": "14-day free trial",
+  "trialBadge": "Get started today",
   "paywall": {
     "pageTitle": "Subscription required",
     "trialActive": {
-      "title": "Your free trial is active",
+      "title": "Your access period is active",
       "subtitle": "Enjoy all Emlak CRM features until {{date}}",
       "message": "Explore the dashboard, import your data, and invite your team. When you are ready, choose a plan that fits your agency.",
       "actions": {
@@ -40,18 +40,18 @@
     }
   },
   "trialReminder": {
-    "badge": "{{count}} days left in trial",
-    "badge_one": "1 day left in trial",
-    "badge_other": "{{count}} days left in trial",
+    "badge": "Trial active",
+    "badge_one": "Trial active",
+    "badge_other": "Trial active",
     "banner": {
-      "titleDefault": "Enjoy your free trial",
+      "titleDefault": "Explore all available features",
       "titleWarning": "Trial ending soon",
       "titleCritical": "Trial ends today",
       "message": {
-        "default": "Explore every feature while your free trial is active.",
-        "count": "{{count}} days left before your access is locked.",
-        "count_one": "1 day left before your access is locked.",
-        "count_other": "{{count}} days left before your access is locked.",
+        "default": "Explore every feature while your access period is active.",
+        "count": "Choose a plan anytime to keep uninterrupted access.",
+        "count_one": "Choose a plan anytime to keep uninterrupted access.",
+        "count_other": "Choose a plan anytime to keep uninterrupted access.",
         "today": "Your trial ends today. Start a plan to keep working without interruption."
       },
       "ctaPrimary": "View plans",
@@ -59,23 +59,23 @@
     },
     "profile": {
       "label": "Trial ends on {{date}}",
-      "countdown": "{{count}} days remaining",
-      "countdown_one": "1 day remaining",
-      "countdown_other": "{{count}} days remaining"
+      "countdown": "Active trial",
+      "countdown_one": "Active trial",
+      "countdown_other": "Active trial"
     }
   },
   "stickyBanner": {
     "ariaLabel": "Trial status notification",
     "title": {
       "default": "Trial active — Explore all features",
-      "default_one": "Trial active — 1 day left",
-      "default_other": "Trial active — {{count}} days left",
-      "warning": "Trial ending in {{count}} days",
-      "warning_one": "Trial ending in 1 day",
-      "warning_other": "Trial ending in {{count}} days",
-      "urgent": "Only {{count}} days left!",
-      "urgent_one": "Only 1 day left!",
-      "urgent_other": "Only {{count}} days left!",
+      "default_one": "Trial active — Explore all features",
+      "default_other": "Trial active — Explore all features",
+      "warning": "Trial active — Review your plan options",
+      "warning_one": "Trial active — Review your plan options",
+      "warning_other": "Trial active — Review your plan options",
+      "urgent": "Trial active — Choose your plan anytime",
+      "urgent_one": "Trial active — Choose your plan anytime",
+      "urgent_other": "Trial active — Choose your plan anytime",
       "critical": "Trial ends tomorrow",
       "critical_one": "Trial ends today",
       "critical_other": "Trial ends tomorrow"

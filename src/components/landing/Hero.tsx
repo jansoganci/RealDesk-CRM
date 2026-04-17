@@ -149,9 +149,9 @@ export const Hero = () => {
               className="hero-cta-primary"
               onClick={() => navigate(ROUTES.REGISTER)}
             >
-              Start Free Trial
+              Get Started
             </button>
-            <span className="hero-cta-secondary">14 days free · no credit card required</span>
+            <span className="hero-cta-secondary">No credit card required</span>
           </div>
 
           <div className="hero-trust">

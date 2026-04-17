@@ -5,8 +5,8 @@
     "getStarted": "Get Started",
     "login": "Log in",
     "cta": "Start Free",
-    "trialBadge": "14 days free",
-    "trialBadgeShort": "14 days free",
+    "trialBadge": "No credit card required",
+    "trialBadgeShort": "No credit card required",
     "menuOpenLabel": "Open menu",
     "menuCloseLabel": "Close menu"
   },
@@ -158,11 +158,11 @@
     "eyebrow": "Ready?",
     "title": "Ready to take control?",
     "cta": "Start for Free",
-    "reassurance": "14 days free, no credit card required."
+    "reassurance": "No credit card required."
   },
   "pricing": {
     "title": "Pricing & plans for RealDesk",
-    "subtitle": "Try all features for 14 days, no credit card required. Designed for real estate agents and small agencies.",
+    "subtitle": "Explore all features with transparent pricing. Designed for real estate agents and small agencies.",
     "loading": "Loading..."
   },
   "footer": {
