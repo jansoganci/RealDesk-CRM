@@ -5,7 +5,7 @@ import { useOrg } from '../../contexts/OrgContext';
 import { useNotifications } from '../../contexts/NotificationContext';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
-import { ROUTES, APP_NAME } from '../../config/constants';
+import { ROUTES } from '../../config/constants';
 import {
   LayoutDashboard,
   Home,
@@ -81,7 +81,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       >
         <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-blue-600 shadow-lg shrink-0">
           <div className="flex flex-col">
-            <span className="font-bold text-white text-lg tracking-tight">{APP_NAME}</span>
+            <span className="font-bold text-white text-lg tracking-tight">RealDesk US</span>
             {currentOrg && (
               <span className="text-white/70 text-xs truncate max-w-[180px]">
                 {currentOrg.name}
