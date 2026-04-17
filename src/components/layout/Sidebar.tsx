@@ -77,7 +77,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         className={cn(
           'fixed top-0 left-0 h-full bg-white border-r border-gray-200/50 z-50 transition-transform duration-300 ease-in-out w-64 flex flex-col shadow-luxury',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
-        )}
+        )} 
       >
         <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-blue-600 shadow-lg shrink-0">
           <div className="flex flex-col">
