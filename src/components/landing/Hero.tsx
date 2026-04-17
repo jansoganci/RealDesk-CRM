@@ -74,7 +74,7 @@ const DashboardMock = () => (
       <div className="dash-reminder-icon">🔔</div>
       <div className="dash-reminder-body">
         <div className="dash-reminder-title">Lease Expiring — Park Avenue</div>
-        <div className="dash-reminder-sub">Tenant: John Smith · Created by EmlakCRM</div>
+        <div className="dash-reminder-sub">Tenant: John Smith · RealDesk</div>
       </div>
       <div className="dash-reminder-time">3 days</div>
     </div>
