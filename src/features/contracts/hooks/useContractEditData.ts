@@ -218,7 +218,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         end_date: new Date(contract.end_date),
         rent_amount: contract.rent_amount || 0,
         deposit: contract.deposit || 0,
-        currency: (contractDetails?.deposit_currency as 'USD' | 'EUR' | 'TRY') || 'USD',
+        currency: 'USD',
         commission_amount: contract.commission_amount && contract.commission_amount > 0 
           ? contract.commission_amount 
           : undefined, // Load from contract (0 or null = undefined, triggers fallback)

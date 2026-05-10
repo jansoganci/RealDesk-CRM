@@ -20,14 +20,8 @@ export function useDealDetail(dealId: string | undefined) {
     setError(null);
     try {
       const data = await dealsService.getById(dealId);
-      if (import.meta.env.DEV) {
-        console.log('deal data:', data, 'error:', null);
-      }
       setDeal(data);
     } catch (e) {
-      if (import.meta.env.DEV) {
-        console.log('deal data:', null, 'error:', e);
-      }
       setError(e instanceof Error ? e.message : 'Failed to load deal');
       setDeal(null);
     } finally {

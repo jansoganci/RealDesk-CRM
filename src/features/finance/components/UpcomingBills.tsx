@@ -98,7 +98,7 @@ export const UpcomingBills = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -115,17 +115,17 @@ export const UpcomingBills = ({
 
   if (bills.length === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg shadow-md bg-emerald-600">
               <CheckCircle2 className="h-5 w-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-slate-900">
+              <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
                 {t('finance:automation.upcomingBills')}
               </CardTitle>
-              <p className="text-sm text-gray-600 mt-0.5">
+              <p className="text-sm text-gray-600 dark:text-slate-300 mt-0.5">
                 {t('finance:automation.upcomingBillsDesc')}
               </p>
             </div>
@@ -134,10 +134,10 @@ export const UpcomingBills = ({
         <CardContent>
           <div className="text-center py-12">
             <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <p className="text-gray-600 font-medium">
+            <p className="text-gray-600 dark:text-slate-300 font-medium">
               {t('finance:automation.noBills')}
             </p>
-            <p className="text-sm text-gray-500 mt-2">
+            <p className="text-sm text-gray-500 dark:text-slate-400 mt-2">
               {t('finance:automation.noBillsDesc', { days: daysAhead })}
             </p>
           </div>
@@ -156,7 +156,7 @@ export const UpcomingBills = ({
   });
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -164,10 +164,10 @@ export const UpcomingBills = ({
               <Calendar className="h-5 w-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-slate-900">
+              <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
                 {t('finance:automation.upcomingBills')}
               </CardTitle>
-              <p className="text-sm text-gray-600 mt-0.5">
+              <p className="text-sm text-gray-600 dark:text-slate-300 mt-0.5">
                 {t('finance:automation.upcomingBillsDesc')}
               </p>
             </div>
@@ -191,13 +191,13 @@ export const UpcomingBills = ({
                     ? 'bg-red-50 border-red-200'
                     : bill.days_until_due <= 3
                     ? 'bg-amber-50 border-amber-200'
-                    : 'bg-gray-50 border-gray-200'
+                    : 'bg-gray-50 border-gray-200 dark:bg-slate-800/60 dark:border-slate-700'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-bold text-slate-900">
+                      <h4 className="font-bold text-slate-900 dark:text-slate-100">
                         {bill.recurring_expense.name}
                       </h4>
                       <Badge className={badge.className}>
@@ -205,7 +205,7 @@ export const UpcomingBills = ({
                         {badge.label}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-slate-300">
                       <span>
                         <span className="font-medium">{t('finance:table.category')}:</span>{' '}
                         {bill.recurring_expense.category}
@@ -221,7 +221,7 @@ export const UpcomingBills = ({
                     </div>
                   </div>
                   <div className="text-right ml-4">
-                    <p className="text-2xl font-bold text-slate-900 mb-2">
+                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
                       {formatCurrency(bill.recurring_expense.amount)}
                     </p>
                     <Button

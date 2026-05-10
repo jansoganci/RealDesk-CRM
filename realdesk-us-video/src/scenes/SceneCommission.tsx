@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { B } from "../components/brand";
 import { MockBrowser } from "../components/MockBrowser";
 import { Pill, SectionLabel } from "../components/Callout";
+import { Cursor } from "../components/Cursor";
 
 const fmt = (n: number) => "$" + Math.round(n).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 
@@ -83,6 +84,31 @@ export const SceneCommission: React.FC = () => {
           </div>
         </MockBrowser>
       </div>
+
+      {/*
+        Cursor journey (1920×1080):
+        - Enters from bottom
+        - Hovers over sale price number (watches it count up)
+        - Moves to commission breakdown columns
+        - Settles on agent net card
+      */}
+      <Cursor
+        fadeOutAtFrame={220}
+        waypoints={[
+          { x: 960,  y: 1100, frame: 0   },  // off-screen bottom
+          { x: 830,  y: 154,  frame: 18  },  // sale price card — arrives as number counts
+          { x: 830,  y: 154,  frame: 55  },  // watch it count
+          { x: 830,  y: 287,  frame: 75  },  // listing side commission col
+          { x: 1238, y: 287,  frame: 100 },  // total commission col
+          { x: 1238, y: 287,  frame: 120 },  // pause
+          { x: 960,  y: 409,  frame: 145 },  // agent net card (green)
+          { x: 960,  y: 409,  frame: 240 },  // rest until fade-out
+        ]}
+        clicks={[
+          { frame: 55  },  // click sale price
+          { frame: 145 },  // click agent net
+        ]}
+      />
     </AbsoluteFill>
   );
 };

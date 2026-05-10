@@ -11,7 +11,14 @@ import { COLORS } from '@/config/colors';
 import { TableActionButtons } from '../../components/common/TableActionButtons';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
 import { useOrg } from '@/contexts/OrgContext';
-export const Owners = () => {
+import type { ReactNode } from 'react';
+
+export type OwnersProps = {
+  pageTop?: ReactNode;
+  pageTitle?: string;
+};
+
+export const Owners = ({ pageTop, pageTitle }: OwnersProps) => {
   const { t } = useTranslation(['owners', 'common']);
   const { isMember } = useOrg();
 
@@ -128,11 +135,11 @@ export const Owners = () => {
       <TableCell>
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-sm min-w-0">
-            <Mail className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+            <Mail className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-slate-400 flex-shrink-0`} />
             <span className={`truncate max-w-[150px] md:max-w-[250px]`}>{owner.email}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <Phone className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
+            <Phone className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-slate-400 flex-shrink-0`} />
             <span>{owner.phone}</span>
           </div>
         </div>
@@ -140,11 +147,11 @@ export const Owners = () => {
       <TableCell>
         {owner.address ? (
           <div className="flex items-center gap-2 text-sm min-w-0">
-            <MapPin className={`h-3 w-3 ${COLORS.muted.textLight} flex-shrink-0`} />
-            <span className={`${COLORS.gray.text600} truncate max-w-[180px] md:max-w-[300px]`}>{owner.address}</span>
+            <MapPin className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-slate-400 flex-shrink-0`} />
+            <span className={`${COLORS.gray.text600} dark:text-slate-300 truncate max-w-[180px] md:max-w-[300px]`}>{owner.address}</span>
           </div>
         ) : (
-          <span className={`${COLORS.muted.textLight} text-sm`}>-</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>-</span>
         )}
       </TableCell>
       <TableCell className="text-center">
@@ -170,7 +177,7 @@ export const Owners = () => {
     <div className="space-y-3">
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
-        <span className={`font-semibold text-base ${COLORS.gray.text900}`}>
+        <span className={`font-semibold text-base ${COLORS.gray.text900} dark:text-slate-100`}>
           {owner.name}
         </span>
         <span className={`inline-flex items-center justify-center px-3 py-1 text-xs font-semibold rounded-full ${COLORS.primary.bgGradient} ${COLORS.text.white} shadow-sm`}>
@@ -182,28 +189,28 @@ export const Owners = () => {
       <div className="space-y-2">
         {owner.email && (
           <div className="flex items-center gap-2 text-sm">
-            <Mail className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-            <span className={`${COLORS.gray.text600} truncate`}>{owner.email}</span>
+            <Mail className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+            <span className={`${COLORS.gray.text600} dark:text-slate-300 truncate`}>{owner.email}</span>
           </div>
         )}
         
         {owner.phone && (
           <div className="flex items-center gap-2 text-sm">
-            <Phone className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-            <span className={COLORS.gray.text600}>{owner.phone}</span>
+            <Phone className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+            <span className={`${COLORS.gray.text600} dark:text-slate-300`}>{owner.phone}</span>
           </div>
         )}
 
         {owner.address && (
           <div className="flex items-center gap-2 text-sm">
-            <MapPin className={`h-4 w-4 ${COLORS.muted.textLight}`} />
-            <span className={`${COLORS.gray.text600} truncate`}>{owner.address}</span>
+            <MapPin className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+            <span className={`${COLORS.gray.text600} dark:text-slate-300 truncate`}>{owner.address}</span>
           </div>
         )}
       </div>
 
       {/* Footer - Actions */}
-      <div className="flex gap-2 pt-2 border-t">
+      <div className="flex gap-2 pt-2 border-t border-gray-200 dark:border-slate-800">
         <TableActionButtons
           onEdit={() => handleEditOwner(owner)}
           onDelete={() => handleDeleteClick(owner)}
@@ -231,7 +238,7 @@ export const Owners = () => {
     description: searchQuery
       ? t('emptyState.noOwnersFoundDescription')
       : t('emptyState.noOwnersYetDescription'),
-    icon: <User className={`h-16 w-16 ${COLORS.muted.textLight}`} />,
+    icon: <User className={`h-16 w-16 ${COLORS.muted.textLight} dark:text-slate-400`} />,
     actionLabel: t('emptyState.addActionLabel'),
     showAction: !searchQuery,
   }), [searchQuery, t]);
@@ -239,7 +246,8 @@ export const Owners = () => {
   return (
     <>
       <ListPageTemplate
-        title={t('title')}
+        title={pageTitle ?? t('title')}
+        pageTop={pageTop}
         items={filteredOwners}
         loading={loading}
         searchQuery={searchQuery}

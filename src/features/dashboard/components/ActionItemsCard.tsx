@@ -43,17 +43,17 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
   }
 
   return (
-    <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 bg-gradient-to-br from-blue-50 to-slate-50 backdrop-blur-sm animate-fade-in">
+    <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 to-slate-50 dark:from-blue-950/30 dark:to-slate-900 backdrop-blur-sm animate-fade-in">
       <CardHeader>
         <div className="flex items-center gap-3">
           <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
             <AlertCircle className="h-5 w-5 text-white" />
           </div>
           <div>
-            <CardTitle className="text-slate-900 font-bold">
+            <CardTitle className="text-slate-900 dark:text-slate-100 font-bold">
               {isNewUser ? t('onboarding.title', 'Getting Started') : t('actionItems.title')}
             </CardTitle>
-            <CardDescription className="text-slate-700 font-medium">
+            <CardDescription className="text-slate-700 dark:text-slate-200 font-medium">
               {isNewUser ? t('onboarding.description', 'Complete these tasks to get started') : t('actionItems.description')}
             </CardDescription>
           </div>
@@ -63,16 +63,16 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
         {/* Onboarding Tasks for New Users */}
         {isNewUser && (
           <div>
-            <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+            <ul className={`space-y-1 text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
               <li className="flex items-center gap-2">
                 <span className="text-blue-600">•</span>
-                <a href="/properties" className="font-medium hover:text-blue-700 hover:underline">
+                <a href="/properties" className="font-medium hover:text-blue-700 dark:hover:text-blue-400 hover:underline">
                   {t('onboarding.addProperty', 'Add your first property')}
                 </a>
               </li>
               <li className="flex items-center gap-2">
                 <span className="text-blue-600">•</span>
-                <a href="/profile" className="font-medium hover:text-blue-700 hover:underline">
+                <a href="/profile" className="font-medium hover:text-blue-700 dark:hover:text-blue-400 hover:underline">
                   {t('onboarding.completeProfile', 'Complete your agency profile')}
                 </a>
               </li>
@@ -83,8 +83,8 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
         {/* Existing Action Items */}
         {actionItems.propertiesMissingInfo.total > 0 && (
           <div>
-            <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.properties.title')}</p>
-            <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+            <p className={`font-medium ${COLORS.gray.text900} dark:text-slate-100 mb-2`}>{t('actionItems.properties.title')}</p>
+            <ul className={`space-y-1 text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
               {actionItems.propertiesMissingInfo.noPhotos > 0 && (
                 <li className="flex items-center gap-2">
                   <span>•</span>
@@ -102,8 +102,8 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
         )}
         {actionItems.tenantsMissingInfo.total > 0 && (
           <div>
-            <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.tenants.title')}</p>
-            <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+            <p className={`font-medium ${COLORS.gray.text900} dark:text-slate-100 mb-2`}>{t('actionItems.tenants.title')}</p>
+            <ul className={`space-y-1 text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
               {actionItems.tenantsMissingInfo.noContact > 0 && (
                 <li className="flex items-center gap-2">
                   <span>•</span>
@@ -115,8 +115,8 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
         )}
         {actionItems.ownersMissingInfo.total > 0 && (
           <div>
-            <p className={`font-medium ${COLORS.gray.text900} mb-2`}>{t('actionItems.owners.title')}</p>
-            <ul className={`space-y-1 text-sm ${COLORS.gray.text600}`}>
+            <p className={`font-medium ${COLORS.gray.text900} dark:text-slate-100 mb-2`}>{t('actionItems.owners.title')}</p>
+            <ul className={`space-y-1 text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
               {actionItems.ownersMissingInfo.noContact > 0 && (
                 <li className="flex items-center gap-2">
                   <span>•</span>

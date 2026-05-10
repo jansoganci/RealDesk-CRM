@@ -1,0 +1,139 @@
+{
+  "page": {
+    "title": "Your Privacy Rights",
+    "subtitle": "California residents have the right to know, delete, and opt out under the California Consumer Privacy Act (CCPA).",
+    "submitRequest": "Submit a Privacy Request",
+    "checkStatus": "Check Request Status",
+    "yourRights": "Your CCPA Rights",
+    "faqTitle": "Frequently Asked Questions",
+    "contactNotice": "For questions, contact us at privacy@realdesk.us"
+  },
+  "rights": {
+    "know": {
+      "title": "Right to Know",
+      "description": "Request information about what personal data we collect, use, share, or sell about you."
+    },
+    "delete": {
+      "title": "Right to Delete",
+      "description": "Request that we delete personal information we've collected from you, subject to certain exceptions."
+    },
+    "optOut": {
+      "title": "Right to Opt-Out",
+      "description": "Opt out of the sale or sharing of your personal information to third parties."
+    },
+    "nonDiscrimination": {
+      "title": "Right to Non-Discrimination",
+      "description": "We will not discriminate against you for exercising any of your CCPA rights."
+    }
+  },
+  "faq": {
+    "whoQualifies": {
+      "q": "Who can submit a CCPA request?",
+      "a": "California residents whose personal information has been collected by a business using RealDesk can submit requests."
+    },
+    "howLong": {
+      "q": "How long does processing take?",
+      "a": "We aim to respond within 45 days. If more time is needed, we'll notify you and may extend by another 45 days."
+    },
+    "whatData": {
+      "q": "What personal data does RealDesk collect?",
+      "a": "Contact information (name, email, phone), transaction history, property preferences, and communication records related to real estate services."
+    },
+    "verification": {
+      "q": "Why do you need to verify my identity?",
+      "a": "Identity verification helps protect your privacy and ensures requests are fulfilled only for the correct individual."
+    }
+  },
+  "requestTypes": {
+    "know": "Right to Know",
+    "delete": "Right to Delete",
+    "opt_out_sale": "Opt Out of Sale",
+    "opt_out_share": "Opt Out of Sharing",
+    "correct": "Right to Correct"
+  },
+  "requestTypeDescriptions": {
+    "know": "Request a copy of the personal information collected about you.",
+    "delete": "Request deletion of your personal information from our records.",
+    "opt_out_sale": "Opt out of the sale of your personal information.",
+    "opt_out_share": "Opt out of sharing your personal information for cross-context behavioral advertising.",
+    "correct": "Request correction of inaccurate personal information."
+  },
+  "relationships": {
+    "tenant": "Tenant",
+    "buyer": "Buyer",
+    "seller": "Seller",
+    "lead": "Lead / Prospect",
+    "other": "Other"
+  },
+  "statuses": {
+    "pending": "Pending",
+    "in_review": "In Review",
+    "verification_sent": "Verification Sent",
+    "completed": "Completed",
+    "denied": "Denied"
+  },
+  "form": {
+    "title": "Submit a Privacy Request",
+    "step1Title": "Select Request Type",
+    "step2Title": "Your Information",
+    "step3Title": "Additional Details",
+    "step4Title": "Review & Submit",
+    "name": "Full Name",
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "relationship": "Your Relationship",
+    "selectRelationship": "Select relationship",
+    "relationshipDescription": "Additional Relationship Details",
+    "relationshipDescriptionPlaceholder": "e.g. Tenant at 123 Main St, or buyer represented by agent Jane Doe",
+    "requestType": "Request Type",
+    "details": "Additional Details",
+    "detailsPlaceholder": "Provide any additional context about your request (optional)",
+    "confirmNotice": "By submitting, you confirm that the information provided is accurate. We will verify your identity before processing your request.",
+    "back": "Back",
+    "next": "Next",
+    "submit": "Submit Request",
+    "submitting": "Submitting...",
+    "submitError": "Failed to submit request. Please try again.",
+    "successTitle": "Request Submitted",
+    "successMessage": "Your privacy request has been received. Save your request ID to check the status later. We will contact you at the email provided."
+  },
+  "statusCheck": {
+    "title": "Check Request Status",
+    "requestIdLabel": "Request ID",
+    "requestIdPlaceholder": "Enter your request UUID",
+    "check": "Check Status",
+    "checking": "Checking...",
+    "notFound": "No request found with that ID. Please verify the ID is correct.",
+    "submitted": "Submitted",
+    "completed": "Completed",
+    "notes": "Notes"
+  },
+  "admin": {
+    "title": "CCPA Compliance Dashboard",
+    "subtitle": "Manage data subject requests from your clients",
+    "searchPlaceholder": "Search by name or email...",
+    "allRequests": "All",
+    "status": "Status",
+    "submitted": "Submitted",
+    "completed": "Completed",
+    "noRequests": "No requests found",
+    "noRequestsHint": "CCPA requests submitted by your clients will appear here.",
+    "requestDetail": "Request Details",
+    "requesterInfo": "Requester Information",
+    "requestInfo": "Request Information",
+    "notes": "Status Notes",
+    "notesOptional": "Notes (optional)",
+    "notesPlaceholder": "Add notes about this request or action taken...",
+    "actions": "Actions",
+    "markInReview": "Mark In Review",
+    "sendVerification": "Send Verification",
+    "completeKnow": "Complete — Data Disclosed",
+    "executeDelete": "Execute Data Deletion",
+    "completeOptOut": "Complete — Mark Opted Out",
+    "completeCorrect": "Complete — Mark Corrected",
+    "deny": "Deny Request",
+    "actionSuccess": "Request updated successfully",
+    "actionError": "Failed to update request",
+    "deletionSummary": "Deletion Summary"
+  }
+}

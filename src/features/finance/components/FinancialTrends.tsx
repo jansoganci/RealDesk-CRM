@@ -31,7 +31,7 @@ export const FinancialTrends = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -129,19 +129,19 @@ export const FinancialTrends = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-xl font-bold text-slate-900">
+            <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
               {t('finance:analytics.yearlyTrend')}
             </CardTitle>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="text-sm text-gray-600 dark:text-slate-300 mt-1">
               {t('finance:analytics.yearlyTrendDesc', { year: yearlySummary.year })}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-500 dark:text-slate-400">
               {t('finance:analytics.operatingEfficiency')}
             </p>
             <p

@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      data_subject_requests: {
+        Row: {
+          id: string
+          org_id: string
+          requested_by: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone: string | null
+          relationship_to_org: string
+          relationship_description: string | null
+          request_type: string
+          details: string | null
+          status: string
+          status_notes: string | null
+          verified_at: string | null
+          completed_at: string | null
+          deletion_summary: string | null
+          data_disclosed_at: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          requested_by?: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone?: string | null
+          relationship_to_org: string
+          relationship_description?: string | null
+          request_type: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          requested_by?: string | null
+          requester_name?: string
+          requester_email?: string
+          requester_phone?: string | null
+          relationship_to_org?: string
+          relationship_description?: string | null
+          request_type?: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_subject_requests_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buyer_agent_agreements: {
         Row: {
           commission_rate: number | null

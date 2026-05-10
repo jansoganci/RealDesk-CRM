@@ -15,7 +15,6 @@ import { Label } from '@/components/ui/label';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { cn } from '@/lib/utils';
 import type { ContractFormData } from '@/types/contract.types';
@@ -206,24 +205,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
 
           <div>
             <Label>{t('create.fields.currency')} *</Label>
-            <Select
-              value={form.watch('currency') || 'USD'}
-              onValueChange={(value) => form.setValue('currency', value as 'USD' | 'EUR' | 'TRY')}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder={t('create.placeholders.currency')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="USD">{t('create.currencyOptions.USD')}</SelectItem>
-                <SelectItem value="EUR">{t('create.currencyOptions.EUR')}</SelectItem>
-                <SelectItem value="TRY">{t('create.currencyOptions.TRY')}</SelectItem>
-              </SelectContent>
-            </Select>
-            {form.formState.errors.currency && (
-              <p className="text-sm text-red-600 mt-1">
-                {form.formState.errors.currency.message}
-              </p>
-            )}
+            <p className="text-sm text-slate-700 py-2">{t('create.currencyOptions.USD')}</p>
           </div>
         </div>
 

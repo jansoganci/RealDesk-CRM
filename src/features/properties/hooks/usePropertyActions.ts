@@ -33,7 +33,18 @@ export function usePropertyActions(
         options?.onCloseEdit?.();
       } else {
         // user_id is injected automatically by the service
-        await propertiesService.create(data);
+        const address = [
+          data.street_address?.trim(),
+          data.city?.trim(),
+          data.state?.trim(),
+          data.zip_code?.trim(),
+        ]
+          .filter(Boolean)
+          .join(', ');
+        await propertiesService.create({
+          ...data,
+          address: address || data.street_address?.trim() || '',
+        });
         toast.success(t('toasts.addSuccess'));
         options?.onCloseCreate?.();
       }

@@ -126,7 +126,6 @@
     "mutualAcceptanceDate": "Mutual acceptance date",
     "autoPopulate": "Auto-populate",
     "addParty": "Add party",
-    "partyRole": "Role",
     "company": "Company",
     "email": "Email",
     "updateParty": "Update party",
@@ -231,6 +230,19 @@
     }
   },
   "timeline": {
+    "pageTitle": "Timeline",
+    "searchPlaceholder": "Search milestones...",
+    "overdue": "{{days}}d overdue",
+    "dueToday": "Due today",
+    "dueIn": "Due in {{days}}d",
+    "empty": "No milestones match your filters.",
+    "filters": {
+      "all": "All Milestones",
+      "overdue": "Overdue",
+      "dueToday": "Due Today",
+      "thisWeek": "This Week",
+      "pending": "Pending"
+    },
     "filter": {
       "all": "All",
       "overdue": "Overdue",

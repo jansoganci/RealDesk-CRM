@@ -190,11 +190,11 @@ export function EditProfileInfoDialog({
             <Input
               value={user?.email || ''}
               disabled
-              className="bg-muted text-muted-foreground cursor-not-allowed pr-10"
+              className="border-slate-200 bg-slate-50 text-slate-600 cursor-not-allowed pr-10 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-400"
             />
-            <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
           </div>
-          <FormDescription>
+          <FormDescription className="text-slate-600 dark:text-slate-400">
             {t('profile:profileInfo.fields.emailHelp')}
           </FormDescription>
         </FormItem>
@@ -318,7 +318,7 @@ export function EditProfileInfoDialog({
                     }
                     className="pr-8"
                   />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-muted-foreground">
+                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 dark:text-slate-400">
                     %
                   </span>
                 </div>
@@ -363,7 +363,7 @@ export function EditProfileInfoDialog({
     <>
       {/* Discard Confirmation Dialog */}
       <AlertDialog open={showDiscardDialog} onOpenChange={setShowDiscardDialog}>
-        <AlertDialogContent>
+        <AlertDialogContent className="border-slate-200 dark:border-slate-700">
           <AlertDialogHeader>
             <AlertDialogTitle>
               {t('profile:profileInfo.discardDialog.title')}
@@ -386,7 +386,7 @@ export function EditProfileInfoDialog({
       {/* Mobile: Drawer */}
       {isMobile ? (
         <Drawer open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-          <DrawerContent>
+          <DrawerContent className="border-slate-200 dark:border-slate-700">
             <DrawerHeader className="text-left">
               <DrawerTitle>
                 {t('profile:profileInfo.editDialog.title')}
@@ -395,7 +395,7 @@ export function EditProfileInfoDialog({
                 {t('profile:profileInfo.editDialog.description')}
               </DrawerDescription>
             </DrawerHeader>
-            <div className="px-4 overflow-y-auto max-h-[60vh]">
+            <div className="px-4 overflow-y-auto max-h-[60vh] bg-white dark:bg-slate-950">
               {formContent}
             </div>
             <DrawerFooter className="flex-row gap-2">
@@ -406,7 +406,7 @@ export function EditProfileInfoDialog({
       ) : (
         /* Desktop: Dialog */
         <Dialog open={isOpen} onOpenChange={(open) => !open && handleClose()}>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-950">
             <DialogHeader>
               <DialogTitle>
                 {t('profile:profileInfo.editDialog.title')}
@@ -415,7 +415,7 @@ export function EditProfileInfoDialog({
                 {t('profile:profileInfo.editDialog.description')}
               </DialogDescription>
             </DialogHeader>
-            <div className="max-h-[60vh] overflow-y-auto py-4">
+            <div className="max-h-[60vh] overflow-y-auto py-4 bg-white dark:bg-slate-950">
               {formContent}
             </div>
             <DialogFooter>{footerContent}</DialogFooter>

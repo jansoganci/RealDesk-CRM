@@ -279,7 +279,7 @@ export const RecurringExpenseDialog = ({
                       </FormControl>
                       <SelectContent>
                         {categories.length === 0 ? (
-                          <div className="px-2 py-1.5 text-sm text-gray-500">
+                          <div className="px-2 py-1.5 text-sm text-gray-500 dark:text-slate-400">
                             {t('finance:fields.noCategoriesAvailable', { defaultValue: 'No categories available' })}
                           </div>
                         ) : (

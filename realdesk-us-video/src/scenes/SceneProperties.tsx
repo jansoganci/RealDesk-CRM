@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { B } from "../components/brand";
 import { MockBrowser } from "../components/MockBrowser";
 import { Pill, SectionLabel } from "../components/Callout";
+import { Cursor } from "../components/Cursor";
 
 const PROPS = [
   { address: "1842 Maple Ave", city: "Austin, TX 78701", type: "For Sale", typeBg: B.primaryBg, typeColor: B.primary, price: "$485,000", beds: 3, baths: 2, sqft: "1,820", status: "Available", statusColor: B.secondary, mls: "MLS #7823401", emoji: "🏡" },
@@ -73,6 +74,31 @@ export const SceneProperties: React.FC = () => {
           </div>
         </MockBrowser>
       </div>
+
+      {/*
+        Cursor journey (coordinates are in the full 1920×1080 frame):
+        - Starts off-screen bottom-right, enters around frame 30
+        - Moves to sidebar "Properties" nav item (~548, 310)
+        - Slides to first property card (~850, 480)
+        - Clicks, then drifts to second card (~1100, 480)
+        - Rests there for the remainder of the scene
+      */}
+      <Cursor
+        fadeOutAtFrame={295}
+        waypoints={[
+          { x: 1700, y: 900, frame: 0   },  // off-screen start (enters from bottom-right)
+          { x: 548,  y: 310, frame: 60  },  // sidebar "Properties" nav item
+          { x: 548,  y: 310, frame: 90  },  // pause on nav
+          { x: 855,  y: 475, frame: 135 },  // first property card
+          { x: 855,  y: 475, frame: 165 },  // pause before click
+          { x: 855,  y: 475, frame: 185 },  // hold after click
+          { x: 1110, y: 475, frame: 240 },  // drift to second card
+          { x: 1110, y: 475, frame: 315 },  // rest until fade-out
+        ]}
+        clicks={[
+          { frame: 165 },  // click first property card
+        ]}
+      />
     </AbsoluteFill>
   );
 };

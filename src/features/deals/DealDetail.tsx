@@ -57,11 +57,11 @@ function DetailRow({
   return (
     <div
       className={cn(
-        'grid grid-cols-1 gap-1 py-2.5 border-b border-gray-100 last:border-0 sm:grid-cols-3 sm:gap-4'
+        'grid grid-cols-1 gap-1 py-2.5 border-b border-gray-100 dark:border-slate-800 last:border-0 sm:grid-cols-3 sm:gap-4'
       )}
     >
-      <dt className={`text-sm font-medium ${COLORS.muted.text}`}>{label}</dt>
-      <dd className={`text-sm sm:col-span-2 ${COLORS.gray.text900}`}>
+      <dt className={`text-sm font-medium ${COLORS.muted.text} dark:text-slate-400`}>{label}</dt>
+      <dd className={`text-sm sm:col-span-2 ${COLORS.gray.text900} dark:text-slate-100`}>
         {children}
       </dd>
     </div>
@@ -110,7 +110,7 @@ function DealDetailBody({
       </TabsList>
 
       <TabsContent value="overview" className="mt-6 space-y-6">
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t('detail.section.details')}</CardTitle>
           </CardHeader>
@@ -183,7 +183,7 @@ function DealDetailBody({
           </CardContent>
         </Card>
 
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t('detail.section.linkedLead')}</CardTitle>
           </CardHeader>
@@ -194,19 +194,19 @@ function DealDetailBody({
                 <DetailRow label={t('detail.leadPhone')}>{lead.phone}</DetailRow>
               </dl>
             ) : (
-              <p className={`text-sm ${COLORS.muted.text}`}>{t('detail.noLead')}</p>
+              <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>{t('detail.noLead')}</p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t('detail.section.property')}</CardTitle>
           </CardHeader>
           <CardContent>
             {property ? (
               <div className="space-y-3">
-                <p className={`text-sm ${COLORS.gray.text900}`}>
+                <p className={`text-sm ${COLORS.gray.text900} dark:text-slate-100`}>
                   {property.address}
                   {property.city ? `, ${property.city}` : ''}
                 </p>
@@ -221,13 +221,13 @@ function DealDetailBody({
                 </Button>
               </div>
             ) : (
-              <p className={`text-sm ${COLORS.muted.text}`}>{t('detail.noProperty')}</p>
+              <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>{t('detail.noProperty')}</p>
             )}
           </CardContent>
         </Card>
 
         {negotiations.length > 0 && (
-          <Card className="border-gray-200/80 shadow-sm">
+          <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
             <CardHeader>
               <CardTitle className="text-lg">{t('detail.section.negotiations')}</CardTitle>
             </CardHeader>
@@ -244,7 +244,7 @@ function DealDetailBody({
         )}
 
         {parties.length > 0 && (
-          <Card className="border-gray-200/80 shadow-sm">
+          <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
             <CardHeader>
               <CardTitle className="text-lg">{t('detail.section.parties')}</CardTitle>
             </CardHeader>
@@ -252,10 +252,10 @@ function DealDetailBody({
               <ul className="space-y-2">
                 {parties.map((p) => (
                   <li key={p.id} className="text-sm">
-                    <span className={`font-medium ${COLORS.gray.text900}`}>
+                    <span className={`font-medium ${COLORS.gray.text900} dark:text-slate-100`}>
                       {p.name}
                     </span>
-                    <span className={`${COLORS.muted.text} ml-2`}>
+                    <span className={`${COLORS.muted.text} dark:text-slate-400 ml-2`}>
                       ({p.role})
                     </span>
                   </li>
@@ -336,7 +336,7 @@ export function DealDetail() {
           <div className="flex min-h-[400px] items-center justify-center">
             <div className="text-center">
               <Loader2 className="mx-auto h-8 w-8 animate-spin text-primary" />
-              <p className={`mt-4 text-sm ${COLORS.muted.text}`}>
+              <p className={`mt-4 text-sm ${COLORS.muted.text} dark:text-slate-400`}>
                 {t('detail.loading')}
               </p>
             </div>
@@ -384,7 +384,7 @@ export function DealDetail() {
                 defaultValue: deal.deal_stage,
               })}
             </Badge>
-            <span className={`text-sm ${COLORS.muted.text}`}>
+            <span className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>
               {deal.deal_type === 'rental'
                 ? t('dealType.rental')
                 : t('dealType.sale')}

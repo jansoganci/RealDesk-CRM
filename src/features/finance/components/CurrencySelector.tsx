@@ -32,7 +32,7 @@ export function CurrencySelector() {
 
   return (
     <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-600 whitespace-nowrap">
+      <label className="text-sm text-gray-600 dark:text-slate-300 whitespace-nowrap">
         {t('finance:currency.displayCurrency')}:
       </label>
       <Select

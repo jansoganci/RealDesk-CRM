@@ -97,7 +97,7 @@ export function DealOutcomeActions({
             type="button"
             size="sm"
             variant="outline"
-            className={`gap-1.5 border-red-200 ${COLORS.danger.text} hover:bg-red-50`}
+            className={`gap-1.5 border-red-200 dark:border-red-900 ${COLORS.danger.text} hover:bg-red-50 dark:hover:bg-red-950/40`}
             onClick={() => setFellOpen(true)}
           >
             <XCircle className="h-4 w-4" />

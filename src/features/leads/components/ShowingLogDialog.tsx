@@ -33,14 +33,14 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Check, ChevronsUpDown } from 'lucide-react';
+import { AlertTriangle, Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import {
   createShowingLogSchema,
   SHOWING_FEEDBACK_OPTIONS,
   type CreateShowingLogFormData,
 } from '../schemas/showing-log-form';
-import type { ShowingLog } from '@/services/leads.service';
+import type { BuyerAgentAgreement, ShowingLog } from '@/services/leads.service';
 import type { Property } from '@/types';
 
 interface ShowingLogDialogProps {
@@ -64,6 +64,8 @@ export function ShowingLogDialog({
   const [properties, setProperties] = useState<Property[]>([]);
   const [loadingProperties, setLoadingProperties] = useState(false);
   const [popoverOpen, setPopoverOpen] = useState(false);
+  const [activeAgreement, setActiveAgreement] = useState<BuyerAgentAgreement | null>(null);
+  const [checkingAgreement, setCheckingAgreement] = useState(false);
 
   const form = useForm<CreateShowingLogFormData>({
     resolver: zodResolver(createShowingLogSchema),
@@ -77,21 +79,13 @@ export function ShowingLogDialog({
     if (open) {
       if (existingShowing) {
         const mappedFeedback =
-          existingShowing.feedback_enum ??
-          (existingShowing.interest_level === 'high'
-            ? 'loved'
-            : existingShowing.interest_level === 'medium'
-            ? 'interested'
-            : existingShowing.interest_level === 'low' || existingShowing.interest_level === 'none'
-            ? 'pass'
-            : 'interested');
+          existingShowing.feedback_enum ?? 'interested';
         form.reset({
           lead_id: leadId,
           property_id: existingShowing.property_id,
           showing_date: new Date(existingShowing.showing_date),
           duration_minutes: existingShowing.duration_minutes ?? undefined,
           feedback: mappedFeedback,
-          interest_level: existingShowing.interest_level as any,
         });
       } else {
         form.reset({
@@ -102,6 +96,25 @@ export function ShowingLogDialog({
       }
     }
   }, [open, existingShowing, leadId, form]);
+
+  useEffect(() => {
+    const checkAgreement = async () => {
+      if (!open || existingShowing || !leadId) {
+        setCheckingAgreement(false);
+        return;
+      }
+      setCheckingAgreement(true);
+      try {
+        const agreement = await leadsService.getAgreementByLeadId(leadId);
+        setActiveAgreement(agreement);
+      } catch {
+        setActiveAgreement(null);
+      } finally {
+        setCheckingAgreement(false);
+      }
+    };
+    void checkAgreement();
+  }, [open, leadId, existingShowing]);
 
   useEffect(() => {
     const loadProperties = async () => {
@@ -126,18 +139,22 @@ export function ShowingLogDialog({
       return;
     }
 
+    if (!existingShowing) {
+      const agreement = await leadsService.getAgreementByLeadId(leadId);
+      if (!agreement || agreement.status !== 'active') {
+        toast.error(t('showings.agreementRequired', 'An active buyer-agent agreement is required to log showings.'));
+        return;
+      }
+    }
+
     try {
       if (existingShowing) {
         await leadsService.updateShowingFeedback(existingShowing.id, data.feedback);
         toast.success(t('toasts.showingUpdated', 'Showing updated'));
       } else {
-        const mappedInterestLevel =
-          data.feedback === 'loved' ? 'high' : data.feedback === 'interested' ? 'medium' : 'low';
-
         const serviceData = {
           ...data,
           duration_minutes: data.duration_minutes ?? undefined,
-          interest_level: mappedInterestLevel as 'high' | 'medium' | 'low' | 'none',
         };
         await leadsService.createShowingLog(serviceData, user.id, currentOrg.id);
         toast.success(t('toasts.showingCreated', 'Showing logged successfully'));
@@ -164,6 +181,24 @@ export function ShowingLogDialog({
               : t('showings.logShowing', 'Log Property Showing')}
           </DialogTitle>
         </DialogHeader>
+
+        {!existingShowing && !checkingAgreement && (!activeAgreement || activeAgreement.status !== 'active') && (
+          <div className="bg-amber-50 border border-amber-200 rounded-md p-3 mb-4">
+            <div className="flex items-start gap-2">
+              <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5 shrink-0" />
+              <div>
+                <p className="text-sm font-medium text-amber-800">
+                  {t('showings.noActiveAgreement', 'No Active Buyer-Agent Agreement')}
+                </p>
+                <p className="text-xs text-amber-700 mt-1">
+                  {activeAgreement
+                    ? t('showings.agreementNotActive', 'Agreement status: {{status}}. Only active agreements comply with NAR requirements.', { status: activeAgreement.status })
+                    : t('showings.agreementRequired', 'A signed buyer-agent agreement is required before showing properties.')}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">

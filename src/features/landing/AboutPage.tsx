@@ -12,34 +12,34 @@ export const AboutPage = () => {
         title={`${t("about.title")} - emlakcrm`}
         description={t("about.metaDescription")}
       />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <LandingHeader />
         <main className="max-w-4xl mx-auto px-6 py-16">
           <div className="prose prose-lg max-w-none">
-            <h1 className="text-4xl font-bold text-gray-900 mb-8">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-slate-100 mb-8">
               {t("about.title")}
             </h1>
             
-            <div className="space-y-6 text-gray-700 leading-relaxed">
+            <div className="space-y-6 text-gray-700 dark:text-slate-300 leading-relaxed">
               <p className="text-lg">
                 {t("about.description")}
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mt-8 mb-4">
                 {t("about.mission.title")}
               </h2>
               <p>
                 {t("about.mission.description")}
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mt-8 mb-4">
                 {t("about.vision.title")}
               </h2>
               <p>
                 {t("about.vision.description")}
               </p>
 
-              <h2 className="text-2xl font-semibold text-gray-900 mt-8 mb-4">
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-slate-100 mt-8 mb-4">
                 {t("about.contact.title")}
               </h2>
               <p>

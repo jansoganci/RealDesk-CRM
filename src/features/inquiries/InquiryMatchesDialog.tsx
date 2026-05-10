@@ -130,12 +130,11 @@ export const InquiryMatchesDialog = ({
                 <Phone className={`h-4 w-4 ${COLORS.gray.text500}`} />
                 <span className={COLORS.gray.text700}>{inquiry.phone}</span>
               </div>
-              {inquiry.preferred_city && (
+              {(inquiry.preferred_city || inquiry.preferred_state || inquiry.preferred_district) && (
                 <div className="flex items-center gap-1">
                   <MapPin className={`h-4 w-4 ${COLORS.gray.text500}`} />
                   <span className={COLORS.gray.text700}>
-                    {inquiry.preferred_city}
-                    {inquiry.preferred_district && `, ${inquiry.preferred_district}`}
+                    {[inquiry.preferred_city, inquiry.preferred_state, inquiry.preferred_district].filter(Boolean).join(', ')}
                   </span>
                 </div>
               )}

@@ -66,16 +66,16 @@ export const SubscriptionStatusCard = () => {
     if (!status) return null;
 
     const badges = {
-      active: { color: 'bg-green-500', text: t('subscriptionCard.status.active'), variant: 'default' as const },
-      trialing: { color: 'bg-blue-500', text: t('subscriptionCard.status.trialing'), variant: 'default' as const },
-      past_due: { color: 'bg-yellow-500', text: t('subscriptionCard.status.pastDue'), variant: 'outline' as const },
-      canceled: { color: 'bg-red-500', text: t('subscriptionCard.status.canceled'), variant: 'destructive' as const },
-      incomplete: { color: 'bg-gray-500', text: t('subscriptionCard.status.incomplete'), variant: 'outline' as const },
-      incomplete_expired: { color: 'bg-gray-500', text: t('subscriptionCard.status.expired'), variant: 'outline' as const },
-      unpaid: { color: 'bg-red-500', text: t('subscriptionCard.status.unpaid'), variant: 'destructive' as const },
+      active: { color: 'bg-green-500 dark:bg-green-400', text: t('subscriptionCard.status.active'), variant: 'default' as const },
+      trialing: { color: 'bg-blue-500 dark:bg-blue-400', text: t('subscriptionCard.status.trialing'), variant: 'default' as const },
+      past_due: { color: 'bg-yellow-500 dark:bg-yellow-400', text: t('subscriptionCard.status.pastDue'), variant: 'outline' as const },
+      canceled: { color: 'bg-red-500 dark:bg-red-400', text: t('subscriptionCard.status.canceled'), variant: 'destructive' as const },
+      incomplete: { color: 'bg-gray-500 dark:bg-slate-500', text: t('subscriptionCard.status.incomplete'), variant: 'outline' as const },
+      incomplete_expired: { color: 'bg-gray-500 dark:bg-slate-500', text: t('subscriptionCard.status.expired'), variant: 'outline' as const },
+      unpaid: { color: 'bg-red-500 dark:bg-red-400', text: t('subscriptionCard.status.unpaid'), variant: 'destructive' as const },
     };
 
-    const badge = badges[status] || { color: 'bg-gray-500', text: status, variant: 'outline' as const };
+    const badge = badges[status] || { color: 'bg-gray-500 dark:bg-slate-500', text: status, variant: 'outline' as const };
 
     return (
       <Badge variant={badge.variant} className="gap-2">
@@ -105,16 +105,16 @@ export const SubscriptionStatusCard = () => {
 
   if (billingLoading && !billingStatus) {
     return (
-      <Card>
+      <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
         <CardHeader>
-          <div className="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
-          <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4 mt-2"></div>
+          <div className="h-6 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-1/2"></div>
+          <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-3/4 mt-2"></div>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-            <div className="h-4 bg-gray-200 rounded animate-pulse w-3/4"></div>
-            <div className="h-10 bg-gray-200 rounded animate-pulse"></div>
+            <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
+            <div className="h-4 bg-gray-200 dark:bg-slate-700 rounded animate-pulse w-3/4"></div>
+            <div className="h-10 bg-gray-200 dark:bg-slate-700 rounded animate-pulse"></div>
           </div>
         </CardContent>
       </Card>
@@ -123,10 +123,10 @@ export const SubscriptionStatusCard = () => {
 
   if (!billingStatus?.hasActiveAccess) {
     return (
-      <Card>
+      <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <CreditCard className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+            <CreditCard className="h-5 w-5 text-slate-700 dark:text-slate-300" />
             {t('subscriptionCard.title')}
           </CardTitle>
           <CardDescription>
@@ -135,7 +135,7 @@ export const SubscriptionStatusCard = () => {
         </CardHeader>
         <CardContent>
           <div className="text-center py-6 space-y-4">
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-slate-300">
               {t('subscriptionCard.noSubscription.message')}
             </p>
             <Button
@@ -154,10 +154,10 @@ export const SubscriptionStatusCard = () => {
   }
 
   return (
-    <Card>
+    <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <CreditCard className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <CreditCard className="h-5 w-5 text-slate-700 dark:text-slate-300" />
           {t('subscriptionCard.title')}
         </CardTitle>
         <CardDescription>
@@ -166,11 +166,11 @@ export const SubscriptionStatusCard = () => {
       </CardHeader>
       <CardContent className="space-y-6">
         {billingStatus?.isTrial && (
-          <div className="rounded-lg border border-blue-100 bg-blue-50 p-4">
-            <p className="text-sm font-semibold text-blue-900">
+          <div className="rounded-lg border border-blue-100 dark:border-blue-900/40 bg-blue-50 dark:bg-blue-950/40 p-4">
+            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
               {tBilling('trialReminder.profile.label', { date: formatDate(billingStatus.trialEndsAt) })}
             </p>
-            <p className="mt-1 text-xs text-blue-800">
+            <p className="mt-1 text-xs text-blue-800 dark:text-blue-200">
               {trialDaysRemaining !== null
                 ? tBilling('trialReminder.profile.countdown', { count: trialDaysRemaining })
                 : tBilling('trialReminder.banner.message.default')}
@@ -181,28 +181,28 @@ export const SubscriptionStatusCard = () => {
         {/* Plan Info */}
         <div className="space-y-4">
           <div>
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-1">
               {t('subscriptionCard.currentPlan')}
             </p>
-            <p className="text-2xl font-bold text-slate-900">
+            <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               {getPlanDisplayName(billingStatus.plan)}
             </p>
           </div>
 
           <div>
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-1">
               {t('subscriptionCard.statusLabel')}
             </p>
             {getStatusBadge(billingStatus.status)}
           </div>
 
           <div>
-            <p className="text-sm text-gray-600 mb-1">
+            <p className="text-sm text-gray-600 dark:text-slate-300 mb-1">
               {billingStatus.cancelAtPeriodEnd
                 ? t('subscriptionCard.cancelsOn')
                 : t('subscriptionCard.renewsOn')}
             </p>
-            <p className="text-lg font-semibold text-slate-900">
+            <p className="text-lg font-semibold text-slate-900 dark:text-slate-100">
               {formatDate(billingStatus.currentPeriodEnd)}
             </p>
           </div>
@@ -210,8 +210,8 @@ export const SubscriptionStatusCard = () => {
 
         {/* Cancel Warning */}
         {billingStatus.cancelAtPeriodEnd && (
-          <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-            <p className="text-sm text-yellow-800 font-medium">
+          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/40 border border-yellow-200 dark:border-yellow-900/40 rounded-lg">
+            <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
               {t('subscriptionCard.cancelWarning')}
             </p>
           </div>
@@ -241,7 +241,7 @@ export const SubscriptionStatusCard = () => {
                   </>
                 )}
               </Button>
-              <p className="text-xs text-center text-gray-500">
+              <p className="text-xs text-center text-gray-500 dark:text-slate-400">
                 {t('subscription.manageHelperText')}
               </p>
             </div>
@@ -253,7 +253,7 @@ export const SubscriptionStatusCard = () => {
               type="button"
               onClick={handleUpgradePlan}
               variant="outline"
-              className="w-full gap-2"
+              className="w-full gap-2 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
             >
               <ArrowUpCircle className="h-4 w-4" />
               {t('subscriptionCard.buttons.upgradePlan')}

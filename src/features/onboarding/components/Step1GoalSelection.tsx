@@ -139,10 +139,10 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                   key={option.value}
                   className={cn(
                     'flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all',
-                    'hover:bg-slate-50 hover:border-blue-300',
+                    'hover:bg-slate-50 hover:border-blue-300 dark:hover:bg-slate-800/50 dark:hover:border-blue-600',
                     isSelected
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-slate-200 bg-white'
+                      ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/40'
+                      : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900'
                   )}
                   onClick={() => !saving && !isLoading && setPrimaryUseCase(option.value)}
                 >
@@ -158,12 +158,12 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                     <Icon
                       className={cn(
                         'h-5 w-5 flex-shrink-0',
-                        isSelected ? 'text-blue-600' : 'text-slate-400'
+                        isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'
                       )}
                     />
                     <span className={cn(
                       'text-sm font-medium',
-                      isSelected ? 'text-blue-900' : 'text-slate-700'
+                      isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-slate-700 dark:text-slate-200'
                     )}>
                       {t(`step1.options.${option.labelKey}`)}
                     </span>

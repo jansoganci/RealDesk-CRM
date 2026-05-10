@@ -48,19 +48,19 @@ export function PhaseHeader({
   const badge = getHealthBadge(health);
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div className="rounded-lg border border-gray-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="space-y-2">
           <div className="flex flex-wrap items-center gap-2">
             <Badge variant="outline">Phase {phaseNumber}</Badge>
-            <h3 className={cn('text-base font-semibold', COLORS.gray.text900)}>{phaseName}</h3>
+            <h3 className={cn('text-base font-semibold', COLORS.gray.text900, 'dark:text-slate-100')}>{phaseName}</h3>
             <Badge className={cn('border', badge.className)}>{badge.label}</Badge>
           </div>
           <div className="flex items-center gap-3">
             <div className="w-36">
               <Progress value={progress} />
             </div>
-            <p className={cn('text-sm', COLORS.gray.text600)}>
+            <p className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-300')}>
               {completedCount} / {totalCount} complete
             </p>
           </div>

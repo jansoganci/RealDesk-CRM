@@ -1,0 +1,92 @@
+{
+  "title": "Applicant Screening",
+  "subtitle": "Track and manage rental applicant screenings",
+  "addScreening": "Add Applicant",
+  "editScreening": "Edit Applicant",
+  "noScreenings": "No applicants yet",
+  "noScreeningsDesc": "Add your first applicant to start screening.",
+  "searchPlaceholder": "Search by name, email or phone…",
+  "filters": {
+    "all": "All",
+    "pending": "Pending",
+    "in_review": "In Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "flagged": "Flagged"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_review": "In Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "flagged": "Flagged"
+  },
+  "table": {
+    "applicant": "Applicant",
+    "status": "Status",
+    "property": "Property",
+    "moveIn": "Move-In",
+    "income": "Monthly Income",
+    "creditScore": "Credit Score",
+    "progress": "Progress",
+    "actions": "Actions"
+  },
+  "fields": {
+    "applicantName": "Full Name",
+    "applicantEmail": "Email",
+    "applicantPhone": "Phone",
+    "screeningStatus": "Status",
+    "propertyId": "Property (optional)",
+    "leadId": "Lead (optional)",
+    "desiredMoveInDate": "Desired Move-In Date",
+    "monthlyIncome": "Monthly Income ($)",
+    "creditScore": "Credit Score (300–850)",
+    "notes": "Notes"
+  },
+  "checklist": {
+    "title": "Screening Checklist",
+    "progress": "{{completed}} of {{total}} completed",
+    "background_check": "Background Check",
+    "credit_check": "Credit Check",
+    "employment_verification": "Employment Verification",
+    "landlord_reference": "Landlord Reference",
+    "income_verification": "Income Verification"
+  },
+  "dialog": {
+    "createTitle": "Add Applicant",
+    "editTitle": "Edit Applicant",
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving…"
+  },
+  "detail": {
+    "title": "Applicant Details",
+    "contactInfo": "Contact Information",
+    "financials": "Financials",
+    "notes": "Notes",
+    "noNotes": "No notes added yet.",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirmDelete": "Delete Applicant?",
+    "confirmDeleteDesc": "This will permanently remove the applicant from the screening list. This action cannot be undone.",
+    "cancelDelete": "Cancel",
+    "confirmDeleteBtn": "Delete"
+  },
+  "toasts": {
+    "createSuccess": "Applicant added successfully.",
+    "createError": "Failed to add applicant.",
+    "updateSuccess": "Applicant updated successfully.",
+    "updateError": "Failed to update applicant.",
+    "deleteSuccess": "Applicant deleted.",
+    "deleteError": "Failed to delete applicant.",
+    "statusSuccess": "Status updated.",
+    "statusError": "Failed to update status."
+  },
+  "validation": {
+    "nameRequired": "Full name is required.",
+    "emailInvalid": "Enter a valid email address.",
+    "creditScoreRange": "Credit score must be between 300 and 850.",
+    "incomePositive": "Monthly income must be a positive number."
+  }
+}

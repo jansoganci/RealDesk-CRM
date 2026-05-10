@@ -79,7 +79,10 @@ export function ReminderSummaryCards({
     return (
       <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6', className)}>
         {[1, 2, 3].map((i) => (
-          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+          <Card
+            key={i}
+            className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80"
+          >
             <CardHeader className="flex flex-row items-center gap-3 space-y-0 pb-2">
               <Skeleton className="h-10 w-10 rounded-xl" />
               <CardTitle className="flex-1">
@@ -123,6 +126,7 @@ export function ReminderSummaryCards({
           className={cn(
             'shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1',
             'border-gray-200/50 backdrop-blur-sm bg-white/90',
+            'dark:border-gray-700/50 dark:bg-gray-900/90',
             onCardClick && 'cursor-pointer',
             className
           )}
@@ -136,25 +140,37 @@ export function ReminderSummaryCards({
             )}>
               {metric.icon}
             </div>
-            <CardTitle className="text-sm font-semibold text-slate-700">
+            <CardTitle className="text-sm font-semibold text-slate-700 dark:text-slate-200">
               {metric.label}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent">
+            <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent dark:from-slate-100 dark:to-slate-300">
               {metric.value}
             </div>
-            <p className={cn('text-xs mt-1.5 leading-relaxed', COLORS.gray.text600)}>
+            <p
+              className={cn(
+                'text-xs mt-1.5 leading-relaxed',
+                COLORS.gray.text600,
+                'dark:text-gray-400'
+              )}
+            >
               {metric.description}
             </p>
             {metric.trend && (
               <div className="flex items-center gap-1 mt-2 text-xs">
                 {metric.trend.isPositive ? (
-                  <TrendingUp className="h-3 w-3 text-green-600" />
+                  <TrendingUp className="h-3 w-3 text-green-600 dark:text-green-400" />
                 ) : (
-                  <TrendingDown className="h-3 w-3 text-red-600" />
+                  <TrendingDown className="h-3 w-3 text-red-600 dark:text-red-400" />
                 )}
-                <span className={metric.trend.isPositive ? 'text-green-600' : 'text-red-600'}>
+                <span
+                  className={
+                    metric.trend.isPositive
+                      ? 'text-green-600 dark:text-green-400'
+                      : 'text-red-600 dark:text-red-400'
+                  }
+                >
                   {metric.trend.value > 0 ? '+' : ''}{metric.trend.value}
                 </span>
               </div>

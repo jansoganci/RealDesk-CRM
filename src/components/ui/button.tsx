@@ -18,7 +18,9 @@ const buttonVariants = cva(
           'border-2 shadow-sm transition-all',
           COLORS.border.DEFAULT_class,
           COLORS.card.bg,
-          'hover:bg-gray-50 hover:text-foreground hover:border-gray-400'
+          'hover:bg-gray-50 hover:text-foreground hover:border-gray-400',
+          'dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100',
+          'dark:hover:bg-slate-800 dark:hover:border-slate-500 dark:hover:text-foreground'
         ),
         secondary:
           'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',

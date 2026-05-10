@@ -19,6 +19,7 @@ import {
 import { ReminderWithDetails } from '../../lib/serviceProxy';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
+import { cn } from '@/lib/utils';
 import { EmptyState } from '../../components/common/EmptyState';
 import {
   AlertDialog,
@@ -106,10 +107,12 @@ export const Reminders = () => {
       <MainLayout title={t('pageTitle')}>
         <PageContainer>
           <div className="flex flex-col items-center justify-center h-96 space-y-4">
-            <AlertCircle className={`h-16 w-16 ${COLORS.danger.text}`} />
+            <AlertCircle className={cn('h-16 w-16', COLORS.danger.text, 'dark:text-red-400')} />
             <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">{t('errors.title')}</h3>
-              <p className={`text-sm ${COLORS.muted.textLight} mb-4`}>
+              <h3 className="text-lg font-semibold mb-2 text-foreground">{t('errors.title')}</h3>
+              <p
+                className={cn('text-sm mb-4', COLORS.muted.textLight, 'dark:text-slate-400')}
+              >
                 {t(errorKey)}
               </p>
               <Button onClick={refreshData} variant="outline">
@@ -130,7 +133,7 @@ export const Reminders = () => {
           <EmptyState
             title={t('empty.globalTitle')}
             description={t('empty.globalDescription')}
-            icon={<Bell className={`h-16 w-16 ${COLORS.muted.text}`} />}
+            icon={<Bell className={cn('h-16 w-16', COLORS.muted.text, 'dark:text-slate-400')} />}
             showAction={false}
           />
         ) : (
@@ -170,7 +173,11 @@ export const Reminders = () => {
             <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={onConfirmMarkAsContacted}
-              className={`${COLORS.success.bg} ${COLORS.success.hover}`}
+              className={cn(
+                COLORS.success.bg,
+                COLORS.success.hover,
+                'dark:bg-emerald-700 dark:hover:bg-emerald-600'
+              )}
             >
               {t('dialogs.confirm')}
             </AlertDialogAction>

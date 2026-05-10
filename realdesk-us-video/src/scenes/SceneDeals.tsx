@@ -3,6 +3,7 @@ import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig } fr
 import { B } from "../components/brand";
 import { MockBrowser } from "../components/MockBrowser";
 import { Pill, SectionLabel } from "../components/Callout";
+import { Cursor } from "../components/Cursor";
 
 const MILESTONES = [
   { label: "Mutual Acceptance",     date: "Apr 2",    done: true,  active: false },
@@ -91,6 +92,34 @@ export const SceneDeals: React.FC = () => {
           </div>
         </MockBrowser>
       </div>
+
+      {/*
+        Cursor journey (1920×1080):
+        - Enters from right edge
+        - Clicks "Deals" sidebar nav
+        - Scans down the milestone timeline (3 active items)
+        - Moves to Deal Parties on the right
+      */}
+      <Cursor
+        fadeOutAtFrame={310}
+        waypoints={[
+          { x: 1900, y: 540, frame: 0   },  // off-screen right
+          { x: 520,  y: 350, frame: 25  },  // "Deals" sidebar nav item
+          { x: 520,  y: 350, frame: 45  },  // pause on nav
+          { x: 750,  y: 362, frame: 65  },  // Title & Escrow (active milestone)
+          { x: 750,  y: 362, frame: 90  },  // hover
+          { x: 750,  y: 410, frame: 110 },  // Final Walk-Through
+          { x: 750,  y: 458, frame: 130 },  // Closing Day 🎉
+          { x: 750,  y: 458, frame: 155 },  // pause
+          { x: 1757, y: 232, frame: 185 },  // Buyer (Sarah Okafor) party card
+          { x: 1757, y: 295, frame: 210 },  // Lender card
+          { x: 1757, y: 295, frame: 330 },  // rest until fade-out
+        ]}
+        clicks={[
+          { frame: 45  },  // click Deals nav
+          { frame: 90  },  // click active milestone
+        ]}
+      />
     </AbsoluteFill>
   );
 };

@@ -35,7 +35,7 @@ export const saleContractFormSchema = z.object({
 
   // Sale terms
   sale_price: z.number().min(1, 'Satis bedeli zorunlu'),
-  currency: z.enum(['TRY', 'USD', 'EUR']).default('TRY'),
+  currency: z.literal('USD').default('USD'),
   payment_method: z.enum(['cash', 'bank_transfer', 'installment', 'mortgage']).default('bank_transfer'),
   deposit_amount: z.number().optional(),
   closing_date: z.string().optional().or(z.literal('')),

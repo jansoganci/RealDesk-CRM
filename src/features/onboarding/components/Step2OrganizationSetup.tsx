@@ -143,10 +143,10 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                       key={option.value}
                       className={cn(
                         'flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all',
-                        'hover:bg-slate-50 hover:border-blue-300',
+                        'hover:bg-slate-50 hover:border-blue-300 dark:hover:bg-slate-800/50 dark:hover:border-blue-600',
                         isSelected
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-slate-200 bg-white'
+                          ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/40'
+                          : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900'
                       )}
                       onClick={() => !saving && !isLoading && setTeamSize(option.value)}
                     >
@@ -161,7 +161,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                       >
                         <span className={cn(
                           'text-sm font-medium',
-                          isSelected ? 'text-blue-900' : 'text-slate-700'
+                          isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-slate-700 dark:text-slate-200'
                         )}>
                           {t(`step2.organization.teamSizeOptions.${option.labelKey}`)}
                         </span>
@@ -178,7 +178,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
         </div>
 
         {/* Preferences Section (Optional) */}
-        <div className="space-y-4 pt-4 border-t">
+        <div className="space-y-4 pt-4 border-t dark:border-slate-800">
           <div className="space-y-2">
             <Label className="text-base font-semibold text-muted-foreground">
               {t('step2.preferences.title')}

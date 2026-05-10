@@ -39,8 +39,6 @@ export const createShowingLogSchema = z.object({
     .nullable(),
 
   feedback: showingFeedbackSchema.default('interested'),
-
-  interest_level: z.string().optional(),
 });
 
 // ============================================================================
@@ -63,8 +61,6 @@ export const updateShowingLogSchema = z.object({
     .nullable(),
 
   feedback: showingFeedbackSchema.optional(),
-
-  interest_level: z.string().optional(),
 });
 
 // ============================================================================

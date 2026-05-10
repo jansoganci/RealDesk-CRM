@@ -73,10 +73,10 @@ export const BillingHistoryCard = () => {
   };
 
   return (
-    <Card>
+    <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Receipt className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <Receipt className="h-5 w-5 text-slate-700 dark:text-slate-300" />
           {t('billingHistory.title')}
         </CardTitle>
         <CardDescription>
@@ -84,7 +84,7 @@ export const BillingHistoryCard = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="rounded-md border">
+        <div className="rounded-md border border-slate-200 bg-white dark:bg-slate-900/40 dark:border-slate-700">
           <Table>
             <TableHeader>
               <TableRow>
@@ -99,17 +99,17 @@ export const BillingHistoryCard = () => {
             <TableBody>
               {mockInvoices.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={4} className="text-center text-gray-500">
+                  <TableCell colSpan={4} className="text-center text-gray-500 dark:text-slate-400">
                     {t('billingHistory.noInvoices')}
                   </TableCell>
                 </TableRow>
               ) : (
                 mockInvoices.map((invoice, index) => (
-                  <TableRow key={index}>
-                    <TableCell className="font-medium">
+                  <TableRow key={index} className="dark:border-slate-700 dark:hover:bg-slate-800/50">
+                    <TableCell className="font-medium text-slate-900 dark:text-slate-100">
                       {formatDate(invoice.date)}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="text-slate-800 dark:text-slate-200">
                       {invoice.amount} {invoice.currency}
                     </TableCell>
                     <TableCell>
@@ -128,7 +128,7 @@ export const BillingHistoryCard = () => {
                           <ExternalLink className="h-3 w-3" />
                         </Button>
                       ) : (
-                        <span className="text-sm text-gray-400">-</span>
+                        <span className="text-sm text-gray-400 dark:text-slate-500">-</span>
                       )}
                     </TableCell>
                   </TableRow>
@@ -139,13 +139,18 @@ export const BillingHistoryCard = () => {
         </div>
 
         <div className="mt-4 flex justify-center">
-          <Button type="button" variant="outline" onClick={handleViewAllInvoices}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={handleViewAllInvoices}
+            className="dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
+          >
             {t('billingHistory.viewAllButton')}
           </Button>
         </div>
 
         {/* Future Integration Note */}
-        <p className="text-xs text-gray-400 mt-4 text-center">
+        <p className="text-xs text-gray-400 dark:text-slate-500 mt-4 text-center">
           {t('billingHistory.futureIntegration')}
         </p>
       </CardContent>
@@ -154,8 +159,8 @@ export const BillingHistoryCard = () => {
       <Dialog open={showAllInvoicesModal} onOpenChange={setShowAllInvoicesModal}>
         <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Receipt className="h-5 w-5" />
+            <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+              <Receipt className="h-5 w-5 text-slate-700 dark:text-slate-300" />
               {t('subscription.invoiceModal.title')}
             </DialogTitle>
             <DialogDescription>
@@ -164,7 +169,7 @@ export const BillingHistoryCard = () => {
           </DialogHeader>
 
           <div className="mt-4">
-            <div className="rounded-md border">
+            <div className="rounded-md border border-slate-200 bg-white dark:bg-slate-900/40 dark:border-slate-700">
               <Table>
                 <TableHeader>
                   <TableRow>
@@ -179,17 +184,17 @@ export const BillingHistoryCard = () => {
                 <TableBody>
                   {mockInvoices.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={4} className="text-center text-gray-500 py-8">
+                      <TableCell colSpan={4} className="text-center text-gray-500 dark:text-slate-400 py-8">
                         {t('billingHistory.noInvoices')}
                       </TableCell>
                     </TableRow>
                   ) : (
                     mockInvoices.map((invoice, index) => (
-                      <TableRow key={index}>
-                        <TableCell className="font-medium">
+                      <TableRow key={index} className="dark:border-slate-700 dark:hover:bg-slate-800/50">
+                        <TableCell className="font-medium text-slate-900 dark:text-slate-100">
                           {formatDate(invoice.date)}
                         </TableCell>
-                        <TableCell>
+                        <TableCell className="text-slate-800 dark:text-slate-200">
                           {invoice.amount} {invoice.currency}
                         </TableCell>
                         <TableCell>
@@ -208,7 +213,7 @@ export const BillingHistoryCard = () => {
                               <ExternalLink className="h-3 w-3" />
                             </Button>
                           ) : (
-                            <span className="text-sm text-gray-400">-</span>
+                            <span className="text-sm text-gray-400 dark:text-slate-500">-</span>
                           )}
                         </TableCell>
                       </TableRow>
@@ -219,7 +224,7 @@ export const BillingHistoryCard = () => {
             </div>
 
             {/* Future Integration Note in Modal */}
-            <p className="text-xs text-gray-400 mt-4 text-center">
+            <p className="text-xs text-gray-400 dark:text-slate-500 mt-4 text-center">
               {t('billingHistory.futureIntegration')}
             </p>
           </div>

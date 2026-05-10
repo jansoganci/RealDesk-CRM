@@ -3,9 +3,11 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
+import { Send, FileSignature, CheckCircle, XCircle } from 'lucide-react';
 import { leadsService } from '@/lib/serviceProxy';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrg } from '@/contexts/OrgContext';
+import { cn } from '@/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -15,6 +17,7 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Select,
   SelectContent,
@@ -117,18 +120,20 @@ export function BuyerAgentAgreementDialog({
     }
 
     try {
-      // Convert null to undefined for service call
       const serviceData = {
         ...data,
         commission_rate: data.commission_rate ?? undefined,
         flat_fee_amount: data.flat_fee_amount ?? undefined,
       };
-      await leadsService.createBuyerAgentAgreement(serviceData, user.id, currentOrg.id);
-      toast.success(
-        existingAgreement
-          ? t('toasts.agreementUpdated', 'Agreement updated')
-          : t('toasts.agreementCreated', 'Agreement created')
-      );
+
+      if (existingAgreement) {
+        await leadsService.updateBuyerAgentAgreement(existingAgreement.id, serviceData, user.id);
+        toast.success(t('toasts.agreementUpdated', 'Agreement updated'));
+      } else {
+        await leadsService.createBuyerAgentAgreement(serviceData, user.id, currentOrg.id);
+        toast.success(t('toasts.agreementCreated', 'Agreement created'));
+      }
+
       onOpenChange(false);
       onSuccess?.();
     } catch (error) {
@@ -142,6 +147,7 @@ export function BuyerAgentAgreementDialog({
   };
 
   const commissionType = form.watch('commission_type');
+  const status = form.watch('status');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -296,30 +302,55 @@ export function BuyerAgentAgreementDialog({
             />
 
             {/* Status */}
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('agreements.status', 'Status')}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder={t('agreements.status', 'Status')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {AGREEMENT_STATUS_OPTIONS.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          {option.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-2">
+              <div className="space-y-1">
+                <Label>{t('agreements.status', 'Status')}</Label>
+                <div>
+                  <span className={cn(
+                    'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
+                    status === 'draft' && 'bg-gray-100 text-gray-700 border border-gray-300 dark:bg-slate-800 dark:text-slate-200 dark:border-slate-600',
+                    status === 'sent' && 'bg-blue-100 text-blue-700 border border-blue-300 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-700',
+                    status === 'signed' && 'bg-purple-100 text-purple-700 border border-purple-300 dark:bg-purple-950/50 dark:text-purple-300 dark:border-purple-700',
+                    status === 'active' && 'bg-green-100 text-green-700 border border-green-300 dark:bg-green-950/50 dark:text-green-300 dark:border-green-700',
+                    status === 'expired' && 'bg-yellow-100 text-yellow-700 border border-yellow-300 dark:bg-yellow-950/40 dark:text-yellow-300 dark:border-yellow-700',
+                    status === 'terminated' && 'bg-red-100 text-red-700 border border-red-300 dark:bg-red-950/50 dark:text-red-300 dark:border-red-700',
+                  )}>
+                    {AGREEMENT_STATUS_OPTIONS.find(o => o.value === status)?.label ?? status}
+                  </span>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {status === 'draft' && (
+                  <Button type="button" size="sm" variant="outline" onClick={() => form.setValue('status', 'sent')}>
+                    <Send className="h-4 w-4 mr-1" />
+                    {t('agreements.markAsSent', 'Mark as Sent')}
+                  </Button>
+                )}
+                {status === 'sent' && (
+                  <Button type="button" size="sm" variant="outline" onClick={() => form.setValue('status', 'signed')}>
+                    <FileSignature className="h-4 w-4 mr-1" />
+                    {t('agreements.markAsSigned', 'Mark as Signed')}
+                  </Button>
+                )}
+                {status === 'signed' && (
+                  <Button type="button" size="sm" variant="outline" className="border-green-300 text-green-700 hover:bg-green-50 dark:border-green-700 dark:text-green-300 dark:hover:bg-green-950/50" onClick={() => form.setValue('status', 'active')}>
+                    <CheckCircle className="h-4 w-4 mr-1" />
+                    {t('agreements.activate', 'Activate Agreement')}
+                  </Button>
+                )}
+                {status === 'active' && (
+                  <Button type="button" size="sm" variant="outline" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => form.setValue('status', 'terminated')}>
+                    <XCircle className="h-4 w-4 mr-1" />
+                    {t('agreements.terminate', 'Terminate Agreement')}
+                  </Button>
+                )}
+                {(status === 'active' || status === 'signed') && (
+                  <p className="text-xs text-muted-foreground mt-1 w-full">
+                    {t('agreements.saveToApply', 'Save the agreement to apply this status change.')}
+                  </p>
+                )}
+              </div>
+            </div>
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>

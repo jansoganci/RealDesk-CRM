@@ -62,7 +62,7 @@ export function PropertyTableRow({
               {property.address}
             </span>
             {property.photos && property.photos.length > 0 && (
-              <span className={`inline-flex items-center gap-1 text-xs ${COLORS.gray.text500} flex-shrink-0`}>
+              <span className={`inline-flex items-center gap-1 text-xs ${COLORS.gray.text500} dark:text-slate-400 flex-shrink-0`}>
                 <Images className="h-3 w-3" />
                 {t('photos', { count: property.photos.length })}
               </span>
@@ -72,7 +72,7 @@ export function PropertyTableRow({
                 href={property.listing_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 transition-colors text-blue-600 hover:text-blue-700 cursor-pointer flex-shrink-0"
+                className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer flex-shrink-0"
                 title={t('properties:table.viewListing')}
                 onClick={(e) => e.stopPropagation()}
                 aria-label={t('properties:table.viewListing')}
@@ -82,7 +82,7 @@ export function PropertyTableRow({
             )}
           </div>
           {property.notes && (
-            <div className={`text-xs ${COLORS.gray.text500} mt-1 line-clamp-1`}>
+            <div className={`text-xs ${COLORS.gray.text500} dark:text-slate-400 mt-1 line-clamp-1`}>
               {property.notes}
             </div>
           )}
@@ -90,44 +90,54 @@ export function PropertyTableRow({
       </TableCell>
       {/* Location - Hidden on tablet, visible on laptop+ */}
       <TableCell className="hidden lg:table-cell">
-        {property.city || property.district || propertyTyped.il || propertyTyped.district_legacy ? (
-          <span className={`${COLORS.gray.text600} text-sm truncate max-w-[150px] md:max-w-none block`}>
-            {[property.district || propertyTyped.district_legacy, property.city || propertyTyped.il].filter(Boolean).join(', ')}
+        {property.city || property.state || property.zip_code ||
+        property.district ||
+        propertyTyped.il ||
+        propertyTyped.district_legacy ? (
+          <span className={`${COLORS.gray.text600} dark:text-slate-300 text-sm truncate max-w-[150px] md:max-w-none block`}>
+            {[
+              property.city || propertyTyped.il,
+              property.state,
+              property.zip_code,
+              property.district || propertyTyped.district_legacy,
+            ]
+              .filter(Boolean)
+              .join(', ')}
           </span>
         ) : (
-          <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('notAvailable')}</span>
         )}
       </TableCell>
       {/* Owner - Always visible */}
       <TableCell>
         {property.owner ? (
-          <span className={`${COLORS.gray.text700} text-sm`}>{property.owner.name}</span>
+          <span className={`${COLORS.gray.text700} dark:text-slate-200 text-sm`}>{property.owner.name}</span>
         ) : (
-          <span className={`${COLORS.muted.textLight} text-sm`}>{t('notAvailable')}</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('notAvailable')}</span>
         )}
       </TableCell>
       {/* Tenant - Hidden on tablet/laptop, visible on desktop */}
       <TableCell className="hidden xl:table-cell">
         {property.status === 'Inactive' ? (
-          <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.inactive')}</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.inactive')}</span>
         ) : property.activeTenant ? (
-          <span className={`${COLORS.gray.text700} text-sm`}>{property.activeTenant.name}</span>
+          <span className={`${COLORS.gray.text700} dark:text-slate-200 text-sm`}>{property.activeTenant.name}</span>
         ) : (
-          <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noTenant')}</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noTenant')}</span>
         )}
       </TableCell>
       <TableCell>
         {(() => {
           if (property.status === 'Inactive') {
-            return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+            return <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noPrice')}</span>;
           }
 
           if (isRental) {
             if (!property.activeContract?.rent_amount) {
-              return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noRent')}</span>;
+              return <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noRent')}</span>;
             }
             return (
-              <span className={`${COLORS.gray.text700} text-sm`}>
+              <span className={`${COLORS.gray.text700} dark:text-slate-200 text-sm`}>
                 {formatCurrency(
                   convertCurrency(
                     property.activeContract.rent_amount,
@@ -142,10 +152,10 @@ export function PropertyTableRow({
           } else if (isSale) {
             const salePrice = propertyTyped.sale_price;
             if (!salePrice) {
-              return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+              return <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noPrice')}</span>;
             }
             return (
-              <span className={`${COLORS.gray.text700} text-sm`}>
+              <span className={`${COLORS.gray.text700} dark:text-slate-200 text-sm`}>
                 {formatCurrency(
                   convertCurrency(
                     salePrice,
@@ -158,16 +168,16 @@ export function PropertyTableRow({
             );
           }
 
-          return <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noPrice')}</span>;
+          return <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noPrice')}</span>;
         })()}
       </TableCell>
       {/* Contract End - Hidden on tablet, visible on laptop+ */}
       <TableCell className="hidden lg:table-cell">
         {property.status === 'Inactive' || !property.activeContract?.end_date ? (
-          <span className={`${COLORS.muted.textLight} text-sm`}>{t('properties:table.noContract')}</span>
+          <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noContract')}</span>
         ) : (
           <div className="flex items-center gap-2 text-sm">
-            <span className={COLORS.gray.text600}>
+            <span className={`${COLORS.gray.text600} dark:text-slate-300`}>
               {format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}
             </span>
             {(() => {

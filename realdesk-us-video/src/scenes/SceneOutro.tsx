@@ -1,17 +1,28 @@
 import React from "react";
 import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { B } from "../components/brand";
+import { Cursor } from "../components/Cursor";
+
+const BTN_CLICK_FRAME = 95;
 
 export const SceneOutro: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoProg  = spring({ fps, frame,           config: { damping: 15, stiffness: 90 } });
+  const logoProg  = spring({ fps, frame,             config: { damping: 15, stiffness: 90 } });
   const line1Prog = spring({ fps, frame: frame - 18, config: { damping: 15, stiffness: 90 } });
   const line2Prog = spring({ fps, frame: frame - 32, config: { damping: 15, stiffness: 90 } });
   const ctaOpacity = interpolate(frame, [50, 68], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const ctaY       = interpolate(frame, [50, 68], [20, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) });
   const badgeOpacity = interpolate(frame, [72, 90], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
+  // Button press: scale dips to 0.95 on click then springs back
+  const btnScale = interpolate(
+    frame,
+    [BTN_CLICK_FRAME, BTN_CLICK_FRAME + 5, BTN_CLICK_FRAME + 18],
+    [1, 0.95, 1],
+    { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.bezier(0.16, 1, 0.3, 1) },
+  );
 
   return (
     <AbsoluteFill
@@ -47,8 +58,8 @@ export const SceneOutro: React.FC = () => {
         </div>
       </div>
 
-      {/* CTA button */}
-      <div style={{ opacity: ctaOpacity, transform: `translateY(${ctaY}px)`, marginBottom: 32 }}>
+      {/* CTA button — with press animation */}
+      <div style={{ opacity: ctaOpacity, transform: `translateY(${ctaY}px) scale(${btnScale})`, marginBottom: 32 }}>
         <div
           style={{
             background: `linear-gradient(135deg, ${B.primary}, ${B.primaryDark})`,
@@ -75,6 +86,26 @@ export const SceneOutro: React.FC = () => {
         <span style={{ color: B.secondary, fontSize: 16 }}>●</span>
         <span style={{ fontSize: 13, color: B.textSecondary, fontFamily: B.font, fontWeight: 500 }}>Built for US solo agents & small teams · No credit card required</span>
       </div>
+
+      {/*
+        Cursor journey:
+        - Enters from left side
+        - Moves to CTA button center
+        - Clicks (triggers button press animation)
+        - Stays on button
+      */}
+      <Cursor
+        fadeOutAtFrame={130}
+        waypoints={[
+          { x: 200,  y: 500, frame: 60  },  // enters from left
+          { x: 960,  y: 638, frame: 88  },  // CTA button center
+          { x: 960,  y: 638, frame: 100 },  // pause after click
+          { x: 960,  y: 638, frame: 150 },  // rest until fade-out
+        ]}
+        clicks={[
+          { frame: BTN_CLICK_FRAME },  // click fires button press
+        ]}
+      />
     </AbsoluteFill>
   );
 };

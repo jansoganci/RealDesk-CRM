@@ -163,7 +163,7 @@ export const PDFExtractButton = ({
             <DialogDescription>
               {fileInfo && (
                 <div className="flex items-center gap-2 mt-2">
-                  <span className="text-sm text-gray-600">
+                  <span className="text-sm text-gray-600 dark:text-slate-300">
                     {fileInfo.name} ({formatFileSize(fileInfo.size)})
                   </span>
                 </div>
@@ -175,47 +175,47 @@ export const PDFExtractButton = ({
             {extracting ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-                <span className="ml-3 text-gray-600">{t('pdfExtract.processing')}</span>
+                <span className="ml-3 text-gray-600 dark:text-slate-300">{t('pdfExtract.processing')}</span>
               </div>
             ) : (
               <>
                 {parsedData && Object.keys(parsedData).length > 0 && (
                   <div className="space-y-2">
-                    <h4 className="font-semibold text-sm text-gray-900">{t('pdfExtract.extractedInfo')}</h4>
+                    <h4 className="font-semibold text-sm text-gray-900 dark:text-slate-100">{t('pdfExtract.extractedInfo')}</h4>
                     <div className="grid grid-cols-2 gap-2">
                       {parsedData.tenantName && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.tenant')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.tenant')}</div>
                           <div className="text-sm font-medium">{parsedData.tenantName}</div>
                         </div>
                       )}
                       {parsedData.ownerName && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.owner')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.owner')}</div>
                           <div className="text-sm font-medium">{parsedData.ownerName}</div>
                         </div>
                       )}
                       {parsedData.rentAmount && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.rentAmount')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.rentAmount')}</div>
                           <div className="text-sm font-medium">{parsedData.rentAmount.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</div>
                         </div>
                       )}
                       {parsedData.deposit && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.deposit')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.deposit')}</div>
                           <div className="text-sm font-medium">{parsedData.deposit.toLocaleString('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 })}</div>
                         </div>
                       )}
                       {parsedData.startDate && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.startDate')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.startDate')}</div>
                           <div className="text-sm font-medium">{parsedData.startDate}</div>
                         </div>
                       )}
                       {parsedData.endDate && (
-                        <div className="p-2 bg-blue-50 rounded border border-blue-200">
-                          <div className="text-xs text-gray-600">{t('pdfExtract.endDate')}</div>
+                        <div className="p-2 bg-blue-50 dark:bg-blue-950/40 rounded border border-blue-200 dark:border-blue-800">
+                          <div className="text-xs text-gray-600 dark:text-slate-300">{t('pdfExtract.endDate')}</div>
                           <div className="text-sm font-medium">{parsedData.endDate}</div>
                         </div>
                       )}
@@ -226,7 +226,7 @@ export const PDFExtractButton = ({
                 {extractedText && (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <h4 className="font-semibold text-sm text-gray-900">{t('pdfExtract.extractedText')}</h4>
+                      <h4 className="font-semibold text-sm text-gray-900 dark:text-slate-100">{t('pdfExtract.extractedText')}</h4>
                       <Badge variant="outline" className="text-xs">
                         {t('pdfExtract.characters', { count: extractedText.length })}
                       </Badge>

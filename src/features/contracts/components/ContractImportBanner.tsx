@@ -16,14 +16,14 @@ export function ContractImportBanner({ onImportClick, disabled }: ContractImport
   const { t } = useTranslation(['contracts', 'common']);
 
   return (
-    <div className="bg-gradient-to-r from-blue-50 to-amber-50 border-2 border-blue-200 rounded-lg p-4">
+    <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-amber-50 p-4 dark:border-blue-800/80 dark:from-blue-950/40 dark:to-amber-950/40">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-1 flex items-center gap-2">
-            <FileInput className="h-5 w-5 text-blue-600" />
+          <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold text-foreground">
+            <FileInput className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             {t('import.banner.title')}
           </h3>
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-muted-foreground">
             {t('import.banner.description')}
           </p>
         </div>

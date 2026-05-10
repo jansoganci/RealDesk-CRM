@@ -92,7 +92,6 @@ export interface CreateShowingLogInput {
   duration_minutes?: number;
   feedback: ShowingFeedback;
   feedback_enum?: ShowingFeedback;
-  interest_level?: InterestLevel;
 }
 
 export interface LeadWithRelations extends Lead {
@@ -152,12 +151,6 @@ export class LeadsService {
     if (uid !== userId) {
       throw new Error('User mismatch.');
     }
-  }
-
-  private mapFeedbackToInterestLevel(feedback: ShowingFeedback): InterestLevel {
-    if (feedback === 'loved') return 'high';
-    if (feedback === 'interested') return 'medium';
-    return 'low';
   }
 
   // ---------------------------------------------------------------------------
@@ -346,6 +339,15 @@ export class LeadsService {
         if (
           inquiry.preferred_city.toLowerCase().trim() !== property.city.toLowerCase().trim()
         ) {
+          matches = false;
+          continue;
+        }
+      }
+
+      if (inquiry.preferred_state && inquiry.preferred_state.trim()) {
+        const want = inquiry.preferred_state.trim().toUpperCase();
+        const propState = property.state?.trim().toUpperCase();
+        if (!propState || propState !== want) {
           matches = false;
           continue;
         }
@@ -867,6 +869,39 @@ export class LeadsService {
     }
   }
 
+  async updateBuyerAgentAgreement(
+    agreementId: string,
+    data: Partial<CreateAgreementInput>,
+    userId: string
+  ): Promise<BuyerAgentAgreement> {
+    try {
+      await this.assertUserMatches(userId);
+      const orgId = await getActiveOrgId();
+
+      const update: Record<string, unknown> = {};
+      if (data.signed_date) update.signed_date = formatDateForDb(data.signed_date);
+      if (data.expiration_date) update.expiration_date = formatDateForDb(data.expiration_date);
+      if (data.commission_rate !== undefined) update.commission_rate = data.commission_rate;
+      if (data.commission_type) update.commission_type = data.commission_type;
+      if (data.flat_fee_amount !== undefined) update.flat_fee_amount = data.flat_fee_amount;
+      if (data.pdf_url !== undefined) update.pdf_url = data.pdf_url;
+      if (data.status) update.status = data.status;
+
+      const { data: result, error } = await supabase
+        .from('buyer_agent_agreements')
+        .update(update)
+        .eq('id', agreementId)
+        .eq('org_id', orgId)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return result as BuyerAgentAgreement;
+    } catch (error) {
+      throw handleServiceError(error, 'Failed to update buyer-agent agreement');
+    }
+  }
+
   /** Latest agreement for a lead (if any). */
   async getAgreementByLeadId(leadId: string): Promise<BuyerAgentAgreement | null> {
     try {
@@ -988,8 +1023,7 @@ export class LeadsService {
         org_id: orgId,
         showing_date: data.showing_date.toISOString(),
         duration_minutes: data.duration_minutes ?? null,
-        feedback_enum: data.feedback_enum ?? data.feedback,
-        interest_level: data.interest_level ?? this.mapFeedbackToInterestLevel(data.feedback),
+        feedback_enum: data.feedback ?? data.feedback_enum,
       };
 
       const row = await insertRow('showing_logs', insert as unknown as ShowingLogInsert);
@@ -1051,7 +1085,6 @@ export class LeadsService {
         .from('showing_logs')
         .update({
           feedback_enum: feedback,
-          interest_level: this.mapFeedbackToInterestLevel(feedback),
         })
         .eq('id', showingId)
         .eq('org_id', orgId)

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { CookieSettingsLink } from "@/components/ui/cookie-settings-link"
 
 export const LandingFooter = () => {
-  const { t } = useTranslation('landing')
+  const { t } = useTranslation(['landing', 'compliance'])
   const currentYear = new Date().getFullYear()
   const privacyLink = '/legal/privacy-policy-en.html'
   const termsLink = '/legal/terms-of-service-en.html'
@@ -49,6 +49,11 @@ export const LandingFooter = () => {
                 <a href={privacyLink} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">
                   {t('footer.privacy')}
                 </a>
+              </li>
+              <li>
+                <Link to="/privacy" className="hover:text-black transition-colors">
+                  {t('compliance:page.title')}
+                </Link>
               </li>
               <li>
                 <a href={termsLink} target="_blank" rel="noopener noreferrer" className="hover:text-black transition-colors">

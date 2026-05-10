@@ -13,13 +13,6 @@ import {
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '../../components/ui/select';
 import { DollarSign, TrendingUp } from 'lucide-react';
 import { PropertyWithOwner } from '../../types';
 import { formatCurrency } from '../../lib/currency';
@@ -38,7 +31,6 @@ const saleSchema = z.object({
     const num = parseFloat(val);
     return !isNaN(num) && num > 0;
   }, 'Sale price must be a positive number'),
-  currency: z.string(),
 });
 
 type SaleFormData = z.infer<typeof saleSchema>;
@@ -56,22 +48,19 @@ export const MarkAsSoldDialog = ({
     register,
     handleSubmit,
     formState: { errors },
-    setValue,
     watch,
     reset,
   } = useForm<SaleFormData>({
     resolver: zodResolver(saleSchema),
     defaultValues: {
       salePrice: '',
-      currency: 'USD',
     },
   });
 
-  const currency = watch('currency');
   const salePrice = watch('salePrice');
 
   const onSubmit = (data: SaleFormData) => {
-    onConfirm(parseFloat(data.salePrice), data.currency);
+    onConfirm(parseFloat(data.salePrice), 'USD');
     reset();
   };
 
@@ -90,13 +79,13 @@ export const MarkAsSoldDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-slate-900">
+          <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
             <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
               <TrendingUp className="h-5 w-5 text-white" />
             </div>
             {t('properties:markAsSold.title')}
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogDescription className="text-slate-600 dark:text-slate-300">
             {t('properties:markAsSold.description', { address: property?.address || '' })}
           </DialogDescription>
         </DialogHeader>
@@ -104,24 +93,24 @@ export const MarkAsSoldDialog = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-5 py-4">
             {/* Property Info */}
-            <div className="bg-gradient-to-br from-slate-50 to-gray-50 rounded-xl p-4 border border-gray-200/50">
+            <div className="bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-800/70 dark:to-slate-800/70 rounded-xl p-4 border border-gray-200/50 dark:border-slate-800">
               <div className="flex items-center gap-2 mb-1">
-                <DollarSign className="h-4 w-4 text-slate-600" />
-                <span className="text-sm font-semibold text-slate-900">
+                <DollarSign className="h-4 w-4 text-slate-600 dark:text-slate-300" />
+                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                   {t('properties:markAsSold.propertyInfo')}
                 </span>
               </div>
-              <p className="text-sm text-slate-700 font-medium">{property?.address}</p>
-              {property?.city && (
-                <p className="text-xs text-slate-600 mt-1">
-                  {[property.city, property.district].filter(Boolean).join(', ')}
+              <p className="text-sm text-slate-700 dark:text-slate-200 font-medium">{property?.address}</p>
+              {(property?.city || property?.state || property?.zip_code) && (
+                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                  {[property.city, property.state, property.zip_code].filter(Boolean).join(', ')}
                 </p>
               )}
             </div>
 
             {/* Sale Price Input */}
             <div className="space-y-2">
-              <Label htmlFor="salePrice" className="text-slate-900 font-semibold">
+              <Label htmlFor="salePrice" className="text-slate-900 dark:text-slate-100 font-semibold">
                 {t('properties:markAsSold.salePrice')} *
               </Label>
               <Input
@@ -137,37 +126,18 @@ export const MarkAsSoldDialog = ({
               )}
             </div>
 
-            {/* Currency Select */}
-            <div className="space-y-2">
-              <Label htmlFor="currency" className="text-slate-900 font-semibold">
-                {t('properties:markAsSold.currency')} *
-              </Label>
-              <Select
-                value={currency}
-                onValueChange={(value) => setValue('currency', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="USD">USD ($)</SelectItem>
-                  <SelectItem value="TRY">TRY (₺)</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
             {/* Commission Preview */}
             {salePrice && !isNaN(parseFloat(salePrice)) && parseFloat(salePrice) > 0 && (
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-200/50 rounded-xl p-4">
+              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-slate-800/70 dark:to-slate-800/70 border border-amber-200/50 dark:border-slate-800 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-slate-600 font-medium">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
                       {t('properties:markAsSold.yourCommission')}
                     </p>
-                    <p className="text-2xl font-bold text-amber-700">
-                      {formatCurrency(calculateCommission(), currency)}
+                    <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+                      {formatCurrency(calculateCommission(), 'USD')}
                     </p>
-                    <p className="text-xs text-slate-600 mt-1">
+                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       {t('properties:markAsSold.commissionRate')}
                     </p>
                   </div>

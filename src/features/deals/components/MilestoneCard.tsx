@@ -38,7 +38,7 @@ function getStatusClasses(status: string): string {
     return `${COLORS.warning.bgLight} ${COLORS.warning.textDark} ${COLORS.warning.border}`;
   }
   if (status === 'waived') {
-    return `${COLORS.gray.bg100} ${COLORS.gray.text700} ${COLORS.gray.border200}`;
+    return `${COLORS.gray.bg100} ${COLORS.gray.text700} ${COLORS.gray.border200} dark:bg-slate-800 dark:text-slate-200 dark:border-slate-700`;
   }
   return `${COLORS.info.bgLight} ${COLORS.info.text} border-sky-200`;
 }
@@ -125,7 +125,7 @@ export function MilestoneCard({
   };
 
   return (
-    <Card className={cn('border shadow-sm', showMissingWarning ? COLORS.warning.border : COLORS.border.color)}>
+    <Card className={cn('border shadow-sm dark:border-slate-700', showMissingWarning ? COLORS.warning.border : COLORS.border.color)}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-2">
@@ -135,7 +135,7 @@ export function MilestoneCard({
                 {t(`milestones.status.${milestone.status}`, { defaultValue: milestone.status })}
               </Badge>
               {milestone.is_cfpb_required && (
-                <Badge className="border border-blue-200 bg-blue-50 text-blue-700">
+                <Badge className="border border-blue-200 bg-blue-50 text-blue-700 dark:border-blue-800 dark:bg-blue-950/40 dark:text-blue-300">
                   {t('timeline.badges.federalRequirement')}
                 </Badge>
               )}
@@ -149,7 +149,7 @@ export function MilestoneCard({
             </div>
           </div>
           <div className="text-right">
-            <p className={cn('text-sm font-medium', COLORS.gray.text900)}>
+            <p className={cn('text-sm font-medium', COLORS.gray.text900, 'dark:text-slate-100')}>
               {t('timeline.dueDate', { date: dueDateLabel })}
             </p>
             <p className={cn('text-xs', countdown.className)}>{countdown.label}</p>
@@ -215,9 +215,9 @@ export function MilestoneCard({
         )}
 
         {lastNote && (
-          <div className={cn('rounded-md border p-2 text-sm', COLORS.gray.border200, COLORS.gray.bg50)}>
-            <p className={cn('font-medium', COLORS.gray.text700)}>{t('timeline.note.last')}</p>
-            <p className={cn('mt-1', COLORS.gray.text600)}>{lastNote}</p>
+          <div className={cn('rounded-md border p-2 text-sm', COLORS.gray.border200, COLORS.gray.bg50, 'dark:border-slate-700 dark:bg-slate-800/70')}>
+            <p className={cn('font-medium', COLORS.gray.text700, 'dark:text-slate-200')}>{t('timeline.note.last')}</p>
+            <p className={cn('mt-1', COLORS.gray.text600, 'dark:text-slate-300')}>{lastNote}</p>
           </div>
         )}
 
@@ -230,7 +230,7 @@ export function MilestoneCard({
             onChange={(e) => void handleFileChange(e)}
           />
           {hasDocument && (
-            <div className="flex items-center justify-between rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700">
+            <div className="flex items-center justify-between rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm text-emerald-700 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
               <span>{t('documents.uploaded')}</span>
               {onOpenDocument && (
                 <Button
@@ -251,9 +251,9 @@ export function MilestoneCard({
         </div>
 
         {contingency && (
-          <div className={cn('rounded-md border p-2 text-sm', COLORS.border.color, COLORS.card.bg)}>
-            <p className={cn('font-medium', COLORS.gray.text700)}>{t('timeline.contingency.title')}</p>
-            <p className={cn('mt-1', COLORS.gray.text600)}>
+          <div className={cn('rounded-md border p-2 text-sm', COLORS.border.color, COLORS.card.bg, 'dark:border-slate-700 dark:bg-slate-900')}>
+            <p className={cn('font-medium', COLORS.gray.text700, 'dark:text-slate-200')}>{t('timeline.contingency.title')}</p>
+            <p className={cn('mt-1', COLORS.gray.text600, 'dark:text-slate-300')}>
               {t('timeline.contingency.status', { status: contingency.status })}
               {contingency.resolutionType
                 ? ` · ${t('timeline.contingency.resolution', { resolution: contingency.resolutionType })}`

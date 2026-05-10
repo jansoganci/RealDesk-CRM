@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { inquiriesService } from '@/lib/serviceProxy';
 import type { PropertyInquiry, InquiryWithMatches } from '@/types';
-import * as z from 'zod';
+import type { InquirySubmitPayload } from '../inquirySchema';
 
 interface UseInquiryActionsOptions {
   onSuccess?: () => void;
@@ -20,10 +20,8 @@ export function useInquiryActions(
   const [isLoading, setIsLoading] = useState(false);
   const [matchesLoading, setMatchesLoading] = useState<string | null>(null);
 
-  type InquiryFormData = z.infer<ReturnType<typeof import('../inquirySchema').getInquirySchema>>;
-
   const handleCreate = async (
-    data: InquiryFormData,
+    data: InquirySubmitPayload,
     editingInquiry?: PropertyInquiry | null
   ) => {
     try {

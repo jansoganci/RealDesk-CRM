@@ -52,12 +52,12 @@ export const ForgotPassword = () => {
   // Success state after email is sent
   if (emailSent) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-emerald-600" />
+              <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center">
@@ -69,9 +69,9 @@ export const ForgotPassword = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-center gap-2 p-4 rounded-lg bg-gray-50 border border-gray-100">
-                <Mail className="h-5 w-5 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">
+              <div className="flex items-center justify-center gap-2 p-4 rounded-lg bg-gray-50 border border-gray-100 dark:bg-slate-800/50 dark:border-slate-700">
+                <Mail className="h-5 w-5 text-gray-500 dark:text-slate-400" />
+                <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
                   {form.getValues('email')}
                 </span>
               </div>
@@ -93,7 +93,7 @@ export const ForgotPassword = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -109,14 +109,14 @@ export const ForgotPassword = () => {
         </CardHeader>
         <CardContent>
           {successMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
-              <p className="text-sm text-emerald-800">{successMessage}</p>
+            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800">
+              <p className="text-sm text-emerald-800 dark:text-emerald-200">{successMessage}</p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
-              <p className="text-sm text-red-800">{errorMessage}</p>
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900">
+              <p className="text-sm text-red-800 dark:text-red-200">{errorMessage}</p>
             </div>
           )}
 
@@ -164,7 +164,7 @@ export const ForgotPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to={ROUTES.LOGIN}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
             >
               <ArrowLeft className="mr-1 h-4 w-4" />
               {t('forgotPassword.backToLogin')}

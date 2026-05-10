@@ -17,6 +17,8 @@ export function usePropertyFilters(properties: PropertyWithOwner[]) {
         (property) =>
           property.address.toLowerCase().includes(query) ||
           property.city?.toLowerCase().includes(query) ||
+          property.state?.toLowerCase().includes(query) ||
+          property.zip_code?.toLowerCase().includes(query) ||
           property.district?.toLowerCase().includes(query) ||
           property.owner?.name.toLowerCase().includes(query)
       );

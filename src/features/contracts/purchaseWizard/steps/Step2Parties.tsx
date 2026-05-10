@@ -761,7 +761,7 @@ export function Step2Parties() {
             control={control}
             name="buyer_agent_name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="sm:col-span-2">
                 <FormLabel>{t('purchaseWizard.step2.buyerAgentName')}</FormLabel>
                 <FormControl>
                   <Input {...field} value={field.value ?? ''} />
@@ -774,7 +774,7 @@ export function Step2Parties() {
             control={control}
             name="seller_agent_name"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="sm:col-span-2">
                 <FormLabel>{t('purchaseWizard.step2.sellerAgentName')}</FormLabel>
                 <FormControl>
                   <Input {...field} value={field.value ?? ''} />
@@ -792,7 +792,7 @@ export function Step2Parties() {
         control={control}
         name="effective_date"
         render={({ field }) => (
-          <FormItem className="max-w-xs">
+          <FormItem>
             <FormLabel>{t('purchaseWizard.step2.effectiveDate')}</FormLabel>
             <p className="text-xs text-muted-foreground">{t('purchaseWizard.step2.effectiveDateHelp')}</p>
             <FormControl>

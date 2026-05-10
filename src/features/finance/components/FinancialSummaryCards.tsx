@@ -70,7 +70,7 @@ export const FinancialSummaryCards = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {[1, 2, 3, 4].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-24" />
@@ -119,7 +119,7 @@ export const FinancialSummaryCards = ({
       value: pendingTransactions.toString(),
       change: null,
       icon: Clock,
-      iconBg: 'bg-gray-600',
+      iconBg: 'bg-gray-600 dark:bg-slate-600',
       iconColor: 'text-white',
     },
   ];
@@ -129,11 +129,11 @@ export const FinancialSummaryCards = ({
       {cards.map((card, index) => (
         <Card
           key={index}
-          className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow"
+          className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-shadow"
         >
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
                 {card.title}
               </CardTitle>
               <div
@@ -144,7 +144,7 @@ export const FinancialSummaryCards = ({
             </div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-slate-900">
+            <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">
               {card.metric ? formatMetric(card.metric) : card.value}
             </div>
             {card.change !== null && (
@@ -164,11 +164,11 @@ export const FinancialSummaryCards = ({
                     </span>
                   </>
                 ) : (
-                  <span className="text-gray-500 font-medium">
+                  <span className="text-gray-500 dark:text-slate-400 font-medium">
                     {t('finance:cards.noChange')}
                   </span>
                 )}
-                <span className="text-gray-500 ml-1">
+                <span className="text-gray-500 dark:text-slate-400 ml-1">
                   {t('finance:cards.vsLastMonth')}
                 </span>
               </div>

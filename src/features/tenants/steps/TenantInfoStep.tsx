@@ -25,8 +25,8 @@ export const TenantInfoStep: React.FC<TenantInfoStepProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">{t('enhanced.steps.info.sectionTitle')}</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t('enhanced.steps.info.sectionTitle')}</h3>
+        <p className="text-sm text-gray-600 dark:text-slate-300">
           {t('enhanced.steps.info.sectionDescription')}
         </p>
       </div>

@@ -132,7 +132,7 @@ export const Login = () => {
           </div>
 
           {/* Divider */}
-          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
+          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
             <span>{t('orSignWithEmail')}</span>
             <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />

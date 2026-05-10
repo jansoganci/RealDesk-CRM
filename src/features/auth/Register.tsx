@@ -42,7 +42,7 @@ export const Register = () => {
   const [termsError, setTermsError] = useState<string | null>(null);
   const { signUp, resendConfirmationEmail, signInWithGoogle } = useAuth();
   const navigate = useNavigate();
-  const { t } = useTranslation(['auth', 'common']);
+  const { t } = useTranslation(['auth', 'common', 'compliance']);
 
   const { token: turnstileToken, isReady: turnstileReady, resetWidget: resetTurnstile } = useTurnstile('turnstile-register');
 
@@ -122,7 +122,7 @@ export const Register = () => {
   // Show email confirmation message if email was sent
   if (emailSent) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
@@ -136,13 +136,13 @@ export const Register = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200">
-              <Info className="h-5 w-5 mt-0.5 text-blue-600 shrink-0" />
+            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800">
+              <Info className="h-5 w-5 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
               <div className="space-y-2">
-                <p className="text-sm text-blue-900 font-medium">
+                <p className="text-sm text-blue-900 font-medium dark:text-blue-100">
                   {t('emailConfirmation.message', { email: userEmail })}
                 </p>
-                <p className="text-xs text-blue-700">
+                <p className="text-xs text-blue-700 dark:text-blue-300">
                   {t('emailConfirmation.checkSpam')}
                 </p>
               </div>
@@ -167,7 +167,7 @@ export const Register = () => {
 
               <Link
                 to={ROUTES.LOGIN}
-                className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 hover:underline"
+                className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
               >
                 {t('emailConfirmation.backToLogin')}
               </Link>
@@ -179,7 +179,7 @@ export const Register = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -307,9 +307,9 @@ export const Register = () => {
               />
 
               {/* Password requirements hint */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100">
-                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0" />
-                <p className="text-xs text-blue-700">
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 dark:bg-blue-950/40 dark:border-blue-800">
+                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
+                <p className="text-xs text-blue-700 dark:text-blue-300">
                   {t('register.passwordRequirements')}
                 </p>
               </div>
@@ -325,7 +325,7 @@ export const Register = () => {
                     setTermsError(null);
                   }}
                   disabled={loading}
-                  className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-900"
                 />
                 <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
                   {t('termsLabel')}{' '}
@@ -345,6 +345,13 @@ export const Register = () => {
                     className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
                   >
                     {t('privacyLink')}
+                  </a>{' '}
+                  {t('termsAnd')}{' '}
+                  <a
+                    href="/privacy"
+                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                  >
+                    {t('compliance:page.title')}
                   </a>.
                 </label>
               </div>
@@ -375,12 +382,12 @@ export const Register = () => {
           </Form>
 
           <div className="mt-6 text-center text-sm">
-            <span className={COLORS.text.secondary}>
+            <span className={`${COLORS.text.secondary} dark:text-slate-400`}>
               {t('register.hasAccount')}{' '}
             </span>
             <Link
               to={ROUTES.LOGIN}
-              className="font-medium text-blue-600 hover:text-blue-700 hover:underline"
+              className="font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
             >
               {t('register.loginLink')}
             </Link>

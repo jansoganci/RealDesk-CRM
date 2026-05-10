@@ -73,7 +73,7 @@ export const Contracts = () => {
     description: searchQuery || statusFilter !== 'all'
       ? t('emptyState.descriptionFiltered')
       : t('emptyState.description'),
-    icon: <FileText className={`h-16 w-16 ${COLORS.muted.text}`} />,
+    icon: <FileText className="h-16 w-16 text-muted-foreground" />,
     actionLabel: t('actions.createFirst'),
     showAction: !searchQuery && statusFilter === 'all',
   }), [searchQuery, statusFilter, t]);

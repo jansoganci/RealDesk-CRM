@@ -2,7 +2,7 @@
  * Sprint 6A T11 — Step 4: Rent, deposits, fees, optional charges, amount due at signing (estimate).
  */
 
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -13,14 +13,17 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import type { LeaseAgreementFormValues } from '@/features/contracts/schemas/leaseAgreementForm.schema';
+import { STATE_DEPOSIT_CAP_MULTIPLIER, STATE_DEPOSIT_RETURN_DAYS } from '@/config/constants';
 import { formatCurrency } from '@/lib/currency';
 
 const USD = 'USD';
 
 export function Step4Financials() {
   const { t } = useTranslation('contracts');
-  const { control, watch } = useFormContext<LeaseAgreementFormValues>();
+  const { control, watch, setValue } = useFormContext<LeaseAgreementFormValues>();
 
+  const propertyState = watch('property_state');
+  const currentReturnDays = watch('security_deposit_return_days');
   const rentAmount = watch('rent_amount');
   const deposit = watch('deposit');
   const securityEnabled = watch('security_deposit_enabled');
@@ -34,6 +37,23 @@ export function Step4Financials() {
   const parkingEnabled = watch('parking_fee_enabled');
   const petsAllowed = watch('pets_allowed');
   const petsDeposit = watch('pets_deposit_amount');
+
+  useEffect(() => {
+    if (propertyState && STATE_DEPOSIT_RETURN_DAYS[propertyState]) {
+      if (!currentReturnDays || currentReturnDays === 21) {
+        setValue('security_deposit_return_days', STATE_DEPOSIT_RETURN_DAYS[propertyState]);
+      }
+    }
+  // Only trigger when state changes — currentReturnDays intentionally excluded
+  // so a manual edit by the user isn't overwritten on re-render
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [propertyState]);
+
+  const depositCapMultiplier = propertyState ? STATE_DEPOSIT_CAP_MULTIPLIER[propertyState] : undefined;
+  const depositCapAmount =
+    depositCapMultiplier != null && rentAmount > 0
+      ? rentAmount * depositCapMultiplier
+      : null;
 
   const amountDueAtSigning = useMemo(() => {
     let total = 0;
@@ -172,6 +192,15 @@ export function Step4Financials() {
                       }}
                     />
                   </FormControl>
+                  {depositCapAmount != null && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {t('leaseWizard.step4.depositCapHint', {
+                        cap: depositCapMultiplier,
+                        amount: formatCurrency(depositCapAmount, USD),
+                        state: propertyState,
+                      })}
+                    </p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}
@@ -195,6 +224,14 @@ export function Step4Financials() {
                       }}
                     />
                   </FormControl>
+                  {propertyState && STATE_DEPOSIT_RETURN_DAYS[propertyState] && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      {t('leaseWizard.step4.stateReturnHint', {
+                        state: propertyState,
+                        days: STATE_DEPOSIT_RETURN_DAYS[propertyState],
+                      })}
+                    </p>
+                  )}
                   <FormMessage />
                 </FormItem>
               )}

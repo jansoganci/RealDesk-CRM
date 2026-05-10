@@ -41,6 +41,14 @@ export function useAlertCenter(limit = 50) {
     void refresh();
   }, [refresh]);
 
+  useEffect(() => {
+    if (!currentOrg?.id) return;
+    const timer = setInterval(() => {
+      void refresh();
+    }, 5 * 60 * 1000);
+    return () => clearInterval(timer);
+  }, [currentOrg?.id, refresh]);
+
   const markRead = useCallback(async (id: string) => {
     await notificationsService.markRead(id);
     await refresh();

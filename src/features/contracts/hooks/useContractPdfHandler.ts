@@ -7,11 +7,12 @@
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
+import { enUS, tr } from 'date-fns/locale';
 import { generateContractPDFBlob } from '@/services/contractPdf.service';
-import { numberToTurkishText } from '@/lib/numberToText';
+import { numberToEnglishText, numberToTurkishText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
 import { formatFixturesForPdf } from '../utils/fixturesUtils';
@@ -49,12 +50,18 @@ const UPLOAD_TIMEOUT = 30000; // 30 seconds
 // Helper Functions
 // ============================================================================
 
+function isLegacyLeasePdf(formData: ContractFormData): boolean {
+  const s = formData.state?.trim() ?? '';
+  return s.length !== 2;
+}
+
 /**
  * Prepare PDF data from form data
  */
 function preparePdfData(
   formData: ContractFormData,
-  contractId: string
+  contractId: string,
+  isLegacy: boolean,
 ): ContractPdfData {
   const monthlyRent = typeof formData.rent_amount === 'string'
     ? parseFloat(formData.rent_amount)
@@ -63,6 +70,10 @@ function preparePdfData(
   const deposit = typeof formData.deposit === 'string'
     ? parseFloat(formData.deposit)
     : formData.deposit;
+
+  const locale = isLegacy ? tr : enUS;
+  const datePattern = isLegacy ? 'dd MMMM yyyy' : 'MMMM dd, yyyy';
+  const amtToText = isLegacy ? numberToTurkishText : numberToEnglishText;
 
   return {
     contractNumber: contractId.slice(0, 8).toUpperCase(),
@@ -92,18 +103,18 @@ function preparePdfData(
 
     // Rent amounts
     monthlyRentNumber: monthlyRent,
-    monthlyRentText: numberToTurkishText(monthlyRent),
+    monthlyRentText: amtToText(monthlyRent),
     yearlyRentNumber: yearlyRent,
-    yearlyRentText: numberToTurkishText(yearlyRent),
+    yearlyRentText: amtToText(yearlyRent),
 
     // Dates
-    startDate: format(new Date(formData.start_date), 'dd MMMM yyyy', { locale: tr }),
-    endDate: format(new Date(formData.end_date), 'dd MMMM yyyy', { locale: tr }),
+    startDate: format(new Date(formData.start_date), datePattern, { locale }),
+    endDate: format(new Date(formData.end_date), datePattern, { locale }),
     paymentDay: formData.payment_day_of_month?.toString() || '1',
 
     // Deposit
     depositAmount: deposit,
-    depositText: numberToTurkishText(deposit),
+    depositText: amtToText(deposit),
 
     // Currency
     currency: formData.currency || 'USD',
@@ -116,7 +127,7 @@ function preparePdfData(
 
     // Eviction commitment
     evictionDate: '', // Left blank for manual entry (legal requirement)
-    commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr }),
+    commitmentDate: format(new Date(), datePattern, { locale }),
 
     // Google Drive handover photos URL (for QR code)
     handoverPhotosUrl: formData.handover_photos_url || undefined
@@ -140,9 +151,13 @@ function validatePdfSize(pdfBlob: Blob): void {
  */
 async function uploadPdfToStorage(
   pdfBlob: Blob,
-  contractId: string
+  contractId: string,
+  isLegacy: boolean,
 ): Promise<string> {
-  const fileName = `Kira_Sozlesmesi_${contractId.slice(0, 8)}.pdf`;
+  const base = contractId.slice(0, 8);
+  const fileName = isLegacy
+    ? `Kira_Sozlesmesi_${base}.pdf`
+    : `Lease_Agreement_${base}.pdf`;
   const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
   const { contractsService } = await import('@/lib/serviceProxy');
@@ -160,12 +175,13 @@ async function uploadPdfToStorage(
 /**
  * Trigger browser download for PDF
  */
-function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
+function downloadPdfToBrowser(pdfBlob: Blob, contractId: string, isLegacy: boolean): boolean {
   try {
     const url = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Kira_Sozlesmesi_${contractId.slice(0, 8)}.pdf`;
+    const base = contractId.slice(0, 8);
+    link.download = isLegacy ? `Kira_Sozlesmesi_${base}.pdf` : `Lease_Agreement_${base}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -182,24 +198,24 @@ function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
 /**
  * Handle upload errors with appropriate toast messages
  */
-function handleUploadError(error: unknown, t: (key: string) => string): void {
+function handleUploadError(error: unknown, tf: TFunction<'contracts'>): void {
   logger.error('PDF storage upload failed:', error);
 
   const errorMessage = error instanceof Error ? error.message : 'Unknown error';
 
   if (errorMessage.includes('storage_quota')) {
-    toast.warning(t('pdf.errors.storageQuota'), {
-      description: t('pdf.errors.storageQuotaDescription'),
+    toast.warning(tf('pdf.errors.storageQuota'), {
+      description: tf('pdf.errors.storageQuotaDescription'),
       duration: 8000
     });
   } else if (errorMessage.includes('timeout')) {
-    toast.warning(t('pdf.errors.timeout'), {
-      description: t('pdf.errors.timeoutDescription'),
+    toast.warning(tf('pdf.errors.timeout'), {
+      description: tf('pdf.errors.timeoutDescription'),
       duration: 8000
     });
   } else {
-    toast.warning(t('pdf.errors.uploadFailed'), {
-      description: t('pdf.errors.uploadFailedDescription'),
+    toast.warning(tf('pdf.errors.uploadFailed'), {
+      description: tf('pdf.errors.uploadFailedDescription'),
       duration: 8000
     });
   }
@@ -208,15 +224,18 @@ function handleUploadError(error: unknown, t: (key: string) => string): void {
 /**
  * Show final success message based on upload result
  */
-function showFinalSuccessMessage(storageSaveSucceeded: boolean, t: (key: string) => string): void {
+function showFinalSuccessMessage(
+  storageSaveSucceeded: boolean,
+  tf: TFunction<'contracts'>,
+): void {
   if (storageSaveSucceeded) {
-    toast.success(t('pdf.success.createdAndSaved'), {
-      description: t('pdf.success.createdAndSavedDescription'),
+    toast.success(tf('pdf.success.createdAndSaved'), {
+      description: tf('pdf.success.createdAndSavedDescription'),
       duration: 6000
     });
   } else {
-    toast.success(t('pdf.success.createdDownloaded'), {
-      description: t('pdf.success.createdDownloadedDescription'),
+    toast.success(tf('pdf.success.createdDownloaded'), {
+      description: tf('pdf.success.createdDownloadedDescription'),
       duration: 8000
     });
   }
@@ -237,10 +256,12 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
     setIsProcessing(true);
 
     try {
+      const isLegacy = isLegacyLeasePdf(formData);
+
       toast.info(t('pdf.generating'), { duration: 2000 });
 
       // STEP 1: Prepare PDF data
-      const pdfData = preparePdfData(formData, contractResult.contract_id);
+      const pdfData = preparePdfData(formData, contractResult.contract_id, isLegacy);
 
       // STEP 2: Generate PDF Blob (with merged clauses from database)
       const pdfBlob = await generateContractPDFBlob(pdfData, contractResult.contract_id);
@@ -257,7 +278,7 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       try {
         toast.info(t('pdf.uploading'), { duration: 2000 });
 
-        storageFilePath = await uploadPdfToStorage(pdfBlob, contractResult.contract_id);
+        storageFilePath = await uploadPdfToStorage(pdfBlob, contractResult.contract_id, isLegacy);
         storageSaveSucceeded = true;
 
         logger.debug('PDF saved to storage:', storageFilePath);
@@ -266,7 +287,7 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       }
 
       // STEP 5: Download to user's browser (always attempt, even if storage failed)
-      const downloadTriggered = downloadPdfToBrowser(pdfBlob, contractResult.contract_id);
+      const downloadTriggered = downloadPdfToBrowser(pdfBlob, contractResult.contract_id, isLegacy);
 
       // STEP 6: Show appropriate success message
       showFinalSuccessMessage(storageSaveSucceeded, t);
@@ -282,11 +303,10 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
     } catch (pdfError) {
       logger.error('PDF generation failed:', pdfError);
 
-      // Handle clause fetch failures specifically
       const errorMessage = pdfError instanceof Error ? pdfError.message.toLowerCase() : '';
       if (errorMessage.includes('clause') || errorMessage.includes('madde')) {
-        toast.error('Özel maddeler yüklenemedi', {
-          description: 'PDF oluşturulamadı. Lütfen tekrar deneyin.',
+        toast.error(t('pdf.errors.clausesLoadFailed'), {
+          description: t('pdf.errors.clausesLoadFailedDescription'),
           duration: 8000
         });
       } else {

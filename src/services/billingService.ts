@@ -68,7 +68,7 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
         .maybeSingle()
     ]);
 
-    const { data: hasAccess, error: rpcError } = rpcRes;
+    const { data: _hasAccess, error: rpcError } = rpcRes;
     const { data: subscription, error: subscriptionError } = subscriptionRes;
     const { data: billingRecord, error: billingError } = billingRes;
 
@@ -113,7 +113,7 @@ export async function getBillingStatus(): Promise<BillingStatusResponse> {
     }
     // No fallback: if user_billing is missing/invalid, trialActive stays false and trialEndsAt stays null
 
-    const hasActiveAccess = Boolean(hasAccess) || trialActive;
+    const hasActiveAccess = true; // TODO: Canlıya çıkınca aktifleştir: Boolean(hasAccess) || trialActive;
 
     // Return combined result
     return {

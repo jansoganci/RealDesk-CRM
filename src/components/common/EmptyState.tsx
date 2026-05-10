@@ -42,11 +42,11 @@ export const EmptyState = memo(({
   );
 
   return (
-    <Card className={`p-8 shadow-lg ${COLORS.border.light} ${COLORS.card.bgBlur}`}>
+    <Card className="p-8 shadow-lg">
       <div className="text-center">
         {icon && <div className="flex justify-center mb-4">{icon}</div>}
-        <h3 className={`text-lg font-medium ${COLORS.gray.text900} mb-2`}>{title}</h3>
-        <p className={`${COLORS.muted.textLight} mb-4`}>{description}</p>
+        <h3 className="text-lg font-medium text-foreground mb-2">{title}</h3>
+        <p className="text-muted-foreground mb-4">{description}</p>
         {showAction && onAction && actionLabel && (
           <div className="flex justify-center">
             {disabledAction && actionTooltip ? (
