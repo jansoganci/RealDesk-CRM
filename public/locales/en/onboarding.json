@@ -1,14 +1,14 @@
 {
   "step1": {
-    "title": "Welcome! What brings you to Emlak CRM?",
-    "subtitle": "We're asking a few questions to provide you with the best experience",
-    "question": "What will you use Emlak CRM for?",
+    "title": "Welcome to RealDesk",
+    "subtitle": "Answer a few questions so your workspace starts with the right US real estate setup.",
+    "question": "What will you use RealDesk for?",
     "options": {
-      "properties": "Organize my property listings",
-      "clients": "Track client relationships (tenants/owners)",
-      "contracts": "Manage contracts and documents",
-      "team": "Team collaboration and reporting",
-      "all": "All of the above"
+      "properties": "Manage listings and rental properties",
+      "clients": "Track buyers, sellers, tenants, and owners",
+      "contracts": "Manage leases, purchase agreements, and documents",
+      "team": "Coordinate with my brokerage or team",
+      "all": "Run my full real estate workflow"
     },
     "skip": "Skip",
     "continue": "Continue",
@@ -18,18 +18,18 @@
     }
   },
   "step2": {
-    "title": "Let's set up your organization",
-    "subtitle": "We're collecting some basic information",
+    "title": "Set up your business profile",
+    "subtitle": "This helps tailor default workflows, reminders, and reporting.",
     "organization": {
       "title": "Organization Information",
       "name": "Organization Name",
       "namePlaceholder": "Enter your organization name",
       "teamSize": "What's your team size?",
       "teamSizeOptions": {
-        "solo": "Just me (individual consultant)",
+        "solo": "Just me (solo agent)",
         "small": "2-5 people (small team)",
-        "medium": "6-20 people (medium team)",
-        "large": "20+ people (large office)"
+        "medium": "6-20 people (brokerage team)",
+        "large": "20+ people (office or brokerage)"
       }
     },
     "preferences": {
@@ -50,14 +50,21 @@
   },
   "step3": {
     "title": "Let's get started!",
-    "subtitle": "Onboarding complete! You can now go to your dashboard to get started.",
-    "goToDashboard": "Go to Dashboard",
+    "subtitle": "Your workspace is ready. Take the next step.",
+    "actions": {
+      "addFirstProperty": "Add Your First Property",
+      "addFirstLead": "Add Your First Lead",
+      "goToDashboard": "Go to Dashboard"
+    },
     "completing": "Completing...",
-    "success": "Great! Onboarding completed."
+    "success": "Great! Onboarding completed.",
+    "errors": {
+      "organizationNotFound": "Organization not found",
+      "completeFailed": "Failed to complete onboarding"
+    }
   },
   "progress": {
     "step": "Step",
     "of": "/"
   }
 }
-

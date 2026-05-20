@@ -1,14 +1,13 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Home, Users, FileText, UserCog, Sparkles } from 'lucide-react';
+import { Loader2, Home, Handshake, Layers, Compass } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useOnboarding, type PrimaryUseCase } from '../hooks/useOnboarding';
 import { useOrg } from '@/contexts/OrgContext';
-import { onboardingService } from '../services/onboarding.service';
-import { organizationService } from '@/services/organization.service';
+import { onboardingService, organizationService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -20,13 +19,11 @@ interface Step1GoalSelectionProps {
 const useCaseOptions: Array<{
   value: PrimaryUseCase;
   icon: React.ComponentType<{ className?: string }>;
-  labelKey: string;
 }> = [
-  { value: 'properties', icon: Home, labelKey: 'properties' },
-  { value: 'clients', icon: Users, labelKey: 'clients' },
-  { value: 'contracts', icon: FileText, labelKey: 'contracts' },
-  { value: 'team', icon: UserCog, labelKey: 'team' },
-  { value: 'all', icon: Sparkles, labelKey: 'all' },
+  { value: 'rentals', icon: Home },
+  { value: 'sales', icon: Handshake },
+  { value: 'both', icon: Layers },
+  { value: 'exploring', icon: Compass },
 ];
 
 export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
@@ -48,8 +45,8 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
         await refreshOrg();
       }
       
-      // Default to "all" when skipping
-      await onboardingService.savePrimaryUseCase(orgId, 'all');
+      // Default to "exploring" when skipping
+      await onboardingService.savePrimaryUseCase(orgId, 'exploring');
       
       // Track skip event
       await onboardingService.trackEvent(
@@ -58,13 +55,13 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
         1,
         'goal_selection',
         'skipped',
-        { primary_use_case: 'all' }
+        { primary_use_case: 'exploring' }
       );
 
-      setPrimaryUseCase('all');
+      setPrimaryUseCase('exploring');
       onContinue();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to skip step';
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.skipFailed');
       toast.error(errorMessage);
     } finally {
       setSaving(false);
@@ -102,7 +99,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
       onContinue();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save selection';
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.saveFailed');
       toast.error(errorMessage);
     } finally {
       setSaving(false);
@@ -153,7 +150,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                   />
                   <Label
                     htmlFor={option.value}
-                    className="flex-1 cursor-pointer flex items-center gap-3"
+                    className="flex-1 cursor-pointer flex items-start gap-3"
                   >
                     <Icon
                       className={cn(
@@ -161,12 +158,19 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                         isSelected ? 'text-blue-600' : 'text-slate-400'
                       )}
                     />
-                    <span className={cn(
-                      'text-sm font-medium',
-                      isSelected ? 'text-blue-900' : 'text-slate-700'
-                    )}>
-                      {t(`step1.options.${option.labelKey}`)}
-                    </span>
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={cn(
+                          'text-sm font-medium',
+                          isSelected ? 'text-blue-900' : 'text-slate-700'
+                        )}
+                      >
+                        {t(`step1.options.${option.value}.label`)}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {t(`step1.options.${option.value}.description`)}
+                      </span>
+                    </div>
                   </Label>
                 </div>
               );

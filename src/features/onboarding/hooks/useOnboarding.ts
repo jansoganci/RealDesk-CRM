@@ -1,39 +1,84 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useOrg } from '@/contexts/OrgContext';
-import { onboardingService } from '../services/onboarding.service';
-import { organizationService } from '@/services/organization.service';
-import { userPreferencesService } from '@/services/userPreferences.service';
+import { onboardingService, userPreferencesService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { createLogger } from '@/lib/logger';
 import { toast } from 'sonner';
+import type { AgentProfileInput } from '../services/onboarding.service';
 
 const logger = createLogger('OnboardingHook');
 
-export type PrimaryUseCase = 'properties' | 'clients' | 'contracts' | 'team' | 'all';
-export type TeamSize = '1' | '2-5' | '6-20' | '21+';
+export type PrimaryUseCase = 'rentals' | 'sales' | 'both' | 'exploring';
+export type TeamSize = '1' | '2-5' | '6-20';
+export type CurrencyCode = 'USD';
+
+type LegacyPrimaryUseCase = 'properties' | 'clients' | 'contracts' | 'team' | 'all';
+type LegacyTeamSize = TeamSize | '21+';
+
+export interface AgentProfileFormData extends AgentProfileInput {
+  currency: CurrencyCode;
+}
+
+function normalizePrimaryUseCase(value: string | null | undefined): PrimaryUseCase | null {
+  if (!value) return null;
+
+  if (value === 'rentals' || value === 'sales' || value === 'both' || value === 'exploring') {
+    return value;
+  }
+
+  const legacyValue = value as LegacyPrimaryUseCase;
+  switch (legacyValue) {
+    case 'properties':
+      return 'rentals';
+    case 'clients':
+    case 'contracts':
+      return 'sales';
+    case 'team':
+    case 'all':
+      return 'both';
+    default:
+      return null;
+  }
+}
+
+function normalizeTeamSize(value: string | null | undefined): TeamSize | null {
+  if (!value) return null;
+
+  const normalized = value as LegacyTeamSize;
+  if (normalized === '1' || normalized === '2-5' || normalized === '6-20') {
+    return normalized;
+  }
+
+  if (normalized === '21+') {
+    return '6-20';
+  }
+
+  return null;
+}
 
 interface UseOnboardingReturn {
   // State
   currentStep: number;
   primaryUseCase: PrimaryUseCase | null;
   organizationName: string;
+  brokerageName: string;
+  licenseState: string;
+  primaryMarketCity: string;
+  primaryMarketState: string;
   teamSize: TeamSize | null;
-  currency: 'TRY' | 'USD' | 'EUR';
+  currency: CurrencyCode;
   isLoading: boolean;
   error: string | null;
 
   // Actions
   setPrimaryUseCase: (useCase: PrimaryUseCase) => void;
-  setOrganizationName: (name: string) => void;
-  setTeamSize: (size: TeamSize) => void;
-  setCurrency: (curr: 'TRY' | 'USD' | 'EUR') => void;
   goToStep: (step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
 
   // Save methods
   saveStep1: () => Promise<void>;
-  saveStep2: () => Promise<void>;
+  saveStep2: (profile: AgentProfileFormData) => Promise<void>;
   completeOnboarding: () => Promise<void>;
   resumeFromStep: () => void;
 }
@@ -43,11 +88,14 @@ export function useOnboarding(): UseOnboardingReturn {
   const [currentStep, setCurrentStep] = useState(1);
   const [primaryUseCase, setPrimaryUseCase] = useState<PrimaryUseCase | null>(null);
   const [organizationName, setOrganizationName] = useState('');
+  const [brokerageName, setBrokerageName] = useState('');
+  const [licenseState, setLicenseState] = useState('');
+  const [primaryMarketCity, setPrimaryMarketCity] = useState('');
+  const [primaryMarketState, setPrimaryMarketState] = useState('');
   const [teamSize, setTeamSize] = useState<TeamSize | null>(null);
-  const [currency, setCurrency] = useState<'TRY' | 'USD' | 'EUR'>('USD');
+  const [currency] = useState<CurrencyCode>('USD');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
   // Load existing data if available
   // Try loading from user_onboarding_responses first, fallback to organizations table
@@ -57,68 +105,84 @@ export function useOnboarding(): UseOnboardingReturn {
 
       try {
         // Try to load from user_onboarding_responses first (new source)
-        const responses = await onboardingService.getResponses(currentOrg.id);
-        
+        const responses = (await onboardingService.getResponses(currentOrg.id)) as Record<string, unknown>;
+
         // Load primary_use_case from new table, fallback to old table
-        if (responses.primary_use_case) {
-          setPrimaryUseCase(responses.primary_use_case as PrimaryUseCase);
-        } else if (currentOrg?.primary_use_case) {
-          // Fallback to organizations table (backward compatibility)
-          setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+        const responsePrimaryUseCase =
+          typeof responses.primary_use_case === 'string' ? responses.primary_use_case : null;
+        const resolvedPrimaryUseCase = normalizePrimaryUseCase(
+          responsePrimaryUseCase ?? currentOrg?.primary_use_case
+        );
+        if (resolvedPrimaryUseCase) {
+          setPrimaryUseCase(resolvedPrimaryUseCase);
         }
 
         // Load team_size from new table, fallback to old table
-        if (responses.team_size) {
-          setTeamSize(responses.team_size as TeamSize);
-        } else if (currentOrg?.team_size_range) {
-          // Fallback to organizations table (backward compatibility)
-          setTeamSize(currentOrg.team_size_range as TeamSize);
+        const responseTeamSize = typeof responses.team_size === 'string' ? responses.team_size : null;
+        const resolvedTeamSize = normalizeTeamSize(responseTeamSize ?? currentOrg?.team_size_range);
+        if (resolvedTeamSize) {
+          setTeamSize(resolvedTeamSize);
         }
 
         // Organization name always comes from organizations table (not a survey response)
         if (currentOrg?.name) {
           setOrganizationName(currentOrg.name);
         }
+
+        setBrokerageName(
+          typeof responses.brokerage_name === 'string'
+            ? responses.brokerage_name
+            : currentOrg?.brokerage_name ?? ''
+        );
+        setLicenseState(
+          typeof responses.license_state === 'string'
+            ? responses.license_state
+            : currentOrg?.license_state ?? ''
+        );
+        setPrimaryMarketCity(
+          typeof responses.primary_market_city === 'string'
+            ? responses.primary_market_city
+            : currentOrg?.primary_market_city ?? ''
+        );
+        setPrimaryMarketState(
+          typeof responses.primary_market_state === 'string'
+            ? responses.primary_market_state
+            : currentOrg?.primary_market_state ?? ''
+        );
       } catch (err) {
         // If new table fails, fall back to old table (graceful degradation)
         logger.warn('Failed to load from user_onboarding_responses, using fallback:', err);
-        
+
         // Fallback to organizations table
-        if (currentOrg?.primary_use_case) {
-          setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+        const resolvedPrimaryUseCase = normalizePrimaryUseCase(currentOrg?.primary_use_case);
+        if (resolvedPrimaryUseCase) {
+          setPrimaryUseCase(resolvedPrimaryUseCase);
         }
         if (currentOrg?.name) {
           setOrganizationName(currentOrg.name);
         }
-        if (currentOrg?.team_size_range) {
-          setTeamSize(currentOrg.team_size_range as TeamSize);
+        const resolvedTeamSize = normalizeTeamSize(currentOrg?.team_size_range);
+        if (resolvedTeamSize) {
+          setTeamSize(resolvedTeamSize);
         }
+        setBrokerageName(currentOrg?.brokerage_name ?? '');
+        setLicenseState(currentOrg?.license_state ?? '');
+        setPrimaryMarketCity(currentOrg?.primary_market_city ?? '');
+        setPrimaryMarketState(currentOrg?.primary_market_state ?? '');
       }
     };
 
     loadOnboardingData();
-  }, [currentOrg?.id, currentOrg?.primary_use_case, currentOrg?.name, currentOrg?.team_size_range]);
-
-  // Load user preferences (language/currency)
-  useEffect(() => {
-    const loadPreferences = async () => {
-      if (preferencesLoaded) return;
-      
-      try {
-        const prefs = await userPreferencesService.getPreferences();
-        setCurrency(prefs.currency as 'TRY' | 'USD' | 'EUR');
-        setPreferencesLoaded(true);
-      } catch (err) {
-        // Use defaults if preferences can't be loaded
-        logger.warn('Failed to load preferences, using defaults');
-        setPreferencesLoaded(true);
-      }
-    };
-
-    if (!preferencesLoaded) {
-      loadPreferences();
-    }
-  }, [preferencesLoaded]);
+  }, [
+    currentOrg?.id,
+    currentOrg?.primary_use_case,
+    currentOrg?.name,
+    currentOrg?.team_size_range,
+    currentOrg?.brokerage_name,
+    currentOrg?.license_state,
+    currentOrg?.primary_market_city,
+    currentOrg?.primary_market_state,
+  ]);
 
   const goToStep = useCallback((step: number) => {
     if (step >= 1 && step <= 3) {
@@ -183,23 +247,29 @@ export function useOnboarding(): UseOnboardingReturn {
     }
   }, [currentOrg?.id, primaryUseCase, nextStep]);
 
-  const saveStep2 = useCallback(async () => {
+  const saveStep2 = useCallback(async (profile: AgentProfileFormData) => {
     if (!currentOrg?.id) {
       setError('Organization not found');
       return;
     }
 
-    if (!organizationName || organizationName.trim().length < 2) {
+    const cleanedOrganizationName = profile.organizationName.trim();
+    const cleanedBrokerageName = profile.brokerageName.trim();
+    const cleanedLicenseState = profile.licenseState.trim().toUpperCase();
+    const cleanedPrimaryMarketCity = profile.primaryMarketCity.trim();
+    const cleanedPrimaryMarketState = profile.primaryMarketState.trim().toUpperCase();
+
+    if (!cleanedOrganizationName || cleanedOrganizationName.length < 2) {
       setError('Organization name must be at least 2 characters');
       return;
     }
 
-    if (organizationName.length > 255) {
+    if (cleanedOrganizationName.length > 255) {
       setError('Organization name must not exceed 255 characters');
       return;
     }
 
-    if (!teamSize) {
+    if (!profile.teamSize) {
       setError('Please select team size');
       return;
     }
@@ -210,44 +280,59 @@ export function useOnboarding(): UseOnboardingReturn {
     try {
       const userId = await getAuthenticatedUserId();
 
-      // 1. Update organization name
-      await organizationService.updateName(currentOrg.id, organizationName.trim());
-
-      // 2. Save team size
-      await onboardingService.saveTeamSize(currentOrg.id, teamSize);
-
-      // 3. Save preferences (always, even if defaults)
-      await userPreferencesService.updatePreferences({
-        language: 'en',
-        currency,
+      // 1. Save agent profile and team setup
+      await onboardingService.saveAgentProfile(currentOrg.id, {
+        organizationName: cleanedOrganizationName,
+        teamSize: profile.teamSize,
+        brokerageName: cleanedBrokerageName,
+        licenseState: cleanedLicenseState,
+        primaryMarketCity: cleanedPrimaryMarketCity,
+        primaryMarketState: cleanedPrimaryMarketState,
       });
 
-      // 4. Track event
+      // 2. Save preferences (USD only)
+      await userPreferencesService.updatePreferences({
+        language: 'en',
+        currency: 'USD',
+      });
+
+      setOrganizationName(cleanedOrganizationName);
+      setTeamSize(profile.teamSize);
+      setBrokerageName(cleanedBrokerageName);
+      setLicenseState(cleanedLicenseState);
+      setPrimaryMarketCity(cleanedPrimaryMarketCity);
+      setPrimaryMarketState(cleanedPrimaryMarketState);
+
+      // 3. Track event
       await onboardingService.trackEvent(
         currentOrg.id,
         userId,
         2,
-        'organization_setup',
+        'agent_profile',
         'completed',
         {
-          organization_name: organizationName.trim(),
-          team_size: teamSize,
+          organization_name: cleanedOrganizationName,
+          team_size: profile.teamSize,
+          brokerage_name: cleanedBrokerageName || null,
+          license_state: cleanedLicenseState,
+          primary_market_city: cleanedPrimaryMarketCity,
+          primary_market_state: cleanedPrimaryMarketState,
           language: 'en',
-          currency,
+          currency: 'USD',
         }
       );
 
-      // 5. Move to next step
+      // 4. Move to next step
       nextStep();
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to save organization setup';
+      const errorMessage = err instanceof Error ? err.message : 'Failed to save agent profile';
       setError(errorMessage);
       toast.error(errorMessage);
       throw err;
     } finally {
       setIsLoading(false);
     }
-  }, [currentOrg?.id, organizationName, teamSize, currency, nextStep]);
+  }, [currentOrg?.id, nextStep]);
 
   const completeOnboarding = useCallback(async () => {
     if (!currentOrg?.id) {
@@ -296,32 +381,61 @@ export function useOnboarding(): UseOnboardingReturn {
 
     // Load saved data - try new table first, fallback to old table
     try {
-      const responses = await onboardingService.getResponses(currentOrg.id);
-      
+      const responses = (await onboardingService.getResponses(currentOrg.id)) as Record<string, unknown>;
+
       // Load primary_use_case from new table, fallback to old table
-      if (responses.primary_use_case) {
-        setPrimaryUseCase(responses.primary_use_case as PrimaryUseCase);
-      } else if (currentOrg.primary_use_case) {
-        setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+      const responsePrimaryUseCase =
+        typeof responses.primary_use_case === 'string' ? responses.primary_use_case : null;
+      const resolvedPrimaryUseCase = normalizePrimaryUseCase(
+        responsePrimaryUseCase ?? currentOrg.primary_use_case
+      );
+      if (resolvedPrimaryUseCase) {
+        setPrimaryUseCase(resolvedPrimaryUseCase);
       }
 
       // Load team_size from new table, fallback to old table
-      if (responses.team_size) {
-        setTeamSize(responses.team_size as TeamSize);
-      } else if (currentOrg.team_size_range) {
-        setTeamSize(currentOrg.team_size_range as TeamSize);
+      const responseTeamSize = typeof responses.team_size === 'string' ? responses.team_size : null;
+      const resolvedTeamSize = normalizeTeamSize(responseTeamSize ?? currentOrg.team_size_range);
+      if (resolvedTeamSize) {
+        setTeamSize(resolvedTeamSize);
       }
+      setBrokerageName(
+        typeof responses.brokerage_name === 'string'
+          ? responses.brokerage_name
+          : currentOrg.brokerage_name ?? ''
+      );
+      setLicenseState(
+        typeof responses.license_state === 'string'
+          ? responses.license_state
+          : currentOrg.license_state ?? ''
+      );
+      setPrimaryMarketCity(
+        typeof responses.primary_market_city === 'string'
+          ? responses.primary_market_city
+          : currentOrg.primary_market_city ?? ''
+      );
+      setPrimaryMarketState(
+        typeof responses.primary_market_state === 'string'
+          ? responses.primary_market_state
+          : currentOrg.primary_market_state ?? ''
+      );
     } catch (err) {
       // If new table fails, fall back to old table (graceful degradation)
       logger.warn('Failed to load from user_onboarding_responses in resume, using fallback:', err);
-      
+
       // Fallback to organizations table
-      if (currentOrg.primary_use_case) {
-        setPrimaryUseCase(currentOrg.primary_use_case as PrimaryUseCase);
+      const resolvedPrimaryUseCase = normalizePrimaryUseCase(currentOrg.primary_use_case);
+      if (resolvedPrimaryUseCase) {
+        setPrimaryUseCase(resolvedPrimaryUseCase);
       }
-      if (currentOrg.team_size_range) {
-        setTeamSize(currentOrg.team_size_range as TeamSize);
+      const resolvedTeamSize = normalizeTeamSize(currentOrg.team_size_range);
+      if (resolvedTeamSize) {
+        setTeamSize(resolvedTeamSize);
       }
+      setBrokerageName(currentOrg.brokerage_name ?? '');
+      setLicenseState(currentOrg.license_state ?? '');
+      setPrimaryMarketCity(currentOrg.primary_market_city ?? '');
+      setPrimaryMarketState(currentOrg.primary_market_state ?? '');
     }
 
     // Organization name always comes from organizations table
@@ -329,7 +443,7 @@ export function useOnboarding(): UseOnboardingReturn {
       setOrganizationName(currentOrg.name);
     }
 
-    // Language/currency will be loaded from user_preferences via existing useEffect
+    // Currency is USD only for US onboarding flow
     setError(null);
   }, [currentOrg]);
 
@@ -337,14 +451,15 @@ export function useOnboarding(): UseOnboardingReturn {
     currentStep,
     primaryUseCase,
     organizationName,
+    brokerageName,
+    licenseState,
+    primaryMarketCity,
+    primaryMarketState,
     teamSize,
     currency,
     isLoading: isLoading || orgLoading,
     error,
     setPrimaryUseCase,
-    setOrganizationName,
-    setTeamSize,
-    setCurrency,
     goToStep,
     nextStep,
     previousStep,

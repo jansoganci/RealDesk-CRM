@@ -6,10 +6,12 @@
 export { handleServiceError } from './handleServiceError';
 
 // Direct service exports
+export { organizationService } from '../services/organization.service';
 export { ownersService } from '../services/owners.service';
 export { propertiesService } from '../services/properties.service';
 export { tenantsService } from '../services/tenants.service';
 export { contractsService } from '../services/contracts.service';
+export { onboardingService } from '../features/onboarding/services/onboarding.service';
 export { leaseAgreementService } from '../services/leaseAgreement.service';
 export type {
   CreateLeaseAgreementInput,
