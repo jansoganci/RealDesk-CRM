@@ -16,7 +16,7 @@ export interface OnboardingStatus {
 }
 
 export interface OnboardingEventData {
-  [key: string]: any;
+  [key: string]: Json;
 }
 
 export interface AgentProfileInput {
