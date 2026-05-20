@@ -6,12 +6,12 @@ This directory contains all project documentation organized by purpose and statu
 
 ### `/reference/`
 **Active reference documentation** - Core architecture, APIs, and guides:
-- `ADR-002-contract-engine-v2-architecture.md` - Contract engine v2 ADR (rent vs v2 isolation)
+- `CURRENT_ARCHITECTURE.md` - Current system architecture (CURRENT)
+- `ADR-002-contract-engine-v2-architecture.md` - Contract engine v2 ADR
 - `API.md` - API documentation
 - `ARCHITECTURE.md` - System architecture overview
 - `CONTRIBUTING.md` - Contribution guidelines
 - `DEPLOYMENT.md` - Deployment procedures
-- `LEGAL_DOCUMENTS_*.md` - Legal document guides and templates
 
 ### `/planning/`
 **Active planning documents** - Features and improvements being planned:
