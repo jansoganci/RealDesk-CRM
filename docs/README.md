@@ -33,13 +33,9 @@ This directory contains all project documentation organized by purpose and statu
 
 ### `/research/`
 **Market research and strategy** - Business and market analysis:
-- `marketing-strategy-*.md` - Marketing strategy documents
-- `real-estate-market-research.md` - Market research
-
-### `/marketing/`
-**Product narrative and analysis** (portfolio-style and stakeholder-facing):
-- `EmlakCRM_Portfolio.md` - Executive overview (English)
-- `EmlakCRM_Detayli_Analiz_Raporu.md` - Detailed product analysis (Turkish)
+- `us_real_estate_market_research.md` - US market research
+- `RealDesk_Product_Workflow_Document.md` - Product workflow (CURRENT)
+- `real.estate.US.market.analysis.md` - US market analysis (CURRENT)
 
 ### `/content/`
 **Long-form text drafts** (not app source):

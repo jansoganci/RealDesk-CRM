@@ -1,17 +1,17 @@
-# Claude Code - Real Estate CRM Technical Documentation
+# RealDesk-CRM — Technical Documentation
 
 ## Project Overview
 
-**Real Estate CRM** (Emlak CRM) is a comprehensive, mobile-first Customer Relationship Management system designed specifically for Turkish real estate agents. The application helps manage properties (both rental and sale), owners, tenants, contracts with PDF generation, financial transactions, commissions, appointments, and property inquiries through an intuitive, responsive interface optimized for mobile devices.
+**RealDesk-CRM** is a comprehensive, mobile-first Customer Relationship Management system designed specifically for US real estate agents. The application helps manage properties (both rental and sale), owners, tenants, contracts with PDF generation, financial transactions, commissions, appointments, and property inquiries through an intuitive, responsive interface optimized for mobile devices.
 
 ### Key Information
-- **Name**: Real Estate CRM (Emlak CRM - "emlak" means real estate in Turkish)
+- **Name**: RealDesk-CRM
 - **Version**: 1.1.0
 - **Type**: Single Page Application (SPA) with PWA support
-- **Target Users**: Turkish real estate agents and agencies
-- **Primary Language**: Turkish (with English i18n support)
+- **Target Users**: US real estate agents and agencies
+- **Primary Language**: English
 - **License**: MIT
-- **Database**: 13 tables, 42 migrations
+- **Database**: 50+ tables, 33 migrations
 - **Services**: 23 service classes
 
 ---
@@ -53,9 +53,7 @@
 ### Internationalization
 - **i18next 25.6** - i18n framework
 - **react-i18next 16.2** - React bindings for i18next
-- **i18next-browser-languagedetector** - Automatic language detection
-- **i18next-http-backend** - Load translations from server
-- **18 translation namespaces** - Complete TR/EN coverage
+- **Language**: English only (was Turkish TR/EN during Emlak CRM phase)
 
 ### Other Libraries
 - **date-fns 3.6** - Modern date utility library
@@ -99,14 +97,12 @@
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### Directory Structure
+### 📁 Directory Structure
 
 ```
-emlak-crm/
+realdesk-crm/
 ├── public/                      # Static assets
-│   ├── locales/                 # i18n translation files (18 namespaces)
-│   │   ├── tr/                  # Turkish translations
-│   │   └── en/                  # English translations
+│   ├── locales/en/              # i18n translation files (English only)
 │   └── manifest.json            # PWA manifest
 │
 ├── src/
