@@ -21,7 +21,7 @@ GitGuardian detected a hardcoded API key in your codebase. The secret has been i
 **Line:** 119  
 **Variable:** `apiKey`  
 **Service:** OCR.space API  
-**Key Pattern:** `K85695495488957`
+**Key Pattern:** `[REDACTED]`
 
 **Risk Level:** HIGH  
 **Service at Risk:** OCR.space API (Free tier key with 500 requests/day limit)
@@ -30,7 +30,7 @@ GitGuardian detected a hardcoded API key in your codebase. The secret has been i
 
 The secret was hardcoded as a fallback value:
 ```typescript
-const apiKey = Deno.env.get('OCR_SPACE_API_KEY') || 'K85695495488957';
+const apiKey = Deno.env.get('OCR_SPACE_API_KEY') || '[REDACTED]';
 ```
 
 This means:
@@ -68,7 +68,7 @@ This means:
    ```
 
 4. **Verify the old key is invalid:**
-   - The old key (`K85695495488957`) should stop working
+   - The old OCR.space key should stop working
    - Test with a new request to confirm
 
 **Note:** If this is a free tier key, you may need to:
@@ -106,7 +106,7 @@ git push origin --force --tags
 # Or download from: https://rtyley.github.io/bfg-repo-cleaner/
 
 # Create a file with the secret to remove
-echo 'K85695495488957' > secrets-to-remove.txt
+echo '[REDACTED]' > secrets-to-remove.txt
 
 # Clean the repository
 bfg --replace-text secrets-to-remove.txt
