@@ -25,22 +25,22 @@ interface Invoice {
 const mockInvoices: Invoice[] = [
   {
     date: '2024-01-13',
-    amount: 599,
-    currency: 'TRY',
+    amount: 29,
+    currency: 'USD',
     status: 'paid',
     invoiceUrl: '#',
   },
   {
     date: '2023-12-13',
-    amount: 599,
-    currency: 'TRY',
+    amount: 29,
+    currency: 'USD',
     status: 'paid',
     invoiceUrl: '#',
   },
   {
     date: '2023-11-13',
-    amount: 599,
-    currency: 'TRY',
+    amount: 29,
+    currency: 'USD',
     status: 'paid',
     invoiceUrl: '#',
   },

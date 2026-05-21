@@ -1,5 +1,6 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { TableHead } from '@/components/ui/table';
 import { AnimatedTabs } from '@/components/ui/animated-tabs';
 import { InquiryDialog } from '@/features/inquiries/InquiryDialog';
@@ -28,6 +29,7 @@ import { Info } from 'lucide-react';
 export const Leads = () => {
   const { t } = useTranslation(['leads', 'common']);
   const { isMember } = useOrg();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<'pipeline' | 'list'>('pipeline');
   const [detailLeadId, setDetailLeadId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -89,6 +91,15 @@ export const Leads = () => {
   const handleAddLead = useCallback(() => {
     openInquiryDialog();
   }, [openInquiryDialog]);
+
+  useEffect(() => {
+    if (searchParams.get('action') === 'add' && !isMember) {
+      openInquiryDialog();
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('action');
+      setSearchParams(nextParams, { replace: true });
+    }
+  }, [isMember, openInquiryDialog, searchParams, setSearchParams]);
 
   const handleEditLead = useCallback((inquiry: PropertyInquiry) => {
     openEditInquiryDialog(inquiry);

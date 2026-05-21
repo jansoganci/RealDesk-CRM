@@ -34,7 +34,7 @@ export function Onboarding() {
       case 2:
         return <Step2OrganizationSetup onContinue={nextStep} onBack={previousStep} />;
       case 3:
-        return <Step3QuickStart onComplete={handleComplete} />;
+        return <Step3QuickStart onComplete={handleComplete} onBack={previousStep} />;
       default:
         return <Step1GoalSelection onContinue={nextStep} />;
     }
@@ -58,4 +58,3 @@ export function Onboarding() {
     </div>
   );
 }
-

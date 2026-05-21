@@ -1,7 +1,7 @@
 /**
  * useContractEditData Hook
  * Loads contract data for editing and transforms it to form format
- * Handles decryption of TC and IBAN fields
+ * Handles decryption of legacy identity and bank fields
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -50,7 +50,7 @@ interface TenantWithEncryption {
 interface PropertyWithComponents {
   id: string;
   address?: string;
-  // Turkish format (legacy)
+  // Legacy address format
   mahalle?: string;
   cadde_sokak?: string;
   bina_no?: string;
@@ -73,7 +73,7 @@ interface ContractDetails {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
-  deposit_currency?: 'USD' | 'EUR' | 'TRY';
+  deposit_currency?: string;
   handover_photos_url?: string;
   is_painted?: boolean;
 }
@@ -160,14 +160,14 @@ export function useContractEditData(contractId: string | undefined): UseContract
       const contractDetails = details as ContractDetails | null;
 
       // Decrypt sensitive fields
-      let ownerTC = '';
+      let ownerTaxId = '';
       let ownerRouting = '';
       let ownerAccount = '';
-      let tenantTC = '';
+      let tenantTaxId = '';
 
       try {
         if (owner.tc_encrypted) {
-          ownerTC = await decrypt(owner.tc_encrypted);
+          ownerTaxId = await decrypt(owner.tc_encrypted);
         }
         if (owner.iban_encrypted) {
           const bankPayload = await decrypt(owner.iban_encrypted);
@@ -180,7 +180,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
           }
         }
         if (contract.tenant.tc_encrypted) {
-          tenantTC = await decrypt(contract.tenant.tc_encrypted);
+          tenantTaxId = await decrypt(contract.tenant.tc_encrypted);
         }
       } catch (decryptError) {
         console.error('Decryption error:', decryptError);
@@ -191,7 +191,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
       const formData: ContractFormData = {
         // Owner fields
         owner_name: owner.name || '',
-        owner_tax_id: ownerTC,
+        owner_tax_id: ownerTaxId,
         owner_routing_number: ownerRouting,
         owner_account_number: ownerAccount,
         owner_phone: owner.phone || '',
@@ -199,12 +199,12 @@ export function useContractEditData(contractId: string | undefined): UseContract
 
         // Tenant fields
         tenant_name: contract.tenant.name || '',
-        tenant_tax_id: tenantTC,
+        tenant_tax_id: tenantTaxId,
         tenant_phone: contract.tenant.phone || '',
         tenant_email: contract.tenant.email || '',
         tenant_address: contract.tenant.address || '',
 
-        // Property fields (US Format - fallback to Turkish if US fields not yet migrated)
+        // Property fields (US Format - fallback to legacy fields if not yet migrated)
         street_address: contract.property.street_address || contract.property.cadde_sokak || '',
         unit: contract.property.unit || contract.property.daire_no || '',
         city: contract.property.city || contract.property.district_legacy || '',

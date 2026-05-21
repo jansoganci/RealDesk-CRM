@@ -17,7 +17,6 @@ import { format } from 'date-fns';
 import { COLORS } from '@/config/colors';
 import type { ReminderWithDetails } from '../../../lib/serviceProxy';
 import { formatCurrency } from '@/lib/currency';
-import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 /**
@@ -42,13 +41,12 @@ export function CallListRow({
   isCompleted = false,
 }: CallListRowProps) {
   const { t } = useTranslation('reminders');
-  const { currency: userCurrency } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const property = reminder.property;
   const owner = property?.owner;
   const tenant = reminder.tenant;
-  const currencyCode = reminder.currency || userCurrency || 'TRY';
+  const currencyCode = 'USD';
   const rentAmountFormatted = formatCurrency(reminder.rent_amount || 0, currencyCode);
 
   const days = reminder.days_until_end ?? 0;

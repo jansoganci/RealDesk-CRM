@@ -1,7 +1,7 @@
 /**
  * Consent Logger
  * 
- * Handles database logging of cookie consent decisions for GDPR/KVKK compliance.
+ * Handles database logging of cookie consent decisions for privacy compliance.
  * Provides functions to log consent records to Supabase.
  */
 
@@ -263,4 +263,3 @@ export async function logConsentToDatabase(
     };
   }
 }
-

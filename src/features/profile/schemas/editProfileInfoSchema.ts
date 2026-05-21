@@ -22,7 +22,7 @@ export const getEditProfileInfoSchema = (t: TFunction) => {
       .optional()
       .nullable()
       .or(z.literal('')),
-    currency: z.enum(['USD', 'TRY', 'EUR'], {
+    currency: z.literal('USD', {
       required_error: t('profile:validation.currencyRequired'),
     }),
     meeting_reminder_minutes: z

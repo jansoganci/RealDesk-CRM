@@ -84,10 +84,8 @@ export class CookieErrorBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
-      // Get current language from i18n instance (class component can't use hooks)
-      const currentLang = i18n.language || 'en';
-      const cookiePolicyLink = `/legal/cookie-policy-${currentLang}.html`;
-      const privacyPolicyLink = `/legal/privacy-policy-${currentLang}.html`;
+      const cookiePolicyLink = '/legal/cookie-policy-en.html';
+      const privacyPolicyLink = '/legal/privacy-policy-en.html';
 
       return (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-[calc(100%-2rem)] sm:max-w-[400px] px-4 sm:px-0">
@@ -140,5 +138,4 @@ export class CookieErrorBoundary extends Component<
     return this.props.children;
   }
 }
-
 

@@ -15,7 +15,6 @@ import type { ReminderWithDetails } from '../../../lib/serviceProxy';
 import { AlarmStatusIcon } from './AlarmStatusIcon';
 import { ContractProgressBar } from './ContractProgressBar';
 import { formatCurrency } from '@/lib/currency';
-import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 /**
@@ -37,11 +36,10 @@ export function CompactReminderCard({
   onMarkAsContacted,
 }: CompactReminderCardProps) {
   const { t } = useTranslation('reminders');
-  const { currency: userCurrency } = useAuth();
 
   const property = reminder.property;
   const tenant = reminder.tenant;
-  const currencyCode = reminder.currency || userCurrency || 'TRY';
+  const currencyCode = 'USD';
   const rentAmountFormatted = formatCurrency(reminder.rent_amount || 0, currencyCode);
 
   // Determine status

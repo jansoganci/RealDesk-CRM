@@ -146,8 +146,6 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
               </FormControl>
               <SelectContent>
                 <SelectItem value="USD">{t('profile:currencies.USD')}</SelectItem>
-                <SelectItem value="TRY">{t('profile:currencies.TRY')}</SelectItem>
-                <SelectItem value="EUR">{t('profile:currencies.EUR')}</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage className="text-xs" />
@@ -220,4 +218,3 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
     </>
   );
 }
-

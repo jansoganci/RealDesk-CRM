@@ -107,8 +107,8 @@
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Rates updated successfully",
     "refreshError": "Failed to update rates",
-    "usd_try": "USD/TRY",
-    "eur_try": "EUR/TRY"
+    "usd_market": "US market",
+    "usd_base": "USD base"
   },
   "onboarding": {
     "title": "Getting Started",
@@ -117,7 +117,7 @@
     "completeProfile": "Complete your agency profile"
   },
   "welcome": {
-    "title": "Welcome to emlakcrm! 🎉",
+    "title": "Welcome to RealDesk!",
     "description": "Get started by adding your first property and setting up your profile. We'll guide you through the process.",
     "addProperty": "Add Your First Property",
     "addPropertyDesc": "Start managing your real estate portfolio",

@@ -61,6 +61,8 @@ export type {
 } from '../services/offerContingencies.service';
 export { dailyBriefService } from '../services/dailyBrief.service';
 export { notificationsService } from '../services/notifications.service';
+export { organizationService } from '../services/organization.service';
+export type { OrganizationOnboardingProfileUpdate } from '../services/organization.service';
 export { dealPartiesService } from '../services/dealParties.service';
 export {
   addCustomMilestone,

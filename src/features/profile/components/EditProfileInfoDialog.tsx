@@ -92,7 +92,7 @@ export function EditProfileInfoDialog({
     defaultValues: {
       full_name: initialData.fullName || '',
       phone_number: initialData.phoneNumber || '',
-      currency: initialData.currency as 'USD' | 'TRY' | 'EUR',
+      currency: 'USD',
       meeting_reminder_minutes: initialData.meetingReminderMinutes,
       commission_rate: initialData.commissionRate,
     },
@@ -104,7 +104,7 @@ export function EditProfileInfoDialog({
       form.reset({
         full_name: initialData.fullName || '',
         phone_number: initialData.phoneNumber || '',
-        currency: initialData.currency as 'USD' | 'TRY' | 'EUR',
+        currency: 'USD',
         meeting_reminder_minutes: initialData.meetingReminderMinutes,
         commission_rate: initialData.commissionRate,
       });
@@ -140,9 +140,9 @@ export function EditProfileInfoDialog({
       // Update auth context
       const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
       setManualLanguage('en');
-      setManualCurrency(data.currency as 'TRY' | 'USD');
+      setManualCurrency('USD');
       await setLanguage('en');
-      await setCurrency(data.currency);
+      await setCurrency('USD');
 
       toast.success(t('profile:profileInfo.updateSuccess'));
       onSaveSuccess?.();
@@ -240,14 +240,8 @@ export function EditProfileInfoDialog({
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  <SelectItem value="TRY">
-                    {t('profile:profileInfo.currencies.TRY')}
-                  </SelectItem>
                   <SelectItem value="USD">
                     {t('profile:profileInfo.currencies.USD')}
-                  </SelectItem>
-                  <SelectItem value="EUR">
-                    {t('profile:profileInfo.currencies.EUR')}
                   </SelectItem>
                 </SelectContent>
               </Select>

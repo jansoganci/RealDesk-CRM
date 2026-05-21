@@ -432,7 +432,7 @@
       "referralEnabled": "Referral Fee?",
       "referralTo": "Referred By",
       "referralPct": "Referral Fee (%)",
-      "tcFee": "TC Fee This Deal",
+      "tcFee": "Transaction Coordinator Fee This Deal",
       "otherFees": "Other Costs This Deal",
       "closingDate": "Closing Date"
     },
@@ -458,7 +458,7 @@
       "franchise": "Franchise Fee",
       "transaction": "Transaction Fee",
       "eo": "E&O Fee",
-      "tc": "TC Fee",
+      "tc": "Transaction Coordinator Fee",
       "other": "Other Fees",
       "net": "NET TO AGENT"
     },

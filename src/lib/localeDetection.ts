@@ -1,10 +1,10 @@
 /**
  * Locale helpers — English-only app (US market).
- * Browser locale, Turkish region, and stored "tr" values do not change the UI language.
+ * Browser locale and stored legacy language values do not change the UI language.
  */
 
 export type SupportedLanguage = 'en';
-export type SupportedCurrency = 'TRY' | 'USD' | 'EUR';
+export type SupportedCurrency = 'USD';
 
 const DEFAULT_LANGUAGE: SupportedLanguage = 'en';
 const DEFAULT_CURRENCY: SupportedCurrency = 'USD';
@@ -24,7 +24,7 @@ function isLocalStorageAvailable(): boolean {
 }
 
 /**
- * @returns Always English (`en`). Ignores browser `navigator.language` and Turkish locale.
+ * @returns Always English (`en`). Ignores browser `navigator.language`.
  */
 export function getDetectedLanguage(): SupportedLanguage {
   return DEFAULT_LANGUAGE;

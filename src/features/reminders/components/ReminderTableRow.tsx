@@ -18,7 +18,6 @@ import type { ReminderWithDetails } from '../../../lib/serviceProxy';
 import { AlarmStatusIcon } from './AlarmStatusIcon';
 import { ContractProgressBar } from './ContractProgressBar';
 import { formatCurrency } from '@/lib/currency';
-import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 /**
@@ -42,16 +41,15 @@ export function ReminderTableRow({
   isCompleted = false,
 }: ReminderTableRowProps) {
   const { t } = useTranslation('reminders');
-  const { currency: userCurrency } = useAuth();
   const [isExpanded, setIsExpanded] = useState(false);
 
   const property = reminder.property;
   const owner = property?.owner;
   const tenant = reminder.tenant;
-  const currencyCode = reminder.currency || userCurrency || 'TRY';
+  const currencyCode = 'USD';
   const rentAmountFormatted = formatCurrency(reminder.rent_amount || 0, currencyCode);
   
-  // Format rent as compact (₺32K instead of ₺32.000)
+  // Format rent as compact.
   const rentCompact = rentAmountFormatted.replace(/\.000$/, 'K').replace(/\./g, ',');
 
   const days = reminder.days_until_end ?? 0;

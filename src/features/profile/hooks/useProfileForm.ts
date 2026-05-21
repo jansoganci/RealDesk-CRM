@@ -43,8 +43,7 @@ export function useProfileForm(): UseProfileFormReturn {
   const normalizeLanguage = useCallback((_lang?: string | null | undefined): ProfileFormData['language'] => 'en', []);
 
   const normalizeCurrency = useCallback(
-    (value: string | null | undefined): ProfileFormData['currency'] =>
-      value === 'TRY' || value === 'USD' || value === 'EUR' ? value : 'USD',
+    (_value: string | null | undefined): ProfileFormData['currency'] => 'USD',
     []
   );
 
@@ -54,4 +53,3 @@ export function useProfileForm(): UseProfileFormReturn {
     normalizeCurrency,
   };
 }
-

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Home, Users, FileText, UserCog, Sparkles } from 'lucide-react';
+import { Loader2, Building2, Handshake, PanelsTopLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { useOnboarding, type PrimaryUseCase } from '../hooks/useOnboarding';
 import { useOrg } from '@/contexts/OrgContext';
 import { onboardingService } from '../services/onboarding.service';
-import { organizationService } from '@/services/organization.service';
+import { organizationService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
@@ -22,17 +22,17 @@ const useCaseOptions: Array<{
   icon: React.ComponentType<{ className?: string }>;
   labelKey: string;
 }> = [
-  { value: 'properties', icon: Home, labelKey: 'properties' },
-  { value: 'clients', icon: Users, labelKey: 'clients' },
-  { value: 'contracts', icon: FileText, labelKey: 'contracts' },
-  { value: 'team', icon: UserCog, labelKey: 'team' },
-  { value: 'all', icon: Sparkles, labelKey: 'all' },
+  { value: 'rentals', icon: Building2, labelKey: 'rentals' },
+  { value: 'sales', icon: Handshake, labelKey: 'sales' },
+  { value: 'both', icon: PanelsTopLeft, labelKey: 'both' },
+  { value: 'exploring', icon: Search, labelKey: 'exploring' },
 ];
 
 export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
   const { t } = useTranslation('onboarding');
   const { primaryUseCase, setPrimaryUseCase, isLoading } = useOnboarding();
   const [saving, setSaving] = useState(false);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const { currentOrg, refreshOrg } = useOrg();
 
   const handleSkip = async () => {
@@ -43,13 +43,13 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
       // If no organization exists, create one first
       if (!orgId) {
-        orgId = await organizationService.createFirstOrganization('My Organization');
+        orgId = await organizationService.createFirstOrganization(t('defaults.organizationName'));
         // Refresh org context to load the newly created organization
         await refreshOrg();
       }
       
-      // Default to "all" when skipping
-      await onboardingService.savePrimaryUseCase(orgId, 'all');
+      // Default to "exploring" when skipping
+      await onboardingService.savePrimaryUseCase(orgId, 'exploring');
       
       // Track skip event
       await onboardingService.trackEvent(
@@ -58,13 +58,13 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
         1,
         'goal_selection',
         'skipped',
-        { primary_use_case: 'all' }
+        { primary_use_case: 'exploring' }
       );
 
-      setPrimaryUseCase('all');
+      setPrimaryUseCase('exploring');
       onContinue();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to skip step';
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.skip');
       toast.error(errorMessage);
     } finally {
       setSaving(false);
@@ -73,7 +73,9 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
   const handleContinue = async () => {
     if (!primaryUseCase) {
-      toast.error(t('step1.validation.required'));
+      const message = t('step1.validation.required');
+      setValidationError(message);
+      toast.error(message);
       return;
     }
 
@@ -84,7 +86,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
       // If no organization exists, create one first
       if (!orgId) {
-        orgId = await organizationService.createFirstOrganization('My Organization');
+        orgId = await organizationService.createFirstOrganization(t('defaults.organizationName'));
         // Refresh org context to load the newly created organization
         await refreshOrg();
       }
@@ -102,7 +104,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
       onContinue();
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Failed to save selection';
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.save');
       toast.error(errorMessage);
     } finally {
       setSaving(false);
@@ -126,7 +128,10 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
           </Label>
           <RadioGroup
             value={primaryUseCase || ''}
-            onValueChange={(value) => setPrimaryUseCase(value as PrimaryUseCase)}
+            onValueChange={(value) => {
+              setPrimaryUseCase(value as PrimaryUseCase);
+              setValidationError(null);
+            }}
             className="space-y-3"
             disabled={saving || isLoading}
           >
@@ -144,7 +149,12 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                       ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/40'
                       : 'border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-900'
                   )}
-                  onClick={() => !saving && !isLoading && setPrimaryUseCase(option.value)}
+                  onClick={() => {
+                    if (!saving && !isLoading) {
+                      setPrimaryUseCase(option.value);
+                      setValidationError(null);
+                    }
+                  }}
                 >
                   <RadioGroupItem
                     value={option.value}
@@ -172,6 +182,9 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
               );
             })}
           </RadioGroup>
+          {validationError && (
+            <p className="text-sm font-medium text-destructive">{validationError}</p>
+          )}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 pt-4">
@@ -192,7 +205,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
           </Button>
           <Button
             onClick={handleContinue}
-            disabled={!primaryUseCase || saving || isLoading}
+            disabled={saving || isLoading}
             className="flex-1"
           >
             {saving ? (
@@ -209,4 +222,3 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
     </Card>
   );
 }
-

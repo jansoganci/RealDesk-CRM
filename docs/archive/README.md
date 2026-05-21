@@ -2,6 +2,10 @@
 
 This directory contains completed implementations, audits, and historical planning documents that are no longer actively being worked on.
 
+## Legacy Market Notice
+
+Many archived files describe the original non-US-market version of the product, including old brand names, old currency assumptions, old privacy-law notes, and legacy contract import details. Treat those files as historical context only. Current US product guidance lives in `../US_CLEANUP_LEGAL_READINESS.md`, root `AGENTS.md`, and current US research docs.
+
 ## Structure
 
 ### `/completed/`
@@ -27,6 +31,5 @@ Files should be moved here when:
 
 ## Active vs Archived
 
-- **Active docs** are in `/docs/planning/`, `/docs/implementation/`, `/docs/reference/`
+- **Active docs** are in `/docs/reference/`, `/docs/research/`, and top-level current status files
 - **Archived docs** are here for historical reference and context
-

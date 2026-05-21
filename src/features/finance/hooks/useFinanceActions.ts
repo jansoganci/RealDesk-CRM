@@ -84,7 +84,7 @@ export const useFinanceActions = ({
           ? `${filters.start_date} to ${filters.end_date || 'now'}`
           : undefined;
 
-        const companyName = 'emlakcrm';
+        const companyName = 'RealDesk';
 
         switch (format) {
           case 'csv': {
@@ -123,4 +123,3 @@ export const useFinanceActions = ({
     handleExport,
   };
 };
-

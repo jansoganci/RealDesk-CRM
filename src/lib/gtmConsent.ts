@@ -1,7 +1,7 @@
 /**
  * Google Tag Manager Consent Mode v2
  * 
- * Implements GTM Consent Mode v2 for GDPR/KVKK compliance.
+ * Implements GTM Consent Mode v2 for privacy compliance.
  * Must be initialized before any GTM scripts load.
  */
 
@@ -75,6 +75,5 @@ export function updateGTMConsent(categories: {
     console.error('Error updating GTM Consent Mode:', error);
   }
 }
-
 
 

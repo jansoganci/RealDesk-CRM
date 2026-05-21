@@ -189,9 +189,7 @@
     },
     "options": {
       "currency": {
-        "TRY": "TRY",
-        "USD": "USD",
-        "EUR": "EUR"
+        "USD": "USD"
       },
       "paymentMethod": {
         "cash": "Cash",

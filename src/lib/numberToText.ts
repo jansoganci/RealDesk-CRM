@@ -2,7 +2,7 @@
  * Sayıyı Türkçe yazıya çevirir
  * Örnek: 15000 → "ONBEŞBİN"
  */
-export function numberToTurkishText(num: number): string {
+function numberToLegacyLocalText(num: number): string {
   if (num === 0) return 'SIFIR';
   
   const birler = ['', 'BİR', 'İKİ', 'ÜÇ', 'DÖRT', 'BEŞ', 'ALTI', 'YEDİ', 'SEKİZ', 'DOKUZ'];
@@ -14,7 +14,7 @@ export function numberToTurkishText(num: number): string {
   // Milyonlar
   if (sayi >= 1000000) {
     const milyon = Math.floor(sayi / 1000000);
-    result += (milyon === 1 ? 'BİR' : numberToTurkishText(milyon)) + 'MİLYON';
+    result += (milyon === 1 ? 'BİR' : numberToLegacyLocalText(milyon)) + 'MİLYON';
   }
   
   // Binler
@@ -24,7 +24,7 @@ export function numberToTurkishText(num: number): string {
     if (bin === 1) {
       result += 'BİN';
     } else {
-      result += numberToTurkishText(bin) + 'BİN';
+      result += numberToLegacyLocalText(bin) + 'BİN';
     }
   }
   
@@ -47,6 +47,8 @@ export function numberToTurkishText(num: number): string {
   
   return result || 'SIFIR';
 }
+
+export const numberToLegacyLeaseText = numberToLegacyLocalText;
 
 const EN_UNITS = [
   '',
@@ -132,4 +134,3 @@ export function numberToEnglishText(num: number): string {
 
   return chunks.join(' ').trim();
 }
-

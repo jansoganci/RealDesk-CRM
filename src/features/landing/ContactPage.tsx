@@ -10,7 +10,7 @@ export const ContactPage = () => {
   return (
     <>
       <SEO
-        title={`${t("contact.title")} - emlakcrm`}
+        title={`${t("contact.title")} - RealDesk`}
         description={t("contact.metaDescription")}
       />
       <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -39,10 +39,10 @@ export const ContactPage = () => {
                     {t("contact.email.description")}
                   </p>
                   <a
-                    href="mailto:destek@emlakcrm.app"
+                    href="mailto:support@realdesk.app"
                     className="text-blue-600 hover:text-blue-700 underline font-medium"
                   >
-                    destek@emlakcrm.app
+                    support@realdesk.app
                   </a>
                 </div>
 
@@ -76,4 +76,3 @@ export const ContactPage = () => {
     </>
   );
 };
-

@@ -69,9 +69,7 @@
     "Sold": "Sold"
   },
   "currencies": {
-    "TRY": "TRY",
-    "USD": "USD",
-    "EUR": "EUR"
+    "USD": "USD"
   },
   "actions": {
     "cancel": "Cancel",

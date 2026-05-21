@@ -77,9 +77,9 @@ export function useProfileData({
 
         const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
         setManualLanguage('en');
-        setManualCurrency(data.currency as 'TRY' | 'USD');
+        setManualCurrency('USD');
         await setLanguage(data.language);
-        await setCurrency(data.currency);
+        await setCurrency('USD');
 
         toast.success(t('profile:messages.saveSuccess'));
         setSaveSuccess(true);
@@ -101,4 +101,3 @@ export function useProfileData({
     loadPreferences,
   };
 }
-

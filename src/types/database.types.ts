@@ -2235,8 +2235,10 @@ export type Database = {
       }
       organizations: {
         Row: {
+          brokerage_name: string | null
           created_at: string | null
           id: string
+          license_state: string | null
           logo_url: string | null
           name: string
           onboarding_completed: boolean | null
@@ -2244,6 +2246,8 @@ export type Database = {
           onboarding_skipped: boolean | null
           onboarding_skipped_at: string | null
           onboarding_step: number | null
+          primary_market_city: string | null
+          primary_market_state: string | null
           primary_use_case: string | null
           settings: Json | null
           slug: string
@@ -2251,8 +2255,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name: string
           onboarding_completed?: boolean | null
@@ -2260,6 +2266,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug: string
@@ -2267,8 +2275,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name?: string
           onboarding_completed?: boolean | null
@@ -2276,6 +2286,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug?: string

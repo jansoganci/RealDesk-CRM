@@ -106,15 +106,15 @@
   "validation": {
     "required": "This field is required",
     "endDateAfterStart": "End date must be after start date",
-    "invalidTC": "Invalid TC Identity number",
-    "tcLength": "TC Identity number must be 11 digits",
-    "invalidIBAN": "Invalid IBAN",
+    "invalidTaxId": "Invalid tax ID",
+    "taxIdLength": "Tax ID must be 11 digits",
+    "invalidBankAccount": "Invalid bank account number",
     "invalidPhone": "Invalid phone number",
     "invalidEmail": "Invalid email address",
     "rentPositive": "Rent amount must be positive",
     "depositPositive": "Deposit amount must be positive",
-    "duplicateOwner": "Owner with this TC number already exists",
-    "duplicateTenant": "Tenant with this TC number already exists",
+    "duplicateOwner": "Owner with this tax ID already exists",
+    "duplicateTenant": "Tenant with this tax ID already exists",
     "duplicateProperty": "Property at this address already exists",
     "activeContractExists": "Active contract exists for this property",
     "fixtures": {
@@ -155,7 +155,7 @@
     "paymentDayRange": "Day must be between 1 and 31",
     "clauseContentRequired": "Clause content cannot be empty",
     "endDateAfterStartStrict": "End date must be after start date",
-    "tcLengthStrict": "TC ID must be {{length}} digits",
+    "taxIdLengthStrict": "Tax ID must be {{length}} digits",
     "invalidUrl": "Please enter a valid URL",
     "invalidGoogleDriveUrl": "Please enter a valid Google Drive link",
     "paintConditionRequired": "Paint condition must be selected",
@@ -354,9 +354,7 @@
       "commercial": "Commercial"
     },
     "currencyOptions": {
-      "TRY": "₺ TRY (Turkish Lira)",
-      "USD": "$ USD (US Dollar)",
-      "EUR": "€ EUR (Euro)"
+      "USD": "$ USD (US Dollar)"
     },
     "labels": {
       "fixturesAddCustom": "Add Custom",

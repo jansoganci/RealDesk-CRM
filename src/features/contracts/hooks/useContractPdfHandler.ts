@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { enUS, tr } from 'date-fns/locale';
 import { generateContractPDFBlob } from '@/services/contractPdf.service';
-import { numberToEnglishText, numberToTurkishText } from '@/lib/numberToText';
+import { numberToEnglishText, numberToLegacyLeaseText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
 import { formatFixturesForPdf } from '../utils/fixturesUtils';
@@ -73,7 +73,7 @@ function preparePdfData(
 
   const locale = isLegacy ? tr : enUS;
   const datePattern = isLegacy ? 'dd MMMM yyyy' : 'MMMM dd, yyyy';
-  const amtToText = isLegacy ? numberToTurkishText : numberToEnglishText;
+  const amtToText = isLegacy ? numberToLegacyLeaseText : numberToEnglishText;
 
   return {
     contractNumber: contractId.slice(0, 8).toUpperCase(),

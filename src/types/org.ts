@@ -19,6 +19,10 @@ export interface Organization {
   slug: string;
   logo_url: string | null;
   settings: Record<string, unknown>;
+  brokerage_name?: string | null;
+  license_state?: string | null;
+  primary_market_city?: string | null;
+  primary_market_state?: string | null;
   created_at: string;
   updated_at: string;
   // Onboarding fields
@@ -146,6 +150,6 @@ export interface OrgContextValue {
   loading: boolean;
   /** Error message if failed to load */
   error: string | null;
-  /** Refresh org data */
-  refreshOrg: () => Promise<void>;
+  /** Refresh org data. Use silent during in-flow updates to avoid unmounting route children. */
+  refreshOrg: (options?: { silent?: boolean }) => Promise<void>;
 }

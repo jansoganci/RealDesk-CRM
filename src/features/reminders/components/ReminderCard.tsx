@@ -20,7 +20,6 @@ import { ReminderBadge } from './ReminderBadge';
 import { AlarmStatusIcon } from './AlarmStatusIcon';
 import { ContractProgressBar } from './ContractProgressBar';
 import { formatCurrency } from '@/lib/currency';
-import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
 
 /**
@@ -42,14 +41,12 @@ export function ReminderCard({
   activeTab,
 }: ReminderCardProps) {
   const { t } = useTranslation('reminders');
-  const { currency: userCurrency } = useAuth();
 
   const property = reminder.property;
   const owner = property?.owner;
   const tenant = reminder.tenant;
   
-  // Get currency code (from contract, user preference, or default to TRY)
-  const currencyCode = reminder.currency || userCurrency || 'TRY';
+  const currencyCode = 'USD';
   
   // Format rent amounts with proper currency symbol
   const rentAmountFormatted = formatCurrency(reminder.rent_amount || 0, currencyCode);
