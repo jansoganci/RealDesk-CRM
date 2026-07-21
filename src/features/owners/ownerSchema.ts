@@ -1,7 +1,12 @@
 import * as z from 'zod';
-import { isValidRoutingNumber, isValidAccountNumber } from '@/services/encryption.service';
+import type { TFunction } from 'i18next';
+import {
+  isValidAccountNumber,
+  isValidRoutingNumber,
+  isValidTaxId,
+} from '@/lib/serviceProxy';
 
-export const getOwnerSchema = (t: (key: string, options?: any) => string) => {
+export const getOwnerSchema = (t: TFunction) => {
   return z
     .object({
       name: z.string().min(1, t('validations.nameRequired')),
@@ -31,6 +36,14 @@ export const getOwnerSchema = (t: (key: string, options?: any) => string) => {
           code: z.ZodIssueCode.custom,
           message: t('validations.invalidAccount'),
           path: ['account_number'],
+        });
+      }
+      const taxId = data.tax_id?.trim();
+      if (taxId && !isValidTaxId(taxId)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: t('validations.invalidTaxId'),
+          path: ['tax_id'],
         });
       }
     });

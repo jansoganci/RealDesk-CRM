@@ -25,6 +25,7 @@
     "invalidEmail": "Invalid email address",
     "phoneRequired": "Phone is required",
     "invalidRouting": "Enter a valid 9-digit ABA routing number",
+    "invalidTaxId": "Enter a valid 9-digit Tax ID",
     "invalidAccount": "Account number must be 4–17 digits"
   },
   "emptyState": {
@@ -57,7 +58,7 @@
       "taxId": "Tax ID / EIN (optional)",
       "taxIdPlaceholder": "e.g. 12-3456789",
       "taxIdHint": "Optional business tax identifier — not SSN.",
-      "bankEditHint": "Leave routing and account blank to keep existing saved bank details.",
+      "bankEditHint": "Bank and Tax ID values are decrypted only while this edit form is open.",
       "address": "Address",
       "addressPlaceholder": "Owner address",
       "notes": "Notes",

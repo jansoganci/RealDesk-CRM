@@ -21,14 +21,13 @@ import {
 import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Button } from '../../components/ui/button';
-import { PropertyOwner } from '../../types';
 import { getOwnerSchema } from './ownerSchema';
-import type { OwnerCreatePayload } from '@/services/owners.service';
+import type { OwnerCreatePayload, OwnerWithSensitiveFields } from '@/lib/serviceProxy';
 
 interface OwnerDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  owner?: PropertyOwner | null;
+  owner?: OwnerWithSensitiveFields | null;
   onSubmit: (data: OwnerCreatePayload) => Promise<void>;
   loading?: boolean;
 }
@@ -61,8 +60,8 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
           phone: owner.phone || '',
           address: owner.address || '',
           notes: owner.notes || '',
-          routing_number: '',
-          account_number: '',
+          routing_number: owner.routing_number,
+          account_number: owner.account_number,
           tax_id: owner.tax_id || '',
         });
       } else {
@@ -88,8 +87,8 @@ export const OwnerDialog = ({ open, onOpenChange, owner, onSubmit, loading }: Ow
       address: data.address?.trim() || null,
       notes: data.notes?.trim() || null,
       tax_id: data.tax_id?.trim() ? data.tax_id.trim() : null,
-      routing_number: data.routing_number?.trim() || undefined,
-      account_number: data.account_number?.trim() || undefined,
+      routing_number: data.routing_number?.trim() || null,
+      account_number: data.account_number?.trim() || null,
     };
     await onSubmit(cleanedData);
   };

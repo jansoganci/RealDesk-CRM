@@ -5,7 +5,7 @@
  */
 
 import { supabase } from '@/config/supabase';
-import { encrypt, hashTaxId } from './encryption.service';
+import { encryptSensitiveValue, hashTaxId } from './encryption.service';
 import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
 import type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
@@ -19,8 +19,8 @@ const logger = createLogger('ContractCreation');
  * Uses atomic PostgreSQL transaction via RPC
  *
  * Flow:
- * 1. Encrypt sensitive data (TC, IBAN)
- * 2. Hash TC for lookups
+ * 1. Encrypt sensitive data server-side
+ * 2. Hash Tax IDs for lookups
  * 3. Normalize phone numbers
  * 4. Normalize address
  * 5. Call RPC function
@@ -38,12 +38,36 @@ export async function createContractWithEntities(
     // ========================================================================
     // Prepare owner data (US Format)
     // ========================================================================
+    const ownerRoutingNumber = formData.owner_routing_number.replace(/\D/g, '');
+    const ownerAccountNumber = formData.owner_account_number.replace(/[\s-]/g, '');
+    const [
+      ownerTaxIdEncrypted,
+      ownerTaxIdHash,
+      ownerRoutingEncrypted,
+      ownerAccountEncrypted,
+      legacyOwnerBankEncrypted,
+      tenantTaxIdEncrypted,
+      tenantTaxIdHash,
+    ] = await Promise.all([
+      encryptSensitiveValue('tax_id', formData.owner_tax_id),
+      hashTaxId(formData.owner_tax_id),
+      encryptSensitiveValue('routing_number', ownerRoutingNumber),
+      encryptSensitiveValue('account_number', ownerAccountNumber),
+      encryptSensitiveValue('legacy_bank_payload', `${ownerRoutingNumber}|${ownerAccountNumber}`),
+      encryptSensitiveValue('tax_id', formData.tenant_tax_id),
+      hashTaxId(formData.tenant_tax_id),
+    ]);
+
     const ownerData = {
       name: formData.owner_name,
-      tax_id_encrypted: await encrypt(formData.owner_tax_id),
-      tax_id_hash: await hashTaxId(formData.owner_tax_id),
-      routing_number_encrypted: await encrypt(formData.owner_routing_number.replace(/\D/g, '')),
-      account_number_encrypted: await encrypt(formData.owner_account_number.replace(/[\s-]/g, '')),
+      tax_id_encrypted: ownerTaxIdEncrypted,
+      tax_id_hash: ownerTaxIdHash,
+      routing_number_encrypted: ownerRoutingEncrypted,
+      account_number_encrypted: ownerAccountEncrypted,
+      // The existing atomic RPC still reads these legacy JSON keys.
+      tc_encrypted: ownerTaxIdEncrypted,
+      tc_hash: ownerTaxIdHash,
+      iban_encrypted: legacyOwnerBankEncrypted,
       phone: normalizePhone(formData.owner_phone),
       email: formData.owner_email || null
     };
@@ -53,8 +77,10 @@ export async function createContractWithEntities(
     // ========================================================================
     const tenantData = {
       name: formData.tenant_name,
-      tax_id_encrypted: await encrypt(formData.tenant_tax_id),
-      tax_id_hash: await hashTaxId(formData.tenant_tax_id),
+      tax_id_encrypted: tenantTaxIdEncrypted,
+      tax_id_hash: tenantTaxIdHash,
+      tc_encrypted: tenantTaxIdEncrypted,
+      tc_hash: tenantTaxIdHash,
       phone: normalizePhone(formData.tenant_phone),
       email: formData.tenant_email || null,
       address: formData.tenant_address

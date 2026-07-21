@@ -4,7 +4,7 @@
  */
 
 import { supabase } from '@/config/supabase';
-import { encrypt, hashTaxId } from './encryption.service';
+import { encryptSensitiveValue, hashTaxId } from './encryption.service';
 import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
 import { getActiveOrgId } from '@/lib/orgHelpers';
@@ -51,12 +51,32 @@ export async function updateContractWithEntities(
     // ========================================================================
     // Update Owner (US Format)
     // ========================================================================
+    const ownerRoutingNumber = formData.owner_routing_number.replace(/\D/g, '');
+    const ownerAccountNumber = formData.owner_account_number.replace(/[\s-]/g, '');
+    const [
+      ownerTaxIdEncrypted,
+      ownerTaxIdHash,
+      ownerRoutingEncrypted,
+      ownerAccountEncrypted,
+      tenantTaxIdEncrypted,
+      tenantTaxIdHash,
+    ] = await Promise.all([
+      encryptSensitiveValue('tax_id', formData.owner_tax_id),
+      hashTaxId(formData.owner_tax_id),
+      encryptSensitiveValue('routing_number', ownerRoutingNumber),
+      encryptSensitiveValue('account_number', ownerAccountNumber),
+      encryptSensitiveValue('tax_id', formData.tenant_tax_id),
+      hashTaxId(formData.tenant_tax_id),
+    ]);
+
     const ownerData = {
       name: formData.owner_name,
-      tax_id_encrypted: await encrypt(formData.owner_tax_id),
-      tax_id_hash: await hashTaxId(formData.owner_tax_id),
-      routing_number_encrypted: await encrypt(formData.owner_routing_number.replace(/\D/g, '')),
-      account_number_encrypted: await encrypt(formData.owner_account_number.replace(/[\s-]/g, '')),
+      tax_id: null,
+      tc_encrypted: ownerTaxIdEncrypted,
+      tc_hash: ownerTaxIdHash,
+      iban_encrypted: null,
+      routing_number_encrypted: ownerRoutingEncrypted,
+      account_number_encrypted: ownerAccountEncrypted,
       phone: normalizePhone(formData.owner_phone),
       email: formData.owner_email || null,
       updated_at: new Date().toISOString(),
@@ -79,8 +99,8 @@ export async function updateContractWithEntities(
     // ========================================================================
     const tenantData = {
       name: formData.tenant_name,
-      tax_id_encrypted: await encrypt(formData.tenant_tax_id),
-      tax_id_hash: await hashTaxId(formData.tenant_tax_id),
+      tc_encrypted: tenantTaxIdEncrypted,
+      tc_hash: tenantTaxIdHash,
       phone: normalizePhone(formData.tenant_phone),
       email: formData.tenant_email || null,
       address: formData.tenant_address,

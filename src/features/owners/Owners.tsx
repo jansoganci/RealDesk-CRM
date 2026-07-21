@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { TableCell, TableHead, TableRow } from '../../components/ui/table';
 import { OwnerDialog } from './OwnerDialog';
 import { ownersService } from '../../lib/serviceProxy';
-import type { OwnerCreatePayload } from '@/services/owners.service';
+import type { OwnerCreatePayload, OwnerWithSensitiveFields } from '@/lib/serviceProxy';
 import { PropertyOwner } from '../../types';
 import { toast } from 'sonner';
 import { Mail, Phone, MapPin, User } from 'lucide-react';
@@ -20,7 +20,7 @@ export const Owners = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedOwner, setSelectedOwner] = useState<PropertyOwner | null>(null);
+  const [selectedOwner, setSelectedOwner] = useState<OwnerWithSensitiveFields | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [ownerToDelete, setOwnerToDelete] = useState<PropertyOwner | null>(null);
   const [actionLoading, setActionLoading] = useState(false);
@@ -63,10 +63,20 @@ export const Owners = () => {
     setDialogOpen(true);
   }, []);
 
-  const handleEditOwner = useCallback((owner: PropertyOwner) => {
-    setSelectedOwner(owner);
-    setDialogOpen(true);
-  }, []);
+  const handleEditOwner = useCallback(async (owner: PropertyOwner) => {
+    try {
+      setActionLoading(true);
+      const ownerWithSensitiveFields = await ownersService.getForEdit(owner.id);
+      if (!ownerWithSensitiveFields) throw new Error('OWNER_NOT_FOUND');
+      setSelectedOwner(ownerWithSensitiveFields);
+      setDialogOpen(true);
+    } catch (error) {
+      toast.error(t('toasts.loadError'));
+      console.error(error);
+    } finally {
+      setActionLoading(false);
+    }
+  }, [t]);
 
   const handleDeleteClick = useCallback((owner: PropertyOwner) => {
     setOwnerToDelete(owner);

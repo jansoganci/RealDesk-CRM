@@ -91,7 +91,24 @@ export type {
 } from '../services/reminders.service';
 
 // Contract Management Services (V1)
-export { encrypt, decrypt, hashTaxId, isValidTaxId, isValidRoutingNumber, isValidAccountNumber, generateEncryptionKey } from '../services/encryption.service';
+export {
+  decryptSensitiveFields,
+  encryptSensitiveValue,
+  hashTaxId,
+  isValidTaxId,
+  isValidRoutingNumber,
+  isValidAccountNumber,
+} from '../services/encryption.service';
+export type {
+  DecryptablePiiField,
+  PiiEntityType,
+  PiiField,
+} from '../services/encryption.service';
+export type {
+  OwnerCreatePayload,
+  OwnerUpdatePayload,
+  OwnerWithSensitiveFields,
+} from '../services/owners.service';
 export { normalizePhone, formatPhoneForDisplay, isValidPhone, detectPhoneFormat, formatPhoneForStorage } from '../services/phone.service';
 export { normalizeAddress, generateFullAddress, parseAddress, isValidAddress, addressesMatch, getShortAddress, US_STATES, isValidZipCode, isValidState } from '../services/address.service';
 export type { AddressComponents } from '../services/address.service';

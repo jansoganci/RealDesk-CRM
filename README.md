@@ -103,13 +103,12 @@ Create a `.env` file in the root directory.
 ```env
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
-VITE_ENCRYPTION_KEY=64_hex_chars_32_bytes_for_AES256GCM
 VITE_TURNSTILE_SITE_KEY=cloudflare_turnstile_site_key
 ```
 
 You can find `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your Supabase project settings under **API** → **Project API keys**.
 
-`VITE_ENCRYPTION_KEY` is used for encrypting sensitive owner bank fields before storage (AES-256-GCM). `VITE_TURNSTILE_SITE_KEY` is used where Cloudflare Turnstile is wired in the app (e.g. public forms).
+`VITE_TURNSTILE_SITE_KEY` is used where Cloudflare Turnstile is wired in the app (e.g. public forms). PII encryption keys must never use a `VITE_` prefix or be available to browser code.
 
 **Supabase Edge Functions (server-side secrets — not `VITE_` prefixed):**
 
@@ -117,6 +116,12 @@ Configure in the Supabase dashboard or CLI as needed for your deployment, for ex
 
 - `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET` (billing)
 - `OCR_SPACE_API_KEY` (or other OCR provider as used by your functions)
+- `PII_ENCRYPTION_KEY` (64 hexadecimal characters; current AES-256-GCM key)
+- `PII_ENCRYPTION_KEY_LEGACY` (optional compatibility key during a separately approved rotation)
+- `ALLOWED_ORIGINS` (optional comma-separated additional browser origins; `realdesk.app`, `www.realdesk.app`, and local development are allowed by default)
+
+Set Edge Function secrets only through the Supabase dashboard or CLI. Never commit or paste their values into source or documentation. Production secret changes and function deployment require the separate apply workflow.
+The in-function rate limiter is best-effort per Edge isolate; configure a durable platform/gateway limit during the separately approved production apply.
 
 See **`CLAUDE.md` → Environment Variables** for the canonical list.
 
@@ -462,7 +467,6 @@ Ensure your production environment includes at least:
 ```
 VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_anon_key
-VITE_ENCRYPTION_KEY=your_production_encryption_key
 VITE_TURNSTILE_SITE_KEY=your_turnstile_site_key
 ```
 

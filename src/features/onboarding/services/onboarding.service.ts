@@ -1,5 +1,6 @@
 import { supabase } from '@/config/supabase';
 import { createLogger } from '@/lib/logger';
+import type { Json } from '@/types/database';
 
 const logger = createLogger('Onboarding');
 
@@ -425,4 +426,3 @@ class OnboardingService {
 }
 
 export const onboardingService = new OnboardingService();
-

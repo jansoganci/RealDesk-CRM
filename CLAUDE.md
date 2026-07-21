@@ -212,10 +212,10 @@ CREATE POLICY "delete" ON table_name FOR DELETE USING (auth.uid() = user_id);
 # Required — Vite client-side
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
-VITE_ENCRYPTION_KEY=64_hex_chars_32_bytes_for_AES256GCM
 VITE_TURNSTILE_SITE_KEY=cloudflare_turnstile_key
 
 # Supabase Edge Functions secrets (not Vite-prefixed)
+# PII_ENCRYPTION_KEY, optional PII_ENCRYPTION_KEY_LEGACY
 # STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET, OCR_SPACE_API_KEY
 ```
 
