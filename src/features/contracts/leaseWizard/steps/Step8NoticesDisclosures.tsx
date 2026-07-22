@@ -2,6 +2,7 @@
  * Sprint 6A T13 — Step 8: Notice addresses, lead-based paint disclosure, additional terms.
  */
 
+import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -35,7 +36,7 @@ function showLeadPaintDisclosure(yearBuilt: LeaseAgreementFormValues['year_built
 
 export function Step8NoticesDisclosures() {
   const { t } = useTranslation('contracts');
-  const { control, watch } = useFormContext<LeaseAgreementFormValues>();
+  const { control, watch, setValue } = useFormContext<LeaseAgreementFormValues>();
 
   const yearBuilt = watch('year_built');
   const knownHazards = watch('lead_paint_known_hazards');
@@ -44,6 +45,10 @@ export function Step8NoticesDisclosures() {
   const additionalTerms = watch('additional_terms') ?? '';
 
   const showLeadPaint = showLeadPaintDisclosure(yearBuilt);
+
+  useEffect(() => {
+    setValue('lead_paint_disclosure_required', showLeadPaint, { shouldDirty: false });
+  }, [showLeadPaint, setValue]);
   const yearUnknown =
     yearBuilt == null || (typeof yearBuilt === 'number' && Number.isNaN(yearBuilt));
 

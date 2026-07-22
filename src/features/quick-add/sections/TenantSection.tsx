@@ -9,13 +9,6 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -40,9 +33,9 @@ export const TenantSection = ({ form, loading = false }: TenantSectionProps) => 
   }
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50">
+    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
           <Users className="h-4 w-4" />
           {t('sections.tenant')}
         </div>
@@ -215,51 +208,27 @@ export const TenantSection = ({ form, loading = false }: TenantSectionProps) => 
             />
           </div>
 
-          {/* Contract Rent & Currency */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <FormField
-              control={form.control}
-              name="contractRent"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('fields.contractRent')}</FormLabel>
-                  <FormControl>
-                    <Input
-                      type="number"
-                      placeholder={t('placeholders.rentAmount')}
-                      value={field.value ?? ''}
-                      onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
-                      disabled={loading}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="contractCurrency"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('fields.currency')}</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger disabled={loading}>
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="TRY">{t('currencies.TRY')}</SelectItem>
-                      <SelectItem value="USD">{t('currencies.USD')}</SelectItem>
-                      <SelectItem value="EUR">{t('currencies.EUR')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+          <FormField
+            control={form.control}
+            name="contractRent"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t('fields.contractRent')}</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder={t('placeholders.rentAmount')}
+                    value={field.value ?? ''}
+                    onChange={(e) =>
+                      field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                    }
+                    disabled={loading}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
       )}
     </div>

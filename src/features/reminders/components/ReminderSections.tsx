@@ -56,7 +56,7 @@ export function ReminderSections({
             showAction={false}
           />
         ) : (
-          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm dark:border-gray-700/50">
             {criticalReminders.map((reminder, index) => (
               <CallListRow
                 key={reminder.id}
@@ -86,7 +86,7 @@ export function ReminderSections({
             showAction={false}
           />
         ) : (
-          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm dark:border-gray-700/50">
             {underWatchReminders.map((reminder) => (
               <CallListRow
                 key={reminder.id}
@@ -116,7 +116,7 @@ export function ReminderSections({
             showAction={false}
           />
         ) : (
-          <Card className="overflow-hidden border-gray-200/50 shadow-sm">
+          <Card className="overflow-hidden border-gray-200/50 shadow-sm dark:border-gray-700/50">
             {completedReminders.map((reminder) => (
               <CallListRow
                 key={reminder.id}
@@ -146,14 +146,22 @@ export function ReminderSections({
           />
         ) : (
           <>
-            <div className={`${COLORS.danger.bgLight} border ${COLORS.danger.border} rounded-lg p-4 shadow-md`}>
+            <div
+              className={`${COLORS.danger.bgLight} border ${COLORS.danger.border} rounded-lg p-4 shadow-md dark:bg-red-950/30 dark:border-red-800`}
+            >
               <div className="flex items-start gap-3">
-                <AlertCircle className={`h-5 w-5 ${COLORS.danger.text} mt-0.5`} />
+                <AlertCircle
+                  className={`h-5 w-5 ${COLORS.danger.text} mt-0.5 dark:text-red-400`}
+                />
                 <div>
-                  <h3 className={`font-semibold ${COLORS.danger.textDark}`}>
+                  <h3
+                    className={`font-semibold ${COLORS.danger.textDark} dark:text-red-200`}
+                  >
                     {t('sections.overdue.calloutTitle')}
                   </h3>
-                  <p className={`text-sm ${COLORS.danger.textDark} mt-1`}>
+                  <p
+                    className={`text-sm ${COLORS.danger.textDark} mt-1 dark:text-red-200/90`}
+                  >
                     {t('sections.overdue.calloutDescription', { count: overdueReminders.length })}
                   </p>
                 </div>
@@ -242,14 +250,22 @@ export function ReminderSections({
           />
         ) : (
           <>
-            <div className={`${COLORS.gray.bg50} border ${COLORS.gray.border200} rounded-lg p-4 shadow-md`}>
+            <div
+              className={`${COLORS.gray.bg50} border ${COLORS.gray.border200} rounded-lg p-4 shadow-md dark:bg-gray-900/80 dark:border-gray-700`}
+            >
               <div className="flex items-start gap-3">
-                <AlertCircle className={`h-5 w-5 ${COLORS.gray.text600} mt-0.5`} />
+                <AlertCircle
+                  className={`h-5 w-5 ${COLORS.gray.text600} mt-0.5 dark:text-gray-400`}
+                />
                 <div>
-                  <h3 className={`font-semibold ${COLORS.gray.text900}`}>
+                  <h3
+                    className={`font-semibold ${COLORS.gray.text900} dark:text-gray-100`}
+                  >
                     {t('sections.expired.calloutTitle')}
                   </h3>
-                  <p className={`text-sm ${COLORS.gray.text700} mt-1`}>
+                  <p
+                    className={`text-sm ${COLORS.gray.text700} mt-1 dark:text-gray-300`}
+                  >
                     {t('sections.expired.calloutDescription')}
                   </p>
                 </div>

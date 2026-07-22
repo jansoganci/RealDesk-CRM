@@ -1,16 +1,18 @@
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
-import { AnimatedTabs } from '../../components/ui/animated-tabs';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { AnimatedTabs } from '@/components/ui/animated-tabs';
 import { PropertyDialog } from './PropertyDialog';
 import { EnhancedTenantDialog } from '../tenants/EnhancedTenantDialog';
 import { MarkAsSoldDialog } from './MarkAsSoldDialog';
+import { Owners } from '../owners/Owners';
+import { Tenants } from '../tenants/Tenants';
 import { propertiesService } from '../../lib/serviceProxy';
 import { PropertyWithOwner, TenantWithContractResult } from '../../types';
 import { toast } from 'sonner';
 import { useAuth } from '../../contexts/AuthContext';
-import { Building2, TrendingUp, Home } from 'lucide-react';
+import { Building2, TrendingUp, Home, Users, UserCheck } from 'lucide-react';
 import { COLORS } from '@/config/colors';
 import { ROUTES } from '@/config/constants';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
@@ -25,8 +27,22 @@ import { PropertyTableRow } from './components/PropertyTableRow';
 import { PropertyTableHeaders } from './components/PropertyTableHeaders';
 import { getStatusFilterOptions } from './utils/statusUtils';
 import { QuickAddButton } from '@/features/quick-add';
+import type { ReactNode } from 'react';
 
-export const Properties = () => {
+const HUB_TAB_IDS = ['properties', 'owners', 'tenants'] as const;
+type HubTabId = (typeof HUB_TAB_IDS)[number];
+
+function parseHubTab(raw: string | null): HubTabId {
+  if (raw === 'owners' || raw === 'tenants') return raw;
+  return 'properties';
+}
+
+type PropertiesListTabProps = {
+  pageTop: ReactNode;
+  pageTitle: string;
+};
+
+const PropertiesListTab = ({ pageTop, pageTitle }: PropertiesListTabProps) => {
   const { t } = useTranslation(['properties', 'common']);
   const navigate = useNavigate();
   const { currency, commissionRate } = useAuth();
@@ -37,7 +53,6 @@ export const Properties = () => {
   const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'rental' | 'sale'>('all');
   const [loading, setLoading] = useState(true);
 
-  // Dialog hook
   const {
     isCreateOpen,
     openCreate,
@@ -60,7 +75,6 @@ export const Properties = () => {
     closeMarkAsSoldDialog,
   } = usePropertyDialogs();
 
-  // Filter hook
   const {
     filteredProperties: baseFilteredProperties,
     searchQuery,
@@ -69,7 +83,6 @@ export const Properties = () => {
     setStatusFilter,
   } = usePropertyFilters(properties);
 
-  // Apply property type filter on top of other filters
   const filteredProperties = useMemo(() => {
     if (propertyTypeFilter === 'all') {
       return baseFilteredProperties;
@@ -82,15 +95,9 @@ export const Properties = () => {
       setLoading(true);
       const data = await propertiesService.getAll();
       setProperties(data);
-    } catch (error: any) {
+    } catch (error: unknown) {
       toast.error(t('toasts.loadError'));
-      console.error('[Properties] Error fetching properties:', {
-        message: error.message,
-        details: error.details,
-        hint: error.hint,
-        code: error.code,
-        status: error.status
-      });
+      console.error('[Properties] Error fetching properties:', error);
     } finally {
       setLoading(false);
     }
@@ -100,7 +107,6 @@ export const Properties = () => {
     loadProperties();
   }, [loadProperties]);
 
-  // Actions hook
   const {
     handleCreate,
     handleDelete,
@@ -157,7 +163,6 @@ export const Properties = () => {
     openMarkAsSoldDialog(property);
   }, [openMarkAsSoldDialog]);
 
-  // Commission hook
   const { handleSaveCommission, isSubmitting: markAsSoldLoading } = usePropertyCommission({
     commissionRate,
     onSuccess: async () => {
@@ -172,8 +177,8 @@ export const Properties = () => {
   }, [propertyToSell, handleSaveCommission]);
 
   const tableHeaders = useCallback(() => <PropertyTableHeaders />, []);
-  
-  const renderTableRow = useCallback((property: any, _index: number) => (
+
+  const renderTableRow = useCallback((property: PropertyWithOwner, _index: number) => (
     <PropertyTableRow
       key={property.id}
       property={property}
@@ -186,7 +191,7 @@ export const Properties = () => {
     />
   ), [handleEditProperty, handleDeleteClick, handleAddTenantToProperty, handleCreateLeaseFromProperty, handleStartPurchaseFromProperty, currency]);
 
-  const renderCardContent = useCallback((property: any, _index: number) => (
+  const renderCardContent = useCallback((property: PropertyWithOwner, _index: number) => (
     <PropertyCard
       key={property.id}
       property={property}
@@ -204,7 +209,7 @@ export const Properties = () => {
     description: searchQuery || statusFilter !== 'all'
       ? t('emptyState.noPropertiesFoundDescription')
       : t('emptyState.noPropertiesYetDescription'),
-    icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text}`} />,
+    icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text} dark:text-slate-400`} />,
     actionLabel: t('emptyState.addActionLabel'),
     showAction: !searchQuery && statusFilter === 'all',
   }), [searchQuery, statusFilter, t]);
@@ -219,18 +224,18 @@ export const Properties = () => {
   }), [isDeleteDialogOpen, propertyToDelete?.address, handleDeleteConfirm, closeDeleteDialog, actionLoading, t]);
 
   const tabsConfig = useMemo(() => [
-    { 
-      id: 'all', 
+    {
+      id: 'all',
       label: t('typeFilter.all'),
       icon: <Building2 className="h-4 w-4" />
     },
-    { 
-      id: 'rental', 
+    {
+      id: 'rental',
       label: t('typeFilter.rental'),
       icon: <Home className="h-4 w-4" />
     },
-    { 
-      id: 'sale', 
+    {
+      id: 'sale',
       label: t('typeFilter.sale'),
       icon: <TrendingUp className="h-4 w-4" />
     },
@@ -239,7 +244,8 @@ export const Properties = () => {
   return (
     <>
       <ListPageTemplate
-        title={t('title')}
+        title={pageTitle}
+        pageTop={pageTop}
         items={filteredProperties}
         loading={loading}
         searchQuery={searchQuery}
@@ -259,6 +265,7 @@ export const Properties = () => {
             tabs={tabsConfig}
             defaultTab={propertyTypeFilter}
             onChange={(tabId) => setPropertyTypeFilter(tabId as 'all' | 'rental' | 'sale')}
+            layoutId="property-type-tab-bubble"
           />
         }
         emptyState={emptyStateConfig}
@@ -268,7 +275,7 @@ export const Properties = () => {
         deleteDialog={deleteDialogConfig}
       />
 
-        <PropertyDialog
+      <PropertyDialog
         open={isCreateOpen || isEditOpen}
         onOpenChange={(open) => {
           if (!open) {
@@ -280,18 +287,18 @@ export const Properties = () => {
         onSubmit={handleSubmit}
         loading={actionLoading}
         onMarkAsSold={(property) => handleMarkAsSoldClick(property)}
-        />
+      />
 
-        <EnhancedTenantDialog
+      <EnhancedTenantDialog
         open={isTenantDialogOpen}
         onOpenChange={(open) => {
           if (!open) closeTenantDialog();
         }}
         onSuccess={handleTenantCreated}
         preSelectedPropertyId={selectedPropertyForTenant}
-        />
+      />
 
-        <MarkAsSoldDialog
+      <MarkAsSoldDialog
         open={isMarkAsSoldDialogOpen}
         onOpenChange={(open) => {
           if (!open) closeMarkAsSoldDialog();
@@ -299,7 +306,99 @@ export const Properties = () => {
         property={propertyToSell}
         onConfirm={handleMarkAsSoldConfirm}
         loading={markAsSoldLoading}
+      />
+    </>
+  );
+};
+
+export const Properties = () => {
+  const { t } = useTranslation(['properties', 'navigation']);
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const rawTab = searchParams.get('tab');
+  const hubTab = parseHubTab(rawTab);
+
+  useEffect(() => {
+    if (!rawTab) return;
+    if (!HUB_TAB_IDS.includes(rawTab as HubTabId)) {
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          next.delete('tab');
+          return next;
+        },
+        { replace: true },
+      );
+    }
+  }, [rawTab, setSearchParams]);
+
+  const handleHubTabChange = useCallback(
+    (tabId: string) => {
+      const nextHub = parseHubTab(tabId);
+      setSearchParams(
+        (prev) => {
+          const next = new URLSearchParams(prev);
+          if (nextHub === 'properties') {
+            next.delete('tab');
+          } else {
+            next.set('tab', nextHub);
+          }
+          return next;
+        },
+        { replace: true },
+      );
+    },
+    [setSearchParams],
+  );
+
+  const hubTitle = t('navigation:properties');
+
+  const hubTabsConfig = useMemo(
+    () => [
+      {
+        id: 'properties',
+        label: t('hub.tabs.properties'),
+        icon: <Home className="h-4 w-4" />,
+      },
+      {
+        id: 'owners',
+        label: t('hub.tabs.owners'),
+        icon: <Users className="h-4 w-4" />,
+      },
+      {
+        id: 'tenants',
+        label: t('hub.tabs.tenants'),
+        icon: <UserCheck className="h-4 w-4" />,
+      },
+    ],
+    [t],
+  );
+
+  const hubTabsSlot = useMemo(
+    () => (
+      <div className="mb-6">
+        <AnimatedTabs
+          tabs={hubTabsConfig}
+          defaultTab={hubTab}
+          onChange={handleHubTabChange}
+          layoutId="property-hub-tab-bubble"
         />
-      </>
-    );
-  };
+      </div>
+    ),
+    [hubTabsConfig, hubTab, handleHubTabChange],
+  );
+
+  return (
+    <>
+      {hubTab === 'properties' && (
+        <PropertiesListTab pageTop={hubTabsSlot} pageTitle={hubTitle} />
+      )}
+      {hubTab === 'owners' && (
+        <Owners pageTop={hubTabsSlot} pageTitle={hubTitle} />
+      )}
+      {hubTab === 'tenants' && (
+        <Tenants pageTop={hubTabsSlot} pageTitle={hubTitle} />
+      )}
+    </>
+  );
+};

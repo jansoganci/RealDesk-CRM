@@ -4,6 +4,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { OrgProvider } from './contexts/OrgContext';
 import { BillingProvider } from './contexts/BillingContext';
 import { NotificationProvider } from './contexts/NotificationContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import { OwnerOnlyRoute } from './components/common/OwnerOnlyRoute';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
@@ -20,9 +21,7 @@ import { PublicPricingPage } from './features/landing/PublicPricingPage';
 import { AboutPage } from './features/landing/AboutPage';
 import { ContactPage } from './features/landing/ContactPage';
 import { Dashboard } from './features/dashboard/Dashboard';
-import { Owners } from './features/owners/Owners';
 import { Properties } from './features/properties/Properties';
-import { Tenants } from './features/tenants/Tenants';
 import { Contracts } from './features/contracts/Contracts';
 import ContractCreate from './features/contracts/ContractCreate';
 import { LeaseWizardPage } from './features/contracts/leaseWizard';
@@ -38,10 +37,14 @@ import { Leads } from './features/leads/Leads';
 import { LeadDetailPage } from './features/leads/LeadDetailPage';
 import { Deals } from './features/deals/Deals';
 import { DealDetail } from './features/deals/DealDetail';
+import { TimelinePage } from './features/timeline';
 import { CalendarPage } from './features/calendar/CalendarPage';
 import { Finance } from './features/finance/Finance';
 import { Profile } from './features/profile/Profile';
 import { TeamPerformance } from './features/team/TeamPerformance';
+import { ScreeningPage } from './features/screening';
+import { DepositTrackerPage } from './features/deposit-tracker';
+import { CompliancePage, ComplianceDashboard } from './features/compliance';
 import { AcceptInvite } from './features/organization/AcceptInvite';
 import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
@@ -76,6 +79,7 @@ function AppContent() {
               <Route path={ROUTES.CONTACT} element={<ContactPage />} />
               <Route path={ROUTES.ACCEPT_INVITE} element={<AcceptInvite />} />
               <Route path={ROUTES.AUTH_CALLBACK} element={<AuthCallback />} />
+              <Route path={ROUTES.CCPA} element={<CompliancePage />} />
               <Route
                 path={ROUTES.ONBOARDING}
                 element={
@@ -109,12 +113,12 @@ function AppContent() {
                 }
               />
               <Route
-                path={ROUTES.TENANTS}
-                element={
-                  <ProtectedRoute>
-                    <Tenants />
-                  </ProtectedRoute>
-                }
+                path="/owners"
+                element={<Navigate to={`${ROUTES.PROPERTIES}?tab=owners`} replace />}
+              />
+              <Route
+                path="/tenants"
+                element={<Navigate to={`${ROUTES.PROPERTIES}?tab=tenants`} replace />}
               />
               {/* Contracts Hub */}
               <Route
@@ -236,14 +240,6 @@ function AppContent() {
                 }
               />
               <Route
-                path={ROUTES.OWNERS}
-                element={
-                  <ProtectedRoute>
-                    <Owners />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
                 path={ROUTES.REMINDERS}
                 element={
                   <ProtectedRoute>
@@ -286,6 +282,14 @@ function AppContent() {
                 }
               />
               <Route
+                path={ROUTES.TIMELINE}
+                element={
+                  <ProtectedRoute>
+                    <TimelinePage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path={ROUTES.CALENDAR}
                 element={
                   <ProtectedRoute>
@@ -319,6 +323,30 @@ function AppContent() {
                     </ProtectedRoute>
                   }
                 />
+                <Route
+                  path={ROUTES.SCREENING}
+                  element={
+                    <ProtectedRoute>
+                      <ScreeningPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path={ROUTES.DEPOSIT_TRACKER}
+                  element={
+                    <ProtectedRoute>
+                      <DepositTrackerPage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
+                  path={ROUTES.CCPA_DASHBOARD}
+                  element={
+                    <ProtectedRoute>
+                      <ComplianceDashboard />
+                    </ProtectedRoute>
+                  }
+                />
       </Routes>
       <Toaster />
     </>
@@ -329,17 +357,19 @@ function App() {
   return (
     <HelmetProvider>
       <ErrorBoundary>
-        <AuthProvider>
-          <OrgProvider>
-            <BillingProvider>
-              <NotificationProvider>
-                <BrowserRouter>
-                  <AppContent />
-                </BrowserRouter>
-              </NotificationProvider>
-            </BillingProvider>
-          </OrgProvider>
-        </AuthProvider>
+        <ThemeProvider>
+          <AuthProvider>
+            <OrgProvider>
+              <BillingProvider>
+                <NotificationProvider>
+                  <BrowserRouter>
+                    <AppContent />
+                  </BrowserRouter>
+                </NotificationProvider>
+              </BillingProvider>
+            </OrgProvider>
+          </AuthProvider>
+        </ThemeProvider>
       </ErrorBoundary>
     </HelmetProvider>
   );

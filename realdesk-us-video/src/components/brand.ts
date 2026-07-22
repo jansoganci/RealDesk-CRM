@@ -1,0 +1,22 @@
+// RealDesk brand tokens — single source of truth for the video
+export const B = {
+  primary:      "#2563EB",
+  primaryDark:  "#1d4ed8",
+  primaryBg:    "#eff6ff",
+  secondary:    "#059669",
+  secondaryBg:  "#ecfdf5",
+  purple:       "#7c3aed",
+  purpleBg:     "#f5f3ff",
+  warning:      "#D97706",
+  warningBg:    "#fffbeb",
+  danger:       "#dc2626",
+  appBg:        "#f8fafc",
+  cardBg:       "#ffffff",
+  sidebarBg:    "#ffffff",
+  sidebarHeader:"#2563EB",
+  border:       "#e5e7eb",
+  textPrimary:  "#0f172a",
+  textSecondary:"#475569",
+  textMuted:    "#64748b",
+  font:         'SF Pro Text, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+} as const;

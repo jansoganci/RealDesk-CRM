@@ -97,12 +97,12 @@ export const ResetPassword = () => {
   // Loading state while checking session
   if (isValidSession === null) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
         <Card className="w-full max-w-md mx-4">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-              <p className="text-sm text-gray-500">{t('common:loading')}</p>
+              <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+              <p className="text-sm text-gray-500 dark:text-slate-400">{t('common:loading')}</p>
             </div>
           </CardContent>
         </Card>
@@ -113,15 +113,15 @@ export const ResetPassword = () => {
   // Invalid/expired session
   if (isValidSession === false) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-red-100 flex items-center justify-center">
-                <AlertCircle className="h-8 w-8 text-red-600" />
+              <div className="h-16 w-16 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center">
+                <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-center text-red-600">
+            <CardTitle className="text-2xl font-bold text-center text-red-600 dark:text-red-400">
               {t('errors.expiredLink').split('.')[0]}
             </CardTitle>
             <CardDescription className="text-center">
@@ -150,12 +150,12 @@ export const ResetPassword = () => {
   // Success state after password update
   if (passwordUpdated) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-emerald-600" />
+              <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+                <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center">
@@ -179,7 +179,7 @@ export const ResetPassword = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -195,14 +195,14 @@ export const ResetPassword = () => {
         </CardHeader>
         <CardContent>
           {successMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200">
-              <p className="text-sm text-emerald-800">{successMessage}</p>
+            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800">
+              <p className="text-sm text-emerald-800 dark:text-emerald-200">{successMessage}</p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200">
-              <p className="text-sm text-red-800">{errorMessage}</p>
+            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900">
+              <p className="text-sm text-red-800 dark:text-red-200">{errorMessage}</p>
             </div>
           )}
 
@@ -247,9 +247,9 @@ export const ResetPassword = () => {
               />
 
               {/* Password requirements hint */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100">
-                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0" />
-                <p className="text-xs text-blue-700">
+              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 dark:bg-blue-950/40 dark:border-blue-800">
+                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
+                <p className="text-xs text-blue-700 dark:text-blue-300">
                   {t('register.passwordRequirements')}
                 </p>
               </div>
@@ -274,7 +274,7 @@ export const ResetPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to={ROUTES.LOGIN}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline"
+              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
             >
               {t('forgotPassword.backToLogin')}
             </Link>

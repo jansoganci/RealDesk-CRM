@@ -267,7 +267,7 @@ export function Step5Financing() {
                   <RadioGroup
                     value={field.value ?? ''}
                     onValueChange={field.onChange}
-                    className="grid gap-2 sm:grid-cols-2"
+                    className="grid gap-4 md:grid-cols-2"
                   >
                     <div className="flex items-center gap-2">
                       <RadioGroupItem value="conventional" id="loan-conventional" />
@@ -378,7 +378,7 @@ export function Step5Financing() {
                 control={control}
                 name="contingent_property_address"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="md:col-span-2">
                     <FormLabel>{t('purchaseWizard.step5.bank.contingentAddress')}</FormLabel>
                     <FormControl>
                       <Input {...field} value={field.value ?? ''} />

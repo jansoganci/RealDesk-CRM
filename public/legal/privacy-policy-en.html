@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Real Estate CRM</title>
+    <title>Privacy Policy - RealDesk</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,7 +45,7 @@
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">1. Introduction</h2>
                         <p class="text-gray-700 leading-relaxed">
                             <strong>Jans Trade, LLC</strong> ("We", "Us", "Platform") is committed to protecting the
-                            privacy of our users.
+                            privacy of RealDesk users.
                             This Privacy Policy explains how we collect, use, store, and protect your personal data when
                             you use our SaaS platform.
                         </p>
@@ -63,8 +63,8 @@
                             We collect specific types of data required to provide our real estate management services:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Identity Information:</strong> Name and business contact details required to
-                                provide the service.</li>
+                            <li><strong>Identity Information:</strong> Name, business profile details, and account
+                                identifiers needed to operate the Service.</li>
                             <li><strong>Contact Information:</strong> Phone number, email address.</li>
                             <li><strong>Authentication Data:</strong>
                                 <ul class="list-disc list-inside ml-6 mt-1 text-gray-600">
@@ -74,8 +74,8 @@
                                 </ul>
                             </li>
                             <li><strong>Financial Information:</strong> Rent amounts, commission rates, routing numbers,
-                                and account numbers. Sensitive bank fields are strictly **encrypted client-side** before
-                                storage.</li>
+                                account numbers, payment status, and subscription payment metadata. Sensitive bank fields
+                                are encrypted client-side before storage.</li>
                             <li><strong>Property & Contract Data:</strong> Addresses, rental contract dates,
                                 tenant/owner associations.</li>
                             <li><strong>Usage Data:</strong> Basic logs of system interaction (e.g., login times). We do
@@ -88,7 +88,7 @@
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. How We Use Your Data & Legal Basis</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
                             We process your data for the following purposes and under the following legal bases
-                            (GDPR/KVKK):
+                            under applicable privacy laws:
                         </p>
 
                         <div class="bg-gray-50 rounded-lg p-6 border border-gray-200">
@@ -129,6 +129,9 @@
                                 encrypted using <strong>AES-GCM</strong> (an industry-standard algorithm) directly in
                                 your browser <em>before</em> they are sent to our database. This adds an extra layer of
                                 privacy.</li>
+                            <li><strong>Security Controls:</strong> Sensitive platform data is protected with
+                                industry-standard transport encryption, access controls, and database-level security
+                                policies.</li>
                             <li><strong>Secure Database:</strong> Data is stored in <strong>Supabase</strong>
                                 (PostgreSQL), utilizing Row Level Security (RLS) policies to ensure users can only
                                 access their own data.</li>
@@ -139,11 +142,11 @@
                         <h3 class="text-xl font-medium text-gray-900 mt-6 mb-3">International Transfers</h3>
                         <p class="text-gray-700 leading-relaxed">
                             Our primary infrastructure provider, Supabase, utilizes servers which may be located within
-                            the EU or other regions.
+                            the United States, the EU, or other regions.
                             By using the Platform, you acknowledge that your data may be transferred to and processed in
                             countries outside of your permanent residence.
-                            We rely on Data Processing Agreements (DPAs) and Standard Contractual Clauses (SCCs) to
-                            ensure your data remains protected in accordance with GDPR and KVKK standards.
+                            We rely on Data Processing Agreements (DPAs), contractual safeguards, and provider security
+                            controls to protect data during cross-border processing.
                         </p>
                     </section>
 
@@ -190,17 +193,17 @@
                                     </tr>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            Exchange Rate APIs</td>
-                                        <td class="px-6 py-4 text-sm text-gray-500">Currency Conversion Data (No
-                                            personal data sent)</td>
+                                            Cloudflare</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">Application hosting, delivery, and
+                                            security services</td>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">-</td>
                                     </tr>
                                     <tr>
                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                            Payment Processors</td>
-                                        <td class="px-6 py-4 text-sm text-gray-500">Processing subscription payments (if
-                                            applicable)</td>
-                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Varies</td>
+                                            Stripe</td>
+                                        <td class="px-6 py-4 text-sm text-gray-500">Processing subscription payments</td>
+                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600 hover:underline"><a
+                                                href="https://stripe.com/privacy" target="_blank">View Policy</a></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -209,7 +212,7 @@
 
                     <!-- User Rights -->
                     <section>
-                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Your Rights (GDPR & KVKK)</h2>
+                        <h2 class="text-2xl font-semibold text-gray-900 mb-4">6. Your Privacy Rights</h2>
                         <p class="text-gray-700 leading-relaxed mb-4">
                             You have specific rights regarding your personal data. You may exercise these rights at any
                             time:
@@ -253,12 +256,11 @@
                     <section>
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">8. Cookies & Tracking</h2>
                         <p class="text-gray-700 leading-relaxed">
-                            Our platform uses **essential cookies** required for authentication (keeping you logged in)
-                            and user preferences (language settings).
+                            Our platform uses essential cookies required for authentication, security, and user
+                            preferences.
                         </p>
                         <p class="text-gray-700 leading-relaxed mt-2">
-                            <strong>No Analytics Tracking:</strong> We do not currently use third-party analytics
-                            cookies (such as Google Analytics) or advertising trackers.
+                            Analytics cookies, if enabled, are controlled through the cookie consent banner.
                             For detailed information, please review our <a href="cookie-policy-en.html"
                                 class="text-blue-600 hover:text-blue-700 underline">Cookie Policy</a>.
                         </p>
@@ -284,7 +286,6 @@
                         <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
                             <p class="text-gray-700"><strong>Data Protection Officer / Contact:</strong>
                                 info@janstrade.com</p>
-                            <p class="text-gray-700 mt-2"><strong>KVKK Inquiries:</strong> info@janstrade.com</p>
                             <p class="text-gray-700 mt-2"><strong>Address:</strong> 30 N Gould St, STE 4000, Sheridan,
                                 Wyoming, 82801, United States</p>
                         </div>

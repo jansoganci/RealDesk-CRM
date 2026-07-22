@@ -1,6 +1,12 @@
 {
+  "navGroup": {
+    "crmCore": "CRM Core",
+    "properties": "Properties",
+    "rentalTools": "Rental Tools",
+    "management": "Management"
+  },
   "dashboard": "Dashboard",
-  "properties": "Properties",
+  "properties": "Property Hub",
   "owners": "Owners",
   "tenants": "Tenants",
   "contracts": "Contracts",
@@ -8,10 +14,17 @@
   "calendar": "Calendar",
   "leads": "Leads",
   "deals": "Deals",
+  "timeline": "Timeline",
+  "screening": "Screening",
+  "deposits": "Deposits",
+  "compliance": "Compliance",
   "reminders": "Reminders",
   "team": "Team",
-  "profile": "Profile",
   "pricing": "Pricing",
+  "profile": "Profile",
+  "theme": "Theme",
+  "darkMode": "Dark Mode",
+  "viewProfile": "View Profile",
   "signOut": "Sign Out",
   "viewAllProperties": "View all properties",
   "viewAllOwners": "View all owners",
@@ -23,6 +36,7 @@
   "viewAllDeals": "View all deals",
   "viewAllReminders": "View all reminders",
   "viewAllTeam": "View all team members",
+  "viewAllCompliance": "View compliance dashboard",
   "notifications": "Notifications",
   "alertCenter": {
     "open": "Open alert center",
@@ -40,6 +54,7 @@
   "userSettings": "User settings",
   "language": {
     "label": "Language",
-    "english": "English"
+    "english": "English",
+    "spanish": "Spanish"
   }
 }

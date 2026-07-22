@@ -46,7 +46,7 @@ export const PerformanceSummaryComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -72,10 +72,10 @@ export const PerformanceSummaryComponent = ({
   }
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600">
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
             {t('finance:performance.title')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 shadow-md">
@@ -88,12 +88,12 @@ export const PerformanceSummaryComponent = ({
           {/* Total Commission */}
           <div>
             <div className="flex items-baseline gap-2">
-              <span className="text-3xl font-bold text-slate-900">
+              <span className="text-3xl font-bold text-slate-900 dark:text-slate-100">
                 {formatMetric(summary.totalCommission)}
               </span>
               <TrendingUp className="h-5 w-5 text-emerald-600" />
             </div>
-            <p className="text-xs text-gray-500 mt-1">
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">
               {t('finance:performance.totalCommission')} ({summary.year})
             </p>
             {summary.previousYear && (
@@ -133,14 +133,14 @@ export const PerformanceSummaryComponent = ({
           {/* Stats Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {/* Deals Count */}
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 dark:bg-slate-800/60">
               <div className="flex items-center gap-2 mb-1">
                 <Target className="h-4 w-4 text-blue-600" />
-                <span className="text-xs font-medium text-gray-500">
+                <span className="text-xs font-medium text-gray-500 dark:text-slate-400">
                   {t('finance:performance.dealsCount')}
                 </span>
               </div>
-              <span className="text-xl font-semibold text-slate-900">
+              <span className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                 {summary.dealsCount}
               </span>
               {summary.previousYear && (
@@ -153,14 +153,14 @@ export const PerformanceSummaryComponent = ({
             </div>
 
             {/* Average Per Deal */}
-            <div className="bg-slate-50 rounded-lg p-3">
+            <div className="bg-slate-50 rounded-lg p-3 dark:bg-slate-800/60">
               <div className="flex items-center gap-2 mb-1">
                 <PieChart className="h-4 w-4 text-purple-600" />
-                <span className="text-xs font-medium text-gray-500">
+                <span className="text-xs font-medium text-gray-500 dark:text-slate-400">
                   {t('finance:performance.averagePerDeal')}
                 </span>
               </div>
-              <span className="text-xl font-semibold text-slate-900">
+              <span className="text-xl font-semibold text-slate-900 dark:text-slate-100">
                 {formatMetric(summary.averagePerDeal)}
               </span>
               {summary.previousYear && (
@@ -195,9 +195,9 @@ export const PerformanceSummaryComponent = ({
           {/* Rental vs Sale Split */}
           <div className="space-y-2">
             <div className="flex items-center justify-between text-xs">
-              <span className="text-gray-500">{t('finance:performance.rentalVsSale')}</span>
+              <span className="text-gray-500 dark:text-slate-400">{t('finance:performance.rentalVsSale')}</span>
             </div>
-            <div className="flex h-2 rounded-full overflow-hidden bg-gray-100">
+            <div className="flex h-2 rounded-full overflow-hidden bg-gray-100 dark:bg-slate-800">
               <div
                 className="bg-blue-500 transition-all duration-500"
                 style={{ width: `${summary.rentalPercentage}%` }}

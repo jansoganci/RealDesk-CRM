@@ -7,6 +7,7 @@ export { handleServiceError } from './handleServiceError';
 
 // Direct service exports
 export { organizationService } from '../services/organization.service';
+export type { OrganizationOnboardingProfileUpdate } from '../services/organization.service';
 export { ownersService } from '../services/owners.service';
 export { propertiesService } from '../services/properties.service';
 export { tenantsService } from '../services/tenants.service';
@@ -108,3 +109,36 @@ export type { DuplicateNameCheck, DataChangesCheck, MultipleContractsCheck } fro
 // Text Extraction Service
 export { extractTextFromFile, extractTextFromFileViaProxy, parseContractFromText } from '../services/textExtraction.service';
 export type { ExtractTextRequest, ExtractTextResponse, ExtractTextError, ParsedContractData } from '../services/textExtraction.service';
+
+// Applicant Screening Service (Sprint 7)
+export { applicantScreeningService } from '../services/applicantScreening.service';
+export type {
+  ApplicantScreening,
+  CreateApplicantScreeningInput,
+  UpdateApplicantScreeningInput,
+  ScreeningStatus,
+} from '../services/applicantScreening.service';
+
+// Security Deposit Tracker (Sprint 7)
+export { depositTrackerService } from '../services/depositTracker.service';
+export type {
+  SecurityDeposit,
+  SecurityDepositWithDeductions,
+  DepositDeduction,
+  CreateDepositInput,
+  UpdateDepositInput,
+  CreateDeductionInput,
+  DepositStatus,
+  HeldBy,
+  DeductionCategory,
+} from '../services/depositTracker.service';
+
+// CCPA Compliance (Sprint 7)
+export { ccpaService } from '../services/ccpa.service';
+export type {
+  DataSubjectRequest,
+  SubmitRequestInput,
+  RequestType,
+  RequestStatus,
+  RelationshipToOrg,
+} from '../services/ccpa.service';

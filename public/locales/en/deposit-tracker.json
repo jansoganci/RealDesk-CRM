@@ -1,0 +1,133 @@
+{
+  "title": "Security Deposits",
+  "subtitle": "Track rental security deposit holds, deductions, and returns",
+  "addDeposit": "Add Deposit",
+  "noDeposits": "No deposits yet",
+  "noDepositsDesc": "Add your first security deposit to start tracking.",
+
+  "status": {
+    "held": "Held",
+    "partially_returned": "Partially Returned",
+    "fully_returned": "Fully Returned",
+    "disputed": "Disputed"
+  },
+
+  "heldBy": {
+    "landlord": "Landlord",
+    "escrow": "Escrow Account",
+    "government_agency": "Government Agency",
+    "other": "Other"
+  },
+
+  "deductionCategory": {
+    "damage": "Damage",
+    "cleaning": "Cleaning",
+    "unpaid_rent": "Unpaid Rent",
+    "late_fees": "Late Fees",
+    "other": "Other"
+  },
+
+  "filters": {
+    "all": "All",
+    "held": "Held",
+    "partially_returned": "Partial",
+    "fully_returned": "Returned",
+    "disputed": "Disputed"
+  },
+
+  "table": {
+    "property": "Property",
+    "tenant": "Tenant",
+    "amount": "Deposit Amount",
+    "status": "Status",
+    "returnDeadline": "Return Deadline",
+    "daysLeft": "Days Left"
+  },
+
+  "form": {
+    "propertyId": "Property",
+    "propertyIdPlaceholder": "Select a property (optional)",
+    "tenantId": "Tenant",
+    "tenantIdPlaceholder": "Select a tenant (optional)",
+    "contractId": "Contract",
+    "contractIdPlaceholder": "Select a contract (optional)",
+    "depositAmount": "Deposit Amount ($)",
+    "heldBy": "Held By",
+    "heldByOtherDescription": "Held By Description",
+    "heldByOtherDescriptionPlaceholder": "Describe where the deposit is held",
+    "returnDeadline": "Return Deadline",
+    "returnDate": "Actual Return Date",
+    "status": "Status",
+    "interestRequired": "Interest Required",
+    "interestAmount": "Interest Amount ($)",
+    "notes": "Notes",
+    "notesPlaceholder": "Any additional notes about this deposit"
+  },
+
+  "detail": {
+    "title": "Deposit Details",
+    "summary": "Summary",
+    "depositAmount": "Deposit Amount",
+    "heldBy": "Held By",
+    "returnDeadline": "Return Deadline",
+    "returnDate": "Return Date",
+    "interestRequired": "Interest Required",
+    "interestAmount": "Interest Amount",
+    "notes": "Notes",
+    "deductions": "Deductions",
+    "totalDeductions": "Total Deductions",
+    "netDeposit": "Net to Return",
+    "markReturned": "Mark as Returned",
+    "markPartial": "Mark as Partial Return",
+    "markDisputed": "Mark as Disputed",
+    "yes": "Yes",
+    "no": "No",
+    "na": "N/A"
+  },
+
+  "deductions": {
+    "title": "Itemized Deductions",
+    "addDeduction": "Add Deduction",
+    "description": "Description",
+    "descriptionPlaceholder": "e.g., Broken window repair",
+    "amount": "Amount ($)",
+    "category": "Category",
+    "categoryPlaceholder": "Select category",
+    "noDeductions": "No deductions yet",
+    "total": "Total",
+    "net": "Net Deposit"
+  },
+
+  "searchPlaceholder": "Search by property or tenant…",
+
+  "daysLeft": {
+    "overdue": "{{days}} days overdue",
+    "today": "Due today",
+    "soon": "{{days}} days left"
+  },
+
+  "deleteConfirm": {
+    "title": "Delete Deposit Record",
+    "description": "This will permanently remove this deposit record. This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  },
+
+  "toasts": {
+    "createSuccess": "Deposit record created.",
+    "createError": "Failed to create deposit record.",
+    "updateSuccess": "Deposit record updated.",
+    "updateError": "Failed to update deposit record.",
+    "deleteSuccess": "Deposit record deleted.",
+    "deleteError": "Failed to delete deposit record.",
+    "statusSuccess": "Status updated.",
+    "statusError": "Failed to update status.",
+    "deductionAdded": "Deduction added.",
+    "deductionAddError": "Failed to add deduction.",
+    "deductionRemoved": "Deduction removed.",
+    "deductionRemoveError": "Failed to remove deduction."
+  },
+
+  "createTitle": "Add Security Deposit",
+  "editTitle": "Edit Security Deposit"
+}

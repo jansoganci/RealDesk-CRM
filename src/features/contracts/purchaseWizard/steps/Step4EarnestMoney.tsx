@@ -30,7 +30,7 @@ export function Step4EarnestMoney() {
         <AlertDescription>{t('purchaseWizard.step4.infoBody')}</AlertDescription>
       </Alert>
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      <div className="grid gap-6 sm:grid-cols-2">
         <FormField
           control={control}
           name="earnest_money_amount"
@@ -81,7 +81,7 @@ export function Step4EarnestMoney() {
         control={control}
         name="earnest_money_deadline_time"
         render={({ field }) => (
-          <FormItem className="max-w-md">
+          <FormItem>
             <FormLabel>{t('purchaseWizard.step4.deadlineTime')}</FormLabel>
             <p className="text-xs text-muted-foreground">{t('purchaseWizard.step4.deadlineTimeHelp')}</p>
             <FormControl>

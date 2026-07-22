@@ -76,9 +76,8 @@ export const PropertyDialog = ({
   } = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),
     defaultValues: {
-      property_type: propertyType,
-      status: propertyType === 'rental' ? 'Empty' : 'Available',
-    } as any,
+      currency: 'USD',
+    } as Partial<PropertyFormData>,
   });
 
   const selectedOwnerId = watch('owner_id');
@@ -121,7 +120,11 @@ export const PropertyDialog = ({
           formLoading={loading}
         />
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+        <form
+          key={property ? property.id : propertyType}
+          onSubmit={handleSubmit(handleFormSubmit)}
+          className="space-y-4"
+        >
           {/* Property Type Selector - Only show for new properties */}
           {!property && (
             <PropertyTypeSelectorSection
@@ -151,7 +154,7 @@ export const PropertyDialog = ({
             onMarkAsSold={onMarkAsSold}
           />
 
-          <DialogFooter className="pt-4 border-t">
+          <DialogFooter className="pt-4 border-t border-gray-200 dark:border-slate-800">
             <Button
               type="button"
               variant="outline"

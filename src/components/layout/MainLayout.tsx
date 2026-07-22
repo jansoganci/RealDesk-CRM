@@ -4,8 +4,6 @@ import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
 import { useMeetingNotifications } from '@/hooks/useMeetingNotifications';
 
-import { COLORS } from '@/config/colors';
-
 interface MainLayoutProps {
   children: React.ReactNode;
   title?: string;
@@ -16,7 +14,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
   useMeetingNotifications(); // Initialize meeting notifications
 
   return (
-    <div className={`min-h-screen ${COLORS.background.bgGradient}`}>
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-950 dark:to-slate-900">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="lg:pl-64">

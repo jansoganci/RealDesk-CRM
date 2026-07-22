@@ -1,7 +1,7 @@
 /**
  * Cookie Configuration
  * 
- * Defines all cookies used in the application for GDPR/KVKK compliance.
+ * Defines all cookies used in the application for privacy compliance.
  * This file must be kept up-to-date when adding new cookies.
  */
 
@@ -121,6 +121,5 @@ export const cookieDefinitions: CookieDefinitions = {
     // },
   ],
 };
-
 
 

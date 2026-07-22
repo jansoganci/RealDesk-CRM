@@ -21,7 +21,7 @@ export const LandingPage = () => {
         description="Modern, mobile-first real estate CRM for US agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system."
         keywords="realdesk, real estate crm, property management, tenant tracking, contract management, US real estate software"
       />
-      <div className="min-h-screen bg-white">
+      <div className="min-h-screen bg-white dark:bg-slate-950">
         <LandingHeader />
         <main>
           <Hero />

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { UseFormReturn } from 'react-hook-form';
+import type { UseFormReturn } from 'react-hook-form';
 import {
   FormControl,
   FormField,
@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/select';
 import { Building2 } from 'lucide-react';
 import type { QuickAddFormData } from '../quickAddSchema';
+import { US_STATES } from '@/features/leads/schemas/lead-form';
 
 interface PropertySectionProps {
   form: UseFormReturn<QuickAddFormData>;
@@ -33,13 +34,12 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
   const statuses = propertyType === 'sale' ? saleStatuses : rentalStatuses;
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50">
-      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900">
+    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
+      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
         <Building2 className="h-4 w-4" />
         {t('sections.property')}
       </div>
 
-      {/* Address */}
       <FormField
         control={form.control}
         name="address"
@@ -58,7 +58,6 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
         )}
       />
 
-      {/* City & District */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FormField
           control={form.control}
@@ -80,13 +79,13 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
 
         <FormField
           control={form.control}
-          name="district"
+          name="zip_code"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t('fields.district')}</FormLabel>
+              <FormLabel>{t('fields.zipCode')}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder={t('placeholders.district')}
+                  placeholder={t('placeholders.zipCode')}
                   {...field}
                   disabled={loading}
                 />
@@ -97,7 +96,37 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
         />
       </div>
 
-      {/* Property Type & Status */}
+      <FormField
+        control={form.control}
+        name="state"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel>{t('fields.state')}</FormLabel>
+            <Select
+              onValueChange={(v) =>
+                field.onChange(v === '__none__' ? '' : v)
+              }
+              value={field.value && field.value.length === 2 ? field.value : '__none__'}
+            >
+              <FormControl>
+                <SelectTrigger disabled={loading}>
+                  <SelectValue placeholder={t('placeholders.state')} />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectItem value="__none__">{t('fields.stateOptional')}</SelectItem>
+                {US_STATES.map((s) => (
+                  <SelectItem key={s.value} value={s.value}>
+                    {s.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <FormField
           control={form.control}
@@ -108,7 +137,6 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
               <Select
                 onValueChange={(value) => {
                   field.onChange(value);
-                  // Reset status when type changes
                   form.setValue('status', value === 'sale' ? 'Available' : 'Empty');
                 }}
                 value={field.value}
@@ -154,7 +182,6 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
         />
       </div>
 
-      {/* Price & Currency */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         {propertyType === 'rental' ? (
           <FormField
@@ -168,7 +195,9 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
                     type="number"
                     placeholder={t('placeholders.rentAmount')}
                     value={field.value ?? ''}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                    onChange={(e) =>
+                      field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                    }
                     disabled={loading}
                   />
                 </FormControl>
@@ -188,7 +217,9 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
                     type="number"
                     placeholder={t('placeholders.salePrice')}
                     value={field.value ?? ''}
-                    onChange={(e) => field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)}
+                    onChange={(e) =>
+                      field.onChange(e.target.value ? parseFloat(e.target.value) : undefined)
+                    }
                     disabled={loading}
                   />
                 </FormControl>
@@ -197,31 +228,12 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
             )}
           />
         )}
-
-        <FormField
-          control={form.control}
-          name="currency"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t('fields.currency')} *</FormLabel>
-              <Select onValueChange={field.onChange} value={field.value}>
-                <FormControl>
-                  <SelectTrigger disabled={loading}>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  <SelectItem value="USD">{t('currencies.USD')}</SelectItem>
-                  <SelectItem value="EUR">{t('currencies.EUR')}</SelectItem>
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormItem className="flex flex-col justify-end">
+          <FormLabel>{t('fields.currency')}</FormLabel>
+          <span className="text-sm font-medium py-2 text-slate-800 dark:text-slate-200">{t('currencies.USD')}</span>
+        </FormItem>
       </div>
 
-      {/* Listing URL */}
       <FormField
         control={form.control}
         name="listing_url"
@@ -240,7 +252,6 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
         )}
       />
 
-      {/* Notes */}
       <FormField
         control={form.control}
         name="notes"
@@ -249,9 +260,9 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
             <FormLabel>{t('fields.notes')}</FormLabel>
             <FormControl>
               <Textarea
-                placeholder={t('placeholders.notes')}
                 className="resize-none"
                 rows={3}
+                placeholder={t('placeholders.notes')}
                 {...field}
                 disabled={loading}
               />

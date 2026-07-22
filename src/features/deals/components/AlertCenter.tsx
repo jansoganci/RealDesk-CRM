@@ -55,7 +55,7 @@ export function AlertCenter() {
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="h-11 w-11 md:h-10 md:w-10 relative flex items-center justify-center rounded-md border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="h-11 w-11 md:h-10 md:w-10 relative flex items-center justify-center rounded-md border border-gray-300 dark:border-slate-600 bg-transparent text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-800 hover:border-gray-400 dark:hover:border-slate-500 focus:outline-none focus:ring-2 focus:ring-gray-300 dark:focus:ring-slate-600 focus:ring-offset-2 dark:focus:ring-offset-slate-950 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           aria-label={t('alertCenter.open')}
         >
           <Bell className="h-6 w-6" />
@@ -67,7 +67,7 @@ export function AlertCenter() {
         </button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[360px] p-0">
-        <div className="border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+        <div className="border-b border-gray-200 dark:border-slate-700 px-4 py-3 flex items-center justify-between">
           <p className="font-semibold text-sm">{t('alertCenter.title')}</p>
           <Button variant="ghost" size="sm" onClick={() => void markAllRead()}>
             {t('alertCenter.markAllRead')}
@@ -76,18 +76,18 @@ export function AlertCenter() {
 
         <div className="max-h-[420px] overflow-y-auto">
           {loading ? (
-            <div className="px-4 py-6 text-sm text-slate-600">{t('alertCenter.loading')}</div>
+            <div className="px-4 py-6 text-sm text-slate-600 dark:text-slate-300">{t('alertCenter.loading')}</div>
           ) : sorted.length === 0 ? (
-            <div className="px-4 py-6 text-sm text-slate-600">{t('alertCenter.empty')}</div>
+            <div className="px-4 py-6 text-sm text-slate-600 dark:text-slate-300">{t('alertCenter.empty')}</div>
           ) : (
             <div className="divide-y divide-gray-100">
               {sorted.map((item) => (
                 <div key={item.id} className="px-4 py-3 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div className="space-y-1">
-                      <p className="text-sm font-medium text-slate-900">{item.title}</p>
-                      <p className="text-xs text-slate-600">{item.body}</p>
-                      <p className="text-xs text-slate-500">{formatCreatedAt(item.created_at)}</p>
+                      <p className="text-sm font-medium text-slate-900 dark:text-slate-100">{item.title}</p>
+                      <p className="text-xs text-slate-600 dark:text-slate-300">{item.body}</p>
+                      <p className="text-xs text-slate-500 dark:text-slate-400">{formatCreatedAt(item.created_at)}</p>
                     </div>
                     {!item.is_read && <Badge variant="secondary">{t('alertCenter.unread')}</Badge>}
                   </div>

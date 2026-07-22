@@ -106,15 +106,15 @@
   "validation": {
     "required": "This field is required",
     "endDateAfterStart": "End date must be after start date",
-    "invalidTC": "Invalid TC Identity number",
-    "tcLength": "TC Identity number must be 11 digits",
-    "invalidIBAN": "Invalid IBAN",
+    "invalidTaxId": "Invalid tax ID",
+    "taxIdLength": "Tax ID must be 11 digits",
+    "invalidBankAccount": "Invalid bank account number",
     "invalidPhone": "Invalid phone number",
     "invalidEmail": "Invalid email address",
     "rentPositive": "Rent amount must be positive",
     "depositPositive": "Deposit amount must be positive",
-    "duplicateOwner": "Owner with this TC number already exists",
-    "duplicateTenant": "Tenant with this TC number already exists",
+    "duplicateOwner": "Owner with this tax ID already exists",
+    "duplicateTenant": "Tenant with this tax ID already exists",
     "duplicateProperty": "Property at this address already exists",
     "activeContractExists": "Active contract exists for this property",
     "fixtures": {
@@ -155,7 +155,7 @@
     "paymentDayRange": "Day must be between 1 and 31",
     "clauseContentRequired": "Clause content cannot be empty",
     "endDateAfterStartStrict": "End date must be after start date",
-    "tcLengthStrict": "TC ID must be {{length}} digits",
+    "taxIdLengthStrict": "Tax ID must be {{length}} digits",
     "invalidUrl": "Please enter a valid URL",
     "invalidGoogleDriveUrl": "Please enter a valid Google Drive link",
     "paintConditionRequired": "Paint condition must be selected",
@@ -488,7 +488,9 @@
       "uploadFailed": "PDF could not be saved to system",
       "uploadFailedDescription": "PDF will be downloaded. You can upload it manually from the contracts list later.",
       "generationFailed": "Failed to generate PDF",
-      "generationFailedDescription": "Contract saved successfully. You can generate the PDF later from the contracts list or upload manually."
+      "generationFailedDescription": "Contract saved successfully. You can generate the PDF later from the contracts list or upload manually.",
+      "clausesLoadFailed": "Could not load custom clauses",
+      "clausesLoadFailedDescription": "PDF could not be generated. Please try again."
     },
     "success": {
       "createdAndSaved": "Contract and PDF created successfully!",
@@ -849,7 +851,9 @@
       "linePrepaid": "Prepaid rent: {{amount}}",
       "linePet": "Pet deposit: {{amount}}",
       "signingTotal": "Estimated total: {{amount}}",
-      "parkingExcluded": "Monthly parking is excluded from this signing total."
+      "parkingExcluded": "Monthly parking is excluded from this signing total.",
+      "stateReturnHint": "{{state}} law requires return within {{days}} days of move-out.",
+      "depositCapHint": "{{state}} cap: {{cap}}× rent = {{amount}} max (unfurnished)."
     },
     "step5": {
       "heading": "Payment & utilities",

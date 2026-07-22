@@ -107,7 +107,9 @@
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Rates updated successfully",
     "refreshError": "Failed to update rates",
-    "usd": "USD"
+    "usd": "USD",
+    "usd_market": "US market",
+    "usd_base": "USD base"
   },
   "onboarding": {
     "title": "Getting Started",

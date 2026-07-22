@@ -118,7 +118,7 @@ export const US_STATES = [
   { value: 'DC', label: 'Washington D.C.' },
 ] as const;
 
-const US_STATE_CODES = US_STATES.map((s) => s.value);
+export const US_STATE_CODES = US_STATES.map((s) => s.value);
 
 // ============================================================================
 // Create Lead Schema

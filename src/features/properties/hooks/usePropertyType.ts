@@ -28,7 +28,7 @@ export function usePropertyType({
   // Initialize property type from existing property or use default
   const [propertyType, setPropertyType] = useState<'rental' | 'sale'>(() => {
     if (property) {
-      return (property as any).property_type || 'rental';
+      return property.property_type === 'sale' ? 'sale' : 'rental';
     }
     return defaultType;
   });
@@ -36,8 +36,7 @@ export function usePropertyType({
   // Update property type when property changes (for edit mode)
   useEffect(() => {
     if (property) {
-      const existingType = (property as any).property_type || 'rental';
-      setPropertyType(existingType);
+      setPropertyType(property.property_type === 'sale' ? 'sale' : 'rental');
     } else {
       setPropertyType(defaultType);
     }

@@ -1,5 +1,12 @@
 {
   "title": "Properties",
+  "hub": {
+    "tabs": {
+      "properties": "Properties",
+      "owners": "Owners",
+      "tenants": "Tenants"
+    }
+  },
   "searchPlaceholder": "Search by address, owner, city...",
   "filterPlaceholder": "Filter by status",
   "addPropertyButton": "Add Property",
@@ -62,6 +69,9 @@
   "validations": {
     "ownerRequired": "Owner is required",
     "addressRequired": "Address is required",
+    "cityRequired": "City is required",
+    "invalidState": "Please select a valid US state code",
+    "invalidZip": "Please enter a valid ZIP code (e.g. 78701 or 78701-1234)",
     "rentAmountPositive": "Rent amount must be greater than zero",
     "salePricePositive": "Sale price must be greater than zero",
     "invalidUrl": "Please enter a valid URL",
@@ -100,10 +110,20 @@
       "saleStatus": "Sale Status",
       "address": "Address",
       "addressPlaceholder": "123 Main St, Apt 4B",
+      "streetAddress": "Street Address",
+      "streetAddressPlaceholder": "123 Main St",
       "city": "City",
       "cityPlaceholder": "City name",
       "district": "District",
       "districtPlaceholder": "District/neighborhood",
+      "state": "State",
+      "statePlaceholder": "Select state",
+      "zipCode": "ZIP Code",
+      "zipCodePlaceholder": "78701",
+      "mlsId": "MLS ID",
+      "mlsIdPlaceholder": "MLS# (optional)",
+      "yearBuilt": "Year Built",
+      "yearBuiltPlaceholder": "e.g. 2005",
       "status": "Status",
       "statusPlaceholder": "Select status",
       "rentAmount": "Monthly Rent",

@@ -56,3 +56,6 @@ Thumbs.db
 # Hermes external state (runtime, do not commit)
 .hermes/hermes-state.json
 .hermes/hermes-state.lock
+
+# Supabase migrations with embedded secrets
+supabase/migrations/0035_schedule_generate_alerts_cron.sql

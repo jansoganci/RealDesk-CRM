@@ -74,7 +74,7 @@ export const AcceptInvite = () => {
       <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <p className="text-slate-500 animate-pulse">{t('common:loading')}</p>
+          <p className="text-slate-500 dark:text-slate-400 animate-pulse">{t('common:loading')}</p>
         </div>
       </div>
     );
@@ -91,7 +91,7 @@ export const AcceptInvite = () => {
             <CardTitle className="text-2xl font-bold text-slate-900 dark:text-slate-50">
               {error === 'Invitation expired' ? t('team:errors.invitationExpired', { defaultValue: 'Invitation Expired' }) : t('team:errors.invalidInvitation', { defaultValue: 'Invalid Invitation' })}
             </CardTitle>
-            <CardDescription className="text-slate-500 mt-2">
+            <CardDescription className="text-slate-500 dark:text-slate-400 mt-2">
               {error === 'Invitation expired' 
                 ? t('team:errors.invitationExpiredDesc', { defaultValue: 'This invitation link has expired. Please ask the sender to resend the invitation.' })
                 : t('team:errors.invalidInvitationDesc', { defaultValue: 'This invitation link is invalid or has already been used.' })}
@@ -101,7 +101,7 @@ export const AcceptInvite = () => {
             <Button className="w-full" asChild variant="outline">
               <Link to={ROUTES.HOME}>{t('common:backToHome')}</Link>
             </Button>
-            <p className="text-xs text-center text-slate-400">
+            <p className="text-xs text-center text-slate-400 dark:text-slate-500">
               {t('common:needHelp')}{' '}
               <Link to={ROUTES.CONTACT} className="text-blue-600 hover:underline">{t('common:contactSupport')}</Link>
             </p>
@@ -118,8 +118,8 @@ export const AcceptInvite = () => {
           {/* Header Image/Pattern */}
           <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center relative overflow-hidden">
             <div className="absolute inset-0 opacity-20 pointer-events-none">
-              <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white blur-3xl"></div>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-white blur-3xl"></div>
+              <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white dark:bg-slate-400/20 blur-3xl"></div>
+              <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-white dark:bg-slate-400/20 blur-3xl"></div>
             </div>
             <div className="bg-white dark:bg-slate-950 p-4 rounded-2xl shadow-lg z-10">
               {invitation?.org_logo ? (
@@ -205,7 +205,7 @@ export const AcceptInvite = () => {
                   )}
                 </Button>
                 
-                <p className="text-xs text-center text-slate-400">
+                <p className="text-xs text-center text-slate-400 dark:text-slate-500">
                   {t('team:invite.wrongAccount', { defaultValue: 'Not your account?' })}{' '}
                   <button 
                     onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
@@ -219,12 +219,12 @@ export const AcceptInvite = () => {
           </CardContent>
 
           <CardFooter className="bg-slate-50 dark:bg-slate-950/50 px-8 py-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400">
+            <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">
               {t('common:appName', { defaultValue: 'EMLAK CRM' })}
             </span>
             <div className="flex gap-4">
-              <Link to={ROUTES.ABOUT} className="text-xs text-slate-500 hover:text-blue-600">{t('common:about')}</Link>
-              <Link to={ROUTES.CONTACT} className="text-xs text-slate-500 hover:text-blue-600">{t('common:contact')}</Link>
+              <Link to={ROUTES.ABOUT} className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600">{t('common:about')}</Link>
+              <Link to={ROUTES.CONTACT} className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600">{t('common:contact')}</Link>
             </div>
           </CardFooter>
         </Card>

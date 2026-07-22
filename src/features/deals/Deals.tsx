@@ -142,7 +142,7 @@ export function Deals() {
             })}
           </Badge>
         </TableCell>
-        <TableCell className={`text-right text-sm ${COLORS.muted.text}`}>
+        <TableCell className={`text-right text-sm ${COLORS.muted.text} dark:text-slate-400`}>
           {formatUpdatedAt(deal.updated_at)}
         </TableCell>
       </TableRow>
@@ -160,7 +160,7 @@ export function Deals() {
         }
       >
         <div className="flex items-start justify-between gap-2">
-          <span className={`font-semibold ${COLORS.gray.text900}`}>
+          <span className={`font-semibold ${COLORS.gray.text900} dark:text-slate-100`}>
             {deal.deal_name}
           </span>
           <Badge variant="secondary" className="shrink-0 font-normal">
@@ -169,7 +169,7 @@ export function Deals() {
             })}
           </Badge>
         </div>
-        <div className={`text-sm ${COLORS.muted.text}`}>
+        <div className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>
           {deal.deal_type === 'rental'
             ? t('deals:dealType.rental')
             : t('deals:dealType.sale')}
@@ -191,38 +191,38 @@ export function Deals() {
         )}
         {stats ? (
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="border-gray-200/80 shadow-sm">
+            <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
               <CardHeader className="pb-2 pt-4 px-4">
                 <CardTitle
-                  className={`text-sm font-medium ${COLORS.muted.text}`}
+                  className={`text-sm font-medium ${COLORS.muted.text} dark:text-slate-400`}
                 >
                   {t('deals:list.statsActive')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-4 px-4">
-                <p className={`text-2xl font-bold ${COLORS.gray.text900}`}>
+                <p className={`text-2xl font-bold ${COLORS.gray.text900} dark:text-slate-100`}>
                   {stats.activeDeals}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-gray-200/80 shadow-sm">
+            <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
               <CardHeader className="pb-2 pt-4 px-4">
                 <CardTitle
-                  className={`text-sm font-medium ${COLORS.muted.text}`}
+                  className={`text-sm font-medium ${COLORS.muted.text} dark:text-slate-400`}
                 >
                   {t('deals:list.statsClosings')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="pb-4 px-4">
-                <p className={`text-2xl font-bold ${COLORS.gray.text900}`}>
+                <p className={`text-2xl font-bold ${COLORS.gray.text900} dark:text-slate-100`}>
                   {stats.closingsThisMonth}
                 </p>
               </CardContent>
             </Card>
-            <Card className="border-gray-200/80 shadow-sm">
+            <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
               <CardHeader className="pb-2 pt-4 px-4">
                 <CardTitle
-                  className={`text-sm font-medium ${COLORS.muted.text}`}
+                  className={`text-sm font-medium ${COLORS.muted.text} dark:text-slate-400`}
                 >
                   {t('deals:list.statsOverdue')}
                 </CardTitle>

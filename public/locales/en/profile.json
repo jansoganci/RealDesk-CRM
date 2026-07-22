@@ -335,7 +335,7 @@
       "defaultTransactionFee": "Default Transaction Fee",
       "eoFeeType": "E&O Fee Type",
       "eoFeeAmount": "E&O Fee Amount (Per Deal)",
-      "defaultTcFee": "Default TC Fee",
+      "defaultTcFee": "Default Transaction Coordinator Fee",
       "defaultRentalType": "Default Rental Commission Type",
       "defaultRentalRate": "Default Rental Commission Rate (%)",
       "defaultRentalFlatFee": "Default Rental Flat Fee"
@@ -365,7 +365,7 @@
       "franchise": "Franchise Fee",
       "transaction": "Transaction Fee",
       "eo": "E&O Fee",
-      "tc": "TC Fee",
+      "tc": "Transaction Coordinator Fee",
       "net": "Net to Agent"
     },
     "cap": {

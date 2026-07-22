@@ -142,15 +142,15 @@ export function DealContingenciesPanel({
 
   return (
     <>
-      <Card className="border-gray-200/80 shadow-sm">
+      <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg">{t('contingencies.title')}</CardTitle>
         </CardHeader>
         <CardContent>
           {loading ? (
-            <p className={`text-sm ${COLORS.muted.text}`}>{t('contingencies.loading')}</p>
+            <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>{t('contingencies.loading')}</p>
           ) : rows.length === 0 ? (
-            <p className={`text-sm ${COLORS.muted.text}`}>
+            <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>
               {t('contingencies.empty')}
             </p>
           ) : (
@@ -231,12 +231,12 @@ export function DealContingenciesPanel({
                 {rows.map((c) => (
                   <li
                     key={c.id}
-                    className="rounded-lg border border-gray-100 p-3 text-sm space-y-2"
+                    className="rounded-lg border border-gray-100 dark:border-slate-800 p-3 text-sm space-y-2"
                   >
                     <div className="font-medium">
                       {c.label_override || typeLabel(c.contingency_type)}
                     </div>
-                    <div className={COLORS.muted.text}>
+                    <div className={`${COLORS.muted.text} dark:text-slate-400`}>
                       {formatDeadline(c.deadline_date)} · {statusLabel(c.status)}
                     </div>
                     {!readOnly && (

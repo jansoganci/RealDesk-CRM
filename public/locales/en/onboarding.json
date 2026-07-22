@@ -1,4 +1,7 @@
 {
+  "defaults": {
+    "organizationName": "My Organization"
+  },
   "step1": {
     "title": "Welcome to RealDesk",
     "subtitle": "Answer a few questions so your workspace starts with the right US real estate setup.",
@@ -29,7 +32,9 @@
     },
     "errors": {
       "skipFailed": "Failed to skip this step. Please try again.",
-      "saveFailed": "Failed to save your selection. Please try again."
+      "saveFailed": "Failed to save your selection. Please try again.",
+      "skip": "Failed to skip this step.",
+      "save": "Failed to save your selection."
     }
   },
   "step2": {
@@ -130,7 +135,15 @@
       "primaryMarketCityMin": "City must be at least 2 characters",
       "primaryMarketCityMax": "City must not exceed 120 characters",
       "primaryMarketStateRequired": "Please select a valid market state",
-      "teamSizeRequired": "Please select team size"
+      "teamSizeRequired": "Please select team size",
+      "organizationNameMin": "Organization name must be at least 2 characters.",
+      "organizationNameMax": "Organization name must not exceed 255 characters.",
+      "brokerageNameRequired": "Brokerage name is required.",
+      "brokerageNameMax": "Brokerage name must not exceed 255 characters.",
+      "licenseStateRequired": "License state is required.",
+      "primaryMarketCityRequired": "Primary market city is required.",
+      "primaryMarketCityMax": "Primary market city must not exceed 120 characters.",
+      "primaryMarketStateRequired": "Primary market state is required."
     }
   },
   "step3": {

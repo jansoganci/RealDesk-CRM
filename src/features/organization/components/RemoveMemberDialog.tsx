@@ -70,7 +70,7 @@ export function RemoveMemberDialog({
               <p>{t('team:removeDialog.description', { name: userName })}</p>
 
               {/* Member info */}
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg">
                 <MemberAvatar
                   name={userName}
                   email={userEmail}
@@ -78,8 +78,8 @@ export function RemoveMemberDialog({
                   size="md"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900">{userName}</p>
-                  <p className="text-sm text-gray-500">{userEmail}</p>
+                  <p className="font-medium text-gray-900 dark:text-slate-50">{userName}</p>
+                  <p className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</p>
                 </div>
                 <RoleBadge role={member.role} size="sm" />
               </div>

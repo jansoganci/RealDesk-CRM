@@ -103,7 +103,6 @@ export function ContractCreateForm() {
             data.clauseOverrides,
             user.id
           );
-          console.log('[ContractCreate] Clause overrides saved');
         } catch (overrideError) {
           console.error('[ContractCreate] Failed to save clause overrides:', overrideError);
           toast.warning(t('create.toasts.clausesSaveFailedTitle'), {

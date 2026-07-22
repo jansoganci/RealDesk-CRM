@@ -15,10 +15,14 @@ export const OrgProvider = ({ children }: { children: React.ReactNode }) => {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const refreshOrg = useCallback(async () => {
+  const refreshOrg = useCallback(async (options?: { silent?: boolean }) => {
+    const silent = options?.silent ?? false;
+
     // Wait for auth to finish loading
     if (authLoading) {
-      setLoading(true);
+      if (!silent) {
+        setLoading(true);
+      }
       return;
     }
 
@@ -31,7 +35,9 @@ export const OrgProvider = ({ children }: { children: React.ReactNode }) => {
       return;
     }
 
-    setLoading(true);
+    if (!silent) {
+      setLoading(true);
+    }
     setError(null);
 
     try {
@@ -56,6 +62,10 @@ export const OrgProvider = ({ children }: { children: React.ReactNode }) => {
             slug,
             logo_url,
             settings,
+            brokerage_name,
+            license_state,
+            primary_market_city,
+            primary_market_state,
             created_at,
             updated_at,
             onboarding_completed,

@@ -174,7 +174,7 @@ export async function updateContractWithEntities(
 
       const detailsData = {
         deposit_amount: formData.deposit || null,
-        deposit_currency: formData.currency || 'TRY',
+        deposit_currency: formData.currency || 'USD',
         payment_day_of_month: formData.payment_day_of_month,
         payment_method: formData.payment_method || null,
         annual_rent: formData.rent_amount * 12,

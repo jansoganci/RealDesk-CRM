@@ -10,7 +10,9 @@
   },
   "pipeline": {
     "emptyColumn": "No leads",
-    "loading": "Loading pipeline..."
+    "loading": "Loading pipeline...",
+    "dragMoved": "Lead moved to {{status}}",
+    "dragUpdateError": "Failed to update lead status"
   },
   "detail": {
     "title": "Lead details",
@@ -98,6 +100,13 @@
       "emailPlaceholder": "Enter email address",
       "preferredCity": "Preferred city",
       "preferredCityPlaceholder": "Enter preferred city",
+      "leadSource": "Lead source",
+      "leadSourcePlaceholder": "How did this lead find you?",
+      "leadSourceAny": "Select source (optional)",
+      "preApproved": "Pre-approved for financing",
+      "preferredState": "Preferred state",
+      "preferredStatePlaceholder": "Select a state",
+      "preferredStateAny": "Any state",
       "preferredDistrict": "Preferred district",
       "preferredDistrictPlaceholder": "Enter preferred district",
       "minRentBudget": "Min monthly rent",
@@ -156,7 +165,12 @@
     "expired": "Expired",
     "terminated": "Terminated",
     "active": "Active",
-    "tiered": "Tiered"
+    "tiered": "Tiered",
+    "markAsSent": "Mark as Sent",
+    "markAsSigned": "Mark as Signed",
+    "activate": "Activate Agreement",
+    "terminate": "Terminate Agreement",
+    "saveToApply": "Save the agreement to apply this status change."
   },
   "showings": {
     "title": "Property Showings",
@@ -179,7 +193,10 @@
     "mediumInterest": "Medium Interest",
     "lowInterest": "Low Interest",
     "noInterest": "No Interest",
-    "minutes": "minutes"
+    "minutes": "minutes",
+    "noActiveAgreement": "No Active Buyer-Agent Agreement",
+    "agreementNotActive": "Agreement status: {{status}}. Only active agreements comply with NAR requirements.",
+    "agreementRequired": "A signed buyer-agent agreement is required before showing properties."
   },
   "toasts": {
     "addSuccess": "Lead added successfully",
@@ -212,5 +229,27 @@
   "deleteDialog": {
     "title": "Delete lead",
     "description": "Are you sure you want to delete the lead for {{inquiryName}}? This action cannot be undone."
+  },
+  "dashboard": {
+    "expiringAgreements": "Expiring Agreements",
+    "expiring": "expiring",
+    "noExpiringAgreements": "No agreements expiring within 30 days.",
+    "expiresOn": "Expires {{date}}",
+    "viewAll": "View all {{count}} expiring agreements",
+    "agreementLeadLabel": "Lead #{{id}}",
+    "leadSources": "Lead Sources",
+    "totalLeads": "{{count}} total",
+    "noLeadData": "No lead data available.",
+    "tooltipCount": "{{count}} ({{percent}}%)",
+    "sources": {
+      "zillow": "Zillow",
+      "realtor_com": "Realtor.com",
+      "referral": "Referral",
+      "sign_call": "Sign Call",
+      "social_media": "Social Media",
+      "cold_call": "Cold Call",
+      "open_house": "Open House",
+      "other": "Other"
+    }
   }
 }

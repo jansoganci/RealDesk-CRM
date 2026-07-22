@@ -1,6 +1,6 @@
 // =====================================================
 // Currency Selector Component
-// Allows users to select their display currency preference
+// Shows the US-market display currency preference.
 // =====================================================
 
 import { useTranslation } from 'react-i18next';
@@ -17,7 +17,7 @@ import { toast } from 'sonner';
 
 export function CurrencySelector() {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency, setCurrency } = useAuth();
+  const { setCurrency } = useAuth();
 
   const handleCurrencyChange = async (newCurrency: string) => {
     try {
@@ -32,11 +32,11 @@ export function CurrencySelector() {
 
   return (
     <div className="flex items-center gap-2">
-      <label className="text-sm text-gray-600 whitespace-nowrap">
+      <label className="text-sm text-gray-600 dark:text-slate-300 whitespace-nowrap">
         {t('finance:currency.displayCurrency')}:
       </label>
       <Select
-        value={currency && ['USD', 'EUR'].includes(currency) ? currency : 'USD'}
+        value="USD"
         onValueChange={handleCurrencyChange}
       >
         <SelectTrigger className="w-24 h-8 md:h-10">
@@ -44,10 +44,8 @@ export function CurrencySelector() {
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="USD">USD</SelectItem>
-          <SelectItem value="EUR">EUR</SelectItem>
         </SelectContent>
       </Select>
     </div>
   );
 }
-

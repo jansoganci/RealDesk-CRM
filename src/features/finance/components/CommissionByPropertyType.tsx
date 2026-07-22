@@ -33,7 +33,7 @@ export const CommissionByPropertyTypeComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -49,10 +49,10 @@ export const CommissionByPropertyTypeComponent = ({
 
   if (!data || data.total.value === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600">
+            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
               {t('finance:analytics.commissionByPropertyType')}
             </CardTitle>
             <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
@@ -61,7 +61,7 @@ export const CommissionByPropertyTypeComponent = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500">
+          <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
             {t('finance:commissionTrends.noData')}
           </div>
         </CardContent>
@@ -95,12 +95,12 @@ export const CommissionByPropertyTypeComponent = ({
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg">
-          <p className="font-semibold text-gray-900">{data.name}</p>
-          <p className="text-sm text-gray-600">
+        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
+          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.name}</p>
+          <p className="text-sm text-gray-600 dark:text-slate-300">
             {formatMetric(data.value)}
           </p>
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-slate-400">
             {data.payload.percentage.toFixed(1)}%
           </p>
         </div>
@@ -130,10 +130,10 @@ export const CommissionByPropertyTypeComponent = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600">
+          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
             {t('finance:analytics.commissionByPropertyType')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">

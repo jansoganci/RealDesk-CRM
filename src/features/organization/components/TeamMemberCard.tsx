@@ -69,24 +69,24 @@ export const TeamMemberCard = memo(({
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 truncate">
+              <span className="font-semibold text-gray-900 dark:text-slate-50 truncate">
                 {displayName}
               </span>
               {isCurrentUser && (
-                <span className="text-xs text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded">
+                <span className="text-xs text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-950 px-1.5 py-0.5 rounded">
                   {t('you')}
                 </span>
               )}
             </div>
 
-            <p className="text-sm text-gray-500 truncate mb-2">
+            <p className="text-sm text-gray-500 dark:text-slate-400 truncate mb-2">
               {teamMember.email}
             </p>
 
             <div className="flex items-center gap-2 flex-wrap">
               <StatusBadge status={teamMember.status} size="sm" />
               <RoleBadge role={teamMember.role} size="sm" />
-              <span className="flex items-center text-xs text-gray-400">
+              <span className="flex items-center text-xs text-gray-400 dark:text-slate-500">
                 <Calendar className="h-3 w-3 mr-1" />
                 {joinedDate}
               </span>

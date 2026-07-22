@@ -167,10 +167,10 @@ export const EnhancedTenantEditDialog = ({
         {/* Progress Bar */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">
+            <span className="text-sm font-medium dark:text-slate-200">
               {t('edit.stepProgress', { current: currentStep, total: TENANT_EDIT_STEPS.length })}
             </span>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-gray-500 dark:text-slate-400">
               {t('edit.progressComplete', { percent: Math.round(getStepProgress()) })}
             </span>
           </div>

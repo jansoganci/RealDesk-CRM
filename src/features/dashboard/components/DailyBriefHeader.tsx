@@ -20,7 +20,7 @@ export function DailyBriefHeader({
   );
 
   return (
-    <Card className="border-blue-200 bg-blue-50">
+    <Card className="border-blue-200 bg-blue-50 dark:border-blue-900 dark:bg-blue-950/40">
       <CardContent className="py-5">
         <div className="space-y-1">
           <p className={`text-lg font-semibold ${COLORS.primary.text}`}>
@@ -28,7 +28,7 @@ export function DailyBriefHeader({
               ? t('dailyBrief.header.greetingClear')
               : t('dailyBrief.header.greeting', { count: attentionCount })}
           </p>
-          <p className={`text-sm ${COLORS.gray.text600}`}>
+          <p className={`text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
             {t('dailyBrief.header.meta', {
               date: formattedDate,
               count: activeDealsCount,

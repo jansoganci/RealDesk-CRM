@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Cookie } from "lucide-react";
 
 export default function CookieNotice() {
-  const { t } = useTranslation("cookie");
+  const { t } = useTranslation(["cookie", "compliance"]);
   const {
     showBanner,
     acceptAll,
@@ -65,6 +65,13 @@ export default function CookieNotice() {
                   className="underline text-blue-600 hover:text-blue-700 transition-colors"
                 >
                   {t("banner.privacyPolicy")}
+                </a>
+                <span className="text-muted-foreground">•</span>
+                <a
+                  href="/privacy"
+                  className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  {t("compliance:page.title")}
                 </a>
                 <span className="text-muted-foreground">•</span>
                 <a

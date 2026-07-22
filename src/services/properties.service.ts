@@ -42,7 +42,10 @@ class PropertiesService {
       .select(`
         id,
         address,
+        street_address,
         city,
+        state,
+        zip_code,
         district,
         status,
         property_type,
@@ -84,7 +87,10 @@ class PropertiesService {
       .select(`
         id,
         address,
+        street_address,
         city,
+        state,
+        zip_code,
         district,
         status,
         property_type,
@@ -127,7 +133,10 @@ class PropertiesService {
       .select(`
         id,
         address,
+        street_address,
         city,
+        state,
+        zip_code,
         district,
         status,
         property_type,

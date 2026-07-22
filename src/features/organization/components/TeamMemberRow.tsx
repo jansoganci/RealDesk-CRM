@@ -71,16 +71,16 @@ export const TeamMemberRow = memo(({
             size="md"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-gray-900 dark:text-slate-50">
               {displayName}
               {isCurrentUser && (
-                <span className="ml-2 text-xs text-blue-600 font-normal">
+                <span className="ml-2 text-xs text-blue-600 dark:text-blue-400 font-normal">
                   {t('you')}
                 </span>
               )}
             </span>
             {teamMember.name && (
-              <span className="text-sm text-gray-500">{teamMember.email}</span>
+              <span className="text-sm text-gray-500 dark:text-slate-400">{teamMember.email}</span>
             )}
           </div>
         </div>
@@ -88,7 +88,7 @@ export const TeamMemberRow = memo(({
 
       {/* Email (hidden on smaller screens, shown in member info) */}
       <TableCell className="hidden lg:table-cell">
-        <span className="text-gray-600">{teamMember.email}</span>
+        <span className="text-gray-600 dark:text-slate-300">{teamMember.email}</span>
       </TableCell>
 
       {/* Status */}
@@ -103,7 +103,7 @@ export const TeamMemberRow = memo(({
 
       {/* Joined/Invited Date */}
       <TableCell className="hidden md:table-cell">
-        <span className="text-gray-600">{joinedDate}</span>
+        <span className="text-gray-600 dark:text-slate-300">{joinedDate}</span>
       </TableCell>
 
       {/* Actions */}

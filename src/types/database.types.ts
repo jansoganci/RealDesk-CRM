@@ -14,6 +14,86 @@ export type Database = {
   }
   public: {
     Tables: {
+      applicant_screenings: {
+        Row: {
+          id: string
+          org_id: string
+          lead_id: string | null
+          created_by: string
+          applicant_name: string
+          applicant_email: string | null
+          applicant_phone: string | null
+          screening_status: string
+          background_check: boolean
+          credit_check: boolean
+          employment_verification: boolean
+          landlord_reference: boolean
+          income_verification: boolean
+          notes: string | null
+          property_id: string | null
+          desired_move_in_date: string | null
+          monthly_income: number | null
+          credit_score: number | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          lead_id?: string | null
+          created_by: string
+          applicant_name: string
+          applicant_email?: string | null
+          applicant_phone?: string | null
+          screening_status?: string
+          background_check?: boolean
+          credit_check?: boolean
+          employment_verification?: boolean
+          landlord_reference?: boolean
+          income_verification?: boolean
+          notes?: string | null
+          property_id?: string | null
+          desired_move_in_date?: string | null
+          monthly_income?: number | null
+          credit_score?: number | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          lead_id?: string | null
+          created_by?: string
+          applicant_name?: string
+          applicant_email?: string | null
+          applicant_phone?: string | null
+          screening_status?: string
+          background_check?: boolean
+          credit_check?: boolean
+          employment_verification?: boolean
+          landlord_reference?: boolean
+          income_verification?: boolean
+          notes?: string | null
+          property_id?: string | null
+          desired_move_in_date?: string | null
+          monthly_income?: number | null
+          credit_score?: number | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "applicant_screenings_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buyer_agent_agreements: {
         Row: {
           commission_rate: number | null
@@ -629,6 +709,80 @@ export type Database = {
           },
         ]
       }
+      data_subject_requests: {
+        Row: {
+          id: string
+          org_id: string
+          requested_by: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone: string | null
+          relationship_to_org: string
+          relationship_description: string | null
+          request_type: string
+          details: string | null
+          status: string
+          status_notes: string | null
+          verified_at: string | null
+          completed_at: string | null
+          deletion_summary: string | null
+          data_disclosed_at: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          requested_by?: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone?: string | null
+          relationship_to_org: string
+          relationship_description?: string | null
+          request_type: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          requested_by?: string | null
+          requester_name?: string
+          requester_email?: string
+          requester_phone?: string | null
+          relationship_to_org?: string
+          relationship_description?: string | null
+          request_type?: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_subject_requests_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deal_amendments: {
         Row: {
           amendment_type: string | null
@@ -941,6 +1095,41 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deposit_deductions: {
+        Row: {
+          id: string
+          deposit_id: string
+          description: string
+          amount: number
+          category: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          deposit_id: string
+          description: string
+          amount: number
+          category?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          deposit_id?: string
+          description?: string
+          amount?: number
+          category?: string | null
+          created_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deposit_deductions_deposit_id_fkey"
+            columns: ["deposit_id"]
+            isOneToOne: false
+            referencedRelation: "security_deposit_tracker"
             referencedColumns: ["id"]
           },
         ]
@@ -2046,8 +2235,10 @@ export type Database = {
       }
       organizations: {
         Row: {
+          brokerage_name: string | null
           created_at: string | null
           id: string
+          license_state: string | null
           logo_url: string | null
           name: string
           onboarding_completed: boolean | null
@@ -2055,6 +2246,8 @@ export type Database = {
           onboarding_skipped: boolean | null
           onboarding_skipped_at: string | null
           onboarding_step: number | null
+          primary_market_city: string | null
+          primary_market_state: string | null
           primary_use_case: string | null
           settings: Json | null
           slug: string
@@ -2062,8 +2255,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name: string
           onboarding_completed?: boolean | null
@@ -2071,6 +2266,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug: string
@@ -2078,8 +2275,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name?: string
           onboarding_completed?: boolean | null
@@ -2087,6 +2286,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug?: string
@@ -2915,6 +3116,77 @@ export type Database = {
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      security_deposit_tracker: {
+        Row: {
+          id: string
+          org_id: string
+          property_id: string | null
+          tenant_id: string | null
+          contract_id: string | null
+          created_by: string
+          deposit_amount: number
+          held_by: string
+          held_by_other_description: string | null
+          return_deadline: string
+          return_date: string | null
+          status: string
+          interest_required: boolean
+          interest_amount: number | null
+          notes: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          property_id?: string | null
+          tenant_id?: string | null
+          contract_id?: string | null
+          created_by: string
+          deposit_amount: number
+          held_by: string
+          held_by_other_description?: string | null
+          return_deadline: string
+          return_date?: string | null
+          status?: string
+          interest_required?: boolean
+          interest_amount?: number | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          property_id?: string | null
+          tenant_id?: string | null
+          contract_id?: string | null
+          created_by?: string
+          deposit_amount?: number
+          held_by?: string
+          held_by_other_description?: string | null
+          return_deadline?: string
+          return_date?: string | null
+          status?: string
+          interest_required?: boolean
+          interest_amount?: number | null
+          notes?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "security_deposit_tracker_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]

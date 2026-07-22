@@ -9,17 +9,17 @@ export function WelcomeEmptyState() {
     const navigate = useNavigate();
 
     return (
-        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 bg-gradient-to-br from-blue-50 to-slate-50 backdrop-blur-sm animate-fade-in">
+        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-900 dark:to-slate-950 backdrop-blur-sm animate-fade-in">
             <CardHeader className="text-center pb-6">
                 <div className="flex justify-center mb-6">
                     <div className="p-4 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-2xl shadow-lg shadow-blue-900/30">
                         <Building2 className="h-14 w-14 text-white" />
                     </div>
                 </div>
-                <CardTitle className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">
+                <CardTitle className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-3">
                     {t('welcome.title')}
                 </CardTitle>
-                <CardDescription className="text-base md:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                <CardDescription className="text-base md:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
                     {t('welcome.description')}
                 </CardDescription>
             </CardHeader>
@@ -49,17 +49,17 @@ export function WelcomeEmptyState() {
                     {/* Complete Profile Button */}
                     <button
                         onClick={() => navigate(ROUTES.PROFILE)}
-                        className="group relative overflow-hidden rounded-xl p-6 bg-white border-2 border-slate-200 hover:border-blue-600 hover:bg-blue-50/50 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+                        className="group relative overflow-hidden rounded-xl p-6 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 hover:border-blue-600 hover:bg-blue-50/50 dark:hover:bg-slate-800/50 shadow-md hover:shadow-xl transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
                     >
                         <div className="flex flex-col items-center gap-4 relative z-10">
-                            <div className="p-3 bg-slate-100 rounded-xl group-hover:bg-blue-100 transition-colors">
-                                <User className="h-8 w-8 text-slate-700 group-hover:text-blue-700 transition-colors" />
+                            <div className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl group-hover:bg-blue-100 dark:group-hover:bg-blue-950/50 transition-colors">
+                                <User className="h-8 w-8 text-slate-700 dark:text-slate-200 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors" />
                             </div>
                             <div className="text-center">
-                                <div className="font-bold text-lg text-slate-900 mb-1">
+                                <div className="font-bold text-lg text-slate-900 dark:text-slate-100 mb-1">
                                     {t('welcome.completeProfile')}
                                 </div>
-                                <div className="text-sm text-slate-600 font-normal">
+                                <div className="text-sm text-slate-600 dark:text-slate-300 font-normal">
                                     {t('welcome.completeProfileDesc')}
                                 </div>
                             </div>
@@ -68,16 +68,16 @@ export function WelcomeEmptyState() {
                 </div>
 
                 {/* Quick Tip */}
-                <div className="mt-6 p-5 bg-gradient-to-br from-blue-50 to-slate-50 border border-blue-200/50 rounded-xl max-w-3xl mx-auto shadow-sm">
+                <div className="mt-6 p-5 bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-900 dark:to-slate-950 border border-blue-200/50 dark:border-slate-700 rounded-xl max-w-3xl mx-auto shadow-sm">
                     <div className="flex items-start gap-3">
                         <div className="p-2 bg-blue-600 rounded-lg shadow-md flex-shrink-0">
                             <Info className="h-4 w-4 text-white" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-slate-900 mb-1">
+                            <p className="text-sm font-bold text-slate-900 dark:text-slate-100 mb-1">
                                 {t('welcome.quickTip')}
                             </p>
-                            <p className="text-sm text-slate-600 leading-relaxed">
+                            <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
                                 {t('welcome.quickTipDesc')}
                             </p>
                         </div>

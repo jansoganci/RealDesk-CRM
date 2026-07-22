@@ -14,6 +14,80 @@ export type Database = {
   }
   public: {
     Tables: {
+      data_subject_requests: {
+        Row: {
+          id: string
+          org_id: string
+          requested_by: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone: string | null
+          relationship_to_org: string
+          relationship_description: string | null
+          request_type: string
+          details: string | null
+          status: string
+          status_notes: string | null
+          verified_at: string | null
+          completed_at: string | null
+          deletion_summary: string | null
+          data_disclosed_at: string | null
+          created_at: string
+          updated_at: string
+          deleted_at: string | null
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          requested_by?: string | null
+          requester_name: string
+          requester_email: string
+          requester_phone?: string | null
+          relationship_to_org: string
+          relationship_description?: string | null
+          request_type: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          requested_by?: string | null
+          requester_name?: string
+          requester_email?: string
+          requester_phone?: string | null
+          relationship_to_org?: string
+          relationship_description?: string | null
+          request_type?: string
+          details?: string | null
+          status?: string
+          status_notes?: string | null
+          verified_at?: string | null
+          completed_at?: string | null
+          deletion_summary?: string | null
+          data_disclosed_at?: string | null
+          created_at?: string
+          updated_at?: string
+          deleted_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "data_subject_requests_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       buyer_agent_agreements: {
         Row: {
           commission_rate: number | null
@@ -2210,8 +2284,10 @@ export type Database = {
       }
       organizations: {
         Row: {
+          brokerage_name: string | null
           created_at: string | null
           id: string
+          license_state: string | null
           logo_url: string | null
           name: string
           onboarding_completed: boolean | null
@@ -2219,6 +2295,8 @@ export type Database = {
           onboarding_skipped: boolean | null
           onboarding_skipped_at: string | null
           onboarding_step: number | null
+          primary_market_city: string | null
+          primary_market_state: string | null
           primary_use_case: string | null
           settings: Json | null
           slug: string
@@ -2226,8 +2304,10 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name: string
           onboarding_completed?: boolean | null
@@ -2235,6 +2315,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug: string
@@ -2242,8 +2324,10 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          brokerage_name?: string | null
           created_at?: string | null
           id?: string
+          license_state?: string | null
           logo_url?: string | null
           name?: string
           onboarding_completed?: boolean | null
@@ -2251,6 +2335,8 @@ export type Database = {
           onboarding_skipped?: boolean | null
           onboarding_skipped_at?: string | null
           onboarding_step?: number | null
+          primary_market_city?: string | null
+          primary_market_state?: string | null
           primary_use_case?: string | null
           settings?: Json | null
           slug?: string

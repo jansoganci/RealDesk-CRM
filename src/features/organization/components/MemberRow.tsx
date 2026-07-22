@@ -61,16 +61,16 @@ export const MemberRow = memo(({
             size="md"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900">
+            <span className="font-medium text-gray-900 dark:text-slate-50">
               {userName || userEmail.split('@')[0]}
               {isCurrentUser && (
-                <span className="ml-2 text-xs text-blue-600 font-normal">
+                <span className="ml-2 text-xs text-blue-600 dark:text-blue-400 font-normal">
                   {t('you')}
                 </span>
               )}
             </span>
             {userName && (
-              <span className="text-sm text-gray-500">{userEmail}</span>
+              <span className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</span>
             )}
           </div>
         </div>
@@ -78,7 +78,7 @@ export const MemberRow = memo(({
 
       {/* Email (hidden on smaller screens, shown in member info) */}
       <TableCell className="hidden lg:table-cell">
-        <span className="text-gray-600">{userEmail}</span>
+        <span className="text-gray-600 dark:text-slate-300">{userEmail}</span>
       </TableCell>
 
       {/* Role */}
@@ -88,7 +88,7 @@ export const MemberRow = memo(({
 
       {/* Joined Date */}
       <TableCell className="hidden md:table-cell">
-        <span className="text-gray-600">{joinedDate}</span>
+        <span className="text-gray-600 dark:text-slate-300">{joinedDate}</span>
       </TableCell>
 
       {/* Actions */}

@@ -96,12 +96,12 @@ export const Profile = () => {
           <UserInfoHeader />
 
           <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700 rounded-lg">
               <TabsTrigger value="general">{t('profile:tabs.general')}</TabsTrigger>
               <TabsTrigger value="commission">{t('profile:tabs.commission')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="general" className="space-y-6 mt-4">
+            <TabsContent value="general" className="space-y-6 mt-4 rounded-lg">
               {/* Profile Information Card - Read-only with Edit button */}
               <ProfileInfoCard
                 data={profileData}

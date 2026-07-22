@@ -36,8 +36,6 @@ import { ChangeMemberRoleDialog } from './components/ChangeMemberRoleDialog';
 import { RemoveMemberDialog } from './components/RemoveMemberDialog';
 
 import { Search, Plus, Info } from 'lucide-react';
-import { COLORS } from '@/config/colors';
-
 export function TeamMembersList() {
   const { t } = useTranslation(['team', 'common']);
   const { user } = useAuth();
@@ -217,7 +215,7 @@ export function TeamMembersList() {
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="relative flex-1 max-w-sm">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${COLORS.muted.textLight}`} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-slate-500" />
               <Input
                 placeholder={t('team:searchPlaceholder')}
                 value={searchQuery}
@@ -261,11 +259,11 @@ export function TeamMembersList() {
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="p-4 animate-pulse">
                   <div className="flex items-start gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gray-200" />
+                    <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700" />
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 w-32 bg-gray-200 rounded" />
-                      <div className="h-3 w-48 bg-gray-200 rounded" />
-                      <div className="h-5 w-16 bg-gray-200 rounded" />
+                      <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
+                      <div className="h-3 w-48 bg-gray-200 dark:bg-gray-700 rounded" />
+                      <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
                     </div>
                   </div>
                 </Card>
@@ -276,7 +274,7 @@ export function TeamMembersList() {
           <EmptyState
             title={searchQuery ? t('common:noSearchResults') : t('team:emptyState.title')}
             description={searchQuery ? t('common:tryDifferentSearch') : t('team:emptyState.description')}
-            icon={<Users2 className="h-12 w-12 text-gray-400" />}
+            icon={<Users2 className="h-12 w-12 text-gray-400 dark:text-gray-500" />}
             actionLabel={isOwner ? t('team:addMember') : undefined}
             onAction={isOwner ? () => setShowAddDialog(true) : undefined}
             showAction={isOwner && !searchQuery}
@@ -285,7 +283,7 @@ export function TeamMembersList() {
           <>
             {/* Desktop Table */}
             <div className="hidden md:block">
-              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95 overflow-hidden animate-fade-in">
+              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95 dark:border-gray-700/50 dark:bg-gray-900/95 overflow-hidden animate-fade-in">
                 <Table>
                   <TableHeader>
                     <TableRow>

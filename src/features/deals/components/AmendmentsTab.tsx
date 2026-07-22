@@ -213,23 +213,23 @@ export function AmendmentsTab({ deal, readOnly = false }: AmendmentsTabProps) {
         </CardHeader>
         <CardContent className="space-y-3">
           {loading ? (
-            <p className="text-sm text-slate-600">{t('detail.loading')}</p>
+            <p className="text-sm text-slate-600 dark:text-slate-300">{t('detail.loading')}</p>
           ) : error ? (
             <p className="text-sm text-red-700">{error}</p>
           ) : amendments.length === 0 ? (
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-slate-600 dark:text-slate-300">
               {t('detail.amendments.empty')}
             </p>
           ) : (
             amendments.map((a) => (
-              <div key={a.id} className="rounded-lg border border-slate-200 p-3">
+              <div key={a.id} className="rounded-lg border border-slate-200 dark:border-slate-700 p-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <Badge variant="outline">{a.amendment_type ?? 'other'}</Badge>
-                  <span className="text-xs text-slate-500">{safeDate(a.effective_date)}</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400">{safeDate(a.effective_date)}</span>
                 </div>
-                <p className="text-sm text-slate-900 mt-2">{a.description}</p>
+                <p className="text-sm text-slate-900 dark:text-slate-100 mt-2">{a.description}</p>
                 {(a.old_value || a.new_value) && (
-                  <p className="text-xs text-slate-600 mt-1">
+                  <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                     {a.old_value ?? '—'} {'->'} {a.new_value ?? '—'}
                   </p>
                 )}

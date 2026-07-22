@@ -4,6 +4,14 @@ import type { Organization, OrgMember, OrgMemberStatus, OrgMemberWithUser, OrgRo
 
 const logger = createLogger('Organization');
 
+export interface OrganizationOnboardingProfileUpdate {
+  organizationName: string;
+  brokerageName: string;
+  licenseState: string;
+  primaryMarketCity: string;
+  primaryMarketState: string;
+}
+
 /**
  * Get Supabase project URL for Edge Functions
  */
@@ -72,6 +80,57 @@ class OrganizationService {
     if (error) {
       logger.error('Error updating organization name:', error);
       throw new Error('Failed to update organization name');
+    }
+
+    if (!data) {
+      throw new Error('Organization not found');
+    }
+
+    return data as Organization;
+  }
+
+  /**
+   * Update organization profile fields collected during US onboarding.
+   * Only owners can update (enforced by RLS).
+   */
+  async updateOnboardingProfile(
+    orgId: string,
+    profile: OrganizationOnboardingProfileUpdate
+  ): Promise<Organization> {
+    const organizationName = profile.organizationName.trim();
+    const brokerageName = profile.brokerageName.trim();
+    const primaryMarketCity = profile.primaryMarketCity.trim();
+    const licenseState = profile.licenseState.trim().toUpperCase();
+    const primaryMarketState = profile.primaryMarketState.trim().toUpperCase();
+
+    if (!organizationName || organizationName.length < 2) {
+      throw new Error('Organization name must be at least 2 characters');
+    }
+
+    if (organizationName.length > 255) {
+      throw new Error('Organization name must not exceed 255 characters');
+    }
+
+    if (!brokerageName || !licenseState || !primaryMarketCity || !primaryMarketState) {
+      throw new Error('All onboarding profile fields are required');
+    }
+
+    const { data, error } = await supabase
+      .from('organizations')
+      .update({
+        name: organizationName,
+        brokerage_name: brokerageName,
+        license_state: licenseState,
+        primary_market_city: primaryMarketCity,
+        primary_market_state: primaryMarketState,
+      })
+      .eq('id', orgId)
+      .select()
+      .single();
+
+    if (error) {
+      logger.error('Error updating organization onboarding profile:', error);
+      throw new Error('Failed to update organization profile');
     }
 
     if (!data) {

@@ -100,11 +100,11 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
           <Input
             value={user?.email || ''}
             disabled
-            className="h-9 bg-slate-50 text-slate-500 cursor-not-allowed pr-10"
+            className="h-9 bg-slate-50 text-slate-600 border border-slate-200 cursor-not-allowed pr-10 dark:bg-slate-900/90 dark:text-slate-400 dark:border-slate-700"
           />
-          <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+          <Lock className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 dark:text-slate-500" />
         </div>
-        <FormDescription className="text-xs text-slate-500">
+        <FormDescription className="text-xs text-slate-500 dark:text-slate-400">
           {t('accountSecurity.description')}
         </FormDescription>
       </FormItem>
@@ -146,8 +146,6 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
               </FormControl>
               <SelectContent>
                 <SelectItem value="USD">{t('profile:currencies.USD')}</SelectItem>
-                <SelectItem value="TRY">{t('profile:currencies.TRY')}</SelectItem>
-                <SelectItem value="EUR">{t('profile:currencies.EUR')}</SelectItem>
               </SelectContent>
             </Select>
             <FormMessage className="text-xs" />
@@ -177,7 +175,7 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
                 <SelectItem value="90">{t('profile:reminderMinutes.90')}</SelectItem>
               </SelectContent>
             </Select>
-            <FormDescription className="text-xs">
+            <FormDescription className="text-xs text-slate-600 dark:text-slate-400">
               {t('profile:fields.meetingReminderDescription')}
             </FormDescription>
             <FormMessage className="text-xs" />
@@ -205,10 +203,12 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
                   disabled={loading}
                   className="h-9 pr-8"
                 />
-                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-gray-500">%</span>
+                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-slate-500 dark:text-slate-400">
+                  %
+                </span>
               </div>
             </FormControl>
-            <FormDescription className="text-xs">
+            <FormDescription className="text-xs text-slate-600 dark:text-slate-400">
               {t('profile:fields.commissionRateDescription')}
             </FormDescription>
             <FormMessage className="text-xs" />
@@ -218,4 +218,3 @@ export function PreferencesSection({ form, loading = false }: PreferencesSection
     </>
   );
 }
-

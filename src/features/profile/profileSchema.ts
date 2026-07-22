@@ -17,7 +17,7 @@ export const getProfileSchema = (t: TFunction) => {
       .optional()
       .or(z.literal('')),
     language: z.literal('en'),
-    currency: z.enum(['USD', 'TRY', 'EUR'], {
+    currency: z.literal('USD', {
       required_error: t('profile.validation.currencyRequired', 'Currency is required'),
     }),
     meeting_reminder_minutes: z.number({
