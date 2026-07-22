@@ -18,8 +18,12 @@ export function DealHealthCard({ card }: DealHealthCardProps) {
       <Card className="h-full border-slate-200 hover:border-blue-300 hover:shadow-md transition-all">
         <CardContent className="py-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-slate-900">{card.dealName}</p>
-            <Badge variant="outline">{t('dailyBrief.dealCard.phase', { phase: card.phase })}</Badge>
+            <p className="min-w-0 flex-1 text-sm font-semibold text-slate-900 line-clamp-2">
+              {card.dealName}
+            </p>
+            <Badge variant="outline" className="shrink-0 whitespace-nowrap">
+              {t('dailyBrief.dealCard.phase', { phase: card.phase })}
+            </Badge>
           </div>
           <p className={`text-xs ${COLORS.gray.text600}`}>{card.propertyAddress}</p>
           <p className={`text-xs ${COLORS.gray.text700}`}>

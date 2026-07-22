@@ -3,7 +3,7 @@
  * T14 — Final step: full-form validation, PDF download, optional CRM save (linked property + tenant).
  * T15 — After CRM save, generate US lease PDF and attach via `uploadContractPdfAndPersist` (non-blocking on failure).
  * T16 — Entry points: Contracts hub (rent card) + contract create header → `/contracts/rent/lease-wizard` (owners).
- * Step field UI: `LeaseWizardStepContent` (steps 1–8), or override via `renderStep`.
+ * Step field UI: `LeaseWizardStepContent` (5 UX steps; field groups 1–8 merged), or override via `renderStep`.
  */
 
 import { useState, type ReactNode } from 'react';
@@ -150,81 +150,92 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
     }
   };
 
+  const progressPercent = Math.round(getStepProgress());
+
   return (
     <Form {...form}>
-      <Card className="mx-auto w-full max-w-[700px] border shadow-sm">
-        <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-          <div className="space-y-1 pr-8">
-            <p className="text-sm font-medium text-muted-foreground">
-              {t('leaseWizard.stepProgress', {
-                current: currentStep,
-                total: totalSteps,
-                label: stepLabel,
-              })}
-            </p>
-            <p className="text-xs text-muted-foreground">
-              {t('leaseWizard.percentComplete', { percent: Math.round(getStepProgress()) })}
-            </p>
-            <Progress value={getStepProgress()} className="mt-3 h-2" />
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            aria-label={t('leaseWizard.close')}
-            onClick={() => setDiscardOpen(true)}
-          >
-            <X className="h-5 w-5" />
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-6 pt-2">
-          <div className="min-h-[200px]">{content}</div>
+      <div className="mx-auto flex w-full max-w-[88rem] flex-col">
+        <Card className="flex max-h-[calc(100dvh-8.5rem)] flex-col overflow-hidden border shadow-sm sm:max-h-[calc(100dvh-10rem)]">
+          <CardHeader className="shrink-0 space-y-3 border-b pb-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0 space-y-1 pr-2">
+                <p className="text-sm font-medium text-foreground">
+                  {t('leaseWizard.stepProgress', {
+                    current: currentStep,
+                    total: totalSteps,
+                    label: stepLabel,
+                  })}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {t('leaseWizard.percentComplete', { percent: progressPercent })}
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="shrink-0"
+                aria-label={t('leaseWizard.close')}
+                onClick={() => setDiscardOpen(true)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            </div>
+            <Progress value={progressPercent} className="h-2" />
+          </CardHeader>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={handleBack}
-              disabled={isFirstStep}
-              className="order-2 sm:order-1"
-            >
-              {t('leaseWizard.back')}
-            </Button>
-            <div className="flex flex-col gap-2 order-1 sm:order-2 sm:ml-auto sm:items-end">
-              {!isLastStep ? (
-                <Button type="button" onClick={handleNext}>
-                  {t('leaseWizard.next')}
-                </Button>
-              ) : (
-                <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
-                  <p className="text-sm text-muted-foreground text-right max-w-md">
-                    {t('leaseWizard.complete.summary')}
-                  </p>
-                  {!canSaveToCrm && (
-                    <p className="text-xs text-muted-foreground text-right max-w-md">
-                      {t('leaseWizard.complete.linkHint')}
+          <CardContent className="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+            {content}
+          </CardContent>
+
+          <div className="shrink-0 border-t bg-card px-6 py-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleBack}
+                disabled={isFirstStep}
+                className="order-2 sm:order-1"
+              >
+                {t('leaseWizard.back')}
+              </Button>
+              <div className="order-1 flex flex-col gap-2 sm:order-2 sm:ml-auto sm:items-end">
+                {!isLastStep ? (
+                  <Button type="button" onClick={handleNext} className="w-full sm:w-auto">
+                    {t('leaseWizard.next')}
+                  </Button>
+                ) : (
+                  <div className="flex w-full flex-col gap-2 sm:w-auto sm:items-end">
+                    <p className="max-w-md text-right text-sm text-muted-foreground">
+                      {t('leaseWizard.complete.summary')}
                     </p>
-                  )}
-                  <div className="flex flex-wrap gap-2 justify-end">
-                    <Button type="button" variant="outline" onClick={handleDownloadPdf}>
-                      {t('leaseWizard.complete.downloadPdf')}
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={() => void handleSaveContract()}
-                      disabled={saveLoading || !canSaveToCrm}
-                      title={!canSaveToCrm ? t('leaseWizard.complete.linkRequired') : undefined}
-                    >
-                      {saveLoading ? t('leaseWizard.complete.saving') : t('leaseWizard.complete.saveContract')}
-                    </Button>
+                    {!canSaveToCrm && (
+                      <p className="max-w-md text-right text-xs text-muted-foreground">
+                        {t('leaseWizard.complete.linkHint')}
+                      </p>
+                    )}
+                    <div className="flex flex-wrap justify-end gap-2">
+                      <Button type="button" variant="outline" onClick={handleDownloadPdf}>
+                        {t('leaseWizard.complete.downloadPdf')}
+                      </Button>
+                      <Button
+                        type="button"
+                        onClick={() => void handleSaveContract()}
+                        disabled={saveLoading || !canSaveToCrm}
+                        title={!canSaveToCrm ? t('leaseWizard.complete.linkRequired') : undefined}
+                      >
+                        {saveLoading
+                          ? t('leaseWizard.complete.saving')
+                          : t('leaseWizard.complete.saveContract')}
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </Card>
+      </div>
 
       <AlertDialog open={discardOpen} onOpenChange={setDiscardOpen}>
         <AlertDialogContent>

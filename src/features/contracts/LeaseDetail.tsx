@@ -23,7 +23,7 @@ export function LeaseDetailPage() {
   if (!id) return null;
 
   return (
-    <MainLayout title={t('leaseDetail.title')}>
+    <MainLayout>
       <PageContainer>
         <div className="mb-6">
           <PageHeader

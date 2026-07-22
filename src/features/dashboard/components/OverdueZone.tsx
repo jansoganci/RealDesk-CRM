@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ROUTES } from '@/config/constants';
-import { COLORS } from '@/config/colors';
 import type { DailyBriefMilestoneItem } from '@/types';
 
 type OverdueZoneProps = {
@@ -14,18 +13,6 @@ type OverdueZoneProps = {
 
 export function OverdueZone({ items }: OverdueZoneProps) {
   const { t } = useTranslation('dashboard');
-
-  if (items.length === 0) {
-    return (
-      <Card className="border-emerald-200 bg-emerald-50">
-        <CardContent className="py-4">
-          <p className={`${COLORS.success.textDark} text-sm font-medium`}>
-            {t('dailyBrief.overdue.empty')}
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
 
   return (
     <Card className="border-red-200 bg-red-50">

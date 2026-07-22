@@ -47,7 +47,7 @@
     "noContract": "-",
     "inactive": "Inactive",
     "perMonth": "/month",
-    "viewListing": "View on Sahibinden.com"
+    "viewListing": "View listing"
   },
   "toasts": {
     "loadError": "Failed to load properties",
@@ -91,6 +91,8 @@
     "form": {
       "owner": "Property Owner",
       "ownerPlaceholder": "Select an owner",
+      "selectOwner": "Select an owner",
+      "noOwners": "No owners yet — add an owner first",
       "propertyType": "Property Type",
       "rentalTypeLabel": "Rental",
       "saleTypeLabel": "Sale",
@@ -120,7 +122,7 @@
       "offerAmount": "Offer Amount",
       "offerAmountPlaceholder": "Enter offer amount (if applicable)",
       "listingUrl": "Listing URL",
-      "listingUrlPlaceholder": "https://www.sahibinden.com/...",
+      "listingUrlPlaceholder": "https://www.zillow.com/...",
       "notes": "Notes",
       "notesPlaceholder": "Additional information about the property..."
     },

@@ -13,7 +13,7 @@ import { getLeaseAgreementFormDefaults } from './leaseAgreementFormDefaults';
 import { LEASE_WIZARD_STEP_SCHEMAS, LEASE_WIZARD_TOTAL_STEPS } from './leaseWizardStepSchemas';
 
 const DRAFT_DEBOUNCE_MS = 500;
-const DRAFT_VERSION = 1;
+const DRAFT_VERSION = 2;
 
 type LeaseWizardDraftV1 = {
   v: typeof DRAFT_VERSION;

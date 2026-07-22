@@ -1,8 +1,12 @@
 /**
- * Default step renderer for the lease wizard (T10+). Override via `LeaseWizard` `renderStep` when testing.
+ * Default step renderer for the lease wizard.
+ * 5 UX steps (merged from the original 8 field groups).
  */
 
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { Separator } from '@/components/ui/separator';
 
 import { Step1Property } from './steps/Step1Property';
 import { Step2Parties } from './steps/Step2Parties';
@@ -17,25 +21,41 @@ type LeaseWizardStepContentProps = {
   step: number;
 };
 
+function CombinedSections({ children }: { children: ReactNode }) {
+  return <div className="space-y-8">{children}</div>;
+}
+
 export function LeaseWizardStepContent({ step }: LeaseWizardStepContentProps) {
   const { t } = useTranslation('contracts');
 
   switch (step) {
     case 1:
-      return <Step1Property />;
+      return (
+        <CombinedSections>
+          <Step1Property />
+          <Separator />
+          <Step6PropertyDetails />
+        </CombinedSections>
+      );
     case 2:
       return <Step2Parties />;
     case 3:
-      return <Step3LeaseTerm />;
+      return (
+        <CombinedSections>
+          <Step3LeaseTerm />
+          <Separator />
+          <Step4Financials />
+        </CombinedSections>
+      );
     case 4:
-      return <Step4Financials />;
+      return (
+        <CombinedSections>
+          <Step5PaymentUtilities />
+          <Separator />
+          <Step7Policies />
+        </CombinedSections>
+      );
     case 5:
-      return <Step5PaymentUtilities />;
-    case 6:
-      return <Step6PropertyDetails />;
-    case 7:
-      return <Step7Policies />;
-    case 8:
       return <Step8NoticesDisclosures />;
     default:
       return (

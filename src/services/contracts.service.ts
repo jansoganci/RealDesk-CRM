@@ -302,9 +302,10 @@ class ContractsService {
   }
 
   async uploadContractPdf(file: File, contractId: string): Promise<string> {
+    const orgId = await getActiveOrgId();
     const fileExt = file.name.split('.').pop();
     const fileName = `${contractId}-${Date.now()}.${fileExt}`;
-    const filePath = `contracts/${fileName}`;
+    const filePath = `${orgId}/contracts/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')

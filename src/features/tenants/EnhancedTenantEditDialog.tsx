@@ -49,7 +49,7 @@ export const EnhancedTenantEditDialog = ({
   tenant,
   onSuccess
 }: EnhancedTenantEditDialogProps) => {
-  const { t } = useTranslation('tenants');
+  const { t } = useTranslation(['tenants', 'errors', 'common']);
 
   // PDF file management hook
   const { pdfFile, setPdfFile } = usePdfFileManagement({ open });

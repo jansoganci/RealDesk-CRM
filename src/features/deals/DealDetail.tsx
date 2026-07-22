@@ -3,7 +3,7 @@ import { useOrg } from '@/contexts/OrgContext';
 import { Link, generatePath, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
-import { AlertCircle, Loader2 } from 'lucide-react';
+import { AlertCircle, CalendarDays, Loader2, MapPin, Phone, UserRound } from 'lucide-react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -55,15 +55,28 @@ function DetailRow({
   children: ReactNode;
 }) {
   return (
-    <div
-      className={cn(
-        'grid grid-cols-1 gap-1 py-2.5 border-b border-gray-100 last:border-0 sm:grid-cols-3 sm:gap-4'
-      )}
-    >
-      <dt className={`text-sm font-medium ${COLORS.muted.text}`}>{label}</dt>
-      <dd className={`text-sm sm:col-span-2 ${COLORS.gray.text900}`}>
-        {children}
-      </dd>
+    <div className="grid grid-cols-1 gap-0.5 py-2 sm:grid-cols-3 sm:gap-4 sm:py-2.5">
+      <dt className={`text-xs font-medium uppercase tracking-wide ${COLORS.muted.text}`}>
+        {label}
+      </dt>
+      <dd className={`text-sm sm:col-span-2 ${COLORS.gray.text900}`}>{children}</dd>
+    </div>
+  );
+}
+
+function MoneyStat({
+  label,
+  value,
+}: {
+  label: string;
+  value: string;
+}) {
+  return (
+    <div className="rounded-lg bg-slate-50 px-3 py-3 dark:bg-slate-900/50">
+      <p className={`text-xs font-medium ${COLORS.muted.text}`}>{label}</p>
+      <p className={`mt-1 text-lg font-semibold tabular-nums ${COLORS.gray.text900}`}>
+        {value}
+      </p>
     </div>
   );
 }
@@ -87,126 +100,288 @@ function DealDetailBody({
   const property = unwrapRelation(deal.properties);
 
   const negotiations = deal.offer_negotiations ?? [];
-  const parties = deal.deal_parties ?? [];
 
   const purchaseContractId = useMemo(() => getLatestPurchaseContractIdFromDeal(deal), [deal]);
   const showPurchaseTab = deal.deal_type === 'sale' && purchaseContractId != null;
 
-  return (
-    <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
-      <TabsList className="flex w-full max-w-4xl flex-wrap gap-1 h-auto">
-        <TabsTrigger value="overview">{t('detail.tabs.overview')}</TabsTrigger>
-        <TabsTrigger value="milestones">{t('detail.tabs.milestones')}</TabsTrigger>
-        <TabsTrigger value="contingencies">
-          {t('detail.tabs.contingencies')}
-        </TabsTrigger>
-        <TabsTrigger value="offers">{t('detail.tabs.offers')}</TabsTrigger>
-        {showPurchaseTab && (
-          <TabsTrigger value="purchase">{t('detail.tabs.purchase')}</TabsTrigger>
-        )}
-        <TabsTrigger value="documents">{t('detail.tabs.documents')}</TabsTrigger>
-        <TabsTrigger value="parties">{t('detail.tabs.parties')}</TabsTrigger>
-        <TabsTrigger value="amendments">{t('detail.tabs.amendments')}</TabsTrigger>
-      </TabsList>
+  const hasMoney =
+    deal.list_price != null ||
+    deal.intended_offer_price != null ||
+    deal.earnest_money_planned != null;
 
-      <TabsContent value="overview" className="mt-6 space-y-6">
-        <Card className="border-gray-200/80 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">{t('detail.section.details')}</CardTitle>
+  const hasFinancing = Boolean(deal.financing_type || deal.preapproval_status);
+  const hasOverviewContent = Boolean(deal.notes) || negotiations.length > 0;
+
+  return (
+    <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
+      <div className="min-w-0">
+        <Tabs value={activeTab} onValueChange={onTabChange} className="w-full">
+          <TabsList className="flex w-full flex-nowrap items-center justify-start gap-1 overflow-x-auto custom-scrollbar">
+            <TabsTrigger value="overview" className="shrink-0">
+              {t('detail.tabs.overview')}
+            </TabsTrigger>
+            <TabsTrigger value="milestones" className="shrink-0">
+              {t('detail.tabs.milestones')}
+            </TabsTrigger>
+            <TabsTrigger value="contingencies" className="shrink-0">
+              {t('detail.tabs.contingencies')}
+            </TabsTrigger>
+            <TabsTrigger value="offers" className="shrink-0">
+              {t('detail.tabs.offers')}
+            </TabsTrigger>
+            {showPurchaseTab && (
+              <TabsTrigger value="purchase" className="shrink-0">
+                {t('detail.tabs.purchase')}
+              </TabsTrigger>
+            )}
+            <TabsTrigger value="documents" className="shrink-0">
+              {t('detail.tabs.documents')}
+            </TabsTrigger>
+            <TabsTrigger value="parties" className="shrink-0">
+              {t('detail.tabs.parties')}
+            </TabsTrigger>
+            <TabsTrigger value="amendments" className="shrink-0">
+              {t('detail.tabs.amendments')}
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="mt-6 space-y-5">
+            {deal.notes && (
+              <Card className="border-slate-200/80 shadow-sm">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-semibold">
+                    {t('detail.section.notes')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p
+                    className={cn(
+                      'whitespace-pre-wrap text-sm leading-relaxed',
+                      COLORS.gray.text900
+                    )}
+                  >
+                    {deal.notes}
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+
+            {negotiations.length > 0 && (
+              <Card className="border-slate-200/80 shadow-sm">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-base font-semibold">
+                    {t('detail.section.negotiations')}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="flex flex-wrap gap-2 text-sm">
+                    {negotiations.map((n) => (
+                      <li key={n.id}>
+                        <Badge variant="outline">{n.status ?? '—'}</Badge>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            )}
+
+            {!hasOverviewContent && (
+              <p className={`text-sm ${COLORS.muted.text}`}>{t('detail.overviewEmpty')}</p>
+            )}
+          </TabsContent>
+
+          <TabsContent value="milestones" className="mt-6">
+            <TimelineTab deal={deal} readOnly={readOnly} />
+          </TabsContent>
+
+          <TabsContent value="contingencies" className="mt-6">
+            <DealContingenciesPanel
+              deal={deal}
+              onRefresh={onRefresh}
+              readOnly={readOnly}
+            />
+          </TabsContent>
+
+          <TabsContent value="offers" className="mt-6">
+            <DealOffersPanel
+              deal={deal}
+              onRefresh={onRefresh}
+              readOnly={readOnly}
+            />
+          </TabsContent>
+
+          {showPurchaseTab && purchaseContractId && (
+            <TabsContent value="purchase" className="mt-6">
+              <PurchaseDetailView
+                deal={deal}
+                contractId={purchaseContractId}
+                onRefresh={onRefresh}
+                readOnly={readOnly}
+                onOpenContingenciesTab={() => onTabChange('contingencies')}
+              />
+            </TabsContent>
+          )}
+
+          <TabsContent value="documents" className="mt-6">
+            <DocumentsTab dealId={deal.id} readOnly={readOnly} />
+          </TabsContent>
+
+          <TabsContent value="parties" className="mt-6">
+            <PartiesTab deal={deal} readOnly={readOnly} />
+          </TabsContent>
+
+          <TabsContent value="amendments" className="mt-6">
+            <AmendmentsTab deal={deal} readOnly={readOnly} />
+          </TabsContent>
+        </Tabs>
+      </div>
+
+      <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
+        <Card className="border-slate-200/80 shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base font-semibold">
+              {t('detail.section.summary')}
+            </CardTitle>
           </CardHeader>
-          <CardContent>
-            <dl>
-              <DetailRow label={t('fields.dealName')}>{deal.deal_name}</DetailRow>
-              <DetailRow label={t('fields.dealType')}>
-                {deal.deal_type === 'rental'
-                  ? t('dealType.rental')
-                  : t('dealType.sale')}
-              </DetailRow>
-              <DetailRow label={t('fields.clientRole')}>
-                {t(`clientRole.${deal.client_role as 'buyer' | 'seller' | 'dual'}`)}
-              </DetailRow>
-              <DetailRow label={t('list.tableStage')}>
-                <Badge variant="secondary" className="font-normal">
-                  {t(`stage.${deal.deal_stage as DealStage}`, {
-                    defaultValue: deal.deal_stage,
-                  })}
-                </Badge>
-              </DetailRow>
-              {deal.financing_type && (
-                <DetailRow label={t('fields.financingType')}>
-                  {t(`financing.${deal.financing_type}`, {
-                    defaultValue: deal.financing_type,
-                  })}
-                </DetailRow>
-              )}
-              {deal.preapproval_status && (
-                <DetailRow label={t('fields.preapproval')}>
-                  {t(`preapproval.${deal.preapproval_status}`, {
-                    defaultValue: deal.preapproval_status,
-                  })}
-                </DetailRow>
-              )}
-              {deal.list_price != null && (
-                <DetailRow label={t('fields.listPrice')}>
-                  {formatCurrency(deal.list_price)}
-                </DetailRow>
-              )}
-              {deal.intended_offer_price != null && (
-                <DetailRow label={t('fields.intendedOffer')}>
-                  {formatCurrency(deal.intended_offer_price)}
-                </DetailRow>
-              )}
-              {deal.earnest_money_planned != null && (
-                <DetailRow label={t('fields.earnestMoney')}>
-                  {formatCurrency(deal.earnest_money_planned)}
-                </DetailRow>
-              )}
-              <DetailRow label={t('fields.projectedClose')}>
-                {formatOptionalDate(deal.projected_close_date)}
-              </DetailRow>
+          <CardContent className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge variant="secondary" className="font-medium">
+                {t(`stage.${deal.deal_stage as DealStage}`, {
+                  defaultValue: deal.deal_stage,
+                })}
+              </Badge>
+            </div>
+            <p className={`text-sm ${COLORS.muted.text}`}>
+              {deal.deal_type === 'rental'
+                ? t('dealType.rental')
+                : t('dealType.sale')}
+              {' · '}
+              {t(`clientRole.${deal.client_role as 'buyer' | 'seller' | 'dual'}`)}
+            </p>
+
+            <div className="space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+              <div className="flex items-center justify-between gap-2 text-sm">
+                <span className={`flex items-center gap-1.5 ${COLORS.muted.text}`}>
+                  <CalendarDays className="h-3.5 w-3.5 shrink-0" />
+                  {t('detail.meta.projectedClose')}
+                </span>
+                <span className={`font-medium ${COLORS.gray.text900}`}>
+                  {formatOptionalDate(deal.projected_close_date)}
+                </span>
+              </div>
               {deal.mutual_acceptance_date && (
-                <DetailRow label={t('detail.mutualAcceptanceDate')}>
-                  {formatOptionalDate(deal.mutual_acceptance_date)}
-                </DetailRow>
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className={COLORS.muted.text}>
+                    {t('detail.mutualAcceptanceDate')}
+                  </span>
+                  <span className={`font-medium ${COLORS.gray.text900}`}>
+                    {formatOptionalDate(deal.mutual_acceptance_date)}
+                  </span>
+                </div>
               )}
               {deal.actual_close_date && (
-                <DetailRow label={t('detail.actualClose')}>
-                  {formatOptionalDate(deal.actual_close_date)}
-                </DetailRow>
+                <div className="flex items-center justify-between gap-2 text-sm">
+                  <span className={COLORS.muted.text}>{t('detail.actualClose')}</span>
+                  <span className={`font-medium ${COLORS.gray.text900}`}>
+                    {formatOptionalDate(deal.actual_close_date)}
+                  </span>
+                </div>
               )}
-              {deal.notes && (
-                <DetailRow label={t('fields.notes')}>
-                  <span className="whitespace-pre-wrap">{deal.notes}</span>
-                </DetailRow>
-              )}
-            </dl>
+            </div>
           </CardContent>
         </Card>
 
-        <Card className="border-gray-200/80 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">{t('detail.section.linkedLead')}</CardTitle>
+        {hasMoney && (
+          <Card className="border-slate-200/80 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold">
+                {t('detail.section.money')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {deal.list_price != null && (
+                <MoneyStat
+                  label={t('fields.listPrice')}
+                  value={formatCurrency(deal.list_price)}
+                />
+              )}
+              {deal.intended_offer_price != null && (
+                <MoneyStat
+                  label={t('fields.intendedOffer')}
+                  value={formatCurrency(deal.intended_offer_price)}
+                />
+              )}
+              {deal.earnest_money_planned != null && (
+                <MoneyStat
+                  label={t('fields.earnestMoney')}
+                  value={formatCurrency(deal.earnest_money_planned)}
+                />
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {hasFinancing && (
+          <Card className="border-slate-200/80 shadow-sm">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base font-semibold">
+                {t('detail.section.financing')}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <dl className="divide-y divide-slate-100 dark:divide-slate-800">
+                {deal.financing_type && (
+                  <DetailRow label={t('fields.financingType')}>
+                    {t(`financing.${deal.financing_type}`, {
+                      defaultValue: deal.financing_type,
+                    })}
+                  </DetailRow>
+                )}
+                {deal.preapproval_status && (
+                  <DetailRow label={t('fields.preapproval')}>
+                    {t(`preapproval.${deal.preapproval_status}`, {
+                      defaultValue: deal.preapproval_status,
+                    })}
+                  </DetailRow>
+                )}
+              </dl>
+            </CardContent>
+          </Card>
+        )}
+
+        <Card className="border-slate-200/80 shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base font-semibold">
+              <UserRound className={`h-4 w-4 ${COLORS.muted.text}`} />
+              {t('detail.section.linkedLead')}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {lead ? (
-              <dl>
-                <DetailRow label={t('list.tableName')}>{lead.name}</DetailRow>
-                <DetailRow label={t('detail.leadPhone')}>{lead.phone}</DetailRow>
-              </dl>
+              <div className="space-y-2">
+                <p className={`text-sm font-medium ${COLORS.gray.text900}`}>{lead.name}</p>
+                <p className={`flex items-center gap-2 text-sm ${COLORS.muted.text}`}>
+                  <Phone className="h-3.5 w-3.5 shrink-0" />
+                  {lead.phone || t('detail.meta.noPhone')}
+                </p>
+              </div>
             ) : (
               <p className={`text-sm ${COLORS.muted.text}`}>{t('detail.noLead')}</p>
             )}
           </CardContent>
         </Card>
 
-        <Card className="border-gray-200/80 shadow-sm">
-          <CardHeader>
-            <CardTitle className="text-lg">{t('detail.section.property')}</CardTitle>
+        <Card className="border-slate-200/80 shadow-sm">
+          <CardHeader className="pb-3">
+            <CardTitle className="flex items-center gap-2 text-base font-semibold">
+              <MapPin className={`h-4 w-4 ${COLORS.muted.text}`} />
+              {t('detail.section.property')}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {property ? (
               <div className="space-y-3">
-                <p className={`text-sm ${COLORS.gray.text900}`}>
+                <p className={`text-sm font-medium ${COLORS.gray.text900}`}>
                   {property.address}
                   {property.city ? `, ${property.city}` : ''}
                 </p>
@@ -225,91 +400,8 @@ function DealDetailBody({
             )}
           </CardContent>
         </Card>
-
-        {negotiations.length > 0 && (
-          <Card className="border-gray-200/80 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg">{t('detail.section.negotiations')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2 text-sm">
-                {negotiations.map((n) => (
-                  <li key={n.id}>
-                    <Badge variant="outline">{n.status ?? '—'}</Badge>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        )}
-
-        {parties.length > 0 && (
-          <Card className="border-gray-200/80 shadow-sm">
-            <CardHeader>
-              <CardTitle className="text-lg">{t('detail.section.parties')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {parties.map((p) => (
-                  <li key={p.id} className="text-sm">
-                    <span className={`font-medium ${COLORS.gray.text900}`}>
-                      {p.name}
-                    </span>
-                    <span className={`${COLORS.muted.text} ml-2`}>
-                      ({p.role})
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-          </Card>
-        )}
-      </TabsContent>
-
-      <TabsContent value="milestones" className="mt-6">
-        <TimelineTab deal={deal} readOnly={readOnly} />
-      </TabsContent>
-
-      <TabsContent value="contingencies" className="mt-6">
-        <DealContingenciesPanel
-          deal={deal}
-          onRefresh={onRefresh}
-          readOnly={readOnly}
-        />
-      </TabsContent>
-
-      <TabsContent value="offers" className="mt-6">
-        <DealOffersPanel
-          deal={deal}
-          onRefresh={onRefresh}
-          readOnly={readOnly}
-        />
-      </TabsContent>
-
-      {showPurchaseTab && purchaseContractId && (
-        <TabsContent value="purchase" className="mt-6">
-          <PurchaseDetailView
-            deal={deal}
-            contractId={purchaseContractId}
-            onRefresh={onRefresh}
-            readOnly={readOnly}
-            onOpenContingenciesTab={() => onTabChange('contingencies')}
-          />
-        </TabsContent>
-      )}
-
-      <TabsContent value="documents" className="mt-6">
-        <DocumentsTab dealId={deal.id} readOnly={readOnly} />
-      </TabsContent>
-
-      <TabsContent value="parties" className="mt-6">
-        <PartiesTab deal={deal} readOnly={readOnly} />
-      </TabsContent>
-
-      <TabsContent value="amendments" className="mt-6">
-        <AmendmentsTab deal={deal} readOnly={readOnly} />
-      </TabsContent>
-    </Tabs>
+      </aside>
+    </div>
   );
 }
 
@@ -368,30 +460,24 @@ export function DealDetail() {
   }
 
   return (
-    <MainLayout title={deal.deal_name}>
+    <MainLayout>
       <PageContainer>
-        <div className="mx-auto max-w-4xl">
+        <div className="w-full">
           <div className="mb-6">
             <PageHeader
               title={deal.deal_name}
               subtitle={t('detail.subtitle')}
               backTo={{ href: ROUTES.DEALS, label: t('detail.backToList') }}
+              actions={
+                <DealOutcomeActions
+                  deal={deal}
+                  onSuccess={refresh}
+                  readOnly={isMember}
+                />
+              }
             />
           </div>
-          <div className="mb-4 flex flex-wrap items-center gap-2">
-            <Badge variant="secondary">
-              {t(`stage.${deal.deal_stage as DealStage}`, {
-                defaultValue: deal.deal_stage,
-              })}
-            </Badge>
-            <span className={`text-sm ${COLORS.muted.text}`}>
-              {deal.deal_type === 'rental'
-                ? t('dealType.rental')
-                : t('dealType.sale')}
-              {' · '}
-              {t(`clientRole.${deal.client_role as 'buyer' | 'seller' | 'dual'}`)}
-            </span>
-          </div>
+
           {deal.deal_type === 'sale' &&
             deal.deal_stage === 'verbal_accepted' &&
             linkedPurchaseContractId == null &&
@@ -408,11 +494,7 @@ export function DealDetail() {
                 </AlertDescription>
               </Alert>
             )}
-          <DealOutcomeActions
-            deal={deal}
-            onSuccess={refresh}
-            readOnly={isMember}
-          />
+
           <DealDetailBody
             deal={deal}
             onRefresh={refresh}

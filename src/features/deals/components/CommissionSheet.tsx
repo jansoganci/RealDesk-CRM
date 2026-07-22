@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 
 import { commissionsService, userPreferencesService, type DealWithRelations } from '@/lib/serviceProxy';
 import { calculateCommission } from '@/services/commissionCalculator';
+import { formatCurrency } from '@/lib/currency';
 import type { BrokerSettings } from '@/types';
 import {
   Sheet,
@@ -18,6 +19,7 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { DateField } from '@/components/ui/date-field';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import {
@@ -201,10 +203,7 @@ export const CommissionSheet = ({
       });
       toast.success(
         t('commissionSheet.messages.recorded', {
-          amount: calculation.netCommission.toLocaleString(undefined, {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2,
-          }),
+          amount: formatCurrency(calculation.netCommission),
         })
       );
       onOpenChange(false);
@@ -392,7 +391,10 @@ export const CommissionSheet = ({
                     <FormItem>
                       <FormLabel>{t('commissionSheet.fields.closingDate')}</FormLabel>
                       <FormControl>
-                        <Input type="date" value={field.value} onChange={field.onChange} />
+                        <DateField
+                          value={field.value || null}
+                          onChange={(next) => field.onChange(next ?? '')}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

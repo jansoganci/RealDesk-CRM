@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@/components/ui/use-toast';
 import { CheckCircle2, XCircle } from 'lucide-react';
@@ -28,10 +28,18 @@ const CLOSING_ELIGIBLE_STAGES = new Set<DealStage>([
   'closing_scheduled',
 ]);
 
+const DONE_MILESTONE_STATUSES = new Set(['complete', 'waived']);
+
 interface DealOutcomeActionsProps {
   deal: DealWithRelations;
   onSuccess: () => void | Promise<void>;
   readOnly?: boolean;
+}
+
+function areAllMilestonesDone(deal: DealWithRelations): boolean {
+  const milestones = deal.deal_milestones ?? [];
+  if (milestones.length === 0) return false;
+  return milestones.every((m) => DONE_MILESTONE_STATUSES.has(m.status));
 }
 
 export function DealOutcomeActions({
@@ -48,7 +56,9 @@ export function DealOutcomeActions({
 
   const stage = deal.deal_stage as DealStage;
   const isTerminal = TERMINAL.includes(stage);
-  const canRecordClosing = CLOSING_ELIGIBLE_STAGES.has(stage);
+  const milestonesDone = useMemo(() => areAllMilestonesDone(deal), [deal]);
+  const canRecordClosing =
+    CLOSING_ELIGIBLE_STAGES.has(stage) && milestonesDone;
   const canFellThrough = !isTerminal;
 
   if (readOnly || isTerminal || (!canRecordClosing && !canFellThrough)) {
@@ -80,12 +90,13 @@ export function DealOutcomeActions({
 
   return (
     <>
-      <div className="mb-6 flex flex-wrap gap-2">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         {canRecordClosing && (
           <Button
             type="button"
             size="sm"
             className="gap-1.5"
+            disabled={busy}
             onClick={() => setClosedOpen(true)}
           >
             <CheckCircle2 className="h-4 w-4" />
@@ -96,8 +107,9 @@ export function DealOutcomeActions({
           <Button
             type="button"
             size="sm"
-            variant="outline"
-            className={`gap-1.5 border-red-200 ${COLORS.danger.text} hover:bg-red-50`}
+            variant="ghost"
+            className={`gap-1.5 ${COLORS.danger.text} hover:bg-red-50 dark:hover:bg-red-950/40`}
+            disabled={busy}
             onClick={() => setFellOpen(true)}
           >
             <XCircle className="h-4 w-4" />

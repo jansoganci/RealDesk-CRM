@@ -82,14 +82,14 @@ export function LeadDetailPage() {
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4">
-              <div className="flex items-start justify-between gap-2">
-                <div>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                <div className="min-w-0">
                   <h3 className="text-lg font-semibold">{lead.name}</h3>
                   <Badge className={cn('mt-1', getLeadStatusBadgeClasses(lead.status))}>
                     {t(`status.${lead.status}`, { defaultValue: lead.status })}
                   </Badge>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2 sm:justify-end">
                   <Button type="button" variant="outline" size="sm" disabled={isMember}>
                     <Pencil className="h-4 w-4 mr-1" />
                     {t('detail.actions.edit')}
@@ -112,7 +112,8 @@ export function LeadDetailPage() {
                       {tDeals('creation.convertFromLead')}
                     </Button>
                   )}
-                  {(lead.status === 'qualified' || lead.status === 'active') && (
+                  {lead.inquiry_type === 'rental' &&
+                    (lead.status === 'qualified' || lead.status === 'active') && (
                     <Button
                       type="button"
                       variant="outline"

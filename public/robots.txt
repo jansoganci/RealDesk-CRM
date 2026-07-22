@@ -15,4 +15,4 @@ Disallow: /leads
 Disallow: /profile
 Disallow: /api/
 
-Sitemap: https://emlakcrm.app/sitemap.xml
+Sitemap: https://realdesk.app/sitemap.xml

@@ -76,8 +76,8 @@ export interface CreateLeadInput {
 
 export interface CreateAgreementInput {
   lead_id: string;
-  signed_date: Date;
-  expiration_date: Date;
+  signed_date: string;
+  expiration_date: string;
   commission_rate?: number;
   commission_type: 'percentage' | 'flat_fee' | 'tiered';
   flat_fee_amount?: number;
@@ -852,8 +852,8 @@ export class LeadsService {
         lead_id: data.lead_id,
         user_id: userId,
         org_id: orgId,
-        signed_date: formatDateForDb(data.signed_date),
-        expiration_date: formatDateForDb(data.expiration_date),
+        signed_date: data.signed_date,
+        expiration_date: data.expiration_date,
         commission_rate: data.commission_rate ?? null,
         commission_type: data.commission_type,
         flat_fee_amount: data.flat_fee_amount ?? null,

@@ -107,8 +107,7 @@
     "daysAgo": "{{days}} days ago",
     "refreshSuccess": "Rates updated successfully",
     "refreshError": "Failed to update rates",
-    "usd_try": "USD/TRY",
-    "eur_try": "EUR/TRY"
+    "usd": "USD"
   },
   "onboarding": {
     "title": "Getting Started",
@@ -117,7 +116,7 @@
     "completeProfile": "Complete your agency profile"
   },
   "welcome": {
-    "title": "Welcome to emlakcrm! 🎉",
+    "title": "Welcome to RealDesk!",
     "description": "Get started by adding your first property and setting up your profile. We'll guide you through the process.",
     "addProperty": "Add Your First Property",
     "addPropertyDesc": "Start managing your real estate portfolio",
@@ -125,6 +124,70 @@
     "completeProfileDesc": "Set up your agency information",
     "quickTip": "Quick Tip",
     "quickTipDesc": "After adding a property, you can create contracts, track tenants, and manage all your real estate operations from one place."
+  },
+  "firstVisit": {
+    "eyebrow": "Your workspace starts here",
+    "title": "Welcome to RealDesk",
+    "description": "Build your client pipeline, organize properties, and keep every transaction moving from one focused workspace.",
+    "stepLabel": "Step {{number}}",
+    "steps": {
+      "lead": {
+        "title": "Add your first lead",
+        "description": "Capture a new contact and keep their next step clear."
+      },
+      "property": {
+        "title": "Add a property",
+        "description": "Create a complete record for a listing or rental."
+      },
+      "contract": {
+        "title": "Import a contract",
+        "description": "Bring an existing transaction into your workspace."
+      }
+    },
+    "actions": {
+      "addLead": "Add your first lead",
+      "addProperty": "Add a property",
+      "importContract": "Already have a contract? Import it",
+      "continueLater": "I'll set this up later"
+    }
+  },
+  "emptyWorkspace": {
+    "eyebrow": "Getting started",
+    "title": "Your workspace is ready",
+    "description": "Choose where you'd like to start. Your dashboard will fill in as you add clients, properties, and transactions.",
+    "actions": {
+      "lead": {
+        "title": "Add a lead",
+        "description": "Start your pipeline with a buyer, seller, landlord, or renter.",
+        "cta": "Add lead"
+      },
+      "property": {
+        "title": "Add a property",
+        "description": "Organize a listing or rental and keep its details close at hand.",
+        "cta": "Add property"
+      },
+      "contract": {
+        "title": "Import a contract",
+        "description": "Already working a transaction? Bring its contract into RealDesk.",
+        "cta": "Import contract"
+      }
+    },
+    "checklist": {
+      "title": "Getting started",
+      "description": "Three simple milestones to build your workspace.",
+      "items": {
+        "lead": "Add your first lead",
+        "property": "Add your first property",
+        "transaction": "Start your first transaction"
+      }
+    }
+  },
+  "dashboardExperience": {
+    "loading": "Preparing your dashboard...",
+    "saveError": {
+      "title": "We couldn't save that preference",
+      "description": "Your workspace is still available. Please try again in a moment."
+    }
   },
   "dailyBrief": {
     "loading": "Loading Daily Brief...",
@@ -168,14 +231,24 @@
       "committedNet": "Committed This Month (Net)",
       "weightedGross": "Weighted 90-Day Pipeline (Gross)",
       "weightedNet": "Weighted 90-Day Pipeline (Net)",
-      "activeDeals": "{{count}} active deal(s) included"
+      "activeDeals": "Based on {{count}} pipeline deal(s)"
     },
     "header": {
-      "greeting": "Good morning. You have {{count}} items needing attention today.",
+      "greeting": "Good morning. You have {{count}} items needing attention.",
+      "greetingClear": "Good morning. You're all caught up for the next 7 days.",
       "meta": "{{date}} · {{count}} active deals"
     },
+    "needsAttention": {
+      "title": "Needs attention",
+      "subtitle": "Next 7 days",
+      "empty": "Nothing due in the next 7 days.",
+      "dueToday": "Due today"
+    },
+    "moneySnapshot": {
+      "title": "Money snapshot"
+    },
     "dealCard": {
-      "title": "Deal Health Cards",
+      "title": "Active deals",
       "phase": "Phase {{phase}}",
       "closingCountdown": "Closing in {{count}} days",
       "noClosingDate": "No closing date set",

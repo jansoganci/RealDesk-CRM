@@ -24,11 +24,9 @@
                 <div class="flex items-center justify-between">
                     <a href="/"
                         class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        Real Estate CRM
+                        RealDesk
                     </a>
                     <div class="flex items-center gap-4">
-                        <a href="privacy-policy-tr.html"
-                            class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Türkçe</a>
                         <a href="/" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Back to Home</a>
                     </div>
                 </div>
@@ -65,9 +63,8 @@
                             We collect specific types of data required to provide our real estate management services:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Identity Information:</strong> Name, surname. For Turkish citizens, Turkish ID
-                                Number (T.C. Kimlik No) is collected but strictly **encrypted client-side** before
-                                storage.</li>
+                            <li><strong>Identity Information:</strong> Name and business contact details required to
+                                provide the service.</li>
                             <li><strong>Contact Information:</strong> Phone number, email address.</li>
                             <li><strong>Authentication Data:</strong>
                                 <ul class="list-disc list-inside ml-6 mt-1 text-gray-600">
@@ -76,8 +73,9 @@
                                         (managed via Google OAuth).</li>
                                 </ul>
                             </li>
-                            <li><strong>Financial Information:</strong> Rent amounts, commission rates. IBAN numbers are
-                                collected but strictly **encrypted client-side** before storage.</li>
+                            <li><strong>Financial Information:</strong> Rent amounts, commission rates, routing numbers,
+                                and account numbers. Sensitive bank fields are strictly **encrypted client-side** before
+                                storage.</li>
                             <li><strong>Property & Contract Data:</strong> Addresses, rental contract dates,
                                 tenant/owner associations.</li>
                             <li><strong>Usage Data:</strong> Basic logs of system interaction (e.g., login times). We do
@@ -127,7 +125,7 @@
                             We take security seriously. Here is how we protect your data:
                         </p>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Advanced Encryption:</strong> Highly sensitive fields (Turkish ID, IBAN) are
+                            <li><strong>Advanced Encryption:</strong> Highly sensitive bank fields are
                                 encrypted using <strong>AES-GCM</strong> (an industry-standard algorithm) directly in
                                 your browser <em>before</em> they are sent to our database. This adds an extra layer of
                                 privacy.</li>

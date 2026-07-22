@@ -9,9 +9,9 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { generateContractPDFBlob } from '@/services/contractPdf.service';
-import { numberToTurkishText } from '@/lib/numberToText';
+import { numberToEnglishText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
 import { formatFixturesForPdf } from '../utils/fixturesUtils';
@@ -92,18 +92,18 @@ function preparePdfData(
 
     // Rent amounts
     monthlyRentNumber: monthlyRent,
-    monthlyRentText: numberToTurkishText(monthlyRent),
+    monthlyRentText: numberToEnglishText(monthlyRent),
     yearlyRentNumber: yearlyRent,
-    yearlyRentText: numberToTurkishText(yearlyRent),
+    yearlyRentText: numberToEnglishText(yearlyRent),
 
     // Dates
-    startDate: format(new Date(formData.start_date), 'dd MMMM yyyy', { locale: tr }),
-    endDate: format(new Date(formData.end_date), 'dd MMMM yyyy', { locale: tr }),
+    startDate: format(new Date(formData.start_date), 'MMMM d, yyyy', { locale: enUS }),
+    endDate: format(new Date(formData.end_date), 'MMMM d, yyyy', { locale: enUS }),
     paymentDay: formData.payment_day_of_month?.toString() || '1',
 
     // Deposit
     depositAmount: deposit,
-    depositText: numberToTurkishText(deposit),
+    depositText: numberToEnglishText(deposit),
 
     // Currency
     currency: formData.currency || 'USD',
@@ -116,7 +116,7 @@ function preparePdfData(
 
     // Eviction commitment
     evictionDate: '', // Left blank for manual entry (legal requirement)
-    commitmentDate: format(new Date(), 'dd MMMM yyyy', { locale: tr }),
+    commitmentDate: format(new Date(), 'MMMM d, yyyy', { locale: enUS }),
 
     // Google Drive handover photos URL (for QR code)
     handoverPhotosUrl: formData.handover_photos_url || undefined
@@ -142,7 +142,7 @@ async function uploadPdfToStorage(
   pdfBlob: Blob,
   contractId: string
 ): Promise<string> {
-  const fileName = `Kira_Sozlesmesi_${contractId.slice(0, 8)}.pdf`;
+  const fileName = `Lease_Agreement_${contractId.slice(0, 8)}.pdf`;
   const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
   const { contractsService } = await import('@/lib/serviceProxy');
@@ -165,7 +165,7 @@ function downloadPdfToBrowser(pdfBlob: Blob, contractId: string): boolean {
     const url = URL.createObjectURL(pdfBlob);
     const link = document.createElement('a');
     link.href = url;
-    link.download = `Kira_Sozlesmesi_${contractId.slice(0, 8)}.pdf`;
+    link.download = `Lease_Agreement_${contractId.slice(0, 8)}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

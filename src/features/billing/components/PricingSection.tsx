@@ -26,9 +26,7 @@ interface Plan {
   id: 'baslangic' | 'profesyonel' | 'ofis_plus';
   nameKey: string;
   descriptionKey: string;
-  monthlyPriceTL: number;
   monthlyPriceUSD: number;
-  yearlyPriceTL: number;
   yearlyPriceUSD: number;
   features: PlanFeature[];
   popular?: boolean;
@@ -39,9 +37,7 @@ const plans: Plan[] = [
     id: 'baslangic',
     nameKey: 'plans.starter.name',
     descriptionKey: 'plans.starter.description',
-    monthlyPriceTL: 299,
     monthlyPriceUSD: 9,
-    yearlyPriceTL: 2990,
     yearlyPriceUSD: 90,
     features: [
       { icon: Building2, textKey: 'features.maxListings.starter' },
@@ -54,9 +50,7 @@ const plans: Plan[] = [
     id: 'profesyonel',
     nameKey: 'plans.pro.name',
     descriptionKey: 'plans.pro.description',
-    monthlyPriceTL: 599,
     monthlyPriceUSD: 19,
-    yearlyPriceTL: 5990,
     yearlyPriceUSD: 190,
     popular: true,
     features: [
@@ -71,9 +65,7 @@ const plans: Plan[] = [
     id: 'ofis_plus',
     nameKey: 'plans.office.name',
     descriptionKey: 'plans.office.description',
-    monthlyPriceTL: 1199,
     monthlyPriceUSD: 39,
-    yearlyPriceTL: 11990,
     yearlyPriceUSD: 390,
     features: [
       { icon: Building2, textKey: 'features.maxListings.office' },

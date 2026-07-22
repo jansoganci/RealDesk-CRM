@@ -23,33 +23,29 @@ export function HorizonZone({ items }: HorizonZoneProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {items.length === 0 ? (
-          <p className="text-sm text-amber-800">{t('dailyBrief.horizon.empty')}</p>
-        ) : (
-          items.map((item) => (
-            <div key={item.milestoneId} className="rounded-lg border border-amber-200 bg-white p-3">
-              <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="text-sm font-semibold text-slate-900">{item.dealName}</p>
-                  <p className="text-sm text-slate-700">{item.milestoneTitle}</p>
-                  <p className="text-xs text-slate-500">
-                    {item.dueDate} · {item.responsibleParty ?? t('dailyBrief.common.unassigned')}
-                  </p>
-                </div>
-                <Badge variant="warning">
-                  {t('dailyBrief.horizon.days', { count: item.daysUntilDue })}
-                </Badge>
+        {items.map((item) => (
+          <div key={item.milestoneId} className="rounded-lg border border-amber-200 bg-white p-3">
+            <div className="flex flex-wrap items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{item.dealName}</p>
+                <p className="text-sm text-slate-700">{item.milestoneTitle}</p>
+                <p className="text-xs text-slate-500">
+                  {item.dueDate} · {item.responsibleParty ?? t('dailyBrief.common.unassigned')}
+                </p>
               </div>
-              <div className="mt-3">
-                <Button size="sm" variant="outline" asChild>
-                  <Link to={generatePath(ROUTES.DEAL_DETAIL, { id: item.dealId })}>
-                    {t('dailyBrief.actions.openDeal')}
-                  </Link>
-                </Button>
-              </div>
+              <Badge variant="warning">
+                {t('dailyBrief.horizon.days', { count: item.daysUntilDue })}
+              </Badge>
             </div>
-          ))
-        )}
+            <div className="mt-3">
+              <Button size="sm" variant="outline" asChild>
+                <Link to={generatePath(ROUTES.DEAL_DETAIL, { id: item.dealId })}>
+                  {t('dailyBrief.actions.openDeal')}
+                </Link>
+              </Button>
+            </div>
+          </div>
+        ))}
       </CardContent>
     </Card>
   );

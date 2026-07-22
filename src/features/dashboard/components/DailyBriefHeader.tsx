@@ -24,7 +24,9 @@ export function DailyBriefHeader({
       <CardContent className="py-5">
         <div className="space-y-1">
           <p className={`text-lg font-semibold ${COLORS.primary.text}`}>
-            {t('dailyBrief.header.greeting', { count: attentionCount })}
+            {attentionCount === 0
+              ? t('dailyBrief.header.greetingClear')
+              : t('dailyBrief.header.greeting', { count: attentionCount })}
           </p>
           <p className={`text-sm ${COLORS.gray.text600}`}>
             {t('dailyBrief.header.meta', {

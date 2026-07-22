@@ -43,10 +43,10 @@ function getServiceRoleKey(): string {
     );
   }
 
-  if (!key.startsWith('eyJ')) {
+  if (!key.startsWith('eyJ') && !key.startsWith('sb_secret_')) {
     throw new Error(
       'Invalid SUPABASE_SERVICE_ROLE_KEY format. ' +
-      'Service role key should start with "eyJ" (JWT format)'
+      'Expected legacy JWT format ("eyJ...") or new API key format ("sb_secret_...")'
     );
   }
 

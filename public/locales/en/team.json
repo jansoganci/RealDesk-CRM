@@ -9,14 +9,24 @@
   "metrics": {
     "commission": "Commission",
     "deals": "Deals Closed",
-    "activeContracts": "Active Contracts"
+    "activeContracts": "Active Contracts",
+    "netCommission": "Net Commission",
+    "companyDollar": "Company Dollar"
   },
   "table": {
     "title": "Team Members",
     "member": "Member",
     "commission": "Commission",
     "deals": "Deals",
-    "contracts": "Contracts"
+    "contracts": "Contracts",
+    "net": "Net",
+    "companyDollar": "Company $"
+  },
+  "orgTotal": {
+    "companyDollarLabel": "Total Company Dollar (Org)"
+  },
+  "caveats": {
+    "splitAccuracy": "Net and Company Dollar figures assume matching commission split/cap settings across the team."
   },
   "empty": {
     "title": "No Team Members",

@@ -9,27 +9,7 @@ import { cn } from '@/lib/utils';
 import { useOrg } from '@/contexts/OrgContext';
 import type { PropertyInquiry } from '@/types';
 import { getLeadStatusBadgeClasses } from '../utils/statusUtils';
-
-// Helper function to format budget with currency symbol
-const formatBudget = (min: number | null, max: number | null, currencyType: string = 'USD'): string => {
-  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'USD';
-
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: normalizedCurrency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-  if (min && max) {
-    return `${formatter.format(min)} - ${formatter.format(max)}`;
-  } else if (min) {
-    return formatter.format(min);
-  } else if (max) {
-    return formatter.format(max);
-  }
-  return '';
-};
+import { formatCurrencyRange } from '@/lib/currency';
 
 interface InquiryTableRowProps {
   inquiry: PropertyInquiry;
@@ -102,12 +82,11 @@ export function InquiryTableRow({
           const isRental = inquiry.inquiry_type === 'rental';
           const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
           const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
-          const currencyType = (inquiry as any).currency_type || 'USD';
 
           if (minBudget || maxBudget) {
             return (
               <span>
-                {formatBudget(minBudget, maxBudget, currencyType)}
+                {formatCurrencyRange(minBudget, maxBudget)}
               </span>
             );
           }

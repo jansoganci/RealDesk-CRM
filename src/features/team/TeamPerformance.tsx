@@ -195,14 +195,38 @@ export function TeamPerformance() {
             </Select>
           </div>
 
+          {/* Org-wide Company Dollar callout — the headline number for the owner */}
+          <Card className="border-slate-800 bg-slate-900">
+            <CardContent className="p-5">
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <p className="text-sm text-slate-300">{t('orgTotal.companyDollarLabel')}</p>
+                  <p className="mt-1 text-3xl font-bold text-white tabular-nums">
+                    {formatCurrency(data.summary.totalCompanyDollar, userCurrency)}
+                  </p>
+                </div>
+                <div className="flex-shrink-0 rounded-lg bg-slate-800 p-3">
+                  <DollarSign className="h-6 w-6 text-emerald-400" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Summary Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <TeamSummaryCard
               title={t('metrics.commission')}
-              value={data.summary.totalCommission}
+              value={data.summary.totalGrossCommission}
               trend={data.summary.trend.commission}
               icon={<DollarSign className="h-5 w-5" />}
               variant="primary"
+              formatValue={(v) => formatCurrency(Number(v), userCurrency)}
+            />
+            <TeamSummaryCard
+              title={t('metrics.netCommission')}
+              value={data.summary.totalNetCommission}
+              icon={<DollarSign className="h-5 w-5" />}
+              variant="success"
               formatValue={(v) => formatCurrency(Number(v), userCurrency)}
             />
             <TeamSummaryCard
@@ -217,6 +241,8 @@ export function TeamPerformance() {
               icon={<FileText className="h-5 w-5" />}
             />
           </div>
+
+          <p className={`text-xs ${COLORS.muted.textLight}`}>{t('caveats.splitAccuracy')}</p>
 
           {/* Team Members Table */}
           <Card>
@@ -234,6 +260,12 @@ export function TeamPerformance() {
                       </th>
                       <th className="text-right text-sm font-medium text-gray-500 pb-3">
                         {t('table.commission')}
+                      </th>
+                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                        {t('table.net')}
+                      </th>
+                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                        {t('table.companyDollar')}
                       </th>
                       <th className="text-right text-sm font-medium text-gray-500 pb-3">
                         {t('table.deals')}
@@ -263,7 +295,13 @@ export function TeamPerformance() {
                           </div>
                         </td>
                         <td className="text-right py-3 font-medium text-gray-900">
-                          {formatCurrency(member.commission, userCurrency)}
+                          {formatCurrency(member.grossCommission, userCurrency)}
+                        </td>
+                        <td className="text-right py-3 font-medium text-emerald-700">
+                          {formatCurrency(member.netCommission, userCurrency)}
+                        </td>
+                        <td className="text-right py-3 text-gray-600">
+                          {formatCurrency(member.companyDollar, userCurrency)}
                         </td>
                         <td className="text-right py-3 text-gray-600">{member.deals}</td>
                         <td className="text-right py-3 text-gray-600">{member.activeContracts}</td>
@@ -278,7 +316,7 @@ export function TeamPerformance() {
                 {data.members.map((member: TeamMemberPerformance) => (
                   <div
                     key={member.id}
-                    className="flex items-center justify-between py-2 border-b border-gray-100 last:border-0"
+                    className="py-2 border-b border-gray-100 last:border-0 space-y-2"
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
@@ -291,9 +329,26 @@ export function TeamPerformance() {
                       </Avatar>
                       <p className="font-medium text-gray-900">{member.name}</p>
                     </div>
-                    <p className="font-medium text-gray-900">
-                      {formatCurrency(member.commission, userCurrency)}
-                    </p>
+                    <div className="grid grid-cols-3 gap-2 pl-12 text-sm">
+                      <div>
+                        <p className="text-xs text-gray-500">{t('table.commission')}</p>
+                        <p className="font-medium text-gray-900">
+                          {formatCurrency(member.grossCommission, userCurrency)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">{t('table.net')}</p>
+                        <p className="font-medium text-emerald-700">
+                          {formatCurrency(member.netCommission, userCurrency)}
+                        </p>
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500">{t('table.companyDollar')}</p>
+                        <p className="font-medium text-gray-900">
+                          {formatCurrency(member.companyDollar, userCurrency)}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>

@@ -47,6 +47,34 @@ export function formatDateForDb(date: Date): string {
 }
 
 /**
+ * Format a YYYY-MM-DD (or ISO) date string for US UI display.
+ * @returns MM/dd/yyyy, or empty string if invalid/missing
+ */
+export function formatDateDisplayUS(iso: string | null | undefined): string {
+  if (!iso) return '';
+  try {
+    return format(parseDateToStartOfDay(iso), 'MM/dd/yyyy');
+  } catch {
+    return '';
+  }
+}
+
+/**
+ * Parse a form date value (YYYY-MM-DD) into a local Date for calendar selection.
+ */
+export function parseDateInputValue(
+  iso: string | null | undefined
+): Date | undefined {
+  if (!iso) return undefined;
+  try {
+    const parsed = parseDateToStartOfDay(iso);
+    return Number.isNaN(parsed.getTime()) ? undefined : parsed;
+  } catch {
+    return undefined;
+  }
+}
+
+/**
  * Check if a date is between two other dates (inclusive)
  * @param date - Date to check
  * @param startDate - Start of range

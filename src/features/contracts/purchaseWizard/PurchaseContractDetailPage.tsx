@@ -27,7 +27,7 @@ export function PurchaseContractDetailPage() {
   if (!id) return null;
 
   return (
-    <MainLayout title={t('purchaseContractDetail.title')}>
+    <MainLayout>
       <PageContainer>
         <div className="mb-6">
           <PageHeader backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('purchaseContractDetail.backToHub') }} />

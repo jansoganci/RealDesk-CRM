@@ -61,9 +61,13 @@
   },
   "completionBanner": {
     "title": "You haven't completed the setup",
-    "description": "Complete the setup steps to get the most out of Emlak CRM",
+    "description": "Complete the setup steps to get the most out of RealDesk",
     "completeSetup": "Complete Setup",
     "later": "Later",
     "dismiss": "Dismiss"
+  },
+  "dateField": {
+    "placeholder": "MM/dd/yyyy",
+    "pickDate": "Pick a date"
   }
 }

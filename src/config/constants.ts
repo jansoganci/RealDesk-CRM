@@ -1,4 +1,4 @@
-export const APP_NAME = 'emlakcrm';
+export const APP_NAME = 'RealDesk';
 
 export const PROPERTY_STATUS = {
   EMPTY: 'Empty',

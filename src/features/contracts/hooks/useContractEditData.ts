@@ -1,7 +1,7 @@
 /**
  * useContractEditData Hook
  * Loads contract data for editing and transforms it to form format
- * Handles decryption of TC and IBAN fields
+ * Handles decryption of sensitive owner and tenant fields
  */
 
 import { useState, useEffect, useCallback } from 'react';
@@ -50,7 +50,7 @@ interface TenantWithEncryption {
 interface PropertyWithComponents {
   id: string;
   address?: string;
-  // Turkish format (legacy)
+  // Legacy address components
   mahalle?: string;
   cadde_sokak?: string;
   bina_no?: string;
@@ -73,7 +73,7 @@ interface ContractDetails {
   payment_day_of_month?: number;
   payment_method?: string;
   special_conditions?: string;
-  deposit_currency?: 'USD' | 'EUR' | 'TRY';
+  deposit_currency?: 'USD';
   handover_photos_url?: string;
   is_painted?: boolean;
 }
@@ -204,7 +204,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         tenant_email: contract.tenant.email || '',
         tenant_address: contract.tenant.address || '',
 
-        // Property fields (US Format - fallback to Turkish if US fields not yet migrated)
+        // Property fields (US Format - fallback to legacy components if not yet migrated)
         street_address: contract.property.street_address || contract.property.cadde_sokak || '',
         unit: contract.property.unit || contract.property.daire_no || '',
         city: contract.property.city || contract.property.district_legacy || '',
@@ -218,7 +218,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
         end_date: new Date(contract.end_date),
         rent_amount: contract.rent_amount || 0,
         deposit: contract.deposit || 0,
-        currency: (contractDetails?.deposit_currency as 'USD' | 'EUR' | 'TRY') || 'USD',
+        currency: contractDetails?.deposit_currency || 'USD',
         commission_amount: contract.commission_amount && contract.commission_amount > 0 
           ? contract.commission_amount 
           : undefined, // Load from contract (0 or null = undefined, triggers fallback)

@@ -4,11 +4,13 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import { FileText, Download, AlertCircle, Plus } from 'lucide-react';
-import { format, differenceInDays } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { BuyerAgentAgreementDialog } from './BuyerAgentAgreementDialog';
 import type { BuyerAgentAgreement } from '@/services/leads.service';
 import { COLORS } from '@/config/colors';
+import { formatDateDisplayUS } from '@/lib/dates';
 import { useOrg } from '@/contexts/OrgContext';
+import { formatCurrency } from '@/lib/currency';
 
 interface BuyerAgentAgreementListProps {
   agreement?: BuyerAgentAgreement;
@@ -81,7 +83,7 @@ export function BuyerAgentAgreementList({
       case 'percentage':
         return `${agreement.commission_rate}%`;
       case 'flat_fee':
-        return `$${agreement.flat_fee_amount?.toLocaleString()}`;
+        return formatCurrency(agreement.flat_fee_amount ?? 0);
       case 'tiered':
         return t('agreements.tiered', 'Tiered');
       default:
@@ -127,7 +129,7 @@ export function BuyerAgentAgreementList({
                 {t('detail.agreements.signed', 'Signed')}
               </span>
               <p className={`font-medium ${COLORS.gray.text900}`}>
-                {format(new Date(agreement.signed_date), 'MMM d, yyyy')}
+                {formatDateDisplayUS(agreement.signed_date)}
               </p>
             </div>
             <div>
@@ -135,7 +137,7 @@ export function BuyerAgentAgreementList({
                 {t('detail.agreements.expires', 'Expires')}
               </span>
               <p className={`font-medium ${COLORS.gray.text900}`}>
-                {format(new Date(agreement.expiration_date), 'MMM d, yyyy')}
+                {formatDateDisplayUS(agreement.expiration_date)}
               </p>
             </div>
           </div>

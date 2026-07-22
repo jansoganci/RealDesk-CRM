@@ -31,17 +31,17 @@ import type { TenantWithContractData, TenantWithContractResult } from '../../typ
 const getEnhancedTenantSchema = (t: (key: string) => string) => z.object({
   // Step 1: Tenant Info
   tenant: z.object({
-    name: z.string().min(1, t('errors.tenant.nameRequired')),
-    email: z.string().email(t('errors.tenant.invalidEmail')).optional().or(z.literal('')),
+    name: z.string().min(1, t('errors:tenant.nameRequired')),
+    email: z.string().email(t('errors:tenant.invalidEmail')).optional().or(z.literal('')),
     phone: z.string().optional(),
     notes: z.string().optional(),
   }),
 
   // Step 2 & 3: Contract Details with Settings
   contract: z.object({
-    property_id: z.string().min(1, t('errors.tenant.propertyRequired')),
-    start_date: z.string().min(1, t('errors.validation.required')),
-    end_date: z.string().min(1, t('errors.validation.required')),
+    property_id: z.string().min(1, t('errors:tenant.propertyRequired')),
+    start_date: z.string().min(1, t('errors:validation.required')),
+    end_date: z.string().min(1, t('errors:validation.required')),
     rent_amount: z.number().nullable().optional(),
     status: z.enum(['Active', 'Inactive', 'Archived']).default('Active'),
     rent_increase_reminder_enabled: z.boolean().default(false),

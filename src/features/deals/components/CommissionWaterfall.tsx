@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next';
 import type { CommissionCalculationResult } from '@/types';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { formatCurrency } from '@/lib/currency';
 
 interface CommissionWaterfallProps {
   result: CommissionCalculationResult;
 }
 
-const money = (value: number): string =>
-  `$${value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const money = (value: number): string => formatCurrency(value);
 
 export const CommissionWaterfall = ({ result }: CommissionWaterfallProps) => {
   const { t } = useTranslation('deals');

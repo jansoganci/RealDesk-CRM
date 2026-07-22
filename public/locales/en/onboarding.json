@@ -4,17 +4,32 @@
     "subtitle": "Answer a few questions so your workspace starts with the right US real estate setup.",
     "question": "What will you use RealDesk for?",
     "options": {
-      "properties": "Manage listings and rental properties",
-      "clients": "Track buyers, sellers, tenants, and owners",
-      "contracts": "Manage leases, purchase agreements, and documents",
-      "team": "Coordinate with my brokerage or team",
-      "all": "Run my full real estate workflow"
+      "rentals": {
+        "label": "Managing rental properties",
+        "description": "Track rentals, tenants, leases, and rent payments"
+      },
+      "sales": {
+        "label": "Managing sales transactions",
+        "description": "Track buyers, listings, offers, and closings"
+      },
+      "both": {
+        "label": "Both rentals and sales",
+        "description": "Run my full real estate workflow in one place"
+      },
+      "exploring": {
+        "label": "Just exploring",
+        "description": "I want to look around before deciding"
+      }
     },
     "skip": "Skip",
     "continue": "Continue",
     "saving": "Saving...",
     "validation": {
       "required": "Please select an option"
+    },
+    "errors": {
+      "skipFailed": "Failed to skip this step. Please try again.",
+      "saveFailed": "Failed to save your selection. Please try again."
     }
   },
   "step2": {
@@ -28,23 +43,93 @@
       "teamSizeOptions": {
         "solo": "Just me (solo agent)",
         "small": "2-5 people (small team)",
-        "medium": "6-20 people (brokerage team)",
-        "large": "20+ people (office or brokerage)"
-      }
+        "team": "6-20 people (brokerage team)"
+      },
+      "brokerageName": "Brokerage Name (Optional)",
+      "brokerageNamePlaceholder": "Enter your brokerage name",
+      "licenseState": "License State",
+      "licenseStatePlaceholder": "Select the state you are licensed in"
+    },
+    "market": {
+      "title": "Primary Market",
+      "city": "City",
+      "cityPlaceholder": "Enter your primary market city",
+      "state": "State",
+      "statePlaceholder": "Select your primary market state"
     },
     "preferences": {
       "title": "Preferences (Optional)",
       "description": "You can change these settings later from your profile page",
-      "language": "Interface Language",
-      "currency": "Currency"
+      "currency": "Currency",
+      "currencyOptions": {
+        "usd": "US Dollar (USD)"
+      }
+    },
+    "states": {
+      "alabama": "Alabama",
+      "alaska": "Alaska",
+      "arizona": "Arizona",
+      "arkansas": "Arkansas",
+      "california": "California",
+      "colorado": "Colorado",
+      "connecticut": "Connecticut",
+      "delaware": "Delaware",
+      "districtOfColumbia": "District of Columbia",
+      "florida": "Florida",
+      "georgia": "Georgia",
+      "hawaii": "Hawaii",
+      "idaho": "Idaho",
+      "illinois": "Illinois",
+      "indiana": "Indiana",
+      "iowa": "Iowa",
+      "kansas": "Kansas",
+      "kentucky": "Kentucky",
+      "louisiana": "Louisiana",
+      "maine": "Maine",
+      "maryland": "Maryland",
+      "massachusetts": "Massachusetts",
+      "michigan": "Michigan",
+      "minnesota": "Minnesota",
+      "mississippi": "Mississippi",
+      "missouri": "Missouri",
+      "montana": "Montana",
+      "nebraska": "Nebraska",
+      "nevada": "Nevada",
+      "newHampshire": "New Hampshire",
+      "newJersey": "New Jersey",
+      "newMexico": "New Mexico",
+      "newYork": "New York",
+      "northCarolina": "North Carolina",
+      "northDakota": "North Dakota",
+      "ohio": "Ohio",
+      "oklahoma": "Oklahoma",
+      "oregon": "Oregon",
+      "pennsylvania": "Pennsylvania",
+      "rhodeIsland": "Rhode Island",
+      "southCarolina": "South Carolina",
+      "southDakota": "South Dakota",
+      "tennessee": "Tennessee",
+      "texas": "Texas",
+      "utah": "Utah",
+      "vermont": "Vermont",
+      "virginia": "Virginia",
+      "washington": "Washington",
+      "westVirginia": "West Virginia",
+      "wisconsin": "Wisconsin",
+      "wyoming": "Wyoming"
     },
     "back": "Back",
     "continue": "Save and Continue",
     "saving": "Saving...",
     "validation": {
-      "nameRequired": "Organization name is required",
       "nameMin": "Organization name must be at least 2 characters",
       "nameMax": "Organization name must not exceed 255 characters",
+      "brokerageMin": "Brokerage name must be at least 2 characters",
+      "brokerageMax": "Brokerage name must not exceed 255 characters",
+      "licenseStateRequired": "Please select a valid license state",
+      "primaryMarketCityMin": "City must be at least 2 characters",
+      "primaryMarketCityMax": "City must not exceed 120 characters",
+      "primaryMarketStateRequired": "Please select a valid market state",
       "teamSizeRequired": "Please select team size"
     }
   },

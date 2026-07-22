@@ -9,6 +9,13 @@ const logger = createLogger('UserPreferences');
 type UserPreferences = Database['public']['Tables']['user_preferences']['Row'];
 type UserPreferencesUpdate = Database['public']['Tables']['user_preferences']['Update'];
 
+type DashboardWelcomePreference = {
+  dashboard_welcome_seen_at?: string | null;
+};
+
+type UserPreferencesWithDashboardWelcome = UserPreferences & DashboardWelcomePreference;
+type UserPreferencesUpdateWithDashboardWelcome = UserPreferencesUpdate & DashboardWelcomePreference;
+
 class UserPreferencesService {
   private getDefaultBrokerSettings(): BrokerSettings {
     return {
@@ -32,7 +39,7 @@ class UserPreferencesService {
   /**
    * Get current user's preferences
    */
-  async getPreferences(): Promise<UserPreferences> {
+  async getPreferences(): Promise<UserPreferencesWithDashboardWelcome> {
     const userId = await getAuthenticatedUserId();
 
     const { data, error } = await supabase
@@ -57,6 +64,7 @@ class UserPreferencesService {
         phone_number: null,
         commission_rate: 4.0,
         onboarding_banner_dismissed_at: null,
+        dashboard_welcome_seen_at: null,
       };
     }
 
@@ -68,8 +76,8 @@ class UserPreferencesService {
    * Uses upsert to handle first-time users
    */
   async updatePreferences(
-    preferences: Partial<UserPreferencesUpdate>
-  ): Promise<UserPreferences> {
+    preferences: Partial<UserPreferencesUpdateWithDashboardWelcome>
+  ): Promise<UserPreferencesWithDashboardWelcome> {
     const userId = await getAuthenticatedUserId();
 
     const { data, error } = await supabase
@@ -92,6 +100,17 @@ class UserPreferencesService {
     }
 
     return data;
+  }
+
+  async getDashboardWelcomeSeenAt(): Promise<string | null> {
+    const preferences = await this.getPreferences();
+    return preferences.dashboard_welcome_seen_at ?? null;
+  }
+
+  async markDashboardWelcomeSeen(): Promise<string> {
+    const seenAt = new Date().toISOString();
+    await this.updatePreferences({ dashboard_welcome_seen_at: seenAt });
+    return seenAt;
   }
 
   /**

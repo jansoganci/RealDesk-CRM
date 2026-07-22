@@ -9,8 +9,9 @@
     "newContract": "New Contract",
     "emptyState": {
       "title": "No sale contracts yet",
-      "description": "Click the button below to create your first sale contract.",
-      "action": "New Sale Contract"
+      "description": "Use the purchase agreement wizard to create your first US sale contract — property, parties, price, and closing in one guided flow.",
+      "action": "Start purchase agreement",
+      "actionLegacy": "New sale contract"
     },
     "purchaseSection": {
       "title": "Purchase agreements"
@@ -165,9 +166,7 @@
     },
     "options": {
       "currency": {
-        "TRY": "TRY",
-        "USD": "USD",
-        "EUR": "EUR"
+        "USD": "USD"
       },
       "paymentMethod": {
         "cash": "Cash",

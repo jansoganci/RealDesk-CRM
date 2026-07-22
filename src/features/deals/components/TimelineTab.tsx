@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import { DateField } from '@/components/ui/date-field';
 import {
   Dialog,
   DialogContent,
@@ -105,10 +106,10 @@ export function TimelineTab({ deal, readOnly = false }: TimelineTabProps) {
     notes: '',
   });
   const [collapsed, setCollapsed] = useState<Record<number, boolean>>({
-    1: false,
-    2: false,
-    3: false,
-    4: false,
+    1: true,
+    2: true,
+    3: true,
+    4: true,
   });
 
   const {
@@ -344,12 +345,14 @@ export function TimelineTab({ deal, readOnly = false }: TimelineTabProps) {
 
                 <div className="space-y-1">
                   <Label htmlFor="custom-milestone-due-date">{t('timeline.form.dueDate')}</Label>
-                  <Input
+                  <DateField
                     id="custom-milestone-due-date"
-                    type="date"
-                    value={customMilestoneForm.dueDate}
-                    onChange={(event) =>
-                      setCustomMilestoneForm((prev) => ({ ...prev, dueDate: event.target.value }))
+                    value={customMilestoneForm.dueDate || null}
+                    onChange={(next) =>
+                      setCustomMilestoneForm((prev) => ({
+                        ...prev,
+                        dueDate: next ?? '',
+                      }))
                     }
                     disabled={isSubmitting}
                   />

@@ -32,7 +32,6 @@ import { LeaseDetailPage } from './features/contracts/LeaseDetail';
 import { ContractImportPage } from './features/contracts/import/ContractImportPage';
 import { ContractsHub } from './features/contractsHub/ContractsHub';
 import { SaleContractsList } from './features/contractsSale/SaleContractsList';
-import { SaleContractBuilder } from './features/contractsSale/SaleContractBuilder';
 import { SaleContractEdit } from './features/contractsSale/SaleContractEdit';
 import { Reminders } from './features/reminders/Reminders';
 import { Leads } from './features/leads/Leads';
@@ -222,7 +221,9 @@ function AppContent() {
                 path={ROUTES.CONTRACTS_SALE_CREATE}
                 element={
                   <ProtectedRoute>
-                    <SaleContractBuilder />
+                    <OwnerOnlyRoute>
+                      <Navigate to={ROUTES.CONTRACTS_PURCHASE_NEW} replace />
+                    </OwnerOnlyRoute>
                   </ProtectedRoute>
                 }
               />

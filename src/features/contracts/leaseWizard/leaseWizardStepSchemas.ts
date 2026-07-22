@@ -402,16 +402,13 @@ const step8 = leaseAgreementFormObjectSchema
     }
   });
 
-/** 1-based step index → schema (steps 1–8). */
+/** 1-based wizard step → schema (5 steps; former 1+6, 2, 3+4, 5+7, 8). */
 export const LEASE_WIZARD_STEP_SCHEMAS: Record<number, z.ZodTypeAny> = {
-  1: step1,
+  1: step1.and(step6),
   2: step2,
-  3: step3,
-  4: step4,
-  5: step5,
-  6: step6,
-  7: step7,
-  8: step8,
+  3: step3.and(step4),
+  4: step5.and(step7),
+  5: step8,
 };
 
-export const LEASE_WIZARD_TOTAL_STEPS = 8;
+export const LEASE_WIZARD_TOTAL_STEPS = 5;

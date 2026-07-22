@@ -42,6 +42,10 @@ import {
 } from '../schemas/showing-log-form';
 import type { ShowingLog } from '@/services/leads.service';
 import type { Property } from '@/types';
+import {
+  formatDateTimeLocalValue,
+  parseDateTimeLocalValue,
+} from '../utils/dateTimeLocal';
 
 interface ShowingLogDialogProps {
   open: boolean;
@@ -91,7 +95,7 @@ export function ShowingLogDialog({
           showing_date: new Date(existingShowing.showing_date),
           duration_minutes: existingShowing.duration_minutes ?? undefined,
           feedback: mappedFeedback,
-          interest_level: existingShowing.interest_level as any,
+          interest_level: existingShowing.interest_level ?? undefined,
         });
       } else {
         form.reset({
@@ -249,12 +253,10 @@ export function ShowingLogDialog({
                     <FormControl>
                       <Input
                         type="datetime-local"
-                        value={
-                          field.value instanceof Date
-                            ? field.value.toISOString().slice(0, 16)
-                            : ''
+                        value={formatDateTimeLocalValue(field.value)}
+                        onChange={(event) =>
+                          field.onChange(parseDateTimeLocalValue(event.target.value))
                         }
-                        onChange={(e) => field.onChange(new Date(e.target.value))}
                       />
                     </FormControl>
                     <FormMessage />

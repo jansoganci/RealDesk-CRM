@@ -35,9 +35,7 @@
     "en": "English"
   },
   "currencies": {
-    "USD": "US Dollar (USD)",
-    "TRY": "Turkish Lira (TRY)",
-    "EUR": "Euro (EUR)"
+    "USD": "US Dollar (USD)"
   },
   "reminderMinutes": {
     "30": "30 minutes before",
@@ -267,9 +265,7 @@
       "en": "English"
     },
     "currencies": {
-      "TRY": "Turkish Lira (TRY)",
-      "USD": "US Dollar (USD)",
-      "EUR": "Euro (EUR)"
+      "USD": "US Dollar (USD)"
     },
     "reminderOptions": {
       "30": "30 minutes before",

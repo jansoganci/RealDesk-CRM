@@ -18,15 +18,13 @@ export function PurchaseWizardPage() {
 
   return (
     <MainLayout title={t('purchaseWizard.title')}>
-      <PageContainer>
-        <div className="mb-6">
-          <PageHeader
-            backTo={{
-              href: ROUTES.CONTRACTS_HUB,
-              label: t('purchaseWizard.entry.backToHub'),
-            }}
-          />
-        </div>
+      <PageContainer className="space-y-4">
+        <PageHeader
+          backTo={{
+            href: ROUTES.CONTRACTS_HUB,
+            label: t('purchaseWizard.entry.backToHub'),
+          }}
+        />
         <PurchaseWizard onCancel={() => navigate(ROUTES.CONTRACTS_HUB)} />
       </PageContainer>
     </MainLayout>

@@ -176,7 +176,7 @@ export function SaleContractEdit() {
   }
 
   return (
-    <MainLayout title={t('edit.pageTitle')}>
+    <MainLayout>
       <PageContainer>
         <div className="max-w-4xl mx-auto">
           {/* Header */}

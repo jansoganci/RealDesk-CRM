@@ -18,15 +18,13 @@ export function LeaseWizardPage() {
 
   return (
     <MainLayout title={t('leaseWizard.title')}>
-      <PageContainer>
-        <div className="mb-6">
-          <PageHeader
-            backTo={{
-              href: ROUTES.CONTRACTS_RENT,
-              label: t('leaseWizard.entry.backToContracts'),
-            }}
-          />
-        </div>
+      <PageContainer className="space-y-4">
+        <PageHeader
+          backTo={{
+            href: ROUTES.CONTRACTS_RENT,
+            label: t('leaseWizard.entry.backToContracts'),
+          }}
+        />
         <LeaseWizard onCancel={() => navigate(ROUTES.CONTRACTS_RENT)} />
       </PageContainer>
     </MainLayout>

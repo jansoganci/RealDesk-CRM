@@ -62,6 +62,8 @@ export type {
   DefaultContingencyTemplate,
 } from '../services/offerContingencies.service';
 export { dailyBriefService } from '../services/dailyBrief.service';
+export { dashboardExperienceService } from '../services/dashboardExperience.service';
+export type { DashboardDataPresence } from '../services/dashboardExperience.service';
 export { notificationsService } from '../services/notifications.service';
 export { dealPartiesService } from '../services/dealParties.service';
 export {

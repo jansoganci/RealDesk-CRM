@@ -29,7 +29,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Input } from '@/components/ui/input';
+import { DateField } from '@/components/ui/date-field';
 import { Label } from '@/components/ui/label';
 import {
   Select,
@@ -311,11 +311,10 @@ export function DealContingenciesPanel({
             </div>
             <div className="space-y-2">
               <Label htmlFor="res-date">{t('contingencies.resolvedDate')}</Label>
-              <Input
+              <DateField
                 id="res-date"
-                type="date"
                 value={resolvedDate}
-                onChange={(e) => setResolvedDate(e.target.value)}
+                onChange={(next) => setResolvedDate(next ?? '')}
               />
             </div>
           </div>

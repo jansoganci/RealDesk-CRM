@@ -103,6 +103,8 @@ export function MilestoneCard({
 
   const hasDocument = Boolean(milestone.document_path);
   const showMissingWarning = milestone.document_required && !hasDocument;
+  const isTerminal =
+    milestone.status === 'complete' || milestone.status === 'waived';
 
   const handleSaveNote = async () => {
     const text = noteDraft.trim();
@@ -159,30 +161,43 @@ export function MilestoneCard({
 
       <CardContent className="space-y-4">
         <div className="flex flex-wrap gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isBusy}
-            onClick={() => void onStatusChange(milestone.id, 'complete')}
-          >
-            {t('milestones.actionComplete')}
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isBusy}
-            onClick={() => void onStatusChange(milestone.id, 'in_progress')}
-          >
-            {t('milestones.actionInProgress')}
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isBusy}
-            onClick={() => void onStatusChange(milestone.id, 'waived')}
-          >
-            {t('milestones.actionWaive')}
-          </Button>
+          {isTerminal ? (
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={isBusy}
+              onClick={() => void onStatusChange(milestone.id, 'pending')}
+            >
+              {t('milestones.actionReopen')}
+            </Button>
+          ) : (
+            <>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isBusy}
+                onClick={() => void onStatusChange(milestone.id, 'complete')}
+              >
+                {t('milestones.actionComplete')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isBusy || milestone.status === 'in_progress'}
+                onClick={() => void onStatusChange(milestone.id, 'in_progress')}
+              >
+                {t('milestones.actionInProgress')}
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={isBusy}
+                onClick={() => void onStatusChange(milestone.id, 'waived')}
+              >
+                {t('milestones.actionWaive')}
+              </Button>
+            </>
+          )}
           <Button
             size="sm"
             variant="outline"

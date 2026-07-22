@@ -1,32 +1,47 @@
 # Documentation Archive
 
-This directory contains completed implementations, audits, and historical planning documents that are no longer actively being worked on.
+Completed implementations, audits, historical planning, and pre-US market material. Not used for day-to-day development unless you need context.
 
-## Structure
+## Top-level folders (themed)
 
-### `/completed/`
-Completed implementation guides and task plans that have been fully implemented:
-- **Cookie Consent**: Implementation plans, task breakdowns, and requirements
-- **Email Confirmation**: Implementation guide for email verification flow
-- **Exchange Rates**: Edge function fix documentation
-- **Console Log Audit**: Console output cleanup and standardization
-- **Performance Fixes**: Network request loop resolution plans
+| Folder | Contents |
+|--------|----------|
+| `contracts/` | Contract engine v1, rental/sale separation, duplicate handling |
+| `legacy-import/` | Legacy contract import analysis, UX, implementation |
+| `pdf-extraction/` | PDF buttons, extraction system, text integration, download fix |
+| `refactoring/` | Feature-level refactoring plans and progress notes |
+| `ui-accessibility/` | Color migration, skeleton loading, WCAG, legacy Turkish font checks |
+| `infrastructure/` | Cloudflare deploy notes, migration fixes, production readiness |
+| `sprint-planning/` | Sprint `.docx` planning guides (Word) |
+| `turkish-market/` | Pre–US pivot marketing, pricing, EmlakCRM research |
+| `org-migration/` | Organization / multi-tenant migration runbooks |
 
-### `/audits/`
-Security and compliance audit reports:
-- **Security Audit**: Comprehensive security posture analysis
-- **Reauthentication Analysis**: Critical actions requiring password reauthentication
+## Under `completed/`
 
-## When to Archive
+| Folder | Contents |
+|--------|----------|
+| `completed/` (root) | One-off implementations, cookie/resend/onboarding fixes, doc reorganizations |
+| `completed/planning/` | **Closed** plans moved from `docs/planning/` — see `INDEX.md` |
+| `completed/resend/` | Resend-specific fix and deployment notes |
 
-Files should be moved here when:
-1. ✅ Implementation is complete and deployed
-2. ✅ Audit findings have been addressed
-3. ✅ Document is no longer needed for active development
-4. ✅ Historical reference only
+## `audits/`
 
-## Active vs Archived
+Security, i18n, and reauthentication audit snapshots.
 
-- **Active docs** are in `/docs/planning/`, `/docs/implementation/`, `/docs/reference/`
-- **Archived docs** are here for historical reference and context
+## When to archive
 
+Move a document here when:
+
+1. Implementation is complete and deployed (or explicitly wont-fix).
+2. Audit findings are addressed or the audit is a historical snapshot.
+3. The doc is no longer edited for active sprints.
+4. You only need it for reference or compliance.
+
+## Closing a plan from `docs/planning/`
+
+See `docs/planning/README.md`. Short version: move file → `completed/planning/` → add a row to `completed/planning/INDEX.md`.
+
+## Active vs archived
+
+- **Active:** `docs/planning/` (in-flight plans only), `docs/implementation/`, `docs/reference/`, `docs/research/`
+- **Archived:** everything under `docs/archive/`

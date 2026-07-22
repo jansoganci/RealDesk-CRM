@@ -6,9 +6,10 @@
 
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import { CalendarIcon, QrCode } from 'lucide-react';
 import { format } from 'date-fns';
-import { tr } from 'date-fns/locale';
+import { enUS } from 'date-fns/locale';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +27,13 @@ interface ContractDetailsSectionProps {
 
 export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
   const { t } = useTranslation('contracts');
+  const currency = form.watch('currency');
+
+  useEffect(() => {
+    if (currency !== 'USD') {
+      form.setValue('currency', 'USD');
+    }
+  }, [currency, form]);
 
   return (
     <Card>
@@ -51,7 +59,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {form.watch('start_date') ? (
-                    format(form.watch('start_date'), 'PPP', { locale: tr })
+                    format(form.watch('start_date'), 'PPP', { locale: enUS })
                   ) : (
                     <span>{t('create.datePicker.selectDate')}</span>
                   )}
@@ -86,7 +94,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   {form.watch('end_date') ? (
-                    format(form.watch('end_date'), 'PPP', { locale: tr })
+                    format(form.watch('end_date'), 'PPP', { locale: enUS })
                   ) : (
                     <span>{t('create.datePicker.selectDate')}</span>
                   )}
@@ -207,16 +215,14 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           <div>
             <Label>{t('create.fields.currency')} *</Label>
             <Select
-              value={form.watch('currency') || 'USD'}
-              onValueChange={(value) => form.setValue('currency', value as 'USD' | 'EUR' | 'TRY')}
+              value="USD"
+              onValueChange={() => form.setValue('currency', 'USD')}
             >
               <SelectTrigger>
                 <SelectValue placeholder={t('create.placeholders.currency')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="USD">{t('create.currencyOptions.USD')}</SelectItem>
-                <SelectItem value="EUR">{t('create.currencyOptions.EUR')}</SelectItem>
-                <SelectItem value="TRY">{t('create.currencyOptions.TRY')}</SelectItem>
               </SelectContent>
             </Select>
             {form.formState.errors.currency && (

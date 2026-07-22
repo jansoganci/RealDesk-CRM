@@ -10,7 +10,15 @@
     "cancel": "Cancel",
     "success": "Deal created and linked to this lead.",
     "successStandalone": "Deal created.",
-    "error": "Could not create the deal. Try again."
+    "error": "Could not create the deal. Try again.",
+    "propertyPlaceholder": "Select a matched property",
+    "propertiesLoading": "Loading matched properties…",
+    "propertyHelp": "The latest shown property is selected automatically when available.",
+    "propertyRequired": "Select a matched property before creating the deal.",
+    "noMatchedProperties": "No eligible matched properties are available for this lead.",
+    "propertiesError": "Matched properties could not be loaded.",
+    "propertyUnavailable": "Property details unavailable",
+    "retry": "Retry"
   },
   "list": {
     "searchPlaceholder": "Search by deal name…",
@@ -46,6 +54,7 @@
   "fields": {
     "dealName": "Deal name",
     "dealType": "Deal type",
+    "property": "Matched property",
     "clientRole": "Your role",
     "financingType": "Financing",
     "financingPlaceholder": "Select financing",
@@ -104,6 +113,10 @@
     },
     "section": {
       "details": "Deal details",
+      "summary": "At a glance",
+      "money": "Pricing",
+      "financing": "Financing",
+      "notes": "Notes",
       "linkedLead": "Linked lead",
       "property": "Property",
       "negotiations": "Offer sessions",
@@ -111,9 +124,14 @@
       "milestones": "Milestones",
       "offerRounds": "Offer rounds"
     },
+    "meta": {
+      "projectedClose": "Projected close",
+      "noPhone": "No phone on file"
+    },
     "noLead": "No lead linked to this deal.",
     "noProperty": "No property linked.",
     "viewProperty": "View property",
+    "overviewEmpty": "No notes or offer sessions yet.",
     "milestonesEmpty": "No milestones on this deal yet.",
     "offersEmpty": "No offer rounds yet.",
     "round": "Round",
@@ -220,6 +238,7 @@
     "actionInProgress": "Mark in progress",
     "actionComplete": "Mark complete",
     "actionWaive": "Mark waived",
+    "actionReopen": "Reopen",
     "toastUpdated": "Milestone updated.",
     "toastError": "Could not update milestone.",
     "status": {
@@ -389,20 +408,21 @@
     }
   },
   "outcome": {
+    "actionsMenu": "Actions",
     "recordClosing": "Record closing",
     "recordClosingTitle": "Record successful closing",
     "recordClosingDesc": "Marks this deal closed won. If a property is linked, the listing is updated (sold or occupied as applicable).",
     "closeDate": "Closing date",
     "confirmClosing": "Confirm closing",
     "toastClosedWon": "Deal marked closed won.",
-    "fellThrough": "Mark fell through",
-    "fellThroughTitle": "Mark deal as fell through",
+    "fellThrough": "Deal failed",
+    "fellThroughTitle": "Mark deal as failed",
     "fellThroughDesc": "Ends the transaction. Milestones are waived; linked listings return to available when applicable.",
     "reason": "Reason",
     "reasonPlaceholder": "Briefly describe why the deal did not close.",
     "reasonTooShort": "Enter at least a few characters for the reason.",
-    "confirmFellThrough": "Mark fell through",
-    "toastFellThrough": "Deal marked as fell through.",
+    "confirmFellThrough": "Confirm deal failed",
+    "toastFellThrough": "Deal marked as failed.",
     "toastError": "Could not update the deal."
   },
   "commissionSheet": {
@@ -452,7 +472,7 @@
     },
     "messages": {
       "loadSettingsError": "Failed to load broker settings.",
-      "recorded": "Deal closed. ${{amount}} net commission recorded.",
+      "recorded": "Deal closed. {{amount}} net commission recorded.",
       "recordError": "Failed to record commission."
     }
   },

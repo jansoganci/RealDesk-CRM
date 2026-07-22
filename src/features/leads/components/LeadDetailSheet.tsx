@@ -70,7 +70,7 @@ export function LeadDetailSheet({
     try {
       const data = await leadsService.getLeadWithDetails(leadId);
       setDetail(data);
-    } catch (e) {
+    } catch {
       toast.error(t('toasts.loadDetailError'));
       setDetail(null);
     } finally {
@@ -112,7 +112,7 @@ export function LeadDetailSheet({
   return (
     <>
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent className="w-full sm:max-w-lg overflow-y-auto">
+      <SheetContent className="w-full overflow-y-auto sm:max-w-lg">
         <SheetHeader className="pr-8">
           <div className="flex items-center justify-between gap-2">
             <SheetTitle>{t('detail.title')}</SheetTitle>
@@ -144,14 +144,14 @@ export function LeadDetailSheet({
             </TabsList>
 
             <TabsContent value="overview" className="space-y-4 mt-4">
-              <div className="flex items-start justify-between gap-2">
-                <div>
+              <div className="space-y-3">
+                <div className="min-w-0">
                   <h3 className={`text-lg font-semibold ${COLORS.gray.text900}`}>{lead.name}</h3>
                   <Badge className={cn('mt-1', getLeadStatusBadgeClasses(lead.status))}>
                     {t(`status.${lead.status}`, { defaultValue: lead.status })}
                   </Badge>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex flex-wrap gap-2">
                   <Button
                     type="button"
                     variant="outline"
@@ -180,8 +180,8 @@ export function LeadDetailSheet({
                       {tDeals('creation.convertFromLead')}
                     </Button>
                   )}
-                  <div className="flex gap-2">
-                    {(lead.status === 'qualified' || lead.status === 'active') && (
+                  {lead.inquiry_type === 'rental' &&
+                    (lead.status === 'qualified' || lead.status === 'active') && (
                       <Button
                         type="button"
                         variant="outline"
@@ -193,7 +193,8 @@ export function LeadDetailSheet({
                         {t('detail.actions.createLease')}
                       </Button>
                     )}
-                    {(lead.status === 'active' || lead.status === 'under_contract') && (
+                  {lead.inquiry_type === 'sale' &&
+                    (lead.status === 'qualified' || lead.status === 'active') && (
                       <Button
                         type="button"
                         variant="outline"
@@ -205,7 +206,6 @@ export function LeadDetailSheet({
                         {t('detail.actions.createPurchaseAgreement')}
                       </Button>
                     )}
-                  </div>
                 </div>
               </div>
 

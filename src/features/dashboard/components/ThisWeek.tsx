@@ -29,7 +29,12 @@ export function ThisWeek({ items }: ThisWeekProps) {
           className="flex w-full items-center justify-between text-left"
           onClick={() => setOpen((prev) => !prev)}
         >
-          <CardTitle className="text-base">{t('dailyBrief.thisWeek.title')}</CardTitle>
+          <span className="flex items-center gap-2">
+            <CardTitle className="text-base">{t('dailyBrief.thisWeek.title')}</CardTitle>
+            {weekItems.length > 0 && (
+              <Badge variant="secondary">{weekItems.length}</Badge>
+            )}
+          </span>
           {open ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
         </button>
       </CardHeader>

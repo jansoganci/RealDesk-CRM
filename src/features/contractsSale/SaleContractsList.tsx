@@ -10,12 +10,14 @@ import { useTranslation } from 'react-i18next';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
+import { EmptyState } from '@/components/common/EmptyState';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { ROUTES } from '@/config/constants';
+import { COLORS } from '@/config/colors';
 import { useOrg } from '@/contexts/OrgContext';
-import { Plus, FileText, Pencil, Trash2, FileDown, RefreshCw, Loader2 } from 'lucide-react';
+import { FileText, Pencil, Trash2, FileDown, RefreshCw, Loader2 } from 'lucide-react';
 import { format } from 'date-fns';
 import { contractBuilderService } from '@/services/contractBuilder.service';
 import type { ContractInstanceV2 } from '@/types/contractBuilder.types';
@@ -36,6 +38,8 @@ export function SaleContractsList() {
   const [instances, setInstances] = useState<ContractInstanceV2[]>([]);
   const [loading, setLoading] = useState(true);
   const { isGenerating, isDownloading, generatePdf, downloadPdf } = useSaleContractPdf();
+
+  const canOpenPurchaseWizard = !orgLoading && isOwner;
 
   const loadData = useCallback(async () => {
     try {
@@ -104,31 +108,15 @@ export function SaleContractsList() {
   }, [t]);
 
   const emptyState = useMemo(() => (
-    <div className="text-center py-12">
-      <FileText className="h-16 w-16 mx-auto text-gray-300 mb-4" />
-      <h3 className="text-lg font-medium text-gray-900 mb-2">
-        {t('list.emptyState.title')}
-      </h3>
-      <p className="text-gray-500 mb-6">
-        {t('list.emptyState.description')}
-      </p>
-      <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-        {!orgLoading && isOwner && (
-          <Button
-            type="button"
-            variant="default"
-            onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
-          >
-            {tContracts('purchaseWizard.entry.openWizard')}
-          </Button>
-        )}
-        <Button variant={!orgLoading && isOwner ? 'outline' : 'default'} onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}>
-          <Plus className="h-4 w-4 mr-2" />
-          {t('list.emptyState.action')}
-        </Button>
-      </div>
-    </div>
-  ), [navigate, t, tContracts, isOwner, orgLoading]);
+    <EmptyState
+      title={t('list.emptyState.title')}
+      description={t('list.emptyState.description')}
+      icon={<FileText className={`h-16 w-16 ${COLORS.muted.text}`} />}
+      actionLabel={t('list.emptyState.action')}
+      onAction={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
+      showAction={canOpenPurchaseWizard}
+    />
+  ), [canOpenPurchaseWizard, navigate, t]);
 
   return (
     <MainLayout title={t('list.pageTitle')}>
@@ -137,27 +125,17 @@ export function SaleContractsList() {
         <div className="mb-6">
           <PageHeader
             backTo={{ href: ROUTES.CONTRACTS_HUB, label: t('list.backToHub') }}
-            actions={(
-              <div className="flex w-full flex-col gap-2 sm:ml-auto sm:w-auto sm:flex-row sm:items-center">
-                {!orgLoading && isOwner && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
-                    className="w-full md:w-auto"
-                  >
-                    {tContracts('purchaseWizard.entry.openWizard')}
-                  </Button>
-                )}
+            actions={
+              canOpenPurchaseWizard ? (
                 <Button
-                  onClick={() => navigate(ROUTES.CONTRACTS_SALE_CREATE)}
+                  type="button"
+                  onClick={() => navigate(ROUTES.CONTRACTS_PURCHASE_NEW)}
                   className="w-full md:w-auto"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
-                  {t('list.newContract')}
+                  {tContracts('purchaseWizard.entry.openWizard')}
                 </Button>
-              </div>
-            )}
+              ) : undefined
+            }
           />
         </div>
 

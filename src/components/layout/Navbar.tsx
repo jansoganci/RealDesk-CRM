@@ -4,7 +4,7 @@ import { COLORS } from '@/config/colors';
 import { AlertCenter } from '@/features/deals/components/AlertCenter';
 
 interface NavbarProps {
-  title: string;
+  title?: string;
   onMenuClick: () => void;
 }
 
@@ -21,7 +21,9 @@ export const Navbar = ({ title, onMenuClick }: NavbarProps) => {
           >
             <Menu className="h-5 w-5" />
           </Button>
-          <h1 className={`text-xl font-semibold ${COLORS.gray.text900}`}>{title}</h1>
+          {title && (
+            <h1 className={`text-xl font-semibold ${COLORS.gray.text900}`}>{title}</h1>
+          )}
         </div>
 
         <div className="flex items-center gap-2">

@@ -66,7 +66,7 @@ Before you begin, ensure you have the following installed:
 1. **Clone the repository**
    ```bash
    git clone <repository-url>
-   cd emlak-crm
+   cd RealDesk-CRM
    ```
 
 2. **Install dependencies**
@@ -228,7 +228,7 @@ Requires Wrangler configuration and Cloudflare credentials appropriate for your 
 ## Project Structure
 
 ```
-emlak-crm/
+RealDesk-CRM/
 ├── public/
 │   ├── locales/
 │   │   └── en/                 # i18n JSON (English only; one file per namespace)
@@ -470,31 +470,32 @@ For platform-specific deployment guides, troubleshooting, and best practices, se
 
 ## Documentation
 
-Comprehensive documentation is available for developers:
+| Audience | Start here |
+|----------|------------|
+| **Developers (human)** | This README → [docs/README.md](./docs/README.md) |
+| **Coding agents** | [AGENTS.md](./AGENTS.md) → [CLAUDE.md](./CLAUDE.md) |
 
-- **[CHANGELOG.md](./CHANGELOG.md)** - Version history and release notes
-- **[CLAUDE.md](./CLAUDE.md)** - Stack, commands, migration naming, RLS patterns, env vars, edge functions
-- **[docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md)** - Technical architecture and system design
-- **[docs/reference/API.md](./docs/reference/API.md)** - API documentation for services
-- **[docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)** - Deployment guides for various platforms
-- **[docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)** - Contribution guidelines and development workflow
-- **[docs/design/claude.md](./docs/design/claude.md)** - Design notes and UI guidelines
-- **[docs/design/EmlakCRM_Tasarim_Sistemi_Analizi.md](./docs/design/EmlakCRM_Tasarim_Sistemi_Analizi.md)** - Design system (colors, typography, components)
+**Index:** [docs/README.md](./docs/README.md) — reference, planning, archive, research, samples.
 
-### Product & planning
+**Core references**
 
-- **[docs/marketing/EmlakCRM_Portfolio.md](./docs/marketing/EmlakCRM_Portfolio.md)** - Executive overview and impact narrative (English)
-- **[docs/marketing/EmlakCRM_Detayli_Analiz_Raporu.md](./docs/marketing/EmlakCRM_Detayli_Analiz_Raporu.md)** - Detailed product analysis (Turkish)
-- **[docs/planning/onboarding-migration-analysis.md](./docs/planning/onboarding-migration-analysis.md)** - Onboarding data storage architecture review
-- **[docs/security/SECURITY_INCIDENT_REPORT.md](./docs/security/SECURITY_INCIDENT_REPORT.md)** - Security incident record and remediation checklist
+- [CHANGELOG.md](./CHANGELOG.md) — release notes
+- [CLAUDE.md](./CLAUDE.md) — commands, migrations, conventions, gotchas
+- [AGENTS.md](./AGENTS.md) — agent workflow, verify commands, safety rules
+- [docs/reference/CURRENT_ARCHITECTURE.md](./docs/reference/CURRENT_ARCHITECTURE.md) — system architecture (current)
+- [docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md) — architecture diagrams
+- [docs/reference/API.md](./docs/reference/API.md) — services
+- [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md) — deploy guides
+- [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md) — contributing
+- [docs/design/claude.md](./docs/design/claude.md) — UI / design rulebook
 
-### Quick Links
+**Product & history**
 
-- **Getting Started**: See [Installation](#installation) section
-- **Architecture**: See [docs/reference/ARCHITECTURE.md](./docs/reference/ARCHITECTURE.md)
-- **API Reference**: See [docs/reference/API.md](./docs/reference/API.md)
-- **Deploying**: See [docs/reference/DEPLOYMENT.md](./docs/reference/DEPLOYMENT.md)
-- **Contributing**: See [docs/reference/CONTRIBUTING.md](./docs/reference/CONTRIBUTING.md)
+- [docs/research/RealDesk_Product_Workflow_Document.md](./docs/research/RealDesk_Product_Workflow_Document.md) — product workflow
+- [docs/planning/TEAM_COMMISSION_KPI_PLAN.md](./docs/planning/TEAM_COMMISSION_KPI_PLAN.md) — active plan (see [docs/planning/README.md](./docs/planning/README.md))
+- [docs/archive/turkish-market/EmlakCRM_Portfolio.md](./docs/archive/turkish-market/EmlakCRM_Portfolio.md) — legacy portfolio narrative
+- [docs/archive/completed/planning/onboarding-migration-analysis.md](./docs/archive/completed/planning/onboarding-migration-analysis.md) — archived onboarding review
+- [docs/security/SECURITY_INCIDENT_REPORT.md](./docs/security/SECURITY_INCIDENT_REPORT.md) — security incident record
 
 ## Contributing
 

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,13 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { DateField } from '@/components/ui/date-field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -30,9 +32,21 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { dealsService, type CreateDealInput } from '@/lib/serviceProxy';
+import { dealsService } from '@/lib/serviceProxy';
 import type { LeadWithRelations } from '@/services/leads.service';
 import { dealFormSchema, type DealFormData } from '@/features/deals/schemas/dealFormSchema';
+import { useLeadPropertyMatches } from '@/features/deals/hooks/useLeadPropertyMatches';
+import {
+  applyPropertyMatchDefaults,
+  buildDefaultsFromLead,
+  getDefaultPropertyMatch,
+  isEligiblePropertyMatch,
+} from '@/features/deals/utils/dealCreationDefaults';
+import {
+  buildDealPayload,
+  validateConvertPreconditions,
+} from '@/features/deals/utils/dealConvertPreconditions';
+import type { InquiryMatchWithProperty } from '@/types';
 
 const FINANCING_TYPES = [
   'cash',
@@ -73,52 +87,6 @@ function emptyDealDefaults(): DealFormData {
   };
 }
 
-function toCreatePayload(data: DealFormData): CreateDealInput {
-  return {
-    deal_name: data.deal_name,
-    deal_type: data.deal_type,
-    client_role: data.client_role,
-    property_id: data.property_id ?? null,
-    property_snapshot: data.property_snapshot ?? null,
-    financing_type: data.financing_type ?? null,
-    preapproval_status: data.preapproval_status ?? null,
-    buyer_agent_agreement_id: data.buyer_agent_agreement_id ?? null,
-    list_price: data.list_price ?? null,
-    intended_offer_price: data.intended_offer_price ?? null,
-    earnest_money_planned: data.earnest_money_planned ?? null,
-    projected_close_date: data.projected_close_date || null,
-    notes: data.notes ?? null,
-  };
-}
-
-function buildDefaultsFromLead(lead: LeadWithRelations): DealFormData {
-  const dealType = lead.inquiry_type === 'rental' ? 'rental' : 'sale';
-  const maxBudget =
-    dealType === 'rental' ? lead.max_rent_budget : lead.max_sale_budget;
-
-  let preapproval_status: DealFormData['preapproval_status'] = null;
-  if (lead.pre_approved === true) preapproval_status = 'approved';
-  else if (lead.pre_approved === false) preapproval_status = 'not_started';
-
-  return {
-    deal_name: `${lead.name} — ${dealType === 'sale' ? 'Purchase' : 'Lease'}`,
-    deal_type: dealType,
-    client_role: 'buyer',
-    property_id: null,
-    property_snapshot: null,
-    financing_type: null,
-    preapproval_status,
-    buyer_agent_agreement_id: lead.buyer_agent_agreement?.id ?? null,
-    list_price: maxBudget ?? null,
-    intended_offer_price: maxBudget ?? null,
-    earnest_money_planned: null,
-    projected_close_date: null,
-    notes: lead.notes ?? null,
-    lead_id: lead.id,
-    deal_stage: undefined,
-  };
-}
-
 interface DealCreationSheetProps {
   /** When set, submits via `convertLeadToDeal` and pre-fills from the lead. */
   lead?: LeadWithRelations;
@@ -138,6 +106,20 @@ export function DealCreationSheet({
   const { t } = useTranslation('deals');
   const { toast } = useToast();
   const [submitting, setSubmitting] = useState(false);
+  const {
+    matches,
+    loading: matchesLoading,
+    error: matchesError,
+    reload: reloadMatches,
+  } = useLeadPropertyMatches(lead?.id, open && Boolean(lead));
+
+  const eligibleMatches = useMemo(
+    () =>
+      lead
+        ? matches.filter((match) => isEligiblePropertyMatch(match, lead.inquiry_type))
+        : [],
+    [lead, matches]
+  );
 
   const defaults = useMemo(
     () => (lead ? buildDefaultsFromLead(lead) : emptyDealDefaults()),
@@ -155,12 +137,49 @@ export function DealCreationSheet({
     }
   }, [open, lead, form]);
 
+  const applyMatch = useCallback(
+    (match: InquiryMatchWithProperty) => {
+      if (!lead) return;
+      const next = applyPropertyMatchDefaults(form.getValues(), lead, match);
+      form.setValue('property_id', next.property_id, { shouldDirty: true, shouldValidate: true });
+      form.setValue('property_snapshot', null, { shouldDirty: true });
+      form.setValue('deal_name', next.deal_name, { shouldDirty: true, shouldValidate: true });
+      form.setValue('list_price', next.list_price, { shouldDirty: true, shouldValidate: true });
+      form.setValue('intended_offer_price', next.intended_offer_price, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
+      form.clearErrors('property_id');
+    },
+    [form, lead]
+  );
+
+  useEffect(() => {
+    if (!open || !lead || matchesLoading || matchesError) return;
+
+    const currentPropertyId = form.getValues('property_id');
+    const currentMatch = eligibleMatches.find(
+      (match) => match.property_id === currentPropertyId
+    );
+    const preferredMatch =
+      currentMatch ?? getDefaultPropertyMatch(eligibleMatches, lead.showing_logs);
+
+    if (preferredMatch) applyMatch(preferredMatch);
+  }, [applyMatch, eligibleMatches, form, lead, matchesError, matchesLoading, open]);
+
   const onSubmit = async (data: DealFormData) => {
     if (disabled) return;
     setSubmitting(true);
     try {
-      const payload = toCreatePayload(data);
+      const payload = buildDealPayload(data);
       if (lead) {
+        if (validateConvertPreconditions(data) === 'property_required') {
+          form.setError('property_id', {
+            type: 'required',
+            message: t('creation.propertyRequired'),
+          });
+          return;
+        }
         await dealsService.convertLeadToDeal(lead.id, payload);
         toast({ title: t('creation.success') });
       } else {
@@ -219,7 +238,7 @@ export function DealCreationSheet({
                   <Select
                     value={field.value}
                     onValueChange={field.onChange}
-                    disabled={disabled}
+                    disabled={disabled || Boolean(lead)}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -239,6 +258,65 @@ export function DealCreationSheet({
                 </FormItem>
               )}
             />
+
+            {lead ? (
+              <FormField
+                control={form.control}
+                name="property_id"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t('fields.property')}</FormLabel>
+                    <Select
+                      value={field.value ?? undefined}
+                      onValueChange={(propertyId) => {
+                        const selected = eligibleMatches.find(
+                          (match) => match.property_id === propertyId
+                        );
+                        if (selected) applyMatch(selected);
+                      }}
+                      disabled={disabled || matchesLoading || Boolean(matchesError)}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue
+                            placeholder={
+                              matchesLoading
+                                ? t('creation.propertiesLoading')
+                                : t('creation.propertyPlaceholder')
+                            }
+                          />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {eligibleMatches.map((match) => (
+                          <SelectItem key={match.property_id} value={match.property_id}>
+                            {match.property?.address ?? t('creation.propertyUnavailable')}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    {matchesError ? (
+                      <FormDescription className="text-destructive">
+                        {t('creation.propertiesError')}{' '}
+                        <Button
+                          type="button"
+                          variant="link"
+                          className="h-auto p-0 text-destructive"
+                          onClick={reloadMatches}
+                        >
+                          {t('creation.retry')}
+                        </Button>
+                      </FormDescription>
+                    ) : !matchesLoading && eligibleMatches.length === 0 ? (
+                      <FormDescription>{t('creation.noMatchedProperties')}</FormDescription>
+                    ) : (
+                      <FormDescription>{t('creation.propertyHelp')}</FormDescription>
+                    )}
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ) : null}
 
             <FormField
               control={form.control}
@@ -426,10 +504,9 @@ export function DealCreationSheet({
                 <FormItem>
                   <FormLabel>{t('fields.projectedClose')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="date"
-                      {...field}
-                      value={field.value ?? ''}
+                    <DateField
+                      value={field.value}
+                      onChange={field.onChange}
                       disabled={disabled}
                     />
                   </FormControl>
@@ -466,7 +543,14 @@ export function DealCreationSheet({
               >
                 {t('creation.cancel')}
               </Button>
-              <Button type="submit" disabled={disabled || submitting}>
+              <Button
+                type="submit"
+                disabled={
+                  disabled ||
+                  submitting ||
+                  Boolean(lead && (matchesLoading || matchesError || eligibleMatches.length === 0))
+                }
+              >
                 {t('creation.submit')}
               </Button>
             </SheetFooter>

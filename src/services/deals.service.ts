@@ -164,33 +164,40 @@ class DealsService {
   }
 
   /**
-   * Creates a deal linked to a lead and sets `property_inquiries.deal_id`.
+   * Atomically creates a deal + negotiation and marks the matched lead converted.
    */
   async convertLeadToDeal(leadId: string, input: CreateDealInput): Promise<{ deal: DealRow; negotiation: OfferNegotiationRow }> {
     try {
+      await getAuthenticatedUserId();
       const orgId = await getActiveOrgId();
 
-      const { data: lead, error: leadError } = await supabase
-        .from('property_inquiries')
-        .select('id, org_id')
-        .eq('id', leadId)
-        .eq('org_id', orgId)
-        .is('deleted_at', null)
-        .maybeSingle();
-
-      if (leadError) throw leadError;
-      if (!lead) {
-        throw new Error('Lead not found.');
+      if (!input.property_id) {
+        throw new Error('A matched property is required to convert this lead.');
       }
 
-      const { deal, negotiation } = await this.createDeal({
-        ...input,
-        lead_id: leadId,
+      const { data, error } = await supabase.rpc('rpc_convert_lead_to_deal', {
+        p_lead_id: leadId,
+        p_org_id: orgId,
+        p_property_id: input.property_id,
+        p_deal: {
+          deal_name: input.deal_name,
+          deal_type: input.deal_type,
+          client_role: input.client_role,
+          financing_type: input.financing_type ?? null,
+          preapproval_status: input.preapproval_status ?? null,
+          buyer_agent_agreement_id: input.buyer_agent_agreement_id ?? null,
+          list_price: input.list_price ?? null,
+          intended_offer_price: input.intended_offer_price ?? null,
+          earnest_money_planned: input.earnest_money_planned ?? null,
+          projected_close_date: input.projected_close_date ?? null,
+          notes: input.notes ?? null,
+        },
       });
 
-      await updateRow('property_inquiries', leadId, { deal_id: deal.id });
+      if (error) throw error;
+      if (!data) throw new Error('The conversion did not return a deal.');
 
-      return { deal, negotiation };
+      return data;
     } catch (error) {
       throw handleServiceError(error, 'Failed to convert lead to deal');
     }

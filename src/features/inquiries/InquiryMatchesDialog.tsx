@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import {
@@ -9,33 +9,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../components/ui/dialog';
-import { Button } from '../../components/ui/button';
+import { Button, buttonVariants } from '../../components/ui/button';
 import { Badge } from '../../components/ui/badge';
 import { InquiryWithMatches, InquiryMatchWithProperty } from '../../types';
 import { inquiriesService } from '../../lib/serviceProxy';
-import { Phone, MapPin, DollarSign, Check } from 'lucide-react';
+import { Phone, MapPin, Tag, Check } from 'lucide-react';
 import { toast } from 'sonner';
-
-// Helper function to format budget with currency symbol
-const formatBudget = (min: number | null, max: number | null, currencyType: string = 'USD'): string => {
-  const normalizedCurrency = currencyType?.toUpperCase().trim() || 'USD';
-
-  const formatter = new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: normalizedCurrency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-
-  if (min && max) {
-    return `${formatter.format(min)} - ${formatter.format(max)}`;
-  } else if (min) {
-    return formatter.format(min);
-  } else if (max) {
-    return formatter.format(max);
-  }
-  return '';
-};
+import { cn } from '@/lib/utils';
+import { formatCurrencyRange } from '@/lib/currency';
 
 interface InquiryMatchesDialogProps {
   open: boolean;
@@ -54,13 +35,7 @@ export const InquiryMatchesDialog = ({
   const [matches, setMatches] = useState<InquiryMatchWithProperty[]>([]);
   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    if (open && inquiry) {
-      loadMatches();
-    }
-  }, [open, inquiry]);
-
-  const loadMatches = async () => {
+  const loadMatches = useCallback(async () => {
     if (!inquiry) return;
 
     try {
@@ -73,7 +48,13 @@ export const InquiryMatchesDialog = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [inquiry, t]);
+
+  useEffect(() => {
+    if (open && inquiry) {
+      void loadMatches();
+    }
+  }, [open, inquiry, loadMatches]);
 
   const handleMarkAsContacted = async () => {
     if (!inquiry) return;
@@ -144,12 +125,11 @@ export const InquiryMatchesDialog = ({
                 const isRental = inquiry.inquiry_type === 'rental';
                 const minBudget = isRental ? inquiry.min_rent_budget : inquiry.min_sale_budget;
                 const maxBudget = isRental ? inquiry.max_rent_budget : inquiry.max_sale_budget;
-                const currencyType = (inquiry as any).currency_type || 'USD';
 
                 if (minBudget || maxBudget) {
                   return (
                     <span className={COLORS.gray.text700}>
-                      {formatBudget(minBudget, maxBudget, currencyType)}
+                      {formatCurrencyRange(minBudget, maxBudget)}
                       {isRental && ` ${t('matches.perMonth')}`}
                     </span>
                   );
@@ -178,41 +158,58 @@ export const InquiryMatchesDialog = ({
                 {matches.map((match) => (
                   <div
                     key={match.id}
-                    className={`p-4 rounded-lg border ${COLORS.gray.border200} ${COLORS.card.bg} hover:${COLORS.gray.bg50} transition-colors`}
+                    className="rounded-xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-sm dark:border-slate-800 dark:bg-slate-950"
                   >
                     {match.property && (
                       <>
                         <div className="space-y-2">
-                          <div className={`font-medium ${COLORS.gray.text900}`}>
+                          <div className="font-medium text-slate-900 dark:text-slate-100">
                             {match.property.address}
                           </div>
-                          <div className="flex items-center gap-4 text-sm">
+                          <div className="flex flex-col items-start gap-2 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                             {match.property.city && (
                               <div className="flex items-center gap-1">
-                                <MapPin className={`h-4 w-4 ${COLORS.gray.text500}`} />
-                                <span className={COLORS.gray.text700}>
+                                <MapPin className="h-4 w-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                                <span className="text-slate-700 dark:text-slate-300">
                                   {match.property.city}
                                   {match.property.district && `, ${match.property.district}`}
                                 </span>
                               </div>
                             )}
-                            {match.property.rent_amount && (
+                            {(match.property.property_type === 'sale'
+                              ? match.property.sale_price
+                              : match.property.rent_amount) && (
                               <div className="flex items-center gap-1">
-                                <DollarSign className={`h-4 w-4 ${COLORS.gray.text500}`} />
-                                <span className={COLORS.gray.text700}>
-                                  {match.property.rent_amount} {match.property.currency || 'USD'}
+                                <Tag className="h-4 w-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
+                                <span className="font-medium text-slate-700 dark:text-slate-200">
+                                  {formatCurrencyRange(
+                                    match.property.property_type === 'sale'
+                                      ? match.property.sale_price ?? 0
+                                      : match.property.rent_amount ?? 0,
+                                    null,
+                                    match.property.currency || 'USD'
+                                  )}
+                                  {match.property.property_type === 'rental' &&
+                                    ` ${t('matches.perMonth')}`}
                                 </span>
                               </div>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 mt-3">
+                        <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center">
                           <a
                             href={`tel:${inquiry.phone}`}
-                            className={`flex items-center gap-2 px-3 py-1.5 text-sm rounded-md ${COLORS.primary.bg} ${COLORS.primary.hover} transition-colors`}
+                            aria-label={t('matches.contactLeadAria', {
+                              name: inquiry.name,
+                              property: match.property.address,
+                            })}
+                            className={cn(
+                              buttonVariants({ size: 'sm' }),
+                              'w-full gap-2 text-white sm:w-auto'
+                            )}
                           >
-                            <Phone className="h-4 w-4" />
-                            {t('matches.contact')}
+                            <Phone className="h-4 w-4" aria-hidden="true" />
+                            {t('matches.contactLead', { name: inquiry.name })}
                           </a>
                           {match.contacted && (
                             <Badge className={`${COLORS.success.bg} ${COLORS.text.white}`}>
@@ -237,7 +234,7 @@ export const InquiryMatchesDialog = ({
             onClick={() => onOpenChange(false)}
             disabled={loading}
           >
-            {t('close', { ns: 'common' })}
+            {t('matches.close')}
           </Button>
           {inquiry.status !== 'contacted' && inquiry.status !== 'closed' && (
             <Button

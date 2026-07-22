@@ -212,6 +212,24 @@ async function processWaitingOnOthersAlerts(nowIso: string): Promise<number> {
   return created;
 }
 
+// Constant-time comparison: hashing normalizes both inputs to a fixed-length
+// digest and the byte loop never short-circuits, so neither a network timing
+// side-channel nor an early-return leaks how much of the token matched.
+async function timingSafeEqual(a: string, b: string): Promise<boolean> {
+  const encoder = new TextEncoder();
+  const [digestA, digestB] = await Promise.all([
+    crypto.subtle.digest('SHA-256', encoder.encode(a)),
+    crypto.subtle.digest('SHA-256', encoder.encode(b)),
+  ]);
+  const bytesA = new Uint8Array(digestA);
+  const bytesB = new Uint8Array(digestB);
+  let diff = 0;
+  for (let i = 0; i < bytesA.length; i++) {
+    diff |= bytesA[i] ^ bytesB[i];
+  }
+  return diff === 0;
+}
+
 async function processClosingSoonAlerts(today: Date): Promise<number> {
   const { data: deals, error } = await supabaseAdmin
     .from('deals')
@@ -261,13 +279,21 @@ async function processClosingSoonAlerts(today: Date): Promise<number> {
   return created;
 }
 
-Deno.serve(async (req) => {
+Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
 
-  if (req.method !== 'POST' && req.method !== 'GET') {
+  if (req.method !== 'POST') {
     return errorResponse('Method not allowed', 405, corsHeaders);
+  }
+
+  const authHeader = req.headers.get('Authorization');
+  const token = authHeader?.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+  if (!token || !serviceRoleKey || !(await timingSafeEqual(token, serviceRoleKey))) {
+    return errorResponse('Unauthorized', 401, corsHeaders);
   }
 
   try {

@@ -30,7 +30,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
-import { Input } from '@/components/ui/input';
+import { DateField } from '@/components/ui/date-field';
 import { Label } from '@/components/ui/label';
 import { COLORS } from '@/config/colors';
 import { formatCurrency } from '@/lib/currency';
@@ -227,66 +227,73 @@ export function DealOffersPanel({
       return null;
     }
 
+    // Happy-path CTA outside the menu; destructive / secondary stay behind ⋯
+    const primary: { label: string; onClick: () => void } | null = showSubmit
+      ? { label: t('offers.submitRound'), onClick: () => void handleSubmit(r.id) }
+      : showMutual
+        ? { label: t('offers.mutualAcceptance'), onClick: () => openMutual(r.id) }
+        : null;
+
+    const menuHasItems = showVerbal || showReject || showExpire;
+
     return (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
+      <div className="flex items-center justify-end gap-1.5">
+        {primary && (
           <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
+            type="button"
+            size="sm"
+            variant="default"
+            className="h-8 shrink-0"
             disabled={busy}
-            aria-label={t('offers.actions')}
+            onClick={primary.onClick}
           >
-            <MoreHorizontal className="h-4 w-4" />
+            {primary.label}
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {showSubmit && (
-            <DropdownMenuItem
-              onClick={() => void handleSubmit(r.id)}
-              disabled={busy}
-            >
-              {t('offers.submitRound')}
-            </DropdownMenuItem>
-          )}
-          {showVerbal && (
-            <DropdownMenuItem
-              onClick={() => void handleVerbal(r.id)}
-              disabled={busy}
-            >
-              {t('offers.verbalAccepted')}
-            </DropdownMenuItem>
-          )}
-          {showMutual && (
-            <DropdownMenuItem
-              onClick={() => openMutual(r.id)}
-              disabled={busy}
-            >
-              {t('offers.mutualAcceptance')}
-            </DropdownMenuItem>
-          )}
-          {(showSubmit || showVerbal || showMutual) && showReject ? (
-            <DropdownMenuSeparator />
-          ) : null}
-          {showReject && (
-            <DropdownMenuItem
-              onClick={() => void handleReject(r.id)}
-              disabled={busy}
-              className="text-red-600"
-            >
-              {t('offers.reject')}
-            </DropdownMenuItem>
-          )}
-          {showExpire && (
-            <DropdownMenuItem
-              onClick={() => void handleExpire(r.id)}
-              disabled={busy}
-            >
-              {t('offers.expire')}
-            </DropdownMenuItem>
-          )}
-        </DropdownMenuContent>
-      </DropdownMenu>
+        )}
+        {menuHasItems && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 shrink-0"
+                disabled={busy}
+                aria-label={t('offers.actions')}
+              >
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {showVerbal && (
+                <DropdownMenuItem
+                  onClick={() => void handleVerbal(r.id)}
+                  disabled={busy}
+                >
+                  {t('offers.verbalAccepted')}
+                </DropdownMenuItem>
+              )}
+              {showVerbal && (showReject || showExpire) ? <DropdownMenuSeparator /> : null}
+              {showReject && (
+                <DropdownMenuItem
+                  onClick={() => void handleReject(r.id)}
+                  disabled={busy}
+                  className="text-red-600"
+                >
+                  {t('offers.reject')}
+                </DropdownMenuItem>
+              )}
+              {showExpire && (
+                <DropdownMenuItem
+                  onClick={() => void handleExpire(r.id)}
+                  disabled={busy}
+                >
+                  {t('offers.expire')}
+                </DropdownMenuItem>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+      </div>
     );
   };
 
@@ -332,7 +339,7 @@ export function DealOffersPanel({
                     <TableHead>{t('detail.offerPrice')}</TableHead>
                     <TableHead>{t('list.tableStage')}</TableHead>
                     <TableHead>{t('detail.submitted')}</TableHead>
-                    <TableHead className="w-[70px] text-right">
+                    <TableHead className="w-[220px] text-right">
                       {t('offers.actions')}
                     </TableHead>
                   </TableRow>
@@ -421,11 +428,10 @@ export function DealOffersPanel({
           </AlertDialogHeader>
           <div className="space-y-2 py-2">
             <Label htmlFor="ma-date">{t('offers.mutualDate')}</Label>
-            <Input
+            <DateField
               id="ma-date"
-              type="date"
               value={maDate}
-              onChange={(e) => setMaDate(e.target.value)}
+              onChange={(next) => setMaDate(next ?? '')}
             />
           </div>
           <AlertDialogFooter>

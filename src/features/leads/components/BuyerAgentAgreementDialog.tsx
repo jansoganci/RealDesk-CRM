@@ -15,6 +15,8 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { CurrencyInput } from '@/components/ui/currency-input';
+import { DateField } from '@/components/ui/date-field';
 import {
   Select,
   SelectContent,
@@ -38,6 +40,7 @@ import {
 } from '../schemas/buyer-agent-agreement-form';
 import type { BuyerAgentAgreement } from '@/services/leads.service';
 import { addMonths } from 'date-fns';
+import { formatDateForDb } from '@/lib/dates';
 
 interface BuyerAgentAgreementDialogProps {
   open: boolean;
@@ -55,25 +58,15 @@ export function BuyerAgentAgreementDialog({
   onSuccess,
 }: BuyerAgentAgreementDialogProps) {
   const { t } = useTranslation('leads');
-  const { user } = useAuth();
+  const { user, currency } = useAuth();
   const { currentOrg } = useOrg();
-
-  const getDateInputValue = (value: unknown): string => {
-    if (value instanceof Date) {
-      return Number.isNaN(value.getTime()) ? '' : value.toISOString().split('T')[0];
-    }
-    if (typeof value === 'string') {
-      return value;
-    }
-    return '';
-  };
 
   const form = useForm<CreateBuyerAgentAgreementFormData>({
     resolver: zodResolver(createBuyerAgentAgreementSchema),
     defaultValues: {
       lead_id: leadId,
-      signed_date: new Date(),
-      expiration_date: addMonths(new Date(), 6),
+      signed_date: formatDateForDb(new Date()),
+      expiration_date: formatDateForDb(addMonths(new Date(), 6)),
       commission_type: 'percentage',
       commission_rate: 2.5,
       status: 'draft',
@@ -85,12 +78,8 @@ export function BuyerAgentAgreementDialog({
       if (existingAgreement) {
         form.reset({
           lead_id: leadId,
-          signed_date: existingAgreement.signed_date
-            ? new Date(existingAgreement.signed_date)
-            : undefined,
-          expiration_date: existingAgreement.expiration_date
-            ? new Date(existingAgreement.expiration_date)
-            : undefined,
+          signed_date: existingAgreement.signed_date ?? undefined,
+          expiration_date: existingAgreement.expiration_date ?? undefined,
           commission_type: existingAgreement.commission_type as any,
           commission_rate: existingAgreement.commission_rate ?? undefined,
           flat_fee_amount: existingAgreement.flat_fee_amount ?? undefined,
@@ -100,8 +89,8 @@ export function BuyerAgentAgreementDialog({
       } else {
         form.reset({
           lead_id: leadId,
-          signed_date: new Date(),
-          expiration_date: addMonths(new Date(), 6),
+          signed_date: formatDateForDb(new Date()),
+          expiration_date: formatDateForDb(addMonths(new Date(), 6)),
           commission_type: 'percentage',
           commission_rate: 2.5,
           status: 'draft',
@@ -164,10 +153,9 @@ export function BuyerAgentAgreementDialog({
                 <FormItem>
                   <FormLabel>{t('agreements.signedDate', 'Signed Date')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="date"
-                      value={getDateInputValue(field.value)}
-                      onChange={(e) => field.onChange(e.target.value || undefined)}
+                    <DateField
+                      value={field.value}
+                      onChange={(value) => field.onChange(value ?? undefined)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -183,10 +171,9 @@ export function BuyerAgentAgreementDialog({
                 <FormItem>
                   <FormLabel>{t('agreements.expirationDate', 'Expiration Date')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="date"
-                      value={getDateInputValue(field.value)}
-                      onChange={(e) => field.onChange(e.target.value || undefined)}
+                    <DateField
+                      value={field.value}
+                      onChange={(value) => field.onChange(value ?? undefined)}
                     />
                   </FormControl>
                   <FormMessage />
@@ -255,15 +242,11 @@ export function BuyerAgentAgreementDialog({
                   <FormItem>
                     <FormLabel>{t('agreements.flatFeeAmount', 'Flat Fee Amount ($)')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="number"
-                        step="0.01"
-                        placeholder="5000.00"
-                        value={field.value ?? ''}
-                        onChange={(e) => {
-                          const val = e.target.value;
-                          field.onChange(val === '' ? null : parseFloat(val));
-                        }}
+                      <CurrencyInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        emptyValue={null}
+                        currency={currency}
                       />
                     </FormControl>
                     <FormMessage />

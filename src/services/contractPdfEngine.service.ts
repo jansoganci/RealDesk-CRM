@@ -21,6 +21,7 @@ import { addTurkishFonts } from './pdfFonts';
 import { supabase } from '../config/supabase';
 import { contractBuilderService } from './contractBuilder.service';
 import { generateSalePdfTemplate } from '../templates/salePdf.template';
+import { getActiveOrgId } from '../lib/orgHelpers';
 
 // ============================================================================
 // Types
@@ -162,7 +163,8 @@ class ContractPdfEngineService {
     instanceId: string
   ): Promise<PdfUploadResult> {
     try {
-      const storagePath = `v2/${type}/${userId}/${instanceId}.pdf`;
+      const orgId = await getActiveOrgId();
+      const storagePath = `${orgId}/v2/${type}/${userId}/${instanceId}.pdf`;
 
       const { error } = await supabase.storage
         .from(this.STORAGE_BUCKET)

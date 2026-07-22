@@ -181,7 +181,7 @@ class PurchaseAgreementService {
   ): Promise<string> {
     const timestamp = Date.now();
     const suffix = tag ? `_${tag}` : '';
-    const path = `purchases/${orgId}/${contractId}/v${offerNumber}${suffix}_${timestamp}.pdf`;
+    const path = `${orgId}/purchases/${contractId}/v${offerNumber}${suffix}_${timestamp}.pdf`;
     const { error } = await supabase.storage.from('contract-pdfs').upload(path, blob, {
       cacheControl: '3600',
       upsert: false,
@@ -751,7 +751,7 @@ class PurchaseAgreementService {
     await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();
 
-    const path = `purchases/${orgId}/${contractId}/fha_addendum.pdf`;
+    const path = `${orgId}/purchases/${contractId}/fha_addendum.pdf`;
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')
       .upload(path, file, {
@@ -795,7 +795,7 @@ class PurchaseAgreementService {
     await getAuthenticatedUserId();
     const orgId = await getActiveOrgId();
 
-    const path = `purchases/${orgId}/${contractId}/va_addendum.pdf`;
+    const path = `${orgId}/purchases/${contractId}/va_addendum.pdf`;
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')
       .upload(path, file, {
@@ -872,7 +872,7 @@ class PurchaseAgreementService {
    */
   async uploadPurchaseAddendum(contractId: string, kind: 'fha' | 'va', file: File): Promise<void> {
     await getAuthenticatedUserId();
-    await getActiveOrgId();
+    const orgId = await getActiveOrgId();
 
     const bundle = await this.getPurchaseByContractId(contractId);
     if (!bundle?.purchase_details) {
@@ -881,8 +881,8 @@ class PurchaseAgreementService {
 
     const fileExt = file.name.includes('.') ? file.name.split('.').pop() : 'pdf';
     const safeExt = fileExt && fileExt.length <= 8 ? fileExt : 'pdf';
-    const fileName = `${contractId}-${kind}-${Date.now()}.${safeExt}`;
-    const filePath = `contracts/${fileName}`;
+    const fileName = `${kind}_addendum-${Date.now()}.${safeExt}`;
+    const filePath = `${orgId}/purchases/${contractId}/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from('contract-pdfs')

@@ -47,13 +47,9 @@ export const createBuyerAgentAgreementSchema = z
   .object({
     lead_id: z.string().uuid('Invalid lead ID'),
 
-    signed_date: z.coerce.date({
-      required_error: 'Signed date is required',
-    }),
+    signed_date: z.string().min(1, 'Signed date is required'),
 
-    expiration_date: z.coerce.date({
-      required_error: 'Expiration date is required',
-    }),
+    expiration_date: z.string().min(1, 'Expiration date is required'),
 
     commission_type: commissionTypeSchema,
 
@@ -118,9 +114,9 @@ export const createBuyerAgentAgreementSchema = z
 export const updateBuyerAgentAgreementSchema = z.object({
   lead_id: z.string().uuid('Invalid lead ID'),
 
-  signed_date: z.coerce.date().optional(),
+  signed_date: z.string().optional(),
 
-  expiration_date: z.coerce.date().optional(),
+  expiration_date: z.string().optional(),
 
   commission_type: commissionTypeSchema.optional(),
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import {
@@ -14,11 +14,24 @@ import {
 } from '../../components/ui/dialog';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
+import { CurrencyInput } from '../../components/ui/currency-input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
 import { PropertyInquiry } from '../../types';
 import { getRentalInquirySchema, getSaleInquirySchema } from './inquirySchema';
 import { InquiryTypeSelector } from './InquiryTypeSelector';
+import { useAuth } from '@/contexts/AuthContext';
+
+/**
+ * `InquiryFormData` is a runtime union of the rental/sale schemas, so RHF's
+ * `FieldErrors` type only exposes properties common to both variants.
+ */
+interface BudgetFormErrors {
+  min_rent_budget?: { message?: string };
+  max_rent_budget?: { message?: string };
+  min_sale_budget?: { message?: string };
+  max_sale_budget?: { message?: string };
+}
 
 interface InquiryDialogProps {
   open: boolean;
@@ -36,6 +49,7 @@ export const InquiryDialog = ({
   loading = false,
 }: InquiryDialogProps) => {
   const { t } = useTranslation(['leads', 'common']);
+  const { currency } = useAuth();
   const [inquiryType, setInquiryType] = useState<'rental' | 'sale'>('rental');
 
   // Conditional schema based on inquiry type
@@ -51,10 +65,12 @@ export const InquiryDialog = ({
     register,
     handleSubmit,
     reset,
+    control,
     formState: { errors },
   } = useForm<InquiryFormData>({
     resolver: zodResolver(inquirySchema),
   });
+  const budgetErrors: BudgetFormErrors = errors;
 
   useEffect(() => {
     if (open) {
@@ -227,31 +243,43 @@ export const InquiryDialog = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="min_rent_budget">{t('dialog.form.minRentBudget')}</Label>
-                <Input
-                  id="min_rent_budget"
-                  type="number"
-                  step="0.01"
-                  placeholder={t('dialog.form.minRentBudgetPlaceholder')}
-                  {...register('min_rent_budget' as any, { valueAsNumber: true })}
-                  disabled={loading}
+                <Controller
+                  name="min_rent_budget"
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      id="min_rent_budget"
+                      placeholder={t('dialog.form.minRentBudgetPlaceholder')}
+                      value={field.value}
+                      onChange={field.onChange}
+                      currency={currency}
+                      disabled={loading}
+                    />
+                  )}
                 />
-                {(errors as any).min_rent_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_rent_budget.message}</p>
+                {budgetErrors.min_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{budgetErrors.min_rent_budget.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="max_rent_budget">{t('dialog.form.maxRentBudget')}</Label>
-                <Input
-                  id="max_rent_budget"
-                  type="number"
-                  step="0.01"
-                  placeholder={t('dialog.form.maxRentBudgetPlaceholder')}
-                  {...register('max_rent_budget' as any, { valueAsNumber: true })}
-                  disabled={loading}
+                <Controller
+                  name="max_rent_budget"
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      id="max_rent_budget"
+                      placeholder={t('dialog.form.maxRentBudgetPlaceholder')}
+                      value={field.value}
+                      onChange={field.onChange}
+                      currency={currency}
+                      disabled={loading}
+                    />
+                  )}
                 />
-                {(errors as any).max_rent_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_rent_budget.message}</p>
+                {budgetErrors.max_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{budgetErrors.max_rent_budget.message}</p>
                 )}
               </div>
             </div>
@@ -259,31 +287,43 @@ export const InquiryDialog = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="min_sale_budget">{t('dialog.form.minSaleBudget')}</Label>
-                <Input
-                  id="min_sale_budget"
-                  type="number"
-                  step="0.01"
-                  placeholder={t('dialog.form.minSaleBudgetPlaceholder')}
-                  {...register('min_sale_budget' as any, { valueAsNumber: true })}
-                  disabled={loading}
+                <Controller
+                  name="min_sale_budget"
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      id="min_sale_budget"
+                      placeholder={t('dialog.form.minSaleBudgetPlaceholder')}
+                      value={field.value}
+                      onChange={field.onChange}
+                      currency={currency}
+                      disabled={loading}
+                    />
+                  )}
                 />
-                {(errors as any).min_sale_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_sale_budget.message}</p>
+                {budgetErrors.min_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{budgetErrors.min_sale_budget.message}</p>
                 )}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="max_sale_budget">{t('dialog.form.maxSaleBudget')}</Label>
-                <Input
-                  id="max_sale_budget"
-                  type="number"
-                  step="0.01"
-                  placeholder={t('dialog.form.maxSaleBudgetPlaceholder')}
-                  {...register('max_sale_budget' as any, { valueAsNumber: true })}
-                  disabled={loading}
+                <Controller
+                  name="max_sale_budget"
+                  control={control}
+                  render={({ field }) => (
+                    <CurrencyInput
+                      id="max_sale_budget"
+                      placeholder={t('dialog.form.maxSaleBudgetPlaceholder')}
+                      value={field.value}
+                      onChange={field.onChange}
+                      currency={currency}
+                      disabled={loading}
+                    />
+                  )}
                 />
-                {(errors as any).max_sale_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_sale_budget.message}</p>
+                {budgetErrors.max_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{budgetErrors.max_sale_budget.message}</p>
                 )}
               </div>
             </div>

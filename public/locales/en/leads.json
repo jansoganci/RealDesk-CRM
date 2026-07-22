@@ -120,7 +120,10 @@
     "matchedProperties": "Matched properties",
     "noMatches": "No matches found",
     "contact": "Contact",
+    "contactLead": "Contact {{name}}",
+    "contactLeadAria": "Contact {{name}} about {{property}}",
     "contacted": "Contacted",
+    "close": "Close",
     "markAsContacted": "Mark as contacted",
     "perMonth": "/month"
   },

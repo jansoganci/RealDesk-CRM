@@ -5,6 +5,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DateField } from '@/components/ui/date-field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -126,10 +127,11 @@ export function AmendmentsTab({ deal, readOnly = false }: AmendmentsTabProps) {
               </div>
               <div className="space-y-1">
                 <Label>{t('detail.amendments.effectiveDate')}</Label>
-                <Input
-                  type="date"
-                  value={form.effectiveDate}
-                  onChange={(e) => setForm((prev) => ({ ...prev, effectiveDate: e.target.value }))}
+                <DateField
+                  value={form.effectiveDate || null}
+                  onChange={(next) =>
+                    setForm((prev) => ({ ...prev, effectiveDate: next ?? '' }))
+                  }
                   disabled={submitting}
                 />
               </div>
@@ -183,11 +185,10 @@ export function AmendmentsTab({ deal, readOnly = false }: AmendmentsTabProps) {
                 </div>
                 <div className="space-y-1">
                   <Label>{t('detail.amendments.newDueDate')}</Label>
-                  <Input
-                    type="date"
-                    value={form.milestoneDueDate}
-                    onChange={(e) =>
-                      setForm((prev) => ({ ...prev, milestoneDueDate: e.target.value }))
+                  <DateField
+                    value={form.milestoneDueDate || null}
+                    onChange={(next) =>
+                      setForm((prev) => ({ ...prev, milestoneDueDate: next ?? '' }))
                     }
                     disabled={submitting}
                   />

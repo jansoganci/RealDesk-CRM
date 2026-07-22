@@ -45,15 +45,15 @@ export function OwnerSelectField({
           <SelectValue
             placeholder={
               loading
-                ? t('common:loading', 'Yükleniyor...')
-                : t('dialog.form.selectOwner', 'Ev sahibi seçin')
+                ? t('common:loading')
+                : t('dialog.form.selectOwner')
             }
           />
         </SelectTrigger>
         <SelectContent>
           {owners.length === 0 && !loading && (
             <div className="p-2 text-sm text-gray-500">
-              {t('dialog.form.noOwners', 'Henüz ev sahibi eklenmemiş')}
+              {t('dialog.form.noOwners')}
             </div>
           )}
           {owners.map((owner) => (

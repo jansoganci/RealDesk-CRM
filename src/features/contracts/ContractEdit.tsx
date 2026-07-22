@@ -64,7 +64,7 @@ export default function ContractEdit() {
   }
 
   return (
-    <MainLayout title={t('edit.title')}>
+    <MainLayout>
       <PageContainer>
         <div className="max-w-4xl mx-auto">
           <div className="mb-6">

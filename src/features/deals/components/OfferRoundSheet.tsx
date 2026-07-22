@@ -12,6 +12,8 @@ import {
   SheetTitle,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
+import { CurrencyInput } from '@/components/ui/currency-input';
+import { DateField } from '@/components/ui/date-field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import {
@@ -30,6 +32,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useAuth } from '@/contexts/AuthContext';
 import {
   offerRoundsService,
   type CreateFirstOfferInput,
@@ -131,6 +134,7 @@ export function OfferRoundSheet({
 }: OfferRoundSheetProps) {
   const { t } = useTranslation('deals');
   const { toast } = useToast();
+  const { currency } = useAuth();
   const [submitting, setSubmitting] = useState(false);
 
   const defaultValues = useMemo(() => {
@@ -222,16 +226,11 @@ export function OfferRoundSheet({
                 <FormItem>
                   <FormLabel>{t('detail.offerPrice')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      {...field}
-                      value={field.value ?? ''}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        field.onChange(v === '' ? undefined : Number(v));
-                      }}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      emptyValue={undefined}
+                      currency={currency}
                       disabled={disabled}
                     />
                   </FormControl>
@@ -281,16 +280,11 @@ export function OfferRoundSheet({
                 <FormItem>
                   <FormLabel>{t('fields.earnestMoney')}</FormLabel>
                   <FormControl>
-                    <Input
-                      type="number"
-                      min={0}
-                      step="0.01"
-                      {...field}
-                      value={field.value ?? ''}
-                      onChange={(e) => {
-                        const v = e.target.value;
-                        field.onChange(v === '' ? null : Number(v));
-                      }}
+                    <CurrencyInput
+                      value={field.value}
+                      onChange={field.onChange}
+                      emptyValue={null}
+                      currency={currency}
                       disabled={disabled}
                     />
                   </FormControl>
@@ -307,10 +301,9 @@ export function OfferRoundSheet({
                   <FormItem>
                     <FormLabel>{t('offers.closingDate')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                        value={field.value ?? ''}
+                      <DateField
+                        value={field.value}
+                        onChange={field.onChange}
                         disabled={disabled}
                       />
                     </FormControl>
@@ -325,10 +318,9 @@ export function OfferRoundSheet({
                   <FormItem>
                     <FormLabel>{t('offers.possessionDate')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                        value={field.value ?? ''}
+                      <DateField
+                        value={field.value}
+                        onChange={field.onChange}
                         disabled={disabled}
                       />
                     </FormControl>
@@ -382,10 +374,9 @@ export function OfferRoundSheet({
                   <FormItem>
                     <FormLabel>{t('offers.expirationDate')}</FormLabel>
                     <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                        value={field.value ?? ''}
+                      <DateField
+                        value={field.value}
+                        onChange={field.onChange}
                         disabled={disabled}
                       />
                     </FormControl>

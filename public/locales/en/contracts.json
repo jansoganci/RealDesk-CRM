@@ -273,9 +273,13 @@
     "subtitle": "Fill in the rental contract information",
     "sections": {
       "owner": "Owner Information",
+      "ownerDescription": "Enter the property owner's contact and banking details for this lease.",
       "tenant": "Tenant Information",
+      "tenantDescription": "Enter the tenant's contact details and current address.",
       "property": "Property Information",
+      "propertyDescription": "Enter the US address and property details for this lease.",
       "contract": "Contract Details",
+      "contractDescription": "Set lease dates, rent, deposit, and optional payment preferences.",
       "paymentDetailsOptional": "Payment Details (Optional)"
     },
     "datePicker": {
@@ -329,15 +333,17 @@
       "owner_phone": "(512) 555-1234",
       "email": "email@example.com",
       "tenant_name": "Jane Smith",
-      "mahalle": "Moda Neighborhood",
-      "cadde_sokak": "Atatürk Avenue",
+      "tenant_address": "123 Main St, Apt 4B, Austin, TX 78701",
+      "mahalle": "Downtown",
+      "cadde_sokak": "Main Street",
       "bina_no": "123",
-      "daire_no": "5",
-      "ilce": "Kadıköy",
-      "il": "Istanbul",
-      "usePurpose": "Residential / Commercial",
+      "daire_no": "4B",
+      "ilce": "Travis County",
+      "il": "Austin",
+      "usePurpose": "Residential, Office, Retail, etc.",
       "currency": "Select currency",
       "commission_amount": "Manual commission amount (optional)",
+      "payment_method": "Bank transfer, check, online portal, etc.",
       "fixtures": "Select fixtures or add custom",
       "fixturesCustomInput": "Type custom fixture and press Enter",
       "fixturesEmpty": "No fixtures selected",
@@ -354,9 +360,7 @@
       "commercial": "Commercial"
     },
     "currencyOptions": {
-      "TRY": "₺ TRY (Turkish Lira)",
-      "USD": "$ USD (US Dollar)",
-      "EUR": "€ EUR (Euro)"
+      "USD": "$ USD (US Dollar)"
     },
     "labels": {
       "fixturesAddCustom": "Add Custom",
@@ -654,12 +658,9 @@
     "stepLabels": {
       "1": "Property",
       "2": "Parties",
-      "3": "Lease term",
-      "4": "Financials",
-      "5": "Payment & utilities",
-      "6": "Property details",
-      "7": "Policies",
-      "8": "Notices & disclosures"
+      "3": "Term & financials",
+      "4": "Payment & policies",
+      "5": "Notices & disclosures"
     },
     "back": "Back",
     "next": "Next",

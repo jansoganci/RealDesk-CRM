@@ -1,4 +1,4 @@
-// ThePivot – DARK section. "emlakcrm unifies it all."
+// ThePivot section.
 import { useTranslation } from "react-i18next"
 
 export const ThePivot = () => {

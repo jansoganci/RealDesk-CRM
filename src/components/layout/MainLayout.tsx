@@ -8,7 +8,7 @@ import { COLORS } from '@/config/colors';
 
 interface MainLayoutProps {
   children: React.ReactNode;
-  title: string;
+  title?: string;
 }
 
 export const MainLayout = ({ children, title }: MainLayoutProps) => {

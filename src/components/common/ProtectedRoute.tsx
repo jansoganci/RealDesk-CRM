@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 import { supabase } from '../../config/supabase';
 import { ROUTES } from '../../config/constants';
-import { useBilling } from '../../contexts/BillingContext';
 import { useOrg } from '../../contexts/OrgContext';
 
 interface ProtectedRouteProps {
@@ -15,10 +14,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
   const [isChecking, setIsChecking] = useState(true);
   const [hasUser, setHasUser] = useState(false);
-  const { billingStatus, billingLoading } = useBilling();
   const { currentOrg, loading: orgLoading } = useOrg();
-  const hasActiveAccess = billingStatus?.hasActiveAccess ?? null;
-  const isTrialActive = billingStatus?.isTrial ?? false;
 
   // Additional check for session (helps with iOS Safari/PWA race conditions)
   useEffect(() => {
@@ -61,8 +57,8 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     };
   }, [user, loading, isEmailConfirmed]);
 
-  // Show loading state while checking auth, org, or billing
-  if (loading || isChecking || orgLoading || billingLoading) {
+  // Show loading state while checking auth or organization access
+  if (loading || isChecking || orgLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>
@@ -82,7 +78,7 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   // Note: If email confirmation is required, users won't have a session until confirmed,
   // so this check is mainly for edge cases
 
-  // Step 2: Check onboarding FIRST (before billing)
+  // Step 2: Check onboarding before allowing application access
   // If user is authenticated but has NO organization, redirect to onboarding
   if (!currentOrg && !orgLoading) {
     if (location.pathname !== ROUTES.ONBOARDING) {
@@ -103,45 +99,11 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
       return <Navigate to={ROUTES.ONBOARDING} replace />;
     }
     
-    // If on onboarding page and onboarding is incomplete, allow it (skip billing check)
+    // If on onboarding page and onboarding is incomplete, allow it
     if (location.pathname === ROUTES.ONBOARDING && !currentOrg.onboarding_completed) {
       return <>{children}</>;
     }
   }
 
-  // Check billing access after authentication is confirmed
-  // Skip billing check if already on billing subscribe page
-  if (location.pathname === ROUTES.BILLING_SUBSCRIBE) {
-    return <>{children}</>;
-  }
-
-  // BILLING CHECK: Only block if explicitly no access AND no trial
-  // This allows:
-  // 1. Active subscribers (hasActiveAccess === true)
-  // 2. Users in trial period (isTrialActive === true)
-  // 3. Users whose billing hasn't loaded yet (hasActiveAccess === null)
-  //
-  // Only blocks when:
-  // - hasActiveAccess is explicitly false (subscription expired/canceled)
-  // - AND isTrialActive is false (trial expired or never existed)
-  const shouldBlockAccess = hasActiveAccess === false && isTrialActive === false;
-
-  if (shouldBlockAccess) {
-    return (
-      <Navigate
-        to={ROUTES.BILLING_SUBSCRIBE}
-        replace
-        state={{
-          billingStatus,
-          from: location.pathname,
-        }}
-      />
-    );
-  }
-
-  // Allow access for:
-  // - Active subscribers
-  // - Trial users
-  // - Users whose billing status is still loading (null)
   return <>{children}</>;
 };
