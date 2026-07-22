@@ -335,22 +335,21 @@ export function Step1Property() {
             </FormItem>
           )}
         />
+        <FormField
+          control={control}
+          name="tax_parcel_info"
+          render={({ field }) => (
+            <FormItem className="sm:col-span-2">
+              <FormLabel>{t('purchaseWizard.step1.taxParcel')}</FormLabel>
+              <p className="text-xs text-muted-foreground">{t('purchaseWizard.step1.taxParcelHelp')}</p>
+              <FormControl>
+                <Input {...field} value={field.value ?? ''} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
-
-      <FormField
-        control={control}
-        name="tax_parcel_info"
-        render={({ field }) => (
-          <FormItem>
-            <FormLabel>{t('purchaseWizard.step1.taxParcel')}</FormLabel>
-            <p className="text-xs text-muted-foreground">{t('purchaseWizard.step1.taxParcelHelp')}</p>
-            <FormControl>
-              <Input {...field} value={field.value ?? ''} />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
 
       <FormField
         control={control}
@@ -445,30 +444,32 @@ export function Step1Property() {
         )}
       </div>
 
-      <FormField
-        control={control}
-        name="year_built"
-        render={({ field }) => (
-          <FormItem className="max-w-xs">
-            <FormLabel>{t('purchaseWizard.step1.yearBuilt')}</FormLabel>
-            <p className="text-xs text-muted-foreground">{t('purchaseWizard.step1.yearBuiltHelp')}</p>
-            <FormControl>
-              <Input
-                type="number"
-                min={1600}
-                max={2100}
-                inputMode="numeric"
-                value={field.value ?? ''}
-                onChange={(e) => {
-                  const v = e.target.value;
-                  field.onChange(v === '' ? null : Number(v));
-                }}
-              />
-            </FormControl>
-            <FormMessage />
-          </FormItem>
-        )}
-      />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <FormField
+          control={control}
+          name="year_built"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>{t('purchaseWizard.step1.yearBuilt')}</FormLabel>
+              <p className="text-xs text-muted-foreground">{t('purchaseWizard.step1.yearBuiltHelp')}</p>
+              <FormControl>
+                <Input
+                  type="number"
+                  min={1600}
+                  max={2100}
+                  inputMode="numeric"
+                  value={field.value ?? ''}
+                  onChange={(e) => {
+                    const v = e.target.value;
+                    field.onChange(v === '' ? null : Number(v));
+                  }}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+      </div>
 
       <div className="rounded-lg border bg-muted/40 px-4 py-3 text-sm">
         <p className="font-medium text-foreground">{t('purchaseWizard.step1.timezoneTitle')}</p>

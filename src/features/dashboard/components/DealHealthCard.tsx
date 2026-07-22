@@ -15,19 +15,19 @@ export function DealHealthCard({ card }: DealHealthCardProps) {
 
   return (
     <Link to={generatePath(ROUTES.DEAL_DETAIL, { id: card.dealId })}>
-      <Card className="h-full border-slate-200 hover:border-blue-300 hover:shadow-md transition-all">
+      <Card className="h-full border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 hover:shadow-md transition-all">
         <CardContent className="py-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <p className="text-sm font-semibold text-slate-900">{card.dealName}</p>
+            <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{card.dealName}</p>
             <Badge variant="outline">{t('dailyBrief.dealCard.phase', { phase: card.phase })}</Badge>
           </div>
-          <p className={`text-xs ${COLORS.gray.text600}`}>{card.propertyAddress}</p>
-          <p className={`text-xs ${COLORS.gray.text700}`}>
+          <p className={`text-xs ${COLORS.gray.text600} dark:text-slate-300`}>{card.propertyAddress}</p>
+          <p className={`text-xs ${COLORS.gray.text700} dark:text-slate-200`}>
             {card.closingCountdownDays == null
               ? t('dailyBrief.dealCard.noClosingDate')
               : t('dailyBrief.dealCard.closingCountdown', { count: card.closingCountdownDays })}
           </p>
-          <p className={`text-xs ${COLORS.gray.text700}`}>
+          <p className={`text-xs ${COLORS.gray.text700} dark:text-slate-200`}>
             {card.nextMilestoneTitle
               ? t('dailyBrief.dealCard.nextMilestone', { title: card.nextMilestoneTitle })
               : t('dailyBrief.dealCard.noNextMilestone')}

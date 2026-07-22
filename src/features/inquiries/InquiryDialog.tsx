@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
 import {
   Dialog,
   DialogContent,
@@ -16,15 +15,31 @@ import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
-import { PropertyInquiry } from '../../types';
-import { getRentalInquirySchema, getSaleInquirySchema } from './inquirySchema';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Switch } from '@/components/ui/switch';
+import type { PropertyInquiry } from '../../types';
+import {
+  getInquirySchema,
+  LEAD_SOURCE_OPTIONS,
+  type InquiryDialogFormValues,
+  type InquirySubmitPayload,
+} from './inquirySchema';
 import { InquiryTypeSelector } from './InquiryTypeSelector';
+import { US_STATES } from '@/features/leads/schemas/lead-form';
+
+export type { InquirySubmitPayload };
 
 interface InquiryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   inquiry: PropertyInquiry | null;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: InquirySubmitPayload) => Promise<void>;
   loading?: boolean;
 }
 
@@ -36,123 +51,103 @@ export const InquiryDialog = ({
   loading = false,
 }: InquiryDialogProps) => {
   const { t } = useTranslation(['leads', 'common']);
-  const [inquiryType, setInquiryType] = useState<'rental' | 'sale'>('rental');
 
-  // Conditional schema based on inquiry type
-  const inquirySchema = inquiryType === 'rental'
-    ? getRentalInquirySchema(t)
-    : getSaleInquirySchema(t);
-  type InquiryFormData = z.infer<typeof inquirySchema>;
+  const inquirySchema = useMemo(() => getInquirySchema(t), [t]);
 
-  // Type assertion for onSubmit to maintain type safety
-  const typedOnSubmit = onSubmit as (data: InquiryFormData) => Promise<void>;
+  const emptyDefaults = useMemo(
+    (): InquiryDialogFormValues => ({
+      name: '',
+      phone: '',
+      email: '',
+      preferred_city: '',
+      preferred_state: undefined,
+      lead_source: undefined,
+      pre_approved: false,
+      inquiry_type: 'rental',
+      min_rent_budget: undefined,
+      max_rent_budget: undefined,
+      min_sale_budget: undefined,
+      max_sale_budget: undefined,
+      notes: '',
+    }),
+    [],
+  );
 
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
+    watch,
     formState: { errors },
-  } = useForm<InquiryFormData>({
+  } = useForm<InquiryDialogFormValues>({
     resolver: zodResolver(inquirySchema),
+    defaultValues: emptyDefaults,
   });
 
+  const inquiryType = watch('inquiry_type');
+  const preferredStateVal = watch('preferred_state');
+  const leadSourceVal = watch('lead_source');
+
   useEffect(() => {
-    if (open) {
-      if (inquiry) {
-        // Detect inquiry type from existing inquiry
-        const existingType = (inquiry as any).inquiry_type || 'rental';
-        setInquiryType(existingType);
-
-        // Reset form with type-specific data
-        if (existingType === 'rental') {
-          reset({
-            name: inquiry.name || '',
-            phone: inquiry.phone || '',
-            email: inquiry.email || '',
-            preferred_city: inquiry.preferred_city || '',
-            preferred_district: inquiry.preferred_district || '',
-            min_rent_budget: (inquiry as any).min_rent_budget || undefined,
-            max_rent_budget: (inquiry as any).max_rent_budget || undefined,
-            inquiry_type: 'rental',
-            notes: inquiry.notes || '',
-          } as any);
-        } else {
-          reset({
-            name: inquiry.name || '',
-            phone: inquiry.phone || '',
-            email: inquiry.email || '',
-            preferred_city: inquiry.preferred_city || '',
-            preferred_district: inquiry.preferred_district || '',
-            min_sale_budget: (inquiry as any).min_sale_budget || undefined,
-            max_sale_budget: (inquiry as any).max_sale_budget || undefined,
-            inquiry_type: 'sale',
-            notes: inquiry.notes || '',
-          } as any);
-        }
-      } else {
-        // New inquiry - use current inquiry type
-        if (inquiryType === 'rental') {
-          reset({
-            name: '',
-            phone: '',
-            email: '',
-            preferred_city: '',
-            preferred_district: '',
-            min_rent_budget: undefined,
-            max_rent_budget: undefined,
-            inquiry_type: 'rental',
-            notes: '',
-          } as any);
-        } else {
-          reset({
-            name: '',
-            phone: '',
-            email: '',
-            preferred_city: '',
-            preferred_district: '',
-            min_sale_budget: undefined,
-            max_sale_budget: undefined,
-            inquiry_type: 'sale',
-            notes: '',
-          } as any);
-        }
-      }
+    if (!open) return;
+    if (inquiry) {
+      reset({
+        name: inquiry.name || '',
+        phone: inquiry.phone || '',
+        email: inquiry.email || '',
+        preferred_city: inquiry.preferred_city || '',
+        preferred_state:
+          inquiry.preferred_state && inquiry.preferred_state.trim().length === 2
+            ? inquiry.preferred_state.toUpperCase()
+            : undefined,
+        lead_source: (inquiry.lead_source ?? undefined) as
+          | InquiryDialogFormValues['lead_source']
+          | undefined,
+        pre_approved: inquiry.pre_approved ?? false,
+        inquiry_type: inquiry.inquiry_type === 'sale' ? 'sale' : 'rental',
+        min_rent_budget: inquiry.inquiry_type === 'rental' ? inquiry.min_rent_budget ?? undefined : undefined,
+        max_rent_budget: inquiry.inquiry_type === 'rental' ? inquiry.max_rent_budget ?? undefined : undefined,
+        min_sale_budget: inquiry.inquiry_type === 'sale' ? inquiry.min_sale_budget ?? undefined : undefined,
+        max_sale_budget: inquiry.inquiry_type === 'sale' ? inquiry.max_sale_budget ?? undefined : undefined,
+        notes: inquiry.notes || '',
+      });
+    } else {
+      reset(emptyDefaults);
     }
-  }, [open, inquiry, inquiryType, reset]);
+  }, [open, inquiry, reset, emptyDefaults]);
 
-  const handleFormSubmit = async (data: InquiryFormData) => {
-    const cleanedData = {
+  const handleFormSubmit = async (data: InquiryDialogFormValues) => {
+    const payload = {
       ...data,
       email: data.email?.trim() || undefined,
       preferred_city: data.preferred_city?.trim() || undefined,
-      preferred_district: data.preferred_district?.trim() || undefined,
+      preferred_state: data.preferred_state?.trim()?.toUpperCase() || undefined,
+      preferred_district: null as string | null,
       notes: data.notes?.trim() || undefined,
     };
-    await typedOnSubmit(cleanedData);
+    await onSubmit(payload);
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>
-            {inquiry ? t('dialog.editTitle') : t('dialog.addTitle')}
-          </DialogTitle>
+          <DialogTitle>{inquiry ? t('dialog.editTitle') : t('dialog.addTitle')}</DialogTitle>
           <DialogDescription>
-            {inquiry
-              ? t('dialog.editDescription')
-              : t('dialog.addDescription')}
+            {inquiry ? t('dialog.editDescription') : t('dialog.addDescription')}
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-          {/* Inquiry Type Selector - only shown for new inquiries */}
           {!inquiry && (
             <div className="space-y-2">
               <Label>{t('dialog.form.inquiryType')} *</Label>
               <InquiryTypeSelector
                 value={inquiryType}
-                onChange={setInquiryType}
+                onChange={(next) =>
+                  setValue('inquiry_type', next, { shouldValidate: true, shouldDirty: true })
+                }
                 disabled={loading}
               />
             </div>
@@ -200,6 +195,35 @@ export const InquiryDialog = ({
             </div>
           </div>
 
+          <div className="space-y-2">
+            <Label htmlFor="lead_source">{t('dialog.form.leadSource')}</Label>
+            <Select
+              value={leadSourceVal ?? '__none__'}
+              onValueChange={(value) =>
+                setValue(
+                  'lead_source',
+                  value === '__none__'
+                    ? undefined
+                    : (value as NonNullable<InquiryDialogFormValues['lead_source']>),
+                  { shouldValidate: true },
+                )
+              }
+              disabled={loading}
+            >
+              <SelectTrigger id="lead_source">
+                <SelectValue placeholder={t('dialog.form.leadSourcePlaceholder')} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="__none__">{t('dialog.form.leadSourceAny')}</SelectItem>
+                {LEAD_SOURCE_OPTIONS.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="preferred_city">{t('dialog.form.preferredCity')}</Label>
@@ -212,17 +236,54 @@ export const InquiryDialog = ({
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="preferred_district">{t('dialog.form.preferredDistrict')}</Label>
-              <Input
-                id="preferred_district"
-                placeholder={t('dialog.form.preferredDistrictPlaceholder')}
-                {...register('preferred_district')}
+              <Label htmlFor="preferred_state">{t('dialog.form.preferredState')}</Label>
+              <Select
+                value={
+                  preferredStateVal && preferredStateVal.length === 2
+                    ? preferredStateVal
+                    : '__none__'
+                }
+                onValueChange={(value) =>
+                  setValue(
+                    'preferred_state',
+                    value === '__none__' ? undefined : (value as InquiryDialogFormValues['preferred_state']),
+                    { shouldValidate: true },
+                  )
+                }
                 disabled={loading}
-              />
+              >
+                <SelectTrigger id="preferred_state">
+                  <SelectValue placeholder={t('dialog.form.preferredStatePlaceholder')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="__none__">{t('dialog.form.preferredStateAny')}</SelectItem>
+                  {US_STATES.map((s) => (
+                    <SelectItem key={s.value} value={s.value}>
+                      {s.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {errors.preferred_state && (
+                <p className={`text-sm ${COLORS.danger.text}`}>{errors.preferred_state.message}</p>
+              )}
             </div>
           </div>
 
-          {/* Conditional Budget Fields based on Inquiry Type */}
+          <div className="flex items-center justify-between gap-3 py-1">
+            <Label htmlFor="pre_approved" className="text-sm font-normal cursor-pointer">
+              {t('dialog.form.preApproved')}
+            </Label>
+            <Switch
+              id="pre_approved"
+              checked={watch('pre_approved') ?? false}
+              onCheckedChange={(checked) =>
+                setValue('pre_approved', checked, { shouldValidate: true, shouldDirty: true })
+              }
+              disabled={loading}
+            />
+          </div>
+
           {inquiryType === 'rental' ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
@@ -232,11 +293,11 @@ export const InquiryDialog = ({
                   type="number"
                   step="0.01"
                   placeholder={t('dialog.form.minRentBudgetPlaceholder')}
-                  {...register('min_rent_budget' as any, { valueAsNumber: true })}
+                  {...register('min_rent_budget', { valueAsNumber: true })}
                   disabled={loading}
                 />
-                {(errors as any).min_rent_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_rent_budget.message}</p>
+                {errors.min_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{errors.min_rent_budget.message}</p>
                 )}
               </div>
 
@@ -247,11 +308,11 @@ export const InquiryDialog = ({
                   type="number"
                   step="0.01"
                   placeholder={t('dialog.form.maxRentBudgetPlaceholder')}
-                  {...register('max_rent_budget' as any, { valueAsNumber: true })}
+                  {...register('max_rent_budget', { valueAsNumber: true })}
                   disabled={loading}
                 />
-                {(errors as any).max_rent_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_rent_budget.message}</p>
+                {errors.max_rent_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{errors.max_rent_budget.message}</p>
                 )}
               </div>
             </div>
@@ -264,11 +325,11 @@ export const InquiryDialog = ({
                   type="number"
                   step="0.01"
                   placeholder={t('dialog.form.minSaleBudgetPlaceholder')}
-                  {...register('min_sale_budget' as any, { valueAsNumber: true })}
+                  {...register('min_sale_budget', { valueAsNumber: true })}
                   disabled={loading}
                 />
-                {(errors as any).min_sale_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).min_sale_budget.message}</p>
+                {errors.min_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{errors.min_sale_budget.message}</p>
                 )}
               </div>
 
@@ -279,11 +340,11 @@ export const InquiryDialog = ({
                   type="number"
                   step="0.01"
                   placeholder={t('dialog.form.maxSaleBudgetPlaceholder')}
-                  {...register('max_sale_budget' as any, { valueAsNumber: true })}
+                  {...register('max_sale_budget', { valueAsNumber: true })}
                   disabled={loading}
                 />
-                {(errors as any).max_sale_budget && (
-                  <p className={`text-sm ${COLORS.danger.text}`}>{(errors as any).max_sale_budget.message}</p>
+                {errors.max_sale_budget && (
+                  <p className={`text-sm ${COLORS.danger.text}`}>{errors.max_sale_budget.message}</p>
                 )}
               </div>
             </div>
@@ -317,8 +378,8 @@ export const InquiryDialog = ({
               {loading
                 ? t('saving', { ns: 'common' })
                 : inquiry
-                ? t('dialog.updateButton')
-                : t('dialog.addButton')}
+                  ? t('dialog.updateButton')
+                  : t('dialog.addButton')}
             </Button>
           </DialogFooter>
         </form>

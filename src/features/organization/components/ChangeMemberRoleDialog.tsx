@@ -74,7 +74,7 @@ export function ChangeMemberRoleDialog({
   const content = (
     <div className="space-y-4">
       {/* Member info */}
-      <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+      <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg">
         <MemberAvatar
           name={userName}
           email={userEmail}
@@ -82,20 +82,20 @@ export function ChangeMemberRoleDialog({
           size="md"
         />
         <div>
-          <p className="font-medium text-gray-900">{userName}</p>
-          <p className="text-sm text-gray-500">{userEmail}</p>
+          <p className="font-medium text-gray-900 dark:text-slate-50">{userName}</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</p>
         </div>
       </div>
 
       {/* Role change visualization */}
       <div className="flex items-center justify-center gap-4 py-4">
         <div className="text-center">
-          <p className="text-xs text-gray-500 mb-1">{t('team:changeRoleDialog.currentRole')}</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mb-1">{t('team:changeRoleDialog.currentRole')}</p>
           <RoleBadge role={currentRole} />
         </div>
-        <div className="text-2xl text-gray-400">→</div>
+        <div className="text-2xl text-gray-400 dark:text-slate-500">→</div>
         <div className="text-center">
-          <p className="text-xs text-gray-500 mb-1">{t('team:changeRoleDialog.newRole')}</p>
+          <p className="text-xs text-gray-500 dark:text-slate-400 mb-1">{t('team:changeRoleDialog.newRole')}</p>
           <RoleBadge role={newRole} />
         </div>
       </div>

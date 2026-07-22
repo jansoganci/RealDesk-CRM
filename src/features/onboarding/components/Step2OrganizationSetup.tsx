@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -15,22 +12,15 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useOnboarding, type TeamSize } from '../hooks/useOnboarding';
-import { cn } from '@/lib/utils';
+import { US_STATES } from '@/lib/serviceProxy';
+import { useOnboarding } from '../hooks/useOnboarding';
 
 interface Step2OrganizationSetupProps {
   onContinue: () => void;
   onBack: () => void;
 }
 
-const teamSizeOptions: Array<{ value: TeamSize; labelKey: string }> = [
-  { value: '1', labelKey: 'solo' },
-  { value: '2-5', labelKey: 'small' },
-  { value: '6-20', labelKey: 'team' },
-];
 
 const usStateOptions: Array<{ value: string; labelKey: string }> = [
   { value: 'AL', labelKey: 'alabama' },
@@ -135,23 +125,19 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
     licenseState,
     primaryMarketCity,
     primaryMarketState,
-    teamSize,
-    currency,
+
     saveStep2,
     isLoading,
   } = useOnboarding();
   const [saving, setSaving] = useState(false);
-  const step2Schema = useMemo(() => createStep2Schema(t), [t]);
 
-  const form = useForm<Step2FormValues>({
-    resolver: zodResolver(step2Schema),
     defaultValues: {
       organizationName,
       brokerageName,
       licenseState,
       primaryMarketCity,
       primaryMarketState,
-      teamSize: teamSize ?? undefined,
+
     },
   });
 
@@ -162,28 +148,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
       licenseState,
       primaryMarketCity,
       primaryMarketState,
-      teamSize: teamSize ?? undefined,
-    });
-  }, [
-    organizationName,
-    brokerageName,
-    licenseState,
-    primaryMarketCity,
-    primaryMarketState,
-    teamSize,
-    form,
-  ]);
 
-  const handleContinue = async (values: Step2FormValues) => {
-    setSaving(true);
-    try {
-      await saveStep2({
-        ...values,
-        currency: 'USD',
-      });
-      onContinue();
-    } catch {
-      // Error is handled in useOnboarding with toast feedback
     } finally {
       setSaving(false);
     }
@@ -199,24 +164,12 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
           {t('step2.subtitle')}
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-6">
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleContinue)} className="space-y-6">
-            <div className="space-y-4">
-              <Label className="text-base font-semibold">
-                {t('step2.organization.title')}
-              </Label>
 
               <FormField
                 control={form.control}
                 name="organizationName"
                 render={({ field }) => (
-                  <FormItem className="space-y-2">
-                    <FormLabel>{t('step2.organization.name')}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder={t('step2.organization.namePlaceholder')}
+
                         disabled={saving || isLoading}
                         maxLength={255}
                       />
@@ -230,7 +183,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                 control={form.control}
                 name="brokerageName"
                 render={({ field }) => (
-                  <FormItem className="space-y-2">
+
                     <FormLabel>{t('step2.organization.brokerageName')}</FormLabel>
                     <FormControl>
                       <Input
@@ -243,177 +196,13 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                     <FormMessage />
                   </FormItem>
                 )}
-              />
 
-              <FormField
-                control={form.control}
-                name="licenseState"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('step2.organization.licenseState')}</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={saving || isLoading}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('step2.organization.licenseStatePlaceholder')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {usStateOptions.map((state) => (
-                          <SelectItem key={state.value} value={state.value}>
-                            {t(`step2.states.${state.labelKey}`)}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <div className="space-y-4 pt-4 border-t">
-              <Label className="text-base font-semibold">
-                {t('step2.market.title')}
-              </Label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="primaryMarketCity"
-                  render={({ field }) => (
-                    <FormItem className="space-y-2">
-                      <FormLabel>{t('step2.market.city')}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder={t('step2.market.cityPlaceholder')}
-                          disabled={saving || isLoading}
-                          maxLength={120}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="primaryMarketState"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t('step2.market.state')}</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        disabled={saving || isLoading}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t('step2.market.statePlaceholder')} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {usStateOptions.map((state) => (
-                            <SelectItem key={state.value} value={state.value}>
-                              {t(`step2.states.${state.labelKey}`)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </div>
-
-            <div className="space-y-4 pt-4 border-t">
-              <FormField
-                control={form.control}
-                name="teamSize"
-                render={({ field }) => (
-                  <FormItem className="space-y-2">
-                    <FormLabel className="text-base font-semibold">
-                      {t('step2.organization.teamSize')}
-                    </FormLabel>
-                    <FormControl>
-                      <RadioGroup
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        className="space-y-3"
-                        disabled={saving || isLoading}
-                      >
-                        {teamSizeOptions.map((option) => {
-                          const isSelected = field.value === option.value;
-
-                          return (
-                            <div
-                              key={option.value}
-                              className={cn(
-                                'flex items-center space-x-3 p-4 rounded-lg border-2 cursor-pointer transition-all',
-                                'hover:bg-slate-50 hover:border-blue-300',
-                                isSelected
-                                  ? 'border-blue-500 bg-blue-50'
-                                  : 'border-slate-200 bg-white'
-                              )}
-                              onClick={() => !saving && !isLoading && field.onChange(option.value)}
-                            >
-                              <RadioGroupItem
-                                value={option.value}
-                                id={`team-${option.value}`}
-                                className="flex-shrink-0"
-                              />
-                              <Label
-                                htmlFor={`team-${option.value}`}
-                                className="flex-1 cursor-pointer"
-                              >
-                                <span
-                                  className={cn(
-                                    'text-sm font-medium',
-                                    isSelected ? 'text-blue-900' : 'text-slate-700'
-                                  )}
-                                >
-                                  {t(`step2.organization.teamSizeOptions.${option.labelKey}`)}
-                                </span>
-                              </Label>
-                            </div>
-                          );
-                        })}
-                      </RadioGroup>
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-            </div>
 
-            <div className="space-y-4 pt-4 border-t">
-              <div className="space-y-2">
-                <Label className="text-base font-semibold text-muted-foreground">
-                  {t('step2.preferences.title')}
-                </Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('step2.preferences.description')}
-                </p>
-                <div className="space-y-2 pt-2">
-                  <Label htmlFor="currency" className="text-sm">
-                    {t('step2.preferences.currency')}
-                  </Label>
-                  <Select value={currency} disabled>
-                    <SelectTrigger id="currency">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="USD">
-                        {t('step2.preferences.currencyOptions.usd')}
-                      </SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-              </div>
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4">

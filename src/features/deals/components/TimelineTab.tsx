@@ -238,7 +238,7 @@ export function TimelineTab({ deal, readOnly = false }: TimelineTabProps) {
         </CardContent>
       </Card>
 
-      {loading && <p className={cn('text-sm', COLORS.gray.text600)}>{t('timeline.loading')}</p>}
+      {loading && <p className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-300')}>{t('timeline.loading')}</p>}
       {error && <p className={cn('text-sm', COLORS.danger.text)}>{error}</p>}
 
       {!loading &&
@@ -260,7 +260,7 @@ export function TimelineTab({ deal, readOnly = false }: TimelineTabProps) {
                 {group.rows.length === 0 ? (
                   <Card>
                     <CardContent className="py-4">
-                      <p className={cn('text-sm', COLORS.gray.text600)}>{t('timeline.emptyPhase')}</p>
+                      <p className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-300')}>{t('timeline.emptyPhase')}</p>
                     </CardContent>
                   </Card>
                 ) : (
@@ -291,7 +291,7 @@ export function TimelineTab({ deal, readOnly = false }: TimelineTabProps) {
         <div className="space-y-3">
           <Card>
             <CardContent className="py-3">
-              <p className={cn('text-sm font-semibold', COLORS.gray.text900)}>{t('timeline.customSectionTitle')}</p>
+              <p className={cn('text-sm font-semibold', COLORS.gray.text900, 'dark:text-slate-100')}>{t('timeline.customSectionTitle')}</p>
             </CardContent>
           </Card>
           {customMilestones.map((milestone) => (

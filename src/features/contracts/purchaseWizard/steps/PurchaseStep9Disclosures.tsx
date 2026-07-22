@@ -166,7 +166,7 @@ export function PurchaseStep9Disclosures({
 
       <section className="space-y-3 rounded-lg border p-4">
         <h4 className="text-sm font-medium">{t('purchaseWizard.step9.agentsTitle')}</h4>
-        <div className="grid gap-2 md:grid-cols-2 text-sm">
+        <div className="grid gap-4 md:grid-cols-2 text-sm">
           <p>{t('purchaseWizard.step9.buyerAgent', { value: buyerAgent })}</p>
           <p>{t('purchaseWizard.step9.sellerAgent', { value: sellerAgent })}</p>
         </div>

@@ -34,8 +34,8 @@ export const StatusBadge = memo(({
         sizeClasses,
         'font-medium border',
         isActive
-          ? 'bg-green-50 text-green-700 border-green-200'
-          : 'bg-amber-50 text-amber-700 border-amber-200',
+          ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-950/40 dark:text-green-300 dark:border-green-800'
+          : 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/40 dark:text-amber-300 dark:border-amber-800',
         className
       )}
     >

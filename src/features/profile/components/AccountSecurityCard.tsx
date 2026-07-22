@@ -16,12 +16,12 @@ function SecurityRow({ icon, title, description, buttonLabel, onClick }: Securit
   return (
     <div className="flex items-center justify-between gap-4 py-4 group">
       <div className="flex items-center gap-3 min-w-0">
-        <div className="flex-shrink-0 text-gray-400 group-hover:text-gray-600 transition-colors">
+        <div className="flex-shrink-0 text-gray-400 dark:text-slate-500 group-hover:text-gray-600 dark:group-hover:text-slate-300 transition-colors">
           {icon}
         </div>
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-900">{title}</p>
-          <p className="text-sm text-gray-500 truncate">{description}</p>
+          <p className="text-sm font-medium text-gray-900 dark:text-slate-100">{title}</p>
+          <p className="text-sm text-gray-500 dark:text-slate-400 truncate">{description}</p>
         </div>
       </div>
       <Button
@@ -29,7 +29,7 @@ function SecurityRow({ icon, title, description, buttonLabel, onClick }: Securit
         variant="outline"
         size="sm"
         onClick={onClick}
-        className="flex-shrink-0 text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+        className="flex-shrink-0 text-gray-700 dark:text-slate-200 hover:text-gray-900 dark:hover:text-slate-100 hover:bg-gray-50 dark:hover:bg-slate-800"
       >
         {buttonLabel}
       </Button>
@@ -54,13 +54,13 @@ export function AccountSecurityCard() {
 
   return (
     <>
-      <div className="rounded-lg border border-gray-200 bg-white shadow-sm">
-        <div className="px-4 py-3 border-b border-gray-100">
-          <h3 className="text-sm font-medium text-gray-500 uppercase tracking-wide">
+      <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-sm">
+        <div className="px-4 py-3 border-b border-gray-100 dark:border-slate-800">
+          <h3 className="text-sm font-medium text-gray-500 dark:text-slate-400 uppercase tracking-wide">
             {t('accountSecurity.title')}
           </h3>
         </div>
-        <div className="px-4 divide-y divide-gray-100">
+        <div className="px-4 divide-y divide-gray-100 dark:divide-slate-800">
           <SecurityRow
             icon={<Mail className="h-5 w-5" />}
             title={t('accountSecurity.changeEmailButton')}

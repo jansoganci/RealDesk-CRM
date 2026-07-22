@@ -16,6 +16,15 @@ import { ThisWeek } from './components/ThisWeek';
 import { DailyBriefHeader } from './components/DailyBriefHeader';
 import { DealHealthCard } from './components/DealHealthCard';
 import { IncomeForecastCard } from './components/IncomeForecastCard';
+import { ExpiringAgreementsCard } from '@/features/leads/components/ExpiringAgreementsCard';
+import { LeadSourceBreakdownCard } from '@/features/leads/components/LeadSourceBreakdownCard';
+
+const leadInsightsGrid = (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <ExpiringAgreementsCard />
+    <LeadSourceBreakdownCard />
+  </div>
+);
 
 export const Dashboard = () => {
   const { t } = useTranslation('dashboard');
@@ -58,21 +67,24 @@ export const Dashboard = () => {
         {loading ? (
           <Card>
             <CardContent className="py-6">
-              <p className={`text-sm ${COLORS.gray.text600}`}>{t('dailyBrief.loading')}</p>
+              <p className={`text-sm ${COLORS.gray.text600} dark:text-slate-300`}>{t('dailyBrief.loading')}</p>
             </CardContent>
           </Card>
         ) : error ? (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-red-200 bg-red-50 dark:border-red-900 dark:bg-red-950/50">
             <CardContent className="py-6">
               <p className={`text-sm ${COLORS.danger.textDark}`}>{error}</p>
             </CardContent>
           </Card>
         ) : !hasActiveDeals ? (
-          <Card>
-            <CardContent className="py-6">
-              <p className={`text-sm ${COLORS.gray.text700}`}>{t('dailyBrief.empty.noDeals')}</p>
-            </CardContent>
-          </Card>
+          <div className="space-y-4">
+            <Card>
+              <CardContent className="py-6">
+                <p className={`text-sm ${COLORS.gray.text700} dark:text-slate-200`}>{t('dailyBrief.empty.noDeals')}</p>
+              </CardContent>
+            </Card>
+            {leadInsightsGrid}
+          </div>
         ) : (
           <div className="space-y-4">
             <DailyBriefHeader
@@ -84,9 +96,10 @@ export const Dashboard = () => {
             <WaitingOnOthers items={data.waitingOnOthers} />
             <ThisWeek items={data.due7Days} />
             <IncomeForecastCard />
+            {leadInsightsGrid}
             {data.dealHealthCards.length > 0 && (
               <div className="space-y-2">
-                <p className={`text-sm font-semibold ${COLORS.gray.text900}`}>
+                <p className={`text-sm font-semibold ${COLORS.gray.text900} dark:text-slate-100`}>
                   {t('dailyBrief.dealCard.title')}
                 </p>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3">

@@ -2,6 +2,16 @@
 
 This directory contains all project documentation organized by purpose and status.
 
+## Current Product Direction
+
+RealDesk is a US-focused, English-only CRM for solo real estate agents. For the current cleanup/legal status, start with:
+
+- `US_CLEANUP_LEGAL_READINESS.md` - US residue cleanup inventory, legal research checklist, billing go-live audit, and V1/V1.5/V2 definitions
+- `sprint-audits.md` - Current sprint implementation audit
+- `research/RealDesk_Product_Workflow_Document.md` - US product workflow map
+
+Older non-US-market documents remain in `archive/` and some stale reference files for historical context only. They are not current product guidance.
+
 ## 📁 Directory Structure
 
 ### `/reference/`
@@ -13,44 +23,18 @@ This directory contains all project documentation organized by purpose and statu
 - `CONTRIBUTING.md` - Contribution guidelines
 - `DEPLOYMENT.md` - Deployment procedures
 
-### `/planning/`
-**Active planning documents** - Features and improvements being planned:
-- `contracts-hub-and-sale-v2.md` - Contracts hub implementation plan
-- `EXTRACTION_IMPLEMENTATION_PLAN.md` - Text extraction system plan
-- `HYBRID_EXTRACTION_ANALYSIS.md` - Hybrid extraction analysis
-- `stripe-integration-plan.md` - Stripe payment integration plan
-- `BILLING_WORKFLOW_PLAN.md` - Billing and subscription workflow
-- `STRIPE_*.md` - Stripe-related planning docs
-- `*_optimization_plan.md` - Performance optimization plans
-- `todos.md` - Active task list
-- `onboarding-migration-analysis.md` - Onboarding data storage architecture review
-- `agency-ekleme.md` - Agency onboarding notes (Turkish)
-
-### `/implementation/`
-**Active implementation guides** - Step-by-step guides for ongoing work:
-- `EMAIL_TEMPLATES.md` - Email template documentation
-- `COOKIE_CONSENT_README.md` - Cookie consent system guide
-
 ### `/research/`
 **Market research and strategy** - Business and market analysis:
-- `us_real_estate_market_research.md` - US market research
-- `RealDesk_Product_Workflow_Document.md` - Product workflow (CURRENT)
-- `real.estate.US.market.analysis.md` - US market analysis (CURRENT)
 
-### `/content/`
-**Long-form text drafts** (not app source):
-- `duz-metin.txt` - Plain-text draft / export
 
 ### `/samples/`
-**Reference assets** moved out of repo root (contracts, media, legal HTML samples):
+**Reference assets** moved out of repo root:
 - `contracts/` - Example PDFs for sale contract work
 - `media/` - Images kept for reference (favicon variant, SEO, misc.)
-- `legal/` - e.g. KVKK HTML sample drafts
 
 ### `/design/`
 **Design documentation** - UI/UX design rules and guidelines:
 - `claude.md` - Design rulebook and guidelines
-- `EmlakCRM_Tasarim_Sistemi_Analizi.md` - Design system (colors, typography, components)
 
 ### `/security/`
 **Security records** - Incident notes and remediation checklists:
@@ -74,17 +58,13 @@ Notable archived items:
 - **DB migrations naming:** root `CLAUDE.md` → *Database migrations (naming)* — files are `0001_…sql`, `0002_…sql`, … (not `YYYYMMDDHHmmss`).
 
 ### For Planning
-- Active plans: `/planning/`
 - Research: `/research/`
-- Marketing & narrative: `/marketing/`
-
-### For Implementation
-- Implementation guides: `/implementation/`
+- US cleanup/legal readiness: `/US_CLEANUP_LEGAL_READINESS.md`
 - Design rules: `/design/claude.md`
 
 ## 📝 Document Status
 
-- **Active**: Documents in `/planning/`, `/implementation/`, `/reference/`
+- **Active**: Documents in `/reference/`, `/research/`, and top-level current status files
 - **Archived**: Documents in `/archive/` (completed implementations)
 - **Research**: Documents in `/research/` (ongoing research)
 
@@ -92,6 +72,4 @@ Notable archived items:
 
 - Move completed implementations to `/archive/completed/`
 - Move completed audits to `/archive/audits/`
-- Keep active planning docs in `/planning/`
 - Update this README when structure changes
-

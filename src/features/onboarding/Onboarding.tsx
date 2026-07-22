@@ -34,14 +34,14 @@ export function Onboarding() {
       case 2:
         return <Step2OrganizationSetup onContinue={nextStep} onBack={previousStep} />;
       case 3:
-        return <Step3QuickStart onComplete={handleComplete} />;
+        return <Step3QuickStart onComplete={handleComplete} onBack={previousStep} />;
       default:
         return <Step1GoalSelection onContinue={nextStep} />;
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-950 dark:to-slate-900 flex flex-col">
       <div className="flex-1 flex items-center justify-center p-4">
         <PageContainer className="w-full max-w-4xl">
           <div className="space-y-8">
@@ -58,4 +58,3 @@ export function Onboarding() {
     </div>
   );
 }
-

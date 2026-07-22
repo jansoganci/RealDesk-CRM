@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useOrg } from '@/contexts/OrgContext';
 import { onboardingService, userPreferencesService } from '@/lib/serviceProxy';
+import { onboardingService } from '../services/onboarding.service';
+import { organizationService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { createLogger } from '@/lib/logger';
 import { toast } from 'sonner';
@@ -54,6 +56,13 @@ function normalizeTeamSize(value: string | null | undefined): TeamSize | null {
   }
 
   return null;
+
+export interface OnboardingOrganizationProfile {
+  organizationName: string;
+  brokerageName: string;
+  licenseState: string;
+  primaryMarketCity: string;
+  primaryMarketState: string;
 }
 
 interface UseOnboardingReturn {
@@ -72,6 +81,11 @@ interface UseOnboardingReturn {
 
   // Actions
   setPrimaryUseCase: (useCase: PrimaryUseCase) => void;
+  setOrganizationName: (name: string) => void;
+  setBrokerageName: (name: string) => void;
+  setLicenseState: (state: string) => void;
+  setPrimaryMarketCity: (city: string) => void;
+  setPrimaryMarketState: (state: string) => void;
   goToStep: (step: number) => void;
   nextStep: () => void;
   previousStep: () => void;
@@ -79,12 +93,13 @@ interface UseOnboardingReturn {
   // Save methods
   saveStep1: () => Promise<void>;
   saveStep2: (profile: AgentProfileFormData) => Promise<void>;
+  saveStep2: (profile: OnboardingOrganizationProfile) => Promise<void>;
   completeOnboarding: () => Promise<void>;
   resumeFromStep: () => void;
 }
 
 export function useOnboarding(): UseOnboardingReturn {
-  const { currentOrg, loading: orgLoading } = useOrg();
+  const { currentOrg, loading: orgLoading, refreshOrg } = useOrg();
   const [currentStep, setCurrentStep] = useState(1);
   const [primaryUseCase, setPrimaryUseCase] = useState<PrimaryUseCase | null>(null);
   const [organizationName, setOrganizationName] = useState('');
@@ -149,6 +164,10 @@ export function useOnboarding(): UseOnboardingReturn {
             ? responses.primary_market_state
             : currentOrg?.primary_market_state ?? ''
         );
+        setBrokerageName(currentOrg?.brokerage_name ?? '');
+        setLicenseState(currentOrg?.license_state ?? '');
+        setPrimaryMarketCity(currentOrg?.primary_market_city ?? '');
+        setPrimaryMarketState(currentOrg?.primary_market_state ?? '');
       } catch (err) {
         // If new table fails, fall back to old table (graceful degradation)
         logger.warn('Failed to load from user_onboarding_responses, using fallback:', err);
@@ -182,6 +201,13 @@ export function useOnboarding(): UseOnboardingReturn {
     currentOrg?.license_state,
     currentOrg?.primary_market_city,
     currentOrg?.primary_market_state,
+    currentOrg?.brokerage_name,
+    currentOrg?.id,
+    currentOrg?.license_state,
+    currentOrg?.name,
+    currentOrg?.primary_market_city,
+    currentOrg?.primary_market_state,
+    currentOrg?.primary_use_case,
   ]);
 
   const goToStep = useCallback((step: number) => {
@@ -248,6 +274,7 @@ export function useOnboarding(): UseOnboardingReturn {
   }, [currentOrg?.id, primaryUseCase, nextStep]);
 
   const saveStep2 = useCallback(async (profile: AgentProfileFormData) => {
+  const saveStep2 = useCallback(async (profile: OnboardingOrganizationProfile) => {
     if (!currentOrg?.id) {
       setError('Organization not found');
       return;
@@ -260,17 +287,26 @@ export function useOnboarding(): UseOnboardingReturn {
     const cleanedPrimaryMarketState = profile.primaryMarketState.trim().toUpperCase();
 
     if (!cleanedOrganizationName || cleanedOrganizationName.length < 2) {
+    if (!profile.organizationName || profile.organizationName.trim().length < 2) {
       setError('Organization name must be at least 2 characters');
       return;
     }
 
     if (cleanedOrganizationName.length > 255) {
+    if (profile.organizationName.length > 255) {
       setError('Organization name must not exceed 255 characters');
       return;
     }
 
     if (!profile.teamSize) {
       setError('Please select team size');
+    if (
+      !profile.brokerageName.trim() ||
+      !profile.licenseState ||
+      !profile.primaryMarketCity.trim() ||
+      !profile.primaryMarketState
+    ) {
+      setError('Please complete all required organization profile fields');
       return;
     }
 
@@ -302,6 +338,26 @@ export function useOnboarding(): UseOnboardingReturn {
       setLicenseState(cleanedLicenseState);
       setPrimaryMarketCity(cleanedPrimaryMarketCity);
       setPrimaryMarketState(cleanedPrimaryMarketState);
+      const trimmedProfile: OnboardingOrganizationProfile = {
+        organizationName: profile.organizationName.trim(),
+        brokerageName: profile.brokerageName.trim(),
+        licenseState: profile.licenseState.trim().toUpperCase(),
+        primaryMarketCity: profile.primaryMarketCity.trim(),
+        primaryMarketState: profile.primaryMarketState.trim().toUpperCase(),
+      };
+
+      // 1. Update organization profile
+      await organizationService.updateOnboardingProfile(currentOrg.id, trimmedProfile);
+
+      // 2. Advance onboarding step
+      await onboardingService.updateOnboardingStep(currentOrg.id, 2);
+
+      setOrganizationName(trimmedProfile.organizationName);
+      setBrokerageName(trimmedProfile.brokerageName);
+      setLicenseState(trimmedProfile.licenseState);
+      setPrimaryMarketCity(trimmedProfile.primaryMarketCity);
+      setPrimaryMarketState(trimmedProfile.primaryMarketState);
+      await refreshOrg({ silent: true });
 
       // 3. Track event
       await onboardingService.trackEvent(
@@ -324,6 +380,13 @@ export function useOnboarding(): UseOnboardingReturn {
 
       // 4. Move to next step
       nextStep();
+          organization_name: trimmedProfile.organizationName,
+          brokerage_name: trimmedProfile.brokerageName,
+          license_state: trimmedProfile.licenseState,
+          primary_market_city: trimmedProfile.primaryMarketCity,
+          primary_market_state: trimmedProfile.primaryMarketState,
+        }
+      );
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to save agent profile';
       setError(errorMessage);
@@ -333,6 +396,7 @@ export function useOnboarding(): UseOnboardingReturn {
       setIsLoading(false);
     }
   }, [currentOrg?.id, nextStep]);
+  }, [currentOrg?.id, refreshOrg]);
 
   const completeOnboarding = useCallback(async () => {
     if (!currentOrg?.id) {
@@ -442,6 +506,10 @@ export function useOnboarding(): UseOnboardingReturn {
     if (currentOrg.name) {
       setOrganizationName(currentOrg.name);
     }
+    setBrokerageName(currentOrg.brokerage_name ?? '');
+    setLicenseState(currentOrg.license_state ?? '');
+    setPrimaryMarketCity(currentOrg.primary_market_city ?? '');
+    setPrimaryMarketState(currentOrg.primary_market_state ?? '');
 
     // Currency is USD only for US onboarding flow
     setError(null);
@@ -460,6 +528,14 @@ export function useOnboarding(): UseOnboardingReturn {
     isLoading: isLoading || orgLoading,
     error,
     setPrimaryUseCase,
+    isLoading: isLoading || orgLoading,
+    error,
+    setPrimaryUseCase,
+    setOrganizationName,
+    setBrokerageName,
+    setLicenseState,
+    setPrimaryMarketCity,
+    setPrimaryMarketState,
     goToStep,
     nextStep,
     previousStep,
@@ -469,4 +545,3 @@ export function useOnboarding(): UseOnboardingReturn {
     resumeFromStep,
   };
 }
-

@@ -1,8 +1,10 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router-dom';
 import { TableHead } from '@/components/ui/table';
 import { AnimatedTabs } from '@/components/ui/animated-tabs';
 import { InquiryDialog } from '@/features/inquiries/InquiryDialog';
+import type { InquirySubmitPayload } from '@/features/inquiries/inquirySchema';
 import { InquiryMatchesDialog } from '@/features/inquiries/InquiryMatchesDialog';
 import { PropertyInquiry } from '@/types';
 import { Inbox, Home, TrendingUp, LayoutGrid, List } from 'lucide-react';
@@ -10,8 +12,6 @@ import { ListPageTemplate } from '@/components/templates/ListPageTemplate';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { useOrg } from '@/contexts/OrgContext';
-import * as z from 'zod';
-import { getInquirySchema } from '@/features/inquiries/inquirySchema';
 import { useInquiriesData } from '@/features/inquiries/hooks/useInquiriesData';
 import { useInquiryFilters } from '@/features/inquiries/hooks/useInquiryFilters';
 import { useInquiryDialogs } from '@/features/inquiries/hooks/useInquiryDialogs';
@@ -29,9 +29,7 @@ import { Info } from 'lucide-react';
 export const Leads = () => {
   const { t } = useTranslation(['leads', 'common']);
   const { isMember } = useOrg();
-  const inquirySchema = useMemo(() => getInquirySchema(t), [t]);
-  type InquiryFormData = z.infer<typeof inquirySchema>;
-
+  const [searchParams, setSearchParams] = useSearchParams();
   const [view, setView] = useState<'pipeline' | 'list'>('pipeline');
   const [detailLeadId, setDetailLeadId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
@@ -94,6 +92,15 @@ export const Leads = () => {
     openInquiryDialog();
   }, [openInquiryDialog]);
 
+  useEffect(() => {
+    if (searchParams.get('action') === 'add' && !isMember) {
+      openInquiryDialog();
+      const nextParams = new URLSearchParams(searchParams);
+      nextParams.delete('action');
+      setSearchParams(nextParams, { replace: true });
+    }
+  }, [isMember, openInquiryDialog, searchParams, setSearchParams]);
+
   const handleEditLead = useCallback((inquiry: PropertyInquiry) => {
     openEditInquiryDialog(inquiry);
   }, [openEditInquiryDialog]);
@@ -118,10 +125,10 @@ export const Leads = () => {
   }, [inquiryToDelete, handleDelete]);
 
   const handleSubmit = useCallback(
-    async (data: InquiryFormData) => {
+    async (data: InquirySubmitPayload) => {
       await handleCreate(data, selectedInquiry);
     },
-    [handleCreate, selectedInquiry]
+    [handleCreate, selectedInquiry],
   );
 
   const renderDesktopRow = useCallback(
@@ -282,7 +289,7 @@ export const Leads = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="inline-flex">
-                      <Info className="h-4 w-4 text-slate-400" />
+                      <Info className="h-4 w-4 text-slate-400 dark:text-slate-500" />
                     </span>
                   </TooltipTrigger>
                   <TooltipContent>{t('common:readOnlyMode')}</TooltipContent>
@@ -313,6 +320,8 @@ export const Leads = () => {
           pipeline={pipeline}
           loading={pipelineLoading}
           onOpenLead={(lead) => openLeadDetail(lead)}
+          onRefresh={refreshPipeline}
+          readOnly={isMember}
         />
       </PageContainer>
     </MainLayout>

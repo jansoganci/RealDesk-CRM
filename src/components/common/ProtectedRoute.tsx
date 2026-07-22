@@ -61,8 +61,10 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
     };
   }, [user, loading, isEmailConfirmed]);
 
-  // Show loading state while checking auth, org, or billing
-  if (loading || isChecking || orgLoading || billingLoading) {
+  // Show loading state while checking auth, org, or billing.
+  // Keep rendering when org is already loaded — background refresh must not unmount onboarding.
+  const isInitialOrgLoad = orgLoading && !currentOrg;
+  if (loading || isChecking || isInitialOrgLoad || billingLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900"></div>

@@ -15,30 +15,30 @@ export function WaitingOnOthers({ items }: WaitingOnOthersProps) {
   const { t } = useTranslation('dashboard');
 
   return (
-    <Card className="border-sky-200 bg-sky-50">
+    <Card className="border-sky-200 bg-sky-50 dark:border-sky-800 dark:bg-sky-950/30">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sky-900 text-base">
+        <CardTitle className="flex items-center gap-2 text-sky-900 dark:text-sky-100 text-base">
           <Clock3 className="h-4 w-4" />
           {t('dailyBrief.waiting.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 ? (
-          <p className="text-sm text-sky-800">{t('dailyBrief.waiting.empty')}</p>
+          <p className="text-sm text-sky-800 dark:text-sky-200">{t('dailyBrief.waiting.empty')}</p>
         ) : (
           items.map((item) => (
-            <div key={item.milestoneId} className="rounded-lg border border-sky-200 bg-white p-3">
+            <div key={item.milestoneId} className="rounded-lg border border-sky-200 bg-white dark:border-sky-800 dark:bg-slate-900 p-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{item.dealName}</p>
-                  <p className="text-sm text-slate-700">{item.milestoneTitle}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.dealName}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-200">{item.milestoneTitle}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {t('dailyBrief.waiting.counterparty', {
                       name: item.counterpartyName ?? t('dailyBrief.common.unknown'),
                     })}
                   </p>
                 </div>
-                <Badge className="border-sky-200 bg-sky-100 text-sky-800">
+                <Badge className="border-sky-200 bg-sky-100 text-sky-800 dark:border-sky-700 dark:bg-sky-900/60 dark:text-sky-200">
                   {item.lastNudgeSentAt
                     ? t('dailyBrief.waiting.nudged')
                     : t('dailyBrief.waiting.notNudged')}

@@ -152,7 +152,7 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
 
   return (
     <Form {...form}>
-      <Card className="mx-auto w-full max-w-[700px] border shadow-sm">
+      <Card className="mx-auto w-full max-w-6xl border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
           <div className="space-y-1 pr-8">
             <p className="text-sm font-medium text-muted-foreground">

@@ -39,7 +39,7 @@ export const FinancialRatiosComponent = ({
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {[1, 2].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <Skeleton className="h-4 w-28" />
@@ -100,11 +100,11 @@ export const FinancialRatiosComponent = ({
       {kpis.map((kpi, index) => (
         <Card
           key={index}
-          className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+          className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
         >
           <CardHeader className="pb-3">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium text-gray-600">
+              <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
                 {kpi.title}
               </CardTitle>
               <div
@@ -117,7 +117,7 @@ export const FinancialRatiosComponent = ({
           <CardContent>
             <div className="space-y-2">
               <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-bold text-slate-900">
+                <span className="text-3xl font-bold text-slate-900 dark:text-slate-100">
                   {kpi.value}
                 </span>
                 {kpi.trend === 'up' ? (
@@ -126,7 +126,7 @@ export const FinancialRatiosComponent = ({
                   <TrendingDown className={`h-5 w-5 ${kpi.trendColor}`} />
                 )}
               </div>
-              <p className="text-xs text-gray-500 leading-relaxed">
+              <p className="text-xs text-gray-500 dark:text-slate-400 leading-relaxed">
                 {kpi.description}
               </p>
             </div>

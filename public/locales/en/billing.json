@@ -1,6 +1,6 @@
 {
   "header": {
-    "title": "Choose your plan for Emlak CRM",
+    "title": "Choose your plan for RealDesk",
     "subtitle": "Explore all features and choose the plan that fits your team."
   },
   "billingPeriod": {
@@ -13,7 +13,7 @@
     "pageTitle": "Subscription required",
     "trialActive": {
       "title": "Your access period is active",
-      "subtitle": "Enjoy all Emlak CRM features until {{date}}",
+      "subtitle": "Enjoy all RealDesk features until {{date}}",
       "message": "Explore the dashboard, import your data, and invite your team. When you are ready, choose a plan that fits your agency.",
       "actions": {
         "dashboard": "Go to dashboard",
@@ -32,7 +32,7 @@
     "subscriptionActive": {
       "title": "You already have full access",
       "subtitle": "Thanks for being a subscriber",
-      "message": "You can continue using every feature of Emlak CRM. Manage your subscription or head back to the dashboard anytime.",
+      "message": "You can continue using every feature of RealDesk. Manage your subscription or head back to the dashboard anytime.",
       "actions": {
         "dashboard": "Return to dashboard",
         "manage": "Manage subscription"
@@ -81,7 +81,7 @@
       "critical_other": "Trial ends tomorrow"
     },
     "message": {
-      "default": "Unlock your full potential with Emlak CRM",
+      "default": "Unlock your full potential with RealDesk",
       "warning": "Choose your plan before time runs out",
       "urgent": "Don't lose access — pick a plan now",
       "critical": "Subscribe now to keep your data and access"

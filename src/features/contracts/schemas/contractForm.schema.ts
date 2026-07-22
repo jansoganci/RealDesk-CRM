@@ -148,9 +148,7 @@ export const contractFormSchema = z.object({
     .min(0, t('depositNonNegative'))
     .max(1000000000, t('invalidAmount')),
 
-  currency: z.enum(['USD', 'EUR', 'TRY'], {
-    errorMap: () => ({ message: t('currencyRequired') }),
-  }).default('USD'),
+  currency: z.literal('USD').default('USD'),
 
   commission_amount: z.preprocess(
     (val) => (val === '' || val === undefined || val === null || (typeof val === 'number' && isNaN(val)) ? undefined : val),

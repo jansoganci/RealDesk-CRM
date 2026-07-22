@@ -19,6 +19,9 @@
     "ownerEmail": "Email",
     "address": "Address",
     "city": "City",
+    "state": "State",
+    "stateOptional": "No preference",
+    "zipCode": "ZIP Code",
     "district": "District",
     "propertyType": "Property Type",
     "status": "Status",
@@ -41,11 +44,13 @@
     "ownerPhone": "e.g. +1 555 123 4567",
     "ownerEmail": "e.g. john@email.com",
     "address": "e.g. 123 Main Street",
-    "city": "e.g. New York",
+    "city": "e.g. Austin",
+    "state": "Search or select…",
+    "zipCode": "e.g. 78701",
     "district": "e.g. Manhattan",
     "rentAmount": "e.g. 2500",
     "salePrice": "e.g. 500000",
-    "listingUrl": "e.g. https://...",
+    "listingUrl": "e.g. https://example.com/listing…",
     "notes": "Notes about the property...",
     "tenantName": "e.g. Jane Doe",
     "tenantPhone": "e.g. +1 555 987 6543",
@@ -64,9 +69,7 @@
     "Sold": "Sold"
   },
   "currencies": {
-    "TRY": "TRY",
-    "USD": "USD",
-    "EUR": "EUR"
+    "USD": "USD"
   },
   "actions": {
     "cancel": "Cancel",
@@ -93,6 +96,8 @@
     "salePriceRequired": "Sale price is required",
     "salePricePositive": "Sale price must be positive",
     "currencyRequired": "Select a currency",
+    "invalidState": "Please enter a valid 2-letter US state code",
+    "invalidZip": "Please enter a valid ZIP code (12345 or 12345-6789)",
     "tenantNameRequired": "Tenant name is required",
     "tenantNameMin": "Tenant name must be at least 2 characters",
     "contractStartRequired": "Contract start date is required",

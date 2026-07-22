@@ -86,6 +86,8 @@ export interface ListPageTemplateProps<T> {
   skeletonColumnCount?: number; // Optional: Number of columns for skeleton (default: 5)
   headerContent?: ReactNode; // Optional: Content to render above search/filter row
   leftAction?: ReactNode; // Optional: Content to render to the left of the main add button
+  /** Rendered at top of page body (e.g. hub-level tabs) */
+  pageTop?: ReactNode;
 }
 
 function ListPageTemplateInner<T>({
@@ -112,6 +114,7 @@ function ListPageTemplateInner<T>({
   skeletonColumnCount = 5,
   headerContent,
   leftAction,
+  pageTop,
 }: ListPageTemplateProps<T>) {
   const { t } = useTranslation('common');
 
@@ -137,11 +140,12 @@ function ListPageTemplateInner<T>({
   return (
     <MainLayout title={title}>
       <PageContainer className="min-h-[600px]">
+        {pageTop}
         {headerContent && <div className="mb-6">{headerContent}</div>}
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="relative flex-1 max-w-sm">
-              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${COLORS.muted.textLight}`} />
+              <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
               <Input
                 placeholder={searchPlaceholder || t('searchPlaceholder')}
                 value={searchQuery}
@@ -224,7 +228,7 @@ function ListPageTemplateInner<T>({
           <>
             {/* Desktop Table - Hidden on mobile */}
             <div className="hidden md:block">
-              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95 overflow-hidden animate-fade-in">
+              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 overflow-hidden animate-fade-in">
                 <Table>
                   <TableHeader>
                     <TableRow>

@@ -33,7 +33,7 @@ export const BudgetComparison = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -46,17 +46,17 @@ export const BudgetComparison = ({
 
   if (!budgetComparison || budgetComparison.length === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
         <CardHeader>
-          <CardTitle className="text-xl font-bold text-slate-900">
+          <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
             {t('finance:analytics.budgetVsActual')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-12">
-            <TrendingUp className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <p className="text-gray-500">{t('finance:analytics.noBudgetData')}</p>
-            <p className="text-sm text-gray-400 mt-2">
+            <TrendingUp className="h-16 w-16 text-gray-300 dark:text-slate-600 mx-auto mb-4" />
+            <p className="text-gray-500 dark:text-slate-400">{t('finance:analytics.noBudgetData')}</p>
+            <p className="text-sm text-gray-400 dark:text-slate-500 mt-2">
               {t('finance:analytics.noBudgetDataDesc')}
             </p>
           </div>
@@ -179,12 +179,12 @@ export const BudgetComparison = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
       <CardHeader>
-        <CardTitle className="text-xl font-bold text-slate-900">
+        <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
           {t('finance:analytics.budgetVsActual')}
         </CardTitle>
-        <p className="text-sm text-gray-600 mt-1">
+        <p className="text-sm text-gray-600 dark:text-slate-300 mt-1">
           {t('finance:analytics.budgetVsActualDesc')}
         </p>
       </CardHeader>
@@ -197,21 +197,21 @@ export const BudgetComparison = ({
 
           {/* Category List */}
           <div className="space-y-3">
-            <h4 className="text-sm font-semibold text-gray-700">
+            <h4 className="text-sm font-semibold text-gray-700 dark:text-slate-200">
               {t('finance:analytics.categoryDetails')}
             </h4>
             {topCategories.map((item, index) => (
               <div
                 key={index}
-                className={`flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors ${
+                className={`flex items-center justify-between p-3 rounded-lg bg-gray-50 hover:bg-gray-100 transition-colors dark:bg-slate-800/50 dark:hover:bg-slate-800 ${
                   onCategoryClick ? 'cursor-pointer' : ''
                 }`}
                 onClick={() => onCategoryClick && onCategoryClick(item.category)}
               >
                 <div className="flex-1">
-                  <p className="font-medium text-slate-900">{item.category}</p>
+                  <p className="font-medium text-slate-900 dark:text-slate-100">{item.category}</p>
                   <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-slate-400">
                       {formatCurrency(item.actual)} / {formatCurrency(item.budgeted)}
                     </span>
                     {getStatusBadge(item.status, item.percentage_difference)}

@@ -15,24 +15,24 @@ export function HorizonZone({ items }: HorizonZoneProps) {
   const { t } = useTranslation('dashboard');
 
   return (
-    <Card className="border-amber-200 bg-amber-50">
+    <Card className="border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/30">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-amber-900 text-base">
+        <CardTitle className="flex items-center gap-2 text-amber-900 dark:text-amber-100 text-base">
           <CalendarClock className="h-4 w-4" />
           {t('dailyBrief.horizon.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.length === 0 ? (
-          <p className="text-sm text-amber-800">{t('dailyBrief.horizon.empty')}</p>
+          <p className="text-sm text-amber-800 dark:text-amber-200">{t('dailyBrief.horizon.empty')}</p>
         ) : (
           items.map((item) => (
-            <div key={item.milestoneId} className="rounded-lg border border-amber-200 bg-white p-3">
+            <div key={item.milestoneId} className="rounded-lg border border-amber-200 dark:border-amber-900 bg-white dark:bg-slate-900 p-3">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div>
-                  <p className="text-sm font-semibold text-slate-900">{item.dealName}</p>
-                  <p className="text-sm text-slate-700">{item.milestoneTitle}</p>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.dealName}</p>
+                  <p className="text-sm text-slate-700 dark:text-slate-200">{item.milestoneTitle}</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {item.dueDate} · {item.responsibleParty ?? t('dailyBrief.common.unassigned')}
                   </p>
                 </div>

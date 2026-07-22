@@ -7,10 +7,34 @@
     },
     "backToHub": "Contracts",
     "newContract": "New Contract",
+    "searchPlaceholder": "Search by buyer, seller, property, title…",
+    "filters": {
+      "all": "All types",
+      "purchase": "Purchase agreements",
+      "legacy": "Template drafts"
+    },
+    "table": {
+      "type": "Type",
+      "contract": "Contract",
+      "property": "Property",
+      "status": "Status",
+      "amount": "Amount",
+      "date": "Closing / created",
+      "actions": "Actions",
+      "typePurchase": "Purchase",
+      "typeLegacy": "Template"
+    },
+    "viewDetail": "View details",
+    "dialog": {
+      "deleteTitle": "Delete contract?",
+      "deleteDescription": "This will permanently remove \"{{name}}\". This cannot be undone."
+    },
     "emptyState": {
       "title": "No sale contracts yet",
       "description": "Click the button below to create your first sale contract.",
-      "action": "New Sale Contract"
+      "action": "New Sale Contract",
+      "titleFiltered": "No matching contracts",
+      "descriptionFiltered": "Try a different search or type filter."
     },
     "purchaseSection": {
       "title": "Purchase agreements"
@@ -165,9 +189,7 @@
     },
     "options": {
       "currency": {
-        "TRY": "TRY",
-        "USD": "USD",
-        "EUR": "EUR"
+        "USD": "USD"
       },
       "paymentMethod": {
         "cash": "Cash",

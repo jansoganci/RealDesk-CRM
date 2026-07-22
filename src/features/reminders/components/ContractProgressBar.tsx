@@ -62,18 +62,18 @@ export function ContractProgressBar({
   const getBgColorClass = () => {
     // If 100% or expired, always red background
     if (percentage >= 100 || reminder.days_until_end < 0) {
-      return 'bg-red-100';
+      return 'bg-red-100 dark:bg-red-950/50';
     }
     
     switch (zone) {
       case 'safe':
-        return 'bg-green-100';
+        return 'bg-green-100 dark:bg-green-950/40';
       case 'approaching':
-        return 'bg-yellow-100';
+        return 'bg-yellow-100 dark:bg-yellow-950/40';
       case 'critical':
-        return 'bg-red-100';
+        return 'bg-red-100 dark:bg-red-950/50';
       default:
-        return 'bg-green-100';
+        return 'bg-green-100 dark:bg-green-950/40';
     }
   };
 
@@ -82,7 +82,7 @@ export function ContractProgressBar({
       {showLabel && (
         <div className="flex items-center justify-between text-xs text-muted-foreground">
           {percentage >= 100 || reminder.days_until_end < 0 ? (
-            <span className="text-xs text-red-600 font-medium">
+            <span className="text-xs text-red-600 dark:text-red-400 font-medium">
               {t('progress.expired')}
             </span>
           ) : (
@@ -94,7 +94,7 @@ export function ContractProgressBar({
             </span>
           )}
           {showDaysUntilCritical && daysUntilCritical <= 0 && percentage < 100 && reminder.days_until_end >= 0 && (
-            <span className="text-xs text-red-600 font-medium">
+            <span className="text-xs text-red-600 dark:text-red-400 font-medium">
               {t('progress.inCriticalZone')}
             </span>
           )}

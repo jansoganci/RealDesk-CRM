@@ -60,8 +60,8 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold">{t('enhanced.steps.contract.sectionTitle')}</h3>
-        <p className="text-sm text-gray-600">
+        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t('enhanced.steps.contract.sectionTitle')}</h3>
+        <p className="text-sm text-gray-600 dark:text-slate-300">
           {t('enhanced.steps.contract.sectionDescription')}
         </p>
       </div>
@@ -86,7 +86,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
                 <SelectItem key={property.id} value={property.id}>
                   <div className="flex flex-col">
                     <span>{property.address}</span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-gray-500 dark:text-slate-400">
                       {t('enhanced.steps.contract.fields.propertyStatus', { status: property.status })}
                     </span>
                   </div>
@@ -137,7 +137,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
           <div className="space-y-2">
             <Label htmlFor="contract.rent_amount">{t('enhanced.steps.contract.fields.rentAmount.label')}</Label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500">
+              <span className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-slate-400">
                 {t('enhanced.steps.contract.fields.rentAmount.currencySymbol')}
               </span>
               <Input

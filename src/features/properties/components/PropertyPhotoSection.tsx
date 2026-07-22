@@ -42,8 +42,8 @@ export function PropertyPhotoSection({
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Images className="h-5 w-5 text-gray-500" />
-            <span className="text-sm font-medium text-gray-700">
+            <Images className="h-5 w-5 text-gray-500 dark:text-slate-400" />
+            <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
               {t('dialog.form.photos')}
             </span>
           </div>

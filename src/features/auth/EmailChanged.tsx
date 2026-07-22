@@ -10,12 +10,12 @@ export const EmailChanged = () => {
   const { t } = useTranslation('auth');
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50}`}>
+    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <div className="h-16 w-16 rounded-full bg-emerald-100 flex items-center justify-center">
-              <CheckCircle className="h-8 w-8 text-emerald-600" />
+            <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
+              <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
             </div>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
@@ -24,7 +24,7 @@ export const EmailChanged = () => {
           <CardDescription className="text-center">
             {t('emailChanged.description')}
             <br />
-            <span className="text-xs text-gray-500 mt-2 block">
+            <span className="text-xs text-gray-500 dark:text-slate-400 mt-2 block">
               {t('emailChanged.secondaryDescription')}
             </span>
           </CardDescription>

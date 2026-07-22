@@ -10,17 +10,17 @@ export function LegalDocumentsCard({ language }: LegalDocumentsCardProps) {
     const { t } = useTranslation('profile');
 
     return (
-        <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-blue-200/50 bg-gradient-to-br from-blue-50 to-slate-50 backdrop-blur-sm animate-fade-in lg:col-span-2">
+        <Card className="shadow-luxury hover:shadow-luxury-lg dark:hover:shadow-black/30 transition-all duration-300 border-blue-200/50 dark:border-slate-700 bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-900 dark:to-slate-950 backdrop-blur-sm animate-fade-in lg:col-span-2 dark:shadow-black/25">
             <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
-                        <Scale className="h-5 w-5 text-white" />
+                    <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 dark:from-blue-950 dark:via-slate-900 dark:to-slate-950 rounded-xl shadow-lg shadow-blue-900/20 dark:shadow-black/40">
+                        <Scale className="h-5 w-5 text-white dark:text-slate-100" />
                     </div>
                     <div>
-                        <CardTitle className="text-lg font-bold text-slate-900">
+                        <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">
                             {t('legal.title')}
                         </CardTitle>
-                        <CardDescription className="text-sm text-slate-600 font-medium">
+                        <CardDescription className="text-sm text-slate-600 dark:text-slate-300 font-medium">
                             {t('pageDescription')}
                         </CardDescription>
                     </div>
@@ -33,18 +33,18 @@ export function LegalDocumentsCard({ language }: LegalDocumentsCardProps) {
                         href={`/legal/privacy-policy-${language}.html`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-white hover:shadow-md hover:border-blue-300 transition-all duration-200"
+                        className="group flex items-center justify-between p-4 border border-slate-200 dark:border-slate-600 rounded-lg bg-white/60 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                                <FileText className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
+                                <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>
-                                <div className="font-medium text-slate-900 text-sm">{t('legal.privacy.title')}</div>
-                                <div className="text-xs text-slate-600">{t('legal.privacy.description')}</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100 text-sm">{t('legal.privacy.title')}</div>
+                                <div className="text-xs text-slate-600 dark:text-slate-300">{t('legal.privacy.description')}</div>
                             </div>
                         </div>
-                        <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <ExternalLink className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors shrink-0" />
                     </a>
 
                     {/* Terms of Service */}
@@ -52,18 +52,18 @@ export function LegalDocumentsCard({ language }: LegalDocumentsCardProps) {
                         href={`/legal/terms-of-service-${language}.html`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-white hover:shadow-md hover:border-blue-300 transition-all duration-200"
+                        className="group flex items-center justify-between p-4 border border-slate-200 dark:border-slate-600 rounded-lg bg-white/60 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                                <ScrollText className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
+                                <ScrollText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>
-                                <div className="font-medium text-slate-900 text-sm">{t('legal.terms.title')}</div>
-                                <div className="text-xs text-slate-600">{t('legal.terms.description')}</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100 text-sm">{t('legal.terms.title')}</div>
+                                <div className="text-xs text-slate-600 dark:text-slate-300">{t('legal.terms.description')}</div>
                             </div>
                         </div>
-                        <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <ExternalLink className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors shrink-0" />
                     </a>
 
                     {/* Cookie Policy */}
@@ -71,18 +71,18 @@ export function LegalDocumentsCard({ language }: LegalDocumentsCardProps) {
                         href={`/legal/cookie-policy-${language}.html`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-center justify-between p-4 border border-slate-200 rounded-lg hover:bg-white hover:shadow-md hover:border-blue-300 transition-all duration-200"
+                        className="group flex items-center justify-between p-4 border border-slate-200 dark:border-slate-600 rounded-lg bg-white/60 dark:bg-slate-900/60 hover:bg-white dark:hover:bg-slate-800 hover:shadow-md hover:border-blue-300 dark:hover:border-blue-500 transition-all duration-200"
                     >
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-blue-50 rounded-lg group-hover:bg-blue-100 transition-colors">
-                                <Cookie className="h-5 w-5 text-blue-600" />
+                            <div className="p-2 bg-blue-50 dark:bg-blue-950/60 rounded-lg group-hover:bg-blue-100 dark:group-hover:bg-blue-900/40 transition-colors">
+                                <Cookie className="h-5 w-5 text-blue-600 dark:text-blue-400" />
                             </div>
                             <div>
-                                <div className="font-medium text-slate-900 text-sm">{t('legal.cookies.title')}</div>
-                                <div className="text-xs text-slate-600">{t('legal.cookies.description')}</div>
+                                <div className="font-medium text-slate-900 dark:text-slate-100 text-sm">{t('legal.cookies.title')}</div>
+                                <div className="text-xs text-slate-600 dark:text-slate-300">{t('legal.cookies.description')}</div>
                             </div>
                         </div>
-                        <ExternalLink className="h-4 w-4 text-slate-400 group-hover:text-blue-600 transition-colors" />
+                        <ExternalLink className="h-4 w-4 text-slate-400 dark:text-slate-500 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors shrink-0" />
                     </a>
                 </div>
             </CardContent>

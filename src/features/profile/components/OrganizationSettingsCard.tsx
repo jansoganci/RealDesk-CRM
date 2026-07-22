@@ -85,7 +85,7 @@ export function OrganizationSettingsCard({
           <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
             <Building2 className="h-5 w-5 text-white" />
           </div>
-          <CardTitle className="text-lg font-bold text-slate-900">
+          <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-50">
             {t('organizationSettings.title')}
           </CardTitle>
         </div>
@@ -102,7 +102,7 @@ export function OrganizationSettingsCard({
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-0 divide-y divide-gray-100">
+        <div className="space-y-0 divide-y divide-gray-100 dark:divide-slate-800">
           {/* Organization Name */}
           <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-3">
             <span className="text-sm text-muted-foreground">
@@ -130,7 +130,7 @@ export function OrganizationSettingsCard({
               {t('organizationSettings.fields.orgId')}
             </span>
             <div className="flex items-center gap-2">
-              <code className="text-xs bg-gray-100 px-2 py-1 rounded font-mono text-gray-600 truncate max-w-[200px]">
+              <code className="text-xs bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded font-mono text-gray-600 dark:text-slate-300 truncate max-w-[200px]">
                 {currentOrg.id}
               </code>
               <TooltipProvider>

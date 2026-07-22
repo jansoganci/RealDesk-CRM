@@ -42,13 +42,13 @@ export const QuickAddDialog = ({ open, onOpenChange, onSuccess }: QuickAddDialog
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0 flex flex-col overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 flex-shrink-0">
-          <DialogTitle className="flex items-center gap-2 text-slate-900">
+          <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-50">
             <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
               <Zap className="h-5 w-5 text-white" />
             </div>
             {t('title')}
           </DialogTitle>
-          <DialogDescription className="text-slate-600">
+          <DialogDescription className="text-slate-600 dark:text-slate-400">
             {t('description')}
           </DialogDescription>
         </DialogHeader>
@@ -75,7 +75,7 @@ export const QuickAddDialog = ({ open, onOpenChange, onSuccess }: QuickAddDialog
           </Form>
         </div>
 
-        <DialogFooter className="px-6 py-4 border-t bg-slate-50/50 flex-shrink-0">
+        <DialogFooter className="px-6 py-4 border-t border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 flex-shrink-0">
           <Button
             type="button"
             variant="outline"

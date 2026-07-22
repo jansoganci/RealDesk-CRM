@@ -31,7 +31,6 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '../../../contexts/AuthContext';
 import type {
   RecurringExpense,
   ExpenseCategory,
@@ -52,7 +51,7 @@ const getRecurringExpenseSchema = (_t: any) =>
   z.object({
     name: z.string().min(1, 'Name is required'),
     amount: z.coerce.number().positive('Amount must be greater than 0'),
-    currency: z.enum(['USD', 'EUR'], {
+    currency: z.literal('USD', {
       required_error: 'Currency is required',
     }),
     category: z.string().min(1, 'Category is required'),
@@ -78,14 +77,9 @@ export const RecurringExpenseDialog = ({
   loading = false,
 }: RecurringExpenseDialogProps) => {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency: userCurrency } = useAuth();
   const recurringExpenseSchema = getRecurringExpenseSchema(t);
 
-  // Normalize user currency to uppercase and ensure it's valid
-  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'USD') as 'USD' | 'EUR';
-  const normalizedDefaultCurrency = ['USD', 'EUR'].includes(defaultCurrency)
-    ? defaultCurrency
-    : 'USD';
+  const normalizedDefaultCurrency = 'USD' as const;
 
   const form = useForm<RecurringExpenseFormData>({
     resolver: zodResolver(recurringExpenseSchema),
@@ -108,16 +102,10 @@ export const RecurringExpenseDialog = ({
   useEffect(() => {
     if (recurringExpense) {
       // When editing: use expense's currency or fallback to user preference
-      let expenseCurrency = recurringExpense.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
-      if (expenseCurrency === 'TRY') expenseCurrency = 'USD';
-      const normalizedExpenseCurrency = ['USD', 'EUR'].includes(expenseCurrency)
-        ? (expenseCurrency as 'USD' | 'EUR')
-        : normalizedDefaultCurrency;
-
       form.reset({
         name: recurringExpense.name,
         amount: recurringExpense.amount,
-        currency: normalizedExpenseCurrency,
+        currency: 'USD',
         category: recurringExpense.category,
         frequency: recurringExpense.frequency,
         start_date: recurringExpense.start_date,
@@ -132,7 +120,7 @@ export const RecurringExpenseDialog = ({
       form.reset({
         name: '',
         amount: 0,
-        currency: normalizedDefaultCurrency,
+        currency: 'USD',
         category: '',
         frequency: 'monthly',
         start_date: new Date().toISOString().split('T')[0],
@@ -246,7 +234,6 @@ export const RecurringExpenseDialog = ({
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -279,7 +266,7 @@ export const RecurringExpenseDialog = ({
                       </FormControl>
                       <SelectContent>
                         {categories.length === 0 ? (
-                          <div className="px-2 py-1.5 text-sm text-gray-500">
+                          <div className="px-2 py-1.5 text-sm text-gray-500 dark:text-slate-400">
                             {t('finance:fields.noCategoriesAvailable', { defaultValue: 'No categories available' })}
                           </div>
                         ) : (
@@ -547,4 +534,3 @@ export const RecurringExpenseDialog = ({
     </Dialog>
   );
 };
-

@@ -37,7 +37,7 @@ export function ContractTypeCard({
         'transition-all duration-200 h-full',
         disabled
           ? 'opacity-60 cursor-not-allowed'
-          : 'hover:shadow-lg hover:border-blue-200 cursor-pointer'
+          : 'hover:shadow-lg hover:border-blue-200 dark:hover:border-blue-700 cursor-pointer'
       )}
       onClick={disabled ? undefined : onClick}
     >
@@ -46,13 +46,13 @@ export function ContractTypeCard({
           <div
             className={cn(
               'p-3 rounded-xl',
-              disabled ? 'bg-gray-100' : 'bg-blue-50'
+              disabled ? 'bg-gray-100 dark:bg-slate-800' : 'bg-blue-50 dark:bg-blue-950/40'
             )}
           >
             <Icon
               className={cn(
                 'h-6 w-6',
-                disabled ? 'text-gray-400' : 'text-blue-600'
+                disabled ? 'text-gray-400 dark:text-slate-500' : 'text-blue-600 dark:text-blue-400'
               )}
             />
           </div>
@@ -61,7 +61,7 @@ export function ContractTypeCard({
               variant={disabled ? 'secondary' : 'default'}
               className={cn(
                 'text-xs',
-                disabled ? 'bg-gray-100 text-gray-500' : 'bg-blue-100 text-blue-700'
+                disabled ? 'bg-gray-100 text-gray-500 dark:bg-slate-800 dark:text-slate-400' : 'bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300'
               )}
             >
               {badge}
@@ -74,7 +74,11 @@ export function ContractTypeCard({
       <CardContent className="pt-0 space-y-2">
         <Button
           variant={disabled ? 'ghost' : 'default'}
-          className="w-full"
+          className={cn(
+            'w-full',
+            !disabled && 'dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700',
+            disabled && 'dark:text-muted-foreground'
+          )}
           disabled={disabled}
           onClick={(e) => {
             e.stopPropagation();
@@ -87,7 +91,7 @@ export function ContractTypeCard({
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="w-full bg-white dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:border-slate-500"
             onClick={(e) => {
               e.stopPropagation();
               secondaryAction.onClick();

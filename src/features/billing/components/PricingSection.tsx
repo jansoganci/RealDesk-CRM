@@ -119,13 +119,6 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
   }, [searchParams, setSearchParams, toast, t]);
 
   const handleSelectPlan = async (planId: 'baslangic' | 'profesyonel' | 'ofis_plus') => {
-    console.log('🎯 [PricingSection] User clicked plan:', {
-      planId,
-      billingPeriod,
-      hasSession: !!session,
-      userId: session?.user?.id,
-    });
-
     // Require authentication
     if (!session) {
       console.warn('⚠️ [PricingSection] No session found, blocking checkout');
@@ -137,29 +130,17 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
       return;
     }
 
-    console.log('✅ [PricingSection] Session exists, proceeding with checkout');
-
     // Set loading state for this specific plan
     setLoading(planId);
 
     try {
       const currency = 'usd';
 
-      console.log('💰 [PricingSection] Calling createCheckoutSession...', {
-        plan: planId,
-        interval: billingPeriod,
-        currency,
-      });
-
       // Create checkout session
       const { url } = await createCheckoutSession({
         plan: planId,
         interval: billingPeriod,
         currency,
-      });
-
-      console.log('✅ [PricingSection] Got checkout URL, redirecting...', {
-        hasUrl: !!url,
       });
 
       // Redirect to Stripe Checkout
@@ -187,18 +168,18 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
   const displaySubtitle = subtitle !== undefined ? subtitle : t('header.subtitle');
 
   return (
-    <section className="w-full bg-gradient-to-b from-slate-50 via-neutral-50 to-white px-3 sm:px-4 pb-8 sm:pb-12">
+    <section className="w-full bg-gradient-to-b from-slate-50 via-neutral-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 px-3 sm:px-4 pb-8 sm:pb-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         {showHeader && (displayTitle || displaySubtitle) && (
           <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
             {displayTitle && (
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
                 {displayTitle}
               </h2>
             )}
             {displaySubtitle && (
-              <p className="text-base md:text-lg text-slate-600">
+              <p className="text-base md:text-lg text-slate-600 dark:text-slate-300">
                 {displaySubtitle}
               </p>
             )}
@@ -207,12 +188,12 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
 
         {/* Billing Period Toggle */}
         <div className="flex justify-center mb-10">
-          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 bg-white rounded-full border border-slate-200 shadow-sm">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 bg-white dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
             <button
               onClick={() => setBillingPeriod('monthly')}
               className={`px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${billingPeriod === 'monthly'
                 ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
                 }`}
             >
               {t('billingPeriod.monthly')}
@@ -221,7 +202,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
               onClick={() => setBillingPeriod('yearly')}
               className={`px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all relative ${billingPeriod === 'yearly'
                 ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900'
+                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
                 }`}
             >
               {t('billingPeriod.yearly')}
@@ -247,7 +228,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                 key={plan.id}
                 className={`relative flex flex-col h-full rounded-2xl transition-all hover:shadow-xl ${plan.popular
                   ? 'border-2 border-blue-500 shadow-lg scale-100 md:scale-105 z-10'
-                  : 'border border-slate-200'
+                  : 'border border-slate-200 dark:border-slate-700'
                   }`}
               >
                 {plan.popular && (
@@ -259,10 +240,10 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                 )}
 
                 <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6">
-                  <CardTitle className="text-xl sm:text-2xl font-bold text-slate-900">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">
                     {t(plan.nameKey)}
                   </CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 mt-2">
+                  <CardDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
                     {t(plan.descriptionKey)}
                   </CardDescription>
                 </CardHeader>
@@ -278,16 +259,16 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                   {/* Price */}
                   <div className="text-center mb-6">
                     <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-3xl sm:text-4xl font-bold text-slate-900">{price}</span>
-                      <span className="text-base sm:text-lg text-slate-600">{currencySymbol}</span>
+                      <span className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">{price}</span>
+                      <span className="text-base sm:text-lg text-slate-600 dark:text-slate-300">{currencySymbol}</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 mt-1">
+                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
                       {price}{currencySymbol}{periodText}
                     </p>
                     {billingPeriod === 'yearly' && (
                       <p className="text-xs text-blue-600 mt-1 font-medium">
                         {yearlyPrice}{currencySymbol} {t('price.yearlyDiscount')}{' '}
-                        <span className="line-through text-slate-400">
+                        <span className="line-through text-slate-400 dark:text-slate-500">
                           {(monthlyPrice * 12).toFixed(0)}{currencySymbol}
                         </span>
                       </p>
@@ -301,7 +282,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                       return (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
                           <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mt-0.5 shrink-0" />
-                          <span className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
                             {t(feature.textKey)}
                           </span>
                         </li>
@@ -315,7 +296,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                     disabled={loading !== null}
                     className={`w-full rounded-xl py-2.5 sm:py-3 ${plan.popular
                       ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white '
+                      : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 '
                       }`}
                   >
                     {loading === plan.id ? (

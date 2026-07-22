@@ -1,7 +1,7 @@
 {
-  "name": "emlakcrm",
-  "short_name": "emlakcrm",
-  "description": "emlakcrm Management System",
+  "name": "RealDesk",
+  "short_name": "RealDesk",
+  "description": "RealDesk Management System",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

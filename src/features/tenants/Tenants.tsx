@@ -15,8 +15,14 @@ import { Users } from 'lucide-react';
 
 import { COLORS } from '@/config/colors';
 import { ListPageTemplate } from '../../components/templates/ListPageTemplate';
+import type { ReactNode } from 'react';
 
-export const Tenants = () => {
+export type TenantsProps = {
+  pageTop?: ReactNode;
+  pageTitle?: string;
+};
+
+export const Tenants = ({ pageTop, pageTitle }: TenantsProps) => {
   const { t } = useTranslation(['tenants', 'common']);
 
   // Tenants data hook
@@ -88,7 +94,7 @@ export const Tenants = () => {
     description: searchQuery || assignmentFilter !== 'all'
       ? t('emptyState.noTenantsFoundDescription')
       : t('emptyState.noTenantsYetDescription'),
-    icon: <Users className={`h-16 w-16 ${COLORS.muted.text}`} />,
+    icon: <Users className={`h-16 w-16 ${COLORS.muted.text} dark:text-slate-400`} />,
     actionLabel: t('emptyState.addActionLabel'),
     showAction: !searchQuery && assignmentFilter === 'all',
   }), [searchQuery, assignmentFilter, t]);
@@ -135,7 +141,8 @@ export const Tenants = () => {
   return (
     <>
       <ListPageTemplate
-        title={t('title')}
+        title={pageTitle ?? t('title')}
+        pageTop={pageTop}
         items={filteredTenants}
         loading={loading}
         searchQuery={searchQuery}

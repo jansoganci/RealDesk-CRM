@@ -1,66 +1,45 @@
 {
+  "defaults": {
+    "organizationName": "My Organization"
+  },
   "step1": {
-    "title": "Welcome to RealDesk",
-    "subtitle": "Answer a few questions so your workspace starts with the right US real estate setup.",
-    "question": "What will you use RealDesk for?",
-    "options": {
-      "properties": "Manage listings and rental properties",
-      "clients": "Track buyers, sellers, tenants, and owners",
-      "contracts": "Manage leases, purchase agreements, and documents",
-      "team": "Coordinate with my brokerage or team",
-      "all": "Run my full real estate workflow"
+
     },
     "skip": "Skip",
     "continue": "Continue",
     "saving": "Saving...",
     "validation": {
-      "required": "Please select an option"
+      "required": "Please select a goal before continuing."
+    },
+    "errors": {
+      "skip": "Failed to skip this step.",
+      "save": "Failed to save your selection."
     }
   },
   "step2": {
-    "title": "Set up your business profile",
-    "subtitle": "This helps tailor default workflows, reminders, and reporting.",
-    "organization": {
-      "title": "Organization Information",
-      "name": "Organization Name",
-      "namePlaceholder": "Enter your organization name",
-      "teamSize": "What's your team size?",
-      "teamSizeOptions": {
-        "solo": "Just me (solo agent)",
-        "small": "2-5 people (small team)",
-        "medium": "6-20 people (brokerage team)",
-        "large": "20+ people (office or brokerage)"
-      }
-    },
-    "preferences": {
-      "title": "Preferences (Optional)",
-      "description": "You can change these settings later from your profile page",
-      "language": "Interface Language",
-      "currency": "Currency"
+
     },
     "back": "Back",
     "continue": "Save and Continue",
     "saving": "Saving...",
     "validation": {
-      "nameRequired": "Organization name is required",
-      "nameMin": "Organization name must be at least 2 characters",
-      "nameMax": "Organization name must not exceed 255 characters",
-      "teamSizeRequired": "Please select team size"
+      "organizationNameMin": "Organization name must be at least 2 characters.",
+      "organizationNameMax": "Organization name must not exceed 255 characters.",
+      "brokerageNameRequired": "Brokerage name is required.",
+      "brokerageNameMax": "Brokerage name must not exceed 255 characters.",
+      "licenseStateRequired": "License state is required.",
+      "primaryMarketCityRequired": "Primary market city is required.",
+      "primaryMarketCityMax": "Primary market city must not exceed 120 characters.",
+      "primaryMarketStateRequired": "Primary market state is required."
     }
   },
   "step3": {
-    "title": "Let's get started!",
-    "subtitle": "Your workspace is ready. Take the next step.",
-    "actions": {
-      "addFirstProperty": "Add Your First Property",
-      "addFirstLead": "Add Your First Lead",
-      "goToDashboard": "Go to Dashboard"
+
     },
     "completing": "Completing...",
     "success": "Great! Onboarding completed.",
     "errors": {
-      "organizationNotFound": "Organization not found",
-      "completeFailed": "Failed to complete onboarding"
+
     }
   },
   "progress": {

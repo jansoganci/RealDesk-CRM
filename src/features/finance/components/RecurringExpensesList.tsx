@@ -114,7 +114,7 @@ export const RecurringExpensesList = ({
   const getStatusBadge = (expense: RecurringExpense) => {
     if (!expense.is_active) {
       return (
-        <Badge variant="secondary" className="bg-gray-100 text-gray-700">
+        <Badge variant="secondary" className="bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-200">
           {t('finance:recurring.status.inactive', { defaultValue: 'Inactive' })}
         </Badge>
       );
@@ -189,7 +189,7 @@ export const RecurringExpensesList = ({
         />
 
         {/* Desktop Skeleton */}
-        <div className="hidden md:block bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
+        <div className="hidden md:block bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden">
           <div className="p-6">
             <div className="space-y-2">
               {[...Array(5)].map((_, i) => (
@@ -231,7 +231,7 @@ export const RecurringExpensesList = ({
           description={t('finance:recurring.list.empty.description', {
             defaultValue: 'Create your first recurring expense to get started',
           })}
-          icon={<Repeat className="h-12 w-12 text-gray-400" />}
+          icon={<Repeat className="h-12 w-12 text-gray-400 dark:text-slate-500" />}
           showAction={false}
         />
       </div>
@@ -250,12 +250,12 @@ export const RecurringExpensesList = ({
       />
 
       {/* Desktop Table View */}
-      <div className="hidden md:block bg-white rounded-lg shadow-lg border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200">
-          <h2 className="text-xl font-bold text-slate-900">
+      <div className="hidden md:block bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
+          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
             {t('finance:recurring.list.title', { defaultValue: 'Recurring Expenses' })}
           </h2>
-          <p className="text-sm text-gray-600 mt-1">
+          <p className="text-sm text-gray-600 dark:text-slate-300 mt-1">
             {t('finance:recurring.list.description', {
               defaultValue: 'Manage your recurring bills and expenses',
             })}
@@ -264,7 +264,7 @@ export const RecurringExpensesList = ({
         <div className="p-6">
           <Table>
             <TableHeader>
-              <TableRow className="bg-gray-50">
+              <TableRow className="bg-gray-50 dark:bg-slate-800/80">
                 <TableHead>{t('finance:recurring.table.name', { defaultValue: 'Name' })}</TableHead>
                 <TableHead>{t('finance:recurring.table.category', { defaultValue: 'Category' })}</TableHead>
                 <TableHead>{t('finance:recurring.table.amount', { defaultValue: 'Amount' })}</TableHead>
@@ -278,7 +278,7 @@ export const RecurringExpensesList = ({
             </TableHeader>
             <TableBody>
               {filteredExpenses.map(expense => (
-                <TableRow key={expense.id} className="hover:bg-gray-50 transition-colors">
+                <TableRow key={expense.id} className="hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors">
                   <TableCell className="font-medium">{expense.name}</TableCell>
                   <TableCell>
                     <Badge variant="outline">{expense.category}</Badge>
@@ -297,7 +297,7 @@ export const RecurringExpensesList = ({
                             <MoreHorizontal className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
+                        <DropdownMenuContent align="end" className="dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
                           <DropdownMenuItem onClick={() => onEdit(expense)}>
                             <Edit className="mr-2 h-4 w-4" />
                             {t('finance:recurring.actions.edit', { defaultValue: 'Edit' })}
@@ -323,9 +323,9 @@ export const RecurringExpensesList = ({
       {/* Mobile Card View */}
       <div className="md:hidden space-y-4">
         {filteredExpenses.map(expense => (
-          <Card key={expense.id} className="p-4 shadow-sm border-gray-200">
+          <Card key={expense.id} className="p-4 shadow-sm border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900">
             <div className="flex justify-between items-start mb-3">
-              <h3 className="font-bold text-lg text-slate-900">{expense.name}</h3>
+              <h3 className="font-bold text-lg text-slate-900 dark:text-slate-100">{expense.name}</h3>
               {getStatusBadge(expense)}
             </div>
             <div className="space-y-2">
@@ -333,10 +333,10 @@ export const RecurringExpensesList = ({
                 <Badge variant="outline">{expense.category}</Badge>
                 {getFrequencyBadge(expense.frequency)}
               </div>
-              <div className="text-2xl font-bold text-slate-900">
+              <div className="text-2xl font-bold text-slate-900 dark:text-slate-100">
                 {formatCurrency(expense.amount, expense.currency)}
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-300">
                 <Calendar className="h-4 w-4" />
                 <span>
                   {t('finance:recurring.table.nextDueDate', { defaultValue: 'Next due' })}:{' '}

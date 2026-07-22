@@ -167,7 +167,7 @@ export function Step1Property() {
               <RadioGroup
                 onValueChange={field.onChange}
                 value={field.value}
-                className="grid gap-3 sm:grid-cols-2"
+                className="grid gap-3 md:grid-cols-2"
               >
                 {(
                   [
@@ -207,12 +207,13 @@ export function Step1Property() {
         />
       )}
 
-      <div className="grid gap-4 sm:grid-cols-2">
+      {/* Desktop: paired columns (Street|Unit, City|State, ZIP|Year built, Beds|Baths). Mobile: single column */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
         <FormField
           control={control}
           name="property_street"
           render={({ field }) => (
-            <FormItem className="sm:col-span-2">
+            <FormItem>
               <FormLabel>{t('leaseWizard.step1.street')}</FormLabel>
               <FormControl>
                 <Input autoComplete="street-address" {...field} />
@@ -284,9 +285,6 @@ export function Step1Property() {
             </FormItem>
           )}
         />
-      </div>
-
-      <div className="grid gap-4 sm:grid-cols-3">
         <FormField
           control={control}
           name="year_built"

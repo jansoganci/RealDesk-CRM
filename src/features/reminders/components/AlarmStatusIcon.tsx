@@ -58,7 +58,7 @@ export function AlarmStatusIcon({
       case 'armed':
         return (
           <Shield 
-            className={cn(iconClassName, 'text-green-600')} 
+            className={cn(iconClassName, 'text-green-600 dark:text-emerald-400')} 
             size={size}
             aria-label={t('alarm.armed')}
           />
@@ -66,7 +66,7 @@ export function AlarmStatusIcon({
       case 'critical':
         return (
           <Bell 
-            className={cn(iconClassName, 'text-red-600 animate-pulse')} 
+            className={cn(iconClassName, 'text-red-600 dark:text-red-400 animate-pulse')} 
             size={size}
             aria-label={t('alarm.critical')}
           />
@@ -74,7 +74,7 @@ export function AlarmStatusIcon({
       case 'completed':
         return (
           <CheckCircle2 
-            className={cn(iconClassName, 'text-gray-500')} 
+            className={cn(iconClassName, 'text-gray-500 dark:text-slate-400')} 
             size={size}
             aria-label={t('alarm.completed')}
           />

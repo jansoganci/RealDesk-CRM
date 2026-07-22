@@ -5,7 +5,7 @@
  * Extracted from ContractCreateForm.tsx for better separation of concerns
  *
  * Handles:
- * - TC number hashing
+ * - Tax ID hashing
  * - Duplicate name detection (owner + tenant)
  * - Data change detection (owner + tenant)
  * - Multiple active contracts check

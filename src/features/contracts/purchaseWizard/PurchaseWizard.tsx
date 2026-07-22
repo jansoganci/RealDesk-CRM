@@ -251,7 +251,7 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
           <p className="max-w-sm px-4 text-center text-sm font-medium text-foreground">{submitPhaseLabel}</p>
         </div>
       ) : null}
-      <Card className="mx-auto w-full max-w-[700px] border shadow-sm">
+      <Card className="mx-auto w-full max-w-6xl border shadow-sm">
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
           <div className="space-y-1 pr-8">
             <p className="text-sm font-medium text-muted-foreground">

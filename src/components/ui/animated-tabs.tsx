@@ -13,12 +13,15 @@ interface AnimatedTabsProps {
   tabs: Tab[];
   defaultTab?: string;
   onChange?: (tabId: string) => void;
+  /** Unique Framer Motion layoutId when multiple AnimatedTabs exist on one screen */
+  layoutId?: string;
 }
 
 export function AnimatedTabs({ 
   tabs, 
   defaultTab,
-  onChange 
+  onChange,
+  layoutId = 'bubble',
 }: AnimatedTabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
 
@@ -58,7 +61,7 @@ export function AnimatedTabs({
         >
           {activeTab === tab.id && (
             <motion.span
-              layoutId="bubble"
+              layoutId={layoutId}
               className="absolute inset-0 z-10 bg-blue-600"
               style={{ borderRadius: "0.375rem" }}
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}

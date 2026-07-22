@@ -30,7 +30,6 @@ import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { useAuth } from '../../../contexts/AuthContext';
 import type { FinancialTransaction, ExpenseCategory } from '../../../types/financial';
 
 interface TransactionDialogProps {
@@ -50,7 +49,7 @@ const getTransactionSchema = (t: any) =>
     }),
     category: z.string().min(1, t('finance:validation.categoryRequired')),
     amount: z.coerce.number().positive(t('finance:validation.amountPositive')),
-    currency: z.enum(['USD', 'EUR'], {
+    currency: z.literal('USD', {
       required_error: t('finance:validation.currencyRequired'),
     }),
     description: z.string().min(1, t('finance:validation.descriptionRequired')),
@@ -70,14 +69,9 @@ export const TransactionDialog = ({
   loading = false,
 }: TransactionDialogProps) => {
   const { t } = useTranslation(['finance', 'common']);
-  const { currency: userCurrency } = useAuth();
   const transactionSchema = getTransactionSchema(t);
 
-  // Normalize user currency to uppercase and ensure it's valid
-  const defaultCurrency = (userCurrency?.toUpperCase().trim() || 'USD') as 'USD' | 'EUR';
-  const normalizedDefaultCurrency = ['USD', 'EUR'].includes(defaultCurrency)
-    ? defaultCurrency
-    : 'USD';
+  const normalizedDefaultCurrency = 'USD' as const;
 
   const form = useForm<TransactionFormData>({
     resolver: zodResolver(transactionSchema),
@@ -98,18 +92,12 @@ export const TransactionDialog = ({
   useEffect(() => {
     if (transaction) {
       // When editing: use transaction's currency or fallback to user preference
-      let transactionCurrency = transaction.currency?.toUpperCase().trim() || normalizedDefaultCurrency;
-      if (transactionCurrency === 'TRY') transactionCurrency = 'USD';
-      const normalizedTransactionCurrency = ['USD', 'EUR'].includes(transactionCurrency)
-        ? (transactionCurrency as 'USD' | 'EUR')
-        : normalizedDefaultCurrency;
-
       form.reset({
         transaction_date: transaction.transaction_date,
         type: transaction.type,
         category: transaction.category,
         amount: transaction.amount,
-        currency: normalizedTransactionCurrency,
+        currency: 'USD',
         description: transaction.description,
         notes: transaction.notes || '',
         payment_method: transaction.payment_method as any,
@@ -122,7 +110,7 @@ export const TransactionDialog = ({
         type: 'expense',
         category: '',
         amount: 0,
-        currency: normalizedDefaultCurrency,
+        currency: 'USD',
         description: '',
         notes: '',
         payment_method: 'bank_transfer',
@@ -227,7 +215,7 @@ export const TransactionDialog = ({
                       </FormControl>
                       <SelectContent>
                         {filteredCategories.length === 0 ? (
-                          <div className="px-2 py-1.5 text-sm text-gray-500">
+                          <div className="px-2 py-1.5 text-sm text-gray-500 dark:text-slate-400">
                             {t('finance:fields.noCategoriesAvailable')}
                           </div>
                         ) : (
@@ -291,7 +279,6 @@ export const TransactionDialog = ({
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="USD">USD</SelectItem>
-                        <SelectItem value="EUR">EUR</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />

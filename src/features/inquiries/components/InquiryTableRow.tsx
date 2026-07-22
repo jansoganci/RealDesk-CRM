@@ -84,13 +84,11 @@ export function InquiryTableRow({
         </div>
       </TableCell>
       <TableCell>
-        {inquiry.preferred_city || inquiry.preferred_district ? (
+        {inquiry.preferred_city || inquiry.preferred_state || inquiry.preferred_district ? (
           <div className="flex items-center gap-1">
             <MapPin className={`h-4 w-4 ${COLORS.gray.text500}`} />
             <span>
-              {inquiry.preferred_city}
-              {inquiry.preferred_city && inquiry.preferred_district && ', '}
-              {inquiry.preferred_district}
+              {[inquiry.preferred_city, inquiry.preferred_state, inquiry.preferred_district].filter(Boolean).join(', ')}
             </span>
           </div>
         ) : (

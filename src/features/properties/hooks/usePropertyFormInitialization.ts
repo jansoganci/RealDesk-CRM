@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { UseFormReset, UseFormSetValue, FieldValues, Path } from 'react-hook-form';
-import { Property } from '@/types';
+import type { FieldValues, Path, UseFormReset, UseFormSetValue } from 'react-hook-form';
+import type { Property } from '@/types';
 
 interface UsePropertyFormInitializationOptions<T extends FieldValues> {
   open: boolean;
@@ -24,77 +24,88 @@ export function usePropertyFormInitialization<T extends FieldValues>({
   setValue,
   loadOwners,
 }: UsePropertyFormInitializationOptions<T>) {
-  // Initialize form when dialog opens
   useEffect(() => {
     if (open) {
       const initForm = async () => {
         await loadOwners();
-        
+
         if (property) {
-          // Reset form with existing property data (Edit mode)
+          const street =
+            (property.street_address && property.street_address.trim()) ||
+            (property.address && property.address.trim()) ||
+            '';
+
+          const baseFields = {
+            owner_id: property.owner_id || '',
+            street_address: street,
+            city: property.city?.trim() || '',
+            state: (property.state || '').trim().toUpperCase() || '',
+            zip_code: property.zip_code?.trim() || '',
+            mls_id: property.mls_id?.trim() || '',
+            year_built:
+              typeof property.year_built === 'number' && !Number.isNaN(property.year_built)
+                ? property.year_built
+                : undefined,
+            notes: property.notes || '',
+            listing_url: property.listing_url || '',
+            currency: 'USD',
+          };
+
           if (propertyType === 'rental') {
             reset({
+              ...baseFields,
               property_type: 'rental',
-              owner_id: property.owner_id || '',
-              address: property.address || '',
-              city: property.city || '',
-              district: property.district || '',
-              status: property.status as any,
+              status: property.status,
               rent_amount: property.rent_amount || undefined,
-              currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : 'USD') as 'USD' | 'TRY',
-              notes: property.notes || '',
-              listing_url: property.listing_url || '',
-            } as any);
+            } as unknown as Parameters<UseFormReset<T>>[0]);
           } else {
             reset({
+              ...baseFields,
               property_type: 'sale',
-              owner_id: property.owner_id || '',
-              address: property.address || '',
-              city: property.city || '',
-              district: property.district || '',
-              status: property.status as any,
-              sale_price: (property as any).sale_price || undefined,
-              currency: (property.currency === 'USD' || property.currency === 'TRY' ? property.currency : 'USD') as 'USD' | 'TRY',
-              buyer_name: (property as any).buyer_name || '',
-              buyer_phone: (property as any).buyer_phone || '',
-              buyer_email: (property as any).buyer_email || '',
-              offer_amount: (property as any).offer_amount || undefined,
-              notes: property.notes || '',
-              listing_url: property.listing_url || '',
-            } as any);
+              status: property.status,
+              sale_price: property.sale_price ?? undefined,
+              buyer_name: property.buyer_name ?? '',
+              buyer_phone: property.buyer_phone ?? '',
+              buyer_email: property.buyer_email ?? '',
+              offer_amount: property.offer_amount ?? undefined,
+            } as unknown as Parameters<UseFormReset<T>>[0]);
           }
         } else {
-          // Reset form with default values (Create mode)
           reset({
             property_type: propertyType,
             owner_id: '',
-            address: '',
+            street_address: '',
             city: '',
-            district: '',
+            state: '',
+            zip_code: '',
+            mls_id: '',
+            year_built: undefined,
             status: propertyType === 'rental' ? 'Empty' : 'Available',
             rent_amount: undefined,
+            sale_price: undefined,
             currency: 'USD',
             notes: '',
             listing_url: '',
-          } as any);
+            buyer_name: '',
+            buyer_phone: '',
+            buyer_email: '',
+            offer_amount: undefined,
+          } as unknown as Parameters<UseFormReset<T>>[0]);
         }
       };
       initForm();
     }
   }, [open, property, propertyType, reset, loadOwners]);
 
-  // Update form when property type changes (only for new properties)
   useEffect(() => {
     if (!property && open) {
-      // Reset form with new property type defaults
       if (propertyType === 'rental') {
-        setValue('property_type' as Path<T>, 'rental' as any);
-        setValue('status' as Path<T>, 'Empty' as any);
+        setValue('property_type' as Path<T>, 'rental' as T[Path<T>]);
+        setValue('status' as Path<T>, 'Empty' as T[Path<T>]);
       } else {
-        setValue('property_type' as Path<T>, 'sale' as any);
-        setValue('status' as Path<T>, 'Available' as any);
+        setValue('property_type' as Path<T>, 'sale' as T[Path<T>]);
+        setValue('status' as Path<T>, 'Available' as T[Path<T>]);
       }
     }
   }, [propertyType, property, open, setValue]);
 }
-

@@ -1,7 +1,11 @@
 import { supabase } from '@/config/supabase';
 import { createLogger } from '@/lib/logger';
+import type { Json } from '@/types/database';
 
 const logger = createLogger('Onboarding');
+const PRIMARY_USE_CASES = ['rentals', 'sales', 'both', 'exploring'] as const;
+
+export type PrimaryUseCase = (typeof PRIMARY_USE_CASES)[number];
 
 export type PrimaryUseCase = 'rentals' | 'sales' | 'both' | 'exploring';
 export type TeamSize = '1' | '2-5' | '6-20';
@@ -26,6 +30,7 @@ export interface AgentProfileInput {
   licenseState: string;
   primaryMarketCity: string;
   primaryMarketState: string;
+  [key: string]: Json | undefined;
 }
 
 class OnboardingService {
@@ -53,6 +58,7 @@ class OnboardingService {
    */
   async savePrimaryUseCase(orgId: string, useCase: PrimaryUseCase): Promise<void> {
     if (!['rentals', 'sales', 'both', 'exploring'].includes(useCase)) {
+    if (!PRIMARY_USE_CASES.includes(useCase)) {
       throw new Error('Invalid primary use case');
     }
 
@@ -247,7 +253,7 @@ class OnboardingService {
         step_number: stepNumber,
         step_name: stepName,
         action_taken: action,
-        data: (data || {}) as any,
+        data: data || {},
       });
 
     if (error) {
@@ -346,11 +352,7 @@ class OnboardingService {
   /**
    * Save onboarding response to user_onboarding_responses table
    */
-  async saveResponse(
-    orgId: string,
-    questionKey: string,
-    answer: string | number | boolean | object
-  ): Promise<void> {
+  async saveResponse(orgId: string, questionKey: string, answer: Json): Promise<void> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
@@ -360,7 +362,7 @@ class OnboardingService {
         user_id: user.id,
         org_id: orgId,
         question_key: questionKey,
-        answer: answer as any,
+        answer,
       }, {
         onConflict: 'user_id,question_key'
       });
@@ -374,7 +376,7 @@ class OnboardingService {
   /**
    * Get all onboarding responses for current user
    */
-  async getResponses(orgId: string): Promise<Record<string, any>> {
+  async getResponses(orgId: string): Promise<Record<string, Json>> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
@@ -389,7 +391,7 @@ class OnboardingService {
       throw new Error('Failed to fetch onboarding responses');
     }
 
-    const responses: Record<string, any> = {};
+    const responses: Record<string, Json> = {};
     data?.forEach(row => {
       responses[row.question_key] = row.answer;
     });
@@ -403,7 +405,7 @@ class OnboardingService {
   async getResponse(
     orgId: string,
     questionKey: string
-  ): Promise<any | null> {
+  ): Promise<Json | null> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
@@ -425,4 +427,3 @@ class OnboardingService {
 }
 
 export const onboardingService = new OnboardingService();
-
