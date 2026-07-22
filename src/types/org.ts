@@ -33,6 +33,11 @@ export interface Organization {
   onboarding_skipped?: boolean;
   onboarding_skipped_at?: string | null;
   onboarding_step?: number;
+  // Agent profile fields
+  brokerage_name?: string | null;
+  license_state?: string | null;
+  primary_market_city?: string | null;
+  primary_market_state?: string | null;
 }
 
 /**

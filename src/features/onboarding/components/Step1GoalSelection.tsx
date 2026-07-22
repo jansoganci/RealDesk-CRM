@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Loader2, Home, Handshake, Layers, Compass } from 'lucide-react';
 import { Loader2, Building2, Handshake, PanelsTopLeft, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,6 +8,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { useOnboarding, type PrimaryUseCase } from '../hooks/useOnboarding';
 import { useOrg } from '@/contexts/OrgContext';
+import { onboardingService, organizationService } from '@/lib/serviceProxy';
 import { onboardingService } from '../services/onboarding.service';
 import { organizationService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
@@ -20,8 +22,11 @@ interface Step1GoalSelectionProps {
 const useCaseOptions: Array<{
   value: PrimaryUseCase;
   icon: React.ComponentType<{ className?: string }>;
-  labelKey: string;
 }> = [
+  { value: 'rentals', icon: Home },
+  { value: 'sales', icon: Handshake },
+  { value: 'both', icon: Layers },
+  { value: 'exploring', icon: Compass },
   { value: 'rentals', icon: Building2, labelKey: 'rentals' },
   { value: 'sales', icon: Handshake, labelKey: 'sales' },
   { value: 'both', icon: PanelsTopLeft, labelKey: 'both' },
@@ -64,6 +69,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
       setPrimaryUseCase('exploring');
       onContinue();
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.skipFailed');
       const errorMessage = error instanceof Error ? error.message : t('step1.errors.skip');
       toast.error(errorMessage);
     } finally {
@@ -104,6 +110,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
 
       onContinue();
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : t('step1.errors.saveFailed');
       const errorMessage = error instanceof Error ? error.message : t('step1.errors.save');
       toast.error(errorMessage);
     } finally {
@@ -163,7 +170,7 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                   />
                   <Label
                     htmlFor={option.value}
-                    className="flex-1 cursor-pointer flex items-center gap-3"
+                    className="flex-1 cursor-pointer flex items-start gap-3"
                   >
                     <Icon
                       className={cn(
@@ -171,6 +178,19 @@ export function Step1GoalSelection({ onContinue }: Step1GoalSelectionProps) {
                         isSelected ? 'text-blue-600 dark:text-blue-400' : 'text-slate-400 dark:text-slate-500'
                       )}
                     />
+                    <div className="flex flex-col gap-1">
+                      <span
+                        className={cn(
+                          'text-sm font-medium',
+                          isSelected ? 'text-blue-900' : 'text-slate-700'
+                        )}
+                      >
+                        {t(`step1.options.${option.value}.label`)}
+                      </span>
+                      <span className="text-xs text-slate-500">
+                        {t(`step1.options.${option.value}.description`)}
+                      </span>
+                    </div>
                     <span className={cn(
                       'text-sm font-medium',
                       isSelected ? 'text-blue-900 dark:text-blue-100' : 'text-slate-700 dark:text-slate-200'

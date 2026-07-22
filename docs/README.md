@@ -16,18 +16,16 @@ Older non-US-market documents remain in `archive/` and some stale reference file
 
 ### `/reference/`
 **Active reference documentation** - Core architecture, APIs, and guides:
-- `ADR-002-contract-engine-v2-architecture.md` - Contract engine v2 ADR (rent vs v2 isolation)
+- `CURRENT_ARCHITECTURE.md` - Current system architecture (CURRENT)
+- `ADR-002-contract-engine-v2-architecture.md` - Contract engine v2 ADR
 - `API.md` - API documentation
 - `ARCHITECTURE.md` - System architecture overview
 - `CONTRIBUTING.md` - Contribution guidelines
 - `DEPLOYMENT.md` - Deployment procedures
-- `LEGAL_DOCUMENTS_*.md` - Legal document guides and templates
 
 ### `/research/`
 **Market research and strategy** - Business and market analysis:
-- `RealDesk_Product_Workflow_Document.md` - Product workflow and V1/V1.5/V2 feature map
-- `real.estate.US.market.analysis.md` - US market analysis
-- `us_real_estate_market_research.md` - US market research notes
+
 
 ### `/samples/`
 **Reference assets** moved out of repo root:

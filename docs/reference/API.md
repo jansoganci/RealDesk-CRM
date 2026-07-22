@@ -111,8 +111,8 @@ Creates a new property.
 ```typescript
 const newProperty = await propertiesService.create({
   name: 'Apartment 101',
-  city: 'Istanbul',
-  district: 'Kadıköy',
+  city: 'New York',
+  district: 'Manhattan',
   owner_id: 'owner-uuid',
   status: 'Empty'
 });

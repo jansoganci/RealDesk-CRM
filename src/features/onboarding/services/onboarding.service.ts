@@ -7,6 +7,9 @@ const PRIMARY_USE_CASES = ['rentals', 'sales', 'both', 'exploring'] as const;
 
 export type PrimaryUseCase = (typeof PRIMARY_USE_CASES)[number];
 
+export type PrimaryUseCase = 'rentals' | 'sales' | 'both' | 'exploring';
+export type TeamSize = '1' | '2-5' | '6-20';
+
 export interface OnboardingStatus {
   onboarding_completed: boolean;
   onboarding_completed_at: string | null;
@@ -17,6 +20,16 @@ export interface OnboardingStatus {
 }
 
 export interface OnboardingEventData {
+  [key: string]: Json;
+}
+
+export interface AgentProfileInput {
+  organizationName: string;
+  teamSize: TeamSize;
+  brokerageName: string;
+  licenseState: string;
+  primaryMarketCity: string;
+  primaryMarketState: string;
   [key: string]: Json | undefined;
 }
 
@@ -44,6 +57,7 @@ class OnboardingService {
    * Save primary use case (Step 1 selection)
    */
   async savePrimaryUseCase(orgId: string, useCase: PrimaryUseCase): Promise<void> {
+    if (!['rentals', 'sales', 'both', 'exploring'].includes(useCase)) {
     if (!PRIMARY_USE_CASES.includes(useCase)) {
       throw new Error('Invalid primary use case');
     }
@@ -87,6 +101,99 @@ class OnboardingService {
         (responseResult.status === 'fulfilled' && responseResult.value.error)) {
       logger.warn('Failed to save to user_onboarding_responses (non-critical):', responseResult);
     }
+  }
+
+  /**
+   * Save agent profile setup (Step 2)
+   */
+  async saveAgentProfile(orgId: string, profile: AgentProfileInput): Promise<void> {
+    const organizationName = profile.organizationName.trim();
+    const brokerageName = profile.brokerageName.trim();
+    const licenseState = profile.licenseState.trim().toUpperCase();
+    const primaryMarketCity = profile.primaryMarketCity.trim();
+    const primaryMarketState = profile.primaryMarketState.trim().toUpperCase();
+
+    if (organizationName.length < 2) {
+      throw new Error('Organization name must be at least 2 characters');
+    }
+    if (organizationName.length > 255) {
+      throw new Error('Organization name must not exceed 255 characters');
+    }
+    if (brokerageName.length > 255) {
+      throw new Error('Brokerage name must not exceed 255 characters');
+    }
+    if (!['1', '2-5', '6-20'].includes(profile.teamSize)) {
+      throw new Error('Invalid team size');
+    }
+    if (!/^[A-Z]{2}$/.test(licenseState)) {
+      throw new Error('Invalid license state');
+    }
+    if (primaryMarketCity.length < 2 || primaryMarketCity.length > 120) {
+      throw new Error('Primary market city must be between 2 and 120 characters');
+    }
+    if (!/^[A-Z]{2}$/.test(primaryMarketState)) {
+      throw new Error('Invalid primary market state');
+    }
+
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error('User not authenticated');
+
+    const responseUpdates: Array<{ questionKey: string; answer: string }> = [
+      { questionKey: 'team_size', answer: profile.teamSize },
+      { questionKey: 'brokerage_name', answer: brokerageName },
+      { questionKey: 'license_state', answer: licenseState },
+      { questionKey: 'primary_market_city', answer: primaryMarketCity },
+      { questionKey: 'primary_market_state', answer: primaryMarketState },
+    ];
+
+    const [orgUpdateResult, ...responseResults] = await Promise.allSettled([
+      supabase
+        .from('organizations')
+        .update({
+          name: organizationName,
+          team_size_range: profile.teamSize,
+          brokerage_name: brokerageName.length > 0 ? brokerageName : null,
+          license_state: licenseState,
+          primary_market_city: primaryMarketCity,
+          primary_market_state: primaryMarketState,
+          onboarding_step: 2,
+        })
+        .eq('id', orgId),
+      ...responseUpdates.map((item) =>
+        supabase
+          .from('user_onboarding_responses')
+          .upsert(
+            {
+              user_id: user.id,
+              org_id: orgId,
+              question_key: item.questionKey,
+              answer: item.answer,
+            },
+            {
+              onConflict: 'user_id,question_key',
+            }
+          )
+      ),
+    ]);
+
+    // Organizations table write is CRITICAL - must succeed
+    if (
+      orgUpdateResult.status === 'rejected' ||
+      (orgUpdateResult.status === 'fulfilled' && orgUpdateResult.value.error)
+    ) {
+      logger.error('Error saving agent profile to organizations:', orgUpdateResult);
+      throw new Error('Failed to save agent profile');
+    }
+
+    // Response table writes are optional - log but don't fail
+    responseResults.forEach((result, index) => {
+      if (result.status === 'rejected' || (result.status === 'fulfilled' && result.value.error)) {
+        logger.warn('Failed to save onboarding response (non-critical):', {
+          questionKey: responseUpdates[index]?.questionKey,
+          result,
+        });
+      }
+    });
   }
 
   /**

@@ -1,8 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useTranslation } from 'react-i18next';
-import { Loader2 } from 'lucide-react';
+
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -24,38 +21,101 @@ interface Step2OrganizationSetupProps {
   onBack: () => void;
 }
 
-const usStateCodes = US_STATES.map((state) => state.code);
 
-const createOrganizationProfileSchema = (t: (key: string) => string) =>
+const usStateOptions: Array<{ value: string; labelKey: string }> = [
+  { value: 'AL', labelKey: 'alabama' },
+  { value: 'AK', labelKey: 'alaska' },
+  { value: 'AZ', labelKey: 'arizona' },
+  { value: 'AR', labelKey: 'arkansas' },
+  { value: 'CA', labelKey: 'california' },
+  { value: 'CO', labelKey: 'colorado' },
+  { value: 'CT', labelKey: 'connecticut' },
+  { value: 'DE', labelKey: 'delaware' },
+  { value: 'DC', labelKey: 'districtOfColumbia' },
+  { value: 'FL', labelKey: 'florida' },
+  { value: 'GA', labelKey: 'georgia' },
+  { value: 'HI', labelKey: 'hawaii' },
+  { value: 'ID', labelKey: 'idaho' },
+  { value: 'IL', labelKey: 'illinois' },
+  { value: 'IN', labelKey: 'indiana' },
+  { value: 'IA', labelKey: 'iowa' },
+  { value: 'KS', labelKey: 'kansas' },
+  { value: 'KY', labelKey: 'kentucky' },
+  { value: 'LA', labelKey: 'louisiana' },
+  { value: 'ME', labelKey: 'maine' },
+  { value: 'MD', labelKey: 'maryland' },
+  { value: 'MA', labelKey: 'massachusetts' },
+  { value: 'MI', labelKey: 'michigan' },
+  { value: 'MN', labelKey: 'minnesota' },
+  { value: 'MS', labelKey: 'mississippi' },
+  { value: 'MO', labelKey: 'missouri' },
+  { value: 'MT', labelKey: 'montana' },
+  { value: 'NE', labelKey: 'nebraska' },
+  { value: 'NV', labelKey: 'nevada' },
+  { value: 'NH', labelKey: 'newHampshire' },
+  { value: 'NJ', labelKey: 'newJersey' },
+  { value: 'NM', labelKey: 'newMexico' },
+  { value: 'NY', labelKey: 'newYork' },
+  { value: 'NC', labelKey: 'northCarolina' },
+  { value: 'ND', labelKey: 'northDakota' },
+  { value: 'OH', labelKey: 'ohio' },
+  { value: 'OK', labelKey: 'oklahoma' },
+  { value: 'OR', labelKey: 'oregon' },
+  { value: 'PA', labelKey: 'pennsylvania' },
+  { value: 'RI', labelKey: 'rhodeIsland' },
+  { value: 'SC', labelKey: 'southCarolina' },
+  { value: 'SD', labelKey: 'southDakota' },
+  { value: 'TN', labelKey: 'tennessee' },
+  { value: 'TX', labelKey: 'texas' },
+  { value: 'UT', labelKey: 'utah' },
+  { value: 'VT', labelKey: 'vermont' },
+  { value: 'VA', labelKey: 'virginia' },
+  { value: 'WA', labelKey: 'washington' },
+  { value: 'WV', labelKey: 'westVirginia' },
+  { value: 'WI', labelKey: 'wisconsin' },
+  { value: 'WY', labelKey: 'wyoming' },
+];
+
+const usStateCodes = new Set(usStateOptions.map((state) => state.value));
+
+const createStep2Schema = (translate: (key: string) => string) =>
   z.object({
     organizationName: z
       .string()
       .trim()
-      .min(2, { message: t('step2.validation.organizationNameMin') })
-      .max(255, { message: t('step2.validation.organizationNameMax') }),
+      .min(2, translate('step2.validation.nameMin'))
+      .max(255, translate('step2.validation.nameMax')),
     brokerageName: z
       .string()
       .trim()
-      .min(1, { message: t('step2.validation.brokerageNameRequired') })
-      .max(255, { message: t('step2.validation.brokerageNameMax') }),
+      .max(255, translate('step2.validation.brokerageMax'))
+      .refine((value) => value.length === 0 || value.length >= 2, {
+        message: translate('step2.validation.brokerageMin'),
+      }),
     licenseState: z
       .string()
-      .refine((value) => usStateCodes.includes(value), {
-        message: t('step2.validation.licenseStateRequired'),
+      .min(1, translate('step2.validation.licenseStateRequired'))
+      .refine((value) => usStateCodes.has(value), {
+        message: translate('step2.validation.licenseStateRequired'),
       }),
     primaryMarketCity: z
       .string()
       .trim()
-      .min(1, { message: t('step2.validation.primaryMarketCityRequired') })
-      .max(120, { message: t('step2.validation.primaryMarketCityMax') }),
+      .min(2, translate('step2.validation.primaryMarketCityMin'))
+      .max(120, translate('step2.validation.primaryMarketCityMax')),
     primaryMarketState: z
       .string()
-      .refine((value) => usStateCodes.includes(value), {
-        message: t('step2.validation.primaryMarketStateRequired'),
+      .min(1, translate('step2.validation.primaryMarketStateRequired'))
+      .refine((value) => usStateCodes.has(value), {
+        message: translate('step2.validation.primaryMarketStateRequired'),
       }),
+    teamSize: z.enum(['1', '2-5', '6-20'], {
+      required_error: translate('step2.validation.teamSizeRequired'),
+      invalid_type_error: translate('step2.validation.teamSizeRequired'),
+    }),
   });
 
-type OrganizationProfileFormData = z.infer<ReturnType<typeof createOrganizationProfileSchema>>;
+type Step2FormValues = z.infer<ReturnType<typeof createStep2Schema>>;
 
 export function Step2OrganizationSetup({ onContinue, onBack }: Step2OrganizationSetupProps) {
   const { t } = useTranslation('onboarding');
@@ -65,24 +125,19 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
     licenseState,
     primaryMarketCity,
     primaryMarketState,
+
     saveStep2,
     isLoading,
   } = useOnboarding();
   const [saving, setSaving] = useState(false);
 
-  const schema = useMemo(
-    () => createOrganizationProfileSchema((key: string) => t(key)),
-    [t]
-  );
-
-  const form = useForm<OrganizationProfileFormData>({
-    resolver: zodResolver(schema),
     defaultValues: {
       organizationName,
       brokerageName,
       licenseState,
       primaryMarketCity,
       primaryMarketState,
+
     },
   });
 
@@ -93,16 +148,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
       licenseState,
       primaryMarketCity,
       primaryMarketState,
-    });
-  }, [brokerageName, form, licenseState, organizationName, primaryMarketCity, primaryMarketState]);
 
-  const onSubmit = async (data: OrganizationProfileFormData) => {
-    setSaving(true);
-    try {
-      await saveStep2(data);
-      onContinue();
-    } catch {
-      // saveStep2 owns the user-facing toast.
     } finally {
       setSaving(false);
     }
@@ -118,20 +164,12 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
           {t('step2.subtitle')}
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
               <FormField
                 control={form.control}
                 name="organizationName"
                 render={({ field }) => (
-                  <FormItem className="sm:col-span-2">
-                    <FormLabel>{t('step2.organization.organizationName')}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder={t('step2.organization.organizationNamePlaceholder')}
+
                         disabled={saving || isLoading}
                         maxLength={255}
                       />
@@ -145,7 +183,7 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                 control={form.control}
                 name="brokerageName"
                 render={({ field }) => (
-                  <FormItem className="sm:col-span-2">
+
                     <FormLabel>{t('step2.organization.brokerageName')}</FormLabel>
                     <FormControl>
                       <Input
@@ -158,84 +196,13 @@ export function Step2OrganizationSetup({ onContinue, onBack }: Step2Organization
                     <FormMessage />
                   </FormItem>
                 )}
-              />
 
-              <FormField
-                control={form.control}
-                name="licenseState"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('step2.organization.licenseState')}</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={saving || isLoading}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('step2.organization.licenseStatePlaceholder')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {US_STATES.map((state) => (
-                          <SelectItem key={state.code} value={state.code}>
-                            {state.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="primaryMarketCity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('step2.organization.primaryMarketCity')}</FormLabel>
-                    <FormControl>
-                      <Input
-                        {...field}
-                        placeholder={t('step2.organization.primaryMarketCityPlaceholder')}
-                        disabled={saving || isLoading}
-                        maxLength={120}
-                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
 
-              <FormField
-                control={form.control}
-                name="primaryMarketState"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t('step2.organization.primaryMarketState')}</FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      disabled={saving || isLoading}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder={t('step2.organization.primaryMarketStatePlaceholder')} />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {US_STATES.map((state) => (
-                          <SelectItem key={state.code} value={state.code}>
-                            {state.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 pt-4">

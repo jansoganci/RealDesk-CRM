@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Loader2, LayoutDashboard, Home, UserPlus } from 'lucide-react';
 import { Building2, FileSignature, Handshake, LayoutDashboard, Loader2, PencilLine } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useOnboarding } from '../hooks/useOnboarding';
 import { ROUTES } from '@/config/constants';
 import { toast } from 'sonner';
-import { onboardingService } from '../services/onboarding.service';
+import { onboardingService } from '@/lib/serviceProxy';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { useOrg } from '@/contexts/OrgContext';
 
@@ -56,22 +57,7 @@ export function Step3QuickStart({ onComplete, onBack }: Step3QuickStartProps) {
   const { currentOrg } = useOrg();
   const [completing, setCompleting] = useState(false);
 
-  const profileRows = [
-    { label: t('step3.profile.organizationName'), value: currentOrg?.name },
-    { label: t('step3.profile.brokerageName'), value: currentOrg?.brokerage_name },
-    { label: t('step3.profile.licenseState'), value: currentOrg?.license_state },
-    { label: t('step3.profile.primaryMarket'), value: currentOrg?.primary_market_city && currentOrg?.primary_market_state
-      ? t('step3.profile.marketValue', {
-        city: currentOrg.primary_market_city,
-        state: currentOrg.primary_market_state,
-      })
-      : undefined },
-    { label: t('step3.profile.goal'), value: primaryUseCase ? t(`step1.options.${primaryUseCase}`) : undefined },
-  ];
 
-  const actions = actionSets[primaryUseCase || 'exploring'] ?? actionSets.exploring;
-
-  const handleComplete = async (action: QuickStartAction) => {
     if (!currentOrg?.id) {
       toast.error(t('step3.errors.organizationNotFound'));
       return;
@@ -80,11 +66,7 @@ export function Step3QuickStart({ onComplete, onBack }: Step3QuickStartProps) {
     setCompleting(true);
     try {
       const userId = await getAuthenticatedUserId();
-      
-      // Mark onboarding as complete
       await onboardingService.completeOnboarding(currentOrg.id);
-
-      // Track completion event
       await onboardingService.trackEvent(
         currentOrg.id,
         userId,
@@ -97,13 +79,82 @@ export function Step3QuickStart({ onComplete, onBack }: Step3QuickStartProps) {
         }
       );
 
-      await onComplete();
-      navigate(action.route, { replace: true });
-    } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : t('step3.errors.complete');
       toast.error(errorMessage);
     } finally {
       setCompleting(false);
+    }
+  };
+
+  const renderActions = () => {
+    switch (primaryUseCase) {
+      case 'rentals':
+        return (
+          <Button
+            onClick={() => completeAndNavigate(ROUTES.PROPERTIES)}
+            disabled={completing || isLoading}
+            className="w-full h-auto py-6 px-6 flex items-center justify-center gap-3"
+            size="lg"
+          >
+            {completing ? (
+              <><Loader2 className="h-5 w-5 animate-spin" />{t('step3.completing')}</>
+            ) : (
+              <><Home className="h-5 w-5" />{t('step3.actions.addFirstProperty')}</>
+            )}
+          </Button>
+        );
+      case 'sales':
+        return (
+          <Button
+            onClick={() => completeAndNavigate(ROUTES.LEADS)}
+            disabled={completing || isLoading}
+            className="w-full h-auto py-6 px-6 flex items-center justify-center gap-3"
+            size="lg"
+          >
+            {completing ? (
+              <><Loader2 className="h-5 w-5 animate-spin" />{t('step3.completing')}</>
+            ) : (
+              <><UserPlus className="h-5 w-5" />{t('step3.actions.addFirstLead')}</>
+            )}
+          </Button>
+        );
+      case 'both':
+        return (
+          <div className="space-y-3">
+            <Button
+              onClick={() => completeAndNavigate(ROUTES.PROPERTIES)}
+              disabled={completing || isLoading}
+              className="w-full h-auto py-6 px-6 flex items-center justify-center gap-3"
+              size="lg"
+              variant="outline"
+            >
+              <Home className="h-5 w-5" />{t('step3.actions.addFirstProperty')}
+            </Button>
+            <Button
+              onClick={() => completeAndNavigate(ROUTES.LEADS)}
+              disabled={completing || isLoading}
+              className="w-full h-auto py-6 px-6 flex items-center justify-center gap-3"
+              size="lg"
+            >
+              <UserPlus className="h-5 w-5" />{t('step3.actions.addFirstLead')}
+            </Button>
+          </div>
+        );
+      case 'exploring':
+      default:
+        return (
+          <Button
+            onClick={() => completeAndNavigate(ROUTES.DASHBOARD)}
+            disabled={completing || isLoading}
+            className="w-full h-auto py-6 px-6 flex items-center justify-center gap-3"
+            size="lg"
+          >
+            {completing ? (
+              <><Loader2 className="h-5 w-5 animate-spin" />{t('step3.completing')}</>
+            ) : (
+              <><LayoutDashboard className="h-5 w-5" />{t('step3.actions.goToDashboard')}</>
+            )}
+          </Button>
+        );
     }
   };
 
@@ -118,6 +169,7 @@ export function Step3QuickStart({ onComplete, onBack }: Step3QuickStartProps) {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
+        {renderActions()}
         <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/60">
           <div className="flex items-start justify-between gap-4">
             <div>

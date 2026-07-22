@@ -3,14 +3,7 @@
     "organizationName": "My Organization"
   },
   "step1": {
-    "title": "Welcome! What brings you to RealDesk?",
-    "subtitle": "Answer a few quick questions so your workspace starts in the right shape.",
-    "question": "What do you want to focus on first?",
-    "options": {
-      "rentals": "Rentals & Property Management",
-      "sales": "Buyer & Seller Transactions",
-      "both": "Both Rentals & Sales",
-      "exploring": "Just Exploring"
+
     },
     "skip": "Skip",
     "continue": "Continue",
@@ -24,19 +17,7 @@
     }
   },
   "step2": {
-    "title": "Set up your agent profile",
-    "subtitle": "Add the brokerage and market details RealDesk will use across your workspace.",
-    "organization": {
-      "organizationName": "Organization Name",
-      "organizationNamePlaceholder": "Enter your organization name",
-      "brokerageName": "Brokerage Name",
-      "brokerageNamePlaceholder": "Enter your brokerage name",
-      "licenseState": "License State",
-      "licenseStatePlaceholder": "Select license state",
-      "primaryMarketCity": "Primary Market City",
-      "primaryMarketCityPlaceholder": "Enter your primary market city",
-      "primaryMarketState": "Primary Market State",
-      "primaryMarketStatePlaceholder": "Select primary market state"
+
     },
     "back": "Back",
     "continue": "Save and Continue",
@@ -53,53 +34,12 @@
     }
   },
   "step3": {
-    "title": "Welcome to RealDesk",
-    "subtitle": "Review your profile, make a quick correction if needed, then choose where you want to start.",
-    "edit": "Edit",
-    "profile": {
-      "title": "Your agent profile",
-      "description": "These details will be used as your workspace defaults.",
-      "organizationName": "Organization Name",
-      "brokerageName": "Brokerage Name",
-      "licenseState": "License State",
-      "primaryMarket": "Primary Market",
-      "goal": "Primary Goal",
-      "marketValue": "{{city}}, {{state}}",
-      "missing": "Not provided"
-    },
-    "actions": {
-      "title": "Choose your first move",
-      "description": "Pick the place that matches what you want to do next.",
-      "lead": {
-        "title": "Add a Lead",
-        "description": "Start with a buyer, seller, or renter inquiry."
-      },
-      "property": {
-        "title": "Add a Property",
-        "description": "Create your first listing or managed rental."
-      },
-      "lease": {
-        "title": "Create a Lease",
-        "description": "Build a rental agreement workflow."
-      },
-      "purchase": {
-        "title": "Start a Purchase",
-        "description": "Open the purchase agreement workflow."
-      },
-      "deals": {
-        "title": "View Deals",
-        "description": "Set up your transaction pipeline."
-      },
-      "dashboard": {
-        "title": "Go to Dashboard",
-        "description": "Land in your workspace overview."
-      }
+
     },
     "completing": "Completing...",
     "success": "Great! Onboarding completed.",
     "errors": {
-      "organizationNotFound": "Organization not found.",
-      "complete": "Failed to complete onboarding."
+
     }
   },
   "progress": {
