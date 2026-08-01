@@ -34,6 +34,8 @@ import {
 } from '@/components/ui/form';
 import {
   createBuyerAgentAgreementSchema,
+  commissionTypeSchema,
+  agreementStatusSchema,
   COMMISSION_TYPE_OPTIONS,
   AGREEMENT_STATUS_OPTIONS,
   type CreateBuyerAgentAgreementFormData,
@@ -41,6 +43,20 @@ import {
 import type { BuyerAgentAgreement } from '@/services/leads.service';
 import { addMonths } from 'date-fns';
 import { formatDateForDb } from '@/lib/dates';
+import type { z } from 'zod';
+
+type CommissionType = z.infer<typeof commissionTypeSchema>;
+type AgreementStatus = z.infer<typeof agreementStatusSchema>;
+
+function toCommissionType(value: string | null | undefined): CommissionType {
+  const parsed = commissionTypeSchema.safeParse(value);
+  return parsed.success ? parsed.data : 'percentage';
+}
+
+function toAgreementStatus(value: string | null | undefined): AgreementStatus {
+  const parsed = agreementStatusSchema.safeParse(value);
+  return parsed.success ? parsed.data : 'draft';
+}
 
 interface BuyerAgentAgreementDialogProps {
   open: boolean;
@@ -80,11 +96,11 @@ export function BuyerAgentAgreementDialog({
           lead_id: leadId,
           signed_date: existingAgreement.signed_date ?? undefined,
           expiration_date: existingAgreement.expiration_date ?? undefined,
-          commission_type: existingAgreement.commission_type as any,
+          commission_type: toCommissionType(existingAgreement.commission_type),
           commission_rate: existingAgreement.commission_rate ?? undefined,
           flat_fee_amount: existingAgreement.flat_fee_amount ?? undefined,
           pdf_url: existingAgreement.pdf_url ?? '',
-          status: (existingAgreement.status as any) ?? 'draft',
+          status: toAgreementStatus(existingAgreement.status),
         });
       } else {
         form.reset({

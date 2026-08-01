@@ -23,12 +23,17 @@ import { PropertyPhotoSection } from './components/PropertyPhotoSection';
 import { PropertyFormFields } from './components/PropertyFormFields';
 import { PropertyTypeSelectorSection } from './components/PropertyTypeSelectorSection';
 import { PropertyWithOwner } from '../../types';
+import { getRentalPropertySchema, getSalePropertySchema } from './propertySchemas';
+
+type PropertyFormSubmitData =
+  | z.infer<ReturnType<typeof getRentalPropertySchema>>
+  | z.infer<ReturnType<typeof getSalePropertySchema>>;
 
 interface PropertyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   property: Property | null;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: PropertyFormSubmitData) => Promise<void>;
   loading?: boolean;
   onMarkAsSold?: (property: PropertyWithOwner) => void;
 }
@@ -50,9 +55,6 @@ export const PropertyDialog = ({
   });
 
   type PropertyFormData = z.infer<typeof propertySchema>;
-
-  // Type assertion for onSubmit to maintain type safety
-  const typedOnSubmit = onSubmit as (data: PropertyFormData) => Promise<void>;
 
   // Owner selection hook
   const { owners, loadingOwners, loadOwners } = usePropertyOwnerSelection();
@@ -93,8 +95,8 @@ export const PropertyDialog = ({
   });
 
   // Form submission hook
-  const { handleFormSubmit } = usePropertyFormSubmission({
-    onSubmit: typedOnSubmit,
+  const { handleFormSubmit } = usePropertyFormSubmission<PropertyFormData>({
+    onSubmit,
   });
 
   return (

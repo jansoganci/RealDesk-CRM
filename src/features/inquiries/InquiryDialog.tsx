@@ -17,7 +17,7 @@ import { Input } from '../../components/ui/input';
 import { CurrencyInput } from '../../components/ui/currency-input';
 import { Label } from '../../components/ui/label';
 import { Textarea } from '../../components/ui/textarea';
-import { PropertyInquiry } from '../../types';
+import { PropertyInquiry, RentalInquiry, SaleInquiry } from '../../types';
 import { getRentalInquirySchema, getSaleInquirySchema } from './inquirySchema';
 import { InquiryTypeSelector } from './InquiryTypeSelector';
 import { useAuth } from '@/contexts/AuthContext';
@@ -33,11 +33,15 @@ interface BudgetFormErrors {
   max_sale_budget?: { message?: string };
 }
 
+type RentalInquiryFormData = z.infer<ReturnType<typeof getRentalInquirySchema>>;
+type SaleInquiryFormData = z.infer<ReturnType<typeof getSaleInquirySchema>>;
+type InquirySubmitData = RentalInquiryFormData | SaleInquiryFormData;
+
 interface InquiryDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   inquiry: PropertyInquiry | null;
-  onSubmit: (data: any) => Promise<void>;
+  onSubmit: (data: InquirySubmitData) => Promise<void>;
   loading?: boolean;
 }
 
@@ -58,9 +62,6 @@ export const InquiryDialog = ({
     : getSaleInquirySchema(t);
   type InquiryFormData = z.infer<typeof inquirySchema>;
 
-  // Type assertion for onSubmit to maintain type safety
-  const typedOnSubmit = onSubmit as (data: InquiryFormData) => Promise<void>;
-
   const {
     register,
     handleSubmit,
@@ -75,38 +76,37 @@ export const InquiryDialog = ({
   useEffect(() => {
     if (open) {
       if (inquiry) {
-        // Detect inquiry type from existing inquiry
-        const existingType = (inquiry as any).inquiry_type || 'rental';
+        const existingType = inquiry.inquiry_type === 'sale' ? 'sale' : 'rental';
         setInquiryType(existingType);
 
-        // Reset form with type-specific data
         if (existingType === 'rental') {
+          const rentalInquiry = inquiry as RentalInquiry;
           reset({
-            name: inquiry.name || '',
-            phone: inquiry.phone || '',
-            email: inquiry.email || '',
-            preferred_city: inquiry.preferred_city || '',
-            preferred_district: inquiry.preferred_district || '',
-            min_rent_budget: (inquiry as any).min_rent_budget || undefined,
-            max_rent_budget: (inquiry as any).max_rent_budget || undefined,
+            name: rentalInquiry.name || '',
+            phone: rentalInquiry.phone || '',
+            email: rentalInquiry.email || '',
+            preferred_city: rentalInquiry.preferred_city || '',
+            preferred_district: rentalInquiry.preferred_district || '',
+            min_rent_budget: rentalInquiry.min_rent_budget ?? undefined,
+            max_rent_budget: rentalInquiry.max_rent_budget ?? undefined,
             inquiry_type: 'rental',
-            notes: inquiry.notes || '',
-          } as any);
+            notes: rentalInquiry.notes || '',
+          });
         } else {
+          const saleInquiry = inquiry as SaleInquiry;
           reset({
-            name: inquiry.name || '',
-            phone: inquiry.phone || '',
-            email: inquiry.email || '',
-            preferred_city: inquiry.preferred_city || '',
-            preferred_district: inquiry.preferred_district || '',
-            min_sale_budget: (inquiry as any).min_sale_budget || undefined,
-            max_sale_budget: (inquiry as any).max_sale_budget || undefined,
+            name: saleInquiry.name || '',
+            phone: saleInquiry.phone || '',
+            email: saleInquiry.email || '',
+            preferred_city: saleInquiry.preferred_city || '',
+            preferred_district: saleInquiry.preferred_district || '',
+            min_sale_budget: saleInquiry.min_sale_budget ?? undefined,
+            max_sale_budget: saleInquiry.max_sale_budget ?? undefined,
             inquiry_type: 'sale',
-            notes: inquiry.notes || '',
-          } as any);
+            notes: saleInquiry.notes || '',
+          });
         }
       } else {
-        // New inquiry - use current inquiry type
         if (inquiryType === 'rental') {
           reset({
             name: '',
@@ -118,7 +118,7 @@ export const InquiryDialog = ({
             max_rent_budget: undefined,
             inquiry_type: 'rental',
             notes: '',
-          } as any);
+          });
         } else {
           reset({
             name: '',
@@ -130,7 +130,7 @@ export const InquiryDialog = ({
             max_sale_budget: undefined,
             inquiry_type: 'sale',
             notes: '',
-          } as any);
+          });
         }
       }
     }
@@ -144,7 +144,7 @@ export const InquiryDialog = ({
       preferred_district: data.preferred_district?.trim() || undefined,
       notes: data.notes?.trim() || undefined,
     };
-    await typedOnSubmit(cleanedData);
+    await onSubmit(cleanedData);
   };
 
   return (

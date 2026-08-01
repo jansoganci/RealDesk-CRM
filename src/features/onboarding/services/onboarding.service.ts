@@ -248,7 +248,7 @@ class OnboardingService {
         step_number: stepNumber,
         step_name: stepName,
         action_taken: action,
-        data: (data || {}) as any,
+        data: (data ?? {}) satisfies Json,
       });
 
     if (error) {
@@ -361,7 +361,7 @@ class OnboardingService {
         user_id: user.id,
         org_id: orgId,
         question_key: questionKey,
-        answer: answer as any,
+        answer: answer as Json,
       }, {
         onConflict: 'user_id,question_key'
       });
@@ -375,7 +375,7 @@ class OnboardingService {
   /**
    * Get all onboarding responses for current user
    */
-  async getResponses(orgId: string): Promise<Record<string, any>> {
+  async getResponses(orgId: string): Promise<Record<string, Json>> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 
@@ -390,7 +390,7 @@ class OnboardingService {
       throw new Error('Failed to fetch onboarding responses');
     }
 
-    const responses: Record<string, any> = {};
+    const responses: Record<string, Json> = {};
     data?.forEach(row => {
       responses[row.question_key] = row.answer;
     });
@@ -404,7 +404,7 @@ class OnboardingService {
   async getResponse(
     orgId: string,
     questionKey: string
-  ): Promise<any | null> {
+  ): Promise<Json | null> {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) throw new Error('User not authenticated');
 

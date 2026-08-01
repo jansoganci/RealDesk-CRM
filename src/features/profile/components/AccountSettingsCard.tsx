@@ -15,13 +15,17 @@ import { Button } from '@/components/ui/button';
 import { Save } from 'lucide-react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import type * as z from 'zod';
 import { PreferencesSection } from './PreferencesSection';
+import type { getProfileSchema } from '../profileSchema';
+
+type ProfileFormData = z.infer<ReturnType<typeof getProfileSchema>>;
 
 /**
  * @deprecated Use ProfileInfoCard and EditProfileInfoDialog instead.
  */
 interface AccountSettingsCardProps {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<ProfileFormData>;
   loading: boolean;
   onSave: () => void;
 }

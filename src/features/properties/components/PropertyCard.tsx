@@ -63,9 +63,8 @@ export function PropertyCard({
     );
   };
 
-  const propertyTyped = property as any;
-  const isRental = propertyTyped.property_type === 'rental';
-  const isSale = propertyTyped.property_type === 'sale';
+  const isRental = property.property_type === 'rental';
+  const isSale = property.property_type === 'sale';
 
   return (
     <div className="space-y-4">
@@ -166,7 +165,7 @@ export function PropertyCard({
                 </span>
               </div>
             );
-          } else if (isSale && propertyTyped.sale_price) {
+          } else if (isSale && property.sale_price) {
             return (
               <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200/50 shadow-sm">
                 <div className="flex items-center gap-2">
@@ -176,8 +175,8 @@ export function PropertyCard({
                 <span className="font-bold text-amber-700">
                   {formatCurrency(
                     convertCurrency(
-                      propertyTyped.sale_price,
-                      propertyTyped.currency || 'USD',
+                      property.sale_price,
+                      property.currency || 'USD',
                       currency
                     ),
                     currency

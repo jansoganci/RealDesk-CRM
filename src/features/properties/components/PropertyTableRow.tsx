@@ -49,9 +49,8 @@ export function PropertyTableRow({
     );
   };
 
-  const propertyTyped = property as any;
-  const isRental = propertyTyped.property_type === 'rental';
-  const isSale = propertyTyped.property_type === 'sale';
+  const isRental = property.property_type === 'rental';
+  const isSale = property.property_type === 'sale';
 
   return (
     <TableRow>
@@ -92,14 +91,14 @@ export function PropertyTableRow({
       <TableCell className="hidden lg:table-cell">
         {property.city || property.state || property.zip_code ||
         property.district ||
-        propertyTyped.il ||
-        propertyTyped.district_legacy ? (
+        property.il ||
+        property.district_legacy ? (
           <span className={`${COLORS.gray.text600} dark:text-slate-300 text-sm truncate max-w-[150px] md:max-w-none block`}>
             {[
-              property.city || propertyTyped.il,
+              property.city || property.il,
               property.state,
               property.zip_code,
-              property.district || propertyTyped.district_legacy,
+              property.district || property.district_legacy,
             ]
               .filter(Boolean)
               .join(', ')}
@@ -150,7 +149,7 @@ export function PropertyTableRow({
               </span>
             );
           } else if (isSale) {
-            const salePrice = propertyTyped.sale_price;
+            const salePrice = property.sale_price;
             if (!salePrice) {
               return <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>{t('properties:table.noPrice')}</span>;
             }
@@ -159,7 +158,7 @@ export function PropertyTableRow({
                 {formatCurrency(
                   convertCurrency(
                     salePrice,
-                    propertyTyped.currency || 'USD',
+                    property.currency || 'USD',
                     currency
                   ),
                   currency

@@ -1,7 +1,8 @@
 import * as z from 'zod';
+import type { TFunction } from 'i18next';
 import { isValidRoutingNumber, isValidAccountNumber } from '@/services/encryption.service';
 
-export const getOwnerSchema = (t: (key: string, options?: any) => string) => {
+export const getOwnerSchema = (t: TFunction) => {
   return z
     .object({
       name: z.string().min(1, t('validations.nameRequired')),

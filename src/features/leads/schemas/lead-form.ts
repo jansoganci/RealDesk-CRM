@@ -173,7 +173,7 @@ export const createLeadSchema = z
       .string()
       .length(2, 'State code must be 2 characters')
       .toUpperCase()
-      .refine((val) => !val || US_STATE_CODES.includes(val as any), {
+      .refine((val) => !val || (US_STATE_CODES as readonly string[]).includes(val), {
         message: 'Please select a valid US state',
       })
       .optional()
@@ -278,7 +278,7 @@ const baseUpdateLeadSchema = z
       .string()
       .length(2, 'State code must be 2 characters')
       .toUpperCase()
-      .refine((val) => !val || US_STATE_CODES.includes(val as any), {
+      .refine((val) => !val || (US_STATE_CODES as readonly string[]).includes(val), {
         message: 'Please select a valid US state',
       })
       .optional()

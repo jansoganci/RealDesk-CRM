@@ -148,8 +148,8 @@ export function TeamMembersList() {
       await organizationService.revokeInvitation(teamMember.invitation.id);
       toast.success(t('team:invitationRevoked'));
       fetchTeamData();
-    } catch (error: any) {
-      toast.error(error.message || t('common:error'));
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : t('common:error'));
     }
   };
 
@@ -173,8 +173,8 @@ export function TeamMembersList() {
       await organizationService.resendInvitation(teamMember.invitation.id);
       toast.success(t('team:invitationResent'));
       fetchTeamData();
-    } catch (error: any) {
-      toast.error(error.message || t('common:error'));
+    } catch (error: unknown) {
+      toast.error(error instanceof Error ? error.message : t('common:error'));
     }
   };
 

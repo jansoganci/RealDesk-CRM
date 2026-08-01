@@ -3,6 +3,17 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { FileText, Loader2 } from 'lucide-react';
 import { extractTextFromFileViaProxy, parseContractFromText } from '@/lib/serviceProxy';
+import type { ParsedContractData } from '@/services/textExtraction.service';
+
+/** Legacy flat keys used by the extract preview UI. */
+interface PDFExtractPreviewData {
+  tenantName?: string;
+  ownerName?: string;
+  rentAmount?: number;
+  deposit?: number;
+  startDate?: string;
+  endDate?: string;
+}
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -16,7 +27,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 
 interface PDFExtractButtonProps {
-  onExtract?: (text: string, parsedData?: any) => void;
+  onExtract?: (text: string, parsedData?: ParsedContractData) => void;
   variant?: 'default' | 'outline' | 'ghost';
   size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
@@ -32,7 +43,7 @@ export const PDFExtractButton = ({
   const [dialogOpen, setDialogOpen] = useState(false);
   const [extracting, setExtracting] = useState(false);
   const [extractedText, setExtractedText] = useState('');
-  const [parsedData, setParsedData] = useState<any>(null);
+  const [parsedData, setParsedData] = useState<PDFExtractPreviewData | null>(null);
   const [fileInfo, setFileInfo] = useState<{
     name: string;
     size: number;
@@ -82,7 +93,7 @@ export const PDFExtractButton = ({
 
       // Parse contract data
       const parsed = parseContractFromText(result.text);
-      setParsedData(parsed);
+      setParsedData(parsed as PDFExtractPreviewData);
 
       toast.success(
         t('pdfExtract.success', {

@@ -3,7 +3,7 @@ import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { tenantsService, contractsService } from '../../../lib/serviceProxy';
-import type { TenantWithProperty, Contract, TenantUpdate, ContractUpdate } from '../../../types';
+import type { TenantWithProperty, Contract, TenantUpdate, ContractUpdate, ContractInsert } from '../../../types';
 import type { TenantEditFormData } from '../schemas/tenantEditSchema';
 
 /**
@@ -100,7 +100,7 @@ export function useTenantEditSubmission({
         };
         
         // user_id is injected automatically by the service
-        await contractsService.create(contractInsertData as any);
+        await contractsService.create(contractInsertData as ContractInsert);
       }
       
       // Handle PDF upload if provided

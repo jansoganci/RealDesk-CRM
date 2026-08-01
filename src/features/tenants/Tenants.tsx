@@ -109,7 +109,7 @@ export const Tenants = ({ pageTop, pageTitle }: TenantsProps) => {
     </>
   ), [t]);
 
-  const renderTableRow = useCallback((tenant: any, _index: number) => (
+  const renderTableRow = useCallback((tenant: TenantWithProperty, _index: number) => (
     <TenantTableRow
       key={tenant.id}
       tenant={tenant}
@@ -119,7 +119,7 @@ export const Tenants = ({ pageTop, pageTitle }: TenantsProps) => {
     />
   ), [handleEditTenant, handleDeleteClick, handleScheduleMeeting]);
 
-  const renderCardContent = useCallback((tenant: any, _index: number) => (
+  const renderCardContent = useCallback((tenant: TenantWithProperty, _index: number) => (
     <TenantCard
       key={tenant.id}
       tenant={tenant}

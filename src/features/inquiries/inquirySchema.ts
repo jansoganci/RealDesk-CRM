@@ -3,10 +3,11 @@
  * Kept for backward compatibility with existing InquiryDialog component.
  */
 import * as z from 'zod';
+import type { TFunction } from 'i18next';
 import { isValidPhone } from '@/services/phone.service';
 
 // Base inquiry schema (common fields for both rental and sale)
-const baseInquirySchema = (t: (key: string, options?: any) => string) =>
+const baseInquirySchema = (t: TFunction) =>
   z.object({
     name: z.string().min(1, t('validations.nameRequired')),
     phone: z
@@ -25,7 +26,7 @@ const baseInquirySchema = (t: (key: string, options?: any) => string) =>
   });
 
 // Rental inquiry schema
-export const getRentalInquirySchema = (t: (key: string, options?: any) => string) => {
+export const getRentalInquirySchema = (t: TFunction) => {
   return baseInquirySchema(t).extend({
     inquiry_type: z.literal('rental'),
     min_rent_budget: z.number().positive().optional().nullable(),
@@ -34,7 +35,7 @@ export const getRentalInquirySchema = (t: (key: string, options?: any) => string
 };
 
 // Sale inquiry schema
-export const getSaleInquirySchema = (t: (key: string, options?: any) => string) => {
+export const getSaleInquirySchema = (t: TFunction) => {
   return baseInquirySchema(t).extend({
     inquiry_type: z.literal('sale'),
     min_sale_budget: z.number().positive().optional().nullable(),
@@ -44,7 +45,7 @@ export const getSaleInquirySchema = (t: (key: string, options?: any) => string) 
 
 // Combined inquiry schema (for backward compatibility with type inference)
 // Use getRentalInquirySchema or getSaleInquirySchema for actual form validation
-export const getInquirySchema = (t: (key: string, options?: any) => string) => {
+export const getInquirySchema = (t: TFunction) => {
   return baseInquirySchema(t).extend({
     inquiry_type: z.enum(['rental', 'sale']).default('rental'),
     // Rental budget fields

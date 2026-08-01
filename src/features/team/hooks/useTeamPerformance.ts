@@ -98,7 +98,7 @@ export function useTeamPerformance(): UseTeamPerformanceReturn {
       setError(null);
 
       const { data: result, error: rpcError } = await supabase.rpc(
-        'get_team_performance' as any,
+        'get_team_performance',
         {
           p_org_id: currentOrg.id,
           p_start_date: dateRange.startDate,
@@ -110,7 +110,7 @@ export function useTeamPerformance(): UseTeamPerformanceReturn {
         throw rpcError;
       }
 
-      setData(result as TeamPerformanceData);
+      setData(result as unknown as TeamPerformanceData);
     } catch (err) {
       console.error('Failed to load team performance:', err);
       setError('Failed to load team performance data');
