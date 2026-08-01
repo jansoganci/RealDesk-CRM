@@ -1,0 +1,2 @@
+[functions.hash-tax-id]
+verify_jwt = true

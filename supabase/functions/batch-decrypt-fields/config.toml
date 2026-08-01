@@ -1,0 +1,2 @@
+[functions.batch-decrypt-fields]
+verify_jwt = true
