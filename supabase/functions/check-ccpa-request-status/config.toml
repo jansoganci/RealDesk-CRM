@@ -1,0 +1,2 @@
+[functions.check-ccpa-request-status]
+verify_jwt = false
