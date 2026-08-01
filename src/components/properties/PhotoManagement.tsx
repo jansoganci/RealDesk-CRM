@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   Dialog,
@@ -37,14 +37,7 @@ export const PhotoManagement = ({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadProgress, setUploadProgress] = useState(0);
 
-  useEffect(() => {
-    if (open) {
-      loadPhotos();
-      setSelectedFiles([]);
-    }
-  }, [open, propertyId]);
-
-  const loadPhotos = async () => {
+  const loadPhotos = useCallback(async () => {
     try {
       setLoading(true);
       const data = await photosService.getPhotosByPropertyId(propertyId);
@@ -55,7 +48,14 @@ export const PhotoManagement = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [propertyId, t]);
+
+  useEffect(() => {
+    if (open) {
+      void loadPhotos();
+      setSelectedFiles([]);
+    }
+  }, [open, propertyId, loadPhotos]);
 
   const handleFilesSelected = (files: File[]) => {
     setSelectedFiles(files);

@@ -82,11 +82,12 @@ export const FinanceDashboard = () => {
 
   // Custom hooks
   const financeData = useFinanceData(filters);
+  const { loadData, loadTransactions, loadAnalytics } = financeData;
   const financeActions = useFinanceActions({
     onDataChange: async () => {
-      await financeData.loadData();
+      await loadData();
       if (activeTab === 'analytics' && analyticsLoaded) {
-        await financeData.loadAnalytics();
+        await loadAnalytics();
       }
     },
     transactions: financeData.transactions,
@@ -95,23 +96,23 @@ export const FinanceDashboard = () => {
 
   // Load initial data
   useEffect(() => {
-    financeData.loadData();
-  }, [financeData.loadData]);
+    loadData();
+  }, [loadData]);
 
   // Reload transactions when filters change
   useEffect(() => {
     if (activeTab === 'transactions' || activeTab === 'overview') {
-      financeData.loadTransactions();
+      loadTransactions();
     }
-  }, [filters, activeTab]);
+  }, [filters, activeTab, loadTransactions]);
 
   // Lazy load analytics when tab is opened
   useEffect(() => {
     if (activeTab === 'analytics' && !analyticsLoaded) {
-      financeData.loadAnalytics();
+      loadAnalytics();
       setAnalyticsLoaded(true);
     }
-  }, [activeTab, analyticsLoaded]);
+  }, [activeTab, analyticsLoaded, loadAnalytics]);
 
   // Load recurring expenses function
   const loadRecurringExpenses = useCallback(async () => {
@@ -160,7 +161,9 @@ export const FinanceDashboard = () => {
         console.error('Error processing recurring expenses:', error);
         // Silent fail - no toast for errors
       });
-  }, []); // Run once on mount
+    // Mount-only: must not re-run on `t` changes (would risk duplicate generated transactions).
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- intentional once-on-mount side effect
+  }, []);
 
   // Handlers
   const handleAddTransaction = () => {

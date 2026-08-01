@@ -53,10 +53,12 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
   const isMountedRef = useRef(true);
   const isFetchingRef = useRef(false);
 
+  const orgId = currentOrg?.id;
+
   const refreshCounts = useCallback(async () => {
     // Don't fetch if no user is logged in, no organization is active, or already fetching
-    if (!userId || !currentOrg || isFetchingRef.current) {
-      if (!userId || !currentOrg) {
+    if (!userId || !orgId || isFetchingRef.current) {
+      if (!userId || !orgId) {
         setReminderCount(0);
         setUnreadMatchesCount(0);
         setIsLoading(false);
@@ -91,20 +93,20 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
         setIsLoading(false);
       }
     }
-  }, [userId]);
+  }, [userId, orgId]);
 
   // Initial fetch and interval setup
   useEffect(() => {
     isMountedRef.current = true;
 
     // Fetch immediately on mount (if user and org exist)
-    if (userId && currentOrg) {
+    if (userId && orgId) {
       refreshCounts();
     }
 
     // Set up interval for periodic refresh
     const intervalId = setInterval(() => {
-      if (userId && currentOrg) {
+      if (userId && orgId) {
         refreshCounts();
       }
     }, REFRESH_INTERVAL_MS);
@@ -114,16 +116,16 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       isMountedRef.current = false;
       clearInterval(intervalId);
     };
-  }, [userId, refreshCounts]);
+  }, [userId, orgId, refreshCounts]);
 
   // Reset counts when user logs out or org is cleared
   useEffect(() => {
-    if (!userId || !currentOrg) {
+    if (!userId || !orgId) {
       setReminderCount(0);
       setUnreadMatchesCount(0);
       setError(null);
     }
-  }, [userId, currentOrg]);
+  }, [userId, orgId]);
 
   const value = useMemo(() => ({
     reminderCount,

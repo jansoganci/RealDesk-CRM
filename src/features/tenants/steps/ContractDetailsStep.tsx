@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { COLORS } from '@/config/colors';
@@ -37,11 +37,7 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
 
   const selectedPropertyId = watch('contract.property_id');
 
-  useEffect(() => {
-    loadProperties();
-  }, []);
-
-  const loadProperties = async () => {
+  const loadProperties = useCallback(async () => {
     try {
       setLoadingProperties(true);
       const data = await propertiesService.getAll();
@@ -55,7 +51,11 @@ export const ContractDetailsStep: React.FC<ContractDetailsStepProps> = ({
     } finally {
       setLoadingProperties(false);
     }
-  };
+  }, [t]);
+
+  useEffect(() => {
+    void loadProperties();
+  }, [loadProperties]);
 
   return (
     <div className="space-y-6">

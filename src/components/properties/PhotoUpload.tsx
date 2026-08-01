@@ -25,7 +25,7 @@ export const PhotoUpload = ({
   const { t } = useTranslation(['photo']);
   const remainingSlots = maxFiles - currentPhotoCount;
 
-  const validateFiles = (files: File[]): { valid: File[]; error: string | null } => {
+  const validateFiles = useCallback((files: File[]): { valid: File[]; error: string | null } => {
     const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
     const maxSize = 5 * 1024 * 1024;
 
@@ -48,7 +48,7 @@ export const PhotoUpload = ({
     }
 
     return { valid: validFiles, error: null };
-  };
+  }, [remainingSlots, maxFiles, t]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -94,7 +94,7 @@ export const PhotoUpload = ({
       setSelectedFiles(valid);
       onFilesSelected(valid);
     },
-    [onFilesSelected, remainingSlots]
+    [onFilesSelected, validateFiles]
   );
 
   const handleRemoveFile = (index: number) => {

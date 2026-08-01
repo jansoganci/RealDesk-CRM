@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '../../../components/ui/card';
 import { Skeleton } from '../../../components/ui/skeleton';
@@ -25,11 +25,7 @@ export const UpcomingBills = ({
   const [loading, setLoading] = useState(true);
   const [markingPaid, setMarkingPaid] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadBills();
-  }, [daysAhead]);
-
-  const loadBills = async () => {
+  const loadBills = useCallback(async () => {
     setLoading(true);
     try {
       const data = await financialTransactionsService.getUpcomingBills(daysAhead);
@@ -40,7 +36,11 @@ export const UpcomingBills = ({
     } finally {
       setLoading(false);
     }
-  };
+  }, [daysAhead, t]);
+
+  useEffect(() => {
+    void loadBills();
+  }, [loadBills]);
 
   const handleMarkAsPaid = async (billId: string) => {
     setMarkingPaid(billId);

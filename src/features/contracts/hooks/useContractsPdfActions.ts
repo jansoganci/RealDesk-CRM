@@ -107,7 +107,7 @@ export function useContractsPdfActions({
     input.accept = '.pdf';
     input.onchange = (e) => handlePdfFileSelected(e, contractId);
     input.click();
-  }, [refreshData, handlePdfFileSelected]);
+  }, [handlePdfFileSelected]);
 
   return useMemo(() => ({
     uploadingContractId,

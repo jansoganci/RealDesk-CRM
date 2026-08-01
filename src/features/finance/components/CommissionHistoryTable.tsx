@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
@@ -110,7 +110,7 @@ export const CommissionHistoryTable = () => {
     },
   });
 
-  const load = async () => {
+  const load = useCallback(async () => {
     setLoading(true);
     try {
       const result = await commissionsService.getCommissionHistory({
@@ -125,11 +125,11 @@ export const CommissionHistoryTable = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filters.type, filters.side, t]);
 
   useEffect(() => {
     void load();
-  }, [filters.type, filters.side]);
+  }, [load]);
 
   useEffect(() => {
     const run = async () => {

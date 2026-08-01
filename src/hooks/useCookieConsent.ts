@@ -76,8 +76,7 @@ export interface UseCookieConsentReturn {
  * @returns UseCookieConsentReturn - Consent state and methods
  */
 export function useCookieConsent(): UseCookieConsentReturn {
-  // Get i18n for language detection and translations
-  const { i18n, t } = useTranslation('cookie');
+  const { t } = useTranslation('cookie');
 
   // Initialize state from localStorage or defaults
   const [consent, setConsent] = useState<ConsentCategories>(() => {
@@ -166,7 +165,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
       // Silently handle errors - logging failures shouldn't affect UX
       console.debug('[useCookieConsent] Error building consent record:', error);
     }
-  }, [i18n.language]);
+  }, []);
 
   /**
    * Check Global Privacy Control (GPC) signal
@@ -513,7 +512,7 @@ export function useCookieConsent(): UseCookieConsentReturn {
     (category: keyof ConsentCategories): boolean => {
       return hasConsent(category);
     },
-    [consent]
+    []
   );
 
   /**

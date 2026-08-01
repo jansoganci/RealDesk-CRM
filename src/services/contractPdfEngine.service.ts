@@ -303,7 +303,7 @@ class ContractPdfEngineService {
     }
 
     switch (section.type) {
-      case 'title':
+      case 'title': {
         doc.setFontSize(section.options?.fontSize || 18);
         doc.setFont('Roboto', section.options?.bold !== false ? 'bold' : 'normal');
         const titleAlign = section.options?.align || 'center';
@@ -316,6 +316,7 @@ class ContractPdfEngineService {
         doc.text(section.content || '', titleX, yPosition, { align: titleAlign });
         yPosition += this.LINE_HEIGHT * 2;
         break;
+      }
 
       case 'heading':
         doc.setFontSize(section.options?.fontSize || 12);
@@ -324,7 +325,7 @@ class ContractPdfEngineService {
         yPosition += this.LINE_HEIGHT;
         break;
 
-      case 'paragraph':
+      case 'paragraph': {
         doc.setFontSize(section.options?.fontSize || 10);
         doc.setFont('Roboto', section.options?.bold ? 'bold' : 'normal');
         const paragraphAlign = section.options?.align || 'left';
@@ -339,6 +340,7 @@ class ContractPdfEngineService {
         doc.text(lines, paragraphX, yPosition, { align: paragraphAlign });
         yPosition += lines.length * this.LINE_HEIGHT;
         break;
+      }
 
       case 'table':
         doc.setFontSize(10);

@@ -10,7 +10,7 @@
  * - Syncs with React Hook Form state
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { UseFormReturn } from 'react-hook-form';
 import { toast } from 'sonner';
 import { Pencil, RotateCcw, Check, X } from 'lucide-react';
@@ -64,16 +64,11 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
   const [loading, setLoading] = useState(true);
   const { t } = useTranslation('contracts');
 
-  // Load clauses on mount
-  useEffect(() => {
-    loadClauses();
-  }, []);
-
   /**
    * Load merged clauses from service
    * Auto-seeds templates if user doesn't have them yet
    */
-  async function loadClauses() {
+  const loadClauses = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -99,7 +94,12 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
     } finally {
       setLoading(false);
     }
-  }
+  }, [t]);
+
+  // Load clauses on mount / when loader identity changes
+  useEffect(() => {
+    void loadClauses();
+  }, [loadClauses]);
 
   /**
    * Start editing a clause
