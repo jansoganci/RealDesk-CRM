@@ -36,6 +36,10 @@ This repo uses **`0001_slug.sql`**, **`0002_…`**, not Supabase timestamp names
 - **Never** reorder or edit migrations already applied in shared envs — add `000N_…` follow-up.
 - If `db push` skips numbered files, apply SQL in order via SQL Editor / `psql`. Order in folder is source of truth.
 
+### Migration history notes
+
+Migration numbering: `0035` was never created (intentional gap, no action needed). `0039` is used by two files (`0039_add_agent_profile_fields.sql` and `0039_add_us_onboarding_org_profile_fields.sql`) — both were already applied to production manually. Do not rename either file; do not reuse `0035` or `0039` for future migrations. The next new migration should start at `0047`.
+
 ---
 
 ## Stack & layout

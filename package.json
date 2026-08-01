@@ -14,7 +14,7 @@
     "test:watch": "vitest",
     "gen:types": "npx supabase gen types typescript --project-id esmldgmwahhhplswmkui > src/types/database.ts",
     "deploy": "npm run build && wrangler pages deploy dist",
-    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=emlak-crm-app"
+    "deploy:prod": "npm run build && wrangler pages deploy dist --project-name=realdesk-us --commit-dirty=true"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",

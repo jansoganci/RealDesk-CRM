@@ -55,6 +55,7 @@ Only documents for **open** work belong here.
 
 | File | Status |
 |------|--------|
+| [`COMMERCIAL_READINESS_PLAN.md`](planning/COMMERCIAL_READINESS_PLAN.md) | Active — security, billing, legal documents, communications, compliance, and quality release gates |
 | [`TEAM_COMMISSION_KPI_PLAN.md`](planning/TEAM_COMMISSION_KPI_PLAN.md) | Active — team performance / commission KPIs |
 | [`README.md`](planning/README.md) | How to add, update, and **close** plans |
 
