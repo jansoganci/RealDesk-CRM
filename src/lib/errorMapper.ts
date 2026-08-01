@@ -82,7 +82,7 @@ const mapCodeToKey = (code: string): string => {
  */
 export const getErrorMessage = (
   error: unknown,
-  t: (key: string, options?: any) => string
+  t: (key: string, options?: Record<string, unknown>) => string
 ): string => {
   const key = mapErrorToKey(error);
   return t(key);

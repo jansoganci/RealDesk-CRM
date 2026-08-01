@@ -23,7 +23,7 @@ class Logger {
   /**
    * DEBUG: Detailed flow tracing. Stripped in production.
    */
-  debug(message: string, ...args: any[]) {
+  debug(message: string, ...args: unknown[]) {
     if (!IS_PROD) {
       console.debug(this.formatMessage(message), ...args);
     }
@@ -32,7 +32,7 @@ class Logger {
   /**
    * INFO: Significant lifecycle events. Stripped in production.
    */
-  info(message: string, ...args: any[]) {
+  info(message: string, ...args: unknown[]) {
     if (!IS_PROD) {
       console.info(this.formatMessage(message), ...args);
     }
@@ -41,24 +41,25 @@ class Logger {
   /**
    * WARN: Recoverable issues. Visible in production.
    */
-  warn(message: string, ...args: any[]) {
+  warn(message: string, ...args: unknown[]) {
     console.warn(this.formatMessage(message), ...args);
   }
 
   /**
    * ERROR: Critical failures. Visible in production.
    */
-  error(message: string, ...args: any[]) {
+  error(message: string, ...args: unknown[]) {
     // Enhanced error logging for Supabase/PostgREST errors
-    const processedArgs = args.map(arg => {
+    const processedArgs = args.map((arg) => {
       if (arg && typeof arg === 'object' && ('message' in arg || 'code' in arg)) {
+        const record = arg as Record<string, unknown>;
         return {
-          message: arg.message,
-          details: arg.details,
-          hint: arg.hint,
-          code: arg.code,
-          status: arg.status,
-          ...arg
+          message: record.message,
+          details: record.details,
+          hint: record.hint,
+          code: record.code,
+          status: record.status,
+          ...record,
         };
       }
       return arg;
