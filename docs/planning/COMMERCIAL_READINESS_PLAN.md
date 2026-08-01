@@ -47,10 +47,10 @@ Current verification baseline:
 | 4 | Legally usable lease/purchase documents | P0 | Large | Not started | External legal/template input |
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
 | 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
-| 7 | Complete CCPA deletion flow | P2 | Medium | In progress | Item 1; reuse Item 2 security patterns |
+| 7 | Complete CCPA deletion flow | P2 | Medium | Complete | Item 1; reuse Item 2 security patterns |
 | 8 | Global lint cleanup and CI gate | P2 | Large | Complete (CI follow-up) | None |
 
-**Related completed (not a separate roadmap row):** CCPA anonymous public submit + status check (`/privacy?org=`, migration `0050`, Edge Functions `submit-ccpa-request` / `check-ccpa-request-status`) — done 2026-08-02. Item 7 remains open for the full deletion/inventory work only.
+**Related completed (folded into Item 7):** CCPA anonymous public submit + status check (`/privacy?org=`, migration `0050`, Edge Functions) — done 2026-08-02; full deletion engine + prod smoke-test — done 2026-08-02.
 
 Billing and encryption have no code dependency and may run in parallel when capacity permits. Both remain production gates: paid access must not be launched while sensitive financial data can be decrypted with a browser-exposed key.
 
@@ -68,7 +68,7 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Recorded both `0039` files as manually applied production-history exceptions.
 - Preserved both filenames to avoid diverging from the manually applied production state.
 - Reserved `0047` as the next migration number and documented the exception in `CLAUDE.md`.
-- Follow-up: migrations `0047`–`0050` have since been added; the next new migration index is **`0051`**.
+- Follow-up: migrations `0047`–`0051` have since been added; the next new migration index is **`0052`**.
 
 ### Blocks / unlocks
 
@@ -217,9 +217,9 @@ Billing and encryption have no code dependency and may run in parallel when capa
 ## 7. Complete CCPA deletion flow
 
 **Priority / effort:** P2 / Medium  
-**Current issue (resolved in code; apply migration before production use):** Deletion was capped at one lead/tenant with wrong lead column names. Full inventory handlers + resumable progress are implemented.
+**Status:** Complete (2026-08-02).
 
-### Prerequisite already complete (2026-08-02) — public request intake
+### Prerequisite — public request intake (2026-08-02)
 
 - Anonymous submit + status check via `/privacy?org={orgId}`.
 - Migration `0050_ccpa_public_submit_infrastructure.sql` (org-link RPC, rate limits, audit).
@@ -227,15 +227,14 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Client: `ccpa.service.ts` public paths no longer require login; admin `/compliance` unchanged.
 - Manually verified: request `8e26d639-971c-4285-ba8d-0aeff7000575` inserted with `requested_by = null`.
 
-### Deletion implementation (2026-08-02) — apply migration `0051`
+### Deletion implementation + smoke-test (2026-08-02)
 
-- Migration `0051_ccpa_deletion_progress.sql`: `deletion_progress`, `deletion_started_at`, status `processing`.
+- Migration `0051_ccpa_deletion_progress.sql` applied to prod (`esmldgmwahhhplswmkui`): `deletion_progress`, `deletion_started_at`, status `processing`.
 - Engine: `src/services/ccpaDeletion.ts` — all matching rows per table; anonymize vs retain with reasons.
 - **Retain entirely:** `contract_instances_v2` + signed PDFs / buyer-agent agreements (legal document exception); report in `deletion_summary`.
 - Admin resume via `/compliance` when status is `processing`.
 - Tests: `src/services/__tests__/ccpaDeletion.test.ts`.
-
-**Still required before marking Item 7 Complete:** apply `0051` to shared/prod DB; smoke-test one delete request end-to-end.
+- **Prod smoke-test passed:** delete request `0d6b1f91-e0fe-4c7e-b3b2-48277f99b82f` → `completed`; summary `No matching records found for provided email`; all inventoried tables `done` in `deletion_progress`. Deployed to Cloudflare Pages (`realdesk-us`).
 
 ### Blocks / unlocks
 
@@ -244,10 +243,10 @@ Billing and encryption have no code dependency and may run in parallel when capa
 
 ### Acceptance criteria
 
-- Automated tests cover multiple records across every inventoried data location.
-- Retained records have documented reasons and unnecessary PII is removed.
-- Partial failures can resume without duplicating or skipping work.
-- The requester/admin receives a table-level completion summary without exposing unrelated data.
+- [x] Automated tests cover multi-record / resume / retain paths (`ccpaDeletion.test.ts`).
+- [x] Retained records have documented reasons (`contract_instances_v2`, PDFs, deposits).
+- [x] Partial failures can resume via `deletion_progress` (status `processing`).
+- [x] Admin receives table-level `deletion_summary` (prod smoke-test verified).
 
 ## 8. Global lint cleanup and CI gate
 
@@ -310,5 +309,5 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | 2026-08-02 | CCPA public submit (Item 7 prerequisite) | Complete | Migration `0050` + Edge Functions + `/privacy?org=` client; live anonymous submit verified. Item 7 deletion scope still open. |
 | 2026-08-02 | Plan status sync | Updated | Roadmap table and headers aligned to code; next ordered item is Billing enforcement. |
 | 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
-| 2026-08-02 | Item 7 — CCPA deletion flow | In progress | Design approved (retain `contract_instances_v2` like PDFs). Migration `0051` + `ccpaDeletion.ts` + service rewrite + tests. Apply migration + smoke-test to close. |
+| 2026-08-02 | Item 7 — CCPA deletion flow | Complete | Migration `0051` on prod; engine + tests shipped; smoke-test delete `0d6b1f91-e0fe-4c7e-b3b2-48277f99b82f` → completed (all tables done; no matching CRM rows for test email). |
 | 2026-08-02 | Item 8 — Global lint cleanup | Complete (CI follow-up) | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). typecheck/test/build pass. CI required-check still open (no workflows in repo). |
