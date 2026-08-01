@@ -1,6 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Shield, Eye, Trash2, ShieldOff, HelpCircle, Search } from 'lucide-react';
+import { Shield, Eye, Trash2, ShieldOff, HelpCircle, Search, AlertTriangle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -14,13 +15,56 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from '@/components/ui/accordion';
+import { supabase } from '@/config/supabase';
 import { DataSubjectRequestForm } from './components/DataSubjectRequestForm';
 import { RequestStatusCheck } from './components/RequestStatusCheck';
 
+const ORG_UUID_RE =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+type OrgLinkState = 'loading' | 'valid' | 'invalid';
+
 export function CompliancePage() {
   const { t } = useTranslation('compliance');
+  const [searchParams] = useSearchParams();
   const [formOpen, setFormOpen] = useState(false);
   const [statusOpen, setStatusOpen] = useState(false);
+  const [orgLinkState, setOrgLinkState] = useState<OrgLinkState>('loading');
+  const [orgId, setOrgId] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const orgParam = searchParams.get('org');
+
+    if (!orgParam || !ORG_UUID_RE.test(orgParam)) {
+      setOrgLinkState('invalid');
+      setOrgId(null);
+      return;
+    }
+
+    setOrgLinkState('loading');
+
+    void (async () => {
+      const { data, error } = await supabase.rpc('ccpa_org_link_valid', {
+        p_org_id: orgParam,
+      });
+
+      if (cancelled) return;
+
+      if (error || data !== true) {
+        setOrgLinkState('invalid');
+        setOrgId(null);
+        return;
+      }
+
+      setOrgId(orgParam);
+      setOrgLinkState('valid');
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [searchParams]);
 
   const rights = [
     { key: 'know', icon: Eye, color: 'text-blue-600', bg: 'bg-blue-50 border-blue-200' },
@@ -44,6 +88,7 @@ export function CompliancePage() {
               size="lg"
               className="bg-white text-blue-700 hover:bg-blue-50 dark:bg-slate-100 dark:text-blue-900 dark:hover:bg-white font-semibold shadow-lg"
               onClick={() => setFormOpen(true)}
+              disabled={orgLinkState !== 'valid'}
             >
               {t('page.submitRequest')}
             </Button>
@@ -59,6 +104,33 @@ export function CompliancePage() {
           </div>
         </div>
       </div>
+
+      {orgLinkState === 'invalid' && (
+        <div className="max-w-3xl mx-auto px-4 pt-8">
+          <div
+            role="alert"
+            className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/40 dark:border-amber-800 p-4 flex gap-3"
+          >
+            <AlertTriangle className="h-5 w-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="space-y-1">
+              <p className="text-sm font-semibold text-amber-900 dark:text-amber-100">
+                {t('page.invalidOrgTitle')}
+              </p>
+              <p className="text-sm text-amber-800 dark:text-amber-200">
+                {t('page.invalidOrgMessage')}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {orgLinkState === 'loading' && (
+        <div className="max-w-3xl mx-auto px-4 pt-8">
+          <p className="text-sm text-slate-500 dark:text-slate-400 text-center">
+            {t('page.validatingOrg')}
+          </p>
+        </div>
+      )}
 
       {/* Rights Overview */}
       <div className="max-w-3xl mx-auto px-4 py-12 space-y-10">
@@ -94,15 +166,17 @@ export function CompliancePage() {
         <p className="text-xs text-slate-400 dark:text-slate-500 text-center">{t('page.contactNotice')}</p>
       </div>
 
-      {/* Submit Request Dialog */}
-      <Dialog open={formOpen} onOpenChange={setFormOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>{t('form.title')}</DialogTitle>
-          </DialogHeader>
-          <DataSubjectRequestForm onSuccess={() => setFormOpen(false)} />
-        </DialogContent>
-      </Dialog>
+      {/* Submit Request Dialog — only when org link is valid */}
+      {orgId && (
+        <Dialog open={formOpen} onOpenChange={setFormOpen}>
+          <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{t('form.title')}</DialogTitle>
+            </DialogHeader>
+            <DataSubjectRequestForm orgId={orgId} />
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Check Status Dialog */}
       <Dialog open={statusOpen} onOpenChange={setStatusOpen}>

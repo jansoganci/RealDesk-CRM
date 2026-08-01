@@ -153,6 +153,8 @@ export { ccpaService } from '../services/ccpa.service';
 export type {
   DataSubjectRequest,
   SubmitRequestInput,
+  SubmitRequestResult,
+  CheckRequestStatusResult,
   RequestType,
   RequestStatus,
   RelationshipToOrg,

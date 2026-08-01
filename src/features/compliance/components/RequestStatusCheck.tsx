@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Badge } from '@/components/ui/badge';
-import { ccpaService, type DataSubjectRequest } from '@/lib/serviceProxy';
+import { ccpaService, type CheckRequestStatusResult } from '@/lib/serviceProxy';
 import { cn } from '@/lib/utils';
 
 const STATUS_CLASSES: Record<string, string> = {
@@ -19,22 +19,21 @@ const STATUS_CLASSES: Record<string, string> = {
 export function RequestStatusCheck() {
   const { t } = useTranslation('compliance');
   const [requestId, setRequestId] = useState('');
-  const [result, setResult] = useState<DataSubjectRequest | null>(null);
+  const [email, setEmail] = useState('');
+  const [result, setResult] = useState<CheckRequestStatusResult | null>(null);
   const [notFound, setNotFound] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const canCheck = requestId.trim().length > 0 && email.trim().length > 0;
+
   const handleCheck = async () => {
-    if (!requestId.trim()) return;
+    if (!canCheck) return;
     setLoading(true);
     setNotFound(false);
     setResult(null);
     try {
-      const data = await ccpaService.getRequestById(requestId.trim());
-      if (data) {
-        setResult(data);
-      } else {
-        setNotFound(true);
-      }
+      const data = await ccpaService.checkRequestStatus(requestId.trim(), email.trim());
+      setResult(data);
     } catch {
       setNotFound(true);
     } finally {
@@ -44,21 +43,30 @@ export function RequestStatusCheck() {
 
   return (
     <div className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="requestId">{t('statusCheck.requestIdLabel')}</Label>
-        <div className="flex gap-2">
+      <div className="space-y-3">
+        <div className="space-y-2">
+          <Label htmlFor="requestId">{t('statusCheck.requestIdLabel')}</Label>
           <Input
             id="requestId"
             value={requestId}
             onChange={(e) => setRequestId(e.target.value)}
             placeholder={t('statusCheck.requestIdPlaceholder')}
-            className="flex-1"
           />
-          <Button onClick={handleCheck} disabled={loading || !requestId.trim()}>
-            <Search className="h-4 w-4 mr-2" />
-            {loading ? t('statusCheck.checking') : t('statusCheck.check')}
-          </Button>
         </div>
+        <div className="space-y-2">
+          <Label htmlFor="statusEmail">{t('statusCheck.emailLabel')}</Label>
+          <Input
+            id="statusEmail"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={t('statusCheck.emailPlaceholder')}
+          />
+        </div>
+        <Button onClick={handleCheck} disabled={loading || !canCheck} className="w-full sm:w-auto">
+          <Search className="h-4 w-4 mr-2" />
+          {loading ? t('statusCheck.checking') : t('statusCheck.check')}
+        </Button>
       </div>
 
       {notFound && (
@@ -66,21 +74,18 @@ export function RequestStatusCheck() {
       )}
 
       {result && (
-        <div className="rounded-xl border border-slate-200 p-4 space-y-3">
-          <div className="flex items-center justify-between">
-            <p className="text-sm font-medium">{t(`requestTypes.${result.request_type}`)}</p>
-            <Badge className={cn('text-xs', STATUS_CLASSES[result.status])}>
+        <div className="rounded-xl border border-slate-200 dark:border-slate-700 p-4 space-y-3">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-medium">{t(`requestTypes.${result.requestType}`)}</p>
+            <Badge className={cn('text-xs', STATUS_CLASSES[result.status] ?? STATUS_CLASSES.pending)}>
               {t(`statuses.${result.status}`)}
             </Badge>
           </div>
-          <div className="text-xs text-slate-500 space-y-1">
-            <p>{t('statusCheck.submitted')}: {new Date(result.created_at).toLocaleDateString()}</p>
-            {result.completed_at && (
-              <p>{t('statusCheck.completed')}: {new Date(result.completed_at).toLocaleDateString()}</p>
-            )}
-            {result.status_notes && (
-              <p>{t('statusCheck.notes')}: {result.status_notes}</p>
-            )}
+          <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+            <p>
+              {t('statusCheck.submitted')}:{' '}
+              {new Date(result.submittedAt).toLocaleDateString()}
+            </p>
           </div>
         </div>
       )}

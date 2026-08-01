@@ -16,20 +16,25 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
+import { useTurnstile } from '@/hooks/useTurnstile';
 import { ccpaService } from '@/lib/serviceProxy';
 import { submitRequestSchema, type SubmitRequestFormValues, REQUEST_TYPES, RELATIONSHIP_TYPES } from '../schemas/ccpa.schema';
 
 interface DataSubjectRequestFormProps {
-  onSuccess?: () => void;
+  orgId: string;
 }
 
 const STEPS = ['type', 'identity', 'details', 'confirm'] as const;
+const TURNSTILE_CONTAINER_ID = 'turnstile-ccpa-submit';
 
-export function DataSubjectRequestForm({ onSuccess }: DataSubjectRequestFormProps) {
+export function DataSubjectRequestForm({ orgId }: DataSubjectRequestFormProps) {
   const { t } = useTranslation('compliance');
   const [step, setStep] = useState(0);
   const [submitted, setSubmitted] = useState(false);
+  const [submittedRequestId, setSubmittedRequestId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { token: turnstileToken, isReady: turnstileReady, resetWidget: resetTurnstile } =
+    useTurnstile(TURNSTILE_CONTAINER_ID);
 
   const form = useForm<SubmitRequestFormValues>({
     resolver: zodResolver(submitRequestSchema),
@@ -62,12 +67,22 @@ export function DataSubjectRequestForm({ onSuccess }: DataSubjectRequestFormProp
   const prev = () => setStep((s) => Math.max(s - 1, 0));
 
   const onSubmit = async (values: SubmitRequestFormValues) => {
+    if (!turnstileToken) {
+      toast.error(t('form.turnstileRequired'));
+      return;
+    }
+
     setIsSubmitting(true);
     try {
-      await ccpaService.submitRequest(values);
+      const result = await ccpaService.submitRequest({
+        ...values,
+        orgId,
+        turnstileToken,
+      });
+      setSubmittedRequestId(result.requestId);
       setSubmitted(true);
-      onSuccess?.();
     } catch (err) {
+      resetTurnstile();
       toast.error(err instanceof Error ? err.message : t('form.submitError'));
     } finally {
       setIsSubmitting(false);
@@ -80,6 +95,12 @@ export function DataSubjectRequestForm({ onSuccess }: DataSubjectRequestFormProp
         <CheckCircle className="h-12 w-12 text-emerald-500" />
         <h3 className="text-lg font-semibold">{t('form.successTitle')}</h3>
         <p className="text-sm text-slate-500 dark:text-slate-400 max-w-sm">{t('form.successMessage')}</p>
+        {submittedRequestId && (
+          <div className="rounded-lg bg-slate-50 dark:bg-slate-800/70 px-4 py-3 text-sm w-full max-w-sm">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">{t('form.requestIdLabel')}</p>
+            <p className="font-mono text-xs break-all">{submittedRequestId}</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -201,6 +222,14 @@ export function DataSubjectRequestForm({ onSuccess }: DataSubjectRequestFormProp
         </div>
       )}
 
+      {/* Turnstile: keep mounted so the widget can initialize; hide until confirm step */}
+      <div className={cn(step === 3 ? 'block' : 'hidden')}>
+        <div id={TURNSTILE_CONTAINER_ID} />
+        {step === 3 && !turnstileReady && (
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-2">{t('form.turnstileLoading')}</p>
+        )}
+      </div>
+
       {/* Navigation */}
       <div className="flex items-center justify-between pt-2">
         {step > 0 ? (
@@ -214,7 +243,7 @@ export function DataSubjectRequestForm({ onSuccess }: DataSubjectRequestFormProp
             {t('form.next')} <ChevronRight className="h-4 w-4 ml-1" />
           </Button>
         ) : (
-          <Button type="submit" disabled={isSubmitting}>
+          <Button type="submit" disabled={isSubmitting || !turnstileReady || !turnstileToken}>
             <Send className="h-4 w-4 mr-2" />
             {isSubmitting ? t('form.submitting') : t('form.submit')}
           </Button>

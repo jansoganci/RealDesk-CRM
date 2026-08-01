@@ -1,6 +1,5 @@
 import { supabase } from '@/config/supabase';
 import { getAuthenticatedUserId } from '@/lib/auth';
-import { getActiveOrgId } from '@/lib/orgHelpers';
 import { handleServiceError } from '@/lib/handleServiceError';
 
 export type RequestType = 'know' | 'delete' | 'opt_out_sale' | 'opt_out_share' | 'correct';
@@ -30,6 +29,8 @@ export interface DataSubjectRequest {
 }
 
 export interface SubmitRequestInput {
+  orgId: string;
+  turnstileToken: string;
   requester_name: string;
   requester_email: string;
   requester_phone?: string | null;
@@ -39,38 +40,113 @@ export interface SubmitRequestInput {
   details?: string | null;
 }
 
+export interface SubmitRequestResult {
+  requestId: string;
+}
+
+export interface CheckRequestStatusResult {
+  status: RequestStatus;
+  requestType: RequestType;
+  submittedAt: string;
+}
+
 export interface UpdateRequestStatusInput {
   status: RequestStatus;
   status_notes?: string | null;
 }
 
+function getEdgeFunctionConfig(): { url: string; anonKey: string } {
+  const url = import.meta.env.VITE_SUPABASE_URL;
+  const anonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  if (!url || !anonKey) {
+    throw new Error('VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY is not set');
+  }
+  return { url, anonKey };
+}
+
+async function callCcpaEdgeFunction<T>(
+  functionName: string,
+  body: Record<string, unknown>,
+): Promise<T> {
+  const { url, anonKey } = getEdgeFunctionConfig();
+  const response = await fetch(`${url}/functions/v1/${functionName}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      apikey: anonKey,
+      Authorization: `Bearer ${anonKey}`,
+    },
+    body: JSON.stringify(body),
+  });
+
+  const payload = (await response.json().catch(() => ({}))) as {
+    error?: string;
+    code?: string;
+    requestId?: string;
+    status?: RequestStatus;
+    requestType?: RequestType;
+    submittedAt?: string;
+    details?: { code?: string };
+  };
+
+  if (!response.ok) {
+    const message = payload.error || `Request failed (${response.status})`;
+    throw new Error(message);
+  }
+
+  return payload as T;
+}
+
 class CcpaService {
-  async submitRequest(data: SubmitRequestInput): Promise<DataSubjectRequest> {
+  /**
+   * Public anonymous submit via Edge Function (no session required).
+   * Requires orgId from /privacy?org= and a Turnstile token.
+   */
+  async submitRequest(data: SubmitRequestInput): Promise<SubmitRequestResult> {
     try {
-      const userId = await getAuthenticatedUserId();
-      const orgId = await getActiveOrgId();
+      const result = await callCcpaEdgeFunction<{ requestId: string }>('submit-ccpa-request', {
+        orgId: data.orgId,
+        requestType: data.request_type,
+        requesterName: data.requester_name,
+        requesterEmail: data.requester_email,
+        requesterPhone: data.requester_phone ?? null,
+        relationshipToOrg: data.relationship_to_org,
+        relationshipDescription: data.relationship_description ?? null,
+        details: data.details ?? null,
+        turnstileToken: data.turnstileToken,
+      });
 
-      const { data: created, error } = await supabase
-        .from('data_subject_requests')
-        .insert({
-          org_id: orgId,
-          requested_by: userId,
-          requester_name: data.requester_name,
-          requester_email: data.requester_email,
-          requester_phone: data.requester_phone ?? null,
-          relationship_to_org: data.relationship_to_org,
-          relationship_description: data.relationship_description ?? null,
-          request_type: data.request_type,
-          details: data.details ?? null,
-          status: 'pending',
-        })
-        .select()
-        .single();
+      if (!result.requestId) {
+        throw new Error('Failed to submit CCPA request');
+      }
 
-      if (error) throw error;
-      return created as unknown as DataSubjectRequest;
+      return { requestId: result.requestId };
     } catch (error) {
       throw handleServiceError(error, 'Failed to submit CCPA request');
+    }
+  }
+
+  /**
+   * Public anonymous status check via Edge Function.
+   * Requires requestId + requesterEmail as a shared-secret pair.
+   */
+  async checkRequestStatus(
+    requestId: string,
+    requesterEmail: string,
+  ): Promise<CheckRequestStatusResult> {
+    try {
+      const result = await callCcpaEdgeFunction<CheckRequestStatusResult>(
+        'check-ccpa-request-status',
+        { requestId, requesterEmail },
+      );
+
+      if (!result.status || !result.requestType || !result.submittedAt) {
+        throw new Error('Failed to check CCPA request status');
+      }
+
+      return result;
+    } catch (error) {
+      throw handleServiceError(error, 'Failed to check CCPA request status');
     }
   }
 
@@ -196,7 +272,7 @@ class CcpaService {
         .limit(1);
 
       if (leadErr) throw leadErr;
-      const leadCount = (leadData as any[])?.length || 0;
+      const leadCount = (leadData as { id: string }[] | null)?.length || 0;
       if (leadCount) summary.push(`${leadCount} lead record(s) anonymized`);
 
       // Anonymize tenants

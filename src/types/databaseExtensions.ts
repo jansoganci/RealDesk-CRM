@@ -27,6 +27,10 @@ export type AppDatabase = Database & {
         Args: RpcConvertLeadToDealArgs;
         Returns: RpcConvertLeadToDealResult;
       };
+      ccpa_org_link_valid: {
+        Args: { p_org_id: string };
+        Returns: boolean;
+      };
     };
   };
 };

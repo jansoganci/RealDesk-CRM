@@ -6,7 +6,10 @@
     "checkStatus": "Check Request Status",
     "yourRights": "Your CCPA Rights",
     "faqTitle": "Frequently Asked Questions",
-    "contactNotice": "For questions, contact us at privacy@realdesk.us"
+    "contactNotice": "For questions, contact us at privacy@realdesk.us",
+    "invalidOrgTitle": "Invalid or missing organization link",
+    "invalidOrgMessage": "This privacy page requires a valid organization link from your real estate agent (for example /privacy?org=…). You can still check the status of an existing request below. Contact your agent if you need a new link to submit a request.",
+    "validatingOrg": "Validating organization link…"
   },
   "rights": {
     "know": {
@@ -95,19 +98,25 @@
     "submitting": "Submitting...",
     "submitError": "Failed to submit request. Please try again.",
     "successTitle": "Request Submitted",
-    "successMessage": "Your privacy request has been received. Save your request ID to check the status later. We will contact you at the email provided."
+    "successMessage": "Your privacy request has been received. Save your request ID and use the same email to check status later. We will contact you at the email provided.",
+    "requestIdLabel": "Your request ID",
+    "turnstileRequired": "Please complete the captcha before submitting.",
+    "turnstileLoading": "Loading captcha…"
   },
   "statusCheck": {
     "title": "Check Request Status",
     "requestIdLabel": "Request ID",
     "requestIdPlaceholder": "Enter your request UUID",
+    "emailLabel": "Email used on the request",
+    "emailPlaceholder": "Enter the email you submitted with",
     "check": "Check Status",
     "checking": "Checking...",
-    "notFound": "No request found with that ID. Please verify the ID is correct.",
+    "notFound": "No matching request found. Check the ID and email, then try again.",
     "submitted": "Submitted",
     "completed": "Completed",
     "notes": "Notes"
   },
+
   "admin": {
     "title": "CCPA Compliance Dashboard",
     "subtitle": "Manage data subject requests from your clients",
