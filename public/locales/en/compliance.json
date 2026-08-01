@@ -72,6 +72,7 @@
     "pending": "Pending",
     "in_review": "In Review",
     "verification_sent": "Verification Sent",
+    "processing": "Processing",
     "completed": "Completed",
     "denied": "Denied"
   },
@@ -138,6 +139,7 @@
     "sendVerification": "Send Verification",
     "completeKnow": "Complete — Data Disclosed",
     "executeDelete": "Execute Data Deletion",
+    "resumeDelete": "Resume Data Deletion",
     "completeOptOut": "Complete — Mark Opted Out",
     "completeCorrect": "Complete — Mark Corrected",
     "deny": "Deny Request",

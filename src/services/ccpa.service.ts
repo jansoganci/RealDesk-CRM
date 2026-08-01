@@ -1,10 +1,27 @@
 import { supabase } from '@/config/supabase';
 import { getAuthenticatedUserId } from '@/lib/auth';
 import { handleServiceError } from '@/lib/handleServiceError';
+import type { Json } from '@/types/database';
+import {
+  runCcpaDeletion,
+  type DeletionProgressMap,
+} from './ccpaDeletion';
+
+function toJsonProgress(progress: DeletionProgressMap): Json {
+  return progress as unknown as Json;
+}
 
 export type RequestType = 'know' | 'delete' | 'opt_out_sale' | 'opt_out_share' | 'correct';
-export type RequestStatus = 'pending' | 'in_review' | 'verification_sent' | 'completed' | 'denied';
+export type RequestStatus =
+  | 'pending'
+  | 'in_review'
+  | 'verification_sent'
+  | 'processing'
+  | 'completed'
+  | 'denied';
 export type RelationshipToOrg = 'tenant' | 'buyer' | 'seller' | 'lead' | 'other';
+
+export type { DeletionProgressMap, DeletionTableProgress } from './ccpaDeletion';
 
 export interface DataSubjectRequest {
   id: string;
@@ -22,6 +39,8 @@ export interface DataSubjectRequest {
   verified_at: string | null;
   completed_at: string | null;
   deletion_summary: string | null;
+  deletion_progress: DeletionProgressMap;
+  deletion_started_at: string | null;
   data_disclosed_at: string | null;
   created_at: string;
   updated_at: string;
@@ -53,6 +72,15 @@ export interface CheckRequestStatusResult {
 export interface UpdateRequestStatusInput {
   status: RequestStatus;
   status_notes?: string | null;
+}
+
+function normalizeDataSubjectRequest(row: unknown): DataSubjectRequest {
+  const data = row as DataSubjectRequest;
+  return {
+    ...data,
+    deletion_progress: (data.deletion_progress ?? {}) as DeletionProgressMap,
+    deletion_started_at: data.deletion_started_at ?? null,
+  };
 }
 
 function getEdgeFunctionConfig(): { url: string; anonKey: string } {
@@ -162,7 +190,7 @@ class CcpaService {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return (data ?? []) as unknown as DataSubjectRequest[];
+      return (data ?? []).map(normalizeDataSubjectRequest);
     } catch (error) {
       throw handleServiceError(error, 'Failed to fetch CCPA requests');
     }
@@ -183,7 +211,7 @@ class CcpaService {
         if (error.code === 'PGRST116') return null;
         throw error;
       }
-      return data as unknown as DataSubjectRequest;
+      return normalizeDataSubjectRequest(data);
     } catch (error) {
       throw handleServiceError(error, 'Failed to fetch CCPA request');
     }
@@ -208,7 +236,7 @@ class CcpaService {
         .single();
 
       if (error) throw error;
-      return data as unknown as DataSubjectRequest;
+      return normalizeDataSubjectRequest(data);
     } catch (error) {
       throw handleServiceError(error, 'Failed to update request status');
     }
@@ -232,16 +260,16 @@ class CcpaService {
         .single();
 
       if (error) throw error;
-      return data as unknown as DataSubjectRequest;
+      return normalizeDataSubjectRequest(data);
     } catch (error) {
       throw handleServiceError(error, 'Failed to complete know request');
     }
   }
 
   /**
-   * Right to Delete — anonymizes PII across related tables, then marks completed.
-   * Soft-delete + anonymization: PII fields are replaced with [redacted], records
-   * remain for the agent's audit trail.
+   * Right to Delete — anonymizes PII across inventoried tables, then marks completed.
+   * Soft-delete + anonymization where allowed; signed/legal records retained with reason.
+   * Resumable via deletion_progress (skips tables already done).
    */
   async completeDeleteRequest(id: string): Promise<DataSubjectRequest> {
     try {
@@ -249,68 +277,77 @@ class CcpaService {
 
       const request = await this.getRequestById(id);
       if (!request) throw new Error('Request not found');
+      if (request.request_type !== 'delete') {
+        throw new Error('Request is not a delete request');
+      }
 
-      const email = request.requester_email;
-      const redacted = '[redacted per CCPA request]';
-      const deletedAt = new Date().toISOString();
-      const summary: string[] = [];
+      const startedAt = request.deletion_started_at ?? new Date().toISOString();
+      const existingProgress = (request.deletion_progress ?? {}) as DeletionProgressMap;
 
-      // Anonymize property_inquiries
-      const { data: leadData, error: leadErr } = await supabase
-        .from('property_inquiries')
+      const { error: startError } = await supabase
+        .from('data_subject_requests')
         .update({
-          contact_name: redacted,
-          contact_email: redacted,
-          contact_phone: null,
-          notes: null,
-          deleted_at: deletedAt,
+          status: 'processing',
+          deletion_started_at: startedAt,
+          deletion_progress: toJsonProgress(existingProgress),
         })
-        .eq('contact_email', email)
-        .eq('org_id', request.org_id)
-        .is('deleted_at', null)
-        .select('id')
-        .limit(1);
+        .eq('id', id);
 
-      if (leadErr) throw leadErr;
-      const leadCount = (leadData as { id: string }[] | null)?.length || 0;
-      if (leadCount) summary.push(`${leadCount} lead record(s) anonymized`);
+      if (startError) throw startError;
 
-      // Anonymize tenants
-      const { error: tenantErr, count: tenantCount } = await supabase
-        .from('tenants')
-        .update({
-          name: redacted,
-          email: redacted,
-          phone: null,
-          deleted_at: deletedAt,
-        })
-        .eq('email', email)
-        .eq('org_id', request.org_id)
-        .is('deleted_at', null)
-        .select('id')
-        .limit(1);
+      const persistProgress = async (progress: DeletionProgressMap) => {
+        const { error } = await supabase
+          .from('data_subject_requests')
+          .update({
+            status: 'processing',
+            deletion_progress: toJsonProgress(progress),
+          })
+          .eq('id', id);
+        if (error) throw error;
+      };
 
-      if (tenantErr) throw tenantErr;
-      if (tenantCount) summary.push(`${tenantCount} tenant record(s) anonymized`);
+      const result = await runCcpaDeletion({
+        supabase,
+        orgId: request.org_id,
+        email: request.requester_email,
+        existingProgress,
+        onProgress: persistProgress,
+      });
 
-      const deletionSummary =
-        summary.length > 0
-          ? summary.join('; ')
-          : 'No matching records found for provided email';
+      if (result.failed) {
+        const failedTable = result.failedTable ?? 'unknown';
+        const failedError = result.progress[failedTable]?.error ?? 'error';
+        const { error } = await supabase
+          .from('data_subject_requests')
+          .update({
+            status: 'processing',
+            deletion_progress: toJsonProgress(result.progress),
+            deletion_summary: result.summary,
+            status_notes: `Deletion paused at ${failedTable}: ${failedError}`,
+          })
+          .eq('id', id);
 
+        if (error) throw error;
+        throw new Error(
+          `Deletion incomplete at ${failedTable}. Progress saved — retry to resume.`,
+        );
+      }
+
+      const completedAt = new Date().toISOString();
       const { data, error } = await supabase
         .from('data_subject_requests')
         .update({
           status: 'completed',
-          completed_at: deletedAt,
-          deletion_summary: deletionSummary,
+          completed_at: completedAt,
+          deletion_progress: toJsonProgress(result.progress),
+          deletion_summary: result.summary,
         })
         .eq('id', id)
         .select()
         .single();
 
       if (error) throw error;
-      return data as unknown as DataSubjectRequest;
+      return normalizeDataSubjectRequest(data);
     } catch (error) {
       throw handleServiceError(error, 'Failed to complete delete request');
     }
@@ -333,7 +370,7 @@ class CcpaService {
         .single();
 
       if (error) throw error;
-      return data as unknown as DataSubjectRequest;
+      return normalizeDataSubjectRequest(data);
     } catch (error) {
       throw handleServiceError(error, 'Failed to complete opt-out request');
     }

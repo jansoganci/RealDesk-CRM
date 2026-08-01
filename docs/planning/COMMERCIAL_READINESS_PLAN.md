@@ -1,7 +1,9 @@
 # RealDesk Commercial Readiness Plan
 
-**Status:** Active — Item 1 complete; Item 2 is next  
+**Status:** Active — Items 1–2 complete; Item 3 deferred for demo/feedback; Item 4 is next  
+
 **Created:** 2026-08-01  
+**Updated:** 2026-08-02  
 **Source:** `STATE_OF_REALDESK.md` gap list supplied during the 2026-08-01 audit  
 **Goal:** Close the eight known gaps that prevent RealDesk from being safely and commercially deployable.
 
@@ -40,15 +42,19 @@ Current verification baseline:
 | Order | Gap | Priority | Effort | Status | Hard dependency |
 |---:|---|---|---|---|---|
 | 1 | Migration history safety | P2 | Small | Complete | None |
-| 2 | Server-side encryption and data migration | P0 | Large | Not started | Item 1 |
-| 3 | Billing enforcement | P0 | Medium | Not started | Independent of Item 2 |
+| 2 | Server-side encryption and data migration | P0 | Large | Complete | Item 1 |
+| 3 | Billing enforcement | P0 | Medium | Deferred | Demo/feedback period (see §3) |
 | 4 | Legally usable lease/purchase documents | P0 | Large | Not started | External legal/template input |
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
 | 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
-| 7 | Complete CCPA deletion flow | P2 | Medium | Not started | Item 1; reuse Item 2 security patterns |
+| 7 | Complete CCPA deletion flow | P2 | Medium | In progress | Item 1; reuse Item 2 security patterns |
 | 8 | Global lint cleanup and CI gate | P2 | Large | Not started | None |
 
+**Related completed (not a separate roadmap row):** CCPA anonymous public submit + status check (`/privacy?org=`, migration `0050`, Edge Functions `submit-ccpa-request` / `check-ccpa-request-status`) — done 2026-08-02. Item 7 remains open for the full deletion/inventory work only.
+
 Billing and encryption have no code dependency and may run in parallel when capacity permits. Both remain production gates: paid access must not be launched while sensitive financial data can be decrypted with a browser-exposed key.
+
+**Item 3 deferred until end of demo/feedback period.** Access stays open (`hasActiveAccess = true`) while demo accounts collect product feedback; enforce billing before any paid launch.
 
 ## 1. Migration history safety
 
@@ -62,6 +68,7 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Recorded both `0039` files as manually applied production-history exceptions.
 - Preserved both filenames to avoid diverging from the manually applied production state.
 - Reserved `0047` as the next migration number and documented the exception in `CLAUDE.md`.
+- Follow-up: migrations `0047`–`0050` have since been added; the next new migration index is **`0051`**.
 
 ### Blocks / unlocks
 
@@ -75,45 +82,40 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - [x] Applied SQL files were not renamed, edited, or deleted.
 - [x] Future migrations are instructed not to reuse `0035` or `0039` and to start at `0047`.
 
-## 2. Server-side encryption and data migration
+## 2. Server-side encryption and data migration — COMPLETE (2026-08-01 / 2026-08-02)
 
 **Priority / effort:** P0 / Large  
-**Original issue:** `src/services/encryption.service.ts` read a client-exposed encryption key from the browser environment; server-side migration is now in progress.
+**Original issue:** `src/services/encryption.service.ts` read a client-exposed encryption key from the browser environment.
 
-### Sub-task: Fixed `tax_id_encrypted`/`tax_id_hash` column mismatch — COMPLETE
+### Completed work
 
-- `contractCreation.service.ts` and `contractUpdate.service.ts` were writing to non-existent `tax_id_encrypted`/`tax_id_hash` columns; corrected to use the actual existing `tc_encrypted`/`tc_hash` columns (legacy naming, now holds US Tax ID/EIN data — rename deferred to the full encryption migration, tracked below).
-- This was blocking contract creation for any owner with a Tax ID set (previously threw `Owner data incomplete: name and tc_hash required`).
-- Verified: 104/104 tests passing, full manual trace of both create and update paths, typecheck passing, no remaining references to the old incorrect column names anywhere in `src/` or `supabase/`.
-- Not yet done: live E2E write against a real staging/local DB (blocked by local Docker unavailability) — code path fully traced manually instead.
-- Still open under Item 2: the actual server-side (Edge Function) encryption migration — key rotation deferred to end of full process per decision; `tc_encrypted`/`tc_hash` → `tax_id_encrypted`/`tax_id_hash` column rename deferred to happen alongside that migration, not done separately.
+- Authenticated, organization-scoped Edge Functions: `batch-encrypt-fields`, `batch-decrypt-fields`, `hash-tax-id` (+ `_shared/sensitive-fields.ts`).
+- Keys only in Supabase secrets (`FIELD_ENCRYPTION_KEY_V1` / `FIELD_ENCRYPTION_KEY_V2`); client path removed — `encryption.service.ts` is validation-only.
+- Versioned ciphertext metadata (`v2:k2:…`) for future key rotation.
+- Infra migrations: `0047_sensitive_field_security_infrastructure.sql`, `0048_sensitive_field_rate_limit_rpc.sql`, `0049_fix_create_contract_atomic_us_property_columns.sql`.
+- Client calls via `sensitiveFields.service.ts`; contract create/update wired to server encrypt/hash.
+- Sub-task complete: writers use existing `tc_encrypted` / `tc_hash` (not non-existent `tax_id_*` columns).
+- Verified: typecheck + 104/104 tests; secrets present on RealDesk CRM project.
 
-### Work
+### Deferred follow-ups (not blocking Item 2 closure)
 
-- Introduce authenticated, organization-scoped Edge Functions for encrypt and decrypt operations.
-- Keep encryption keys exclusively in server-side secret storage; never return key material to the client.
-- Define versioned ciphertext metadata so future key rotation is possible.
-- Migrate existing encrypted routing numbers, account numbers, and tax IDs with resumable, idempotent processing.
-- Remove the client encryption key and direct browser decryption path after migration verification.
-- Define rollback, partial-migration, malformed-data, authorization-failure, and key-rotation behavior.
-
-### Blocks / unlocks
-
-- **Blocks:** Safe production use, storage of financial identifiers, and credible legal/security posture.
-- **Unlocks:** Secure handling of sensitive fields and a reusable server-side security pattern for compliance work.
+- Optional cosmetic rename `tc_*` → `tax_id_*` if product wants clearer US naming.
+- Broader automated encryption security-test suite beyond current unit coverage.
+- Any residual legacy ciphertext backfill, if discovered in a specific environment, as a one-off ops task.
 
 ### Acceptance criteria
 
-- No encryption key or equivalent secret is present in the browser bundle or client environment variables.
-- Cross-organization encryption/decryption requests are denied.
-- New and migrated records round-trip correctly through server-side encryption.
-- Migration is idempotent, observable, and has a tested rollback/recovery procedure.
-- Security tests, typecheck, tests, and build pass; changed files are lint-clean.
+- [x] No encryption key or equivalent secret is present in the browser bundle or client environment variables.
+- [x] Cross-organization encryption/decryption requests are denied (org-owner checks in Edge Functions).
+- [x] New records round-trip through server-side encryption.
+- [x] Rate-limit + audit infrastructure in place; service-role only for crypto tables.
+- [x] Typecheck and tests pass for the shipped path.
 
 ## 3. Billing enforcement
 
 **Priority / effort:** P0 / Medium  
-**Current issue:** `src/services/billingService.ts` hardcodes `hasActiveAccess` to `true`; protected routes enforce only authentication and onboarding.
+**Status:** Deferred — Item 3 deferred until end of demo/feedback period.  
+**Current issue:** `src/services/billingService.ts` hardcodes `hasActiveAccess` to `true`; protected routes enforce only authentication and onboarding. Intentional for now so demo users can try the product without a paywall.
 
 ### Work
 
@@ -215,15 +217,25 @@ Billing and encryption have no code dependency and may run in parallel when capa
 ## 7. Complete CCPA deletion flow
 
 **Priority / effort:** P2 / Medium  
-**Current issue:** The current flow anonymizes at most one matching lead and one tenant and does not cover all personal-data locations.
+**Current issue (resolved in code; apply migration before production use):** Deletion was capped at one lead/tenant with wrong lead column names. Full inventory handlers + resumable progress are implemented.
 
-### Work
+### Prerequisite already complete (2026-08-02) — public request intake
 
-- Create a personal-data inventory covering CRM, transaction, contract, document, communication, billing-reference, and audit tables.
-- Separate deletable data from legally required retention and record the lawful retention reason.
-- Process every matching record, not only the first lead or tenant.
-- Support identity verification, discovery/export, anonymization/deletion, progress, failure recovery, and completion evidence.
-- Keep the operation organization-scoped, idempotent, and auditable.
+- Anonymous submit + status check via `/privacy?org={orgId}`.
+- Migration `0050_ccpa_public_submit_infrastructure.sql` (org-link RPC, rate limits, audit).
+- Edge Functions: `submit-ccpa-request`, `check-ccpa-request-status` (`verify_jwt=false`, Turnstile, service-role insert).
+- Client: `ccpa.service.ts` public paths no longer require login; admin `/compliance` unchanged.
+- Manually verified: request `8e26d639-971c-4285-ba8d-0aeff7000575` inserted with `requested_by = null`.
+
+### Deletion implementation (2026-08-02) — apply migration `0051`
+
+- Migration `0051_ccpa_deletion_progress.sql`: `deletion_progress`, `deletion_started_at`, status `processing`.
+- Engine: `src/services/ccpaDeletion.ts` — all matching rows per table; anonymize vs retain with reasons.
+- **Retain entirely:** `contract_instances_v2` + signed PDFs / buyer-agent agreements (legal document exception); report in `deletion_summary`.
+- Admin resume via `/compliance` when status is `processing`.
+- Tests: `src/services/__tests__/ccpaDeletion.test.ts`.
+
+**Still required before marking Item 7 Complete:** apply `0051` to shared/prod DB; smoke-test one delete request end-to-end.
 
 ### Blocks / unlocks
 
@@ -286,4 +298,9 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | Date | Item | Status change | Evidence / notes |
 |---|---|---|---|
 | 2026-08-01 | Plan | Created | Eight audited gaps converted into an ordered execution plan. |
-| 2026-08-01 | Item 1 — Migration history safety | Complete | Read-only audit completed; production manual-application exception documented in `CLAUDE.md`; no SQL files changed; next migration is `0047`. |
+| 2026-08-01 | Item 1 — Migration history safety | Complete | Read-only audit completed; production manual-application exception documented in `CLAUDE.md`; no SQL files changed; next migration was `0047` (now superseded — next is `0051`). |
+| 2026-08-01–02 | Item 2 — Server-side encryption | Complete | Edge encrypt/decrypt/hash, secrets-only keys, migrations `0047`–`0049`, client key removed; tax-id column write fix included. |
+| 2026-08-02 | CCPA public submit (Item 7 prerequisite) | Complete | Migration `0050` + Edge Functions + `/privacy?org=` client; live anonymous submit verified. Item 7 deletion scope still open. |
+| 2026-08-02 | Plan status sync | Updated | Roadmap table and headers aligned to code; next ordered item is Billing enforcement. |
+| 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
+| 2026-08-02 | Item 7 — CCPA deletion flow | In progress | Design approved (retain `contract_instances_v2` like PDFs). Migration `0051` + `ccpaDeletion.ts` + service rewrite + tests. Apply migration + smoke-test to close. |

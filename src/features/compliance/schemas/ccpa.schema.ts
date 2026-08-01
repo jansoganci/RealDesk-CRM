@@ -2,7 +2,14 @@ import { z } from 'zod';
 
 export const REQUEST_TYPES = ['know', 'delete', 'opt_out_sale', 'opt_out_share', 'correct'] as const;
 export const RELATIONSHIP_TYPES = ['tenant', 'buyer', 'seller', 'lead', 'other'] as const;
-export const REQUEST_STATUSES = ['pending', 'in_review', 'verification_sent', 'completed', 'denied'] as const;
+export const REQUEST_STATUSES = [
+  'pending',
+  'in_review',
+  'verification_sent',
+  'processing',
+  'completed',
+  'denied',
+] as const;
 
 export const submitRequestSchema = z.object({
   request_type: z.enum(REQUEST_TYPES, { required_error: 'Request type is required' }),

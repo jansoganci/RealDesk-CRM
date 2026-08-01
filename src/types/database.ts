@@ -31,6 +31,8 @@ export type Database = {
           verified_at: string | null
           completed_at: string | null
           deletion_summary: string | null
+          deletion_progress: Json
+          deletion_started_at: string | null
           data_disclosed_at: string | null
           created_at: string
           updated_at: string
@@ -52,6 +54,8 @@ export type Database = {
           verified_at?: string | null
           completed_at?: string | null
           deletion_summary?: string | null
+          deletion_progress?: Json
+          deletion_started_at?: string | null
           data_disclosed_at?: string | null
           created_at?: string
           updated_at?: string
@@ -73,6 +77,8 @@ export type Database = {
           verified_at?: string | null
           completed_at?: string | null
           deletion_summary?: string | null
+          deletion_progress?: Json
+          deletion_started_at?: string | null
           data_disclosed_at?: string | null
           created_at?: string
           updated_at?: string
