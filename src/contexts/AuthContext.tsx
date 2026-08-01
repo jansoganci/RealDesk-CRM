@@ -1,5 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
-import { User, Session } from '@supabase/supabase-js';
+import { User, Session, PostgrestError } from '@supabase/supabase-js';
+import type { Database } from '../types/database.types';
 import { supabase } from '../config/supabase';
 import i18n from '../i18n';
 import { trackLogin } from '../utils/gtm';
@@ -8,6 +9,16 @@ import { createLogger } from '../lib/logger';
 
 
 const authLogger = createLogger('Auth');
+
+type UserPreferencesFields = Pick<
+  Database['public']['Tables']['user_preferences']['Row'],
+  'language' | 'currency' | 'meeting_reminder_minutes' | 'commission_rate' | 'full_name' | 'phone_number'
+>;
+
+type UserPreferencesResult = {
+  data: UserPreferencesFields | null;
+  error: PostgrestError | null;
+};
 
 interface AuthContextType {
   user: User | null;
@@ -88,21 +99,20 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       const initialUserId = cachedSession?.user?.id;
 
-      const promises: [Promise<any>, Promise<any>?] = [
-        supabase.auth.getUser() // Silent validation in background
-      ];
+      const prefsPromise: Promise<UserPreferencesResult> = initialUserId
+        ? Promise.resolve(
+            supabase
+              .from('user_preferences')
+              .select('language, currency, meeting_reminder_minutes, commission_rate, full_name, phone_number')
+              .eq('user_id', initialUserId)
+              .maybeSingle()
+          )
+        : Promise.resolve({ data: null, error: null });
 
-      if (initialUserId) {
-        promises.push(
-          (supabase
-            .from('user_preferences')
-            .select('language, currency, meeting_reminder_minutes, commission_rate, full_name, phone_number')
-            .eq('user_id', initialUserId)
-            .maybeSingle() as any) as Promise<any>
-        );
-      }
-
-      const [userRes, prefsRes] = await Promise.all(promises);
+      const [userRes, prefsRes] = await Promise.all([
+        supabase.auth.getUser(), // Silent validation in background
+        prefsPromise,
+      ]);
       const { data: { user }, error } = userRes;
 
       if (error || !user) {
@@ -256,7 +266,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (!data && !error) {
       await supabase.from('user_preferences').insert({ ...prefs, user_id: user.id });
     }
-  }, [user?.id]);
+  }, [user]);
 
   const setLanguage = useCallback(async (_newLanguage: string) => {
     const normalized: SupportedLanguage = 'en';
@@ -394,9 +404,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return { success: false, error: error.message };
       }
       return { success: true };
-    } catch (error: any) {
+    } catch (error: unknown) {
       authLogger.error('signInWithGoogle exception:', error);
-      return { success: false, error: error.message ?? 'Unknown error' };
+      const message = error instanceof Error ? error.message : 'Unknown error';
+      return { success: false, error: message };
     }
   }, []);
 
@@ -424,8 +435,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     isEmailConfirmed,
     signInWithGoogle
   }), [
-    user?.id,
-    session?.access_token,
+    user,
+    session,
     loading,
     preferences,
     setLanguage,

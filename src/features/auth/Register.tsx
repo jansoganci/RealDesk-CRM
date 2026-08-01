@@ -23,8 +23,8 @@ const calculatePasswordStrength = (password: string): 'weak' | 'medium' | 'stron
   const hasUppercase = /[A-Z]/.test(password);
   const hasLowercase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/.test(password);
-  const specialCharCount = (password.match(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/g) || []).length;
+  const hasSpecialChar = /[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/.test(password);
+  const specialCharCount = (password.match(/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/g) || []).length;
   
   const meetsRequirements = hasMinLength && hasUppercase && hasLowercase && hasNumber && hasSpecialChar;
   

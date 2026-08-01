@@ -16,7 +16,7 @@ export const getPasswordSchema = (t: TFunction) =>
     .regex(/[A-Z]/, t('validation.passwordUppercase'))
     .regex(/[a-z]/, t('validation.passwordLowercase'))
     .regex(/[0-9]/, t('validation.passwordNumber'))
-    .regex(/[!@#$%^&*()_+\-=\[\]{}|;:,.<>?]/, t('validation.passwordSpecialChar'));
+    .regex(/[!@#$%^&*()_+\-=[\]{}|;:,.<>?]/, t('validation.passwordSpecialChar'));
 
 /**
  * Login form schema - simpler validation (just check not empty)
