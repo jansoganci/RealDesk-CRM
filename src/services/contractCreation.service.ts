@@ -18,6 +18,20 @@ import { createLogger } from '@/lib/logger';
 
 const logger = createLogger('ContractCreation');
 
+function isContractCreationResult(value: unknown): value is ContractCreationResult {
+  if (typeof value !== 'object' || value === null) return false;
+  const result = value as Record<string, unknown>;
+  return result.success === true
+    && typeof result.owner_id === 'string'
+    && typeof result.tenant_id === 'string'
+    && typeof result.property_id === 'string'
+    && typeof result.contract_id === 'string'
+    && typeof result.created_owner === 'boolean'
+    && typeof result.created_tenant === 'boolean'
+    && typeof result.created_property === 'boolean'
+    && typeof result.message === 'string';
+}
+
 /**
  * Create contract with automatic entity creation
  * Uses atomic PostgreSQL transaction via RPC
@@ -135,7 +149,7 @@ export async function createContractWithEntities(
       }
       // Handle Turkish date format: "dd.mm.yyyy" or "dd/mm/yyyy"
       if (typeof date === 'string') {
-        const parts = date.split(/[.\/]/);
+        const parts = date.split(/[./]/);
         if (parts.length === 3) {
           const [day, month, year] = parts;
           return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
@@ -163,7 +177,7 @@ export async function createContractWithEntities(
     const parseDate = (date: string | Date): Date => {
       if (date instanceof Date) return date;
       if (typeof date === 'string') {
-        const parts = date.split(/[.\/]/);
+        const parts = date.split(/[./]/);
         if (parts.length === 3) {
           const [day, month, year] = parts;
           return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
@@ -205,7 +219,7 @@ export async function createContractWithEntities(
     // ========================================================================
     // Removed: sensitive console.log statements (security)
 
-    const { data, error } = await supabase.rpc('create_contract_atomic' as any, {
+    const { data, error } = await supabase.rpc('create_contract_atomic', {
       owner_data: ownerData,
       tenant_data: tenantData,
       property_data: propertyData,
@@ -219,13 +233,13 @@ export async function createContractWithEntities(
       throw new Error(`Contract creation failed: ${error.message}`);
     }
 
-    if (!data || !(data as any).success) {
+    if (!isContractCreationResult(data)) {
       throw new Error('Contract creation failed: No data returned');
     }
 
     // Removed: console.log with contract data (security)
 
-    const result = data as unknown as ContractCreationResult;
+    const result = data;
 
     // Track contract_created event (GA4)
     if (result.contract_id) {

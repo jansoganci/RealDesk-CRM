@@ -224,9 +224,9 @@ export async function updateContractWithEntities(
         updated_at: new Date().toISOString(),
       };
 
-      // Try to update existing details (using 'as any' for table not in generated types)
+      // Try to update existing details.
       const { error: detailsError } = await supabase
-        .from('contract_details' as any)
+        .from('contract_details')
         .update(detailsData)
         .eq('contract_id', contractId)
         .eq('user_id', userId);
@@ -234,7 +234,7 @@ export async function updateContractWithEntities(
       if (detailsError) {
         // If no existing details, insert new one
         const { error: insertError } = await supabase
-          .from('contract_details' as any)
+          .from('contract_details')
           .insert({
             ...detailsData,
             contract_id: contractId,

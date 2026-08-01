@@ -157,7 +157,7 @@ export function useContractEditData(contractId: string | undefined): UseContract
 
       // Fetch contract details separately (may not exist)
       const { data: details } = await supabase
-        .from('contract_details' as any)
+        .from('contract_details')
         .select('*')
         .eq('contract_id', contractId)
         .maybeSingle();
