@@ -21,7 +21,7 @@ This document provides a comprehensive analysis of the current authentication fl
 ```env
 VITE_SUPABASE_URL=https://jglxczzxliaiigccavnb.supabase.co
 VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-VITE_ENCRYPTION_KEY=21debd69c120d1b29ee149b6790184f777cc90261895edc7f582d8f06b197c9e
+LEGACY_CLIENT_ENCRYPTION_KEY=[redacted-and-retired]
 ```
 
 ### Naming Convention

@@ -93,7 +93,6 @@ CREATE POLICY "select" ON table_name FOR SELECT USING (auth.uid() = user_id);
 ```env
 VITE_SUPABASE_URL=
 VITE_SUPABASE_ANON_KEY=
-VITE_ENCRYPTION_KEY=          # 64 hex chars, AES-256-GCM for owner bank fields
 VITE_TURNSTILE_SITE_KEY=
 # Edge secrets (not VITE_): STRIPE_*, OCR_*, etc.
 ```
@@ -126,7 +125,7 @@ Base: `${VITE_SUPABASE_URL}/functions/v1/<name>`
 
 ## Security
 
-- Encrypt routing/account numbers via `encryption.service.ts` before store
+- Encrypt sensitive fields through authenticated Supabase Edge Functions before storage
 - Zod-validate input before services; signed URLs ~15 min for PDFs/photos
 - CCPA-oriented personal data flows where applicable
 - Do not change RLS/migrations/encryption without explicit approval

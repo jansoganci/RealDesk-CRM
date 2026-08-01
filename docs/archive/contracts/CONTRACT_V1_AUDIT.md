@@ -78,7 +78,7 @@ Version 1 (Foundation) has been **successfully completed** with all planned feat
 
 #### Files Created:
 - `src/services/encryption.service.ts` ✅
-- `.env` updated with VITE_ENCRYPTION_KEY ✅
+- `.env` updated with the legacy client encryption key ✅
 
 #### Functions Implemented:
 - [x] `getEncryptionKey()` - Retrieves key from environment
@@ -287,7 +287,7 @@ npm run build
 - [x] `docs/CONTRACT_IMPLEMENTATION_PLAN.md`
 
 ### Files Modified:
-- [x] `.env` (added VITE_ENCRYPTION_KEY)
+- [x] `.env` (added the legacy client encryption key)
 - [x] `src/lib/serviceProxy.ts` (exported new services)
 - [x] `src/types/index.ts` (exported contract types)
 - [x] `src/App.tsx` (added /contracts/create route)

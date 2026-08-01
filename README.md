@@ -103,13 +103,12 @@ Create a `.env` file in the root directory.
 ```env
 VITE_SUPABASE_URL=https://your-project.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key
-VITE_ENCRYPTION_KEY=64_hex_chars_32_bytes_for_AES256GCM
 VITE_TURNSTILE_SITE_KEY=cloudflare_turnstile_site_key
 ```
 
 You can find `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in your Supabase project settings under **API** → **Project API keys**.
 
-`VITE_ENCRYPTION_KEY` is used for encrypting sensitive owner bank fields before storage (AES-256-GCM). `VITE_TURNSTILE_SITE_KEY` is used where Cloudflare Turnstile is wired in the app (e.g. public forms).
+Sensitive-field encryption runs in authenticated Supabase Edge Functions using the server-only `FIELD_ENCRYPTION_KEY_V1` and `FIELD_ENCRYPTION_KEY_V2` secrets. `VITE_TURNSTILE_SITE_KEY` is used where Cloudflare Turnstile is wired in the app (e.g. public forms).
 
 **Supabase Edge Functions (server-side secrets — not `VITE_` prefixed):**
 
@@ -462,7 +461,6 @@ Ensure your production environment includes at least:
 ```
 VITE_SUPABASE_URL=your_production_supabase_url
 VITE_SUPABASE_ANON_KEY=your_production_anon_key
-VITE_ENCRYPTION_KEY=your_production_encryption_key
 VITE_TURNSTILE_SITE_KEY=your_turnstile_site_key
 ```
 

@@ -94,7 +94,7 @@ export type {
 } from '../services/reminders.service';
 
 // Contract Management Services (V1)
-export { encrypt, decrypt, hashTaxId, isValidTaxId, isValidRoutingNumber, isValidAccountNumber, generateEncryptionKey } from '../services/encryption.service';
+export { isValidTaxId, isValidRoutingNumber, isValidAccountNumber } from '../services/encryption.service';
 export {
   batchEncryptSensitiveFields,
   batchDecryptSensitiveFields,

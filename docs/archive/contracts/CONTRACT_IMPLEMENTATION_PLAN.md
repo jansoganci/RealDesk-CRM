@@ -286,7 +286,7 @@ Part of Contract Management V1 (Foundation)"
   - Add TypeScript types
 
 - [ ] **Add environment variable** (15 min)
-  - Add `VITE_ENCRYPTION_KEY` to `.env`
+  - Add the legacy client encryption key to `.env`
   - Generate 32-byte key: `openssl rand -hex 32`
   - Add to `.env.example` with placeholder
   - Document in README
@@ -302,7 +302,7 @@ Part of Contract Management V1 (Foundation)"
 
 ```
 src/services/encryption.service.ts
-.env (add VITE_ENCRYPTION_KEY)
+.env (add the legacy client encryption key)
 ```
 
 ### Files to Modify
@@ -331,10 +331,10 @@ const IV_LENGTH = 12; // 96 bits for GCM
  * Must be 32 bytes (256 bits)
  */
 function getEncryptionKey(): CryptoKey {
-  const keyHex = import.meta.env.VITE_ENCRYPTION_KEY;
+  const keyHex = import.meta.env.LEGACY_CLIENT_ENCRYPTION_KEY;
 
   if (!keyHex || keyHex.length !== 64) {
-    throw new Error('VITE_ENCRYPTION_KEY must be 32 bytes (64 hex characters)');
+    throw new Error('Legacy client encryption key must be 32 bytes (64 hex characters)');
   }
 
   // Convert hex to Uint8Array
@@ -2753,7 +2753,7 @@ DROP INDEX IF EXISTS idx_owners_name_gin;
 ## Common Issues & Solutions
 
 ### Issue: Encryption key not found
-**Solution:** Add `VITE_ENCRYPTION_KEY` to `.env`
+**Historical solution:** Add the legacy client encryption key to `.env`
 
 ### Issue: RPC function not found
 **Solution:** Run `supabase db reset` to apply migrations

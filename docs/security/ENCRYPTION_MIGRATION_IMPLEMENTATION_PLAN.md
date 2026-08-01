@@ -1245,7 +1245,7 @@ supabase db dump -f backup_before_migration_$(date +%Y%m%d_%H%M%S).sql
 supabase secrets set ENCRYPTION_KEY="<64-char-hex-string>"
 
 # Set old encryption key (temporary, for migration)
-supabase secrets set ENCRYPTION_KEY_OLD="<current-VITE_ENCRYPTION_KEY-value>"
+supabase secrets set ENCRYPTION_KEY_OLD="<retired-client-encryption-key-value>"
 ```
 
 **Step 1.3: Verify Keys**
@@ -1785,7 +1785,7 @@ supabase functions deploy decrypt-sensitive-data
 supabase secrets set ENCRYPTION_KEY="<new-64-char-hex-key>"
 
 # Set old key (for backward compatibility)
-supabase secrets set ENCRYPTION_KEY_OLD="<current-VITE_ENCRYPTION_KEY>"
+supabase secrets set ENCRYPTION_KEY_OLD="<retired-client-encryption-key>"
 ```
 
 **Step 1.4: Test Edge Functions**
