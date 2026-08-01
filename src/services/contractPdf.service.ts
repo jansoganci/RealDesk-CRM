@@ -11,6 +11,12 @@ import { GENEL_SARTLAR, OZEL_SARTLAR, TAHLIYE_TAAHHUTNAMESI_TEXT } from '@/templ
 import { addTurkishFonts, setFontBold, setFontNormal } from './pdfFonts';
 import { clausesService } from './clauses.service';
 
+interface JsPdfDocumentWithAutoTable extends jsPDF {
+  lastAutoTable: {
+    finalY: number;
+  };
+}
+
 // PDF Configuration
 const PDF_CONFIG = {
   orientation: 'portrait' as const,
@@ -272,7 +278,7 @@ function renderPage1_InfoTable(doc: jsPDF, data: ContractPdfData): void {
   });
   
   // TESLİM DURUMU section
-  y = (doc as any).lastAutoTable.finalY + 10;
+  y = (doc as JsPdfDocumentWithAutoTable).lastAutoTable.finalY + 10;
   const pageWidth = doc.internal.pageSize.width - margins.left - margins.right;
 
   doc.setFontSize(fontSize.body);
@@ -438,7 +444,7 @@ function renderPage5_TahliyeTaahhutnamesi(doc: jsPDF, data: ContractPdfData, tex
     margin: { left: margins.left, right: margins.right }
   });
 
-  y = (doc as any).lastAutoTable.finalY + 15;
+  y = (doc as JsPdfDocumentWithAutoTable).lastAutoTable.finalY + 15;
 
   // Commitment text (use parameter instead of constant)
   doc.setFontSize(fontSize.body);

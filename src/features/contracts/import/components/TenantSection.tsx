@@ -5,12 +5,12 @@ import { Textarea } from '@/components/ui/textarea';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { ReviewFormData } from '../types/reviewFormTypes';
+import type { ReviewFormData, ReviewFormFieldValue } from '../types/reviewFormTypes';
 
 interface TenantSectionProps {
   formData: ReviewFormData;
   fieldErrors: Record<string, string>;
-  onFieldUpdate: (field: keyof ReviewFormData, value: any) => void;
+  onFieldUpdate: (field: keyof ReviewFormData, value: ReviewFormFieldValue) => void;
 }
 
 /**

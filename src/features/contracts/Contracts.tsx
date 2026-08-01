@@ -20,6 +20,7 @@ import { isExpiringSoon } from './utils/contractUtils';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ROUTES } from '../../config/constants';
+import type { ContractWithDetails } from '@/types';
 
 export const Contracts = () => {
   const { t } = useTranslation(['contracts', 'common']);
@@ -90,7 +91,7 @@ export const Contracts = () => {
     </>
   ), [t]);
 
-  const renderTableRow = useCallback((contract: any, _index: number) => (
+  const renderTableRow = useCallback((contract: ContractWithDetails, _index: number) => (
     <TableRow key={contract.id}>
       <TableCell>
         <div className="font-medium truncate max-w-[180px] md:max-w-none">
@@ -173,7 +174,7 @@ export const Contracts = () => {
     </TableRow>
   ), [currency, handleDownloadPdf, handleUploadPdfClick, handleEditContract, handleDeleteClick, uploadingContractId, actionLoading, pdfActionLoading, t]);
 
-  const renderCardContent = useCallback((contract: any, _index: number) => (
+  const renderCardContent = useCallback((contract: ContractWithDetails, _index: number) => (
     <div className="space-y-3" key={contract.id}>
       <div className="flex items-start justify-between gap-2">
         <div className="flex-1">

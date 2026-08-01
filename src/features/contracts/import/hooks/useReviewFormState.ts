@@ -1,27 +1,41 @@
 import { useState, useCallback, useMemo } from 'react';
-import type { ReviewFormData } from '../types/reviewFormTypes';
+import type {
+  LegacyFlatParsedData,
+  ReviewFormData,
+  ReviewFormFieldValue,
+} from '../types/reviewFormTypes';
 import { convertDateFormat } from '../utils/dateUtils';
 import type { ParsedContractData } from '@/services/textExtraction.service';
 
+type ParsedReviewSource = ParsedContractData | LegacyFlatParsedData;
+
 interface UseReviewFormStateReturn {
   formData: ReviewFormData;
-  updateField: (field: keyof ReviewFormData, value: any) => void;
+  updateField: (field: keyof ReviewFormData, value: ReviewFormFieldValue) => void;
   resetForm: () => void;
+}
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
 }
 
 /**
  * Helper to safely get nested value or fallback to legacy flat format
  */
 function getFieldValue(
-  parsedData: ParsedContractData | Record<string, any>,
+  parsedData: ParsedReviewSource,
   nestedPath: string,
   legacyKey?: string
 ): string {
   // Try new nested format first (e.g., "owner.name")
   const parts = nestedPath.split('.');
-  let value: any = parsedData;
+  let value: unknown = parsedData;
   for (const part of parts) {
-    value = value?.[part];
+    if (!isRecord(value)) {
+      value = undefined;
+      break;
+    }
+    value = value[part];
     if (value === undefined || value === null) break;
   }
 
@@ -31,8 +45,11 @@ function getFieldValue(
   }
 
   // Fallback to legacy flat format (e.g., "ownerName")
-  if (legacyKey && (parsedData as any)[legacyKey]) {
-    return String((parsedData as any)[legacyKey]);
+  if (legacyKey && legacyKey in parsedData) {
+    const legacyValue = (parsedData as LegacyFlatParsedData)[legacyKey];
+    if (legacyValue !== undefined && legacyValue !== null) {
+      return String(legacyValue);
+    }
   }
 
   return '';
@@ -44,7 +61,7 @@ function getFieldValue(
  * Supports both new nested format (ParsedContractData) and legacy flat format
  */
 export function useReviewFormState(
-  parsedData: ParsedContractData | Record<string, any> = {}
+  parsedData: ParsedReviewSource = {}
 ): UseReviewFormStateReturn {
 
   // Create initial form data from parsed data
@@ -96,7 +113,7 @@ export function useReviewFormState(
   const [formData, setFormData] = useState<ReviewFormData>(initialFormData);
 
   // Update field value
-  const updateField = useCallback((field: keyof ReviewFormData, value: any) => {
+  const updateField = useCallback((field: keyof ReviewFormData, value: ReviewFormFieldValue) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   }, []);
 
@@ -111,4 +128,3 @@ export function useReviewFormState(
     resetForm,
   };
 }
-

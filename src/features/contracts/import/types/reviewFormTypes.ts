@@ -2,6 +2,8 @@
  * Type definitions for Review Step form data
  */
 
+import type { ParsedContractData } from '@/services/textExtraction.service';
+
 export interface ReviewFormData {
   // Owner (US Format)
   owner_name: string;
@@ -38,7 +40,10 @@ export interface ReviewFormData {
   is_painted?: boolean;
 }
 
-export interface ParsedData {
+export type ReviewFormFieldValue = ReviewFormData[keyof ReviewFormData];
+
+/** Legacy flat OCR payload (pre-nested ParsedContractData). */
+export interface LegacyFlatParsedData {
   ownerName?: string;
   tenantName?: string;
   startDate?: string;
@@ -46,6 +51,7 @@ export interface ParsedData {
   rentAmount?: number | string;
   deposit?: number | string;
   propertyAddress?: string;
-  [key: string]: any;
+  [key: string]: string | number | null | undefined;
 }
 
+export type ParsedData = ParsedContractData | LegacyFlatParsedData;

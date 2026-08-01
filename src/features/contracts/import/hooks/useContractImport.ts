@@ -14,15 +14,27 @@ import {
 } from '@/lib/serviceProxy';
 import { useAuth } from '@/contexts/AuthContext';
 import { mapReviewToContractForm } from '../utils/mapReviewToContractForm';
+import type { ParsedData, ReviewFormData } from '../types/reviewFormTypes';
+import type { ContractCreationResult } from '@/types/contract.types';
+
+/** Success screen payload (names were not returned by createContractWithEntities). */
+export interface ImportCreatedData {
+  created_owner: boolean;
+  created_tenant: boolean;
+  created_property: boolean;
+  owner_name: string;
+  tenant_name: string;
+  property_address: string;
+}
 
 interface ImportState {
   file: File | null;
   extractedText: string;
-  parsedData: any;
+  parsedData: ParsedData;
   progress: number;
   status: string;
   submitting: boolean;
-  createdData: any;
+  createdData: ImportCreatedData | null;
 }
 
 export const useContractImport = () => {
@@ -90,7 +102,7 @@ export const useContractImport = () => {
     }
   };
 
-  const submitContract = async (formData: any) => {
+  const submitContract = async (formData: ReviewFormData) => {
     if (!user) {
       toast.error(t('import.toasts.noSession'));
       return false;
@@ -120,7 +132,7 @@ export const useContractImport = () => {
 
       setState(prev => ({
         ...prev,
-        createdData: result,
+        createdData: toImportCreatedData(result),
         submitting: false
       }));
 
@@ -158,3 +170,14 @@ export const useContractImport = () => {
     reset
   };
 };
+
+function toImportCreatedData(result: ContractCreationResult): ImportCreatedData {
+  return {
+    created_owner: result.created_owner,
+    created_tenant: result.created_tenant,
+    created_property: result.created_property,
+    owner_name: '',
+    tenant_name: '',
+    property_address: '',
+  };
+}

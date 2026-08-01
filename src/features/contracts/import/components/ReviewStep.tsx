@@ -13,6 +13,7 @@ import { TenantSection } from './TenantSection';
 import { PropertySection } from './PropertySection';
 import { ContractSection } from './ContractSection';
 import { ReviewAlerts } from './ReviewAlerts';
+import type { ReviewFormData, ReviewFormFieldValue, ParsedData } from '../types/reviewFormTypes';
 import { useReviewFormState } from '../hooks/useReviewFormState';
 import { useReviewFormValidation } from '../hooks/useReviewFormValidation';
 import { useReviewFormSubmission } from '../hooks/useReviewFormSubmission';
@@ -20,8 +21,8 @@ import { useReviewFormSubmission } from '../hooks/useReviewFormSubmission';
 interface ReviewStepProps {
   uploadedFile: File | null;
   extractedText: string;
-  parsedData: any;
-  onSubmit: (formData: any) => void;
+  parsedData: ParsedData;
+  onSubmit: (formData: ReviewFormData) => void;
   onCancel: () => void;
   isSubmitting: boolean;
 }
@@ -42,8 +43,8 @@ export const ReviewStep = ({
   const { fieldErrors, validateForm, clearFieldError } = useReviewFormValidation();
 
   // Clear error when field is updated
-  const handleFieldUpdate = (field: string, value: any) => {
-    updateField(field as keyof typeof formData, value);
+  const handleFieldUpdate = (field: keyof ReviewFormData, value: ReviewFormFieldValue) => {
+    updateField(field, value);
     
     // Clear error when user fixes it
     if (value && fieldErrors[field]) {

@@ -80,8 +80,8 @@ export interface GenerateAndSaveResult {
 // Template Registry
 // ============================================================================
 
-const templateRegistry: Record<V2ContractType, TemplateGenerator<any>> = {
-  sale: generateSalePdfTemplate,
+const templateRegistry: Record<V2ContractType, TemplateGenerator<Record<string, unknown>>> = {
+  sale: generateSalePdfTemplate as TemplateGenerator<Record<string, unknown>>,
   commission: () => {
     throw new Error('Commission template not implemented yet');
   },

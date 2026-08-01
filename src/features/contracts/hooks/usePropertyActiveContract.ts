@@ -14,6 +14,16 @@ import { useAuth } from '@/contexts/AuthContext';
 // Types
 // ============================================================================
 
+type JoinedTenantName = { name: string } | { name: string }[] | null;
+
+function getJoinedTenantName(tenant: JoinedTenantName | undefined): string {
+  if (!tenant) return 'Bilinmeyen';
+  if (Array.isArray(tenant)) {
+    return tenant[0]?.name ?? 'Bilinmeyen';
+  }
+  return tenant.name ?? 'Bilinmeyen';
+}
+
 export interface ActiveContractInfo {
   id: string;
   tenant_name: string;
@@ -121,7 +131,7 @@ export function usePropertyActiveContract(): UsePropertyActiveContractResult {
       // Active contract found - set warning data
       setActiveContract({
         id: contract.id,
-        tenant_name: (contract.tenant as any)?.name || 'Bilinmeyen',
+        tenant_name: getJoinedTenantName(contract.tenant as JoinedTenantName | undefined),
         start_date: contract.start_date,
         end_date: contract.end_date,
         rent_amount: contract.rent_amount || 0,

@@ -4,12 +4,12 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { FixturesSelector } from '../../components/FixturesSelector';
-import type { ReviewFormData } from '../types/reviewFormTypes';
+import type { ReviewFormData, ReviewFormFieldValue } from '../types/reviewFormTypes';
 
 interface ContractSectionProps {
   formData: ReviewFormData;
   fieldErrors: Record<string, string>;
-  onFieldUpdate: (field: keyof ReviewFormData, value: any) => void;
+  onFieldUpdate: (field: keyof ReviewFormData, value: ReviewFormFieldValue) => void;
 }
 
 /**

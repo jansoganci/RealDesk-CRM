@@ -33,13 +33,14 @@ import {
 } from '@/components/ui/card';
 import { clausesService } from '@/services/clauses.service';
 import type { ContractFormData } from '../schemas/contractForm.schema';
+import type { ClauseType } from '@/types/contract.types';
 
 // ============================================================================
 // Internal State Type
 // ============================================================================
 
 interface EditableClauseState {
-  type: 'GENEL_SARTLAR' | 'OZEL_SARTLAR' | 'TAHLIYE_TAAHHUTNAMESI';
+  type: ClauseType;
   index: number;
   content: string;
   isCustomized: boolean;
@@ -104,7 +105,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
   /**
    * Start editing a clause
    */
-  function startEditing(type: string, index: number) {
+  function startEditing(type: ClauseType, index: number) {
     setClauses((prev) =>
       prev.map((clause) => {
         if (clause.type === type && clause.index === index) {
@@ -118,7 +119,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
   /**
    * Cancel editing (discard draft changes)
    */
-  function cancelEditing(type: string, index: number) {
+  function cancelEditing(type: ClauseType, index: number) {
     setClauses((prev) =>
       prev.map((clause) => {
         if (clause.type === type && clause.index === index) {
@@ -133,7 +134,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
    * Save clause edit
    * Updates local state and syncs with form
    */
-  function saveEdit(type: string, index: number) {
+  function saveEdit(type: ClauseType, index: number) {
     setClauses((prev) =>
       prev.map((clause) => {
         if (clause.type === type && clause.index === index) {
@@ -154,14 +155,14 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
           if (existingIndex >= 0) {
             // Update existing override
             currentOverrides[existingIndex] = {
-              clause_type: type as any,
+              clause_type: type,
               clause_index: index,
               custom_content: newContent,
             };
           } else {
             // Add new override
             currentOverrides.push({
-              clause_type: type as any,
+              clause_type: type,
               clause_index: index,
               custom_content: newContent,
             });
@@ -187,7 +188,7 @@ export function EditableClausesSection({ form }: EditableClausesSectionProps) {
    * Reset clause to default template
    * Removes override from form state and reloads template
    */
-  function resetToDefault(type: string, index: number) {
+  function resetToDefault(type: ClauseType, index: number) {
     // Remove from form overrides
     const currentOverrides = form.getValues('clauseOverrides') || [];
     const filtered = currentOverrides.filter(

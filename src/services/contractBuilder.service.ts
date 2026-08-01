@@ -9,6 +9,7 @@
 
 import { supabase } from '../config/supabase';
 import { getActiveOrgId } from '../lib/orgHelpers';
+import type { Database, Json } from '../types/database.types';
 import type {
   ContractType,
   ContractInstanceV2,
@@ -17,8 +18,13 @@ import type {
   UpdateContractInstanceRequest,
 } from '../types/contractBuilder.types';
 
-// Type assertion helper for v2 tables that aren't in generated types yet
-const fromV2 = (table: string) => supabase.from(table as any);
+type V2TableName = 'contract_instances_v2' | 'contract_templates_v2';
+type ContractInstanceV2Insert =
+  Database['public']['Tables']['contract_instances_v2']['Insert'] & {
+    org_id: string;
+  };
+
+const fromV2 = (table: V2TableName) => supabase.from(table);
 
 class ContractBuilderService {
   /**
@@ -58,18 +64,20 @@ class ContractBuilderService {
     if (!userData.user) throw new Error('Not authenticated');
     const orgId = await getActiveOrgId();
 
-    const { data, error } = await fromV2('contract_instances_v2')
-      .insert({
+    const insertRow: ContractInstanceV2Insert = {
         user_id: userData.user.id,
         org_id: orgId,
         type: request.type,
         template_id: request.template_id || null,
         title: request.title,
-        form_data: request.form_data,
+        form_data: request.form_data as Json,
         rendered_content: request.rendered_content,
-        parties: request.parties,
+        parties: request.parties as Json,
         status: request.status,
-      })
+      };
+
+    const { data, error } = await fromV2('contract_instances_v2')
+      .insert(insertRow)
       .select()
       .single();
 

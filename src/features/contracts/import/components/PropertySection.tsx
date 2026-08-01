@@ -7,13 +7,13 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Info } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { US_STATES } from '@/lib/serviceProxy';
-import type { ReviewFormData, ParsedData } from '../types/reviewFormTypes';
+import type { ReviewFormData, ReviewFormFieldValue, ParsedData } from '../types/reviewFormTypes';
 
 interface PropertySectionProps {
   formData: ReviewFormData;
   fieldErrors: Record<string, string>;
   parsedData: ParsedData;
-  onFieldUpdate: (field: keyof ReviewFormData, value: any) => void;
+  onFieldUpdate: (field: keyof ReviewFormData, value: ReviewFormFieldValue) => void;
 }
 
 /**
@@ -29,7 +29,7 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
         <CardTitle className="text-lg">{t('import.sections.property')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {parsedData.propertyAddress && (
+        {'propertyAddress' in parsedData && parsedData.propertyAddress && (
           <Alert className="border-blue-200 bg-blue-50">
             <Info className="h-4 w-4 text-blue-600" />
             <AlertDescription className="text-blue-800">
