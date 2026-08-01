@@ -35,6 +35,13 @@ export interface MultipleContractsCheck {
   message?: string;
 }
 
+type ActiveContractWithProperty = {
+  id: string;
+  start_date: string;
+  end_date: string;
+  property: { full_address: string } | null;
+};
+
 /**
  * Check if same name exists with different TC
  * Warns: "⚠️ Ali Yılmaz ismiyle 2 farklı kişi daha var (farklı TC No)"
@@ -165,14 +172,15 @@ export async function checkMultipleContracts(
     return { hasMultiple: false };
   }
 
-  const addresses = activeContracts
-    .map((c: any) => c.property?.full_address || 'Bilinmeyen adres')
+  const contracts = activeContracts as ActiveContractWithProperty[];
+  const addresses = contracts
+    .map((c) => c.property?.full_address || 'Bilinmeyen adres')
     .join('\n- ');
 
   return {
     hasMultiple: activeContracts.length > 0,
     count: activeContracts.length,
-    contracts: activeContracts.map((c: any) => ({
+    contracts: contracts.map((c) => ({
       id: c.id,
       property_address: c.property?.full_address || 'Bilinmeyen',
       start_date: c.start_date,

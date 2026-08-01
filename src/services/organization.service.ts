@@ -1,6 +1,111 @@
 import { supabase } from '../config/supabase';
 import { createLogger } from '../lib/logger';
-import type { Organization, OrgMember, OrgMemberStatus, OrgMemberWithUser, OrgRole } from '../types/org';
+import type { Json } from '../types/database.types';
+import type {
+  AcceptOrgInvitationResult,
+} from '../types/rpc';
+import type {
+  InvitationInfo,
+  Organization,
+  OrgInvitation,
+  OrgMember,
+  OrgMemberStatus,
+  OrgMemberWithUser,
+  OrgRole,
+} from '../types/org';
+
+type OrgMemberRpcRow = {
+  id: string;
+  org_id: string;
+  user_id: string;
+  role: string;
+  status: string;
+  invited_by: string | null;
+  invited_at: string | null;
+  joined_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+  user_email: string | null;
+  user_full_name: string | null;
+  user_avatar_url: string | null;
+};
+
+type InviteMemberResult =
+  | { type: 'member'; data: OrgMember }
+  | { type: 'invitation'; data: OrgInvitation };
+
+function parseInvitationInfo(data: Json | null): InvitationInfo {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return { valid: false };
+  }
+
+  const row = data as Record<string, unknown>;
+  const role = row.role === 'owner' || row.role === 'member' ? row.role : undefined;
+
+  return {
+    valid: row.valid === true,
+    org_name: typeof row.org_name === 'string' ? row.org_name : undefined,
+    org_logo:
+      typeof row.org_logo === 'string'
+        ? row.org_logo
+        : row.org_logo === null
+          ? null
+          : undefined,
+    role,
+    invited_by_name:
+      typeof row.invited_by_name === 'string'
+        ? row.invited_by_name
+        : row.invited_by_name === null
+          ? null
+          : undefined,
+    invited_at: typeof row.invited_at === 'string' ? row.invited_at : undefined,
+    expires_at: typeof row.expires_at === 'string' ? row.expires_at : undefined,
+    expired: row.expired === true,
+  };
+}
+
+function parseAcceptInvitationResult(data: Json | null): AcceptOrgInvitationResult {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) {
+    return { success: false, message: 'Invalid response' };
+  }
+
+  const row = data as Record<string, unknown>;
+
+  return {
+    success: row.success === true,
+    message: typeof row.message === 'string' ? row.message : '',
+    error: typeof row.error === 'string' ? row.error : undefined,
+    org_id: typeof row.org_id === 'string' ? row.org_id : undefined,
+  };
+}
+
+function toOrgInvitation(row: {
+  id: string;
+  org_id: string;
+  email: string;
+  role: string;
+  invitation_token: string;
+  invited_by: string | null;
+  invited_at: string;
+  expires_at: string;
+  accepted_at: string | null;
+  created_at: string | null;
+  updated_at: string | null;
+}): OrgInvitation {
+  return {
+    id: row.id,
+    org_id: row.org_id,
+    email: row.email,
+    role: row.role as OrgRole,
+    invitation_token: row.invitation_token,
+    invited_by: row.invited_by,
+    invited_at: row.invited_at,
+    expires_at: row.expires_at,
+    accepted_at: row.accepted_at,
+    created_at: row.created_at ?? row.invited_at,
+    updated_at: row.updated_at ?? row.invited_at,
+  };
+}
 
 const logger = createLogger('Organization');
 
@@ -179,8 +284,8 @@ class OrganizationService {
     }
 
     // Map flat RPC response to nested OrgMemberWithUser structure
-    const rows = (data as any[]) || [];
-    return rows.map((row: any) => ({
+    const rows = (data ?? []) as OrgMemberRpcRow[];
+    return rows.map((row) => ({
       id: row.id,
       org_id: row.org_id,
       user_id: row.user_id,
@@ -325,7 +430,7 @@ class OrganizationService {
    * @param role - Role to assign (owner or member)
    * @returns The created invitation
    */
-  async inviteMember(orgId: string, email: string, role: OrgRole): Promise<{ type: 'invitation' | 'member'; data: any }> {
+  async inviteMember(orgId: string, email: string, role: OrgRole): Promise<InviteMemberResult> {
     // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email || !emailRegex.test(email)) {
@@ -410,7 +515,7 @@ class OrganizationService {
         throw new Error('Failed to add member');
       }
 
-      return { type: 'member', data };
+      return { type: 'member', data: data as OrgMember };
     }
 
     // 6. User is NOT registered - create invitation
@@ -472,14 +577,14 @@ class OrganizationService {
       });
     }
 
-    return { type: 'invitation', data };
+    return { type: 'invitation', data: toOrgInvitation(data) };
   }
 
   /**
    * Get all pending invitations for an organization
    * Only owners can view (enforced by RLS)
    */
-  async getInvitations(orgId: string): Promise<any[]> {
+  async getInvitations(orgId: string): Promise<OrgInvitation[]> {
     const { data, error } = await supabase
       .from('org_invitations')
       .select('*')
@@ -492,7 +597,7 @@ class OrganizationService {
       throw new Error('Failed to fetch invitations');
     }
 
-    return data || [];
+    return (data ?? []).map(toOrgInvitation);
   }
 
   /**
@@ -568,7 +673,7 @@ class OrganizationService {
    * Get invitation info by token (for showing on accept page)
    * This is a public function (no auth required)
    */
-  async getInvitationInfo(token: string): Promise<any> {
+  async getInvitationInfo(token: string): Promise<InvitationInfo> {
     const { data, error } = await supabase
       .rpc('get_invitation_info', { p_token: token });
 
@@ -577,14 +682,14 @@ class OrganizationService {
       throw new Error('Failed to fetch invitation info');
     }
 
-    return data;
+    return parseInvitationInfo(data);
   }
 
   /**
    * Accept an invitation using a token
    * User must be authenticated
    */
-  async acceptInvitation(token: string): Promise<any> {
+  async acceptInvitation(token: string): Promise<AcceptOrgInvitationResult> {
     const { data, error } = await supabase
       .rpc('accept_org_invitation', { p_token: token });
 
@@ -593,7 +698,7 @@ class OrganizationService {
       throw new Error('Failed to accept invitation');
     }
 
-    return data;
+    return parseAcceptInvitationResult(data);
   }
 
   /**

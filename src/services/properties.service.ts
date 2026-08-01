@@ -1,5 +1,12 @@
 import { supabase } from '../config/supabase';
-import type { Property, PropertyInsert, PropertyUpdate, PropertyWithOwner } from '../types';
+import type {
+  ContractStatus,
+  Property,
+  PropertyInsert,
+  PropertyUpdate,
+  PropertyWithOwner,
+  Tenant,
+} from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
@@ -7,14 +14,34 @@ import { createLogger } from '../lib/logger';
 
 const logger = createLogger('Properties');
 
+type PropertyContractJoin = {
+  id: string;
+  status: string;
+  rent_amount: number | null;
+  currency: string | null;
+  end_date: string;
+  tenant?: Pick<Tenant, 'id' | 'name' | 'phone'> | null;
+};
+
+type PropertyWithContractsRow = Record<string, unknown> & {
+  contracts?: PropertyContractJoin[];
+};
+
+type PropertyMissingInfoRow = {
+  id: string;
+  city: string | null;
+  district: string | null;
+  photos?: { id: string }[];
+};
+
 class PropertiesService {
   // Private helper to transform properties data
-  private transformProperties(data: any[]): PropertyWithOwner[] {
+  private transformProperties(data: PropertyWithContractsRow[]): PropertyWithOwner[] {
     return data.map((property) => {
       // Find the active contract and extract its tenant and contract details
       const contracts = Array.isArray(property.contracts) ? property.contracts : [];
       const activeContractData = contracts.find(
-        (contract: any) => contract?.status === 'Active'
+        (contract) => contract?.status === 'Active'
       );
       const activeTenant = activeContractData?.tenant || null;
       const activeContract = activeContractData ? {
@@ -22,7 +49,7 @@ class PropertiesService {
         rent_amount: activeContractData.rent_amount,
         currency: activeContractData.currency,
         end_date: activeContractData.end_date,
-        status: activeContractData.status,
+        status: activeContractData.status as ContractStatus,
       } : null;
 
       const { contracts: _, ...rest } = property;
@@ -382,7 +409,7 @@ class PropertiesService {
 
     const propertiesWithMissingInfo = new Set<string>();
 
-    properties?.forEach((p: any) => {
+    properties?.forEach((p: PropertyMissingInfoRow) => {
       const photoCount = p.photos?.length || 0;
       const hasLocation = (p.city && p.city.trim() !== '') || (p.district && p.district.trim() !== '');
       

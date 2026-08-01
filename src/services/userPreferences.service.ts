@@ -151,7 +151,7 @@ class UserPreferencesService {
   async getBrokerSettings(): Promise<BrokerSettings> {
     const userId = await getAuthenticatedUserId();
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('user_preferences')
       .select(
         `
@@ -220,7 +220,7 @@ class UserPreferencesService {
       merged.annual_cap_amount = 0;
     }
 
-    const { error } = await (supabase as any)
+    const { error } = await supabase
       .from('user_preferences')
       .upsert(
         {

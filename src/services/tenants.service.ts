@@ -6,7 +6,8 @@ import type {
   TenantWithProperty,
   Contract,
   TenantWithContractData,
-  TenantWithContractResult
+  TenantWithContractResult,
+  Property,
 } from '../types';
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
@@ -35,6 +36,18 @@ import { createLogger } from '../lib/logger';
 
 const logger = createLogger('Tenants');
 
+type TenantContractProperty = Pick<Property, 'id' | 'address' | 'city' | 'district' | 'il' | 'district_legacy'>;
+
+type TenantContractJoin = {
+  id: string;
+  status: string;
+  property?: TenantContractProperty | null;
+};
+
+type TenantWithContractsRow = Tenant & {
+  contracts?: TenantContractJoin[];
+};
+
 class TenantsService {
   async getAll(): Promise<TenantWithProperty[]> {
     const orgId = await getActiveOrgId();
@@ -56,8 +69,8 @@ class TenantsService {
     if (error) throw error;
 
     // Transform: Active contract'tan property'yi çıkar
-    return (data || []).map((tenant: any) => {
-      const activeContract = tenant.contracts?.find((c: any) => c.status === 'Active');
+    return ((data ?? []) as TenantWithContractsRow[]).map((tenant) => {
+      const activeContract = tenant.contracts?.find((c) => c.status === 'Active');
       const { contracts: _, ...tenantData } = tenant;
       return {
         ...tenantData,
@@ -341,8 +354,10 @@ class TenantsService {
 
       if (error && typeof error === 'object') {
         const supabaseError = error as { code?: string; message?: string };
-        const structuredError = new AppError(ERROR_TENANT_CONTRACT_CREATION_FAILED, supabaseError.message);
-        (structuredError as any).originalCode = supabaseError.code;
+        const structuredError = Object.assign(
+          new AppError(ERROR_TENANT_CONTRACT_CREATION_FAILED, supabaseError.message),
+          { originalCode: supabaseError.code }
+        );
         throw structuredError;
       }
 
