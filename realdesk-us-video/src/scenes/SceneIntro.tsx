@@ -1,5 +1,5 @@
 import React from "react";
-import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing, Sequence } from "remotion";
+import { AbsoluteFill, interpolate, spring, useCurrentFrame, useVideoConfig, Easing } from "remotion";
 import { B } from "../components/brand";
 
 const FeaturePill: React.FC<{ icon: string; label: string; delay: number; color: string }> = ({ icon, label, delay, color }) => {

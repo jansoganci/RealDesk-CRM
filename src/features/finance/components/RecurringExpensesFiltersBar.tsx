@@ -32,7 +32,7 @@ export const RecurringExpensesFiltersBar = ({
 
   const handleActiveStatusChange = (value: string) => {
     if (value === 'all') {
-      const { is_active, ...rest } = filters;
+      const { is_active: _is_active, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({ ...filters, is_active: value === 'active' });
@@ -41,7 +41,7 @@ export const RecurringExpensesFiltersBar = ({
 
   const handleCategoryChange = (value: string) => {
     if (value === 'all') {
-      const { category, ...rest } = filters;
+      const { category: _category, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({ ...filters, category: value });
@@ -50,7 +50,7 @@ export const RecurringExpensesFiltersBar = ({
 
   const handleFrequencyChange = (value: string) => {
     if (value === 'all') {
-      const { frequency, ...rest } = filters;
+      const { frequency: _frequency, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({ ...filters, frequency: value as 'monthly' | 'quarterly' | 'yearly' });

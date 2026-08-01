@@ -12,6 +12,7 @@ import { Logo } from "./HelloWorld/Logo";
 import { Subtitle } from "./HelloWorld/Subtitle";
 import { Title } from "./HelloWorld/Title";
 
+// eslint-disable-next-line react-refresh/only-export-components -- Remotion composition schema
 export const myCompSchema = z.object({
   titleText: z.string(),
   titleColor: zColor(),

@@ -43,7 +43,6 @@ export const SectionLabel: React.FC<{
   delay?: number;
 }> = ({ title, subtitle, delay = 0 }) => {
   const frame = useCurrentFrame();
-  const { fps } = useVideoConfig();
 
   const opacity = interpolate(frame - delay, [0, 16], [0, 1], {
     extrapolateLeft: "clamp",

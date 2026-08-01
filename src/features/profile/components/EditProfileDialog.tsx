@@ -77,7 +77,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
       } else {
         toast.error(result.error || t('editProfile.errors.emailFailed'));
       }
-    } catch (error) {
+    } catch {
       toast.error(t('editProfile.errors.emailFailed'));
     } finally {
       setEmailLoading(false);
@@ -107,7 +107,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
       } else {
         toast.error(updateResult.error || t('editProfile.errors.passwordFailed'));
       }
-    } catch (error) {
+    } catch {
       toast.error(t('editProfile.errors.passwordFailed'));
     } finally {
       setPasswordLoading(false);

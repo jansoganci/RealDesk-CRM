@@ -161,7 +161,7 @@ export function TeamMembersList() {
     try {
       await navigator.clipboard.writeText(inviteLink);
       toast.success(t('team:inviteLinkCopied'));
-    } catch (error) {
+    } catch {
       toast.error(t('common:error'));
     }
   };

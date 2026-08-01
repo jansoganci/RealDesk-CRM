@@ -146,6 +146,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
 // Hook
 // ============================================================================
 
+// eslint-disable-next-line react-refresh/only-export-components -- context hook
 export function useNotifications() {
   const context = useContext(NotificationContext);
   if (!context) {

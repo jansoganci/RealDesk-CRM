@@ -27,7 +27,7 @@ export const FinanceFiltersBar = ({
 
   const handleTypeChange = (value: string) => {
     if (value === 'all') {
-      const { type, ...rest } = filters;
+      const { type: _type, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({ ...filters, type: value as 'income' | 'expense' });
@@ -36,7 +36,7 @@ export const FinanceFiltersBar = ({
 
   const handleCategoryChange = (value: string) => {
     if (value === 'all') {
-      const { category, ...rest } = filters;
+      const { category: _category, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({ ...filters, category: value });
@@ -45,7 +45,7 @@ export const FinanceFiltersBar = ({
 
   const handleStatusChange = (value: string) => {
     if (value === 'all') {
-      const { payment_status, ...rest } = filters;
+      const { payment_status: _payment_status, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       onFiltersChange({
@@ -57,7 +57,7 @@ export const FinanceFiltersBar = ({
 
   const handleMonthChange = (value: string) => {
     if (value === 'all') {
-      const { start_date, end_date, ...rest } = filters;
+      const { start_date: _start_date, end_date: _end_date, ...rest } = filters;
       onFiltersChange(rest);
     } else {
       const startDate = `${value}-01`;

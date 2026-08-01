@@ -72,6 +72,7 @@ export const BillingProvider = ({ children }: { children: React.ReactNode }) => 
   return <BillingContext.Provider value={value}>{children}</BillingContext.Provider>;
 };
 
+// eslint-disable-next-line react-refresh/only-export-components -- context hook
 export const useBilling = () => {
   const context = useContext(BillingContext);
   if (!context) {

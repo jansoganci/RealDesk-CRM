@@ -1,7 +1,4 @@
 import { Composition } from "remotion";
-import { HelloWorld, myCompSchema } from "./HelloWorld";
-import { Logo, myCompSchema2 } from "./HelloWorld/Logo";
-import { RealDeskIntro } from "./RealDeskIntro";
 import { RealDeskDemo } from "./RealDeskDemo";
 
 // Each <Composition> is an entry in the sidebar!

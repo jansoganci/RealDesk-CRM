@@ -5,7 +5,6 @@ import {
   useCurrentFrame,
   useVideoConfig,
   Easing,
-  Sequence,
 } from "remotion";
 
 // ── Brand tokens ────────────────────────────────────────────────

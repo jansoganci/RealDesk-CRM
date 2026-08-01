@@ -146,7 +146,7 @@ export const CalendarPage = () => {
             const rangeEnd = endOfDay(weekDays[weekDays.length - 1]);
             const data = await meetingsService.getByDateRange(rangeStart.toISOString(), rangeEnd.toISOString());
             setMeetings(data);
-        } catch (error) {
+        } catch {
             toast.error(t('errors.loadMeetings'));
         } finally {
             setLoading(false);

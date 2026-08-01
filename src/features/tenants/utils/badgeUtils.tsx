@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
  * Provides a reusable function to render assignment badges for tenants
  */
 
+// eslint-disable-next-line react-refresh/only-export-components -- badge utility
 export function getAssignmentBadge(tenant: TenantWithProperty) {
   // This function uses useTranslation, so it needs to be called within a component
   // For this reason, we export a component instead of a pure function

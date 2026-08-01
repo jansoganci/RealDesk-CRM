@@ -60,7 +60,7 @@ export function useSaleContractPdf(): UseSaleContractPdfReturn {
           toast.error(t('pdf.generateFailed'), { description: result.error });
           return false;
         }
-      } catch (error) {
+      } catch {
         toast.error(t('pdf.generateFailed'));
         return false;
       } finally {
@@ -92,7 +92,7 @@ export function useSaleContractPdf(): UseSaleContractPdfReturn {
         } else {
           toast.error(t('pdf.downloadFailed'), { description: result.error });
         }
-      } catch (error) {
+      } catch {
         toast.error(t('pdf.downloadFailed'));
       } finally {
         setIsDownloading(false);

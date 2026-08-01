@@ -10,6 +10,7 @@ import { z } from "zod";
 import { Arc } from "./Arc";
 import { Atom } from "./Atom";
 
+// eslint-disable-next-line react-refresh/only-export-components -- Remotion composition schema
 export const myCompSchema2 = z.object({
   logoColor1: zColor(),
   logoColor2: zColor(),

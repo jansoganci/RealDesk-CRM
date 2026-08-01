@@ -365,7 +365,7 @@ export class LeaseAgreementPdfService {
     if ((form.co_signer_name?.trim() ?? '').length >= 2) {
       const lab =
         form.co_signer_role === 'guarantor' ? 'Guarantor' : 'Co-signer';
-      y = drawSignatureRow(doc, y, lab, MARGIN_MM, maxW, h);
+      drawSignatureRow(doc, y, lab, MARGIN_MM, maxW, h);
     }
 
     const { w: fw, h: fh } = pageSize(doc);

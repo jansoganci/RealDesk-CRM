@@ -295,7 +295,7 @@ function generateRandomString(length: number): string {
       }
       return result.substring(0, length);
     }
-  } catch (error) {
+  } catch {
     // Fallback to Math.random() if crypto API fails
     logger.warn('crypto.getRandomValues() unavailable, using Math.random() fallback');
   }

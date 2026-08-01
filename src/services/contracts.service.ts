@@ -279,7 +279,7 @@ class ContractsService {
       );
       
       // If there are other fields to update besides status, update them
-      const { status, ...otherFields } = contract;
+      const { status: _status, ...otherFields } = contract;
       if (Object.keys(otherFields).length > 0) {
         return updateRow('contracts', id, otherFields);
       }

@@ -46,8 +46,7 @@ const PropertiesListTab = ({ pageTop, pageTitle }: PropertiesListTabProps) => {
   const { t } = useTranslation(['properties', 'common']);
   const navigate = useNavigate();
   const { currency, commissionRate } = useAuth();
-  const propertySchema = useMemo(() => getPropertySchema(t), [t]);
-  type PropertyFormData = z.infer<typeof propertySchema>;
+  type PropertyFormData = z.infer<ReturnType<typeof getPropertySchema>>;
 
   const [properties, setProperties] = useState<PropertyWithOwner[]>([]);
   const [propertyTypeFilter, setPropertyTypeFilter] = useState<'all' | 'rental' | 'sale'>('all');

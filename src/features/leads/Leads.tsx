@@ -29,8 +29,7 @@ import { Info } from 'lucide-react';
 export const Leads = () => {
   const { t } = useTranslation(['leads', 'common']);
   const { isMember } = useOrg();
-  const inquirySchema = useMemo(() => getInquirySchema(t), [t]);
-  type InquiryFormData = z.infer<typeof inquirySchema>;
+  type InquiryFormData = z.infer<ReturnType<typeof getInquirySchema>>;
 
   const [view, setView] = useState<'pipeline' | 'list'>('pipeline');
   const [detailLeadId, setDetailLeadId] = useState<string | null>(null);

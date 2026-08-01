@@ -155,7 +155,7 @@ export function SaleContractBuilder() {
               description: pdfResult.error
             });
           }
-        } catch (error) {
+        } catch {
           toast.warning(t('toasts.builder.savedFinalNoPdf'));
         }
       } else {

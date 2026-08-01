@@ -176,6 +176,7 @@ export const OrgProvider = ({ children }: { children: React.ReactNode }) => {
  * Hook to access organization context
  * Must be used within OrgProvider
  */
+// eslint-disable-next-line react-refresh/only-export-components -- context hook
 export const useOrg = (): OrgContextValue => {
   const context = useContext(OrgContext);
   if (!context) {
