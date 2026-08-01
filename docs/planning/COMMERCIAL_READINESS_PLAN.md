@@ -1,6 +1,6 @@
 # RealDesk Commercial Readiness Plan
 
-**Status:** Active — Items 1–2 complete; Item 3 deferred for demo/feedback; Item 4 is next  
+**Status:** Active — Items 1–2 complete; Item 3 deferred; Item 8 lint baseline clean (CI gate follow-up); Item 4 is next  
 
 **Created:** 2026-08-01  
 **Updated:** 2026-08-02  
@@ -13,9 +13,9 @@ The core CRM is implemented: leads, deals, milestones, properties, commissions, 
 
 Current verification baseline:
 
-- `npm run lint`: fails with 203 errors and 59 warnings.
+- `npm run lint`: passes (0 errors, 0 warnings).
 - `npm run typecheck`: passes.
-- `npm run test`: passes, 104/104 tests.
+- `npm run test`: passes, 114/114 tests.
 - `npm run build`: passes.
 
 ## Execution rules
@@ -48,7 +48,7 @@ Current verification baseline:
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
 | 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
 | 7 | Complete CCPA deletion flow | P2 | Medium | In progress | Item 1; reuse Item 2 security patterns |
-| 8 | Global lint cleanup and CI gate | P2 | Large | Not started | None |
+| 8 | Global lint cleanup and CI gate | P2 | Large | Complete (CI follow-up) | None |
 
 **Related completed (not a separate roadmap row):** CCPA anonymous public submit + status check (`/privacy?org=`, migration `0050`, Edge Functions `submit-ccpa-request` / `check-ccpa-request-status`) — done 2026-08-02. Item 7 remains open for the full deletion/inventory work only.
 
@@ -252,26 +252,33 @@ Billing and encryption have no code dependency and may run in parallel when capa
 ## 8. Global lint cleanup and CI gate
 
 **Priority / effort:** P2 / Large  
-**Current issue:** Lint reports 203 errors and 59 warnings, including widespread explicit `any` usage.
+**Status:** Complete for lint baseline; CI enforcement still open (no `.github/workflows` in repo).
 
 ### Work
 
-- Fix errors in risk order: authentication/security, contracts, billing/finance, services, feature UI, then warnings.
-- Replace `any`, unsafe casts, invalid interfaces, stale hook dependencies, and unnecessary escapes with correct types/logic.
-- Avoid behavior-changing refactors unless separately approved and tested.
-- Make lint a required CI check once the baseline reaches zero.
+- [x] Fixed errors in risk order: auth/security → contracts → billing/finance → services → feature UI → lib/ui → warnings.
+- [x] Replaced `any`, empty interfaces, stale hook deps, and unnecessary escapes with correct types/logic across waves 0–7 on `feature/global-lint-cleanup`.
+- [x] Avoided behavior-changing refactors; kept intentional mount-only side effects (e.g. finance recurring processor).
+- [ ] Make lint a required CI check — **follow-up**: repository has no GitHub Actions workflows yet.
 
 ### Blocks / unlocks
 
 - **Blocks:** Nothing directly, but compounds regression risk in every new feature.
-- **Unlocks:** Enforced conventions, safer refactors, and a reliable CI quality gate.
+- **Unlocks:** Enforced conventions, safer refactors, and a reliable CI quality gate (after CI follow-up).
 
 ### Acceptance criteria
 
-- `npm run lint` passes with zero errors and zero warnings.
-- Typecheck, all tests, and build continue to pass.
-- CI rejects new lint failures.
-- No broad functional behavior changes are bundled into lint-only commits.
+- [x] `npm run lint` passes with zero errors and zero warnings.
+- [x] Typecheck, all tests, and build continue to pass.
+- [ ] CI rejects new lint failures (no CI workflow present — remaining follow-up).
+- [x] No broad functional behavior changes are bundled into lint-only commits.
+
+### Completion notes (2026-08-02)
+
+- Branch: `feature/global-lint-cleanup`
+- Commits: `ae8435d` … `ad25e43` (waves 0–7)
+- Tooling: parent agent + Composer subagents for contracts/finance/services/features/warnings; mechanical escape restore from stash after branch churn
+- Remaining: add CI job running `npm run lint` (and preferably typecheck/test) as required check
 
 ## Hard dependency map
 
@@ -304,3 +311,4 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | 2026-08-02 | Plan status sync | Updated | Roadmap table and headers aligned to code; next ordered item is Billing enforcement. |
 | 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
 | 2026-08-02 | Item 7 — CCPA deletion flow | In progress | Design approved (retain `contract_instances_v2` like PDFs). Migration `0051` + `ccpaDeletion.ts` + service rewrite + tests. Apply migration + smoke-test to close. |
+| 2026-08-02 | Item 8 — Global lint cleanup | Complete (CI follow-up) | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). typecheck/test/build pass. CI required-check still open (no workflows in repo). |
