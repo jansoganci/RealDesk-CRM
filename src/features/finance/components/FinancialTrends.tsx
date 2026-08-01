@@ -7,6 +7,7 @@ import { NormalizedYearlySummary } from '../../../services/finance/analytics.ser
 import { formatCurrency } from '../../../lib/currency';
 import { YearOverYearIndicator } from './YearOverYearIndicator';
 import { COLORS } from '@/config/colors';
+import type { TooltipItem } from 'chart.js';
 
 interface FinancialTrendsProps {
   yearlySummary: NormalizedYearlySummary | null;
@@ -94,8 +95,8 @@ export const FinancialTrends = ({
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => {
-            return `${context.dataset.label}: ${formatCurrencyLocal(context.parsed.y)}`;
+          label: (context: TooltipItem<'line'>) => {
+            return `${context.dataset.label}: ${formatCurrencyLocal(context.parsed.y ?? 0)}`;
           },
         },
       },
@@ -122,7 +123,7 @@ export const FinancialTrends = ({
           font: {
             size: 12,
           },
-          callback: (value: any) => formatCurrencyLocal(value),
+          callback: (value: string | number) => formatCurrencyLocal(Number(value)),
         },
       },
     },

@@ -1,5 +1,5 @@
 import { Commission } from '../../types';
-import { FinancialTransaction, CategoryBreakdown } from '../../types/financial';
+import { FinancialTransaction, CategoryBreakdown, TransactionType } from '../../types/financial';
 
 /**
  * Result of a normalized calculation
@@ -160,16 +160,23 @@ export async function calculatePerformanceSummary(
   };
 }
 
+export type CategoryBreakdownTransaction = Pick<
+  FinancialTransaction,
+  'amount' | 'currency' | 'transaction_date' | 'category'
+> & {
+  type: TransactionType | string;
+};
+
 /**
  * Calculates a fully normalized Category Breakdown
  */
 export async function calculateCategoryBreakdown(
-  transactions: FinancialTransaction[],
+  transactions: CategoryBreakdownTransaction[],
   displayCurrency: string,
   type: 'income' | 'expense'
 ): Promise<NormalizedCategoryBreakdown[]> {
   const filteredTransactions = transactions.filter(t => t.type === type);
-  const categoryGroups: Record<string, FinancialTransaction[]> = {};
+  const categoryGroups: Record<string, CategoryBreakdownTransaction[]> = {};
   
   filteredTransactions.forEach(t => {
     if (!categoryGroups[t.category]) categoryGroups[t.category] = [];

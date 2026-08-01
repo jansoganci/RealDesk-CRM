@@ -30,18 +30,24 @@ import { Input } from '../../../components/ui/input';
 import { Textarea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Loader2 } from 'lucide-react';
-import type { FinancialTransaction, ExpenseCategory } from '../../../types/financial';
+import type { TFunction } from 'i18next';
+import type {
+  FinancialTransaction,
+  ExpenseCategory,
+  CreateFinancialTransactionInput,
+  UpdateFinancialTransactionInput,
+} from '../../../types/financial';
 
 interface TransactionDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   transaction?: FinancialTransaction | null;
   categories: ExpenseCategory[];
-  onSave: (data: any) => Promise<void>;
+  onSave: (data: CreateFinancialTransactionInput | UpdateFinancialTransactionInput) => Promise<void>;
   loading?: boolean;
 }
 
-const getTransactionSchema = (t: any) =>
+const getTransactionSchema = (t: TFunction) =>
   z.object({
     transaction_date: z.string().min(1, t('finance:validation.dateRequired')),
     type: z.enum(['income', 'expense'], {
@@ -100,8 +106,8 @@ export const TransactionDialog = ({
         currency: 'USD',
         description: transaction.description,
         notes: transaction.notes || '',
-        payment_method: transaction.payment_method as any,
-        payment_status: transaction.payment_status as any,
+        payment_method: transaction.payment_method ?? undefined,
+        payment_status: transaction.payment_status,
       });
     } else {
       // When creating new: use user preference or 'USD'

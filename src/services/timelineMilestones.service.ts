@@ -465,7 +465,7 @@ async function getMilestoneInOrg(milestoneId: string): Promise<DealMilestoneRowE
 }
 
 function normalizeFileName(name: string): string {
-  return name.replace(/[^\w.\-]+/g, '_');
+  return name.replace(/[^\w.-]+/g, '_');
 }
 
 export async function updateMilestoneStatus(

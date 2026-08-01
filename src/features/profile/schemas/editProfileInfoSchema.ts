@@ -15,7 +15,7 @@ export const getEditProfileInfoSchema = (t: TFunction) => {
       .or(z.literal('')),
     phone_number: z
       .string()
-      .regex(/^[\d\s\-\+\(\)]*$/, {
+      .regex(/^[\d\s\-+()]*$/, {
         message: t('profile:validation.phoneInvalid'),
       })
       .max(20, { message: t('profile:validation.phoneMax') })

@@ -25,6 +25,8 @@ import type {
   RecurringExpenseFilters,
   CreateRecurringExpenseInput,
   UpdateRecurringExpenseInput,
+  CreateFinancialTransactionInput,
+  UpdateFinancialTransactionInput,
 } from '../../types/financial';
 
 type TabValue = 'overview' | 'transactions' | 'analytics' | 'recurring' | 'commission';
@@ -177,7 +179,7 @@ export const FinanceDashboard = () => {
   };
 
   const handleSaveTransaction = async (
-    data: any,
+    data: CreateFinancialTransactionInput | UpdateFinancialTransactionInput,
     selected: FinancialTransaction | null
   ) => {
     await financeActions.handleSaveTransaction(data, selected);

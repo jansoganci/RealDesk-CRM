@@ -171,7 +171,7 @@ export async function getRateFromTry(
   }
 
   // 3. Try exact date match from DB
-  let { data, error } = await supabase
+  const { data, error } = await supabase
     .from('exchange_rates')
     .select('rate, rate_date, source')
     .eq('from_currency', 'TRY')

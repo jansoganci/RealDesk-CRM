@@ -9,7 +9,7 @@ export const getProfileSchema = (t: TFunction) => {
       .optional()
       .or(z.literal('')),
     phone_number: z.string()
-      .regex(/^[\d\s\-\+\(\)]+$/, {
+      .regex(/^[\d\s\-+()]+$/, {
         message: t('profile.validation.phoneInvalid', 'Invalid phone number format')
       })
       .min(7, { message: t('profile.validation.phoneMin', 'Phone number must be at least 7 characters') })

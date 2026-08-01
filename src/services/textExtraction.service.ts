@@ -362,9 +362,9 @@ export function parseContractFromText(text: string): ParsedContractData {
 
   // Tenant Phone - supports "LABEL\nVALUE" format
   const tenantPhonePatterns = [
-    /KİRACININ\s*TELEFONU\s*\n\s*([0-9\s\-\(\)]{10,})/i,
-    /KİRACININ\s*TELEFONU[\s:]+([0-9\s\-\(\)]{10,})/i,
-    /KİRACI\s*TEL(?:EFON)?[\s:]+([0-9\s\-\(\)]{10,})/i,
+    /KİRACININ\s*TELEFONU\s*\n\s*([0-9\s\-()]{10,})/i,
+    /KİRACININ\s*TELEFONU[\s:]+([0-9\s\-()]{10,})/i,
+    /KİRACI\s*TEL(?:EFON)?[\s:]+([0-9\s\-()]{10,})/i,
   ];
   for (const pattern of tenantPhonePatterns) {
     const match = text.match(pattern);
@@ -443,8 +443,8 @@ export function parseContractFromText(text: string): ParsedContractData {
 
   // Owner Phone
   const ownerPhonePatterns = [
-    /KİRAYA\s*VERENİN\s*TELEFONU\s*\n\s*([0-9\s\-\(\)]{10,})/i,
-    /(?:KİRAYA\s*VEREN|MAL\s*SAHİBİ)[\s\w]*?TEL(?:EFON)?[\s:]+([0-9\s\-\(\)]{10,})/i,
+    /KİRAYA\s*VERENİN\s*TELEFONU\s*\n\s*([0-9\s\-()]{10,})/i,
+    /(?:KİRAYA\s*VEREN|MAL\s*SAHİBİ)[\s\w]*?TEL(?:EFON)?[\s:]+([0-9\s\-()]{10,})/i,
   ];
   for (const pattern of ownerPhonePatterns) {
     const match = text.match(pattern);
@@ -525,7 +525,7 @@ export function parseContractFromText(text: string): ParsedContractData {
   // ============================================
 
   // Contract Number
-  const contractNumMatch = text.match(/(?:NUMARASI|SÖZLEŞME\s*NO)[\s:]*([A-Z0-9\-\/]+)/i);
+  const contractNumMatch = text.match(/(?:NUMARASI|SÖZLEŞME\s*NO)[\s:]*([A-Z0-9\-/]+)/i);
   if (contractNumMatch && contractNumMatch[1].trim()) {
     result.contract.contractNumber = contractNumMatch[1].trim();
     fieldsFound++;
@@ -535,13 +535,13 @@ export function parseContractFromText(text: string): ParsedContractData {
   // Supports both "LABEL: VALUE" and "LABEL\nVALUE" formats
   const monthlyRentPatterns = [
     // Format: "BİR AYLIK KİRA KARŞILIĞI\n20000" (DOCX extraction - label on separate line)
-    /BİR\s*AYLIK\s*KİRA\s*KARŞILIĞI\s*\n\s*([0-9\.\,\s]+)/i,
+    /BİR\s*AYLIK\s*KİRA\s*KARŞILIĞI\s*\n\s*([0-9.,\s]+)/i,
     // Format: "AYLIK KİRA KARŞILIĞI: 20000" or with RAKAM İLE
-    /BİR?\s*AYLIK\s*KİRA\s*KARŞILIĞI[\s\S]*?RAKAM\s*[İI]LE[\s:]*([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i,
+    /BİR?\s*AYLIK\s*KİRA\s*KARŞILIĞI[\s\S]*?RAKAM\s*[İI]LE[\s:]*([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i,
     // Format: "AYLIK KİRA: 20000"
-    /AYLIK\s*KİRA[\s:]+([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i,
+    /AYLIK\s*KİRA[\s:]+([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i,
     // Format: "KİRA BEDELİ: 20000"
-    /KİRA\s*BEDELİ[\s:]+([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i,
+    /KİRA\s*BEDELİ[\s:]+([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i,
   ];
   for (const pattern of monthlyRentPatterns) {
     const match = text.match(pattern);
@@ -556,7 +556,7 @@ export function parseContractFromText(text: string): ParsedContractData {
   }
 
   // Annual Rent (Bir Senelik Kira Karşılığı)
-  const annualRentMatch = text.match(/BİR\s*SENELİK\s*KİRA\s*KARŞILIĞI[\s\S]*?RAKAM\s*[İI]LE[\s:]*([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i);
+  const annualRentMatch = text.match(/BİR\s*SENELİK\s*KİRA\s*KARŞILIĞI[\s\S]*?RAKAM\s*[İI]LE[\s:]*([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i);
   if (annualRentMatch) {
     const amount = parseTurkishNumber(annualRentMatch[1]);
     if (amount && amount > 0) {
@@ -568,10 +568,10 @@ export function parseContractFromText(text: string): ParsedContractData {
   // Deposit (Depozito) - supports "LABEL\nVALUE" format
   const depositPatterns = [
     // DOCX format: "DEPOZİTO\n20000"
-    /DEPOZİTO\s*\n\s*([0-9\.\,\s]+)/i,
+    /DEPOZİTO\s*\n\s*([0-9.,\s]+)/i,
     // Same line format
-    /DEPOZİTO[\s:]+([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i,
-    /TEMİNAT[\s:]+([0-9\.\,\s]+)\s*(?:TL|TRY|₺)?/i,
+    /DEPOZİTO[\s:]+([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i,
+    /TEMİNAT[\s:]+([0-9.,\s]+)\s*(?:TL|TRY|₺)?/i,
   ];
   for (const pattern of depositPatterns) {
     const match = text.match(pattern);
@@ -588,11 +588,11 @@ export function parseContractFromText(text: string): ParsedContractData {
   // Start Date (Kiranın Başlangıcı) - supports "LABEL\nVALUE" format
   const startDatePatterns = [
     // DOCX format: "KİRANIN BAŞLANGICI\n27.12.2025"
-    /KİRANIN\s*BAŞLANGICI\s*\n\s*(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
+    /KİRANIN\s*BAŞLANGICI\s*\n\s*(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
     // Same line format
-    /KİRANIN\s*BAŞLANGICI[\s:]+(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
-    /BAŞLANGIÇ\s*TARİHİ[\s:]+(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
-    /SÖZLEŞME\s*BAŞLANGIÇ[\s:]+(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
+    /KİRANIN\s*BAŞLANGICI[\s:]+(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
+    /BAŞLANGIÇ\s*TARİHİ[\s:]+(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
+    /SÖZLEŞME\s*BAŞLANGIÇ[\s:]+(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
   ];
   for (const pattern of startDatePatterns) {
     const match = text.match(pattern);
@@ -638,8 +638,8 @@ export function parseContractFromText(text: string): ParsedContractData {
   // End Date (if not calculated)
   if (!result.contract.endDate) {
     const endDatePatterns = [
-      /BİTİŞ\s*TARİHİ[\s:]*(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
-      /SÖZLEŞME\s*BİTİŞ[\s:]*(\d{1,2}[\./]\d{1,2}[\./]\d{2,4})/i,
+      /BİTİŞ\s*TARİHİ[\s:]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
+      /SÖZLEŞME\s*BİTİŞ[\s:]*(\d{1,2}[./]\d{1,2}[./]\d{2,4})/i,
     ];
     for (const pattern of endDatePatterns) {
       const match = text.match(pattern);

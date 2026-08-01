@@ -9,6 +9,8 @@ import {
   Legend,
   Tooltip,
 } from 'recharts';
+import type { PieLabelRenderProps } from 'recharts';
+import type { FinanceChartTooltipProps } from './chartTooltipTypes';
 import { Building2 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
@@ -91,17 +93,17 @@ export const CommissionByPropertyTypeComponent = ({
     },
   ];
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: FinanceChartTooltipProps) => {
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
           <p className="font-semibold text-gray-900 dark:text-slate-100">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-slate-300">
-            {formatMetric(data.value)}
+            {formatMetric(data.value ?? 0)}
           </p>
           <p className="text-xs text-gray-500 dark:text-slate-400">
-            {data.payload.percentage.toFixed(1)}%
+            {data.payload?.percentage?.toFixed(1)}%
           </p>
         </div>
       );
@@ -109,7 +111,14 @@ export const CommissionByPropertyTypeComponent = ({
     return null;
   };
 
-  const CustomLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
+  const CustomLabel = ({
+    cx,
+    cy,
+    midAngle = 0,
+    innerRadius,
+    outerRadius,
+    percent = 0,
+  }: PieLabelRenderProps) => {
     const RADIAN = Math.PI / 180;
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);

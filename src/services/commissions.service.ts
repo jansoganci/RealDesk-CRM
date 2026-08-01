@@ -14,6 +14,7 @@ import type {
 } from '../types';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
+import type { Json } from '../types/database.types';
 import {
   calculateCommission as calculateCommissionPure,
   calculateRentalCommission as calculateRentalCommissionPure,
@@ -56,7 +57,7 @@ class CommissionsService {
   }
 
   private async getBrokerSettings(_orgId: string, userId: string): Promise<BrokerSettings> {
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('user_preferences')
       .select(
         `
@@ -105,7 +106,7 @@ class CommissionsService {
     ytdRoyaltyDollar: number;
   }> {
     const startDate = this.getCurrentCapYearStart(anniversaryDate);
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('commissions')
       .select('broker_dollar, franchise_fee_amount')
       .eq('org_id', orgId)
@@ -179,14 +180,15 @@ class CommissionsService {
       `)
       .eq('org_id', orgId)
       .is('deleted_at', null)
-      .order('created_at', { ascending: false });
+      .order('created_at', { ascending: false })
+      .returns<CommissionWithProperty[]>();
 
     if (error) {
       console.error('Error fetching commissions with properties:', error);
       throw error;
     }
 
-    return (data || []) as CommissionWithProperty[];
+    return data ?? [];
   }
 
   /**
@@ -443,12 +445,12 @@ class CommissionsService {
     if (typeof closingDate === 'string' && closingDate.includes('T')) {
       closingDate = closingDate.slice(0, 10);
     }
-    const { data, error } = await (supabase as any).rpc('rpc_record_commission_and_close_deal', {
+    const { data, error } = await supabase.rpc('rpc_record_commission_and_close_deal', {
       p_commission: {
         ...commission,
         user_id: userId,
         closing_date: closingDate,
-      } as unknown as Record<string, unknown>,
+      } as Json,
     });
 
     if (error) {
@@ -466,7 +468,7 @@ class CommissionsService {
     const startDate = this.getCurrentCapYearStart(brokerSettings.cap_anniversary_date);
     const today = new Date().toISOString().slice(0, 10);
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('commissions')
       .select('id, deal_id, property_address, gross_commission, net_commission, broker_dollar, type, closing_date')
       .eq('org_id', orgId)
@@ -558,7 +560,7 @@ class CommissionsService {
     const from = (page - 1) * pageSize;
     const to = from + pageSize - 1;
 
-    let query = (supabase as any)
+    let query = supabase
       .from('commissions')
       .select('*', { count: 'exact' })
       .eq('org_id', orgId)
@@ -602,7 +604,7 @@ class CommissionsService {
       ? Math.ceil((new Date(`${capResetDate}T00:00:00`).getTime() - Date.now()) / (1000 * 60 * 60 * 24))
       : null;
 
-    const { data: recent, error } = await (supabase as any)
+    const { data: recent, error } = await supabase
       .from('commissions')
       .select('gross_commission, broker_dollar')
       .eq('org_id', orgId)
@@ -624,7 +626,7 @@ class CommissionsService {
         : 0;
 
     const historyStartDate = this.getCurrentCapYearStart(settings.cap_anniversary_date);
-    const { data: historyRowsRaw, error: historyError } = await (supabase as any)
+    const { data: historyRowsRaw, error: historyError } = await supabase
       .from('commissions')
       .select('id, closing_date, property_address, broker_dollar')
       .eq('org_id', orgId)
@@ -678,7 +680,7 @@ class CommissionsService {
     const settings = await this.getBrokerSettings(orgId, userId);
     const capContext = await this.getCapContext(orgId, userId, settings.cap_anniversary_date);
 
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('deals')
       .select('id, deal_type, deal_stage, projected_close_date, intended_offer_price, accepted_offer_price')
       .eq('org_id', orgId)
@@ -755,7 +757,7 @@ class CommissionsService {
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
     const orgId = await getActiveOrgId();
-    const { data, error } = await (supabase as any)
+    const { data, error } = await supabase
       .from('commissions')
       .select('*')
       .eq('org_id', orgId)

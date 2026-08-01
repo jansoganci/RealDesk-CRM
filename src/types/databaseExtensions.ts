@@ -1,7 +1,18 @@
 import type { Database, Json } from './database.types';
+import type { Database as FullDatabase } from './database';
 
 type DealRow = Database['public']['Tables']['deals']['Row'];
 type OfferNegotiationRow = Database['public']['Tables']['offer_negotiations']['Row'];
+
+type ExtendedTables = Pick<
+  FullDatabase['public']['Tables'],
+  'commissions' | 'user_preferences'
+>;
+
+type ExtendedFunctions = Pick<
+  FullDatabase['public']['Functions'],
+  'rpc_record_commission_and_close_deal'
+>;
 
 export type RpcConvertLeadToDealArgs = {
   p_deal: Json;
@@ -22,7 +33,8 @@ export type RpcConvertLeadToDealResult = {
  */
 export type AppDatabase = Database & {
   public: Database['public'] & {
-    Functions: Database['public']['Functions'] & {
+    Tables: Database['public']['Tables'] & ExtendedTables;
+    Functions: Database['public']['Functions'] & ExtendedFunctions & {
       rpc_convert_lead_to_deal: {
         Args: RpcConvertLeadToDealArgs;
         Returns: RpcConvertLeadToDealResult;

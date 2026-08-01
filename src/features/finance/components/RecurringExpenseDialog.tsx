@@ -31,6 +31,7 @@ import { Textarea } from '../../../components/ui/textarea';
 import { Button } from '../../../components/ui/button';
 import { Checkbox } from '../../../components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
+import type { TFunction } from 'i18next';
 import type {
   RecurringExpense,
   ExpenseCategory,
@@ -47,7 +48,7 @@ interface RecurringExpenseDialogProps {
   loading?: boolean;
 }
 
-const getRecurringExpenseSchema = (_t: any) =>
+const getRecurringExpenseSchema = (_t: TFunction) =>
   z.object({
     name: z.string().min(1, 'Name is required'),
     amount: z.coerce.number().positive('Amount must be greater than 0'),
@@ -112,7 +113,7 @@ export const RecurringExpenseDialog = ({
         end_date: recurringExpense.end_date || null,
         day_of_month: recurringExpense.day_of_month || null,
         vendor_name: recurringExpense.vendor_name || '',
-        payment_method: recurringExpense.payment_method as any,
+        payment_method: recurringExpense.payment_method ?? undefined,
         notes: recurringExpense.notes || '',
       });
     } else {

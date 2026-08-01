@@ -7,6 +7,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { AlertTriangle, CheckCircle2, TrendingUp } from 'lucide-react';
 import type { BudgetVsActual } from '../../../types/financial';
 import { COLORS } from '@/config/colors';
+import type { TooltipItem } from 'chart.js';
 
 interface BudgetComparisonProps {
   budgetComparison: BudgetVsActual[];
@@ -110,8 +111,8 @@ export const BudgetComparison = ({
       },
       tooltip: {
         callbacks: {
-          label: (context: any) => {
-            return `${context.dataset.label}: ${formatCurrency(context.parsed.y)}`;
+          label: (context: TooltipItem<'bar'>) => {
+            return `${context.dataset.label}: ${formatCurrency(context.parsed.y ?? 0)}`;
           },
         },
       },
@@ -140,7 +141,7 @@ export const BudgetComparison = ({
           font: {
             size: 12,
           },
-          callback: (value: any) => formatCurrency(value),
+          callback: (value: string | number) => formatCurrency(Number(value)),
         },
       },
     },

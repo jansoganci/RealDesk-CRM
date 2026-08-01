@@ -20,7 +20,57 @@ import type {
   TopCategory,
   CashFlowForecast,
   FinancialTransaction,
+  UpcomingRecurringExpense,
 } from '../../types/financial';
+
+interface PropertySoldRow {
+  created_at: string | null;
+  sold_at: string | null;
+}
+
+interface RentalContractWithProperty {
+  start_date: string | null;
+  property: { created_at: string | null } | null;
+}
+
+interface CommissionClientTypeRow {
+  type: string;
+  amount: number;
+  currency: string;
+  created_at: string;
+  property: {
+    buyer_name: string | null;
+  } | null;
+  contract: {
+    tenant_id: string | null;
+  } | null;
+}
+
+interface MarketingTransactionRow {
+  amount: number;
+  currency: string;
+  transaction_date: string;
+  created_at: string;
+  category: string;
+}
+
+interface InquiryRow {
+  id: string;
+  status: string | null;
+}
+
+interface InquiryMatchRow {
+  inquiry_id: string;
+  property_id: string | null;
+}
+
+interface MeetingPropertyRow {
+  property_id: string | null;
+}
+
+interface ContractPropertyRow {
+  property_id: string | null;
+}
 
 /**
  * Normalized versions of existing types
@@ -44,7 +94,7 @@ export interface NormalizedFinancialDashboard {
   income_by_category: NormalizedCategoryBreakdown[];
   expense_by_category: NormalizedCategoryBreakdown[];
   monthly_trends: MonthlyTrend[]; // Trends still use simple numbers for now as they are aggregates
-  upcoming_expenses: any[]; // Skip for now
+  upcoming_expenses: UpcomingRecurringExpense[]; // Skip for now
   pending_transactions_count: number;
 }
 
@@ -181,8 +231,8 @@ export const getFinancialDashboardNormalized = async (
     })(),
     calculateNormalizedSum(yearToDateTransactions.filter(t => t.type === 'income'), displayCurrency),
     calculateNormalizedSum(yearToDateTransactions.filter(t => t.type === 'expense'), displayCurrency),
-    calculateCategoryBreakdown(currentMonthTransactions as any, displayCurrency, 'income'),
-    calculateCategoryBreakdown(currentMonthTransactions as any, displayCurrency, 'expense'),
+    calculateCategoryBreakdown(currentMonthTransactions, displayCurrency, 'income'),
+    calculateCategoryBreakdown(currentMonthTransactions, displayCurrency, 'expense'),
   ]);
 
   // Inject metadata into breakdowns
@@ -550,7 +600,7 @@ export const getAverageDaysToClose = async (
 
     // Calculate days for sales
     if (salesData) {
-      salesData.forEach((property: any) => {
+      salesData.forEach((property: PropertySoldRow) => {
         if (property.created_at && property.sold_at) {
           const created = new Date(property.created_at);
           const sold = new Date(property.sold_at);
@@ -565,7 +615,7 @@ export const getAverageDaysToClose = async (
 
     // Calculate days for rentals
     if (contractsData) {
-      contractsData.forEach((contract: any) => {
+      contractsData.forEach((contract: RentalContractWithProperty) => {
         const property = contract.property;
         if (property && property.created_at && contract.start_date) {
           const created = new Date(property.created_at);
@@ -651,7 +701,8 @@ export const getCommissionByClientType = async (
       .eq('org_id', orgId)
       .is('deleted_at', null)
       .gte('created_at', startDate)
-      .lte('created_at', endDate);
+      .lte('created_at', endDate)
+      .returns<CommissionClientTypeRow[]>();
 
     if (commissionsError) {
       console.error('Error fetching commissions:', commissionsError);
@@ -673,11 +724,11 @@ export const getCommissionByClientType = async (
     }
 
     // Categorize commissions by client type
-    const ownerCommissions: any[] = [];
-    const tenantCommissions: any[] = [];
-    const buyerCommissions: any[] = [];
+    const ownerCommissions: CommissionClientTypeRow[] = [];
+    const tenantCommissions: CommissionClientTypeRow[] = [];
+    const buyerCommissions: CommissionClientTypeRow[] = [];
 
-    commissionsData.forEach((commission: any) => {
+    commissionsData.forEach((commission: CommissionClientTypeRow) => {
       const property = commission.property;
       const contract = commission.contract;
 
@@ -776,7 +827,7 @@ export const getMarketingROI = async (
     const commissions = await commissionsService.getByDateRange(startDate, endDate);
 
     // Calculate total marketing spend
-    const marketingTransactions = (transactionsData || []).map((t: any) => ({
+    const marketingTransactions = (transactionsData || []).map((t: MarketingTransactionRow) => ({
       amount: t.amount,
       currency: t.currency,
       created_at: t.transaction_date || t.created_at,
@@ -796,8 +847,8 @@ export const getMarketingROI = async (
     const byCategory = await Promise.all(
       marketingCategories.map(async (category) => {
         const categoryTransactions = (transactionsData || []).filter(
-          (t: any) => t.category === category
-        ).map((t: any) => ({
+          (t: MarketingTransactionRow) => t.category === category
+        ).map((t: MarketingTransactionRow) => ({
           amount: t.amount,
           currency: t.currency,
           created_at: t.transaction_date || t.created_at,
@@ -869,7 +920,7 @@ export const getConversionFunnelMetrics = async (
     }
 
     // Get inquiry matches to link inquiries to properties
-    const inquiryIds = (inquiriesData || []).map((i: any) => i.id);
+    const inquiryIds = (inquiriesData || []).map((i: InquiryRow) => i.id);
     const { data: inquiryMatchesData, error: matchesError } = await supabase
       .from('inquiry_matches')
       .select('inquiry_id, property_id')
@@ -912,7 +963,7 @@ export const getConversionFunnelMetrics = async (
     // Build maps for matching
     // Map inquiry_id -> property_ids (via inquiry_matches)
     const inquiryToProperties = new Map<string, Set<string>>();
-    (inquiryMatchesData || []).forEach((match: any) => {
+    (inquiryMatchesData || []).forEach((match: InquiryMatchRow) => {
       if (!inquiryToProperties.has(match.inquiry_id)) {
         inquiryToProperties.set(match.inquiry_id, new Set());
       }
@@ -922,17 +973,17 @@ export const getConversionFunnelMetrics = async (
     });
 
     // Get property IDs from meetings
-    const meetingPropertyIds = new Set((meetingsData || []).map((m: any) => m.property_id).filter(Boolean));
+    const meetingPropertyIds = new Set((meetingsData || []).map((m: MeetingPropertyRow) => m.property_id).filter(Boolean));
     
     // Get property IDs from contracts
-    const contractPropertyIds = new Set((contractsData || []).map((c: any) => c.property_id).filter(Boolean));
+    const contractPropertyIds = new Set((contractsData || []).map((c: ContractPropertyRow) => c.property_id).filter(Boolean));
 
     // Count inquiries that have appointments
     // An inquiry has an appointment if:
     // 1. It has a matched property that has a meeting, OR
     // 2. Its status is 'contacted' or 'closed' (indicates contact was made)
     let inquiriesWithAppointments = 0;
-    (inquiriesData || []).forEach((inquiry: any) => {
+    (inquiriesData || []).forEach((inquiry: InquiryRow) => {
       const inquiryProperties = inquiryToProperties.get(inquiry.id) || new Set();
       const hasMatchingMeeting = Array.from(inquiryProperties).some(propId => meetingPropertyIds.has(propId));
       const isContacted = inquiry.status === 'contacted' || inquiry.status === 'closed';
@@ -1012,7 +1063,7 @@ export const getTopCategoriesNormalized = async (
   }
 
   const transactions = data || [];
-  const normalizedBreakdown = await calculateCategoryBreakdown(transactions as any, displayCurrency, type);
+  const normalizedBreakdown = await calculateCategoryBreakdown(transactions, displayCurrency, type);
 
   // Get category metadata
   const categories = await getCategories(type);

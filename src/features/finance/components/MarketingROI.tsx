@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import type { FinanceChartTooltipProps } from './chartTooltipTypes';
 import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
@@ -80,17 +81,17 @@ export const MarketingROIComponent = ({
       color: cat.roi >= 0 ? COLORS.success.hex : COLORS.danger.hex,
     }));
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: FinanceChartTooltipProps) => {
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
           <p className="font-semibold text-gray-900 dark:text-slate-100">{data.name}</p>
           <p className="text-sm text-gray-600 dark:text-slate-300">
-            {t('finance:analytics.marketingSpend')}: {formatMetric(data.value)}
+            {t('finance:analytics.marketingSpend')}: {formatMetric(data.value ?? 0)}
           </p>
-          <p className={`text-xs font-medium ${data.payload.roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
-            ROI: {data.payload.roi >= 0 ? '+' : ''}{data.payload.roi.toFixed(1)}%
+          <p className={`text-xs font-medium ${(data.payload?.roi ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+            ROI: {(data.payload?.roi ?? 0) >= 0 ? '+' : ''}{(data.payload?.roi ?? 0).toFixed(1)}%
           </p>
         </div>
       );

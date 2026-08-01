@@ -5,6 +5,7 @@ import { Doughnut } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { TopCategory } from '../../../types/financial';
+import type { TooltipItem } from 'chart.js';
 
 interface TopCategoriesProps {
   topIncome: TopCategory[];
@@ -79,7 +80,7 @@ export const TopCategories = ({
         },
         tooltip: {
           callbacks: {
-            label: (context: any) => {
+            label: (context: TooltipItem<'doughnut'>) => {
               const label = context.label || '';
               const value = context.parsed || 0;
               return `${label}: ${formatCurrency(value)}`;

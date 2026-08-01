@@ -11,6 +11,7 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
+import type { FinanceChartTooltipProps } from './chartTooltipTypes';
 import { Target } from 'lucide-react';
 import type { ConversionFunnelMetrics } from '../../../services/finance/analytics.service';
 import { COLORS } from '@/config/colors';
@@ -82,14 +83,14 @@ export const ConversionFunnelComponent = ({
     },
   ];
 
-  const CustomTooltip = ({ active, payload }: any) => {
+  const CustomTooltip = ({ active, payload }: FinanceChartTooltipProps) => {
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
         <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
-          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.payload.name}</p>
+          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.payload?.name}</p>
           <p className="text-sm text-gray-600 dark:text-slate-300">
-            {t('finance:analytics.count')}: {data.payload.value}
+            {t('finance:analytics.count')}: {data.payload?.value}
           </p>
         </div>
       );
