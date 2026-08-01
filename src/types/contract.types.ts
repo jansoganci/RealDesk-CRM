@@ -40,8 +40,8 @@ export interface EncryptedOwner {
   id: string;
   user_id: string;
   name: string;
-  tax_id_encrypted: string;
-  tax_id_hash: string;
+  tc_encrypted: string;
+  tc_hash: string;
   routing_number_encrypted: string;
   account_number_encrypted: string;
   phone: string;
@@ -54,8 +54,8 @@ export interface EncryptedTenant {
   id: string;
   user_id: string;
   name: string;
-  tax_id_encrypted: string;
-  tax_id_hash: string;
+  tc_encrypted: string;
+  tc_hash: string;
   phone: string;
   email?: string;
   address: string;
@@ -195,8 +195,8 @@ export type { ContractFormData } from '@/features/contracts/schemas/contractForm
 export interface CreateContractAtomicParams {
   owner_data: {
     name: string;
-    tax_id_encrypted: string;
-    tax_id_hash: string;
+    tc_encrypted: string;
+    tc_hash: string;
     routing_number_encrypted: string;
     account_number_encrypted: string;
     phone: string;
@@ -204,8 +204,8 @@ export interface CreateContractAtomicParams {
   };
   tenant_data: {
     name: string;
-    tax_id_encrypted: string;
-    tax_id_hash: string;
+    tc_encrypted: string;
+    tc_hash: string;
     phone: string;
     email?: string;
     address: string;

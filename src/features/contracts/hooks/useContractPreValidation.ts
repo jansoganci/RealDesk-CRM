@@ -14,7 +14,7 @@
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import {
-  hashTaxId,
+  hashTaxIdServer,
   normalizePhone,
   checkDuplicateName,
   checkDataChanges,
@@ -56,8 +56,10 @@ export function useContractPreValidation(): UseContractPreValidationReturn {
   ): Promise<PreValidationResult> => {
 
     // Step 1: Hash Tax IDs for lookups
-    const ownerTaxIdHash = await hashTaxId(data.owner_tax_id);
-    const tenantTaxIdHash = await hashTaxId(data.tenant_tax_id);
+    const [ownerTaxIdHash, tenantTaxIdHash] = await Promise.all([
+      hashTaxIdServer(data.owner_tax_id),
+      hashTaxIdServer(data.tenant_tax_id),
+    ]);
 
     // Step 2: Check owner duplicate names
     toast.info(t('validation.checkingOwner'));

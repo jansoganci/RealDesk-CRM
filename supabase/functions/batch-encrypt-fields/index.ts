@@ -6,6 +6,7 @@ import {
   encryptV2,
   errorResponse,
   getFieldConfig,
+  hashTaxIdLegacy,
   isUuid,
   jsonResponse,
   SensitiveFieldError,
@@ -95,7 +96,12 @@ Deno.serve(async (req) => {
     for (const item of parsed.items) {
       try {
         const ciphertext = await encryptV2(item.plaintext, buildAad(parsed.orgId, item.entityType, item.field));
-        results.push({ requestId: item.requestId, ciphertext });
+        const lookupHash = item.field === 'tax_id' ? await hashTaxIdLegacy(item.plaintext) : undefined;
+        results.push({
+          requestId: item.requestId,
+          ciphertext,
+          ...(lookupHash ? { lookupHash, hashVersion: 'legacy-sha256' } : {}),
+        });
       } catch (error) {
         const safeError = asSensitiveError(error);
         throw new SensitiveFieldError(safeError.code, safeError.status, safeError.message, item.requestId);

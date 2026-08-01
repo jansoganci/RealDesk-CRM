@@ -5,9 +5,13 @@
  */
 
 import { supabase } from '@/config/supabase';
-import { encrypt, hashTaxId } from './encryption.service';
 import { normalizePhone } from './phone.service';
 import { normalizeAddress, generateFullAddress } from './address.service';
+import { getActiveOrgId } from '@/lib/orgHelpers';
+import {
+  batchEncryptSensitiveFields,
+  requireEncryptResult,
+} from './sensitiveFields.service';
 import type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
 import type { ContractCreationResult } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
@@ -35,15 +39,50 @@ export async function createContractWithEntities(
   userId: string
 ): Promise<ContractCreationResult> {
   try {
+    const orgId = await getActiveOrgId();
+    const encryptedFields = await batchEncryptSensitiveFields(orgId, [
+      {
+        requestId: 'owner-tax-id',
+        entityType: 'property_owner',
+        field: 'tax_id',
+        plaintext: formData.owner_tax_id,
+      },
+      {
+        requestId: 'owner-routing-number',
+        entityType: 'property_owner',
+        field: 'routing_number',
+        plaintext: formData.owner_routing_number.replace(/\D/g, ''),
+      },
+      {
+        requestId: 'owner-account-number',
+        entityType: 'property_owner',
+        field: 'account_number',
+        plaintext: formData.owner_account_number.replace(/[\s-]/g, ''),
+      },
+      {
+        requestId: 'tenant-tax-id',
+        entityType: 'tenant',
+        field: 'tax_id',
+        plaintext: formData.tenant_tax_id,
+      },
+    ]);
+    const ownerTax = requireEncryptResult(encryptedFields, 'owner-tax-id');
+    const ownerRouting = requireEncryptResult(encryptedFields, 'owner-routing-number');
+    const ownerAccount = requireEncryptResult(encryptedFields, 'owner-account-number');
+    const tenantTax = requireEncryptResult(encryptedFields, 'tenant-tax-id');
+    if (!ownerTax.lookupHash || !tenantTax.lookupHash) {
+      throw new Error('TAX_ID_HASH_MISSING');
+    }
+
     // ========================================================================
     // Prepare owner data (US Format)
     // ========================================================================
     const ownerData = {
       name: formData.owner_name,
-      tax_id_encrypted: await encrypt(formData.owner_tax_id),
-      tax_id_hash: await hashTaxId(formData.owner_tax_id),
-      routing_number_encrypted: await encrypt(formData.owner_routing_number.replace(/\D/g, '')),
-      account_number_encrypted: await encrypt(formData.owner_account_number.replace(/[\s-]/g, '')),
+      tc_encrypted: ownerTax.ciphertext,
+      tc_hash: ownerTax.lookupHash,
+      routing_number_encrypted: ownerRouting.ciphertext,
+      account_number_encrypted: ownerAccount.ciphertext,
       phone: normalizePhone(formData.owner_phone),
       email: formData.owner_email || null
     };
@@ -53,8 +92,8 @@ export async function createContractWithEntities(
     // ========================================================================
     const tenantData = {
       name: formData.tenant_name,
-      tax_id_encrypted: await encrypt(formData.tenant_tax_id),
-      tax_id_hash: await hashTaxId(formData.tenant_tax_id),
+      tc_encrypted: tenantTax.ciphertext,
+      tc_hash: tenantTax.lookupHash,
       phone: normalizePhone(formData.tenant_phone),
       email: formData.tenant_email || null,
       address: formData.tenant_address

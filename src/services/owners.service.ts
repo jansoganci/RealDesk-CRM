@@ -3,7 +3,12 @@ import type { PropertyOwner, PropertyOwnerInsert, PropertyOwnerUpdate } from '..
 import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
-import { encrypt, isValidRoutingNumber, isValidAccountNumber } from './encryption.service';
+import { isValidRoutingNumber, isValidAccountNumber } from './encryption.service';
+import {
+  batchEncryptSensitiveFields,
+  requireEncryptResult,
+  type EncryptFieldRequest,
+} from './sensitiveFields.service';
 
 interface OwnerWithPropertyCount extends PropertyOwner {
   property_count: number;
@@ -35,6 +40,7 @@ async function buildInsertPayload(
     user_id: userId,
     org_id: orgId,
   };
+  const fields: EncryptFieldRequest[] = [];
 
   const r = routing_number?.trim();
   if (r) {
@@ -42,7 +48,12 @@ async function buildInsertPayload(
     if (!isValidRoutingNumber(digits)) {
       throw new Error('INVALID_ROUTING_NUMBER');
     }
-    payload.routing_number_encrypted = await encrypt(digits);
+    fields.push({
+      requestId: 'owner-routing-number',
+      entityType: 'property_owner',
+      field: 'routing_number',
+      plaintext: digits,
+    });
   }
 
   const a = account_number?.trim();
@@ -51,15 +62,31 @@ async function buildInsertPayload(
       throw new Error('INVALID_ACCOUNT_NUMBER');
     }
     const normalized = a.replace(/[\s-]/g, '');
-    payload.account_number_encrypted = await encrypt(normalized);
+    fields.push({
+      requestId: 'owner-account-number',
+      entityType: 'property_owner',
+      field: 'account_number',
+      plaintext: normalized,
+    });
+  }
+
+  if (fields.length > 0) {
+    const encrypted = await batchEncryptSensitiveFields(orgId, fields);
+    if (fields.some((field) => field.requestId === 'owner-routing-number')) {
+      payload.routing_number_encrypted = requireEncryptResult(encrypted, 'owner-routing-number').ciphertext;
+    }
+    if (fields.some((field) => field.requestId === 'owner-account-number')) {
+      payload.account_number_encrypted = requireEncryptResult(encrypted, 'owner-account-number').ciphertext;
+    }
   }
 
   return payload;
 }
 
-async function buildUpdatePayload(owner: OwnerUpdatePayload): Promise<PropertyOwnerUpdate> {
+async function buildUpdatePayload(owner: OwnerUpdatePayload, orgId: string): Promise<PropertyOwnerUpdate> {
   const { routing_number, account_number, ...rest } = owner;
   const payload: PropertyOwnerUpdate = { ...rest };
+  const fields: EncryptFieldRequest[] = [];
 
   const r = routing_number?.trim();
   if (r) {
@@ -67,7 +94,12 @@ async function buildUpdatePayload(owner: OwnerUpdatePayload): Promise<PropertyOw
     if (!isValidRoutingNumber(digits)) {
       throw new Error('INVALID_ROUTING_NUMBER');
     }
-    payload.routing_number_encrypted = await encrypt(digits);
+    fields.push({
+      requestId: 'owner-routing-number',
+      entityType: 'property_owner',
+      field: 'routing_number',
+      plaintext: digits,
+    });
   }
 
   const a = account_number?.trim();
@@ -76,7 +108,22 @@ async function buildUpdatePayload(owner: OwnerUpdatePayload): Promise<PropertyOw
       throw new Error('INVALID_ACCOUNT_NUMBER');
     }
     const normalized = a.replace(/[\s-]/g, '');
-    payload.account_number_encrypted = await encrypt(normalized);
+    fields.push({
+      requestId: 'owner-account-number',
+      entityType: 'property_owner',
+      field: 'account_number',
+      plaintext: normalized,
+    });
+  }
+
+  if (fields.length > 0) {
+    const encrypted = await batchEncryptSensitiveFields(orgId, fields);
+    if (fields.some((field) => field.requestId === 'owner-routing-number')) {
+      payload.routing_number_encrypted = requireEncryptResult(encrypted, 'owner-routing-number').ciphertext;
+    }
+    if (fields.some((field) => field.requestId === 'owner-account-number')) {
+      payload.account_number_encrypted = requireEncryptResult(encrypted, 'owner-account-number').ciphertext;
+    }
   }
 
   return payload;
@@ -120,7 +167,8 @@ export const ownersService = {
   },
 
   async update(id: string, owner: OwnerUpdatePayload) {
-    const payload = await buildUpdatePayload(owner);
+    const orgId = await getActiveOrgId();
+    const payload = await buildUpdatePayload(owner, orgId);
     return updateRow('property_owners', id, payload);
   },
 

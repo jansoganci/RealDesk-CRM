@@ -95,6 +95,21 @@ export type {
 
 // Contract Management Services (V1)
 export { encrypt, decrypt, hashTaxId, isValidTaxId, isValidRoutingNumber, isValidAccountNumber, generateEncryptionKey } from '../services/encryption.service';
+export {
+  batchEncryptSensitiveFields,
+  batchDecryptSensitiveFields,
+  hashTaxIdServer,
+  requireEncryptResult,
+  requireDecryptResult,
+} from '../services/sensitiveFields.service';
+export type {
+  EncryptFieldRequest,
+  EncryptFieldResult,
+  DecryptFieldRequest,
+  DecryptFieldResult,
+  SensitiveEntityType,
+  SensitiveField,
+} from '../services/sensitiveFields.service';
 export { normalizePhone, formatPhoneForDisplay, isValidPhone, detectPhoneFormat, formatPhoneForStorage } from '../services/phone.service';
 export { normalizeAddress, generateFullAddress, parseAddress, isValidAddress, addressesMatch, getShortAddress, US_STATES, isValidZipCode, isValidState } from '../services/address.service';
 export type { AddressComponents } from '../services/address.service';

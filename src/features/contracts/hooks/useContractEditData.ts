@@ -6,7 +6,11 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/config/supabase';
-import { decrypt } from '@/services/encryption.service';
+import {
+  batchDecryptSensitiveFields,
+  requireDecryptResult,
+  type DecryptFieldRequest,
+} from '@/lib/serviceProxy';
 import type { ContractFormData } from '../schemas/contractForm.schema';
 
 // ============================================================================
@@ -35,7 +39,8 @@ interface OwnerWithEncryption {
   phone?: string;
   email?: string;
   tc_encrypted?: string;
-  iban_encrypted?: string;
+  routing_number_encrypted?: string;
+  account_number_encrypted?: string;
 }
 
 interface TenantWithEncryption {
@@ -166,21 +171,52 @@ export function useContractEditData(contractId: string | undefined): UseContract
       let tenantTC = '';
 
       try {
+        const decryptRequests: DecryptFieldRequest[] = [];
         if (owner.tc_encrypted) {
-          ownerTC = await decrypt(owner.tc_encrypted);
+          decryptRequests.push({
+            requestId: 'owner-tax-id',
+            entityType: 'property_owner',
+            entityId: owner.id,
+            field: 'tax_id',
+          });
         }
-        if (owner.iban_encrypted) {
-          const bankPayload = await decrypt(owner.iban_encrypted);
-          const pipe = bankPayload.indexOf('|');
-          if (pipe >= 0) {
-            ownerRouting = bankPayload.slice(0, pipe);
-            ownerAccount = bankPayload.slice(pipe + 1);
-          } else {
-            ownerAccount = bankPayload;
-          }
+        if (owner.routing_number_encrypted) {
+          decryptRequests.push({
+            requestId: 'owner-routing-number',
+            entityType: 'property_owner',
+            entityId: owner.id,
+            field: 'routing_number',
+          });
+        }
+        if (owner.account_number_encrypted) {
+          decryptRequests.push({
+            requestId: 'owner-account-number',
+            entityType: 'property_owner',
+            entityId: owner.id,
+            field: 'account_number',
+          });
         }
         if (contract.tenant.tc_encrypted) {
-          tenantTC = await decrypt(contract.tenant.tc_encrypted);
+          decryptRequests.push({
+            requestId: 'tenant-tax-id',
+            entityType: 'tenant',
+            entityId: contract.tenant.id,
+            field: 'tax_id',
+          });
+        }
+
+        const decrypted = await batchDecryptSensitiveFields(decryptRequests);
+        if (owner.tc_encrypted) {
+          ownerTC = requireDecryptResult(decrypted, 'owner-tax-id');
+        }
+        if (owner.routing_number_encrypted) {
+          ownerRouting = requireDecryptResult(decrypted, 'owner-routing-number');
+        }
+        if (owner.account_number_encrypted) {
+          ownerAccount = requireDecryptResult(decrypted, 'owner-account-number');
+        }
+        if (contract.tenant.tc_encrypted) {
+          tenantTC = requireDecryptResult(decrypted, 'tenant-tax-id');
         }
       } catch (decryptError) {
         console.error('Decryption error:', decryptError);
