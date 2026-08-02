@@ -14,6 +14,8 @@ module.exports = {
     '*.config.*',
     'supabase/functions',
     'scripts/**',
+    'ds-bundle',
+    '.ds-sync',
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
