@@ -76,7 +76,7 @@ export const ReviewStep = ({
           <div className="flex items-center gap-2 mb-6">
             <CheckCircle className="h-6 w-6 text-green-600" />
             <h3 className="text-xl font-semibold">{t('import.sections.extractedData')}</h3>
-            <span className="text-sm text-gray-500">
+            <span className="text-sm text-muted-foreground">
               {t('import.fieldsFilled', { extracted: extractedCount, total: totalFields })}
             </span>
           </div>

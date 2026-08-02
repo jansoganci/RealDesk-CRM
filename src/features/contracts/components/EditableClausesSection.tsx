@@ -375,11 +375,11 @@ function ClauseEditor({
   // Editing mode
   if (clause.isEditing) {
     return (
-      <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-4">
+      <div className="rounded-lg border border-primary/30 bg-primary p-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
             {clauseLabel && (
-              <span className="text-sm font-semibold text-blue-900">
+              <span className="text-sm font-semibold text-primary">
                 {clauseLabel}
               </span>
             )}
@@ -413,11 +413,11 @@ function ClauseEditor({
 
   // View mode
   return (
-    <div className="rounded-lg border p-4 hover:border-gray-300 transition-colors">
+    <div className="rounded-lg border p-4 hover:border-border transition-colors">
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           {clauseLabel && (
-            <span className="text-sm font-semibold text-gray-700">
+            <span className="text-sm font-semibold text-foreground/80">
               {clauseLabel}
             </span>
           )}
@@ -442,7 +442,7 @@ function ClauseEditor({
         </div>
       </div>
 
-      <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-wrap">
+      <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
         {clause.content}
       </p>
     </div>

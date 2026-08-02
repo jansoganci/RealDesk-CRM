@@ -16,11 +16,11 @@ export function ContractImportBanner({ onImportClick, disabled }: ContractImport
   const { t } = useTranslation(['contracts', 'common']);
 
   return (
-    <div className="rounded-lg border-2 border-blue-200 bg-gradient-to-r from-blue-50 to-amber-50 p-4 dark:border-blue-800/80 dark:from-blue-950/40 dark:to-amber-950/40">
+    <div className="rounded-lg border-2 border-primary/30 bg-gradient-to-r from-primary to-amber-50 p-4 dark:border-primary/30 dark:from-primary/40 dark:to-amber-950/40">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold text-foreground">
-            <FileInput className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            <FileInput className="h-5 w-5 text-primary dark:text-primary" />
             {t('import.banner.title')}
           </h3>
           <p className="text-sm text-muted-foreground">
@@ -31,7 +31,7 @@ export function ContractImportBanner({ onImportClick, disabled }: ContractImport
           onClick={onImportClick}
           disabled={disabled}
           title={disabled ? t('common:readOnlyMode') : undefined}
-          className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 whitespace-nowrap"
+          className="bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary whitespace-nowrap"
         >
           <FileInput className="h-4 w-4 mr-2" />
           {t('import.banner.button')}

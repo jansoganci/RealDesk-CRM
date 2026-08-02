@@ -30,9 +30,9 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
       </CardHeader>
       <CardContent className="space-y-4">
         {'propertyAddress' in parsedData && parsedData.propertyAddress && (
-          <Alert className="border-blue-200 bg-blue-50">
-            <Info className="h-4 w-4 text-blue-600" />
-            <AlertDescription className="text-blue-800">
+          <Alert className="border-primary/30 bg-primary">
+            <Info className="h-4 w-4 text-primary" />
+            <AlertDescription className="text-primary">
               <strong>{t('import.foundAddress')}:</strong> {parsedData.propertyAddress}
             </AlertDescription>
           </Alert>

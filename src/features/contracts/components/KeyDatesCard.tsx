@@ -53,7 +53,7 @@ export function KeyDatesCard({
   nodes.push({ key: 'closing', label: t('purchaseWizard.step9.keyDates.closingDate'), value: closingDate });
 
   return (
-    <Card className="border-gray-200/80 shadow-sm">
+    <Card className="border-border/80 shadow-sm">
       <CardHeader>
         <CardTitle className="text-base">{t('purchaseWizard.step9.keyDates.title')}</CardTitle>
       </CardHeader>

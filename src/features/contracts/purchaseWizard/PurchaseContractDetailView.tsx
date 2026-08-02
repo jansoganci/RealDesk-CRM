@@ -121,7 +121,7 @@ export function PurchaseContractDetailView({ contractId }: PurchaseContractDetai
 
   return (
     <div className="space-y-6">
-      <Card className="border-gray-200/80 shadow-sm">
+      <Card className="border-border/80 shadow-sm">
         <CardHeader>
           <CardTitle className="text-lg">{t('purchaseContractDetail.title')}</CardTitle>
         </CardHeader>

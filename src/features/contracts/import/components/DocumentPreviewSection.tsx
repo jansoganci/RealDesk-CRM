@@ -22,12 +22,12 @@ export function DocumentPreviewSection({ uploadedFile, extractedText }: Document
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-100 rounded flex items-center justify-center flex-shrink-0">
-                <FileText className="h-6 w-6 text-blue-600" />
+              <div className="w-12 h-12 bg-primary rounded flex items-center justify-center flex-shrink-0">
+                <FileText className="h-6 w-6 text-primary" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="font-medium text-sm truncate">{uploadedFile.name}</p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-muted-foreground">
                   {(uploadedFile.size / 1024 / 1024).toFixed(2)} MB
                 </p>
               </div>

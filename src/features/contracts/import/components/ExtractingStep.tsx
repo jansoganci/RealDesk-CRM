@@ -18,23 +18,23 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
   return (
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-6">
       {/* Big Animated Spinner */}
-      <Loader2 className="h-32 w-32 text-blue-600 animate-spin mb-8" />
+      <Loader2 className="h-32 w-32 text-primary animate-spin mb-8" />
 
       {/* Status Text */}
-      <h2 className="text-3xl font-semibold text-gray-800 mb-4">
+      <h2 className="text-3xl font-semibold text-foreground mb-4">
         {status}
       </h2>
 
       {/* Progress Bar */}
-      <div className="w-full max-w-md h-4 bg-gray-200 rounded-full overflow-hidden mb-6">
+      <div className="w-full max-w-md h-4 bg-muted rounded-full overflow-hidden mb-6">
         <div
-          className="h-full bg-gradient-to-r from-blue-500 to-blue-600 transition-all duration-500 ease-out"
+          className="h-full bg-gradient-to-r from-primary to-primary transition-all duration-500 ease-out"
           style={{ width: `${progress}%` }}
         />
       </div>
 
       {/* Progress Percentage */}
-      <p className="text-xl text-gray-600 mb-12">
+      <p className="text-xl text-muted-foreground mb-12">
         {t('import.progress.completed', { progress })}
       </p>
 
@@ -50,20 +50,20 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
           <div
             className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-colors",
-              progress >= 33 ? "bg-blue-100" : "bg-gray-100"
+              progress >= 33 ? "bg-primary" : "bg-muted"
             )}
           >
             <FileText
               className={cn(
                 "h-8 w-8 transition-colors",
-                progress >= 33 ? "text-blue-600" : "text-gray-400"
+                progress >= 33 ? "text-primary" : "text-muted-foreground/70"
               )}
             />
           </div>
           <span
             className={cn(
               "text-sm font-medium transition-colors",
-              progress >= 33 ? "text-blue-600" : "text-gray-500"
+              progress >= 33 ? "text-primary" : "text-muted-foreground"
             )}
           >
             {t('import.progressSteps.uploaded')}
@@ -80,20 +80,20 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
           <div
             className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-colors",
-              progress >= 66 ? "bg-blue-100" : "bg-gray-100"
+              progress >= 66 ? "bg-primary" : "bg-muted"
             )}
           >
             <Search
               className={cn(
                 "h-8 w-8 transition-colors",
-                progress >= 66 ? "text-blue-600" : "text-gray-400"
+                progress >= 66 ? "text-primary" : "text-muted-foreground/70"
               )}
             />
           </div>
           <span
             className={cn(
               "text-sm font-medium transition-colors",
-              progress >= 66 ? "text-blue-600" : "text-gray-500"
+              progress >= 66 ? "text-primary" : "text-muted-foreground"
             )}
           >
             {t('import.progressSteps.extracting')}
@@ -110,20 +110,20 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
           <div
             className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-colors",
-              progress >= 100 ? "bg-green-100" : "bg-gray-100"
+              progress >= 100 ? "bg-green-100" : "bg-muted"
             )}
           >
             <CheckCircle
               className={cn(
                 "h-8 w-8 transition-colors",
-                progress >= 100 ? "text-green-600" : "text-gray-400"
+                progress >= 100 ? "text-green-600" : "text-muted-foreground/70"
               )}
             />
           </div>
           <span
             className={cn(
               "text-sm font-medium transition-colors",
-              progress >= 100 ? "text-green-600" : "text-gray-500"
+              progress >= 100 ? "text-green-600" : "text-muted-foreground"
             )}
           >
             {t('import.progressSteps.ready')}
@@ -132,7 +132,7 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
       </div>
 
       {/* Wait message */}
-      <p className="mt-12 text-sm text-gray-500">
+      <p className="mt-12 text-sm text-muted-foreground">
         {t('import.waitMessage')}
       </p>
     </div>

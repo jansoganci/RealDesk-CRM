@@ -196,7 +196,7 @@ export function PurchaseStep8Legal() {
       </section>
 
       <section className="grid gap-3 md:grid-cols-3">
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader>
             <CardTitle className="text-sm">{t('purchaseWizard.step8.infoCards.buyerDefault.title')}</CardTitle>
           </CardHeader>
@@ -204,7 +204,7 @@ export function PurchaseStep8Legal() {
             {t('purchaseWizard.step8.infoCards.buyerDefault.body')}
           </CardContent>
         </Card>
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader>
             <CardTitle className="text-sm">{t('purchaseWizard.step8.infoCards.sellerDefault.title')}</CardTitle>
           </CardHeader>
@@ -212,7 +212,7 @@ export function PurchaseStep8Legal() {
             {t('purchaseWizard.step8.infoCards.sellerDefault.body')}
           </CardContent>
         </Card>
-        <Card className="border-gray-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader>
             <CardTitle className="text-sm">{t('purchaseWizard.step8.infoCards.disputeResolution.title')}</CardTitle>
           </CardHeader>

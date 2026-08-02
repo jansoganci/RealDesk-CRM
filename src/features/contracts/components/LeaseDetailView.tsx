@@ -165,7 +165,7 @@ export function LeaseDetailView({ contractId }: LeaseDetailViewProps) {
         ) : expiringSoon ? (
           <Badge className="bg-amber-500 text-white">{t('leaseDetail.status.expiringSoon')}</Badge>
         ) : (
-          <Badge className="bg-emerald-600 text-white">{t('leaseDetail.status.active')}</Badge>
+          <Badge className="bg-success text-white">{t('leaseDetail.status.active')}</Badge>
         )}
       </div>
 
@@ -274,7 +274,7 @@ export function LeaseDetailView({ contractId }: LeaseDetailViewProps) {
               {isPdfStale ? (
                 <Badge className="bg-amber-500 text-white">{t('leaseDetail.documents.stale')}</Badge>
               ) : contract.pdf_generated_at ? (
-                <Badge className="bg-emerald-600 text-white">{t('leaseDetail.documents.upToDate')}</Badge>
+                <Badge className="bg-success text-white">{t('leaseDetail.documents.upToDate')}</Badge>
               ) : (
                 <Badge variant="secondary">{t('leaseDetail.documents.notGenerated')}</Badge>
               )}

@@ -67,7 +67,7 @@ export function OfferHistoryTimeline({ contractId }: OfferHistoryTimelineProps) 
       {sorted.map((row) => {
         const rowAny = row as OfferRound & { pdf_path?: string | null };
         return (
-          <Card key={row.id} className="border-gray-200/80 shadow-sm">
+          <Card key={row.id} className="border-border/80 shadow-sm">
             <CardContent className="space-y-2 pt-4">
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="outline">{t('purchaseWizard.step9.offerHistory.round', { n: row.round_number })}</Badge>

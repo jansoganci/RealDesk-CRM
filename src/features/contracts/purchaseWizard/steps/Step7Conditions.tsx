@@ -351,7 +351,7 @@ export function Step7Conditions() {
         )}
       </section>
 
-      <Card className="border-gray-200/80 shadow-sm">
+      <Card className="border-border/80 shadow-sm">
         <CardHeader>
           <CardTitle className="text-base">{t('purchaseWizard.step7.activeContingenciesTitle')}</CardTitle>
         </CardHeader>

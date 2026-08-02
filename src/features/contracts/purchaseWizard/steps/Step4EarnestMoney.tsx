@@ -24,7 +24,7 @@ export function Step4EarnestMoney() {
         <p className="text-sm text-muted-foreground">{t('purchaseWizard.step4.description')}</p>
       </div>
 
-      <Alert className="border-blue-200 bg-blue-50/80 text-blue-950 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-100">
+      <Alert className="border-primary/30 bg-primary text-primary dark:border-primary/30 dark:bg-primary dark:text-primary">
         <Info className="h-4 w-4" aria-hidden />
         <AlertTitle>{t('purchaseWizard.step4.infoTitle')}</AlertTitle>
         <AlertDescription>{t('purchaseWizard.step4.infoBody')}</AlertDescription>

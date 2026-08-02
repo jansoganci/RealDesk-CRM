@@ -32,23 +32,23 @@ export const ContractImportPage = () => {
       <PageContainer>
       {/* Progress Indicator (Simple) */}
       {currentStep !== 'upload' && (
-        <div className="mb-8 flex items-center gap-2 text-sm text-gray-600">
-          <span className={currentStep === 'extracting' || currentStep === 'review' || currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
+        <div className="mb-8 flex items-center gap-2 text-sm text-muted-foreground">
+          <span className={currentStep === 'extracting' || currentStep === 'review' || currentStep === 'success' ? 'text-primary font-medium' : ''}>
             {t('import.progress.upload')}
           </span>
           <span>→</span>
-          <span className={currentStep === 'review' || currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
+          <span className={currentStep === 'review' || currentStep === 'success' ? 'text-primary font-medium' : ''}>
             {t('import.progress.review')}
           </span>
           <span>→</span>
-          <span className={currentStep === 'success' ? 'text-blue-600 font-medium' : ''}>
+          <span className={currentStep === 'success' ? 'text-primary font-medium' : ''}>
             {t('import.progress.complete')}
           </span>
         </div>
       )}
 
       {/* Step Content */}
-      <div className="bg-white rounded-lg shadow-sm border">
+      <div className="bg-card rounded-lg shadow-sm border">
         {currentStep === 'upload' && (
           <UploadStep
             onFileSelected={async (file) => {

@@ -30,7 +30,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
   if (!createdData) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-500">{t('import.noData')}</p>
+        <p className="text-muted-foreground">{t('import.noData')}</p>
       </div>
     );
   }
@@ -52,34 +52,34 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
       </div>
 
       {/* Success Message */}
-      <h2 className="text-4xl font-bold text-gray-900 mb-2">
+      <h2 className="text-4xl font-bold text-foreground mb-2">
         {t('import.success.title')}
       </h2>
-      <p className="text-xl text-gray-600 mb-12">
+      <p className="text-xl text-muted-foreground mb-12">
         {t('import.success.description')}
       </p>
 
       {/* Summary Card */}
       <Card className="w-full max-w-2xl mb-8 border-2 border-green-100 bg-green-50/30">
         <CardContent className="pt-6">
-          <h3 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+          <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
             <FileCheck className="h-5 w-5 text-green-600" />
             {t('import.success.createdRecords')}
           </h3>
 
           <div className="space-y-3">
             {/* Owner */}
-            <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
               <div className="flex-shrink-0">
                 <User className="h-5 w-5 text-green-600 mt-0.5" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   {t('import.success.owner')}: {createdData.owner_name}
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_owner ? "text-green-600" : "text-blue-600"
+                  createdData.created_owner ? "text-green-600" : "text-primary"
                 )}>
                   {createdData.created_owner ? t('create.toasts.ownerCreated') : t('create.toasts.ownerUsed')}
                 </p>
@@ -87,17 +87,17 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Tenant */}
-            <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
               <div className="flex-shrink-0">
                 <User className="h-5 w-5 text-green-600 mt-0.5" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   {t('import.success.tenant')}: {createdData.tenant_name}
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_tenant ? "text-green-600" : "text-blue-600"
+                  createdData.created_tenant ? "text-green-600" : "text-primary"
                 )}>
                   {createdData.created_tenant ? t('create.toasts.tenantCreated') : t('create.toasts.tenantUsed')}
                 </p>
@@ -105,17 +105,17 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Property */}
-            <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
               <div className="flex-shrink-0">
                 <Building className="h-5 w-5 text-green-600 mt-0.5" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   {t('import.success.property')}: {createdData.property_address}
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_property ? "text-green-600" : "text-blue-600"
+                  createdData.created_property ? "text-green-600" : "text-primary"
                 )}>
                   {createdData.created_property ? t('create.toasts.propertyCreated') : t('create.toasts.propertyUsed')}
                 </p>
@@ -123,12 +123,12 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Document Saved */}
-            <div className="flex items-start gap-3 p-3 bg-white rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
               <div className="flex-shrink-0">
                 <FileCheck className="h-5 w-5 text-green-600 mt-0.5" />
               </div>
               <div className="flex-1">
-                <p className="font-medium text-gray-900">
+                <p className="font-medium text-foreground">
                   {t('import.success.documentFile')}
                 </p>
                 <p className="text-sm text-green-600">
@@ -147,7 +147,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
           onClick={onImportAnother}
           variant="outline"
           size="lg"
-          className="flex-1 h-14 text-base border-2 border-blue-300 hover:bg-blue-50 hover:border-blue-500"
+          className="flex-1 h-14 text-base border-2 border-primary/30 hover:bg-primary hover:border-primary/30"
         >
           <FileCheck className="mr-2 h-5 w-5" />
           {t('import.success.createAnother')}
@@ -157,7 +157,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
         <Button
           onClick={() => navigate(ROUTES.CONTRACTS)}
           size="lg"
-          className="flex-1 h-14 text-base bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+          className="flex-1 h-14 text-base bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary"
         >
           {t('import.success.viewContract')}
           <ArrowRight className="ml-2 h-5 w-5" />
@@ -165,7 +165,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
       </div>
 
       {/* Help Text */}
-      <p className="mt-8 text-sm text-gray-500 text-center whitespace-pre-line">
+      <p className="mt-8 text-sm text-muted-foreground text-center whitespace-pre-line">
         {t('import.success.helpText')}
       </p>
     </div>

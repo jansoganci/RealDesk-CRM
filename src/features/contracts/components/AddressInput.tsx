@@ -286,11 +286,11 @@ export function AddressInput({ form }: AddressInputProps) {
       </div>
 
       {/* Full Address Preview */}
-      <div className="p-4 bg-slate-50 dark:bg-slate-900 rounded-lg border border-slate-200 dark:border-slate-800">
-        <p className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+      <div className="p-4 bg-muted dark:bg-muted rounded-lg border border-border dark:border-border">
+        <p className="text-sm font-medium text-foreground/80 dark:text-muted-foreground mb-1">
           Full Address Preview
         </p>
-        <p className="text-sm text-slate-900 dark:text-slate-100">
+        <p className="text-sm text-foreground dark:text-foreground">
           {fullAddressPreview}
         </p>
       </div>

@@ -257,7 +257,7 @@ export function Step1Property() {
                 {PURCHASE_PROPERTY_TYPE_OPTIONS.map(({ value, labelKey, Icon }) => (
                   <div
                     key={value}
-                    className="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5 has-[[data-state=checked]]:border-blue-500 has-[[data-state=checked]]:bg-blue-50/50 dark:has-[[data-state=checked]]:bg-blue-950/20"
+                    className="flex items-center gap-3 rounded-lg border border-border px-3 py-2.5 has-[[data-state=checked]]:border-primary/30 has-[[data-state=checked]]:bg-primary dark:has-[[data-state=checked]]:bg-primary"
                   >
                     <RadioGroupItem value={value} id={`ppt-${value}`} className="shrink-0" />
                     <Icon className="h-5 w-5 shrink-0 text-muted-foreground" aria-hidden />
@@ -290,7 +290,7 @@ export function Step1Property() {
       )}
 
       {propertyType === 'condominium' && (
-        <div className="rounded-lg border border-blue-200 bg-blue-50/60 px-4 py-3 text-sm text-blue-900 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-100">
+        <div className="rounded-lg border border-primary/30 bg-primary px-4 py-3 text-sm text-primary dark:border-primary/30 dark:bg-primary dark:text-primary">
           {t('purchaseWizard.step1.condoMineralBanner')}
         </div>
       )}

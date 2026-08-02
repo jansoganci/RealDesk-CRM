@@ -120,7 +120,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
         {/* Quick Duration Buttons */}
         {form.watch('start_date') && (
           <div className="flex flex-wrap gap-2">
-            <span className="text-sm text-gray-600 self-center mr-2">{t('create.datePicker.quickDuration')}</span>
+            <span className="text-sm text-muted-foreground self-center mr-2">{t('create.datePicker.quickDuration')}</span>
             <Button
               type="button"
               variant="outline"

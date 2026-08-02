@@ -99,8 +99,8 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
           "flex flex-col items-center justify-center",
           "cursor-pointer transition-all duration-200",
           isDragging
-            ? "border-blue-600 bg-blue-50 scale-105"
-            : "border-blue-300 hover:border-blue-500 hover:bg-blue-50/50"
+            ? "border-primary/30 bg-primary scale-105"
+            : "border-primary/30 hover:border-primary/30 hover:bg-primary"
         )}
         onClick={handleClick}
         onDragOver={handleDragOver}
@@ -111,26 +111,26 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
         <FileText
           className={cn(
             "h-24 w-24 mb-6 transition-colors",
-            isDragging ? "text-blue-600" : "text-blue-400"
+            isDragging ? "text-primary" : "text-primary"
           )}
         />
 
         {/* Primary Text */}
-        <p className="text-2xl md:text-3xl font-semibold text-gray-800 mb-2 text-center px-4">
+        <p className="text-2xl md:text-3xl font-semibold text-foreground mb-2 text-center px-4">
           {isDragging
             ? t('import.upload.dropHere')
             : t('import.upload.dragHere')}
         </p>
 
         {/* Secondary Text */}
-        <p className="text-lg md:text-xl text-gray-500 mb-8 text-center px-4">
+        <p className="text-lg md:text-xl text-muted-foreground mb-8 text-center px-4">
           {t('import.upload.orSelect')}
         </p>
 
         {/* Big Button */}
         <Button
           size="lg"
-          className="h-14 px-8 text-lg bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700"
+          className="h-14 px-8 text-lg bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary"
           onClick={(e) => {
             e.stopPropagation();
             handleClick();
@@ -152,10 +152,10 @@ export const UploadStep = ({ onFileSelected, onError }: UploadStepProps) => {
 
       {/* Help Text */}
       <div className="mt-8 text-center space-y-2">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted-foreground">
           {t('import.upload.helpText')}
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-muted-foreground/70">
           {t('import.upload.autoExtract')}
         </p>
       </div>
