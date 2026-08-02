@@ -1,4 +1,4 @@
-export const APP_NAME = 'RealDesk';
+export const APP_NAME = 'Closewell';
 
 /**
  * Typical statutory deposit-return day counts used as wizard defaults.
