@@ -11,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Building2, Loader2, CheckCircle, Info, AlertCircle } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 import { supabase } from '../../config/supabase';
 import { getResetPasswordSchema, ResetPasswordFormData } from './authSchemas';
 
@@ -97,12 +96,12 @@ export const ResetPassword = () => {
   // Loading state while checking session
   if (isValidSession === null) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
-              <p className="text-sm text-gray-500 dark:text-slate-400">{t('common:loading')}</p>
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">{t('common:loading')}</p>
             </div>
           </CardContent>
         </Card>
@@ -113,15 +112,15 @@ export const ResetPassword = () => {
   // Invalid/expired session
   if (isValidSession === false) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-red-100 dark:bg-red-950/40 flex items-center justify-center">
-                <AlertCircle className="h-8 w-8 text-red-600 dark:text-red-400" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-destructive/15">
+                <AlertCircle className="h-8 w-8 text-destructive" />
               </div>
             </div>
-            <CardTitle className="text-2xl font-bold text-center text-red-600 dark:text-red-400">
+            <CardTitle className="text-center text-2xl font-bold text-destructive">
               {t('errors.expiredLink').split('.')[0]}
             </CardTitle>
             <CardDescription className="text-center">
@@ -131,7 +130,7 @@ export const ResetPassword = () => {
           <CardContent>
             <div className="flex flex-col gap-3">
               <Link to={ROUTES.FORGOT_PASSWORD} className="w-full">
-                <Button className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}>
+                <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90">
                   {t('forgotPassword.submit')}
                 </Button>
               </Link>
@@ -150,12 +149,12 @@ export const ResetPassword = () => {
   // Success state after password update
   if (passwordUpdated) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/15">
+                <CheckCircle className="h-8 w-8 text-success" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center">
@@ -167,7 +166,7 @@ export const ResetPassword = () => {
           </CardHeader>
           <CardContent>
             <Button
-              className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
               onClick={() => navigate(ROUTES.LOGIN, { replace: true })}
             >
               {t('resetPassword.goToLogin')}
@@ -179,11 +178,11 @@ export const ResetPassword = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.hex} />
+            <Building2 className="mr-2 h-8 w-8 text-primary" />
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
@@ -195,14 +194,14 @@ export const ResetPassword = () => {
         </CardHeader>
         <CardContent>
           {successMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800">
-              <p className="text-sm text-emerald-800 dark:text-emerald-200">{successMessage}</p>
+            <div className="mb-4 rounded-lg border border-success/30 bg-success/15 p-3">
+              <p className="text-sm text-foreground">{successMessage}</p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900">
-              <p className="text-sm text-red-800 dark:text-red-200">{errorMessage}</p>
+            <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/15 p-3">
+              <p className="text-sm text-foreground">{errorMessage}</p>
             </div>
           )}
 
@@ -247,15 +246,15 @@ export const ResetPassword = () => {
               />
 
               {/* Password requirements hint */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 dark:bg-blue-950/40 dark:border-blue-800">
-                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+              <div className="flex items-start gap-2 rounded-lg border border-info/30 bg-info/15 p-3">
+                <Info className="mt-0.5 h-4 w-4 shrink-0 text-info" />
+                <p className="text-xs text-foreground/80">
                   {t('register.passwordRequirements')}
                 </p>
               </div>
 
               <Button
-                className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                 type="submit"
                 disabled={loading}
               >
@@ -274,7 +273,7 @@ export const ResetPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to={ROUTES.LOGIN}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              className="inline-flex items-center text-sm text-primary hover:text-primary/80 hover:underline"
             >
               {t('forgotPassword.backToLogin')}
             </Link>

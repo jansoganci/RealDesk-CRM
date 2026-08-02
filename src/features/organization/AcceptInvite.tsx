@@ -71,10 +71,10 @@ export const AcceptInvite = () => {
 
   if (loading || authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
-          <p className="text-slate-500 dark:text-slate-400 animate-pulse">{t('common:loading')}</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="animate-pulse text-muted-foreground">{t('common:loading')}</p>
         </div>
       </div>
     );
@@ -82,16 +82,16 @@ export const AcceptInvite = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950 p-4">
-        <Card className="w-full max-w-md shadow-xl border-slate-200 dark:border-slate-800">
+      <div className="flex min-h-screen items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md border-border shadow-xl">
           <CardHeader className="text-center pb-2">
-            <div className="mx-auto w-12 h-12 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center mb-4">
-              <AlertCircle className="h-6 w-6 text-red-600" />
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-destructive/15">
+              <AlertCircle className="h-6 w-6 text-destructive" />
             </div>
-            <CardTitle className="text-2xl font-bold text-slate-900 dark:text-slate-50">
+            <CardTitle className="text-2xl font-bold text-foreground">
               {error === 'Invitation expired' ? t('team:errors.invitationExpired', { defaultValue: 'Invitation Expired' }) : t('team:errors.invalidInvitation', { defaultValue: 'Invalid Invitation' })}
             </CardTitle>
-            <CardDescription className="text-slate-500 dark:text-slate-400 mt-2">
+            <CardDescription className="mt-2 text-muted-foreground">
               {error === 'Invitation expired' 
                 ? t('team:errors.invitationExpiredDesc', { defaultValue: 'This invitation link has expired. Please ask the sender to resend the invitation.' })
                 : t('team:errors.invalidInvitationDesc', { defaultValue: 'This invitation link is invalid or has already been used.' })}
@@ -101,9 +101,9 @@ export const AcceptInvite = () => {
             <Button className="w-full" asChild variant="outline">
               <Link to={ROUTES.HOME}>{t('common:backToHome')}</Link>
             </Button>
-            <p className="text-xs text-center text-slate-400 dark:text-slate-500">
+            <p className="text-center text-xs text-muted-foreground">
               {t('common:needHelp')}{' '}
-              <Link to={ROUTES.CONTACT} className="text-blue-600 hover:underline">{t('common:contactSupport')}</Link>
+              <Link to={ROUTES.CONTACT} className="text-primary hover:underline">{t('common:contactSupport')}</Link>
             </p>
           </CardFooter>
         </Card>
@@ -112,32 +112,32 @@ export const AcceptInvite = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-primary/5 to-background p-4">
       <div className="w-full max-w-lg">
-        <Card className="shadow-2xl border-none bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm overflow-hidden">
+        <Card className="overflow-hidden border-none bg-card/80 shadow-2xl backdrop-blur-sm">
           {/* Header Image/Pattern */}
-          <div className="h-32 bg-gradient-to-r from-blue-600 to-indigo-600 flex items-center justify-center relative overflow-hidden">
+          <div className="relative flex h-32 items-center justify-center overflow-hidden bg-gradient-to-r from-primary to-primary/80">
             <div className="absolute inset-0 opacity-20 pointer-events-none">
-              <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white dark:bg-slate-400/20 blur-3xl"></div>
-              <div className="absolute -bottom-10 -right-10 w-40 h-40 rounded-full bg-white dark:bg-slate-400/20 blur-3xl"></div>
+              <div className="absolute -left-10 -top-10 h-40 w-40 rounded-full bg-primary-foreground/20 blur-3xl"></div>
+              <div className="absolute -bottom-10 -right-10 h-40 w-40 rounded-full bg-primary-foreground/20 blur-3xl"></div>
             </div>
-            <div className="bg-white dark:bg-slate-950 p-4 rounded-2xl shadow-lg z-10">
+            <div className="z-10 rounded-2xl bg-card p-4 shadow-lg">
               {invitation?.org_logo ? (
                 <img src={invitation.org_logo} alt={invitation.org_name} className="h-12 w-auto object-contain" />
               ) : (
-                <ShieldCheck className="h-12 w-12 text-blue-600" />
+                <ShieldCheck className="h-12 w-12 text-primary" />
               )}
             </div>
           </div>
 
           <CardHeader className="text-center pt-8">
-            <CardTitle className="text-3xl font-bold text-slate-900 dark:text-slate-50 leading-tight">
+            <CardTitle className="text-3xl font-bold leading-tight text-foreground">
               {t('team:invite.title', { defaultValue: "You're Invited!" })}
             </CardTitle>
-            <CardDescription className="text-lg text-slate-600 dark:text-slate-400 mt-4 px-4">
-              <span className="font-semibold text-slate-900 dark:text-slate-50">{invitation?.invited_by_name || 'Someone'}</span>{' '}
+            <CardDescription className="mt-4 px-4 text-lg text-muted-foreground">
+              <span className="font-semibold text-foreground">{invitation?.invited_by_name || 'Someone'}</span>{' '}
               {t('team:invite.invitedYouTo', { defaultValue: 'has invited you to join' })}{' '}
-              <span className="font-bold text-blue-600">{invitation?.org_name}</span>{' '}
+              <span className="font-bold text-primary">{invitation?.org_name}</span>{' '}
               {t('team:invite.asRole', { defaultValue: 'as a' })}{' '}
               <span className="font-semibold">{t(`team:roles.${invitation?.role}`)}</span>.
             </CardDescription>
@@ -147,18 +147,18 @@ export const AcceptInvite = () => {
             {!user ? (
               /* Not Logged In View */
               <div className="space-y-6">
-                <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-xl flex items-start gap-3">
-                  <div className="p-2 bg-blue-100 dark:bg-blue-800 rounded-lg shrink-0">
-                    <Mail className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <div className="flex items-start gap-3 rounded-xl bg-info/15 p-4">
+                  <div className="shrink-0 rounded-lg bg-info/15 p-2">
+                    <Mail className="h-5 w-5 text-info" />
                   </div>
-                  <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
+                  <p className="text-sm leading-relaxed text-foreground/80">
                     {t('team:invite.loginPrompt', { defaultValue: 'To accept this invitation and join the team, please log in to your account or create a new one.' })}
                   </p>
                 </div>
 
                 <div className="grid sm:grid-cols-2 gap-4">
                   <Button 
-                    className="w-full h-12 text-base font-semibold shadow-lg shadow-blue-500/20" 
+                    className="h-12 w-full text-base font-semibold shadow-lg shadow-primary/20"
                     asChild
                   >
                     <Link to={`${ROUTES.REGISTER}?token=${token}`}>
@@ -168,7 +168,7 @@ export const AcceptInvite = () => {
                   </Button>
                   <Button 
                     variant="outline" 
-                    className="w-full h-12 text-base font-semibold bg-white dark:bg-transparent" 
+                    className="h-12 w-full bg-card text-base font-semibold"
                     asChild
                   >
                     <Link to={`${ROUTES.LOGIN}?redirect=/accept-invite?token=${token}`}>
@@ -180,15 +180,15 @@ export const AcceptInvite = () => {
             ) : (
               /* Logged In View */
               <div className="space-y-6">
-                <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-xl border border-slate-100 dark:border-slate-800">
-                  <p className="text-sm text-slate-600 dark:text-slate-400 text-center">
+                <div className="rounded-xl border border-border bg-muted/50 p-4">
+                  <p className="text-center text-sm text-muted-foreground">
                     {t('team:invite.loggedInAs', { defaultValue: 'Logged in as' })}{' '}
-                    <span className="font-semibold text-slate-900 dark:text-slate-50">{user.email}</span>
+                    <span className="font-semibold text-foreground">{user.email}</span>
                   </p>
                 </div>
 
                 <Button 
-                  className="w-full h-14 text-lg font-bold shadow-xl shadow-blue-500/25 bg-blue-600 hover:bg-blue-700 text-white transition-all transform hover:scale-[1.02] active:scale-[0.98]"
+                  className="h-14 w-full transform bg-primary text-lg font-bold text-primary-foreground shadow-xl shadow-primary/25 transition-all hover:scale-[1.02] hover:bg-primary/90 active:scale-[0.98]"
                   onClick={handleAccept}
                   disabled={accepting}
                 >
@@ -205,11 +205,11 @@ export const AcceptInvite = () => {
                   )}
                 </Button>
                 
-                <p className="text-xs text-center text-slate-400 dark:text-slate-500">
+                <p className="text-center text-xs text-muted-foreground">
                   {t('team:invite.wrongAccount', { defaultValue: 'Not your account?' })}{' '}
                   <button 
                     onClick={() => supabase.auth.signOut().then(() => window.location.reload())}
-                    className="text-blue-600 hover:underline font-medium"
+                    className="font-medium text-primary hover:underline"
                   >
                     {t('auth:logout', { defaultValue: 'Log out' })}
                   </button>
@@ -218,13 +218,13 @@ export const AcceptInvite = () => {
             )}
           </CardContent>
 
-          <CardFooter className="bg-slate-50 dark:bg-slate-950/50 px-8 py-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
-            <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">
+          <CardFooter className="flex items-center justify-between border-t border-border bg-muted/50 px-8 py-4">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
               {t('common:appName', { defaultValue: 'Closewell' })}
             </span>
             <div className="flex gap-4">
-              <Link to={ROUTES.ABOUT} className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600">{t('common:about')}</Link>
-              <Link to={ROUTES.CONTACT} className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600">{t('common:contact')}</Link>
+              <Link to={ROUTES.ABOUT} className="text-xs text-muted-foreground hover:text-primary">{t('common:about')}</Link>
+              <Link to={ROUTES.CONTACT} className="text-xs text-muted-foreground hover:text-primary">{t('common:contact')}</Link>
             </div>
           </CardFooter>
         </Card>

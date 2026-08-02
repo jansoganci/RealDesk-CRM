@@ -11,7 +11,6 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Building2, Loader2, ArrowLeft, Mail, CheckCircle } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 import { getForgotPasswordSchema, ForgotPasswordFormData } from './authSchemas';
 
 export const ForgotPassword = () => {
@@ -52,12 +51,12 @@ export const ForgotPassword = () => {
   // Success state after email is sent
   if (emailSent) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
-              <div className="h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-900/40 flex items-center justify-center">
-                <CheckCircle className="h-8 w-8 text-emerald-600 dark:text-emerald-400" />
+              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-success/15">
+                <CheckCircle className="h-8 w-8 text-success" />
               </div>
             </div>
             <CardTitle className="text-2xl font-bold text-center">
@@ -69,9 +68,9 @@ export const ForgotPassword = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-center gap-2 p-4 rounded-lg bg-gray-50 border border-gray-100 dark:bg-slate-800/50 dark:border-slate-700">
-                <Mail className="h-5 w-5 text-gray-500 dark:text-slate-400" />
-                <span className="text-sm font-medium text-gray-700 dark:text-slate-200">
+              <div className="flex items-center justify-center gap-2 rounded-lg border border-border bg-muted/50 p-4">
+                <Mail className="h-5 w-5 text-muted-foreground" />
+                <span className="text-sm font-medium text-foreground">
                   {form.getValues('email')}
                 </span>
               </div>
@@ -93,11 +92,11 @@ export const ForgotPassword = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
-            <Building2 className="h-8 w-8 mr-2" color={COLORS.primary.hex} />
+            <Building2 className="mr-2 h-8 w-8 text-primary" />
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
@@ -109,14 +108,14 @@ export const ForgotPassword = () => {
         </CardHeader>
         <CardContent>
           {successMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 dark:bg-emerald-950/40 dark:border-emerald-800">
-              <p className="text-sm text-emerald-800 dark:text-emerald-200">{successMessage}</p>
+            <div className="mb-4 rounded-lg border border-success/30 bg-success/15 p-3">
+              <p className="text-sm text-foreground">{successMessage}</p>
             </div>
           )}
 
           {errorMessage && (
-            <div className="mb-4 p-3 rounded-lg bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900">
-              <p className="text-sm text-red-800 dark:text-red-200">{errorMessage}</p>
+            <div className="mb-4 rounded-lg border border-destructive/30 bg-destructive/15 p-3">
+              <p className="text-sm text-foreground">{errorMessage}</p>
             </div>
           )}
 
@@ -142,7 +141,7 @@ export const ForgotPassword = () => {
               />
 
               <Button
-                className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                 type="submit"
                 disabled={loading}
               >
@@ -164,7 +163,7 @@ export const ForgotPassword = () => {
           <div className="mt-6 text-center">
             <Link
               to={ROUTES.LOGIN}
-              className="inline-flex items-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              className="inline-flex items-center text-sm text-primary hover:text-primary/80 hover:underline"
             >
               <ArrowLeft className="mr-1 h-4 w-4" />
               {t('forgotPassword.backToLogin')}

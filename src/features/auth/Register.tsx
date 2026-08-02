@@ -12,7 +12,6 @@ import { Progress } from '../../components/ui/progress';
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, Info } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 import { getRegisterSchema, RegisterFormData } from './authSchemas';
 import { useTurnstile } from '../../hooks/useTurnstile';
 
@@ -122,7 +121,7 @@ export const Register = () => {
   // Show email confirmation message if email was sent
   if (emailSent) {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
@@ -136,13 +135,13 @@ export const Register = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-blue-50 border border-blue-200 dark:bg-blue-950/40 dark:border-blue-800">
-              <Info className="h-5 w-5 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
+            <div className="flex items-start gap-3 rounded-lg border border-info/30 bg-info/15 p-4">
+              <Info className="mt-0.5 h-5 w-5 shrink-0 text-info" />
               <div className="space-y-2">
-                <p className="text-sm text-blue-900 font-medium dark:text-blue-100">
+                <p className="text-sm font-medium text-foreground">
                   {t('emailConfirmation.message', { email: userEmail })}
                 </p>
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+                <p className="text-xs text-muted-foreground">
                   {t('emailConfirmation.checkSpam')}
                 </p>
               </div>
@@ -167,7 +166,7 @@ export const Register = () => {
 
               <Link
                 to={ROUTES.LOGIN}
-                className="block w-full text-center text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="block w-full text-center text-sm text-primary hover:text-primary/80 hover:underline"
               >
                 {t('emailConfirmation.backToLogin')}
               </Link>
@@ -179,7 +178,7 @@ export const Register = () => {
   }
 
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
@@ -198,7 +197,7 @@ export const Register = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700 py-5"
+              className="flex w-full items-center justify-center gap-2 border-border py-5"
               onClick={handleGoogleSignIn}
               disabled={loading}
             >
@@ -207,15 +206,15 @@ export const Register = () => {
                 alt="Google"
                 className="h-5 w-5"
               />
-              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('googleSignUp')}</span>
+              <span className="text-base font-medium text-foreground">{t('googleSignUp')}</span>
             </Button>
           </div>
 
           {/* Divider */}
-          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          <div className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
             <span>{t('register.orSignWithEmail')}</span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <Form {...form}>
@@ -264,10 +263,10 @@ export const Register = () => {
                   <div className="flex items-center justify-between text-xs">
                     <span className={`font-medium ${
                       passwordStrength === 'weak'
-                        ? 'text-red-600 dark:text-red-400'
+                        ? 'text-destructive'
                         : passwordStrength === 'medium'
-                        ? 'text-orange-600 dark:text-orange-400'
-                        : 'text-green-600 dark:text-green-400'
+                        ? 'text-warning'
+                        : 'text-success'
                     }`}>
                       {t(`register.passwordStrength.${passwordStrength}`)}
                     </span>
@@ -278,10 +277,10 @@ export const Register = () => {
                     }
                     className={`h-1.5 ${
                       passwordStrength === 'weak'
-                        ? '[&>div]:bg-red-500'
+                        ? '[&>div]:bg-destructive'
                         : passwordStrength === 'medium'
-                        ? '[&>div]:bg-orange-500'
-                        : '[&>div]:bg-green-500'
+                        ? '[&>div]:bg-warning'
+                        : '[&>div]:bg-success'
                     }`}
                   />
                 </div>
@@ -307,9 +306,9 @@ export const Register = () => {
               />
 
               {/* Password requirements hint */}
-              <div className="flex items-start gap-2 p-3 rounded-lg bg-blue-50 border border-blue-100 dark:bg-blue-950/40 dark:border-blue-800">
-                <Info className="h-4 w-4 mt-0.5 text-blue-600 shrink-0 dark:text-blue-400" />
-                <p className="text-xs text-blue-700 dark:text-blue-300">
+              <div className="flex items-start gap-2 rounded-lg border border-info/30 bg-info/15 p-3">
+                <Info className="mt-0.5 h-4 w-4 shrink-0 text-info" />
+                <p className="text-xs text-foreground/80">
                   {t('register.passwordRequirements')}
                 </p>
               </div>
@@ -325,15 +324,15 @@ export const Register = () => {
                     setTermsError(null);
                   }}
                   disabled={loading}
-                  className="mt-1 h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 dark:border-slate-600 dark:bg-slate-900"
+                  className="mt-1 h-4 w-4 rounded border-border bg-background text-primary focus:ring-ring"
                 />
-                <label htmlFor="acceptTerms" className="text-xs text-slate-600 dark:text-slate-300 cursor-pointer">
+                <label htmlFor="acceptTerms" className="cursor-pointer text-xs text-muted-foreground">
                   {t('termsLabel')}{' '}
                   <a
                     href="/legal/terms-of-service-en.html"
                     target="_blank"
                     rel="noreferrer"
-                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                    className="text-primary underline underline-offset-2 hover:text-primary/80"
                   >
                     {t('termsLink')}
                   </a>{' '}
@@ -342,21 +341,21 @@ export const Register = () => {
                     href="/legal/privacy-policy-en.html"
                     target="_blank"
                     rel="noreferrer"
-                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                    className="text-primary underline underline-offset-2 hover:text-primary/80"
                   >
                     {t('privacyLink')}
                   </a>{' '}
                   {t('termsAnd')}{' '}
                   <a
                     href="/privacy"
-                    className="underline underline-offset-2 text-blue-600 dark:text-blue-400 hover:text-blue-700"
+                    className="text-primary underline underline-offset-2 hover:text-primary/80"
                   >
                     {t('compliance:page.title')}
                   </a>.
                 </label>
               </div>
               {termsError && (
-                <p className="mt-2 text-xs text-red-500">
+                <p className="mt-2 text-xs text-destructive">
                   {termsError}
                 </p>
               )}
@@ -365,7 +364,7 @@ export const Register = () => {
               <div id="turnstile-register" />
 
               <Button
-                className={`w-full ${COLORS.primary.bgGradient} ${COLORS.primary.bgGradientHover}`}
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                 type="submit"
                 disabled={loading || !acceptTerms || !turnstileReady}
               >
@@ -382,12 +381,12 @@ export const Register = () => {
           </Form>
 
           <div className="mt-6 text-center text-sm">
-            <span className={`${COLORS.text.secondary} dark:text-slate-400`}>
+            <span className="text-muted-foreground">
               {t('register.hasAccount')}{' '}
             </span>
             <Link
               to={ROUTES.LOGIN}
-              className="font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+              className="font-medium text-primary hover:text-primary/80 hover:underline"
             >
               {t('register.loginLink')}
             </Link>

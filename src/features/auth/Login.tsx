@@ -85,19 +85,19 @@ export const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 px-4">
-      <div className="w-full max-w-5xl grid md:grid-cols-2 gap-0 overflow-hidden rounded-3xl shadow-2xl bg-slate-900/40 backdrop-blur">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background via-muted to-background px-4">
+      <div className="grid w-full max-w-5xl gap-0 overflow-hidden rounded-3xl bg-card/80 shadow-2xl backdrop-blur md:grid-cols-2">
         {/* Left Panel - Marketing / Sign Up */}
-        <div className="hidden md:flex flex-col justify-center gap-4 bg-gradient-to-br from-indigo-600 via-blue-600 to-sky-500 text-white p-10">
+        <div className="hidden flex-col justify-center gap-4 bg-gradient-to-br from-primary via-primary to-primary/80 p-10 text-primary-foreground md:flex">
           <h2 className="text-3xl font-bold">
             {t('login.newHereTitle')}
           </h2>
-          <p className="text-sm text-indigo-100 max-w-sm">
+          <p className="max-w-sm text-sm text-primary-foreground/80">
             {t('login.newHereSubtitle')}
           </p>
           <Button
             variant="outline"
-            className="mt-4 bg-white/10 hover:bg-white/20 border-white text-white w-fit"
+            className="mt-4 w-fit border-primary-foreground/60 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20 hover:text-primary-foreground"
             onClick={() => navigate(ROUTES.REGISTER)}
           >
             {t('login.newHereCta')}
@@ -105,11 +105,11 @@ export const Login = () => {
         </div>
 
         {/* Right Panel - Login Form */}
-        <div className="bg-white dark:bg-slate-950 px-6 py-8 md:px-10 md:py-12">
-          <h1 className="text-2xl md:text-3xl font-semibold mb-2 text-slate-900 dark:text-slate-50">
+        <div className="bg-card px-6 py-8 md:px-10 md:py-12">
+          <h1 className="mb-2 text-2xl font-semibold text-foreground md:text-3xl">
             {t('login.title')}
           </h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mb-6">
+          <p className="mb-6 text-sm text-muted-foreground">
             {t('login.workspaceSubtitle')}
           </p>
 
@@ -118,7 +118,7 @@ export const Login = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full flex items-center justify-center gap-2 border-slate-300 dark:border-slate-700 py-5"
+              className="flex w-full items-center justify-center gap-2 border-border py-5"
               onClick={handleGoogleSignIn}
               disabled={loading}
             >
@@ -127,15 +127,15 @@ export const Login = () => {
                 alt="Google"
                 className="h-5 w-5"
               />
-              <span className="text-base font-medium text-slate-700 dark:text-slate-200">{t('googleSignIn')}</span>
+              <span className="text-base font-medium text-foreground">{t('googleSignIn')}</span>
             </Button>
           </div>
 
           {/* Divider */}
-          <div className="mb-6 flex items-center gap-2 text-xs text-slate-400 dark:text-slate-500">
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+          <div className="mb-6 flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="h-px flex-1 bg-border" />
             <span>{t('orSignWithEmail')}</span>
-            <div className="flex-1 h-px bg-slate-200 dark:bg-slate-800" />
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <Form {...form}>
@@ -168,7 +168,7 @@ export const Login = () => {
                       <FormLabel>{t('login.password')}</FormLabel>
                       <Link
                         to={ROUTES.FORGOT_PASSWORD}
-                        className="text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400"
+                        className="text-sm text-primary hover:text-primary/80 hover:underline"
                       >
                         {t('login.forgotPassword')}
                       </Link>
@@ -190,7 +190,7 @@ export const Login = () => {
               <div id="turnstile-login" />
 
               <Button
-                className="w-full bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-50 dark:text-slate-900 dark:hover:bg-slate-200"
+                className="w-full bg-primary text-primary-foreground hover:bg-primary/90"
                 type="submit"
                 disabled={loading || !turnstileReady}
               >
@@ -208,12 +208,12 @@ export const Login = () => {
 
           {/* Mobile Sign Up Link */}
           <div className="mt-6 text-center text-sm md:hidden">
-            <span className="text-slate-600 dark:text-slate-400">
+            <span className="text-muted-foreground">
               {t('login.noAccount')}{' '}
             </span>
             <Link
               to={ROUTES.REGISTER}
-              className="font-medium text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400"
+              className="font-medium text-primary hover:text-primary/80 hover:underline"
             >
               {t('login.registerLink')}
             </Link>

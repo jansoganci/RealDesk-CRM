@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../..
 import { toast } from 'sonner';
 import { ROUTES, APP_NAME } from '../../config/constants';
 import { Loader2, CheckCircle, XCircle, Mail } from 'lucide-react';
-import { COLORS } from '@/config/colors';
 import { supabase } from '../../config/supabase';
 import { trackSignUp } from '../../utils/gtm';
 
@@ -120,12 +119,12 @@ export const EmailConfirmation = () => {
 
   if (status === 'checking') {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardContent className="pt-6">
             <div className="flex flex-col items-center gap-4">
-              <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
-              <p className="text-sm text-gray-600 dark:text-slate-400">{t('emailConfirmation.checking')}</p>
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground">{t('emailConfirmation.checking')}</p>
             </div>
           </CardContent>
         </Card>
@@ -135,14 +134,14 @@ export const EmailConfirmation = () => {
 
   if (status === 'confirmed') {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
               <span className="text-2xl font-bold">{APP_NAME}</span>
             </div>
             <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-              <CheckCircle className="h-6 w-6 text-green-600" />
+              <CheckCircle className="h-6 w-6 text-success" />
               {t('emailConfirmation.successTitle')}
             </CardTitle>
             <CardDescription className="text-center">
@@ -151,12 +150,12 @@ export const EmailConfirmation = () => {
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center gap-4">
-              <p className="text-sm text-gray-600 dark:text-slate-400 text-center">
+              <p className="text-center text-sm text-muted-foreground">
                 {t('emailConfirmation.redirecting')}
               </p>
               <Link
                 to={ROUTES.ONBOARDING}
-                className="text-sm text-blue-600 hover:text-blue-700 hover:underline dark:text-blue-400 dark:hover:text-blue-300"
+                className="text-sm text-primary hover:text-primary/80 hover:underline"
               >
                 {t('emailConfirmation.goToOnboarding')}
               </Link>
@@ -169,14 +168,14 @@ export const EmailConfirmation = () => {
 
   if (status === 'expired') {
     return (
-      <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+      <div className="flex min-h-screen items-center justify-center bg-background">
         <Card className="w-full max-w-md mx-4">
           <CardHeader className="space-y-1">
             <div className="flex items-center justify-center mb-4">
               <span className="text-2xl font-bold">{APP_NAME}</span>
             </div>
             <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-              <XCircle className="h-6 w-6 text-red-600" />
+              <XCircle className="h-6 w-6 text-destructive" />
               {t('emailConfirmation.expiredTitle')}
             </CardTitle>
             <CardDescription className="text-center">
@@ -184,9 +183,9 @@ export const EmailConfirmation = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-start gap-3 p-4 rounded-lg bg-red-50 border border-red-200 dark:bg-red-950/40 dark:border-red-900">
-              <Mail className="h-5 w-5 mt-0.5 text-red-600 shrink-0 dark:text-red-400" />
-              <p className="text-sm text-red-900 dark:text-red-200">
+            <div className="flex items-start gap-3 rounded-lg border border-destructive/30 bg-destructive/15 p-4">
+              <Mail className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+              <p className="text-sm text-foreground">
                 {t('emailConfirmation.expiredHint')}
               </p>
             </div>
@@ -211,14 +210,14 @@ export const EmailConfirmation = () => {
 
   // Error state
   return (
-    <div className={`flex items-center justify-center min-h-screen ${COLORS.gray.bg50} dark:bg-slate-950`}>
+    <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md mx-4">
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <span className="text-2xl font-bold">{APP_NAME}</span>
           </div>
           <CardTitle className="text-2xl font-bold text-center flex items-center justify-center gap-2">
-            <XCircle className="h-6 w-6 text-red-600" />
+            <XCircle className="h-6 w-6 text-destructive" />
             {t('emailConfirmation.errorTitle')}
           </CardTitle>
           <CardDescription className="text-center">
@@ -236,4 +235,3 @@ export const EmailConfirmation = () => {
     </div>
   );
 };
-
