@@ -168,7 +168,7 @@ export function SaleContractEdit() {
       <MainLayout title={t('edit.pageTitle')}>
         <PageContainer>
           <div className="flex items-center justify-center h-64">
-            <Loader2 className="h-8 w-8 animate-spin text-blue-600 dark:text-blue-400" />
+            <Loader2 className="h-8 w-8 animate-spin text-primary dark:text-primary" />
           </div>
         </PageContainer>
       </MainLayout>
@@ -201,7 +201,7 @@ export function SaleContractEdit() {
               <CardContent className="space-y-6">
                 {/* Seller Section */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-gray-200 dark:border-gray-700 pb-2 text-foreground">{t('form.sections.seller')}</h3>
+                  <h3 className="font-semibold text-lg border-b border-border dark:border-border pb-2 text-foreground">{t('form.sections.seller')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="seller_name">{t('form.labels.seller_name')}</Label>
@@ -251,7 +251,7 @@ export function SaleContractEdit() {
 
                 {/* Buyer Section */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-gray-200 dark:border-gray-700 pb-2 text-foreground">{t('form.sections.buyer')}</h3>
+                  <h3 className="font-semibold text-lg border-b border-border dark:border-border pb-2 text-foreground">{t('form.sections.buyer')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="buyer_name">{t('form.labels.buyer_name')}</Label>
@@ -301,7 +301,7 @@ export function SaleContractEdit() {
 
                 {/* Property Section */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-gray-200 dark:border-gray-700 pb-2 text-foreground">{t('form.sections.property')}</h3>
+                  <h3 className="font-semibold text-lg border-b border-border dark:border-border pb-2 text-foreground">{t('form.sections.property')}</h3>
                   <div>
                     <Label htmlFor="property_address">{t('form.labels.property_address')}</Label>
                     <Textarea
@@ -342,7 +342,7 @@ export function SaleContractEdit() {
 
                 {/* Sale Terms Section */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-gray-200 dark:border-gray-700 pb-2 text-foreground">{t('form.sections.saleTerms')}</h3>
+                  <h3 className="font-semibold text-lg border-b border-border dark:border-border pb-2 text-foreground">{t('form.sections.saleTerms')}</h3>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <Label htmlFor="sale_price">{t('form.labels.sale_price')}</Label>
@@ -408,7 +408,7 @@ export function SaleContractEdit() {
 
                 {/* Contract Title */}
                 <div className="space-y-4">
-                  <h3 className="font-semibold text-lg border-b border-gray-200 dark:border-gray-700 pb-2 text-foreground">{t('form.sections.contractTitle')}</h3>
+                  <h3 className="font-semibold text-lg border-b border-border dark:border-border pb-2 text-foreground">{t('form.sections.contractTitle')}</h3>
                   <div>
                     <Label htmlFor="title">{t('form.labels.title')}</Label>
                     <Input
@@ -429,7 +429,7 @@ export function SaleContractEdit() {
                 </div>
 
                 {/* Actions */}
-                <div className="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex justify-between pt-4 border-t border-border dark:border-border">
                   <Button
                     variant="outline"
                     onClick={() => navigate(ROUTES.CONTRACTS_SALE)}
@@ -461,7 +461,7 @@ export function SaleContractEdit() {
                   rows={25}
                   className="font-mono text-sm"
                 />
-                <div className="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex justify-between pt-4 border-t border-border dark:border-border">
                   <Button variant="outline" onClick={() => setStep(1)}>
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     {t('edit.actions.back')}
@@ -485,36 +485,36 @@ export function SaleContractEdit() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="bg-gray-50 dark:bg-gray-900/70 p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="bg-muted dark:bg-muted p-4 rounded-lg border border-border dark:border-border">
                   <div className="grid grid-cols-2 gap-4 text-sm mb-4">
                     <div>
-                      <span className="text-gray-500 dark:text-gray-400">{t('edit.summary.seller')}</span>{' '}
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{form.getValues('seller_name')}</span>
+                      <span className="text-muted-foreground dark:text-muted-foreground/70">{t('edit.summary.seller')}</span>{' '}
+                      <span className="font-medium text-foreground dark:text-muted-foreground">{form.getValues('seller_name')}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500 dark:text-gray-400">{t('edit.summary.buyer')}</span>{' '}
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{form.getValues('buyer_name')}</span>
+                      <span className="text-muted-foreground dark:text-muted-foreground/70">{t('edit.summary.buyer')}</span>{' '}
+                      <span className="font-medium text-foreground dark:text-muted-foreground">{form.getValues('buyer_name')}</span>
                     </div>
                     <div>
-                      <span className="text-gray-500 dark:text-gray-400">{t('edit.summary.amount')}</span>{' '}
-                      <span className="font-medium text-gray-900 dark:text-gray-100">
+                      <span className="text-muted-foreground dark:text-muted-foreground/70">{t('edit.summary.amount')}</span>{' '}
+                      <span className="font-medium text-foreground dark:text-muted-foreground">
                         {form.getValues('sale_price')?.toLocaleString('tr-TR')} {form.getValues('currency')}
                       </span>
                     </div>
                     <div>
-                      <span className="text-gray-500 dark:text-gray-400">{t('edit.summary.payment')}</span>{' '}
-                      <span className="font-medium text-gray-900 dark:text-gray-100">{form.getValues('payment_method')}</span>
+                      <span className="text-muted-foreground dark:text-muted-foreground/70">{t('edit.summary.payment')}</span>{' '}
+                      <span className="font-medium text-foreground dark:text-muted-foreground">{form.getValues('payment_method')}</span>
                     </div>
                   </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-950 border border-gray-200 dark:border-gray-700 rounded-lg p-6 max-h-96 overflow-y-auto">
-                  <pre className="whitespace-pre-wrap font-sans text-sm text-gray-900 dark:text-gray-100">
+                <div className="bg-card dark:bg-muted border border-border dark:border-border rounded-lg p-6 max-h-96 overflow-y-auto">
+                  <pre className="whitespace-pre-wrap font-sans text-sm text-foreground dark:text-muted-foreground">
                     {renderedContent}
                   </pre>
                 </div>
 
-                <div className="flex justify-between pt-4 border-t border-gray-200 dark:border-gray-800">
+                <div className="flex justify-between pt-4 border-t border-border dark:border-border">
                   <Button variant="outline" onClick={() => setStep(2)}>
                     <ArrowLeft className="h-4 w-4 mr-2" />
                     {t('edit.actions.back')}

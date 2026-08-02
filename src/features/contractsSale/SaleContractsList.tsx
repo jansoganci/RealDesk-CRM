@@ -84,8 +84,8 @@ export function SaleContractsList() {
       | 'cancelled'
       | 'incomplete';
     const variants: Record<string, { label: string; className: string }> = {
-      draft: { label: t('dealStatus.draft'), className: 'bg-slate-100 text-slate-700' },
-      active: { label: t('dealStatus.active'), className: 'bg-blue-100 text-blue-800' },
+      draft: { label: t('dealStatus.draft'), className: 'bg-muted text-foreground/80' },
+      active: { label: t('dealStatus.active'), className: 'bg-primary text-primary' },
       under_contract: { label: t('dealStatus.under_contract'), className: 'bg-indigo-100 text-indigo-800' },
       closed: { label: t('dealStatus.closed'), className: 'bg-green-100 text-green-800' },
       cancelled: { label: t('dealStatus.cancelled'), className: 'bg-red-100 text-red-700' },
@@ -99,8 +99,8 @@ export function SaleContractsList() {
     const variants: Record<string, { label: string; className: string }> = {
       draft: { label: t('status.draft'), className: 'bg-yellow-100 text-yellow-700' },
       final: { label: t('status.final'), className: 'bg-green-100 text-green-700' },
-      signed: { label: t('status.signed'), className: 'bg-blue-100 text-blue-700' },
-      archived: { label: t('status.archived'), className: 'bg-gray-100 text-gray-600' },
+      signed: { label: t('status.signed'), className: 'bg-primary text-primary' },
+      archived: { label: t('status.archived'), className: 'bg-muted text-muted-foreground' },
       cancelled: { label: t('status.cancelled'), className: 'bg-red-100 text-red-700' },
     };
     const v = variants[status] || variants.draft;
@@ -145,8 +145,8 @@ export function SaleContractsList() {
             {[1, 2, 3].map((i) => (
               <Card key={i} className="animate-pulse">
                 <CardContent className="p-6">
-                  <div className="h-6 bg-gray-200 rounded w-1/3 mb-4" />
-                  <div className="h-4 bg-gray-200 rounded w-1/2" />
+                  <div className="h-6 bg-muted rounded w-1/3 mb-4" />
+                  <div className="h-4 bg-muted rounded w-1/2" />
                 </CardContent>
               </Card>
             ))}
@@ -157,7 +157,7 @@ export function SaleContractsList() {
           <div className="space-y-10">
             {purchaseRows.length > 0 && (
               <section className="space-y-4">
-                <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">
                   {t('list.purchaseSection.title')}
                 </h2>
                 <div className="space-y-4">
@@ -179,10 +179,10 @@ export function SaleContractsList() {
                                 <h3 className="font-semibold text-lg truncate">{title}</h3>
                                 {getDealStatusBadge(row.deal_status)}
                               </div>
-                              <div className="text-sm text-gray-600 space-y-1">
+                              <div className="text-sm text-muted-foreground space-y-1">
                                 {address ? (
                                   <p>
-                                    <span className="text-gray-500">{t('list.purchaseCard.property')}: </span>
+                                    <span className="text-muted-foreground">{t('list.purchaseCard.property')}: </span>
                                     {address}
                                   </p>
                                 ) : null}
@@ -206,7 +206,7 @@ export function SaleContractsList() {
                                   </p>
                                 ) : null}
                                 {row.created_at ? (
-                                  <p className="text-xs text-gray-400 mt-2">
+                                  <p className="text-xs text-muted-foreground/70 mt-2">
                                     {t('list.purchaseCard.created')}: {format(new Date(row.created_at), 'MMM d, yyyy p')}
                                   </p>
                                 ) : null}
@@ -224,7 +224,7 @@ export function SaleContractsList() {
             {instances.length > 0 && (
               <section className="space-y-4">
                 {purchaseRows.length > 0 && (
-                  <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wide">
+                  <h2 className="text-sm font-semibold text-foreground uppercase tracking-wide">
                     {t('list.legacySection.title')}
                   </h2>
                 )}
@@ -246,7 +246,7 @@ export function SaleContractsList() {
                           </h3>
                           {getStatusBadge(instance.status)}
                         </div>
-                        <div className="text-sm text-gray-600 space-y-1">
+                        <div className="text-sm text-muted-foreground space-y-1">
                           {formData.seller_name ? (
                             <p>{t('list.card.seller')} {String(formData.seller_name)}</p>
                           ) : null}
@@ -260,7 +260,7 @@ export function SaleContractsList() {
                             </p>
                           ) : null}
                         </div>
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-muted-foreground/70 mt-2">
                           {format(new Date(instance.created_at), 'dd.MM.yyyy HH:mm')}
                         </p>
                       </div>
