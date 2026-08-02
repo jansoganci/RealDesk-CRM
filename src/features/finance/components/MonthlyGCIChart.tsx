@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import type { MonthlyCommissionData } from '@/types';
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface MonthlyGCIChartProps {
   data: MonthlyCommissionData[];
@@ -10,8 +10,7 @@ interface MonthlyGCIChartProps {
 
 export const MonthlyGCIChart = ({ data }: MonthlyGCIChartProps) => {
   const { t } = useTranslation('finance');
-  const gciBarColor = COLORS.info.hex;
-  const netBarColor = COLORS.primary.hex;
+  const chartColors = useChartColors();
 
   const chartData = data.map((m) => ({
     month: m.monthName.slice(0, 3),
@@ -31,8 +30,8 @@ export const MonthlyGCIChart = ({ data }: MonthlyGCIChartProps) => {
             <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
-            <Bar dataKey="gci" fill={gciBarColor} name={t('commissionDashboard.monthlyChart.gci')} />
-            <Bar dataKey="net" fill={netBarColor} name={t('commissionDashboard.monthlyChart.net')} />
+            <Bar dataKey="gci" fill={chartColors.info} name={t('commissionDashboard.monthlyChart.gci')} />
+            <Bar dataKey="net" fill={chartColors.primary} name={t('commissionDashboard.monthlyChart.net')} />
           </BarChart>
         </ResponsiveContainer>
       </CardContent>

@@ -15,7 +15,7 @@ import { Building2 } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { CommissionByPropertyType } from '../../../services/finance/analytics.service';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface CommissionByPropertyTypeProps {
   data: CommissionByPropertyType | null;
@@ -28,6 +28,7 @@ export const CommissionByPropertyTypeComponent = ({
 }: CommissionByPropertyTypeProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency } = useAuth();
+  const chartColors = useChartColors();
 
   const formatMetric = (value: number) => {
     return formatCurrency(value, currency || 'USD');
@@ -58,7 +59,7 @@ export const CommissionByPropertyTypeComponent = ({
               {t('finance:analytics.commissionByPropertyType')}
             </CardTitle>
             <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
-              <Building2 className="h-4 w-4 text-white" />
+              <Building2 className="h-4 w-4 text-primary-foreground" />
             </div>
           </div>
         </CardHeader>
@@ -83,13 +84,13 @@ export const CommissionByPropertyTypeComponent = ({
       name: t('finance:analytics.rentalCommissions'),
       value: data.rental.value,
       percentage: rentalPercentage,
-      color: COLORS.primary.hex,
+      color: chartColors.primary,
     },
     {
       name: t('finance:analytics.saleCommissions'),
       value: data.sale.value,
       percentage: salePercentage,
-      color: COLORS.success.hex,
+      color: chartColors.success,
     },
   ];
 
@@ -146,7 +147,7 @@ export const CommissionByPropertyTypeComponent = ({
             {t('finance:analytics.commissionByPropertyType')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
-            <Building2 className="h-4 w-4 text-white" />
+            <Building2 className="h-4 w-4 text-primary-foreground" />
           </div>
         </div>
       </CardHeader>
@@ -154,7 +155,7 @@ export const CommissionByPropertyTypeComponent = ({
         <div className="space-y-4">
           {/* Summary Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-primary rounded-lg p-3 border border-primary/30">
+            <div className="rounded-lg border border-primary/30 bg-primary/15 p-3">
               <p className="text-xs text-primary font-medium mb-1">
                 {t('finance:analytics.rentalCommissions')}
               </p>
@@ -165,14 +166,14 @@ export const CommissionByPropertyTypeComponent = ({
                 {rentalPercentage.toFixed(1)}%
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-              <p className="text-xs text-green-700 font-medium mb-1">
+            <div className="bg-success/15 rounded-lg p-3 border border-success/30">
+              <p className="text-xs text-success font-medium mb-1">
                 {t('finance:analytics.saleCommissions')}
               </p>
-              <p className="text-xl font-bold text-green-900">
+              <p className="text-xl font-bold text-success">
                 {formatMetric(data.sale.value)}
               </p>
-              <p className="text-xs text-green-600 mt-1">
+              <p className="text-xs text-success mt-1">
                 {salePercentage.toFixed(1)}%
               </p>
             </div>
@@ -189,7 +190,7 @@ export const CommissionByPropertyTypeComponent = ({
                   labelLine={false}
                   label={CustomLabel}
                   outerRadius={80}
-                  fill={COLORS.primary.hex}
+                  fill={chartColors.primary}
                   dataKey="value"
                 >
                   {chartData.map((entry, index) => (
@@ -211,4 +212,3 @@ export const CommissionByPropertyTypeComponent = ({
     </Card>
   );
 };
-

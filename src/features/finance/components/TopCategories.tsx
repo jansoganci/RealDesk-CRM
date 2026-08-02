@@ -6,14 +6,13 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import type { TopCategory } from '../../../types/financial';
 import type { TooltipItem } from 'chart.js';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface TopCategoriesProps {
   topIncome: TopCategory[];
   topExpense: TopCategory[];
   loading?: boolean;
 }
-
-const COLORS = ['#10b981', '#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b'];
 
 export const TopCategories = ({
   topIncome,
@@ -22,6 +21,14 @@ export const TopCategories = ({
 }: TopCategoriesProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency } = useAuth();
+  const chartColors = useChartColors();
+  const categoryColors = [
+    chartColors.chart1,
+    chartColors.chart2,
+    chartColors.chart3,
+    chartColors.chart4,
+    chartColors.chart5,
+  ];
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
@@ -64,7 +71,7 @@ export const TopCategories = ({
       datasets: [
         {
           data: categories.map(c => c.amount),
-          backgroundColor: COLORS.slice(0, categories.length),
+          backgroundColor: categoryColors.slice(0, categories.length),
           borderWidth: 0,
         },
       ],
@@ -98,10 +105,16 @@ export const TopCategories = ({
               className={`p-2.5 rounded-lg shadow-md ${
                 icon === TrendingUp
                   ? 'bg-success'
-                  : 'bg-red-600'
+                  : 'bg-destructive'
               }`}
             >
-              <Icon className="h-5 w-5 text-white" />
+              <Icon
+                className={`h-5 w-5 ${
+                  icon === TrendingUp
+                    ? 'text-success-foreground'
+                    : 'text-destructive-foreground'
+                }`}
+              />
             </div>
             <div>
               <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
@@ -128,7 +141,7 @@ export const TopCategories = ({
                     <div className="flex items-center gap-2 flex-1">
                       <div
                         className="w-3 h-3 rounded-full flex-shrink-0"
-                        style={{ backgroundColor: COLORS[index % COLORS.length] }}
+                        style={{ backgroundColor: categoryColors[index % categoryColors.length] }}
                       />
                       <span className="text-sm font-medium text-foreground dark:text-foreground truncate">
                         {cat.category}

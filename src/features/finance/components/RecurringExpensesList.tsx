@@ -129,7 +129,7 @@ export const RecurringExpensesList = ({
       );
     } else if (daysUntilDue <= 3) {
       return (
-        <Badge variant="default" className="bg-warning/15 text-warning border-warning/40">
+        <Badge variant="default" className="border-warning/40 bg-warning/15 text-warning-foreground dark:text-warning">
           {t('finance:automation.dueSoon', { days: daysUntilDue, defaultValue: `Due in ${daysUntilDue} days` })}
         </Badge>
       );
@@ -152,7 +152,7 @@ export const RecurringExpensesList = ({
     const colors: Record<string, string> = {
       monthly: 'bg-primary/15 text-primary border-primary/30',
       quarterly: 'bg-info/15 text-info border-info/40',
-      yearly: 'bg-secondary/15 text-secondary-foreground border-secondary/40',
+      yearly: 'bg-secondary/15 text-secondary-foreground dark:text-secondary border-secondary/40',
     };
 
     return (
@@ -304,7 +304,7 @@ export const RecurringExpensesList = ({
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => handleDeleteClick(expense.id)}
-                            className="text-red-600"
+                            className="text-destructive"
                           >
                             <Trash2 className="mr-2 h-4 w-4" />
                             {t('finance:recurring.actions.delete', { defaultValue: 'Delete' })}
@@ -390,7 +390,7 @@ export const RecurringExpensesList = ({
             <AlertDialogCancel>
               {t('common:actions.cancel', { defaultValue: 'Cancel' })}
             </AlertDialogCancel>
-            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDeleteConfirm} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
               {t('finance:recurring.actions.delete', { defaultValue: 'Delete' })}
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -399,4 +399,3 @@ export const RecurringExpensesList = ({
     </div>
   );
 };
-

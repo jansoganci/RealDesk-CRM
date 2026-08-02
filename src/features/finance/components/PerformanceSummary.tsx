@@ -38,7 +38,7 @@ export const PerformanceSummaryComponent = ({
       <div className="flex items-center gap-1">
         <span>{formatted}</span>
         <div title={`${t('finance:performance.missingRates')}: ${metric.missingDates.join(', ')}`}>
-          <AlertCircle className="h-4 w-4 text-amber-500 inline cursor-help" />
+          <AlertCircle className="h-4 w-4 text-warning inline cursor-help" />
         </div>
       </div>
     );
@@ -79,7 +79,7 @@ export const PerformanceSummaryComponent = ({
             {t('finance:performance.title')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-secondary shadow-md">
-            <Award className="h-4 w-4 text-white" />
+            <Award className="h-4 w-4 text-primary-foreground" />
           </div>
         </div>
       </CardHeader>
@@ -107,7 +107,7 @@ export const PerformanceSummaryComponent = ({
 
           {/* Transaction Volume */}
           {summary.transactionVolume && summary.transactionVolume.value > 0 && (
-            <div className="bg-primary rounded-lg p-3 border border-primary/30">
+            <div className="rounded-lg border border-primary/30 bg-primary/15 p-3">
               <div className="flex items-center gap-2 mb-1">
                 <Building2 className="h-4 w-4 text-primary" />
                 <span className="text-xs font-medium text-primary">
@@ -155,7 +155,7 @@ export const PerformanceSummaryComponent = ({
             {/* Average Per Deal */}
             <div className="bg-muted rounded-lg p-3 dark:bg-muted">
               <div className="flex items-center gap-2 mb-1">
-                <PieChart className="h-4 w-4 text-purple-600" />
+                <PieChart className="h-4 w-4 text-info" />
                 <span className="text-xs font-medium text-muted-foreground">
                   {t('finance:performance.averagePerDeal')}
                 </span>
@@ -175,17 +175,17 @@ export const PerformanceSummaryComponent = ({
 
           {/* Best Month */}
           {summary.bestMonth && (
-            <div className="bg-gradient-to-r from-amber-50 to-amber-100 rounded-lg p-3 border border-amber-200">
+            <div className="bg-gradient-to-r from-warning/15 to-warning/25 rounded-lg p-3 border border-warning/30">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs font-medium text-amber-700">
+                  <p className="text-xs font-medium text-warning-foreground dark:text-warning">
                     {t('finance:performance.bestMonth')}
                   </p>
-                  <p className="text-sm font-semibold text-amber-900">
+                  <p className="text-sm font-semibold text-warning-foreground dark:text-warning">
                     {summary.bestMonth.monthName}
                   </p>
                 </div>
-                <span className="text-lg font-bold text-amber-900">
+                <span className="text-lg font-bold text-warning-foreground dark:text-warning">
                   {formatMetric(summary.bestMonth.amount)}
                 </span>
               </div>
@@ -203,7 +203,7 @@ export const PerformanceSummaryComponent = ({
                 style={{ width: `${summary.rentalPercentage}%` }}
               />
               <div
-                className="bg-success/150 transition-all duration-500"
+                className="bg-success transition-all duration-500"
                 style={{ width: `${summary.salePercentage}%` }}
               />
             </div>

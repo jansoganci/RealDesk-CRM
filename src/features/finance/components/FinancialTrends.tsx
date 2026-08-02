@@ -6,7 +6,7 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { NormalizedYearlySummary } from '../../../services/finance/analytics.service';
 import { formatCurrency } from '../../../lib/currency';
 import { YearOverYearIndicator } from './YearOverYearIndicator';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 import type { TooltipItem } from 'chart.js';
 
 interface FinancialTrendsProps {
@@ -20,6 +20,7 @@ export const FinancialTrends = ({
 }: FinancialTrendsProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency: userCurrency } = useAuth();
+  const chartColors = useChartColors();
 
   const formatCurrencyLocal = (value: number) => {
     return formatCurrency(value, userCurrency || 'USD');
@@ -54,8 +55,8 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.revenue'),
         data: yearlySummary.months.map(month => month.total_income.value),
-        borderColor: COLORS.success.hex,
-        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+        borderColor: chartColors.success,
+        backgroundColor: chartColors.withAlpha('success', 0.1),
         fill: true,
         tension: 0.4,
         pointRadius: 4,
@@ -64,8 +65,8 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.expenses'),
         data: yearlySummary.months.map(month => month.total_expense.value),
-        borderColor: COLORS.danger.hex,
-        backgroundColor: 'rgba(239, 68, 68, 0.1)',
+        borderColor: chartColors.destructive,
+        backgroundColor: chartColors.withAlpha('destructive', 0.1),
         fill: true,
         tension: 0.4,
         pointRadius: 4,
@@ -74,8 +75,8 @@ export const FinancialTrends = ({
       {
         label: t('finance:analytics.profit'),
         data: yearlySummary.months.map(month => month.net_income.value),
-        borderColor: COLORS.primary.hex,
-        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+        borderColor: chartColors.primary,
+        backgroundColor: chartColors.withAlpha('primary', 0.1),
         fill: true,
         tension: 0.4,
         pointRadius: 4,
@@ -107,7 +108,7 @@ export const FinancialTrends = ({
           display: false,
         },
         ticks: {
-          color: COLORS.muted.hex,
+          color: chartColors.muted,
           font: {
             size: 12,
           },
@@ -115,11 +116,11 @@ export const FinancialTrends = ({
       },
       y: {
         grid: {
-          color: COLORS.border.hex,
+          color: chartColors.border,
           borderDash: [3, 3],
         },
         ticks: {
-          color: COLORS.muted.hex,
+          color: chartColors.muted,
           font: {
             size: 12,
           },
@@ -148,8 +149,8 @@ export const FinancialTrends = ({
             <p
               className={`text-2xl font-bold ${
                 yearlySummary.profit_margin >= 0
-                  ? 'text-green-600'
-                  : 'text-red-600'
+                  ? 'text-success'
+                  : 'text-destructive'
               }`}
             >
               {yearlySummary.profit_margin.toFixed(1)}%

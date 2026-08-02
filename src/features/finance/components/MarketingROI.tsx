@@ -16,7 +16,7 @@ import { TrendingUp, TrendingDown, DollarSign } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { MarketingROI } from '../../../services/finance/analytics.service';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface MarketingROIProps {
   data: MarketingROI | null;
@@ -29,6 +29,7 @@ export const MarketingROIComponent = ({
 }: MarketingROIProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency } = useAuth();
+  const chartColors = useChartColors();
 
   const formatMetric = (value: number) => {
     return formatCurrency(value, currency || 'USD');
@@ -58,8 +59,8 @@ export const MarketingROIComponent = ({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.marketingROI')}
             </CardTitle>
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 shadow-md">
-              <DollarSign className="h-4 w-4 text-white" />
+            <div className="rounded-lg bg-gradient-to-br from-secondary to-secondary/80 p-2.5 shadow-md">
+              <DollarSign className="h-4 w-4 text-secondary-foreground" />
             </div>
           </div>
         </CardHeader>
@@ -78,7 +79,7 @@ export const MarketingROIComponent = ({
       name: t(`finance:categories.expense.${cat.category}`) || cat.category,
       spend: cat.spend.value,
       roi: cat.roi,
-      color: cat.roi >= 0 ? COLORS.success.hex : COLORS.danger.hex,
+      color: cat.roi >= 0 ? chartColors.success : chartColors.destructive,
     }));
 
   const CustomTooltip = ({ active, payload }: FinanceChartTooltipProps) => {
@@ -90,7 +91,7 @@ export const MarketingROIComponent = ({
           <p className="text-sm text-muted-foreground">
             {t('finance:analytics.marketingSpend')}: {formatMetric(data.value ?? 0)}
           </p>
-          <p className={`text-xs font-medium ${(data.payload?.roi ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+          <p className={`text-xs font-medium ${(data.payload?.roi ?? 0) >= 0 ? 'text-success' : 'text-destructive'}`}>
             ROI: {(data.payload?.roi ?? 0) >= 0 ? '+' : ''}{(data.payload?.roi ?? 0).toFixed(1)}%
           </p>
         </div>
@@ -106,27 +107,27 @@ export const MarketingROIComponent = ({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.marketingROI')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 shadow-md">
-            <DollarSign className="h-4 w-4 text-white" />
+          <div className="rounded-lg bg-gradient-to-br from-secondary to-secondary/80 p-2.5 shadow-md">
+            <DollarSign className="h-4 w-4 text-secondary-foreground" />
           </div>
         </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           {/* Main ROI KPI */}
-          <div className="bg-gradient-to-r from-pink-50 to-purple-50 rounded-lg p-4 border border-pink-200">
+          <div className="rounded-lg border border-secondary/30 bg-gradient-to-r from-secondary/15 to-info/15 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-pink-700 font-medium mb-1">
+                <p className="mb-1 text-xs font-medium text-foreground/80">
                   {t('finance:analytics.roiPercentage')}
                 </p>
                 <div className="flex items-baseline gap-2">
                   {data.roi >= 0 ? (
-                    <TrendingUp className="h-5 w-5 text-green-600" />
+                    <TrendingUp className="h-5 w-5 text-success" />
                   ) : (
-                    <TrendingDown className="h-5 w-5 text-red-600" />
+                    <TrendingDown className="h-5 w-5 text-destructive" />
                   )}
-                  <p className={`text-3xl font-bold ${data.roi >= 0 ? 'text-green-600' : 'text-red-600'}`}>
+                  <p className={`text-3xl font-bold ${data.roi >= 0 ? 'text-success' : 'text-destructive'}`}>
                     {data.roi >= 0 ? '+' : ''}{data.roi.toFixed(1)}%
                   </p>
                 </div>
@@ -153,20 +154,20 @@ export const MarketingROIComponent = ({
               </p>
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
+                  <CartesianGrid strokeDasharray="3 3" stroke={chartColors.border} />
                   <XAxis
                     dataKey="name"
-                    tick={{ fontSize: 11, fill: COLORS.muted.hex }}
+                    tick={{ fontSize: 11, fill: chartColors.muted }}
                     tickLine={false}
-                    axisLine={{ stroke: COLORS.border.hex }}
+                    axisLine={{ stroke: chartColors.border }}
                     angle={-45}
                     textAnchor="end"
                     height={80}
                   />
                   <YAxis
-                    tick={{ fontSize: 12, fill: COLORS.muted.hex }}
+                    tick={{ fontSize: 12, fill: chartColors.muted }}
                     tickLine={false}
-                    axisLine={{ stroke: COLORS.border.hex }}
+                    axisLine={{ stroke: chartColors.border }}
                     tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
                   />
                   <Tooltip content={<CustomTooltip />} />
@@ -184,4 +185,3 @@ export const MarketingROIComponent = ({
     </Card>
   );
 };
-

@@ -38,7 +38,7 @@ export const FinancialSummaryCards = ({
       <div className="flex items-center gap-1">
         <span>{formatted}</span>
         <div title={`${t('finance:performance.missingRates')}: ${metric.missingDates.join(', ')}`}>
-          <AlertCircle className="h-4 w-4 text-amber-500 inline cursor-help" />
+          <AlertCircle className="h-4 w-4 text-warning inline cursor-help" />
         </div>
       </div>
     );
@@ -94,15 +94,15 @@ export const FinancialSummaryCards = ({
       change: incomeChange,
       icon: TrendingUp,
       iconBg: 'bg-success',
-      iconColor: 'text-white',
+      iconColor: 'text-success-foreground',
     },
     {
       title: t('finance:cards.totalExpenses'),
       metric: currentMonth?.total_expense,
       change: expenseChange,
       icon: TrendingDown,
-      iconBg: 'bg-red-600',
-      iconColor: 'text-white',
+      iconBg: 'bg-destructive',
+      iconColor: 'text-destructive-foreground',
     },
     {
       title: t('finance:cards.netProfit'),
@@ -111,8 +111,10 @@ export const FinancialSummaryCards = ({
       icon: currentMonth && currentMonth.net_income.value >= 0 ? PiggyBank : DollarSign,
       iconBg: currentMonth && currentMonth.net_income.value >= 0
         ? 'bg-primary'
-        : 'bg-amber-600',
-      iconColor: 'text-white',
+        : 'bg-warning',
+      iconColor: currentMonth && currentMonth.net_income.value >= 0
+        ? 'text-primary-foreground'
+        : 'text-warning-foreground',
     },
     {
       title: t('finance:cards.pending'),
@@ -120,7 +122,7 @@ export const FinancialSummaryCards = ({
       change: null,
       icon: Clock,
       iconBg: 'bg-muted dark:bg-muted',
-      iconColor: 'text-white',
+      iconColor: 'text-muted-foreground',
     },
   ];
 
@@ -151,15 +153,15 @@ export const FinancialSummaryCards = ({
               <div className="flex items-center mt-2 text-sm">
                 {card.change > 0 ? (
                   <>
-                    <TrendingUp className="h-4 w-4 text-green-600 mr-1" />
-                    <span className="text-green-600 font-medium">
+                    <TrendingUp className="h-4 w-4 text-success mr-1" />
+                    <span className="text-success font-medium">
                       +{card.change.toFixed(1)}%
                     </span>
                   </>
                 ) : card.change < 0 ? (
                   <>
-                    <TrendingDown className="h-4 w-4 text-red-600 mr-1" />
-                    <span className="text-red-600 font-medium">
+                    <TrendingDown className="h-4 w-4 text-destructive mr-1" />
+                    <span className="text-destructive font-medium">
                       {card.change.toFixed(1)}%
                     </span>
                   </>

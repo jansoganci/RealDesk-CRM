@@ -290,14 +290,14 @@ export const TransactionsTable = ({
                 <TableCell>
                   <div className="flex items-center gap-2">
                     {transaction.type === 'income' ? (
-                      <div className="flex items-center gap-1 text-green-600">
+                      <div className="flex items-center gap-1 text-success">
                         <TrendingUp className="h-4 w-4" />
                         <span className="font-medium">
                           {t('finance:types.income')}
                         </span>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-1 text-red-600">
+                      <div className="flex items-center gap-1 text-destructive">
                         <TrendingDown className="h-4 w-4" />
                         <span className="font-medium">
                           {t('finance:types.expense')}
@@ -321,8 +321,8 @@ export const TransactionsTable = ({
                     <span
                       className={`font-bold ${
                         transaction.type === 'income'
-                          ? 'text-green-600'
-                          : 'text-red-600'
+                          ? 'text-success'
+                          : 'text-destructive'
                       }`}
                     >
                       {transaction.type === 'income' ? '+' : '-'}
@@ -378,7 +378,7 @@ export const TransactionsTable = ({
                       <DropdownMenuItem
                         onClick={() => !isMember && onDelete(transaction.id)}
                         disabled={isMember}
-                        className={`text-red-600 ${isMember ? "opacity-50 cursor-not-allowed text-muted-foreground/70 dark:text-muted-foreground" : ""}`}
+                        className={`text-destructive ${isMember ? "opacity-50 cursor-not-allowed text-muted-foreground/70 dark:text-muted-foreground" : ""}`}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         {t('common:actions.delete')}

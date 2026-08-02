@@ -23,8 +23,8 @@ export const YearOverYearIndicator = ({
     // Previous year had no data, show as new
     return (
       <div className={`flex items-center gap-1 ${className}`}>
-        <TrendingUp className="h-4 w-4 text-green-600" />
-        <span className="text-sm font-medium text-green-600">
+        <TrendingUp className="h-4 w-4 text-success" />
+        <span className="text-sm font-medium text-success">
           {t('finance:performance.new')}
         </span>
       </div>
@@ -38,12 +38,12 @@ export const YearOverYearIndicator = ({
   return (
     <div className={`flex items-center gap-1 ${className}`}>
       {isPositive ? (
-        <TrendingUp className="h-4 w-4 text-green-600" />
+        <TrendingUp className="h-4 w-4 text-success" />
       ) : (
-        <TrendingDown className="h-4 w-4 text-red-600" />
+        <TrendingDown className="h-4 w-4 text-destructive" />
       )}
       <span className={`text-sm font-medium ${
-        isPositive ? 'text-green-600' : 'text-red-600'
+        isPositive ? 'text-success' : 'text-destructive'
       }`}>
         {isPositive ? '+' : ''}{changeAbs.toFixed(1)}%
       </span>

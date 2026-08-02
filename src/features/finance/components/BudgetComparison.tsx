@@ -6,7 +6,7 @@ import { Bar } from 'react-chartjs-2';
 import { useAuth } from '../../../contexts/AuthContext';
 import { AlertTriangle, CheckCircle2, TrendingUp } from 'lucide-react';
 import type { BudgetVsActual } from '../../../types/financial';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 import type { TooltipItem } from 'chart.js';
 
 interface BudgetComparisonProps {
@@ -22,6 +22,7 @@ export const BudgetComparison = ({
 }: BudgetComparisonProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency } = useAuth();
+  const chartColors = useChartColors();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
@@ -78,7 +79,7 @@ export const BudgetComparison = ({
       {
         label: t('finance:analytics.budgeted'),
         data: topCategories.map(item => item.budgeted),
-        backgroundColor: COLORS.disabled.hex,
+        backgroundColor: chartColors.mutedSurface,
         borderRadius: 8,
       },
       {
@@ -87,13 +88,13 @@ export const BudgetComparison = ({
         backgroundColor: topCategories.map(item => {
           switch (item.status) {
             case 'under':
-              return COLORS.success.hex;
+              return chartColors.success;
             case 'on_track':
-              return COLORS.primary.hex;
+              return chartColors.primary;
             case 'over':
-              return COLORS.danger.hex;
+              return chartColors.destructive;
             default:
-              return COLORS.muted.hex;
+              return chartColors.muted;
           }
         }),
         borderRadius: 8,
@@ -123,7 +124,7 @@ export const BudgetComparison = ({
           display: false,
         },
         ticks: {
-          color: COLORS.muted.hex,
+          color: chartColors.muted,
           font: {
             size: 11,
           },
@@ -133,11 +134,11 @@ export const BudgetComparison = ({
       },
       y: {
         grid: {
-          color: COLORS.border.hex,
+          color: chartColors.border,
           borderDash: [3, 3],
         },
         ticks: {
-          color: COLORS.muted.hex,
+          color: chartColors.muted,
           font: {
             size: 12,
           },
@@ -151,7 +152,7 @@ export const BudgetComparison = ({
     switch (status) {
       case 'under':
         return (
-          <Badge className="bg-green-100 text-green-700 border-green-200">
+          <Badge className="bg-success/15 text-success border-success/30">
             <CheckCircle2 className="h-3 w-3 mr-1" />
             {t('finance:analytics.underBudget', {
               percent: Math.abs(percentage).toFixed(0),
@@ -160,14 +161,14 @@ export const BudgetComparison = ({
         );
       case 'on_track':
         return (
-          <Badge className="bg-primary text-primary border-primary/30">
+          <Badge className="border-primary/30 bg-primary/15 text-primary">
             <TrendingUp className="h-3 w-3 mr-1" />
             {t('finance:analytics.onTrack')}
           </Badge>
         );
       case 'over':
         return (
-          <Badge className="bg-red-100 text-red-700 border-red-200">
+          <Badge className="bg-destructive/15 text-destructive border-destructive/30">
             <AlertTriangle className="h-3 w-3 mr-1" />
             {t('finance:analytics.overBudget', {
               percent: Math.abs(percentage).toFixed(0),
@@ -221,7 +222,7 @@ export const BudgetComparison = ({
                 <div className="text-right">
                   <p
                     className={`text-lg font-bold ${
-                      item.status === 'over' ? 'text-red-600' : 'text-green-600'
+                      item.status === 'over' ? 'text-destructive' : 'text-success'
                     }`}
                   >
                     {item.status === 'over' ? '-' : '+'}

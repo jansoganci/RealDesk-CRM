@@ -77,20 +77,20 @@ export const UpcomingBills = ({
   const getBadgeVariant = (bill: UpcomingRecurringExpense) => {
     if (bill.is_overdue) {
       return {
-        className: 'bg-red-100 text-red-700 border-red-200',
+        className: 'bg-destructive/15 text-destructive border-destructive/30',
         icon: AlertTriangle,
         label: t('finance:automation.overdue'),
       };
     }
     if (bill.days_until_due <= 3) {
       return {
-        className: 'bg-amber-100 text-amber-700 border-amber-200',
+        className: 'border-warning/30 bg-warning/15 text-warning-foreground dark:text-warning',
         icon: Clock,
         label: t('finance:automation.dueSoon', { days: bill.days_until_due }),
       };
     }
     return {
-      className: 'bg-primary text-primary border-primary/30',
+      className: 'border-primary/30 bg-primary/15 text-primary',
       icon: Calendar,
       label: t('finance:automation.upcoming'),
     };
@@ -119,7 +119,7 @@ export const UpcomingBills = ({
         <CardHeader>
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg shadow-md bg-success">
-              <CheckCircle2 className="h-5 w-5 text-white" />
+              <CheckCircle2 className="h-5 w-5 text-success-foreground" />
             </div>
             <div>
               <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
@@ -133,7 +133,7 @@ export const UpcomingBills = ({
         </CardHeader>
         <CardContent>
           <div className="text-center py-12">
-            <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <CheckCircle2 className="h-16 w-16 text-success mx-auto mb-4" />
             <p className="text-muted-foreground font-medium">
               {t('finance:automation.noBills')}
             </p>
@@ -161,7 +161,7 @@ export const UpcomingBills = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="p-2.5 rounded-lg shadow-md bg-primary">
-              <Calendar className="h-5 w-5 text-white" />
+              <Calendar className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
               <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
@@ -172,7 +172,7 @@ export const UpcomingBills = ({
               </p>
             </div>
           </div>
-          <Badge className="bg-primary text-primary border-primary/30 text-lg px-3 py-1">
+          <Badge className="border-primary/30 bg-primary/15 px-3 py-1 text-lg text-primary">
             {bills.length} {t('finance:automation.bills')}
           </Badge>
         </div>
@@ -188,9 +188,9 @@ export const UpcomingBills = ({
                 key={bill.recurring_expense.id}
                 className={`p-4 rounded-lg border-2 transition-all ${
                   bill.is_overdue
-                    ? 'bg-red-50 border-red-200'
+                    ? 'bg-destructive/15 border-destructive/30'
                     : bill.days_until_due <= 3
-                    ? 'bg-amber-50 border-amber-200'
+                    ? 'bg-warning/15 border-warning/30'
                     : 'bg-muted border-border dark:bg-muted dark:border-border'
                 }`}
               >
@@ -228,7 +228,7 @@ export const UpcomingBills = ({
                       size="sm"
                       onClick={() => handleMarkAsPaid(bill.recurring_expense.id)}
                       disabled={markingPaid === bill.recurring_expense.id}
-                      className="bg-success hover:bg-emerald-700 text-white"
+                      className="bg-success text-success-foreground hover:bg-success/90"
                     >
                       {markingPaid === bill.recurring_expense.id ? (
                         <span>{t('common:actions.processing')}</span>

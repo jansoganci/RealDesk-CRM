@@ -6,6 +6,7 @@ import { AnimatedTabs } from '../../../components/ui/animated-tabs';
 import { TrendingUp, TrendingDown, PieChart, AlertCircle } from 'lucide-react';
 import { NormalizedFinancialDashboard } from '../../../services/finance/analytics.service';
 import { formatCurrency } from '../../../lib/currency';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface FinancialChartsProps {
   dashboard: NormalizedFinancialDashboard | null;
@@ -19,6 +20,7 @@ export const FinancialCharts = ({
   const { t } = useTranslation(['finance', 'common']);
   const { currency: userCurrency } = useAuth();
   const [breakdownTab, setBreakdownTab] = useState<'income' | 'expense'>('expense');
+  const chartColors = useChartColors();
 
   const formatCurrencyLocal = (value: number) => {
     return formatCurrency(value, userCurrency || 'USD');
@@ -42,12 +44,24 @@ export const FinancialCharts = ({
     })) || [];
 
   // Colors for progress bars
-  const INCOME_COLORS = ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
-  const EXPENSE_COLORS = ['#ef4444', '#f97316', '#ec4899', '#3b82f6', '#8b5cf6'];
+  const incomeColors = [
+    chartColors.success,
+    chartColors.chart3,
+    chartColors.info,
+    chartColors.chart2,
+    chartColors.chart5,
+  ];
+  const expenseColors = [
+    chartColors.destructive,
+    chartColors.warning,
+    chartColors.chart2,
+    chartColors.info,
+    chartColors.primary,
+  ];
 
   // Get active data based on tab
   const activeData = breakdownTab === 'income' ? incomeData : expenseData;
-  const activeColors = breakdownTab === 'income' ? INCOME_COLORS : EXPENSE_COLORS;
+  const activeColors = breakdownTab === 'income' ? incomeColors : expenseColors;
 
   // Calculate total for percentage
   const activeTotal = activeData.reduce((sum, item) => sum + item.value, 0);
@@ -72,8 +86,8 @@ export const FinancialCharts = ({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:charts.expenseBreakdown')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
-            <PieChart className="h-4 w-4 text-white" />
+          <div className="rounded-lg bg-gradient-to-br from-info to-info/80 p-2.5 shadow-md">
+            <PieChart className="h-4 w-4 text-info-foreground" />
           </div>
         </div>
         <AnimatedTabs
@@ -131,7 +145,7 @@ export const FinancialCharts = ({
                           </span>
                           {!item.isComplete && (
                             <div title={`${t('finance:performance.missingRates')}: ${item.missingDates.join(', ')}`}>
-                              <AlertCircle className="h-3 w-3 text-amber-500 cursor-help" />
+                              <AlertCircle className="h-3 w-3 text-warning cursor-help" />
                             </div>
                           )}
                         </div>

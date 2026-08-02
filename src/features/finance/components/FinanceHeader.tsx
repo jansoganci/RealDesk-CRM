@@ -85,7 +85,7 @@ export const FinanceHeader = ({
                     className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted dark:hover:bg-muted flex items-center gap-2"
                     disabled={loading}
                   >
-                    <FileText className="h-4 w-4 text-green-600" />
+                    <FileText className="h-4 w-4 text-success" />
                     {t('finance:export.exportCSV')}
                   </button>
                   <button
@@ -96,7 +96,7 @@ export const FinanceHeader = ({
                     className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted dark:hover:bg-muted flex items-center gap-2"
                     disabled={loading}
                   >
-                    <FileDown className="h-4 w-4 text-red-600" />
+                    <FileDown className="h-4 w-4 text-destructive" />
                     {t('finance:export.exportPDF')}
                   </button>
                   <button

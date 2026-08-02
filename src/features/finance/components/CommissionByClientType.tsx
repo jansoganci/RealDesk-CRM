@@ -16,7 +16,7 @@ import { Users } from 'lucide-react';
 import { useAuth } from '../../../contexts/AuthContext';
 import { formatCurrency } from '../../../lib/currency';
 import type { CommissionByClientType } from '../../../services/finance/analytics.service';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface CommissionByClientTypeProps {
   data: CommissionByClientType | null;
@@ -29,6 +29,7 @@ export const CommissionByClientTypeComponent = ({
 }: CommissionByClientTypeProps) => {
   const { t } = useTranslation(['finance', 'common']);
   const { currency } = useAuth();
+  const chartColors = useChartColors();
 
   const formatMetric = (value: number) => {
     return formatCurrency(value, currency || 'USD');
@@ -58,8 +59,8 @@ export const CommissionByClientTypeComponent = ({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.commissionByClientType')}
             </CardTitle>
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-md">
-              <Users className="h-4 w-4 text-white" />
+            <div className="rounded-lg bg-gradient-to-br from-primary to-primary/80 p-2.5 shadow-md">
+              <Users className="h-4 w-4 text-primary-foreground" />
             </div>
           </div>
         </CardHeader>
@@ -87,19 +88,19 @@ export const CommissionByClientTypeComponent = ({
       name: t('finance:analytics.ownerCommissions'),
       value: data.owner.value,
       percentage: ownerPercentage,
-      color: COLORS.primary.hex,
+      color: chartColors.primary,
     },
     {
       name: t('finance:analytics.tenantCommissions'),
       value: data.tenant.value,
       percentage: tenantPercentage,
-      color: COLORS.success.hex,
+      color: chartColors.success,
     },
     {
       name: t('finance:analytics.buyerCommissions'),
       value: data.buyer.value,
       percentage: buyerPercentage,
-      color: COLORS.warning.hex,
+      color: chartColors.warning,
     },
   ];
 
@@ -128,8 +129,8 @@ export const CommissionByClientTypeComponent = ({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.commissionByClientType')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 shadow-md">
-            <Users className="h-4 w-4 text-white" />
+          <div className="rounded-lg bg-gradient-to-br from-primary to-primary/80 p-2.5 shadow-md">
+            <Users className="h-4 w-4 text-primary-foreground" />
           </div>
         </div>
       </CardHeader>
@@ -137,7 +138,7 @@ export const CommissionByClientTypeComponent = ({
         <div className="space-y-4">
           {/* Summary Stats */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-primary rounded-lg p-3 border border-primary/30">
+            <div className="rounded-lg border border-primary/30 bg-primary/15 p-3">
               <p className="text-xs text-primary font-medium mb-1">
                 {t('finance:analytics.ownerCommissions')}
               </p>
@@ -148,25 +149,25 @@ export const CommissionByClientTypeComponent = ({
                 {ownerPercentage.toFixed(1)}%
               </p>
             </div>
-            <div className="bg-green-50 rounded-lg p-3 border border-green-200">
-              <p className="text-xs text-green-700 font-medium mb-1">
+            <div className="bg-success/15 rounded-lg p-3 border border-success/30">
+              <p className="text-xs text-success font-medium mb-1">
                 {t('finance:analytics.tenantCommissions')}
               </p>
-              <p className="text-lg font-bold text-green-900">
+              <p className="text-lg font-bold text-success">
                 {formatMetric(data.tenant.value)}
               </p>
-              <p className="text-xs text-green-600 mt-1">
+              <p className="text-xs text-success mt-1">
                 {tenantPercentage.toFixed(1)}%
               </p>
             </div>
-            <div className="bg-amber-50 rounded-lg p-3 border border-amber-200">
-              <p className="text-xs text-amber-700 font-medium mb-1">
+            <div className="bg-warning/15 rounded-lg p-3 border border-warning/30">
+              <p className="mb-1 text-xs font-medium text-warning-foreground dark:text-warning">
                 {t('finance:analytics.buyerCommissions')}
               </p>
-              <p className="text-lg font-bold text-amber-900">
+              <p className="text-lg font-bold text-warning-foreground dark:text-warning">
                 {formatMetric(data.buyer.value)}
               </p>
-              <p className="text-xs text-amber-600 mt-1">
+              <p className="mt-1 text-xs text-warning-foreground dark:text-warning">
                 {buyerPercentage.toFixed(1)}%
               </p>
             </div>
@@ -176,17 +177,17 @@ export const CommissionByClientTypeComponent = ({
           <div className="h-[250px]">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
+                <CartesianGrid strokeDasharray="3 3" stroke={chartColors.border} />
                 <XAxis
                   dataKey="name"
-                  tick={{ fontSize: 12, fill: COLORS.muted.hex }}
+                  tick={{ fontSize: 12, fill: chartColors.muted }}
                   tickLine={false}
-                  axisLine={{ stroke: COLORS.border.hex }}
+                  axisLine={{ stroke: chartColors.border }}
                 />
                 <YAxis
-                  tick={{ fontSize: 12, fill: COLORS.muted.hex }}
+                  tick={{ fontSize: 12, fill: chartColors.muted }}
                   tickLine={false}
-                  axisLine={{ stroke: COLORS.border.hex }}
+                  axisLine={{ stroke: chartColors.border }}
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
                 />
                 <Tooltip content={<CustomTooltip />} />
@@ -203,4 +204,3 @@ export const CommissionByClientTypeComponent = ({
     </Card>
   );
 };
-

@@ -69,10 +69,14 @@ export const FinancialRatiosComponent = ({
       iconBg:
         ratios.cash_flow_forecast_30d >= 0
           ? 'bg-success'
-          : 'bg-red-600',
+          : 'bg-destructive',
+      iconColor:
+        ratios.cash_flow_forecast_30d >= 0
+          ? 'text-success-foreground'
+          : 'text-destructive-foreground',
       trend: ratios.cash_flow_forecast_30d >= 0 ? 'up' : 'down',
       trendColor:
-        ratios.cash_flow_forecast_30d >= 0 ? 'text-green-600' : 'text-red-600',
+        ratios.cash_flow_forecast_30d >= 0 ? 'text-success' : 'text-destructive',
     },
     {
       title: t('finance:analytics.expenseRatio'),
@@ -83,15 +87,21 @@ export const FinancialRatiosComponent = ({
         ratios.expense_ratio < 30
           ? 'bg-success'
           : ratios.expense_ratio < 50
-          ? 'bg-amber-600'
-          : 'bg-red-600',
+          ? 'bg-warning'
+          : 'bg-destructive',
+      iconColor:
+        ratios.expense_ratio < 30
+          ? 'text-success-foreground'
+          : ratios.expense_ratio < 50
+          ? 'text-warning-foreground'
+          : 'text-destructive-foreground',
       trend: ratios.expense_ratio < 50 ? 'down' : 'up',
       trendColor:
         ratios.expense_ratio < 30
-          ? 'text-green-600'
+          ? 'text-success'
           : ratios.expense_ratio < 50
-          ? 'text-amber-600'
-          : 'text-red-600',
+          ? 'text-warning-foreground dark:text-warning'
+          : 'text-destructive',
     },
   ];
 
@@ -110,7 +120,7 @@ export const FinancialRatiosComponent = ({
               <div
                 className={`p-2.5 rounded-lg ${kpi.iconBg} shadow-md`}
               >
-                <kpi.icon className="h-4 w-4 text-white" />
+                <kpi.icon className={`h-4 w-4 ${kpi.iconColor}`} />
               </div>
             </div>
           </CardHeader>

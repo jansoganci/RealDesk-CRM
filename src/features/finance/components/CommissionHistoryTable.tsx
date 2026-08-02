@@ -386,7 +386,7 @@ export const CommissionHistoryTable = () => {
                     <TableCell>{row.property_address}</TableCell>
                     <TableCell>{row.type}</TableCell>
                     <TableCell>${(row.gross_commission ?? 0).toLocaleString()}</TableCell>
-                    <TableCell className="font-medium text-success dark:text-emerald-400">${(row.net_commission ?? row.amount ?? 0).toLocaleString()}</TableCell>
+                    <TableCell className="font-medium text-success">${(row.net_commission ?? row.amount ?? 0).toLocaleString()}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

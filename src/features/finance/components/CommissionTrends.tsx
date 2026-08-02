@@ -13,7 +13,7 @@ import {
 } from 'recharts';
 import { TrendingUp } from 'lucide-react';
 import type { MonthlyCommissionData } from '../../../types';
-import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 
 interface CommissionTrendsProps {
   data: MonthlyCommissionData[];
@@ -25,6 +25,7 @@ export const CommissionTrends = ({
   loading = false,
 }: CommissionTrendsProps) => {
   const { t } = useTranslation(['finance', 'common']);
+  const chartColors = useChartColors();
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('tr-TR', {
@@ -62,8 +63,8 @@ export const CommissionTrends = ({
             <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:commissionTrends.title')}
             </CardTitle>
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
-              <TrendingUp className="h-4 w-4 text-white" />
+            <div className="rounded-lg bg-gradient-to-br from-primary to-primary/80 p-2.5 shadow-md">
+              <TrendingUp className="h-4 w-4 text-primary-foreground" />
             </div>
           </div>
         </CardHeader>
@@ -83,8 +84,8 @@ export const CommissionTrends = ({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:commissionTrends.title')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
-            <TrendingUp className="h-4 w-4 text-white" />
+          <div className="rounded-lg bg-gradient-to-br from-primary to-primary/80 p-2.5 shadow-md">
+            <TrendingUp className="h-4 w-4 text-primary-foreground" />
           </div>
         </div>
       </CardHeader>
@@ -95,27 +96,27 @@ export const CommissionTrends = ({
               data={chartData}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
-              <CartesianGrid strokeDasharray="3 3" stroke={COLORS.border.hex} />
+              <CartesianGrid strokeDasharray="3 3" stroke={chartColors.border} />
               <XAxis
                 dataKey="monthName"
-                tick={{ fontSize: 12, fill: COLORS.muted.hex }}
+                tick={{ fontSize: 12, fill: chartColors.muted }}
                 tickLine={false}
-                axisLine={{ stroke: COLORS.border.hex }}
+                axisLine={{ stroke: chartColors.border }}
               />
               <YAxis
-                tick={{ fontSize: 12, fill: COLORS.muted.hex }}
+                tick={{ fontSize: 12, fill: chartColors.muted }}
                 tickLine={false}
-                axisLine={{ stroke: COLORS.border.hex }}
+                axisLine={{ stroke: chartColors.border }}
                 tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
               />
               <Tooltip
                 formatter={(value: number) => formatCurrency(value)}
-                labelStyle={{ color: COLORS.text.hex, fontWeight: 600 }}
+                labelStyle={{ color: chartColors.foreground, fontWeight: 600 }}
                 contentStyle={{
-                  backgroundColor: 'white',
-                  border: `1px solid ${COLORS.border.hex}`,
+                  backgroundColor: chartColors.card,
+                  border: `1px solid ${chartColors.border}`,
                   borderRadius: '8px',
-                  boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)',
+                  boxShadow: '0 4px 6px -1px hsl(var(--foreground) / 0.1)',
                 }}
               />
               <Legend
@@ -132,18 +133,18 @@ export const CommissionTrends = ({
                 type="monotone"
                 dataKey="rental"
                 name="rental"
-                stroke={COLORS.primary.hex}
+                stroke={chartColors.primary}
                 strokeWidth={2}
-                dot={{ fill: COLORS.primary.hex, r: 4 }}
+                dot={{ fill: chartColors.primary, r: 4 }}
                 activeDot={{ r: 6 }}
               />
               <Line
                 type="monotone"
                 dataKey="sale"
                 name="sale"
-                stroke={COLORS.success.hex}
+                stroke={chartColors.success}
                 strokeWidth={2}
-                dot={{ fill: COLORS.success.hex, r: 4 }}
+                dot={{ fill: chartColors.success, r: 4 }}
                 activeDot={{ r: 6 }}
               />
             </LineChart>
