@@ -160,18 +160,18 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
   const displaySubtitle = subtitle !== undefined ? subtitle : t('header.subtitle');
 
   return (
-    <section className="w-full bg-gradient-to-b from-slate-50 via-neutral-50 to-white dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 px-3 sm:px-4 pb-8 sm:pb-12">
+    <section className="w-full bg-gradient-to-b from-background via-muted/40 to-background px-3 sm:px-4 pb-8 sm:pb-12">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         {showHeader && (displayTitle || displaySubtitle) && (
           <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
             {displayTitle && (
-              <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100">
+              <h2 className="text-3xl md:text-4xl font-bold text-foreground">
                 {displayTitle}
               </h2>
             )}
             {displaySubtitle && (
-              <p className="text-base md:text-lg text-slate-600 dark:text-slate-300">
+              <p className="text-base md:text-lg text-muted-foreground">
                 {displaySubtitle}
               </p>
             )}
@@ -180,12 +180,12 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
 
         {/* Billing Period Toggle */}
         <div className="flex justify-center mb-10">
-          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 bg-white dark:bg-slate-900 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm">
+          <div className="inline-flex items-center gap-1 sm:gap-2 p-1 bg-card rounded-full border border-border shadow-sm">
             <button
               onClick={() => setBillingPeriod('monthly')}
               className={`px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all ${billingPeriod === 'monthly'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
+                ? 'bg-primary text-primary-foreground shadow-md'
+                : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
               {t('billingPeriod.monthly')}
@@ -193,8 +193,8 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
             <button
               onClick={() => setBillingPeriod('yearly')}
               className={`px-4 sm:px-6 py-1.5 sm:py-2 rounded-full text-xs sm:text-sm font-medium transition-all relative ${billingPeriod === 'yearly'
-                ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-md'
-                : 'text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100'
+                ? 'bg-primary text-primary-foreground shadow-md'
+                : 'text-muted-foreground hover:text-foreground'
                 }`}
             >
               {t('billingPeriod.yearly')}
@@ -219,23 +219,23 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
               <Card
                 key={plan.id}
                 className={`relative flex flex-col h-full rounded-2xl transition-all hover:shadow-xl ${plan.popular
-                  ? 'border-2 border-blue-500 shadow-lg scale-100 md:scale-105 z-10'
-                  : 'border border-slate-200 dark:border-slate-700'
+                  ? 'border-2 border-secondary shadow-lg scale-100 md:scale-105 z-10'
+                  : 'border border-border'
                   }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-3 sm:-top-4 left-1/2 -translate-x-1/2">
-                    <span className="bg-gradient-to-r from-blue-600 to-blue-700 text-white text-[10px] sm:text-xs font-semibold px-3 sm:px-4 py-0.5 sm:py-1 rounded-full shadow-md">
+                    <span className="bg-secondary text-secondary-foreground text-[10px] sm:text-xs font-semibold px-3 sm:px-4 py-0.5 sm:py-1 rounded-full shadow-md">
                       {t('popular')}
                     </span>
                   </div>
                 )}
 
                 <CardHeader className="text-center pb-3 sm:pb-4 px-4 sm:px-6">
-                  <CardTitle className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100">
+                  <CardTitle className="text-xl sm:text-2xl font-bold text-foreground">
                     {t(plan.nameKey)}
                   </CardTitle>
-                  <CardDescription className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 mt-2">
+                  <CardDescription className="text-xs sm:text-sm text-muted-foreground mt-2">
                     {t(plan.descriptionKey)}
                   </CardDescription>
                 </CardHeader>
@@ -243,7 +243,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                 <CardContent className="flex-1 flex flex-col px-4 sm:px-6 pb-4 sm:pb-6">
                   {/* Trial Badge */}
                   <div className="flex justify-center mb-4">
-                    <span className="inline-flex items-center rounded-full border border-blue-200 bg-blue-50 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-blue-700 text-center leading-tight">
+                    <span className="inline-flex items-center rounded-full border border-secondary/40 bg-secondary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-secondary-foreground text-center leading-tight">
                       {t('trialBadge')}
                     </span>
                   </div>
@@ -251,16 +251,16 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                   {/* Price */}
                   <div className="text-center mb-6">
                     <div className="flex items-baseline justify-center gap-2">
-                      <span className="text-3xl sm:text-4xl font-bold text-slate-900 dark:text-slate-100">{price}</span>
-                      <span className="text-base sm:text-lg text-slate-600 dark:text-slate-300">{currencySymbol}</span>
+                      <span className="text-3xl sm:text-4xl font-bold text-foreground">{price}</span>
+                      <span className="text-base sm:text-lg text-muted-foreground">{currencySymbol}</span>
                     </div>
-                    <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
                       {price}{currencySymbol}{periodText}
                     </p>
                     {billingPeriod === 'yearly' && (
-                      <p className="text-xs text-blue-600 mt-1 font-medium">
+                      <p className="text-xs text-secondary-foreground mt-1 font-medium">
                         {yearlyPrice}{currencySymbol} {t('price.yearlyDiscount')}{' '}
-                        <span className="line-through text-slate-400 dark:text-slate-500">
+                        <span className="line-through text-muted-foreground">
                           {(monthlyPrice * 12).toFixed(0)}{currencySymbol}
                         </span>
                       </p>
@@ -273,8 +273,8 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                       const Icon = feature.icon;
                       return (
                         <li key={index} className="flex items-start gap-2 sm:gap-3">
-                          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 mt-0.5 shrink-0" />
-                          <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-200 leading-relaxed">
+                          <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-secondary mt-0.5 shrink-0" />
+                          <span className="text-xs sm:text-sm text-foreground/80 leading-relaxed">
                             {t(feature.textKey)}
                           </span>
                         </li>
@@ -287,13 +287,13 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                     onClick={() => handleSelectPlan(plan.id)}
                     disabled={loading !== null}
                     className={`w-full rounded-xl py-2.5 sm:py-3 ${plan.popular
-                      ? 'bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white'
-                      : 'bg-slate-900 hover:bg-slate-800 text-white dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-slate-200 '
+                      ? 'bg-secondary text-secondary-foreground hover:bg-secondary/90'
+                      : 'bg-primary text-primary-foreground hover:bg-primary/90'
                       }`}
                   >
                     {loading === plan.id ? (
                       <span className="flex items-center gap-2">
-                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"></div>
                         <span className="text-xs sm:text-sm">{t('pricingToasts.loading')}</span>
                       </span>
                     ) : (

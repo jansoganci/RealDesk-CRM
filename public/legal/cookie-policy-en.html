@@ -6,28 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cookie Policy - Closewell</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0D1B2A',
+                        gold: '#C9A46A',
+                        cream: '#F7F6F2',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #F7F6F2;
+            color: #0D1B2A;
+        }
+        a:hover {
+            color: #C9A46A;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-cream text-navy">
     <div class="min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 shadow-sm">
+        <header class="bg-navy border-b border-navy shadow-sm">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div class="flex items-center justify-between">
-                    <a href="/"
-                        class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        Closewell
+                    <a href="/" class="inline-flex items-center" aria-label="Closewell home">
+                        <img src="/brand/closewell-logo-dark.png" alt="Closewell" class="h-9 w-auto" />
                     </a>
                     <div class="flex items-center gap-4">
-                        <a href="/" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Back to Home</a>
+                        <a href="/" class="text-sm text-gold hover:opacity-80 font-medium">Back to Home</a>
                     </div>
                 </div>
             </div>
@@ -66,7 +83,7 @@
                         <h2 class="text-2xl font-semibold text-gray-900 mb-4">3. Cookies We Use</h2>
 
                         <div class="space-y-6">
-                            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                            <div class="bg-cream border border-gold/40 rounded-lg p-6">
                                 <h3 class="text-xl font-semibold text-gray-900 mb-3">Strictly Necessary Cookies</h3>
                                 <p class="text-gray-700 leading-relaxed mb-3">
                                     These cookies are essential for the operation of the Platform. They enable you to
@@ -130,10 +147,10 @@
                         <p class="text-gray-700 leading-relaxed mt-4">
                             For more information, please review the
                             <a href="https://supabase.com/privacy" target="_blank"
-                                class="text-blue-600 hover:text-blue-700 underline">Supabase Privacy Policy</a>
+                                class="text-navy hover:text-gold underline">Supabase Privacy Policy</a>
                             and
                             <a href="https://policies.google.com/technologies/cookies" target="_blank"
-                                class="text-blue-600 hover:text-blue-700 underline">Google Cookie Policy</a>.
+                                class="text-navy hover:text-gold underline">Google Cookie Policy</a>.
                         </p>
                     </section>
 
@@ -231,7 +248,7 @@
                         <p class="text-gray-700 leading-relaxed mb-4">
                             If you have questions about our cookie policy, please contact us:
                         </p>
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                        <div class="bg-cream border border-gold/40 rounded-lg p-6">
                             <p class="text-gray-700"><strong>Email:</strong> info@janstrade.com</p>
                             <p class="text-gray-700 mt-2"><strong>Address:</strong> 30 N Gould St, STE 4000, Sheridan,
                                 Wyoming, 82801, United States</p>
@@ -245,10 +262,10 @@
                         <p class="text-sm text-gray-500">© 2025 Jans Trade, LLC. All rights reserved.</p>
                         <div class="flex gap-6">
                             <a href="privacy-policy-en.html"
-                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Privacy Policy</a>
+                                class="text-sm text-gray-600 hover:text-gold transition-colors">Privacy Policy</a>
                             <a href="terms-of-service-en.html"
-                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Terms of Service</a>
-                            <a href="/" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Home</a>
+                                class="text-sm text-gray-600 hover:text-gold transition-colors">Terms of Service</a>
+                            <a href="/" class="text-sm text-gray-600 hover:text-gold transition-colors">Home</a>
                         </div>
                     </div>
                 </div>

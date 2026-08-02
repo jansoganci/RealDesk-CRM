@@ -70,7 +70,7 @@ export const LandingHeader = () => {
             <Button
               onClick={() => handleNavigation(ROUTES.REGISTER)}
               variant="outline"
-              className="border-blue-600 text-blue-600 hover:bg-blue-50 rounded-full px-6 h-10 text-sm font-semibold transition-all duration-200"
+              className="border-primary text-primary hover:bg-primary/10 rounded-full px-6 h-10 text-sm font-semibold transition-all duration-200"
             >
               {t('header.cta')}
             </Button>
@@ -126,7 +126,7 @@ export const LandingHeader = () => {
           {/* Primary CTA */}
           <Button
             onClick={() => handleNavigation(ROUTES.REGISTER)}
-            className="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200"
+            className="mt-2 w-full bg-primary hover:bg-primary/90 text-primary-foreground rounded-lg py-3 text-sm font-semibold shadow-md hover:shadow-lg transition-all duration-200"
           >
             {t('header.cta')}
           </Button>

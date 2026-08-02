@@ -4,30 +4,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cookie Disclosure - Real Estate CRM</title>
+    <title>Cookie Disclosure - Closewell</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: '#0D1B2A',
+                        gold: '#C9A46A',
+                        cream: '#F7F6F2',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
+            background-color: #F7F6F2;
+            color: #0D1B2A;
+        }
+        a:hover {
+            color: #C9A46A;
         }
     </style>
 </head>
 
-<body class="bg-gray-50 text-gray-900">
+<body class="bg-cream text-navy">
     <div class="min-h-screen">
         <!-- Header -->
-        <header class="bg-white border-b border-gray-200 shadow-sm">
+        <header class="bg-navy border-b border-navy shadow-sm">
             <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
                 <div class="flex items-center justify-between">
-                    <a href="/"
-                        class="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
-                        Closewell
+                    <a href="/" class="inline-flex items-center" aria-label="Closewell home">
+                        <img src="/brand/closewell-logo-dark.png" alt="Closewell" class="h-9 w-auto" />
                     </a>
                     <div class="flex items-center gap-4">
-                        <a href="/" class="text-sm text-blue-600 hover:text-blue-700 font-medium">Back to Home</a>
+                        <a href="/" class="text-sm text-gold hover:opacity-80 font-medium">Back to Home</a>
                     </div>
                 </div>
             </div>
@@ -42,7 +59,7 @@
                 <div class="prose prose-lg max-w-none space-y-8">
                     <!-- Introduction -->
                     <section>
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6">
+                        <div class="bg-cream border border-gold/40 rounded-lg p-6 mb-6">
                             <p class="text-gray-700 leading-relaxed">
                                 This Cookie Disclosure is provided by <strong>Jans Trade, LLC</strong> ("we", "us", "our") 
                                 in compliance with the <strong>General Data Protection Regulation (GDPR)</strong> and 
@@ -76,13 +93,13 @@
                                     <tr>
                                         <td class="px-4 py-3 text-sm font-medium text-gray-900">Email</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">
-                                            <a href="mailto:info@janstrade.com" class="text-blue-600 hover:text-blue-700 underline">info@janstrade.com</a>
+                                            <a href="mailto:info@janstrade.com" class="text-navy hover:text-gold underline">info@janstrade.com</a>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td class="px-4 py-3 text-sm font-medium text-gray-900">Website</td>
                                         <td class="px-4 py-3 text-sm text-gray-700">
-                                            <a href="/" class="text-blue-600 hover:text-blue-700 underline">Real Estate CRM</a>
+                                            <a href="/" class="text-navy hover:text-gold underline">Closewell</a>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -213,7 +230,7 @@
                             </table>
                         </div>
 
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <div class="bg-cream border border-gold/40 rounded-lg p-4 mb-4">
                             <p class="text-gray-700 leading-relaxed">
                                 <strong>Note on Google Tag Manager:</strong> Google Tag Manager (GTM) is a tag management system 
                                 that helps us manage and deploy marketing and analytics tags. GTM itself is not a cookie, but 
@@ -322,7 +339,7 @@
 
                         <h3 class="text-xl font-semibold text-gray-900 mb-3 mt-6">6.3. Third-Party Service Provider Data Processing Policies</h3>
                         <ul class="list-disc list-inside space-y-2 text-gray-700 ml-4">
-                            <li><strong>Google:</strong> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-700 underline">Google Privacy Policy</a></li>
+                            <li><strong>Google:</strong> <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" class="text-navy hover:text-gold underline">Google Privacy Policy</a></li>
                         </ul>
                     </section>
 
@@ -386,7 +403,7 @@
                             <li>Changes are applied immediately</li>
                         </ul>
 
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                        <div class="bg-cream border border-gold/40 rounded-lg p-4 mb-4">
                             <p class="text-gray-700 leading-relaxed">
                                 <strong>Withdrawing Cookie Consent:</strong><br>
                                 You can withdraw your consent by disabling analytics cookies in the "Cookie Settings" option. 
@@ -431,11 +448,11 @@
                             To exercise any of these rights, please contact us using the following methods:
                         </p>
 
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-4">
+                        <div class="bg-cream border border-gold/40 rounded-lg p-6 mb-4">
                             <p class="text-gray-700 leading-relaxed mb-2"><strong>Contact Methods:</strong></p>
                             <p class="text-gray-700 leading-relaxed mb-2">
                                 <strong>1) Email:</strong><br>
-                                <a href="mailto:info@janstrade.com" class="text-blue-600 hover:text-blue-700 underline">info@janstrade.com</a>
+                                <a href="mailto:info@janstrade.com" class="text-navy hover:text-gold underline">info@janstrade.com</a>
                             </p>
                             <p class="text-gray-700 leading-relaxed">
                                 <strong>2) Postal Mail:</strong><br>
@@ -466,7 +483,7 @@
                         <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
                             <p class="text-gray-700 leading-relaxed">
                                 <strong>For EU Residents:</strong> Find your local supervisory authority at 
-                                <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" class="text-blue-600 hover:text-blue-700 underline">European Data Protection Board</a>
+                                <a href="https://edpb.europa.eu/about-edpb/about-edpb/members_en" target="_blank" rel="noopener noreferrer" class="text-navy hover:text-gold underline">European Data Protection Board</a>
                             </p>
                         </div>
                     </section>
@@ -477,8 +494,8 @@
                         <p class="text-gray-700 leading-relaxed mb-4">
                             If you have questions about this Cookie Disclosure, please contact us:
                         </p>
-                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                            <p class="text-gray-700"><strong>Email:</strong> <a href="mailto:info@janstrade.com" class="text-blue-600 hover:text-blue-700 underline">info@janstrade.com</a></p>
+                        <div class="bg-cream border border-gold/40 rounded-lg p-6">
+                            <p class="text-gray-700"><strong>Email:</strong> <a href="mailto:info@janstrade.com" class="text-navy hover:text-gold underline">info@janstrade.com</a></p>
                             <p class="text-gray-700 mt-2"><strong>Address:</strong> 30 N Gould St, STE 4000, Sheridan, Wyoming, 82801, United States</p>
                         </div>
                     </section>
@@ -490,12 +507,12 @@
                         <p class="text-sm text-gray-500">© 2025 Jans Trade, LLC. All rights reserved.</p>
                         <div class="flex gap-6">
                             <a href="cookie-policy-en.html"
-                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Cookie Policy</a>
+                                class="text-sm text-gray-600 hover:text-gold transition-colors">Cookie Policy</a>
                             <a href="privacy-policy-en.html"
-                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Privacy Policy</a>
+                                class="text-sm text-gray-600 hover:text-gold transition-colors">Privacy Policy</a>
                             <a href="terms-of-service-en.html"
-                                class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Terms of Service</a>
-                            <a href="/" class="text-sm text-gray-600 hover:text-blue-600 transition-colors">Home</a>
+                                class="text-sm text-gray-600 hover:text-gold transition-colors">Terms of Service</a>
+                            <a href="/" class="text-sm text-gray-600 hover:text-gold transition-colors">Home</a>
                         </div>
                     </div>
                     <div class="mt-6 pt-6 border-t border-gray-200">
