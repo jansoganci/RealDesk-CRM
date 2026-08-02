@@ -3,7 +3,6 @@ import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 
 import { cn } from '@/lib/utils';
-import { COLORS } from '@/config/colors';
 
 const buttonVariants = cva(
   'relative group inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 appearance-none [-webkit-appearance:none] [-moz-appearance:none] align-middle',
@@ -11,21 +10,15 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          'bg-blue-600 text-white shadow hover:bg-blue-700',
+          'bg-primary text-primary-foreground shadow hover:bg-primary/90',
         destructive:
           'bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90',
-        outline: cn(
-          'border-2 shadow-sm transition-all',
-          COLORS.border.DEFAULT_class,
-          COLORS.card.bg,
-          'hover:bg-gray-50 hover:text-foreground hover:border-gray-400',
-          'dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100',
-          'dark:hover:bg-slate-800 dark:hover:border-slate-500 dark:hover:text-foreground'
-        ),
+        outline:
+          'border-2 border-border bg-card text-foreground shadow-sm transition-all hover:bg-muted hover:border-muted-foreground/40 dark:border-border dark:bg-card dark:hover:bg-muted',
         secondary:
-          'bg-emerald-600 text-white shadow-sm hover:bg-emerald-700',
-        ghost: 'hover:bg-orange-500 hover:text-white',
-        link: 'text-blue-600 underline-offset-4 hover:underline',
+          'bg-secondary text-secondary-foreground shadow-sm hover:bg-secondary/90',
+        ghost: 'hover:bg-accent/20 hover:text-accent-foreground',
+        link: 'text-primary underline-offset-4 hover:underline',
       },
       size: {
         default: 'h-11 px-4 py-2 md:h-9',
@@ -57,7 +50,6 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         {...props}
       >
-        {/* Content wrapper for proper z-index and alignment */}
         <span className="relative inline-flex items-center gap-2">
           {children}
         </span>
