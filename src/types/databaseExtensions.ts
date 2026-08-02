@@ -4,10 +4,53 @@ import type { Database as FullDatabase } from './database';
 type DealRow = Database['public']['Tables']['deals']['Row'];
 type OfferNegotiationRow = Database['public']['Tables']['offer_negotiations']['Row'];
 
+type ContractDocumentArtifactRow = {
+  id: string;
+  org_id: string;
+  user_id: string;
+  contract_id: string;
+  deal_id: string | null;
+  doc_type: string;
+  jurisdiction: string;
+  template_id: string;
+  template_version: string;
+  generated_at: string;
+  source_transaction_id: string;
+  storage_path: string | null;
+  input_snapshot: Json | null;
+  counsel_approval_ref: string | null;
+  created_at: string;
+};
+
+type ContractDocumentArtifactInsert = {
+  id?: string;
+  org_id: string;
+  user_id: string;
+  contract_id: string;
+  deal_id?: string | null;
+  doc_type: string;
+  jurisdiction: string;
+  template_id: string;
+  template_version: string;
+  generated_at?: string;
+  source_transaction_id: string;
+  storage_path?: string | null;
+  input_snapshot?: Json | null;
+  counsel_approval_ref?: string | null;
+  created_at?: string;
+};
+
 type ExtendedTables = Pick<
   FullDatabase['public']['Tables'],
   'commissions' | 'user_preferences'
->;
+> & {
+  contract_document_artifacts: {
+    Row: ContractDocumentArtifactRow;
+    Insert: ContractDocumentArtifactInsert;
+    Update: Partial<ContractDocumentArtifactInsert>;
+    Relationships: [];
+  };
+};
 
 type ExtendedFunctions = Pick<
   FullDatabase['public']['Functions'],

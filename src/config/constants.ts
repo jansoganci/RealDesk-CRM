@@ -1,6 +1,10 @@
 export const APP_NAME = 'RealDesk';
 
-/** Statutory security deposit return deadlines in days, by US state code. */
+/**
+ * Typical statutory deposit-return day counts used as wizard defaults.
+ * AZ value (14) means 14 days excluding Saturdays, Sundays, and legal holidays (A.R.S. §33-1321) —
+ * not plain calendar days. FL (15) is the “no claim” return window; claim notices may use 30 days.
+ */
 export const STATE_DEPOSIT_RETURN_DAYS: Record<string, number> = {
   AL: 35, AK: 14, AZ: 14, AR: 60, CA: 21, CO: 30, CT: 30,
   DE: 20, FL: 15, GA: 30, HI: 14, ID: 30, IL: 45, IN: 45,

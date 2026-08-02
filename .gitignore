@@ -59,3 +59,4 @@ Thumbs.db
 
 # Supabase migrations with embedded secrets
 supabase/migrations/0035_schedule_generate_alerts_cron.sql
+tmp/

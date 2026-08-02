@@ -17,7 +17,6 @@ import { X } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/config/constants';
 import {
-  contractsService,
   leaseAgreementPdfService,
   leaseAgreementService,
 } from '@/lib/serviceProxy';
@@ -86,16 +85,20 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
       return;
     }
     const values = form.getValues();
-    const blob = leaseAgreementPdfService.generateBlob({ form: values });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `lease-agreement-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success(t('leaseWizard.complete.pdfReady'));
+    try {
+      const blob = leaseAgreementPdfService.generateBlob({ form: values });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lease-agreement-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(t('leaseWizard.complete.pdfReady'));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('leaseWizard.complete.validationFailed'));
+    }
   };
 
   const handleSaveContract = async () => {
@@ -117,16 +120,10 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
         landlordId: linkedLandlordOwnerId ?? null,
       });
 
-      const pdfBlob = leaseAgreementPdfService.generateBlob({ form: values });
-      const pdfFile = new File(
-        [pdfBlob],
-        `Lease_Agreement_${contractId.slice(0, 8)}.pdf`,
-        { type: 'application/pdf' },
-      );
       let pdfAttached = false;
       let pdfUploadMessage: string | undefined;
       try {
-        await contractsService.uploadContractPdfAndPersist(pdfFile, contractId);
+        await leaseAgreementService.generateAndAttachPdf(contractId, values);
         pdfAttached = true;
       } catch (uploadErr) {
         pdfUploadMessage = uploadErr instanceof Error ? uploadErr.message : undefined;

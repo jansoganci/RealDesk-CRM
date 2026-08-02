@@ -19,6 +19,7 @@ import type {
   PurchaseDetailsUpdate,
 } from '@/types';
 import { toast } from 'sonner';
+import { persistContractDocumentArtifact } from '@/services/contractDocumentArtifacts.service';
 import { purchaseAgreementFormValuesFromDb } from '@/services/purchaseFormFromDb';
 
 /** Keys stored on `contracts` or linking — excluded from `purchase_details` JSON. */
@@ -703,10 +704,10 @@ class PurchaseAgreementService {
     const form = purchaseAgreementFormValuesFromDb(contract as Contract, detail);
     const roundNumber = await this.getLatestOfferRoundNumber(contractId, orgId);
     const { purchaseAgreementPdfService } = await getServiceProxy();
-    const blob = purchaseAgreementPdfService.generateBlob({ form });
+    const { blob, meta } = purchaseAgreementPdfService.generateDocument({ form });
     const path = await this.uploadVersionedPurchasePdf(contractId, orgId, blob, roundNumber, 'regenerated');
 
-    const now = new Date().toISOString();
+    const now = meta.generated_at;
     const { error: contractErr } = await supabase
       .from('contracts')
       .update({ contract_pdf_path: path, pdf_generated_at: now, updated_at: now })
@@ -720,6 +721,14 @@ class PurchaseAgreementService {
       .eq('contract_id', contractId)
       .eq('org_id', orgId);
     if (detailsErr) throw detailsErr;
+
+    await persistContractDocumentArtifact({
+      orgId,
+      contractId,
+      storagePath: path,
+      meta,
+      counselApprovalRef: 'pending-attorney-review',
+    });
 
     return { pdfPath: path };
   }
@@ -860,11 +869,18 @@ class PurchaseAgreementService {
     const form = purchaseAgreementFormValuesFromDb(bundle, bundle.purchase_details);
     const resolvedRound = offerNumber ?? (await this.getLatestOfferRoundNumber(contractId, orgId));
     const { purchaseAgreementPdfService } = await getServiceProxy();
-    const pdfBlob = purchaseAgreementPdfService.generateBlob({ form });
-    const path = await this.uploadVersionedPurchasePdf(contractId, orgId, pdfBlob, resolvedRound);
-    const stamp = new Date().toISOString();
+    const { blob, meta } = purchaseAgreementPdfService.generateDocument({ form });
+    const path = await this.uploadVersionedPurchasePdf(contractId, orgId, blob, resolvedRound);
+    const stamp = meta.generated_at;
     await updateRow('contracts', contractId, { contract_pdf_path: path, pdf_generated_at: stamp });
     await updateRow('purchase_details', bundle.purchase_details.id, { pdf_generated_at: stamp });
+    await persistContractDocumentArtifact({
+      orgId,
+      contractId,
+      storagePath: path,
+      meta,
+      counselApprovalRef: 'pending-attorney-review',
+    });
   }
 
   /**

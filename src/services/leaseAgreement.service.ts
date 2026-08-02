@@ -6,6 +6,7 @@ import { getAuthenticatedUserId } from '@/lib/auth';
 import { insertRow, updateRow } from '@/lib/db';
 import { getActiveOrgId } from '@/lib/orgHelpers';
 import { callRpc } from '@/lib/rpc';
+import { persistContractDocumentArtifact } from '@/services/contractDocumentArtifacts.service';
 import { contractsService } from '@/services/contracts.service';
 import { leaseAgreementPdfService } from '@/services/leaseAgreementPdf.service';
 import type { Json } from '@/types/database.types';
@@ -324,15 +325,40 @@ class LeaseAgreementService {
       paypal_email: details.paypal_email ?? '',
     } as LeaseAgreementFormValues;
 
-    const blob = leaseAgreementPdfService.generateBlob({ form });
+    const { blob, meta } = leaseAgreementPdfService.generateDocument({ form });
     const file = new File([blob], `Lease_Agreement_${contractId.slice(0, 8)}.pdf`, {
       type: 'application/pdf',
     });
     const filePath = await contractsService.uploadContractPdfAndPersist(file, contractId);
-    const generatedAtIso = new Date().toISOString();
-    await updateRow('contracts', contractId, { pdf_generated_at: generatedAtIso });
+    await persistContractDocumentArtifact({
+      orgId,
+      contractId,
+      storagePath: filePath,
+      meta,
+      counselApprovalRef: 'pending-attorney-review',
+    });
 
-    return { contractId, filePath, generatedAtIso };
+    return { contractId, filePath, generatedAtIso: meta.generated_at };
+  }
+
+  /**
+   * Generate draft PDF from form values, upload, and persist artifact metadata.
+   */
+  async generateAndAttachPdf(contractId: string, form: LeaseAgreementFormValues): Promise<string> {
+    const orgId = await getActiveOrgId();
+    const { blob, meta } = leaseAgreementPdfService.generateDocument({ form });
+    const file = new File([blob], `Lease_Agreement_${contractId.slice(0, 8)}.pdf`, {
+      type: 'application/pdf',
+    });
+    const filePath = await contractsService.uploadContractPdfAndPersist(file, contractId);
+    await persistContractDocumentArtifact({
+      orgId,
+      contractId,
+      storagePath: filePath,
+      meta,
+      counselApprovalRef: 'pending-attorney-review',
+    });
+    return filePath;
   }
 }
 
