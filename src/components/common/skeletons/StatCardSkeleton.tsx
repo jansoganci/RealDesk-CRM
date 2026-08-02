@@ -17,7 +17,7 @@ export const StatCardSkeleton = React.memo<StatCardSkeletonProps>(({
       {[...Array(count)].map((_, index) => (
         <Card
           key={index}
-          className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in border-gray-200/50 backdrop-blur-sm bg-white/90"
+          className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in border-border/50 backdrop-blur-sm bg-card/90"
         >
           <CardHeader className="flex flex-row items-center gap-3 space-y-0 pb-2">
             {/* Icon placeholder */}

@@ -17,7 +17,7 @@ export const TableSkeleton = React.memo<TableSkeletonProps>(({
   className,
 }) => {
   return (
-    <Card className={`shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 dark:border-slate-800 backdrop-blur-sm bg-white/95 dark:bg-slate-900/95 overflow-hidden ${className || ''}`}>
+    <Card className={`shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-border/50 backdrop-blur-sm bg-card/95 overflow-hidden ${className || ''}`}>
       <Table>
         {showHeader && (
           <TableHeader>

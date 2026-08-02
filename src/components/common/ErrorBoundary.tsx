@@ -34,23 +34,23 @@ export class ErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+        <div className="min-h-screen flex items-center justify-center bg-muted p-4">
           <div className="max-w-md w-full text-center space-y-4">
             <div className="flex justify-center">
-              <AlertTriangle className="h-16 w-16 text-red-500" />
+              <AlertTriangle className="h-16 w-16 text-destructive" />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">
+            <h1 className="text-2xl font-bold text-foreground">
               {i18n.t('errors:boundary.title')}
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               {i18n.t('errors:boundary.description')}
             </p>
             {this.state.error && (
-              <details className="text-left bg-gray-100 p-4 rounded text-sm">
+              <details className="text-left bg-muted p-4 rounded text-sm">
                 <summary className="cursor-pointer font-semibold mb-2">
                   {i18n.t('errors:boundary.details')}
                 </summary>
-                <pre className="whitespace-pre-wrap text-xs text-gray-700">
+                <pre className="whitespace-pre-wrap text-xs text-muted-foreground">
                   {this.state.error.toString()}
                   {this.state.error.stack}
                 </pre>

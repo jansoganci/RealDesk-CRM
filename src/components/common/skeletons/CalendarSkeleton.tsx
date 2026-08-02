@@ -44,7 +44,7 @@ export const CalendarSkeleton = React.memo<CalendarSkeletonProps>(({
       {[...Array(7)].map((_, dayIndex) => (
         <div 
           key={dayIndex} 
-          className="flex flex-col bg-white dark:bg-slate-900 rounded-lg shadow-sm border border-gray-200 dark:border-slate-800"
+          className="flex flex-col bg-card rounded-lg shadow-sm border border-border"
         >
           {/* Day header */}
           <div className="text-center py-2 border-b">

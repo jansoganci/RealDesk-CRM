@@ -39,7 +39,7 @@ export const CardSkeleton = React.memo<CardSkeletonProps>(({
       {[...Array(count)].map((_, index) => (
         <Card 
           key={index}
-          className="p-5 shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95"
+          className="p-5 shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-border/50 backdrop-blur-sm bg-card/95"
         >
           <div className="space-y-4">
             {/* Header */}

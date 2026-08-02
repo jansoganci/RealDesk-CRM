@@ -105,7 +105,7 @@ export function CookiePreferences({
                   <Label id="essential-label" htmlFor="essential" className="font-medium text-sm">
                     {t("preferences.essential.title")}
                   </Label>
-                  <span className="text-xs text-muted-foreground bg-gray-100 px-2 py-0.5 rounded">
+                  <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded">
                     {t("preferences.alwaysActive")}
                   </span>
                 </div>
@@ -173,12 +173,12 @@ export function CookiePreferences({
 
         {/* Withdraw All Consent Button */}
         {(consent.analytics || consent.marketing) && (
-          <div className="pt-4 border-t border-gray-200">
+          <div className="pt-4 border-t border-border">
             <Button
               variant="outline"
               onClick={handleWithdraw}
               aria-label={t("preferences.withdrawAll")}
-              className="w-full text-red-600 hover:text-red-700 border-red-300 hover:border-red-400"
+              className="w-full text-destructive hover:text-destructive/90 border-destructive/40 hover:border-destructive/60"
             >
               {t("preferences.withdrawAll")}
             </Button>

@@ -18,7 +18,7 @@ export function CookieSettingsLink() {
   return (
     <button
       onClick={openPreferences}
-      className="text-sm text-gray-600 hover:text-black transition-colors"
+      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
     >
       {t("footer.cookieSettings")}
     </button>

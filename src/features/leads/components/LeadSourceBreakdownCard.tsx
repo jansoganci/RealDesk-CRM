@@ -4,19 +4,9 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { COLORS } from '@/config/colors';
+import { useChartColors } from '@/hooks/useChartColors';
 import type { LeadSource } from '@/services/leads.service';
 import { useLeadSourceBreakdown } from '../hooks/useLeadSourceBreakdown';
-
-const SOURCE_COLORS: Record<LeadSource, string> = {
-  zillow: '#2563EB',
-  realtor_com: '#DC2626',
-  referral: '#16A34A',
-  sign_call: '#D97706',
-  social_media: '#7C3AED',
-  cold_call: '#0891B2',
-  open_house: '#DB2777',
-  other: '#6B7280',
-};
 
 type ChartRow = {
   name: string;
@@ -29,13 +19,25 @@ type ChartRow = {
 export function LeadSourceBreakdownCard() {
   const { t } = useTranslation('leads');
   const { data, total, loading, error } = useLeadSourceBreakdown();
+  const chartColors = useChartColors();
+
+  const sourceColors: Record<LeadSource, string> = {
+    zillow: chartColors.chart1,
+    realtor_com: chartColors.chart2,
+    referral: chartColors.chart3,
+    sign_call: chartColors.chart4,
+    social_media: chartColors.chart5,
+    cold_call: chartColors.withAlpha('chart1', 0.55),
+    open_house: chartColors.withAlpha('chart2', 0.55),
+    other: chartColors.muted,
+  };
 
   const chartData: ChartRow[] = data.map((item) => ({
     name: t(`dashboard.sources.${item.source}`),
     value: item.count,
     percentage: item.percentage,
     source: item.source,
-    color: SOURCE_COLORS[item.source] ?? '#6B7280',
+    color: sourceColors[item.source] ?? chartColors.muted,
   }));
 
   return (
@@ -85,7 +87,7 @@ export function LeadSourceBreakdownCard() {
                 <div key={item.source} className="flex items-center gap-2 text-xs">
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
-                    style={{ backgroundColor: SOURCE_COLORS[item.source] ?? '#6B7280' }}
+                    style={{ backgroundColor: sourceColors[item.source] ?? chartColors.muted }}
                   />
                   <span className="text-muted-foreground truncate">
                     {t(`dashboard.sources.${item.source}`)}

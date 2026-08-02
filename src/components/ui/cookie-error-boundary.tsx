@@ -89,15 +89,15 @@ export class CookieErrorBoundary extends Component<
 
       return (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-[calc(100%-2rem)] sm:max-w-[400px] px-4 sm:px-0">
-          <Card className="shadow-lg rounded-2xl border border-yellow-200 bg-yellow-50">
+          <Card className="shadow-lg rounded-2xl border border-warning/30 bg-warning/15">
             <CardContent className="p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0 mt-0.5" />
                 <div className="flex-1 space-y-2">
-                  <h3 className="font-semibold text-sm text-gray-900">
+                  <h3 className="font-semibold text-sm text-foreground">
                     {i18n.t('cookie:errorBoundary.title')}
                   </h3>
-                  <p className="text-xs text-gray-700 leading-relaxed">
+                  <p className="text-xs text-muted-foreground leading-relaxed">
                     {i18n.t('cookie:errorBoundary.body')}
                   </p>
                   <div className="flex flex-wrap gap-2 text-xs">
@@ -109,7 +109,7 @@ export class CookieErrorBoundary extends Component<
                     >
                       {i18n.t('cookie:banner.cookiePolicy')}
                     </a>
-                    <span className="text-gray-400">•</span>
+                    <span className="text-muted-foreground/40">•</span>
                     <a
                       href={privacyPolicyLink}
                       target="_blank"
