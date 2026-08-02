@@ -60,7 +60,7 @@ export function AlertCenter() {
         >
           <Bell className="h-6 w-6" />
           {unreadCount > 0 && (
-            <Badge className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} ${COLORS.text.white} text-xs border-2 border-white rounded-full`}>
+            <Badge className={`absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 ${COLORS.danger.bg} text-destructive-foreground text-xs border-2 border-white rounded-full`}>
               {unreadCount > 9 ? '9+' : unreadCount}
             </Badge>
           )}

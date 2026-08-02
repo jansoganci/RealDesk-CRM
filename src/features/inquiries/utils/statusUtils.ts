@@ -17,9 +17,9 @@ export function getLeadStatusBadgeClasses(status: string): string {
     closed_won: `${COLORS.success.bg} text-success-foreground`,
     closed_lost: `${COLORS.danger.bg} text-destructive-foreground`,
     converted: `${COLORS.success.bg} text-success-foreground`,
-    closed: `${COLORS.status.inactive.bg} ${COLORS.text.white}`,
+    closed: `${COLORS.status.inactive.bg} ${COLORS.status.inactive.text}`,
   };
-  return statusColors[status] || `${COLORS.status.inactive.bg} ${COLORS.text.white}`;
+  return statusColors[status] || `${COLORS.status.inactive.bg} ${COLORS.status.inactive.text}`;
 }
 
 /** @deprecated Use {@link getLeadStatusBadgeClasses} */

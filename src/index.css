@@ -87,13 +87,13 @@ h3 {
     --accent: 37 47% 60%; /* Warm Gold #C9A46A */
     --accent-foreground: 211 53% 11%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 72% 51%; /* #DC2626 — white text passes AA */
     --destructive-foreground: 0 0% 98%;
 
     --success: 163 55% 24%; /* Forest #1B5E4B */
     --success-foreground: 0 0% 100%;
     --info: 173 58% 39%; /* Teal #2A9D8F */
-    --info-foreground: 0 0% 100%;
+    --info-foreground: 211 53% 11%;
     --warning: 35 65% 47%; /* Warm amber #C4842A */
     --warning-foreground: 211 53% 11%;
 
@@ -130,8 +130,8 @@ h3 {
     --accent: 37 47% 60%;
     --accent-foreground: 211 53% 11%;
 
-    --destructive: 0 63% 45%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 0 91% 71%; /* #F87171 — legible on navy surfaces */
+    --destructive-foreground: 211 53% 11%;
 
     --success: 159 44% 42%; /* #3D9B7A — legible on navy */
     --success-foreground: 211 53% 11%;

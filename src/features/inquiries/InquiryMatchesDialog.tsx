@@ -95,12 +95,12 @@ export const InquiryMatchesDialog = ({
               <Badge
                 className={
                   inquiry.status === 'active'
-                    ? `${COLORS.success.bg} ${COLORS.text.white}`
+                    ? `${COLORS.success.bg} text-success-foreground`
                     : inquiry.status === 'matched'
-                    ? `${COLORS.primary.bg} ${COLORS.text.white}`
+                    ? `${COLORS.primary.bg} text-primary-foreground`
                     : inquiry.status === 'contacted'
-                    ? `${COLORS.warning.bg} ${COLORS.text.white}`
-                    : `${COLORS.status.inactive.bg} ${COLORS.text.white}`
+                    ? `${COLORS.warning.bg} text-warning-foreground`
+                    : `${COLORS.status.inactive.bg} ${COLORS.status.inactive.text}`
                 }
               >
                 {t(`status.${inquiry.status}`)}
@@ -157,19 +157,19 @@ export const InquiryMatchesDialog = ({
                 {matches.map((match) => (
                   <div
                     key={match.id}
-                    className="rounded-xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                    className="rounded-xl border border-border bg-card p-4 transition-shadow hover:shadow-sm"
                   >
                     {match.property && (
                       <>
                         <div className="space-y-2">
-                          <div className="font-medium text-slate-900 dark:text-slate-100">
+                          <div className="font-medium text-foreground">
                             {match.property.address}
                           </div>
                           <div className="flex flex-col items-start gap-2 text-sm sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
                             {match.property.city && (
                               <div className="flex items-center gap-1">
-                                <MapPin className="h-4 w-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                                <span className="text-slate-700 dark:text-slate-300">
+                                <MapPin className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                <span className="text-foreground/80">
                                   {match.property.city}
                                   {match.property.district && `, ${match.property.district}`}
                                 </span>
@@ -179,8 +179,8 @@ export const InquiryMatchesDialog = ({
                               ? match.property.sale_price
                               : match.property.rent_amount) && (
                               <div className="flex items-center gap-1">
-                                <Tag className="h-4 w-4 text-slate-500 dark:text-slate-400" aria-hidden="true" />
-                                <span className="font-medium text-slate-700 dark:text-slate-200">
+                                <Tag className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                                <span className="font-medium text-foreground/80">
                                   {formatCurrencyRange(
                                     match.property.property_type === 'sale'
                                       ? match.property.sale_price ?? 0
@@ -204,14 +204,14 @@ export const InquiryMatchesDialog = ({
                             })}
                             className={cn(
                               buttonVariants({ size: 'sm' }),
-                              'w-full gap-2 text-white sm:w-auto'
+                              'w-full gap-2 text-primary-foreground sm:w-auto'
                             )}
                           >
                             <Phone className="h-4 w-4" aria-hidden="true" />
                             {t('matches.contactLead', { name: inquiry.name })}
                           </a>
                           {match.contacted && (
-                            <Badge className={`${COLORS.success.bg} ${COLORS.text.white}`}>
+                            <Badge className={`${COLORS.success.bg} text-success-foreground`}>
                               <Check className="h-3 w-3 mr-1" />
                               {t('matches.contacted')}
                             </Badge>

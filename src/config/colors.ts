@@ -6,7 +6,6 @@
 export const COLORS = {
   primary: {
     DEFAULT: 'primary',
-    hex: '#0D1B2A',
     bg: 'bg-primary',
     bgLight: 'bg-primary/10',
     bgGradient: 'bg-gradient-to-r from-primary to-primary/80',
@@ -21,7 +20,6 @@ export const COLORS = {
 
   secondary: {
     DEFAULT: 'secondary',
-    hex: '#C9A46A',
     bg: 'bg-secondary',
     bgLight: 'bg-secondary/15',
     text: 'text-secondary-foreground',
@@ -34,7 +32,6 @@ export const COLORS = {
 
   success: {
     DEFAULT: 'success',
-    hex: '#1B5E4B',
     bg: 'bg-success',
     bgLight: 'bg-success/15',
     text: 'text-success',
@@ -46,7 +43,6 @@ export const COLORS = {
 
   danger: {
     DEFAULT: 'destructive',
-    hex: '#dc2626',
     light: 'destructive',
     dark: 'bg-destructive',
     bg: 'bg-destructive',
@@ -61,7 +57,6 @@ export const COLORS = {
 
   warning: {
     DEFAULT: 'warning',
-    hex: '#C4842A',
     light: 'warning',
     dark: 'bg-warning',
     bg: 'bg-warning',
@@ -72,13 +67,12 @@ export const COLORS = {
     border: 'border-warning/30',
     borderHover: 'border-warning/50',
     hoverBg: 'hover:bg-warning/20',
-    hover: 'hover:bg-warning/15 hover:text-warning-foreground',
+    hover: 'hover:bg-warning/15 hover:text-foreground',
     shadow: 'shadow-warning/30',
   },
 
   info: {
     DEFAULT: 'info',
-    hex: '#2A9D8F',
     bg: 'bg-info',
     bgLight: 'bg-info/15',
     text: 'text-info',
@@ -86,7 +80,6 @@ export const COLORS = {
 
   accent: {
     DEFAULT: 'accent',
-    hex: '#C9A46A',
     bg: 'bg-accent',
     bgLight: 'bg-accent/15',
     text: 'text-accent-foreground',
@@ -96,7 +89,6 @@ export const COLORS = {
 
   background: {
     DEFAULT: 'background',
-    hex: '#F7F6F2',
     bg: 'bg-background',
     bgGray: 'bg-muted',
     bgGradient: 'bg-gradient-to-b from-background to-card',
@@ -104,14 +96,12 @@ export const COLORS = {
 
   card: {
     DEFAULT: 'card',
-    hex: '#ffffff',
     bg: 'bg-card',
     bgBlur: 'bg-card/80 backdrop-blur-sm',
   },
 
   border: {
     DEFAULT: 'border',
-    hex: '#e5e7eb',
     light: 'border-border/60',
     DEFAULT_class: 'border-border',
     dark: 'border-border',
@@ -120,18 +110,15 @@ export const COLORS = {
 
   text: {
     DEFAULT: 'foreground',
-    hex: '#0D1B2A',
     primary: 'text-foreground',
     secondary: 'text-muted-foreground',
     muted: 'text-muted-foreground',
     disabled: 'text-muted-foreground/60',
     light: 'text-muted-foreground/40',
-    white: 'text-primary-foreground',
   },
 
   muted: {
     DEFAULT: 'muted',
-    hex: '#6b7280',
     light: 'muted-foreground',
     bg: 'bg-muted',
     text: 'text-muted-foreground',
@@ -140,7 +127,6 @@ export const COLORS = {
 
   disabled: {
     DEFAULT: 'muted',
-    hex: '#d1d5db',
     bg: 'bg-muted',
     text: 'text-muted-foreground/50',
   },
@@ -159,24 +145,24 @@ export const COLORS = {
 
   /**
    * Semantic status badge tokens — one meaning per color:
-   * empty/vacant → info (teal), distinct from pending
-   * occupied/available/active/assigned → success (forest)
-   * underOffer/pending → warning (amber)
+   * occupied → info (teal)
+   * empty/vacant and underOffer/pending → warning (amber)
+   * available/active/assigned → success (forest)
    * sold/inactive/archived/unassigned → muted
    * error/expired use COLORS.danger separately
    */
   status: {
     empty: {
+      bg: 'bg-warning',
+      text: 'text-warning-foreground',
+      border: 'border-warning/40',
+      gradient: 'bg-gradient-to-r from-warning to-warning/80',
+    },
+    occupied: {
       bg: 'bg-info',
       text: 'text-info-foreground',
       border: 'border-info/40',
       gradient: 'bg-gradient-to-r from-info to-info/80',
-    },
-    occupied: {
-      bg: 'bg-success',
-      text: 'text-success-foreground',
-      border: 'border-success/40',
-      gradient: 'bg-gradient-to-r from-success to-success/80',
     },
     available: {
       bg: 'bg-success',
