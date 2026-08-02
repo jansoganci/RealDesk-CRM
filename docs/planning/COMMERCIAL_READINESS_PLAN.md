@@ -1,6 +1,6 @@
 # RealDesk Commercial Readiness Plan
 
-**Status:** Active — Items 1–2 complete; Item 3 deferred; Item 8 lint baseline clean (CI gate follow-up); Item 4 is next  
+**Status:** Active — Items 1–2, 7–8 complete; Item 3 deferred; Item 4 is next  
 
 **Created:** 2026-08-01  
 **Updated:** 2026-08-02  
@@ -48,7 +48,7 @@ Current verification baseline:
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
 | 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
 | 7 | Complete CCPA deletion flow | P2 | Medium | Complete | Item 1; reuse Item 2 security patterns |
-| 8 | Global lint cleanup and CI gate | P2 | Large | Complete (CI follow-up) | None |
+| 8 | Global lint cleanup and CI gate | P2 | Large | Complete | None |
 
 **Related completed (folded into Item 7):** CCPA anonymous public submit + status check (`/privacy?org=`, migration `0050`, Edge Functions) — done 2026-08-02; full deletion engine + prod smoke-test — done 2026-08-02.
 
@@ -191,8 +191,10 @@ Billing and encryption have no code dependency and may run in parallel when capa
 
 ## 6. Customer-facing email and SMS workflows
 
-**Priority / effort:** P1 / Large  
+**Priority / effort:** P1 / Large
 **Current issue:** Custom outbound email is limited to organization invitations; deadlines and follow-ups remain in-app.
+
+Scope decision (2026-08-02): SMS is out of scope for now — email only, using Resend (already integrated for org-invitation email). Item title/scope narrowed to 'Customer-facing email workflows' for the current implementation pass. SMS may be revisited as a separate future item.
 
 ### Work
 
@@ -248,28 +250,30 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - [x] Partial failures can resume via `deletion_progress` (status `processing`).
 - [x] Admin receives table-level `deletion_summary` (prod smoke-test verified).
 
-## 8. Global lint cleanup and CI gate
+## 8. Global lint cleanup and CI gate — COMPLETE (2026-08-02)
 
 **Priority / effort:** P2 / Large  
-**Status:** Complete for lint baseline; CI enforcement still open (no `.github/workflows` in repo).
+**Status:** Complete. Lint baseline is clean. CI workflow added at `.github/workflows/ci.yml` (lint + typecheck + test on push/PR to `main`).
 
 ### Work
 
 - [x] Fixed errors in risk order: auth/security → contracts → billing/finance → services → feature UI → lib/ui → warnings.
 - [x] Replaced `any`, empty interfaces, stale hook deps, and unnecessary escapes with correct types/logic across waves 0–7 on `feature/global-lint-cleanup`.
 - [x] Avoided behavior-changing refactors; kept intentional mount-only side effects (e.g. finance recurring processor).
-- [ ] Make lint a required CI check — **follow-up**: repository has no GitHub Actions workflows yet.
+- [x] Added GitHub Actions workflow `.github/workflows/ci.yml` — runs on push/PR to `main` only (not a daily cron).
+- [x] Lint step uses `--max-warnings 0` so any ESLint warning or error fails the job (red check).
+- [x] `package.json` `lint` script aligned to `eslint . --max-warnings 0`.
 
 ### Blocks / unlocks
 
 - **Blocks:** Nothing directly, but compounds regression risk in every new feature.
-- **Unlocks:** Enforced conventions, safer refactors, and a reliable CI quality gate (after CI follow-up).
+- **Unlocks:** Clean local lint baseline; automated quality check on every push/PR to `main`.
 
 ### Acceptance criteria
 
 - [x] `npm run lint` passes with zero errors and zero warnings.
 - [x] Typecheck, all tests, and build continue to pass.
-- [ ] CI rejects new lint failures (no CI workflow present — remaining follow-up).
+- [x] CI rejects new lint failures (workflow fails on any lint error/warning via `--max-warnings 0`).
 - [x] No broad functional behavior changes are bundled into lint-only commits.
 
 ### Completion notes (2026-08-02)
@@ -277,7 +281,10 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Branch: `feature/global-lint-cleanup`
 - Commits: `ae8435d` … `ad25e43` (waves 0–7)
 - Tooling: parent agent + Composer subagents for contracts/finance/services/features/warnings; mechanical escape restore from stash after branch churn
-- Remaining: add CI job running `npm run lint` (and preferably typecheck/test) as required check
+- Verified 2026-08-02: `npm run lint` / `typecheck` / `test` (114/114) / `build` all pass
+- CI workflow: `.github/workflows/ci.yml` — job `quality` runs `npm ci` → lint (`--max-warnings 0`) → typecheck → test
+- Trigger: `push` and `pull_request` targeting `main` only (event-driven; no schedule)
+- Note: Actions tab run appears only after this file is committed and pushed to GitHub. Merge-blocking requires separate branch protection (“Require status checks”) in repo settings.
 
 ## Hard dependency map
 
@@ -297,7 +304,7 @@ Global lint cleanup is not a hard prerequisite. Changed critical files must neve
 
 ## Release gate
 
-RealDesk is commercially deployable only when Items 1–6 are complete, staging verification has passed, production migrations and secrets are confirmed, and no unresolved P0 security or legal-document finding remains. Items 7–8 may not silently regress while the release work proceeds and must be completed immediately after the commercial gate.
+RealDesk is commercially deployable only when Items 1–6 are complete, staging verification has passed, production migrations and secrets are confirmed, and no unresolved P0 security or legal-document finding remains. Items 7–8 are complete and must not silently regress while the release work proceeds.
 
 ## Progress log
 
@@ -310,4 +317,4 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | 2026-08-02 | Plan status sync | Updated | Roadmap table and headers aligned to code; next ordered item is Billing enforcement. |
 | 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
 | 2026-08-02 | Item 7 — CCPA deletion flow | Complete | Migration `0051` on prod; engine + tests shipped; smoke-test delete `0d6b1f91-e0fe-4c7e-b3b2-48277f99b82f` → completed (all tables done; no matching CRM rows for test email). |
-| 2026-08-02 | Item 8 — Global lint cleanup | Complete (CI follow-up) | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). typecheck/test/build pass. CI required-check still open (no workflows in repo). |
+| 2026-08-02 | Item 8 — Global lint cleanup | Complete | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). Re-verified: lint/typecheck/test (114/114)/build pass. CI workflow added (`.github/workflows/ci.yml`: lint+typecheck+test on push/PR to main; `--max-warnings 0`). Item 8 closed. |
