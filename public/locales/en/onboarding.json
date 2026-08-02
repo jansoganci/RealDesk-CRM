@@ -3,9 +3,9 @@
     "organizationName": "My Organization"
   },
   "step1": {
-    "title": "Welcome to RealDesk",
+    "title": "Welcome to Closewell",
     "subtitle": "Answer a few questions so your workspace starts with the right US real estate setup.",
-    "question": "What will you use RealDesk for?",
+    "question": "What will you use Closewell for?",
     "options": {
       "rentals": {
         "label": "Managing rental properties",

@@ -3,9 +3,9 @@
   
   <!-- Homepage -->
   <url>
-    <loc>https://realdesk.app/</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://realdesk.app/"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://realdesk.app/"/>
+    <loc>https://closewell.app/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://closewell.app/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://closewell.app/"/>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <lastmod>2025-12-08</lastmod>
@@ -13,9 +13,9 @@
   
   <!-- Pricing Page -->
   <url>
-    <loc>https://realdesk.app/pricing</loc>
-    <xhtml:link rel="alternate" hreflang="en" href="https://realdesk.app/pricing"/>
-    <xhtml:link rel="alternate" hreflang="x-default" href="https://realdesk.app/pricing"/>
+    <loc>https://closewell.app/pricing</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://closewell.app/pricing"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://closewell.app/pricing"/>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
     <lastmod>2025-12-08</lastmod>
@@ -23,7 +23,7 @@
   
   <!-- Login Page -->
   <url>
-    <loc>https://realdesk.app/login</loc>
+    <loc>https://closewell.app/login</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <lastmod>2025-12-08</lastmod>
@@ -31,28 +31,28 @@
   
   <!-- Register Page -->
   <url>
-    <loc>https://realdesk.app/register</loc>
+    <loc>https://closewell.app/register</loc>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
     <lastmod>2025-12-08</lastmod>
   </url>
   
   <url>
-    <loc>https://realdesk.app/legal/privacy-policy-en.html</loc>
+    <loc>https://closewell.app/legal/privacy-policy-en.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2025-12-08</lastmod>
   </url>
   
   <url>
-    <loc>https://realdesk.app/legal/terms-of-service-en.html</loc>
+    <loc>https://closewell.app/legal/terms-of-service-en.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2025-12-08</lastmod>
   </url>
   
   <url>
-    <loc>https://realdesk.app/legal/cookie-policy-en.html</loc>
+    <loc>https://closewell.app/legal/cookie-policy-en.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
     <lastmod>2025-12-08</lastmod>

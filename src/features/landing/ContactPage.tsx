@@ -10,7 +10,7 @@ export const ContactPage = () => {
   return (
     <>
       <SEO
-        title={`${t("contact.title")} - RealDesk`}
+        title={`${t("contact.title")} - Closewell`}
         description={t("contact.metaDescription")}
       />
       <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -39,10 +39,10 @@ export const ContactPage = () => {
                     {t("contact.email.description")}
                   </p>
                   <a
-                    href="mailto:support@realdesk.app"
+                    href="mailto:support@closewell.app"
                     className="text-blue-600 hover:text-blue-700 underline font-medium"
                   >
-                    support@realdesk.app
+                    support@closewell.app
                   </a>
                 </div>
 

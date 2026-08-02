@@ -16,7 +16,7 @@
     "cta": "Start for Free",
     "placeholder": "Dashboard Screenshot",
     "trustLine": "Manage contracts and rent tracking from one place, in an organized way",
-    "imageAlt": "RealDesk dashboard preview",
+    "imageAlt": "Closewell dashboard preview",
     "badge": "Built for US Real Estate Professionals",
     "scrollHint": "Scroll",
     "canvas": {
@@ -108,10 +108,10 @@
   "pivot": {
     "eyebrow": "The Solution",
     "title": "We unify them all.",
-    "description": "RealDesk brings all these scattered pieces into one professional system. No more searching, no more losing.",
+    "description": "Closewell brings all these scattered pieces into one professional system. No more searching, no more losing.",
     "placeholder": "Unification Animation",
-    "videoAriaLabel": "RealDesk dashboard demonstration showing unified property management",
-    "videoFallback": "Your browser does not support video. The video shows how RealDesk unifies all your property management tasks."
+    "videoAriaLabel": "Closewell dashboard demonstration showing unified property management",
+    "videoFallback": "Your browser does not support video. The video shows how Closewell unifies all your property management tasks."
   },
   "featureProperties": {
     "eyebrow": "Portfolio Management",
@@ -146,7 +146,7 @@
       },
       {
         "question": "Is it mobile friendly?",
-        "answer": "Yes, RealDesk is fully mobile-friendly. You can access all features from your phone browser without downloading any app."
+        "answer": "Yes, Closewell is fully mobile-friendly. You can access all features from your phone browser without downloading any app."
       },
       {
         "question": "How does support work?",
@@ -161,7 +161,7 @@
     "reassurance": "No credit card required."
   },
   "pricing": {
-    "title": "Pricing & plans for RealDesk",
+    "title": "Pricing & plans for Closewell",
     "subtitle": "Explore all features with transparent pricing. Designed for real estate agents and small agencies.",
     "loading": "Loading..."
   },
@@ -178,13 +178,13 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "cookies": "Cookies",
-    "copyright": "© 2025 RealDesk. Built with React, TypeScript, Tailwind CSS, and Supabase.",
+    "copyright": "© 2025 Closewell. Built with React, TypeScript, Tailwind CSS, and Supabase.",
     "allRightsReserved": "All rights reserved."
   },
   "about": {
     "title": "About Us",
-    "metaDescription": "Learn about RealDesk. Modern real estate management for US professionals.",
-    "description": "RealDesk is a modern real estate management system designed for US real estate professionals.",
+    "metaDescription": "Learn about Closewell. Modern real estate management for US professionals.",
+    "description": "Closewell is a modern real estate management system designed for US real estate professionals.",
     "mission": {
       "title": "Our Mission",
       "description": "To eliminate the chaos in real estate businesses and provide a professional management experience. We enable you to manage your portfolio, contracts, and clients from a single place."
@@ -200,7 +200,7 @@
   },
   "contact": {
     "title": "Contact",
-    "metaDescription": "Contact RealDesk for questions and support.",
+    "metaDescription": "Contact Closewell for questions and support.",
     "description": "You can contact us for your questions, suggestions, or support requests.",
     "email": {
       "title": "Email",

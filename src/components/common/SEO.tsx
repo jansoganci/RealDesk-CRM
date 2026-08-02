@@ -19,13 +19,13 @@ export const SEO = ({
 }: SEOProps) => {
     const location = useLocation();
 
-    const baseUrl = 'https://realdesk.app';
+    const baseUrl = 'https://closewell.app';
     const canonicalUrl = `${baseUrl}${location.pathname}`;
     const fullOgImage = ogImage.startsWith('http') ? ogImage : `${baseUrl}${ogImage}`;
 
-    const defaultTitle = 'RealDesk | The CRM for US Real Estate Agents';
+    const defaultTitle = 'Closewell | The CRM for US Real Estate Agents';
     const defaultDescription = 'Modern, mobile-first real estate CRM for US agencies and agents. Manage properties, tenants, contracts, reminders and daily workflows in one simple, secure system.';
-    const defaultKeywords = 'realdesk, real estate crm, property management, tenant tracking, contract management, US real estate software';
+    const defaultKeywords = 'closewell, real estate crm, property management, tenant tracking, contract management, US real estate software';
 
     const finalTitle = title || defaultTitle;
     const finalDescription = description || defaultDescription;
@@ -52,12 +52,12 @@ export const SEO = ({
             <meta property="og:type" content={ogType} />
             <meta property="og:url" content={canonicalUrl} />
             <meta property="og:title" content={finalTitle} />
-            <meta property="og:site_name" content="RealDesk" />
+            <meta property="og:site_name" content="Closewell" />
             <meta property="og:description" content={finalDescription} />
             <meta property="og:image" content={fullOgImage} />
             <meta property="og:image:width" content="1200" />
             <meta property="og:image:height" content="630" />
-            <meta property="og:image:alt" content="RealDesk - Real Estate Management System" />
+            <meta property="og:image:alt" content="Closewell - Real Estate Management System" />
             <meta property="og:locale" content="en_US" />
 
             {/* Twitter Card tags */}
@@ -65,7 +65,7 @@ export const SEO = ({
             <meta name="twitter:title" content={finalTitle} />
             <meta name="twitter:description" content={finalDescription} />
             <meta name="twitter:image" content={fullOgImage} />
-            <meta name="twitter:image:alt" content="RealDesk Dashboard Preview" />
+            <meta name="twitter:image:alt" content="Closewell Dashboard Preview" />
         </Helmet>
     );
 };

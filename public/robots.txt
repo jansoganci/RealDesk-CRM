@@ -15,4 +15,4 @@ Disallow: /leads
 Disallow: /profile
 Disallow: /api/
 
-Sitemap: https://realdesk.app/sitemap.xml
+Sitemap: https://closewell.app/sitemap.xml

@@ -9,7 +9,7 @@ export const AboutPage = () => {
   return (
     <>
       <SEO
-        title={`${t("about.title")} - RealDesk`}
+        title={`${t("about.title")} - Closewell`}
         description={t("about.metaDescription")}
       />
       <div className="min-h-screen bg-white dark:bg-slate-950">
@@ -47,10 +47,10 @@ export const AboutPage = () => {
               </p>
               <p>
                 <a
-                  href="mailto:support@realdesk.app"
+                  href="mailto:support@closewell.app"
                   className="text-blue-600 hover:text-blue-700 underline"
                 >
-                  support@realdesk.app
+                  support@closewell.app
                 </a>
               </p>
             </div>

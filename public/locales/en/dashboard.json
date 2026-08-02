@@ -118,7 +118,7 @@
     "completeProfile": "Complete your agency profile"
   },
   "welcome": {
-    "title": "Welcome to RealDesk!",
+    "title": "Welcome to Closewell!",
     "description": "Get started by adding your first property and setting up your profile. We'll guide you through the process.",
     "addProperty": "Add Your First Property",
     "addPropertyDesc": "Start managing your real estate portfolio",
@@ -129,7 +129,7 @@
   },
   "firstVisit": {
     "eyebrow": "Your workspace starts here",
-    "title": "Welcome to RealDesk",
+    "title": "Welcome to Closewell",
     "description": "Build your client pipeline, organize properties, and keep every transaction moving from one focused workspace.",
     "stepLabel": "Step {{number}}",
     "steps": {
@@ -170,7 +170,7 @@
       },
       "contract": {
         "title": "Import a contract",
-        "description": "Already working a transaction? Bring its contract into RealDesk.",
+        "description": "Already working a transaction? Bring its contract into Closewell.",
         "cta": "Import contract"
       }
     },

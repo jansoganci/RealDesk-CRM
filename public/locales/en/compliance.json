@@ -6,7 +6,7 @@
     "checkStatus": "Check Request Status",
     "yourRights": "Your CCPA Rights",
     "faqTitle": "Frequently Asked Questions",
-    "contactNotice": "For questions, contact us at privacy@realdesk.us",
+    "contactNotice": "For questions, contact us at privacy@closewell.app",
     "invalidOrgTitle": "Invalid or missing organization link",
     "invalidOrgMessage": "This privacy page requires a valid organization link from your real estate agent (for example /privacy?org=…). You can still check the status of an existing request below. Contact your agent if you need a new link to submit a request.",
     "validatingOrg": "Validating organization link…"
@@ -32,14 +32,14 @@
   "faq": {
     "whoQualifies": {
       "q": "Who can submit a CCPA request?",
-      "a": "California residents whose personal information has been collected by a business using RealDesk can submit requests."
+      "a": "California residents whose personal information has been collected by a business using Closewell can submit requests."
     },
     "howLong": {
       "q": "How long does processing take?",
       "a": "We aim to respond within 45 days. If more time is needed, we'll notify you and may extend by another 45 days."
     },
     "whatData": {
-      "q": "What personal data does RealDesk collect?",
+      "q": "What personal data does Closewell collect?",
       "a": "Contact information (name, email, phone), transaction history, property preferences, and communication records related to real estate services."
     },
     "verification": {

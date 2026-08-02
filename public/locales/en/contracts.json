@@ -1168,9 +1168,9 @@
           "other": "Other"
         },
         "fhaWarningTitle": "FHA addendum required",
-        "fhaWarningBody": "FHA loans require a signed Amendatory Clause BEFORE the appraisal is ordered. RealDesk does not generate this form. You must upload it in Step 9 to complete this agreement.",
+        "fhaWarningBody": "FHA loans require a signed Amendatory Clause BEFORE the appraisal is ordered. Closewell does not generate this form. You must upload it in Step 9 to complete this agreement.",
         "vaWarningTitle": "VA addendum required",
-        "vaWarningBody": "VA loans require a VA Escape Clause (38 CFR § 36.4303). RealDesk does not generate this form. You must upload it in Step 9. Earnest money can be $0 for VA loans.",
+        "vaWarningBody": "VA loans require a VA Escape Clause (38 CFR § 36.4303). Closewell does not generate this form. You must upload it in Step 9. Earnest money can be $0 for VA loans.",
         "preapprovalDate": "Buyer provides pre-approval letter by",
         "sellerTerminationDays": "Seller has X days to terminate if letter not received",
         "contingentOnSale": "Contingent on sale of another property?",
@@ -1182,7 +1182,7 @@
         "loanAmount": "Loan Amount",
         "downPayment": "Down Payment",
         "interestRate": "Interest Rate (% per annum)",
-        "rateTooltip": "RealDesk does not calculate amortization schedules. Use a mortgage calculator for monthly payment estimates.",
+        "rateTooltip": "Closewell does not calculate amortization schedules. Use a mortgage calculator for monthly payment estimates.",
         "loanTerm": "Loan Term",
         "loanTermUnit": "Loan term unit",
         "loanTermUnits": {

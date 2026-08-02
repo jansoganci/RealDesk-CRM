@@ -1,5 +1,5 @@
 /**
- * Jurisdictions for which RealDesk may generate V1 draft lease/purchase PDFs.
+ * Jurisdictions for which Closewell may generate V1 draft lease/purchase PDFs.
  * Unsupported states must fail generation — never emit a silent generic summary.
  */
 
@@ -25,7 +25,7 @@ export class UnsupportedDocumentJurisdictionError extends Error {
   constructor(state: string) {
     const normalized = normalizeUsStateCode(state) || '(missing)';
     super(
-      `RealDesk cannot generate a draft lease/purchase document for jurisdiction "${normalized}". Supported states: ${SUPPORTED_DOCUMENT_STATES.join(', ')}.`,
+      `Closewell cannot generate a draft lease/purchase document for jurisdiction "${normalized}". Supported states: ${SUPPORTED_DOCUMENT_STATES.join(', ')}.`,
     );
     this.name = 'UnsupportedDocumentJurisdictionError';
     this.state = normalized;

@@ -220,7 +220,7 @@ export const AcceptInvite = () => {
 
           <CardFooter className="bg-slate-50 dark:bg-slate-950/50 px-8 py-4 flex items-center justify-between border-t border-slate-100 dark:border-slate-800">
             <span className="text-[10px] uppercase tracking-wider font-bold text-slate-400 dark:text-slate-500">
-              {t('common:appName', { defaultValue: 'EMLAK CRM' })}
+              {t('common:appName', { defaultValue: 'Closewell' })}
             </span>
             <div className="flex gap-4">
               <Link to={ROUTES.ABOUT} className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600">{t('common:about')}</Link>

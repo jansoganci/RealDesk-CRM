@@ -1,4 +1,4 @@
-// V1: Disabled — RealDesk US is USD-only.
+// V1: Disabled — Closewell is USD-only.
 // Preserved for V1.5 multi-currency support.
 // Not imported or called anywhere in V1.
 //

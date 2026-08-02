@@ -25,8 +25,8 @@ export const PublicPricingPage = () => {
   return (
     <>
       <SEO
-        title="Pricing | RealDesk US"
-        description="RealDesk US pricing plans for real estate agents. Transparent pricing, no hidden fees."
+        title="Pricing | Closewell"
+        description="Closewell pricing plans for real estate agents. Transparent pricing, no hidden fees."
         keywords="real estate crm pricing, property management software, realtor crm, agent crm pricing"
       />
       <div className="min-h-screen bg-white dark:bg-slate-950">
