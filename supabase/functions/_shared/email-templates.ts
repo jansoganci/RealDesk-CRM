@@ -204,7 +204,7 @@ export function getInvitationEmailTemplate(data: InvitationEmailData): string {
     <!-- Header -->
     <div class="email-header">
       ${orgLogo ? `<img src="${orgLogo}" alt="${orgName}" />` : ''}
-      <h1>Emlak CRM</h1>
+      <h1>Closewell</h1>
     </div>
 
     <!-- Body -->
@@ -264,14 +264,14 @@ export function getInvitationEmailTemplate(data: InvitationEmailData): string {
     <!-- Footer -->
     <div class="footer">
       <p>
-        <strong>Emlak CRM</strong> - Emlak Yönetim Sistemi / Real Estate Management System
+        <strong>Closewell</strong> - Real Estate Management System
       </p>
       <p>
         Bu e-posta otomatik olarak gönderilmiştir. Lütfen yanıtlamayın.<br>
         This email was sent automatically. Please do not reply.
       </p>
       <p>
-        Sorularınız için: <a href="mailto:destek@emlakcrm.app">destek@emlakcrm.app</a>
+        Sorularınız için: <a href="mailto:support@closewell.app">support@closewell.app</a>
       </p>
     </div>
   </div>

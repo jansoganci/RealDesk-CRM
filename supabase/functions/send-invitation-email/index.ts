@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
     const frontendUrl = Deno.env.get('FRONTEND_URL') || 
                        (supabaseUrl.includes('localhost') 
                          ? 'http://localhost:5173' 
-                         : 'https://emlakcrm.app'); // Default production URL
+                         : 'https://closewell.app'); // Default production URL
     
     const invitationLink = `${frontendUrl}/accept-invite?token=${invitation.invitation_token}`;
 
@@ -155,8 +155,8 @@ Deno.serve(async (req) => {
     // 8. Determine sender email
     // Use verified production domain with display name format (required by Resend API)
     // Format: "Display Name <email@domain.com>"
-    // Domain emlakcrm.app is verified in Resend
-    const fromEmail = `Emlak CRM <${PRODUCTION_FROM_EMAIL}>`;
+    // Domain closewell.app must be verified in Resend before production use
+    const fromEmail = `Closewell <${PRODUCTION_FROM_EMAIL}>`;
 
     // 9. Send email via Resend
     console.log('📧 [EdgeFunction] STEP 5: Sending email via Resend...');
@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       to: invitation.email,
       subject: `${orgName} organizasyonuna davet edildiniz / You're invited to join ${orgName}`,
       html: emailHtml,
-      replyTo: 'destek@emlakcrm.app', // Domain is verified, safe to use
+      replyTo: 'support@closewell.app',
     });
 
     console.log('✅ [EdgeFunction] Email sent successfully:', {

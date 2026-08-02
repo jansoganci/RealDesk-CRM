@@ -92,6 +92,6 @@ export const DEFAULT_FROM_EMAIL = 'onboarding@resend.dev';
 
 /**
  * Production sender email (when domain is verified)
- * Domain: emlakcrm.app (verified)
+ * Domain: closewell.app (must be verified in Resend before production use)
  */
-export const PRODUCTION_FROM_EMAIL = 'bilgi@emlakcrm.app';
+export const PRODUCTION_FROM_EMAIL = 'support@closewell.app';
