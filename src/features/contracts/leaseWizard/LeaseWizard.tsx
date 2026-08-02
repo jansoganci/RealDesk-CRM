@@ -18,8 +18,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/config/constants';
 import { assertSupportedDocumentState } from '@/config/supportedDocumentStates';
 import {
-  leaseAgreementPdfService,
   leaseAgreementService,
+  loadLeaseAgreementPdfService,
 } from '@/lib/serviceProxy';
 import {
   AlertDialog,
@@ -81,13 +81,14 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
 
   const content = renderStep?.(currentStep) ?? <LeaseWizardStepContent step={currentStep} />;
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     if (!validateFullForm()) {
       toast.error(t('leaseWizard.complete.validationFailed'));
       return;
     }
     const values = form.getValues();
     try {
+      const leaseAgreementPdfService = await loadLeaseAgreementPdfService();
       const blob = leaseAgreementPdfService.generateBlob({ form: values });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');

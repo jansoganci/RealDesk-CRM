@@ -11,6 +11,8 @@ import { insertRow, updateRow } from '../lib/db';
 import { getAuthenticatedUserId } from '../lib/auth';
 import { getActiveOrgId, softDelete } from '../lib/orgHelpers';
 import { createLogger } from '../lib/logger';
+import { inquiriesService } from './inquiries.service';
+import { trackPropertyCreated } from '../utils/gtm';
 
 const logger = createLogger('Properties');
 
@@ -295,13 +297,10 @@ class PropertiesService {
       (newProperty.property_type === 'sale' && newProperty.status === 'Available');
 
     if (shouldTriggerMatching) {
-      // Import at call time to avoid circular dependency
-      const { inquiriesService } = await import('../lib/serviceProxy');
       await inquiriesService.checkMatchesForNewProperty(newProperty.id);
     }
 
     // Track property_created event (GA4)
-    const { trackPropertyCreated } = await import('../utils/gtm');
     trackPropertyCreated(newProperty.id);
 
     return newProperty;
@@ -323,8 +322,6 @@ class PropertiesService {
       updatedProperty.status === 'Available';
 
     if (rentalNowEmpty || saleNowAvailable) {
-      // Import at call time to avoid circular dependency
-      const { inquiriesService } = await import('../lib/serviceProxy');
       await inquiriesService.checkMatchesForNewProperty(id);
     }
 

@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { useAuth } from '@/contexts/AuthContext';
 import { userPreferencesService } from '@/lib/serviceProxy';
+import { setManualCurrency, setManualLanguage } from '@/lib/localeDetection';
 
 import {
   Dialog,
@@ -138,7 +139,6 @@ export function EditProfileInfoDialog({
       });
 
       // Update auth context
-      const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
       setManualLanguage('en');
       setManualCurrency('USD');
       await setLanguage('en');

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import { useOrg } from '../../contexts/OrgContext';
 import { useTeamPerformance } from './hooks/useTeamPerformance';
@@ -8,6 +9,7 @@ import { MainLayout } from '../../components/layout/MainLayout';
 import { PageContainer } from '../../components/layout/PageContainer';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Button } from '../../components/ui/button';
+import { ROUTES } from '../../config/constants';
 import {
   Select,
   SelectContent,
@@ -25,6 +27,7 @@ import {
   Users,
   AlertCircle,
   ShieldAlert,
+  UserPlus,
 } from 'lucide-react';
 import { formatCurrency } from '../../lib/currency';
 import { COLORS } from '../../config/colors';
@@ -36,6 +39,7 @@ import type { PeriodFilter, TeamMemberPerformance } from './types/team.types';
  */
 export function TeamPerformance() {
   const { t } = useTranslation(['team', 'common']);
+  const navigate = useNavigate();
   const { currency } = useAuth();
   const { isOwner, loading: orgLoading } = useOrg();
   const { data, loading, error, periodFilter, setPeriodFilter, refetch } = useTeamPerformance();
@@ -149,9 +153,15 @@ export function TeamPerformance() {
         <PageContainer>
           <div className="flex flex-col items-center justify-center h-96 space-y-4">
             <Users className={`h-16 w-16 ${COLORS.muted.text}`} />
-            <div className="text-center">
-              <h3 className="text-lg font-semibold mb-2">{t('empty.title')}</h3>
-              <p className={`text-sm ${COLORS.muted.textLight}`}>{t('empty.description')}</p>
+            <div className="text-center space-y-4">
+              <div>
+                <h3 className="text-lg font-semibold mb-2">{t('empty.title')}</h3>
+                <p className={`text-sm ${COLORS.muted.textLight}`}>{t('empty.description')}</p>
+              </div>
+              <Button onClick={() => navigate(ROUTES.TEAM_MEMBERS)}>
+                <UserPlus className="h-4 w-4 mr-2" />
+                {t('inviteToTrack')}
+              </Button>
             </div>
           </div>
         </PageContainer>
@@ -178,21 +188,31 @@ export function TeamPerformance() {
               <h1 className="text-2xl font-bold text-gray-900">{t('pageTitle')}</h1>
               <p className={`text-sm ${COLORS.muted.textLight}`}>{data.period.label}</p>
             </div>
-            <Select
-              value={periodFilter}
-              onValueChange={(value) => setPeriodFilter(value as PeriodFilter)}
-            >
-              <SelectTrigger className="w-full sm:w-[180px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {periodOptions.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+              <Button
+                variant="outline"
+                onClick={() => navigate(ROUTES.TEAM_MEMBERS)}
+                className="w-full sm:w-auto"
+              >
+                <Users className="h-4 w-4 mr-2" />
+                {t('manageMembers')}
+              </Button>
+              <Select
+                value={periodFilter}
+                onValueChange={(value) => setPeriodFilter(value as PeriodFilter)}
+              >
+                <SelectTrigger className="w-full sm:w-[180px]">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  {periodOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {/* Org-wide Company Dollar callout — the headline number for the owner */}

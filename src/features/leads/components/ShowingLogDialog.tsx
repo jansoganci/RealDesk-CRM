@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { leadsService } from '@/lib/serviceProxy';
+import { leadsService, propertiesService } from '@/lib/serviceProxy';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrg } from '@/contexts/OrgContext';
 import {
@@ -112,7 +112,6 @@ export function ShowingLogDialog({
       if (!open || !currentOrg?.id || existingShowing) return;
       setLoadingProperties(true);
       try {
-        const { propertiesService } = await import('@/lib/serviceProxy');
         const data = await propertiesService.getAll();
         setProperties(data);
       } catch (error) {

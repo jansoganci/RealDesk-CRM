@@ -86,7 +86,7 @@ const navigationGroups: NavigationGroupConfig[] = [
       { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
       { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
       { key: 'compliance', href: ROUTES.CCPA_DASHBOARD, icon: Shield },
-      { key: 'team', href: ROUTES.TEAM, icon: Users2, ownerOnly: true },
+      { key: 'team', href: ROUTES.TEAM_MEMBERS, icon: Users2, ownerOnly: true },
     ],
   },
 ];

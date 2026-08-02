@@ -6,6 +6,7 @@ import { userPreferencesService } from '../../../lib/serviceProxy';
 import type { UseFormReturn } from 'react-hook-form';
 import type * as z from 'zod';
 import type { getProfileSchema } from '../profileSchema';
+import { setManualCurrency, setManualLanguage } from '@/lib/localeDetection';
 
 /**
  * Profile Data Hook
@@ -75,7 +76,6 @@ export function useProfileData({
           commission_rate: data.commission_rate,
         });
 
-        const { setManualLanguage, setManualCurrency } = await import('@/lib/localeDetection');
         setManualLanguage('en');
         setManualCurrency('USD');
         await setLanguage(data.language);

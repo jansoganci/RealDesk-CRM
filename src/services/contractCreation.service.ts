@@ -15,6 +15,7 @@ import {
 import type { ContractFormData } from '@/features/contracts/schemas/contractForm.schema';
 import type { ContractCreationResult } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
+import { trackContractCreated } from '@/utils/gtm';
 
 const logger = createLogger('ContractCreation');
 
@@ -243,7 +244,6 @@ export async function createContractWithEntities(
 
     // Track contract_created event (GA4)
     if (result.contract_id) {
-      const { trackContractCreated } = await import('../utils/gtm');
       trackContractCreated(result.contract_id);
     }
 

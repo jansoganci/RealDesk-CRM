@@ -9,6 +9,7 @@ import { getCategories } from './categories.service';
 import { getUpcomingRecurringExpenses } from './recurring.service';
 import { calculateCategoryBreakdown, NormalizedCategoryBreakdown, calculateNormalizedSum, CalculatedMetric } from './reportCalculator';
 import { getActiveOrgId } from '../../lib/orgHelpers';
+import { commissionsService } from '../commissions.service';
 import type {
   MonthlySummary,
   CategoryBreakdown,
@@ -505,8 +506,6 @@ export const getCommissionByPropertyType = async (
     const startDate = `${year}-01-01`;
     const endDate = `${year}-12-31`;
 
-    // Import commissions service dynamically to avoid circular dependency
-    const { commissionsService } = await import('../../lib/serviceProxy');
     const commissions = await commissionsService.getByDateRange(startDate, endDate);
 
     if (!commissions || commissions.length === 0) {
@@ -823,7 +822,6 @@ export const getMarketingROI = async (
     }
 
     // Get commission revenue for the same period
-    const { commissionsService } = await import('../../lib/serviceProxy');
     const commissions = await commissionsService.getByDateRange(startDate, endDate);
 
     // Calculate total marketing spend

@@ -23,7 +23,7 @@ import { useOrg } from '@/contexts/OrgContext';
 import { ArrowLeft, ArrowRight, Check, Save } from 'lucide-react';
 import { toast } from 'sonner';
 import { contractBuilderService } from '@/services/contractBuilder.service';
-import { contractPdfEngineService } from '@/services/contractPdfEngine.service';
+import { loadContractPdfEngineService } from '@/lib/serviceProxy';
 import { saleContractFormSchema, type SaleContractFormData } from './schemas/saleContractForm.schema';
 import { SALE_CONTRACT_TEMPLATE_CONTENT, replacePlaceholders } from '@/templates/salesContractContent';
 
@@ -140,6 +140,7 @@ export function SaleContractBuilder() {
       // Generate PDF only for 'final' status
       if (status === 'final') {
         try {
+          const contractPdfEngineService = await loadContractPdfEngineService();
           const pdfResult = await contractPdfEngineService.generateAndSave(
             'sale',
             values,

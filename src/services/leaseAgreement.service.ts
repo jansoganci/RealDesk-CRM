@@ -8,7 +8,6 @@ import { getActiveOrgId } from '@/lib/orgHelpers';
 import { callRpc } from '@/lib/rpc';
 import { persistContractDocumentArtifact } from '@/services/contractDocumentArtifacts.service';
 import { contractsService } from '@/services/contracts.service';
-import { leaseAgreementPdfService } from '@/services/leaseAgreementPdf.service';
 import type { Json } from '@/types/database.types';
 import type {
   RpcCreateLeaseContractParams,
@@ -325,6 +324,7 @@ class LeaseAgreementService {
       paypal_email: details.paypal_email ?? '',
     } as LeaseAgreementFormValues;
 
+    const { leaseAgreementPdfService } = await import('@/services/leaseAgreementPdf.service');
     const { blob, meta } = leaseAgreementPdfService.generateDocument({ form });
     const file = new File([blob], `Lease_Agreement_${contractId.slice(0, 8)}.pdf`, {
       type: 'application/pdf',
@@ -346,6 +346,7 @@ class LeaseAgreementService {
    */
   async generateAndAttachPdf(contractId: string, form: LeaseAgreementFormValues): Promise<string> {
     const orgId = await getActiveOrgId();
+    const { leaseAgreementPdfService } = await import('@/services/leaseAgreementPdf.service');
     const { blob, meta } = leaseAgreementPdfService.generateDocument({ form });
     const file = new File([blob], `Lease_Agreement_${contractId.slice(0, 8)}.pdf`, {
       type: 'application/pdf',

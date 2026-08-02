@@ -1,5 +1,14 @@
 {
   "pageTitle": "Team Performance",
+  "membersPageTitle": "Team Members",
+  "addMember": "Add Member",
+  "addMemberShort": "Add",
+  "searchPlaceholder": "Search members...",
+  "ownerOnly": "Only organization owners can manage team members",
+  "you": "(You)",
+  "cannotModifySelf": "You cannot modify your own account",
+  "manageMembers": "Manage Members",
+  "inviteToTrack": "Invite Members",
   "periods": {
     "thisMonth": "This Month",
     "lastMonth": "Last Month",
@@ -16,6 +25,11 @@
   "table": {
     "title": "Team Members",
     "member": "Member",
+    "email": "Email",
+    "status": "Status",
+    "role": "Role",
+    "joined": "Joined",
+    "actions": "Actions",
     "commission": "Commission",
     "deals": "Deals",
     "contracts": "Contracts",
@@ -28,17 +42,99 @@
   "caveats": {
     "splitAccuracy": "Net and Company Dollar figures assume matching commission split/cap settings across the team."
   },
+  "status": {
+    "active": "Active",
+    "pending": "Pending"
+  },
+  "roles": {
+    "owner": "Owner",
+    "member": "Member"
+  },
   "empty": {
     "title": "No Team Members",
     "description": "Invite team members to start tracking performance."
+  },
+  "emptyState": {
+    "title": "No team members yet",
+    "description": "Add team members to collaborate on your properties and contracts"
+  },
+  "addDialog": {
+    "title": "Add Team Member",
+    "description": "Invite someone by email. Registered users join immediately; others get an invitation link.",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "colleague@example.com",
+    "roleLabel": "Role",
+    "roleHelp": "Owners can manage team and settings. Members have standard access.",
+    "submit": "Add Member",
+    "submitting": "Adding..."
+  },
+  "changeRoleDialog": {
+    "promoteTitle": "Promote to Owner",
+    "demoteTitle": "Change to Member",
+    "promoteDescription": "Promote {{name}} to organization owner. They will be able to manage team members and organization settings.",
+    "demoteDescription": "Change {{name}} to a regular member. They will lose the ability to manage team members and organization settings.",
+    "currentRole": "Current Role",
+    "newRole": "New Role",
+    "submit": "Confirm Change",
+    "submitting": "Updating...",
+    "demoteWarning": "This user will lose admin privileges and won't be able to manage team members or organization settings."
+  },
+  "removeDialog": {
+    "title": "Remove Team Member",
+    "description": "Are you sure you want to remove {{name}} from your organization?",
+    "warning": "This action cannot be undone. The user will immediately lose access to all organization data, properties, contracts, and other resources.",
+    "cancel": "Cancel",
+    "confirm": "Remove Member",
+    "removing": "Removing..."
+  },
+  "validation": {
+    "emailRequired": "Email address is required",
+    "emailInvalid": "Please enter a valid email address",
+    "roleRequired": "Please select a role"
+  },
+  "success": {
+    "memberAdded": "Team member added successfully",
+    "roleUpdated": "Member role updated successfully",
+    "memberRemoved": "Team member removed successfully",
+    "invitationAccepted": "Invitation accepted successfully!"
   },
   "errors": {
     "loadFailed": "Failed to load team performance",
     "loadFailedTitle": "Error Loading Data",
     "accessDeniedTitle": "Access Denied",
-    "accessDeniedDescription": "Only organization owners can view team performance."
+    "accessDeniedDescription": "Only organization owners can view team performance.",
+    "addFailed": "Failed to add team member. Please try again.",
+    "updateFailed": "Failed to update member role. Please try again.",
+    "removeFailed": "Failed to remove team member. Please try again.",
+    "userNotFound": "User not found. They must register first before being invited.",
+    "alreadyMember": "This user is already a member of your organization.",
+    "lastOwner": "Cannot remove the last owner. Transfer ownership first.",
+    "cannotDemoteLastOwner": "Cannot demote the last owner. Promote another member to owner first.",
+    "invitationExpired": "Invitation Expired",
+    "invitationExpiredDesc": "This invitation link has expired. Please ask the sender to resend the invitation.",
+    "invalidInvitation": "Invalid Invitation",
+    "invalidInvitationDesc": "This invitation link is invalid or has already been used."
+  },
+  "invite": {
+    "title": "You're Invited!",
+    "invitedYouTo": "has invited you to join",
+    "asRole": "as a",
+    "loginPrompt": "To accept this invitation and join the team, please log in to your account or create a new one.",
+    "loggedInAs": "Logged in as",
+    "acceptButton": "Accept Invitation",
+    "wrongAccount": "Not your account?"
   },
   "actions": {
-    "tryAgain": "Try Again"
-  }
+    "tryAgain": "Try Again",
+    "label": "Actions",
+    "promoteToOwner": "Promote to Owner",
+    "demoteToMember": "Change to Member",
+    "removeMember": "Remove from Team",
+    "copyInviteLink": "Copy Invitation Link",
+    "resendInvite": "Resend Invitation",
+    "revokeInvite": "Revoke Invitation"
+  },
+  "invitationRevoked": "Invitation revoked successfully",
+  "inviteLinkCopied": "Invitation link copied to clipboard",
+  "invitationResent": "Invitation resent with a new link"
 }

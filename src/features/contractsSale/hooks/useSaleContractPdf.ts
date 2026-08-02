@@ -11,7 +11,7 @@
 import { useState, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
-import { contractPdfEngineService } from '@/services/contractPdfEngine.service';
+import { loadContractPdfEngineService } from '@/lib/serviceProxy';
 import type { ContractInstanceV2 } from '@/types/contractBuilder.types';
 
 // ============================================================================
@@ -45,6 +45,7 @@ export function useSaleContractPdf(): UseSaleContractPdfReturn {
       toast.info(t('pdf.generating'));
 
       try {
+        const contractPdfEngineService = await loadContractPdfEngineService();
         const result = await contractPdfEngineService.generateAndSave(
           'sale',
           instance.form_data,
@@ -84,6 +85,7 @@ export function useSaleContractPdf(): UseSaleContractPdfReturn {
       setIsDownloading(true);
 
       try {
+        const contractPdfEngineService = await loadContractPdfEngineService();
         const result = await contractPdfEngineService.getDownloadUrl(instance.pdf_path);
 
         if (result.success && result.signedUrl) {
@@ -121,4 +123,3 @@ export function useSaleContractPdf(): UseSaleContractPdfReturn {
     regeneratePdf,
   };
 }
-

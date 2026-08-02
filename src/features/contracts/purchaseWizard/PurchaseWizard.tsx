@@ -15,7 +15,7 @@ import { ROUTES } from '@/config/constants';
 import { useAuth } from '@/contexts/AuthContext';
 import { assertPurchaseDocumentJurisdiction } from '@/features/contracts/utils/documentJurisdiction';
 import {
-  purchaseAgreementPdfService,
+  loadPurchaseAgreementPdfService,
   purchaseAgreementService,
 } from '@/lib/serviceProxy';
 import {
@@ -106,13 +106,14 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
     toast.success(t('purchaseWizard.draftSaved'));
   };
 
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     if (!validateFullForm()) {
       toast.error(t('purchaseWizard.complete.validationFailed'));
       return;
     }
     const values = form.getValues();
     try {
+      const purchaseAgreementPdfService = await loadPurchaseAgreementPdfService();
       const blob = purchaseAgreementPdfService.generateBlob({ form: values });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');

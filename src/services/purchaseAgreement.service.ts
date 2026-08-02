@@ -144,10 +144,6 @@ export type CloseDealResult = {
   purchasePrice: number | null;
 };
 
-async function getServiceProxy() {
-  return import('@/lib/serviceProxy');
-}
-
 /** Payload from deal counter-offer flow to sync `contracts` + `purchase_details` + `deals`. */
 export type PurchaseCounterOfferSync = {
   offer_price: number;
@@ -703,7 +699,7 @@ class PurchaseAgreementService {
 
     const form = purchaseAgreementFormValuesFromDb(contract as Contract, detail);
     const roundNumber = await this.getLatestOfferRoundNumber(contractId, orgId);
-    const { purchaseAgreementPdfService } = await getServiceProxy();
+    const { purchaseAgreementPdfService } = await import('@/services/purchaseAgreementPdf.service');
     const { blob, meta } = purchaseAgreementPdfService.generateDocument({ form });
     const path = await this.uploadVersionedPurchasePdf(contractId, orgId, blob, roundNumber, 'regenerated');
 
@@ -868,7 +864,7 @@ class PurchaseAgreementService {
 
     const form = purchaseAgreementFormValuesFromDb(bundle, bundle.purchase_details);
     const resolvedRound = offerNumber ?? (await this.getLatestOfferRoundNumber(contractId, orgId));
-    const { purchaseAgreementPdfService } = await getServiceProxy();
+    const { purchaseAgreementPdfService } = await import('@/services/purchaseAgreementPdf.service');
     const { blob, meta } = purchaseAgreementPdfService.generateDocument({ form });
     const path = await this.uploadVersionedPurchasePdf(contractId, orgId, blob, resolvedRound);
     const stamp = meta.generated_at;

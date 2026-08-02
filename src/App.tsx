@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
 import { AuthProvider } from './contexts/AuthContext';
@@ -16,37 +17,7 @@ import { EmailConfirmation } from './features/auth/EmailConfirmation';
 import { EmailChanged } from './features/auth/EmailChanged';
 import { AuthCallback } from './features/auth/AuthCallback';
 import { BillingSubscribe } from './features/billing/BillingSubscribe';
-import { LandingPage } from './features/landing/LandingPage';
-import { PublicPricingPage } from './features/landing/PublicPricingPage';
-import { AboutPage } from './features/landing/AboutPage';
-import { ContactPage } from './features/landing/ContactPage';
 import { Dashboard } from './features/dashboard/Dashboard';
-import { Properties } from './features/properties/Properties';
-import { Contracts } from './features/contracts/Contracts';
-import ContractCreate from './features/contracts/ContractCreate';
-import { LeaseWizardPage } from './features/contracts/leaseWizard';
-import { PurchaseContractDetailPage, PurchaseWizardPage } from './features/contracts/purchaseWizard';
-import ContractEdit from './features/contracts/ContractEdit';
-import { LeaseDetailPage } from './features/contracts/LeaseDetail';
-import { ContractImportPage } from './features/contracts/import/ContractImportPage';
-import { ContractsHub } from './features/contractsHub/ContractsHub';
-import { SaleContractsList } from './features/contractsSale/SaleContractsList';
-import { SaleContractEdit } from './features/contractsSale/SaleContractEdit';
-import { Reminders } from './features/reminders/Reminders';
-import { Leads } from './features/leads/Leads';
-import { LeadDetailPage } from './features/leads/LeadDetailPage';
-import { Deals } from './features/deals/Deals';
-import { DealDetail } from './features/deals/DealDetail';
-import { TimelinePage } from './features/timeline';
-import { CalendarPage } from './features/calendar/CalendarPage';
-import { Finance } from './features/finance/Finance';
-import { Profile } from './features/profile/Profile';
-import { TeamPerformance } from './features/team/TeamPerformance';
-import { ScreeningPage } from './features/screening';
-import { DepositTrackerPage } from './features/deposit-tracker';
-import { CompliancePage, ComplianceDashboard } from './features/compliance';
-import { AcceptInvite } from './features/organization/AcceptInvite';
-import { Onboarding } from './features/onboarding/Onboarding';
 import { ROUTES } from './config/constants';
 import { Toaster } from './components/ui/sonner';
 import { GTMPageViewTracker } from './components/GTMPageViewTracker';
@@ -55,6 +26,110 @@ import { CookieErrorBoundary } from './components/ui/cookie-error-boundary';
 import { CookiePreferences } from './components/ui/cookie-preferences';
 import { useCookieConsent } from './hooks/useCookieConsent';
 import './App.css';
+
+const LandingPage = lazy(() =>
+  import('./features/landing/LandingPage').then(({ LandingPage }) => ({ default: LandingPage })),
+);
+const PublicPricingPage = lazy(() =>
+  import('./features/landing/PublicPricingPage').then(({ PublicPricingPage }) => ({ default: PublicPricingPage })),
+);
+const AboutPage = lazy(() =>
+  import('./features/landing/AboutPage').then(({ AboutPage }) => ({ default: AboutPage })),
+);
+const ContactPage = lazy(() =>
+  import('./features/landing/ContactPage').then(({ ContactPage }) => ({ default: ContactPage })),
+);
+const Properties = lazy(() =>
+  import('./features/properties/Properties').then(({ Properties }) => ({ default: Properties })),
+);
+const Contracts = lazy(() =>
+  import('./features/contracts/Contracts').then(({ Contracts }) => ({ default: Contracts })),
+);
+const ContractCreate = lazy(() => import('./features/contracts/ContractCreate'));
+const ContractEdit = lazy(() => import('./features/contracts/ContractEdit'));
+const LeaseWizardPage = lazy(() =>
+  import('./features/contracts/leaseWizard/LeaseWizardPage').then(({ LeaseWizardPage }) => ({ default: LeaseWizardPage })),
+);
+const PurchaseWizardPage = lazy(() =>
+  import('./features/contracts/purchaseWizard/PurchaseWizardPage').then(({ PurchaseWizardPage }) => ({ default: PurchaseWizardPage })),
+);
+const PurchaseContractDetailPage = lazy(() =>
+  import('./features/contracts/purchaseWizard/PurchaseContractDetailPage').then(({ PurchaseContractDetailPage }) => ({ default: PurchaseContractDetailPage })),
+);
+const LeaseDetailPage = lazy(() =>
+  import('./features/contracts/LeaseDetail').then(({ LeaseDetailPage }) => ({ default: LeaseDetailPage })),
+);
+const ContractImportPage = lazy(() =>
+  import('./features/contracts/import/ContractImportPage').then(({ ContractImportPage }) => ({ default: ContractImportPage })),
+);
+const ContractsHub = lazy(() =>
+  import('./features/contractsHub/ContractsHub').then(({ ContractsHub }) => ({ default: ContractsHub })),
+);
+const SaleContractsList = lazy(() =>
+  import('./features/contractsSale/SaleContractsList').then(({ SaleContractsList }) => ({ default: SaleContractsList })),
+);
+const SaleContractEdit = lazy(() =>
+  import('./features/contractsSale/SaleContractEdit').then(({ SaleContractEdit }) => ({ default: SaleContractEdit })),
+);
+const Reminders = lazy(() =>
+  import('./features/reminders/Reminders').then(({ Reminders }) => ({ default: Reminders })),
+);
+const Leads = lazy(() =>
+  import('./features/leads/Leads').then(({ Leads }) => ({ default: Leads })),
+);
+const LeadDetailPage = lazy(() =>
+  import('./features/leads/LeadDetailPage').then(({ LeadDetailPage }) => ({ default: LeadDetailPage })),
+);
+const Deals = lazy(() =>
+  import('./features/deals/Deals').then(({ Deals }) => ({ default: Deals })),
+);
+const DealDetail = lazy(() =>
+  import('./features/deals/DealDetail').then(({ DealDetail }) => ({ default: DealDetail })),
+);
+const TimelinePage = lazy(() =>
+  import('./features/timeline/TimelinePage').then(({ TimelinePage }) => ({ default: TimelinePage })),
+);
+const CalendarPage = lazy(() =>
+  import('./features/calendar/CalendarPage').then(({ CalendarPage }) => ({ default: CalendarPage })),
+);
+const Finance = lazy(() =>
+  import('./features/finance/Finance').then(({ Finance }) => ({ default: Finance })),
+);
+const Profile = lazy(() =>
+  import('./features/profile/Profile').then(({ Profile }) => ({ default: Profile })),
+);
+const TeamPerformance = lazy(() =>
+  import('./features/team/TeamPerformance').then(({ TeamPerformance }) => ({ default: TeamPerformance })),
+);
+const TeamMembersList = lazy(() =>
+  import('./features/organization/TeamMembersList').then(({ TeamMembersList }) => ({ default: TeamMembersList })),
+);
+const ScreeningPage = lazy(() =>
+  import('./features/screening/ScreeningPage').then(({ ScreeningPage }) => ({ default: ScreeningPage })),
+);
+const DepositTrackerPage = lazy(() =>
+  import('./features/deposit-tracker/DepositTrackerPage').then(({ DepositTrackerPage }) => ({ default: DepositTrackerPage })),
+);
+const CompliancePage = lazy(() =>
+  import('./features/compliance/CompliancePage').then(({ CompliancePage }) => ({ default: CompliancePage })),
+);
+const ComplianceDashboard = lazy(() =>
+  import('./features/compliance/ComplianceDashboard').then(({ ComplianceDashboard }) => ({ default: ComplianceDashboard })),
+);
+const AcceptInvite = lazy(() =>
+  import('./features/organization/AcceptInvite').then(({ AcceptInvite }) => ({ default: AcceptInvite })),
+);
+const Onboarding = lazy(() =>
+  import('./features/onboarding/Onboarding').then(({ Onboarding }) => ({ default: Onboarding })),
+);
+
+function RouteLoadingFallback() {
+  return (
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="h-12 w-12 animate-spin rounded-full border-b-2 border-gray-900" />
+    </div>
+  );
+}
 
 function AppContent() {
   const { showPreferences, closePreferences } = useCookieConsent();
@@ -66,7 +141,8 @@ function AppContent() {
         <CookieNotice />
       </CookieErrorBoundary>
       <CookiePreferences open={showPreferences} onOpenChange={closePreferences} />
-      <Routes>
+      <Suspense fallback={<RouteLoadingFallback />}>
+        <Routes>
                 <Route path={ROUTES.HOME} element={<LandingPage />} />
               <Route path={ROUTES.LOGIN} element={<Login />} />
               <Route path={ROUTES.REGISTER} element={<Register />} />
@@ -324,6 +400,16 @@ function AppContent() {
                   }
                 />
                 <Route
+                  path={ROUTES.TEAM_MEMBERS}
+                  element={
+                    <ProtectedRoute>
+                      <OwnerOnlyRoute>
+                        <TeamMembersList />
+                      </OwnerOnlyRoute>
+                    </ProtectedRoute>
+                  }
+                />
+                <Route
                   path={ROUTES.SCREENING}
                   element={
                     <ProtectedRoute>
@@ -347,7 +433,8 @@ function AppContent() {
                     </ProtectedRoute>
                   }
                 />
-      </Routes>
+        </Routes>
+      </Suspense>
       <Toaster />
     </>
   );

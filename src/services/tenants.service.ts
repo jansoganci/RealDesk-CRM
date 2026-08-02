@@ -33,6 +33,8 @@ import {
   ERROR_TENANT_CONTRACT_CREATION_FAILED,
 } from '../lib/errorCodes';
 import { createLogger } from '../lib/logger';
+import { contractsService } from './contracts.service';
+import { trackContractCreated, trackTenantAdded } from '../utils/gtm';
 
 const logger = createLogger('Tenants');
 
@@ -137,7 +139,6 @@ class TenantsService {
     });
 
     // Track tenant_added event (GA4)
-    const { trackTenantAdded } = await import('../utils/gtm');
     trackTenantAdded(newTenant.id);
 
     return newTenant;
@@ -296,7 +297,6 @@ class TenantsService {
       // If PDF file is provided, upload it and persist the path
       if (pdfFile) {
         try {
-          const { contractsService } = await import('./contracts.service');
           await contractsService.uploadContractPdfAndPersist(pdfFile, resTyped.contract_id);
         } catch (uploadErr) {
           logger.error('PDF upload failed after tenant/contract creation:', uploadErr);
@@ -335,7 +335,6 @@ class TenantsService {
       }
 
       // Track tenant_added and contract_created events (GA4)
-      const { trackTenantAdded, trackContractCreated } = await import('../utils/gtm');
       trackTenantAdded(resTyped.tenant_id);
       trackContractCreated(resTyped.contract_id);
 

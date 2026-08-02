@@ -121,6 +121,8 @@ export const ROUTES = {
   FINANCE: '/finance',
   PROFILE: '/profile',
   TEAM: '/team',
+  /** Owner-only team member invite / role management. */
+  TEAM_MEMBERS: '/team/members',
   BILLING_SUBSCRIBE: '/billing/subscribe',
   ONBOARDING: '/onboarding',
   ACCEPT_INVITE: '/accept-invite',

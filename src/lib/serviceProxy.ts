@@ -32,10 +32,27 @@ export type {
   PurchaseDetailsWithContract,
   UploadAddendumResult,
 } from '../services/purchaseAgreement.service';
-export { leaseAgreementPdfService } from '../services/leaseAgreementPdf.service';
 export type { LeaseAgreementPdfInput } from '../services/leaseAgreementPdf.service';
-export { purchaseAgreementPdfService } from '../services/purchaseAgreementPdf.service';
 export type { PurchaseAgreementPdfInput } from '../services/purchaseAgreementPdf.service';
+
+export async function loadLeaseAgreementPdfService() {
+  const { leaseAgreementPdfService } = await import('../services/leaseAgreementPdf.service');
+  return leaseAgreementPdfService;
+}
+
+export async function loadPurchaseAgreementPdfService() {
+  const { purchaseAgreementPdfService } = await import('../services/purchaseAgreementPdf.service');
+  return purchaseAgreementPdfService;
+}
+
+export async function loadContractPdfService() {
+  return import('../services/contractPdf.service');
+}
+
+export async function loadContractPdfEngineService() {
+  const { contractPdfEngineService } = await import('../services/contractPdfEngine.service');
+  return contractPdfEngineService;
+}
 export { remindersService } from '../services/reminders.service';
 export { photosService } from '../services/photos.service';
 export { inquiriesService } from '../services/inquiries.service';

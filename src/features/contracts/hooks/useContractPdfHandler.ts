@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { enUS } from 'date-fns/locale';
-import { generateContractPDFBlob } from '@/services/contractPdf.service';
+import { contractsService, loadContractPdfService } from '@/lib/serviceProxy';
 import { numberToEnglishText } from '@/lib/numberToText';
 import type { ContractFormData, ContractCreationResult, ContractPdfData } from '@/types/contract.types';
 import { createLogger } from '@/lib/logger';
@@ -145,8 +145,6 @@ async function uploadPdfToStorage(
   const fileName = `Lease_Agreement_${contractId.slice(0, 8)}.pdf`;
   const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
-  const { contractsService } = await import('@/lib/serviceProxy');
-
   const storageFilePath = await Promise.race([
     contractsService.uploadContractPdfAndPersist(pdfFile, contractId),
     new Promise<never>((_, reject) =>
@@ -243,6 +241,7 @@ export function useContractPdfHandler(): UseContractPdfHandlerReturn {
       const pdfData = preparePdfData(formData, contractResult.contract_id);
 
       // STEP 2: Generate PDF Blob (with merged clauses from database)
+      const { generateContractPDFBlob } = await loadContractPdfService();
       const pdfBlob = await generateContractPDFBlob(pdfData, contractResult.contract_id);
 
       // STEP 3: Validate PDF size

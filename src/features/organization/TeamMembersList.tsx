@@ -209,7 +209,7 @@ export function TeamMembersList() {
   );
 
   return (
-    <MainLayout title={t('team:pageTitle')}>
+    <MainLayout title={t('team:membersPageTitle')}>
       <PageContainer className="min-h-[600px]">
         {/* Header with search and add button */}
         <div className="flex flex-col sm:flex-row gap-4 justify-between">

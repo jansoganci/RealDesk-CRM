@@ -100,7 +100,7 @@ export function TeamMembersCard() {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate(ROUTES.TEAM)}
+          onClick={() => navigate(ROUTES.TEAM_MEMBERS)}
           className="gap-2"
         >
           {t('profile:teamMembers.viewAll')}
@@ -154,7 +154,7 @@ export function TeamMembersCard() {
             <Button
               variant="outline"
               size="sm"
-              onClick={() => navigate(ROUTES.TEAM)}
+              onClick={() => navigate(ROUTES.TEAM_MEMBERS)}
               className="w-full gap-2"
             >
               <UserPlus className="h-4 w-4" />
