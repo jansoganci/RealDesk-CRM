@@ -60,3 +60,10 @@ Thumbs.db
 # Supabase migrations with embedded secrets
 supabase/migrations/0035_schedule_generate_alerts_cron.sql
 tmp/
+
+# design-sync (Claude Design) — staged converter + generated output
+.ds-sync/
+ds-bundle/
+.design-sync/.cache/
+.design-sync/learnings/
+.design-sync/node_modules
