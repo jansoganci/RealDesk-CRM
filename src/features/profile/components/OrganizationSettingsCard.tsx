@@ -82,8 +82,8 @@ export function OrganizationSettingsCard({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground rounded-xl shadow-lg shadow-primary/30">
-            <Building2 className="h-5 w-5 text-white" />
+          <div className="rounded-xl bg-gradient-to-br from-primary via-primary to-primary/80 p-2.5 shadow-lg shadow-primary/30">
+            <Building2 className="h-5 w-5 text-primary-foreground" />
           </div>
           <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
             {t('organizationSettings.title')}
@@ -102,7 +102,7 @@ export function OrganizationSettingsCard({
         </Button>
       </CardHeader>
       <CardContent>
-        <div className="space-y-0 divide-y divide-gray-100 dark:divide-slate-800">
+        <div className="space-y-0 divide-y divide-border">
           {/* Organization Name */}
           <div className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-3">
             <span className="text-sm text-muted-foreground">
@@ -143,7 +143,7 @@ export function OrganizationSettingsCard({
                       onClick={handleCopyOrgId}
                     >
                       {copied ? (
-                        <Check className="h-3.5 w-3.5 text-green-600" />
+                        <Check className="h-3.5 w-3.5 text-success" />
                       ) : (
                         <Copy className="h-3.5 w-3.5" />
                       )}
@@ -161,4 +161,3 @@ export function OrganizationSettingsCard({
     </Card>
   );
 }
-

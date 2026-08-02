@@ -17,9 +17,9 @@ export const CapProgressCard = ({ progress }: CapProgressCardProps) => {
   const [expanded, setExpanded] = useState(false);
 
   const progressTone = useMemo(() => {
-    if (progress.is_capped) return 'bg-primary dark:bg-primary/100';
-    if (progress.pct_to_cap >= 80) return 'bg-success dark:bg-success/150';
-    return 'bg-warning dark:bg-warning';
+    if (progress.is_capped) return 'bg-primary';
+    if (progress.pct_to_cap >= 80) return 'bg-success';
+    return 'bg-warning';
   }, [progress.is_capped, progress.pct_to_cap]);
 
   return (
@@ -28,7 +28,7 @@ export const CapProgressCard = ({ progress }: CapProgressCardProps) => {
         <div className="flex items-center justify-between">
           <CardTitle className="text-foreground dark:text-muted-foreground">{t('commissionSettings.cap.title')}</CardTitle>
           {progress.is_capped && (
-            <Badge className="bg-success dark:bg-success/150 dark:text-white">{t('commissionSettings.cap.capped')}</Badge>
+            <Badge className="bg-success text-success-foreground">{t('commissionSettings.cap.capped')}</Badge>
           )}
         </div>
       </CardHeader>
@@ -79,7 +79,7 @@ export const CapProgressCard = ({ progress }: CapProgressCardProps) => {
                       {row.closing_date ?? '—'} • +{money(row.company_dollar)} • {t('commissionSettings.cap.cumulative')}: {money(row.cumulative_company_dollar)}
                     </p>
                     {row.triggered_cap && (
-                      <Badge className="mt-1 bg-primary dark:bg-primary/100 dark:text-white">{t('commissionSettings.cap.triggeredCap')}</Badge>
+                      <Badge className="mt-1 bg-primary text-primary-foreground">{t('commissionSettings.cap.triggeredCap')}</Badge>
                     )}
                   </div>
                 ))

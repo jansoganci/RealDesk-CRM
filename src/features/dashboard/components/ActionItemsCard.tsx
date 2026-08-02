@@ -43,11 +43,11 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
   }
 
   return (
-    <Card className="shadow-luxury hover:shadow-luxury-lg transition-all duration-300 border-primary/30/50 dark:border-primary/50 bg-gradient-to-br from-primary to-foreground/70 dark:from-primary/30 dark:to-card backdrop-blur-sm animate-fade-in">
+    <Card className="animate-fade-in border-primary/30 bg-gradient-to-br from-primary/10 to-card shadow-luxury backdrop-blur-sm transition-all duration-300 hover:shadow-luxury-lg">
       <CardHeader>
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground/70 rounded-xl shadow-lg shadow-primary/20">
-            <AlertCircle className="h-5 w-5 text-white" />
+          <div className="rounded-xl bg-gradient-to-br from-primary via-primary to-primary/80 p-2.5 shadow-lg shadow-primary/20">
+            <AlertCircle className="h-5 w-5 text-primary-foreground" />
           </div>
           <div>
             <CardTitle className="text-foreground font-bold">
@@ -130,4 +130,3 @@ export function ActionItemsCard({ actionItems, totalProperties }: ActionItemsCar
     </Card>
   );
 }
-

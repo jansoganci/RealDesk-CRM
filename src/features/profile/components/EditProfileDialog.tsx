@@ -116,11 +116,11 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[550px] bg-gradient-to-br from-primary to-background dark:from-foreground dark:to-foreground border-primary/30/50 dark:border-border shadow-luxury">
+      <DialogContent className="border-primary/30 bg-gradient-to-br from-primary/10 to-background shadow-luxury sm:max-w-[550px]">
         <DialogHeader className="pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground rounded-xl shadow-lg shadow-primary/30">
-              <User className="h-5 w-5 text-white" />
+            <div className="rounded-xl bg-gradient-to-br from-primary via-primary to-primary/80 p-2.5 shadow-lg shadow-primary/30">
+              <User className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
               <DialogTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
@@ -134,17 +134,17 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
         </DialogHeader>
 
         <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-card/80 dark:bg-muted backdrop-blur-sm border border-primary/30/50 dark:border-border shadow-md p-1">
+          <TabsList className="grid w-full grid-cols-2 border border-primary/30 bg-card/80 p-1 shadow-md backdrop-blur-sm">
             <TabsTrigger
               value="email"
-              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="gap-2 transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/90 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
             >
               <Mail className="h-4 w-4" />
               {t('editProfile.tabs.basicInfo')}
             </TabsTrigger>
             <TabsTrigger
               value="password"
-              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="gap-2 transition-all duration-300 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary/90 data-[state=active]:text-primary-foreground data-[state=active]:shadow-md"
             >
               <Lock className="h-4 w-4" />
               {t('editProfile.tabs.security')}
@@ -152,7 +152,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
           </TabsList>
 
           {/* Email Tab */}
-          <TabsContent value="email" className="space-y-4 mt-6 p-6 bg-card/50 dark:bg-muted backdrop-blur-sm rounded-xl border border-primary/30/30 dark:border-border shadow-sm">
+          <TabsContent value="email" className="mt-6 space-y-4 rounded-xl border border-primary/30 bg-card/50 p-6 shadow-sm backdrop-blur-sm">
             <Form {...emailForm}>
               <form onSubmit={emailForm.handleSubmit(handleEmailChange)} className="space-y-4">
                 <FormField
@@ -187,7 +187,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
                   <Button
                     type="submit"
                     disabled={emailLoading}
-                    className="flex-1 bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-white shadow-md transition-all duration-300 hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-md transition-all duration-300 hover:from-primary/90 hover:to-primary hover:shadow-lg"
                   >
                     {emailLoading ? (
                       <>
@@ -204,7 +204,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
           </TabsContent>
 
           {/* Password Tab */}
-          <TabsContent value="password" className="space-y-4 mt-6 p-6 bg-card/50 dark:bg-muted backdrop-blur-sm rounded-xl border border-primary/30/30 dark:border-border shadow-sm">
+          <TabsContent value="password" className="mt-6 space-y-4 rounded-xl border border-primary/30 bg-card/50 p-6 shadow-sm backdrop-blur-sm">
             <Form {...passwordForm}>
               <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className="space-y-4">
                 <FormField
@@ -277,7 +277,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
                   <Button
                     type="submit"
                     disabled={passwordLoading}
-                    className="flex-1 bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-white shadow-md transition-all duration-300 hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary/90 text-primary-foreground shadow-md transition-all duration-300 hover:from-primary/90 hover:to-primary hover:shadow-lg"
                   >
                     {passwordLoading ? (
                       <>

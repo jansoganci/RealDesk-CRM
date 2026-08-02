@@ -49,7 +49,7 @@ export const AccountSettingsCard = ({ form, loading, onSave }: AccountSettingsCa
           className="gap-2 w-full sm:w-auto"
         >
           {loading ? (
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+            <div className="h-4 w-4 animate-spin rounded-full border-b-2 border-primary-foreground"></div>
           ) : (
             <Save className="h-4 w-4" />
           )}

@@ -117,7 +117,7 @@ export const Dashboard = () => {
             </CardContent>
           </Card>
         ) : error ? (
-          <Card className="border-red-200 bg-red-50">
+          <Card className="border-destructive/40 bg-destructive/15">
             <CardContent className="py-6">
               <p className={`text-sm ${COLORS.danger.textDark}`}>{error}</p>
             </CardContent>

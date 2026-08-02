@@ -18,10 +18,10 @@ export const UserInfoHeader = () => {
     : '';
 
   return (
-    <div className="flex flex-col md:flex-row items-center md:items-start gap-6 p-6 bg-gradient-to-br from-primary to-background dark:from-foreground dark:to-foreground rounded-xl border border-primary/30/50 dark:border-border shadow-lg dark:shadow-black/30">
+    <div className="flex flex-col items-center gap-6 rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 to-background p-6 shadow-lg md:flex-row md:items-start">
       {/* Avatar */}
-      <Avatar className="h-20 w-20 md:h-32 md:w-32 border-4 border-white dark:border-border shadow-xl dark:shadow-black/40">
-        <AvatarFallback className="text-3xl md:text-4xl font-bold bg-gradient-to-br from-primary to-primary dark:from-primary dark:to-primary text-white">
+      <Avatar className="h-20 w-20 border-4 border-card shadow-xl md:h-32 md:w-32">
+        <AvatarFallback className="bg-gradient-to-br from-primary to-primary/90 text-3xl font-bold text-primary-foreground md:text-4xl">
           {initials}
         </AvatarFallback>
       </Avatar>

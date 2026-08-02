@@ -10,11 +10,11 @@ export function LegalDocumentsCard({ language }: LegalDocumentsCardProps) {
     const { t } = useTranslation('profile');
 
     return (
-        <Card className="shadow-luxury hover:shadow-luxury-lg dark:hover:shadow-black/30 transition-all duration-300 border-primary/30/50 dark:border-border bg-gradient-to-br from-primary to-background dark:from-foreground dark:to-foreground backdrop-blur-sm animate-fade-in lg:col-span-2 dark:shadow-black/25">
+        <Card className="animate-fade-in border-primary/30 bg-gradient-to-br from-primary/10 to-background shadow-luxury backdrop-blur-sm transition-all duration-300 hover:shadow-luxury-lg lg:col-span-2">
             <CardHeader className="pb-4">
                 <div className="flex items-center gap-3">
-                    <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground dark:from-primary dark:via-foreground dark:to-foreground rounded-xl shadow-lg shadow-primary/30 dark:shadow-black/40">
-                        <Scale className="h-5 w-5 text-white dark:text-muted-foreground" />
+                    <div className="rounded-xl bg-gradient-to-br from-primary via-primary to-primary/80 p-2.5 shadow-lg shadow-primary/30">
+                        <Scale className="h-5 w-5 text-primary-foreground" />
                     </div>
                     <div>
                         <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">

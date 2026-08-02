@@ -15,16 +15,16 @@ export function WaitingOnOthers({ items }: WaitingOnOthersProps) {
   const { t } = useTranslation('dashboard');
 
   return (
-    <Card className="border-sky-200 bg-sky-50">
+    <Card className="border-info/30 bg-info/15">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-sky-900 text-base">
+        <CardTitle className="flex items-center gap-2 text-base text-info">
           <Clock3 className="h-4 w-4" />
           {t('dailyBrief.waiting.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.map((item) => (
-          <div key={item.milestoneId} className="rounded-lg border border-sky-200 bg-white p-3">
+          <div key={item.milestoneId} className="rounded-lg border border-info/30 bg-card p-3">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <p className="text-sm font-semibold text-foreground">{item.dealName}</p>
@@ -35,7 +35,7 @@ export function WaitingOnOthers({ items }: WaitingOnOthersProps) {
                   })}
                 </p>
               </div>
-              <Badge className="border-sky-200 bg-sky-100 text-sky-800">
+              <Badge className="border-info/30 bg-info/15 text-info">
                 {item.lastNudgeSentAt
                   ? t('dailyBrief.waiting.nudged')
                   : t('dailyBrief.waiting.notNudged')}

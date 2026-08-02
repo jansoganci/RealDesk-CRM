@@ -110,8 +110,8 @@ export function ProfileInfoCard({
     <Card className="border-border dark:border-border dark:bg-muted">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground dark:from-primary dark:via-foreground dark:to-foreground rounded-xl shadow-lg shadow-primary/30 dark:shadow-black/40">
-            <User className="h-5 w-5 text-white dark:text-muted-foreground" />
+          <div className="rounded-xl bg-gradient-to-br from-primary via-primary to-primary/80 p-2.5 shadow-lg shadow-primary/30">
+            <User className="h-5 w-5 text-primary-foreground" />
           </div>
           <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
             {t('profileInfo.title')}

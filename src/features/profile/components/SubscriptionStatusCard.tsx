@@ -66,16 +66,16 @@ export const SubscriptionStatusCard = () => {
     if (!status) return null;
 
     const badges = {
-      active: { color: 'bg-green-500 dark:bg-green-400', text: t('subscriptionCard.status.active'), variant: 'default' as const },
-      trialing: { color: 'bg-primary/100 dark:bg-primary/70', text: t('subscriptionCard.status.trialing'), variant: 'default' as const },
-      past_due: { color: 'bg-yellow-500 dark:bg-yellow-400', text: t('subscriptionCard.status.pastDue'), variant: 'outline' as const },
-      canceled: { color: 'bg-red-500 dark:bg-red-400', text: t('subscriptionCard.status.canceled'), variant: 'destructive' as const },
-      incomplete: { color: 'bg-muted0 dark:bg-muted0', text: t('subscriptionCard.status.incomplete'), variant: 'outline' as const },
-      incomplete_expired: { color: 'bg-muted0 dark:bg-muted0', text: t('subscriptionCard.status.expired'), variant: 'outline' as const },
-      unpaid: { color: 'bg-red-500 dark:bg-red-400', text: t('subscriptionCard.status.unpaid'), variant: 'destructive' as const },
+      active: { color: 'bg-success', text: t('subscriptionCard.status.active'), variant: 'default' as const },
+      trialing: { color: 'bg-primary', text: t('subscriptionCard.status.trialing'), variant: 'default' as const },
+      past_due: { color: 'bg-warning', text: t('subscriptionCard.status.pastDue'), variant: 'outline' as const },
+      canceled: { color: 'bg-destructive', text: t('subscriptionCard.status.canceled'), variant: 'destructive' as const },
+      incomplete: { color: 'bg-muted-foreground', text: t('subscriptionCard.status.incomplete'), variant: 'outline' as const },
+      incomplete_expired: { color: 'bg-muted-foreground', text: t('subscriptionCard.status.expired'), variant: 'outline' as const },
+      unpaid: { color: 'bg-destructive', text: t('subscriptionCard.status.unpaid'), variant: 'destructive' as const },
     };
 
-    const badge = badges[status] || { color: 'bg-muted0 dark:bg-muted0', text: status, variant: 'outline' as const };
+    const badge = badges[status] || { color: 'bg-muted-foreground', text: status, variant: 'outline' as const };
 
     return (
       <Badge variant={badge.variant} className="gap-2">
@@ -210,8 +210,8 @@ export const SubscriptionStatusCard = () => {
 
         {/* Cancel Warning */}
         {billingStatus.cancelAtPeriodEnd && (
-          <div className="p-4 bg-yellow-50 dark:bg-yellow-950/40 border border-yellow-200 dark:border-yellow-900/40 rounded-lg">
-            <p className="text-sm text-yellow-800 dark:text-yellow-200 font-medium">
+          <div className="rounded-lg border border-warning/30 bg-warning/15 p-4">
+            <p className="text-sm font-medium text-warning dark:text-warning">
               {t('subscriptionCard.cancelWarning')}
             </p>
           </div>
@@ -231,7 +231,7 @@ export const SubscriptionStatusCard = () => {
               >
                 {loadingPortal ? (
                   <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                    <div className="h-5 w-5 animate-spin rounded-full border-b-2 border-primary-foreground"></div>
                     {t('subscriptionCard.buttons.opening')}
                   </>
                 ) : (

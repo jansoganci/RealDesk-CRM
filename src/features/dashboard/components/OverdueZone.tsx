@@ -15,16 +15,16 @@ export function OverdueZone({ items }: OverdueZoneProps) {
   const { t } = useTranslation('dashboard');
 
   return (
-    <Card className="border-red-200 bg-red-50">
+    <Card className="border-destructive/40 bg-destructive/15">
       <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-red-900 text-base">
+        <CardTitle className="flex items-center gap-2 text-base text-destructive">
           <AlertTriangle className="h-4 w-4" />
           {t('dailyBrief.overdue.title')}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {items.map((item) => (
-          <div key={item.milestoneId} className="rounded-lg border border-red-200 bg-white p-3">
+          <div key={item.milestoneId} className="rounded-lg border border-destructive/30 bg-card p-3">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
                 <p className="text-sm font-semibold text-foreground">{item.dealName}</p>

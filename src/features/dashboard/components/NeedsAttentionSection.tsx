@@ -45,7 +45,7 @@ export function NeedsAttentionSection({ items }: NeedsAttentionSectionProps) {
                 {group.items.map((item) => (
                   <li
                     key={item.milestoneId}
-                    className="rounded-md border border-border bg-white p-3"
+                    className="rounded-md border border-border bg-card p-3"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0">

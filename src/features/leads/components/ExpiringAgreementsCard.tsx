@@ -27,7 +27,7 @@ export function ExpiringAgreementsCard() {
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <CalendarClock className="h-5 w-5 text-amber-500" />
+            <CalendarClock className="h-5 w-5 text-warning" />
             <CardTitle className="text-sm font-semibold">
               {t('dashboard.expiringAgreements')}
             </CardTitle>

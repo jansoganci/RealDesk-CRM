@@ -21,7 +21,7 @@ export function IncomeForecastCard() {
           {loading ? (
             <p className="text-sm text-muted-foreground">{t('dailyBrief.forecast.loading')}</p>
           ) : error ? (
-            <p className="text-sm text-red-600">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
               <div className="rounded-lg border p-3">

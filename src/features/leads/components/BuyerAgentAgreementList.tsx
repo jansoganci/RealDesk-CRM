@@ -37,7 +37,7 @@ export function BuyerAgentAgreementList({
     }
     if (agreement.status === 'sent') {
       return (
-        <Badge className="bg-primary hover:bg-primary text-white">
+        <Badge className="bg-primary text-primary-foreground hover:bg-primary/90">
           {t('agreements.sent', 'Sent')}
         </Badge>
       );

@@ -17,7 +17,7 @@ export function KanbanColumn({ id, title, count, children }: KanbanColumnProps) 
       ref={setNodeRef}
       className={cn(
         'flex w-[260px] shrink-0 flex-col rounded-xl border transition-colors',
-        isOver ? 'border-primary/30 bg-primary/10/80 dark:border-primary dark:bg-primary/50' : 'border-border/80 dark:border-border bg-muted/80 dark:bg-muted'
+        isOver ? 'border-primary/30 bg-primary/10' : 'border-border/80 bg-muted/80'
       )}
     >
       <div className="sticky top-0 z-10 rounded-t-xl border-b border-border/80 dark:border-border px-3 py-2 bg-card/95 dark:bg-muted backdrop-blur-sm">

@@ -60,7 +60,7 @@ export function AccountSecurityCard() {
             {t('accountSecurity.title')}
           </h3>
         </div>
-        <div className="px-4 divide-y divide-gray-100 dark:divide-slate-800">
+        <div className="divide-y divide-border px-4">
           <SecurityRow
             icon={<Mail className="h-5 w-5" />}
             title={t('accountSecurity.changeEmailButton')}

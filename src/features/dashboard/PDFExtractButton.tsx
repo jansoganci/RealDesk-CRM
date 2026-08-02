@@ -152,7 +152,7 @@ export const PDFExtractButton = ({
         variant={variant}
         size={size}
         disabled={extracting}
-        className={`bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-white shadow-md h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm ${className}`}
+        className={`h-8 bg-gradient-to-r from-primary to-primary/90 px-2 text-xs text-primary-foreground shadow-md hover:from-primary/90 hover:to-primary md:h-10 md:px-4 md:text-sm ${className}`}
         title={t('pdfExtract.buttonTitle')}
       >
         {extracting ? (
@@ -275,4 +275,3 @@ export const PDFExtractButton = ({
     </>
   );
 };
-

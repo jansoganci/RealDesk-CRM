@@ -39,7 +39,7 @@ export function FirstDashboardWelcome({
 
   return (
     <section aria-labelledby="first-dashboard-welcome-title">
-      <Card className="relative overflow-hidden border-border/80 bg-gradient-to-br from-white via-primary/70 to-foreground/70 shadow-lg dark:border-border dark:from-background dark:via-primary/40 dark:to-card">
+      <Card className="relative overflow-hidden border-border/80 bg-gradient-to-br from-card via-primary/10 to-muted shadow-lg">
         <div
           aria-hidden="true"
           className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary blur-3xl dark:bg-primary/20"
@@ -50,7 +50,7 @@ export function FirstDashboardWelcome({
         />
 
         <CardHeader className="relative px-5 pb-4 pt-8 sm:px-8 sm:pt-10 lg:px-12 lg:pt-12">
-          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20 sm:h-14 sm:w-14">
+          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 sm:h-14 sm:w-14">
             <Sparkles className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
           </div>
           <p className={cn('text-sm font-semibold uppercase tracking-[0.16em]', COLORS.primary.text)}>
@@ -58,7 +58,7 @@ export function FirstDashboardWelcome({
           </p>
           <h1
             id="first-dashboard-welcome-title"
-            className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-4xl lg:text-5xl dark:text-white"
+            className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-foreground sm:text-4xl lg:text-5xl"
           >
             {t('firstVisit.title')}
           </h1>
@@ -72,7 +72,7 @@ export function FirstDashboardWelcome({
             {steps.map(({ key, icon: Icon }, index) => (
               <li
                 key={key}
-                className="rounded-xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm dark:border-border dark:bg-muted sm:p-5"
+                className="rounded-xl border border-border bg-card/80 p-4 shadow-sm backdrop-blur-sm sm:p-5"
               >
                 <div className="mb-5 flex items-center justify-between">
                   <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary dark:bg-primary/60 dark:text-primary-foreground/80">
@@ -82,7 +82,7 @@ export function FirstDashboardWelcome({
                     {t('firstVisit.stepLabel', { number: index + 1 })}
                   </span>
                 </div>
-                <h3 className="font-semibold text-muted-foreground dark:text-white">
+                <h3 className="font-semibold text-foreground">
                   {t(`firstVisit.steps.${key}.title`)}
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
@@ -108,7 +108,7 @@ export function FirstDashboardWelcome({
               size="lg"
               variant="outline"
               onClick={onAddProperty}
-              className="min-h-11 w-full border-border bg-white/80 sm:w-auto dark:border-border dark:bg-muted"
+              className="min-h-11 w-full border-border bg-card/80 sm:w-auto"
             >
               <Building2 className="h-4 w-4" aria-hidden="true" />
               {t('firstVisit.actions.addProperty')}
@@ -132,7 +132,7 @@ export function FirstDashboardWelcome({
               type="button"
               variant="ghost"
               onClick={onContinueLater}
-              className="min-h-11 px-2 text-muted-foreground hover:bg-muted hover:text-foreground dark:text-muted-foreground/70 dark:hover:bg-muted dark:hover:text-white"
+              className="min-h-11 px-2 text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               {t('firstVisit.actions.continueLater')}
             </Button>

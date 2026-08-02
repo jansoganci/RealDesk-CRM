@@ -85,8 +85,8 @@ export function TeamMembersCard() {
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-green-600 via-green-700 to-emerald-800 rounded-xl shadow-lg shadow-green-900/20">
-            <Users2 className="h-5 w-5 text-white" />
+          <div className="rounded-xl bg-gradient-to-br from-success via-success/90 to-success/80 p-2.5 shadow-lg shadow-success/20">
+            <Users2 className="h-5 w-5 text-success-foreground" />
           </div>
           <div>
             <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
