@@ -110,16 +110,20 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
       return;
     }
     const values = form.getValues();
-    const blob = purchaseAgreementPdfService.generateBlob({ form: values });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `purchase-agreement-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success(t('purchaseWizard.complete.pdfReady'));
+    try {
+      const blob = purchaseAgreementPdfService.generateBlob({ form: values });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `purchase-agreement-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success(t('purchaseWizard.complete.pdfReady'));
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : t('purchaseWizard.complete.validationFailed'));
+    }
   };
 
   const handleSaveContract = async () => {
