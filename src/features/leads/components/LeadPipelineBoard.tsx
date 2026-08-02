@@ -125,7 +125,7 @@ export function LeadPipelineBoard({
 
   if (loading) {
     return (
-      <div className={`rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-12 text-center text-sm ${COLORS.muted.text} dark:text-slate-400`}>
+      <div className={`rounded-xl border border-border dark:border-border bg-card dark:bg-muted p-12 text-center text-sm ${COLORS.muted.text} dark:text-muted-foreground/70`}>
         {t('pipeline.loading')}
       </div>
     );
@@ -143,24 +143,24 @@ export function LeadPipelineBoard({
           return (
             <div
               key={columnId}
-              className="flex w-[260px] shrink-0 flex-col rounded-xl border border-slate-200/80 dark:border-slate-700/80 bg-slate-50/80 dark:bg-slate-800/70"
+              className="flex w-[260px] shrink-0 flex-col rounded-xl border border-border/80 dark:border-border bg-muted/80 dark:bg-muted"
             >
               <div
                 className={cn(
-                  'sticky top-0 z-10 rounded-t-xl border-b border-slate-200/80 dark:border-slate-700/80 px-3 py-2',
-                  'bg-white/95 dark:bg-slate-900/95 backdrop-blur-sm'
+                  'sticky top-0 z-10 rounded-t-xl border-b border-border/80 dark:border-border px-3 py-2',
+                  'bg-card/95 dark:bg-muted backdrop-blur-sm'
                 )}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-semibold uppercase tracking-wide text-slate-600 dark:text-slate-300">
+                  <span className="text-xs font-semibold uppercase tracking-wide text-muted-foreground dark:text-muted-foreground">
                     {t(`status.${columnId}`)}
                   </span>
-                  <span className="text-xs font-medium tabular-nums text-slate-500 dark:text-slate-400">{leads.length}</span>
+                  <span className="text-xs font-medium tabular-nums text-muted-foreground dark:text-muted-foreground/70">{leads.length}</span>
                 </div>
               </div>
               <div className="flex max-h-[calc(100vh-220px)] flex-col gap-2 overflow-y-auto p-2">
                 {leads.length === 0 ? (
-                  <p className={`px-1 py-6 text-center text-xs ${COLORS.muted.text} dark:text-slate-400`}>
+                  <p className={`px-1 py-6 text-center text-xs ${COLORS.muted.text} dark:text-muted-foreground/70`}>
                     {t('pipeline.emptyColumn')}
                   </p>
                 ) : (
@@ -200,7 +200,7 @@ export function LeadPipelineBoard({
               >
                 <SortableContext items={leads.map((l) => l.id)} strategy={verticalListSortingStrategy}>
                   {leads.length === 0 ? (
-                    <p className={`px-1 py-6 text-center text-xs ${COLORS.muted.text} dark:text-slate-400`}>
+                    <p className={`px-1 py-6 text-center text-xs ${COLORS.muted.text} dark:text-muted-foreground/70`}>
                       {t('pipeline.emptyColumn')}
                     </p>
                   ) : (

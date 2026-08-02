@@ -23,7 +23,7 @@ export function ExpiringAgreementsCard() {
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+    <Card className="shadow-lg border-border dark:border-border bg-card/80 dark:bg-muted backdrop-blur-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -48,7 +48,7 @@ export function ExpiringAgreementsCard() {
         ) : error ? (
           <p className={`text-sm ${COLORS.danger.textDark}`}>{error}</p>
         ) : agreements.length === 0 ? (
-          <p className={`text-sm ${COLORS.gray.text500} dark:text-slate-400`}>{t('dashboard.noExpiringAgreements')}</p>
+          <p className={`text-sm ${COLORS.gray.text500} dark:text-muted-foreground/70`}>{t('dashboard.noExpiringAgreements')}</p>
         ) : (
           <div className="space-y-2">
             {agreements.slice(0, 5).map((agreement) => {
@@ -58,7 +58,7 @@ export function ExpiringAgreementsCard() {
                   key={agreement.id}
                   role="button"
                   tabIndex={0}
-                  className="flex items-center justify-between p-2 rounded-md hover:bg-gray-50 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                  className="flex items-center justify-between p-2 rounded-md hover:bg-muted dark:hover:bg-muted cursor-pointer transition-colors"
                   onClick={() =>
                     navigate(generatePath(ROUTES.LEAD_DETAIL, { id: agreement.lead_id }))
                   }

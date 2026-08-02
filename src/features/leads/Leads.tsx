@@ -281,7 +281,7 @@ export const Leads = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <span className="inline-flex">
-                      <Info className="h-4 w-4 text-slate-400" />
+                      <Info className="h-4 w-4 text-muted-foreground/70" />
                     </span>
                   </TooltipTrigger>
                   <TooltipContent>{t('common:readOnlyMode')}</TooltipContent>

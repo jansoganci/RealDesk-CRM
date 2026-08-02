@@ -29,13 +29,13 @@ export function LeadKanbanCard({ lead, onClick }: LeadKanbanCardProps) {
         }
       }}
       className={cn(
-        'p-3 cursor-pointer transition-shadow hover:shadow-md border border-slate-200/80 dark:border-slate-700/80',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500'
+        'p-3 cursor-pointer transition-shadow hover:shadow-md border border-border/80 dark:border-border',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
       )}
     >
       <div className="space-y-2">
-        <div className={`font-semibold text-sm ${COLORS.gray.text900} dark:text-slate-100 line-clamp-2`}>{lead.name}</div>
-        <div className={`flex items-center gap-1 text-xs ${COLORS.gray.text500} dark:text-slate-400`}>
+        <div className={`font-semibold text-sm ${COLORS.gray.text900} dark:text-muted-foreground line-clamp-2`}>{lead.name}</div>
+        <div className={`flex items-center gap-1 text-xs ${COLORS.gray.text500} dark:text-muted-foreground/70`}>
           <Phone className="h-3 w-3 shrink-0" />
           <span className="truncate">{lead.phone}</span>
         </div>

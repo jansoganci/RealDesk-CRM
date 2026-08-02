@@ -39,11 +39,11 @@ export function LeadSourceBreakdownCard() {
   }));
 
   return (
-    <Card className="shadow-lg border-gray-100 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+    <Card className="shadow-lg border-border dark:border-border bg-card/80 dark:bg-muted backdrop-blur-sm">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Users className="h-5 w-5 text-blue-500" />
+            <Users className="h-5 w-5 text-primary" />
             <CardTitle className="text-sm font-semibold">{t('dashboard.leadSources')}</CardTitle>
           </div>
           {!loading && (
@@ -59,7 +59,7 @@ export function LeadSourceBreakdownCard() {
         ) : error ? (
           <p className={`text-sm ${COLORS.danger.textDark}`}>{error}</p>
         ) : data.length === 0 ? (
-          <p className={`text-sm ${COLORS.gray.text500} dark:text-slate-400`}>{t('dashboard.noLeadData')}</p>
+          <p className={`text-sm ${COLORS.gray.text500} dark:text-muted-foreground/70`}>{t('dashboard.noLeadData')}</p>
         ) : (
           <div className="flex flex-col items-center">
             <ResponsiveContainer width="100%" height={180}>

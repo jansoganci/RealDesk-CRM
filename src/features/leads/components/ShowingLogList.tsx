@@ -37,7 +37,7 @@ export function ShowingLogList({ showings, leadId, onRefresh }: ShowingLogListPr
         );
       case 'interested':
         return (
-          <Badge className="bg-blue-600 hover:bg-blue-600 text-white">
+          <Badge className="bg-primary hover:bg-primary text-white">
             {t('showings.interested', 'Interested')}
           </Badge>
         );
