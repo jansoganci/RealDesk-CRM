@@ -236,14 +236,14 @@ For every page task: migrate only listed files; record **before → after** coun
 
 ### P2.1 — Dashboard shell
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `Dashboard.tsx`, `PDFExtractButton.tsx`
 
 ---
 
 ### P2.2 — Dashboard daily brief / zones
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `DailyBriefHeader`, `NeedsAttentionSection`, `OverdueZone`, `ThisWeek`, `HorizonZone`, `WaitingOnOthers`, `RemindersSection`  
 **Keep overdue red.**
 
@@ -251,56 +251,56 @@ For every page task: migrate only listed files; record **before → after** coun
 
 ### P2.3 — Dashboard summary cards / empty states
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `ActionItemsCard`, `DealHealthCard`, `IncomeForecastCard`, `TeamPerformanceSummaryCard`, `EmptyWorkspaceDashboard`, `FirstDashboardWelcome`, `WelcomeEmptyState`
 
 ---
 
 ### P2.4 — Leads board
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `Leads.tsx`, `LeadPipelineBoard`, `KanbanColumn`, `LeadKanbanCard`, `KanbanDragCard`
 
 ---
 
 ### P2.5 — Lead detail
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `LeadDetailPage.tsx`, `LeadDetailSheet.tsx`
 
 ---
 
 ### P2.6 — Leads agreements + showings
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** agreement + showing components listed previously
 
 ---
 
 ### P2.7 — Lead source chart
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `LeadSourceBreakdownCard.tsx` — keep categorical source hues
 
 ---
 
 ### P2.8 — Profile shell + general cards
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** `Profile.tsx`, `UserInfoHeader`, `ProfileInfoCard`, `AccountSettingsCard`, `AccountSecurityCard`, `PreferencesSection`, `LegalDocumentsCard`
 
 ---
 
 ### P2.9 — Profile org / billing / dialogs
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 **Files:** org/billing/edit dialogs listed previously
 
 ---
 
 ### P2.10 — Phase 2 gate
 
-**Status:** [ ] Pending  
+**Status:** [x] Done — migrated raw blue/slate/gray → semantic tokens; lint+typecheck pass.
 lint/typecheck/test → continue Phase 3 immediately.
 
 ---
