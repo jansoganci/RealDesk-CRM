@@ -3,7 +3,7 @@ import type { SupportedDocumentState } from '@/config/supportedDocumentStates';
 import { formatCurrency } from '@/lib/currency';
 
 import { purchaseContingencyGuidance } from './purchaseStateDisclosures';
-import { fmtDate, fmtMoney, fmtYesNo } from './formatHelpers';
+import { fmtDate, fmtMoney, fmtYesNo, optionalClause } from './formatHelpers';
 
 const USD = 'USD';
 
@@ -57,9 +57,9 @@ export function buildPurchaseFormContext(
   return {
     jurisdiction: state,
     seller_name: form.seller_name,
-    seller2_block: form.seller_name_2?.trim() ? ` and ${form.seller_name_2}` : '',
+    seller2_block: optionalClause(form.seller_name_2?.trim(), ` and ${form.seller_name_2}`),
     buyer_name: form.buyer_name,
-    buyer2_block: form.buyer_name_2?.trim() ? ` and ${form.buyer_name_2}` : '',
+    buyer2_block: optionalClause(form.buyer_name_2?.trim(), ` and ${form.buyer_name_2}`),
     buyer_agent_name: form.buyer_agent_name?.trim() || '—',
     seller_agent_name: form.seller_agent_name?.trim() || '—',
     effective_date: fmtDate(form.effective_date),
@@ -68,16 +68,16 @@ export function buildPurchaseFormContext(
     year_built: form.year_built != null ? String(form.year_built) : '—',
     tax_parcel_info: form.tax_parcel_info?.trim() || form.other_property_info?.trim() || '—',
     land_mineral_summary: `Land included: ${fmtYesNo(form.land_included)}. Mineral rights transferred: ${fmtYesNo(form.mineral_rights_transferred)}.`,
-    personal_property_description: form.personal_property_description?.trim() || 'None described.',
+    personal_property_description: form.personal_property_description?.trim() || 'None described',
     purchase_price: formatCurrency(form.purchase_price ?? 0, USD),
     earnest_money_amount: formatCurrency(form.earnest_money_amount ?? 0, USD),
     earnest_money_due_date: fmtDate(form.earnest_money_due_date),
-    earnest_money_time_clause: form.earnest_money_deadline_time ? `at ${form.earnest_money_deadline_time}` : '',
+    earnest_money_time_clause: optionalClause(form.earnest_money_deadline_time, ` at ${form.earnest_money_deadline_time}`),
     earnest_money_escrow_required: fmtYesNo(form.earnest_money_escrow_required),
     earnest_money_return_days: String(form.earnest_money_return_days ?? '—'),
     financing_summary: financingSummary(form),
     closing_date: fmtDate(form.closing_date),
-    closing_time_clause: form.closing_time ? ` at ${form.closing_time}` : '',
+    closing_time_clause: optionalClause(form.closing_time, ` at ${form.closing_time}`),
     title_company: form.title_company?.trim() || '—',
     closing_costs_responsibility: form.closing_costs_responsibility || '—',
     governing_law_state: form.governing_law_state || state,

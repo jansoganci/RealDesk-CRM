@@ -19,12 +19,23 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import {
+  isSupportedDocumentState,
+  SUPPORTED_DOCUMENT_STATE_SET,
+} from '@/config/supportedDocumentStates';
 import type { LeaseAgreementFormValues } from '@/features/contracts/schemas/leaseAgreementForm.schema';
 import { getPropertyTimezone, getTimezoneDisplayLabel } from '@/lib/propertyTimezone';
 import { propertiesService, US_STATES } from '@/lib/serviceProxy';
 import type { PropertyWithOwner } from '@/types';
 
 const NONE_VALUE = '__none__';
+// V1 SCOPE: Only CA/TX/FL/NY/AZ supported for document generation.
+// Add new state codes to SUPPORTED_DOCUMENT_STATES (src/config/
+// supportedDocumentStates.ts) as legal review expands coverage — no
+// other change needed here once that list grows.
+const SUPPORTED_DOCUMENT_STATE_OPTIONS = US_STATES.filter((state) =>
+  SUPPORTED_DOCUMENT_STATE_SET.has(state.code),
+);
 
 function applyPropertyPrefill(p: PropertyWithOwner, setValue: UseFormSetValue<LeaseAgreementFormValues>) {
   const street = (p.street_address?.trim() || p.address || '').trim();
@@ -85,6 +96,10 @@ export function Step1Property() {
       try {
         const p = await propertiesService.getById(propertyId);
         if (!p) return;
+        if (!isSupportedDocumentState(p.state)) {
+          toast.error(t('documentStateGuard.message'));
+          return;
+        }
         applyPropertyPrefill(p, setValue);
       } catch {
         toast.error(t('leaseWizard.step1.loadPropertyError'));
@@ -119,7 +134,13 @@ export function Step1Property() {
                   field.onChange(v);
                   try {
                     const p = await propertiesService.getById(v);
-                    if (p) applyPropertyPrefill(p, setValue);
+                    if (!p) return;
+                    if (!isSupportedDocumentState(p.state)) {
+                      field.onChange(null);
+                      toast.error(t('documentStateGuard.message'));
+                      return;
+                    }
+                    applyPropertyPrefill(p, setValue);
                   } catch {
                     toast.error(t('leaseWizard.step1.loadPropertyError'));
                   }
@@ -140,7 +161,11 @@ export function Step1Property() {
               <SelectContent>
                 <SelectItem value={NONE_VALUE}>{t('leaseWizard.step1.noLinkedProperty')}</SelectItem>
                 {properties.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
+                  <SelectItem
+                    key={p.id}
+                    value={p.id}
+                    disabled={!isSupportedDocumentState(p.state)}
+                  >
                     <span className="font-medium">{p.address}</span>
                     <span className="text-muted-foreground ml-2 text-xs">
                       {p.city}
@@ -261,7 +286,7 @@ export function Step1Property() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="max-h-[280px]">
-                  {US_STATES.map((s) => (
+                  {SUPPORTED_DOCUMENT_STATE_OPTIONS.map((s) => (
                     <SelectItem key={s.code} value={s.code}>
                       {s.name} ({s.code})
                     </SelectItem>

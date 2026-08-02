@@ -13,6 +13,7 @@ import { Loader2, X } from 'lucide-react';
 
 import { ROUTES } from '@/config/constants';
 import { useAuth } from '@/contexts/AuthContext';
+import { assertPurchaseDocumentJurisdiction } from '@/features/contracts/utils/documentJurisdiction';
 import {
   purchaseAgreementPdfService,
   purchaseAgreementService,
@@ -30,6 +31,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { DocumentPropertyEntryGuard } from '@/features/contracts/components/DocumentPropertyEntryGuard';
 
 import { PurchaseWizardStepContent } from './PurchaseWizardStepContent';
 import { usePurchaseWizard } from './usePurchaseWizard';
@@ -135,10 +137,17 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
       toast.error(t('purchaseWizard.complete.linkRequired'));
       return;
     }
+    const values = form.getValues();
+    try {
+      assertPurchaseDocumentJurisdiction(values.property_state, values.governing_law_state);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('documentStateGuard.message'));
+      return;
+    }
+
     setSubmitPhase('saving');
     setSaveLoading(true);
     try {
-      const values = form.getValues();
       let contract_id: string;
       let deal_id: string;
 
@@ -246,7 +255,8 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
   const progressPercent = Math.round(getStepProgress());
 
   return (
-    <Form {...form}>
+    <DocumentPropertyEntryGuard>
+      <Form {...form}>
       {saveLoading ? (
         <div
           className="fixed inset-0 z-[100] flex flex-col items-center justify-center gap-3 bg-background/80 backdrop-blur-sm"
@@ -367,6 +377,7 @@ export function PurchaseWizard({ onCancel, renderStep }: PurchaseWizardProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Form>
+      </Form>
+    </DocumentPropertyEntryGuard>
   );
 }

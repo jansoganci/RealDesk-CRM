@@ -21,12 +21,23 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
+import {
+  isSupportedDocumentState,
+  SUPPORTED_DOCUMENT_STATE_SET,
+} from '@/config/supportedDocumentStates';
 import type { PurchaseAgreementFormValues } from '@/features/contracts/schemas/purchaseAgreementForm.schema';
 import { getPropertyTimezone, getTimezoneDisplayLabel } from '@/lib/propertyTimezone';
 import { propertiesService, US_STATES } from '@/lib/serviceProxy';
 import type { PropertyWithOwner } from '@/types';
 
 const NONE_VALUE = '__none__';
+// V1 SCOPE: Only CA/TX/FL/NY/AZ supported for document generation.
+// Add new state codes to SUPPORTED_DOCUMENT_STATES (src/config/
+// supportedDocumentStates.ts) as legal review expands coverage — no
+// other change needed here once that list grows.
+const SUPPORTED_DOCUMENT_STATE_OPTIONS = US_STATES.filter((state) =>
+  SUPPORTED_DOCUMENT_STATE_SET.has(state.code),
+);
 
 const PURCHASE_PROPERTY_TYPE_OPTIONS: {
   value: PurchaseAgreementFormValues['property_type'];
@@ -140,6 +151,10 @@ export function Step1Property() {
           toast.error(t('purchaseWizard.step1.wrongPropertyType'));
           return;
         }
+        if (!isSupportedDocumentState(p.state)) {
+          toast.error(t('documentStateGuard.message'));
+          return;
+        }
         applyPurchasePropertyPrefill(p, setValue);
       } catch {
         toast.error(t('purchaseWizard.step1.loadPropertyError'));
@@ -180,6 +195,11 @@ export function Step1Property() {
                       field.onChange(null);
                       return;
                     }
+                    if (!isSupportedDocumentState(p.state)) {
+                      field.onChange(null);
+                      toast.error(t('documentStateGuard.message'));
+                      return;
+                    }
                     applyPurchasePropertyPrefill(p, setValue);
                   } catch {
                     toast.error(t('purchaseWizard.step1.loadPropertyError'));
@@ -201,7 +221,11 @@ export function Step1Property() {
               <SelectContent>
                 <SelectItem value={NONE_VALUE}>{t('purchaseWizard.step1.noLinkedProperty')}</SelectItem>
                 {properties.map((p) => (
-                  <SelectItem key={p.id} value={p.id}>
+                  <SelectItem
+                    key={p.id}
+                    value={p.id}
+                    disabled={!isSupportedDocumentState(p.state)}
+                  >
                     <span className="font-medium">{p.address}</span>
                     <span className="text-muted-foreground ml-2 text-xs">
                       {p.city}
@@ -311,7 +335,7 @@ export function Step1Property() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="max-h-[280px]">
-                  {US_STATES.map((s) => (
+                  {SUPPORTED_DOCUMENT_STATE_OPTIONS.map((s) => (
                     <SelectItem key={s.code} value={s.code}>
                       {s.name} ({s.code})
                     </SelectItem>

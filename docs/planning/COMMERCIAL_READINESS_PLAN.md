@@ -1,6 +1,7 @@
 # RealDesk Commercial Readiness Plan
 
-**Status:** Active — Items 1–2, 7–8 complete; Item 3 deferred; Item 4 is next  
+**Status:** Active — Items 1–2, 4 (V1), 7–8 complete; Item 3 deferred; Item 5 is next  
+
 
 **Created:** 2026-08-01  
 **Updated:** 2026-08-02  
@@ -44,7 +45,7 @@ Current verification baseline:
 | 1 | Migration history safety | P2 | Small | Complete | None |
 | 2 | Server-side encryption and data migration | P0 | Large | Complete | Item 1 |
 | 3 | Billing enforcement | P0 | Medium | Deferred | Demo/feedback period (see §3) |
-| 4 | Legally usable lease/purchase documents | P0 | Large | Not started | External legal/template input |
+| 4 | Legally usable lease/purchase documents | P0 | Large | V1 Complete — attorney review deferred | External legal/template input |
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
 | 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
 | 7 | Complete CCPA deletion flow | P2 | Medium | Complete | Item 1; reuse Item 2 security patterns |
@@ -138,31 +139,45 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Stripe webhook changes produce the expected access transition and are covered by tests.
 - No client-only override can restore paid access.
 
-## 4. Legally usable lease and purchase documents
+## 4. Legally usable lease and purchase documents — V1 COMPLETE (2026-08-02)
 
 **Priority / effort:** P0 / Large  
-**Current issue:** Lease and purchase PDFs identify themselves as summaries that must be used with jurisdiction-specific documents.
+**Status:** V1 Complete — attorney review deferred.  
+**Original issue:** Lease and purchase PDFs identified themselves as summaries that must be used with jurisdiction-specific documents.
 
-### Work
+### Completed work
 
-- Obtain counsel-approved source forms and rules for the explicitly supported jurisdictions.
-- Define supported states rather than implying nationwide legal coverage.
-- Map wizard data into versioned, immutable templates while preserving source-template and jurisdiction metadata.
-- Store the exact rendered version and inputs required to reproduce/audit a document.
-- Prevent generation when required state-specific data or a supported template is unavailable.
+- Original, self-authored (not copied from any licensed/official source) draft lease and purchase agreement templates for five supported states: CA, TX, FL, NY, AZ (`src/templates/documentRegistry/`).
+- State-aware statutory disclosure content researched per state and documented in `docs/legal/state-requirements/` (e.g. CA Megan’s Law, FL radon notice, NY bedbug disclosure history, per-state security deposit rules/timelines).
+- Jurisdiction gating via `SUPPORTED_DOCUMENT_STATES` — wizard + hard backend guard; unsupported states are cleanly rejected (no silent generic document).
+- Document provenance metadata (`template_id`, `template_version`, `jurisdiction`, `generated_at`, `source_transaction_id`) recorded per generation via migration `0052_contract_document_artifacts.sql` and `contract_document_artifacts`.
+- Template-driven jsPDF rendering replaced the prior bare summary body; every PDF is labeled “RealDesk … (Draft)” and carries an honest not-attorney-reviewed disclaimer.
+- Root-cause fixes for PDF formatting defects found in manual review (shared interpolation gluing stray dashes onto optional fields, double-period fallback typo, pagination that could split signature/heading blocks), covered by new regression tests (43 new tests).
+
+### Verification
+
+- Sample draft PDFs generated for all 5 states × lease + purchase (10 documents).
+- Unsupported jurisdiction (e.g. Ohio) rejected without producing a document.
+- Lint / typecheck / test / build used to verify the shipped path on the legal-documents feature branch.
+
+### Deferred follow-ups (not blocking Item 4 V1 closure)
+
+- No licensed attorney has reviewed the legal content of these templates. This is a conscious, documented V1 decision — not an oversight — made to enable demo/early-customer use while keeping cost and time-to-market low. Attorney review is required before any real paying customer relies on these documents for an actual transaction, and before adding any additional state beyond the current 5.
+- Counsel approval and formal template licensing/provenance outside the generated PDF remain open until attorney review.
+- Association/board form licensing (if product later requires official forms) is out of V1 scope.
 
 ### Blocks / unlocks
 
-- **Blocks:** Completing a real transaction in RealDesk and the core product value proposition.
-- **Unlocks:** E-signature, contract delivery, and end-to-end closing workflows.
+- **Blocks:** Completing a real transaction in RealDesk and the core product value proposition (full commercial reliance still needs attorney review).
+- **Unlocks:** Demo/early-customer draft documents for CA/TX/FL/NY/AZ; path to e-signature after counsel sign-off.
 
 ### Acceptance criteria
 
-- Generated documents no longer describe themselves as summaries.
-- Every document records jurisdiction, template identity, template version, generation time, and source transaction.
-- Unsupported jurisdictions fail clearly instead of producing a generic legal document.
-- Counsel approval and template licensing/provenance are recorded outside the generated PDF and linked from the implementation record.
-- Golden-file/render tests cover every supported template.
+- [x] Generated documents no longer describe themselves as summaries; they are explicit RealDesk drafts with attorney-disclaimer framing.
+- [x] Every document records jurisdiction, template identity, template version, generation time, and source transaction (`contract_document_artifacts`).
+- [x] Unsupported jurisdictions fail clearly instead of producing a generic legal document.
+- [ ] Counsel approval and template licensing/provenance are recorded outside the generated PDF and linked from the implementation record — **deferred** (see Deferred follow-ups).
+- [x] Automated regression/render coverage for supported templates and formatting fixes (43 new tests).
 
 ## 5. E-signature integration
 
@@ -318,3 +333,4 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
 | 2026-08-02 | Item 7 — CCPA deletion flow | Complete | Migration `0051` on prod; engine + tests shipped; smoke-test delete `0d6b1f91-e0fe-4c7e-b3b2-48277f99b82f` → completed (all tables done; no matching CRM rows for test email). |
 | 2026-08-02 | Item 8 — Global lint cleanup | Complete | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). Re-verified: lint/typecheck/test (114/114)/build pass. CI workflow added (`.github/workflows/ci.yml`: lint+typecheck+test on push/PR to main; `--max-warnings 0`). Item 8 closed. |
+| 2026-08-02 | Item 4 — Legally usable lease/purchase documents | V1 Complete — attorney review deferred | Original draft templates for CA/TX/FL/NY/AZ; state-requirements research docs; jurisdiction gating; migration `0052` artifact metadata; not-attorney-reviewed disclaimer on every PDF; formatting regression tests (43). Attorney review consciously deferred before paying-customer reliance or additional states. |

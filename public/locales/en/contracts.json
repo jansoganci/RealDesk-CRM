@@ -653,6 +653,12 @@
     "endDate": "End Date",
     "characters": "{{count}} characters"
   },
+  "documentStateGuard": {
+    "checking": "Checking document availability for this property…",
+    "title": "Document generation unavailable",
+    "message": "Document generation currently supports CA, TX, FL, NY, and AZ. This property's state isn't supported yet.",
+    "backToProperties": "Back to properties"
+  },
   "leaseWizard": {
     "title": "New lease agreement",
     "stepProgress": "Step {{current}} of {{total}} — {{label}}",

@@ -38,7 +38,7 @@ export function buildPurchaseTemplate(state: SupportedDocumentState): DocumentTe
         kind: 'mapped',
         heading: '3. Purchase price and earnest money',
         body:
-          'Purchase price: {{purchase_price}}. Earnest money: {{earnest_money_amount}}, due {{earnest_money_due_date}} ' +
+          'Purchase price: {{purchase_price}}. Earnest money: {{earnest_money_amount}}, due {{earnest_money_due_date}}' +
           '{{earnest_money_time_clause}}. Escrow required: {{earnest_money_escrow_required}}. ' +
           'If this transaction fails for a reason entitling Buyer to return of earnest money under this Agreement, ' +
           'earnest money should be returned within {{earnest_money_return_days}} days after proper demand, subject to escrow instructions.',

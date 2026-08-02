@@ -30,6 +30,41 @@ function lineHeightMm(fontSizePt: number): number {
   return fontSizePt * 0.4;
 }
 
+function measureParagraphHeight(
+  doc: jsPDF,
+  text: string,
+  opts: { fontSize: number; fontStyle?: 'normal' | 'bold' | 'italic'; maxWidth: number; lineGapMm?: number },
+): number {
+  const style = opts.fontStyle ?? 'normal';
+  doc.setFont(FONT, style);
+  doc.setFontSize(opts.fontSize);
+  const lh = lineHeightMm(opts.fontSize);
+  const lines = doc.splitTextToSize(text.trim(), opts.maxWidth);
+  return lines.length * lh + (opts.lineGapMm ?? 2);
+}
+
+/**
+ * Reserve `blockHeightMm` as one atomic unit: if it won't fit in the space
+ * remaining on the current page, break to a fresh page before drawing
+ * anything, so a multi-piece block (signature label + line + date, or a
+ * heading + the start of its body) never splits across the page boundary.
+ */
+function withKeepTogether(
+  doc: jsPDF,
+  y: number,
+  pageH: number,
+  margin: number,
+  blockHeightMm: number,
+  draw: (startY: number) => number,
+): number {
+  let startY = y;
+  if (startY + blockHeightMm > pageH - margin) {
+    doc.addPage();
+    startY = margin;
+  }
+  return draw(startY);
+}
+
 function writeParagraph(
   doc: jsPDF,
   y: number,
@@ -60,6 +95,8 @@ function writeParagraph(
   return curY + (opts.lineGapMm ?? 2);
 }
 
+const SIGNATURE_LINE_ROW_MM = 12;
+
 function drawSignatureRow(
   doc: jsPDF,
   y: number,
@@ -68,30 +105,47 @@ function drawSignatureRow(
   maxWidth: number,
   pageH: number,
 ): number {
-  let curY = writeParagraph(doc, y, label, {
+  const labelHeight = measureParagraphHeight(doc, label, {
     fontSize: BODY_PT,
     fontStyle: 'bold',
-    margin,
     maxWidth,
-    pageH,
     lineGapMm: 6,
   });
-  doc.setFont(FONT, 'normal');
-  doc.setFontSize(BODY_PT);
-  doc.setLineWidth(0.3);
-  if (curY + 12 > pageH - margin) {
-    doc.addPage();
-    curY = margin;
-  }
-  doc.line(margin, curY, margin + 80, curY);
-  curY += 6;
-  return writeParagraph(doc, curY, 'Date: _______________', {
+  const dateHeight = measureParagraphHeight(doc, 'Date: _______________', {
     fontSize: BODY_PT,
-    margin,
     maxWidth,
-    pageH,
     lineGapMm: 10,
   });
+
+  return withKeepTogether(
+    doc,
+    y,
+    pageH,
+    margin,
+    labelHeight + SIGNATURE_LINE_ROW_MM + dateHeight,
+    (startY) => {
+      let curY = writeParagraph(doc, startY, label, {
+        fontSize: BODY_PT,
+        fontStyle: 'bold',
+        margin,
+        maxWidth,
+        pageH,
+        lineGapMm: 6,
+      });
+      doc.setFont(FONT, 'normal');
+      doc.setFontSize(BODY_PT);
+      doc.setLineWidth(0.3);
+      doc.line(margin, curY, margin + 80, curY);
+      curY += 6;
+      return writeParagraph(doc, curY, 'Date: _______________', {
+        fontSize: BODY_PT,
+        margin,
+        maxWidth,
+        pageH,
+        lineGapMm: 10,
+      });
+    },
+  );
 }
 
 export type RenderDocumentPdfInput = {
@@ -190,6 +244,45 @@ export function renderDocumentTemplateToPdf(input: RenderDocumentPdfInput): Blob
   return doc.output('blob');
 }
 
+/**
+ * Draw a section heading, reserving enough space for the heading plus at
+ * least one line of the body that follows it — otherwise the heading can be
+ * left as the last line on a page (an orphaned heading) with its entire body
+ * pushed to the next page. Does not force the whole body to stay on the same
+ * page; only the heading + first body line are kept together.
+ */
+function writeHeadingKeptWithBody(
+  doc: jsPDF,
+  y: number,
+  heading: string,
+  hasBody: boolean,
+  opts: { maxW: number; contentPageH: number },
+): number {
+  const headingHeight = measureParagraphHeight(doc, heading, {
+    fontSize: SECTION_PT,
+    fontStyle: 'bold',
+    maxWidth: opts.maxW,
+    lineGapMm: 3,
+  });
+  const bodyLeadInHeight = hasBody ? lineHeightMm(BODY_PT) : 0;
+  return withKeepTogether(
+    doc,
+    y,
+    opts.contentPageH,
+    MARGIN_MM,
+    headingHeight + bodyLeadInHeight,
+    (startY) =>
+      writeParagraph(doc, startY, heading, {
+        fontSize: SECTION_PT,
+        fontStyle: 'bold',
+        margin: MARGIN_MM,
+        maxWidth: opts.maxW,
+        pageH: opts.contentPageH,
+        lineGapMm: 3,
+      }),
+  );
+}
+
 function renderSection(
   doc: jsPDF,
   y: number,
@@ -201,14 +294,7 @@ function renderSection(
     if (!opts.leadAddendumBody?.trim()) return y;
     let curY = y;
     if (section.heading) {
-      curY = writeParagraph(doc, curY, section.heading, {
-        fontSize: SECTION_PT,
-        fontStyle: 'bold',
-        margin: MARGIN_MM,
-        maxWidth: opts.maxW,
-        pageH: opts.contentPageH,
-        lineGapMm: 3,
-      });
+      curY = writeHeadingKeptWithBody(doc, curY, section.heading, true, opts);
     }
     return writeParagraph(doc, curY, opts.leadAddendumBody, {
       fontSize: BODY_PT,
@@ -231,17 +317,8 @@ function renderSection(
   }
 
   let curY = y;
-  if (section.heading) {
-    curY = writeParagraph(doc, curY, section.heading, {
-      fontSize: SECTION_PT,
-      fontStyle: 'bold',
-      margin: MARGIN_MM,
-      maxWidth: opts.maxW,
-      pageH: opts.contentPageH,
-      lineGapMm: 3,
-    });
-  }
 
+  let resolvedBody: string | undefined;
   if (section.body) {
     const body =
       section.kind === 'mapped' ? interpolateTemplate(section.body, values) : section.body.replace(
@@ -249,8 +326,15 @@ function renderSection(
         values.jurisdiction ?? '—',
       );
     // also allow {{jurisdiction}} in static via light interpolate
-    const resolved = interpolateTemplate(body, values);
-    curY = writeParagraph(doc, curY, resolved, {
+    resolvedBody = interpolateTemplate(body, values);
+  }
+
+  if (section.heading) {
+    curY = writeHeadingKeptWithBody(doc, curY, section.heading, resolvedBody != null, opts);
+  }
+
+  if (resolvedBody != null) {
+    curY = writeParagraph(doc, curY, resolvedBody, {
       fontSize: BODY_PT,
       margin: MARGIN_MM,
       maxWidth: opts.maxW,

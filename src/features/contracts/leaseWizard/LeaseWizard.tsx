@@ -16,6 +16,7 @@ import { X } from 'lucide-react';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { ROUTES } from '@/config/constants';
+import { assertSupportedDocumentState } from '@/config/supportedDocumentStates';
 import {
   leaseAgreementPdfService,
   leaseAgreementService,
@@ -33,6 +34,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
+import { DocumentPropertyEntryGuard } from '@/features/contracts/components/DocumentPropertyEntryGuard';
 import { LeaseWizardStepContent } from './LeaseWizardStepContent';
 import { useLeaseWizard } from './useLeaseWizard';
 
@@ -110,9 +112,16 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
       toast.error(t('leaseWizard.complete.linkRequired'));
       return;
     }
+    const values = form.getValues();
+    try {
+      assertSupportedDocumentState(values.property_state);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('documentStateGuard.message'));
+      return;
+    }
+
     setSaveLoading(true);
     try {
-      const values = form.getValues();
       const contractId = await leaseAgreementService.createLeaseContract({
         form: values,
         tenantId: linkedTenant1Id,
@@ -150,7 +159,8 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
   const progressPercent = Math.round(getStepProgress());
 
   return (
-    <Form {...form}>
+    <DocumentPropertyEntryGuard>
+      <Form {...form}>
       <div className="mx-auto flex w-full max-w-[88rem] flex-col">
         <Card className="flex max-h-[calc(100dvh-8.5rem)] flex-col overflow-hidden border shadow-sm sm:max-h-[calc(100dvh-10rem)]">
           <CardHeader className="shrink-0 space-y-3 border-b pb-4">
@@ -248,6 +258,7 @@ export function LeaseWizard({ onCancel, renderStep }: LeaseWizardProps) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </Form>
+      </Form>
+    </DocumentPropertyEntryGuard>
   );
 }

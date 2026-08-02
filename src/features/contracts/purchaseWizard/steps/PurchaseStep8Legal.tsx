@@ -12,8 +12,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { SUPPORTED_DOCUMENT_STATE_SET } from '@/config/supportedDocumentStates';
 import { US_STATES } from '@/lib/serviceProxy';
 import type { PurchaseAgreementFormValues } from '@/features/contracts/schemas/purchaseAgreementForm.schema';
+
+// V1 SCOPE: Only CA/TX/FL/NY/AZ supported for document generation.
+// Add new state codes to SUPPORTED_DOCUMENT_STATES (src/config/
+// supportedDocumentStates.ts) as legal review expands coverage — no
+// other change needed here once that list grows.
+const SUPPORTED_DOCUMENT_STATE_OPTIONS = US_STATES.filter((state) =>
+  SUPPORTED_DOCUMENT_STATE_SET.has(state.code),
+);
 
 function fromStoredTime(v: string | null | undefined): { time: string; meridiem: 'AM' | 'PM' } {
   const raw = (v ?? '').trim();
@@ -148,7 +157,7 @@ export function PurchaseStep8Legal() {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent className="max-h-[280px]">
-                  {US_STATES.map((s) => (
+                  {SUPPORTED_DOCUMENT_STATE_OPTIONS.map((s) => (
                     <SelectItem key={s.code} value={s.code}>
                       {s.name} ({s.code})
                     </SelectItem>
@@ -215,4 +224,3 @@ export function PurchaseStep8Legal() {
     </div>
   );
 }
-

@@ -2,7 +2,7 @@ import type { LeaseAgreementFormValues } from '@/features/contracts/schemas/leas
 import type { SupportedDocumentState } from '@/config/supportedDocumentStates';
 import { formatCurrency } from '@/lib/currency';
 
-import { fmtDate, fmtList, fmtMoney, fmtYesNo } from './formatHelpers';
+import { fmtDate, fmtList, fmtMoney, fmtYesNo, optionalClause } from './formatHelpers';
 
 const USD = 'USD';
 
@@ -36,14 +36,15 @@ export function buildLeaseFormContext(
     .filter(Boolean)
     .join('. ');
 
-  const tenant2 =
-    form.tenant_name_2?.trim()
-      ? ` and ${form.tenant_name_2}${form.tenant_email_2 ? ` (${form.tenant_email_2})` : ''}`
-      : '';
+  const tenant2 = optionalClause(
+    form.tenant_name_2?.trim(),
+    ` and ${form.tenant_name_2}${optionalClause(form.tenant_email_2, ` (${form.tenant_email_2})`)}`,
+  );
 
-  const cosigner = form.co_signer_name?.trim()
-    ? `. Co-signer/guarantor: ${form.co_signer_name}${form.co_signer_email ? ` (${form.co_signer_email})` : ''}`
-    : '';
+  const cosigner = optionalClause(
+    form.co_signer_name?.trim(),
+    `. Co-signer/guarantor: ${form.co_signer_name}${optionalClause(form.co_signer_email, ` (${form.co_signer_email})`)}`,
+  );
 
   const leaseType =
     form.lease_type === 'month_to_month'
@@ -52,19 +53,19 @@ export function buildLeaseFormContext(
         ? 'Standard (fixed term)'
         : String(form.lease_type);
 
-  const endClause = form.end_date ? ` and ends on ${fmtDate(form.end_date)}` : '';
+  const endClause = optionalClause(form.end_date, ` and ends on ${fmtDate(form.end_date)}`);
 
   const prepaid = form.prepaid_rent_enabled
     ? `${fmtMoney(form.prepaid_rent_amount)} from ${fmtDate(form.prepaid_rent_start)} to ${fmtDate(form.prepaid_rent_end)}`
     : 'None';
 
   const parking = form.parking_enabled
-    ? `Enabled (${form.parking_spaces ?? '—'} spaces)${form.parking_fee_enabled ? `; fee ${fmtMoney(form.parking_fee_amount)}` : ''}`
+    ? `Enabled (${form.parking_spaces ?? '—'} spaces)${optionalClause(form.parking_fee_enabled, `; fee ${fmtMoney(form.parking_fee_amount)}`)}`
     : 'Not included';
 
   const amenities = [
     form.furnished_enabled ? `Furnished rooms: ${fmtList(form.furnished_rooms)}` : 'Unfurnished',
-    form.appliances_enabled ? `Appliances: ${fmtList(form.appliances_list)}${form.appliances_other ? ` (${form.appliances_other})` : ''}` : null,
+    form.appliances_enabled ? `Appliances: ${fmtList(form.appliances_list)}${optionalClause(form.appliances_other, ` (${form.appliances_other})`)}` : null,
     form.common_areas_enabled ? `Common areas: ${form.common_areas_description ?? 'Yes'}` : null,
   ]
     .filter(Boolean)
@@ -82,7 +83,7 @@ export function buildLeaseFormContext(
     jurisdiction: state,
     jurisdiction_placeholder: state,
     landlord_name: form.landlord_name,
-    landlord_contact_block: landlordContact ? ` (${landlordContact})` : '',
+    landlord_contact_block: optionalClause(landlordContact, ` (${landlordContact})`),
     tenant_name: form.tenant_name,
     tenant2_block: tenant2,
     cosigner_block: cosigner,
