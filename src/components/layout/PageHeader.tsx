@@ -34,12 +34,12 @@ export function PageHeader({ title, subtitle, backTo, actions }: PageHeaderProps
         {hasTitle && (
           <div className="min-w-0">
             {title && (
-              <h1 className="text-2xl font-bold text-slate-900 truncate">
+              <h1 className="text-2xl font-bold text-foreground truncate">
                 {title}
               </h1>
             )}
             {subtitle && (
-              <p className="text-slate-500 text-sm line-clamp-2">
+              <p className="text-muted-foreground text-sm line-clamp-2">
                 {subtitle}
               </p>
             )}

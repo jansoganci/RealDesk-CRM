@@ -14,7 +14,7 @@ export const MainLayout = ({ children, title }: MainLayoutProps) => {
   useMeetingNotifications(); // Initialize meeting notifications
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-slate-950 dark:to-slate-900">
+    <div className="min-h-screen bg-gradient-to-b from-background to-card">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="lg:pl-64">

@@ -86,7 +86,7 @@ const navigationGroups: NavigationGroupConfig[] = [
       { key: 'reminders', href: ROUTES.REMINDERS, icon: Bell },
       { key: 'finance', href: ROUTES.FINANCE, icon: DollarSign },
       { key: 'compliance', href: ROUTES.CCPA_DASHBOARD, icon: Shield },
-      { key: 'team', href: ROUTES.TEAM_MEMBERS, icon: Users2, ownerOnly: true },
+      { key: 'team', href: ROUTES.TEAM, icon: Users2, ownerOnly: true },
     ],
   },
 ];
@@ -115,7 +115,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     <>
       <div
         className={cn(
-          'fixed inset-0 bg-gray-900/50 z-40 lg:hidden transition-opacity',
+          'fixed inset-0 bg-foreground/50 z-40 lg:hidden transition-opacity',
           isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         )}
         onClick={onClose}
@@ -123,11 +123,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
       <aside
         className={cn(
-          'fixed top-0 left-0 h-full bg-white dark:bg-slate-950 border-r border-gray-200/50 dark:border-slate-800 z-50 transition-transform duration-300 ease-in-out w-64 flex flex-col shadow-luxury',
+          'fixed top-0 left-0 h-full bg-card dark:bg-background border-r border-border/50 z-50 transition-transform duration-300 ease-in-out w-64 flex flex-col shadow-luxury',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )} 
       >
-        <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-[#0D1B2A] shadow-lg shrink-0">
+        <div className="flex items-center justify-between px-5 h-[72px] border-b border-white/10 bg-[#0D1B2A] shadow-lg shrink-0">
           <div className="flex flex-col">
             <img src="/brand/closewell-logo-dark.png" alt="Closewell" className="h-8 w-auto" />
             {currentOrg && (
@@ -153,7 +153,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 key={group.label}
                 className={cn('space-y-1.5', groupIndex > 0 && 'mt-6')}
               >
-                <p className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                <p className="px-4 pb-2 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {t(group.label)}
                 </p>
                 {group.items.map((item) => (
@@ -165,8 +165,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                       cn(
                         'flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200',
                         isActive
-                          ? 'bg-blue-600 text-white hover:text-white shadow-md transform scale-[1.02]'
-                          : 'text-slate-700 hover:bg-slate-50 hover:text-slate-900 hover:shadow-md dark:text-slate-200 dark:hover:bg-slate-800/80 dark:hover:text-white'
+                          ? 'bg-primary text-primary-foreground hover:text-primary-foreground shadow-md transform scale-[1.02]'
+                          : 'text-foreground/80 hover:bg-muted hover:text-foreground hover:shadow-md'
                       )
                     }
                     title={t(`viewAll${item.key.charAt(0).toUpperCase() + item.key.slice(1)}`)}
@@ -181,8 +181,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                             className={cn(
                               'ml-auto h-5 px-2.5 text-xs font-bold shadow-md',
                               isActive
-                                ? 'bg-white text-blue-700'
-                                : 'bg-blue-600 text-white'
+                                ? 'bg-primary-foreground text-primary'
+                                : 'bg-primary text-primary-foreground'
                             )}
                             aria-label={`${unreadMatchesCount} ${t('leads')}`}
                           >
@@ -194,8 +194,8 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                             className={cn(
                               'ml-auto h-5 px-2.5 text-xs font-bold shadow-md',
                               isActive
-                                ? 'bg-white text-blue-700'
-                                : 'bg-red-600 text-white'
+                                ? 'bg-primary-foreground text-destructive'
+                                : 'bg-destructive text-destructive-foreground'
                             )}
                             aria-label={`${reminderCount} ${t('reminders')}`}
                           >
@@ -211,13 +211,13 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           )}
         </nav>
 
-        <div className="p-4 border-t border-gray-200/50 dark:border-slate-800 bg-gray-50 dark:bg-slate-900/80">
+        <div className="p-4 border-t border-border/50 bg-muted/80">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
                 type="button"
                 variant="outline"
-                className="w-full justify-between gap-2 bg-white border-slate-300 dark:bg-slate-900 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white font-semibold transition-all shadow-sm hover:shadow-md h-auto py-2.5 px-3"
+                className="w-full justify-between gap-2 font-semibold transition-all shadow-sm hover:shadow-md h-auto py-2.5 px-3"
               >
                 <span className="truncate text-left text-sm">
                   {user?.email ?? t('profile')}
@@ -228,7 +228,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             <DropdownMenuContent
               align="start"
               side="top"
-              className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-56 z-[60] dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200"
+              className="w-[var(--radix-dropdown-menu-trigger-width)] min-w-56 z-[60]"
             >
               <DropdownMenuItem asChild>
                 <Link to={ROUTES.PROFILE} onClick={() => onClose()}>
@@ -254,7 +254,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className="text-red-600 focus:text-red-600 focus:bg-red-50 dark:focus:bg-red-950/40"
+                className="text-destructive focus:text-destructive focus:bg-destructive/10"
                 onClick={() => {
                   void handleSignOut();
                 }}
