@@ -34,12 +34,12 @@ const iconColorClasses: Record<IconColor, { gradient: string; shadow: string }> 
     shadow: COLORS.dashboard.contracts.shadow,
   },
   amber: {
-    gradient: 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700',
-    shadow: 'shadow-lg shadow-amber-600/20',
+    gradient: 'bg-gradient-to-br from-warning via-warning/90 to-warning/80',
+    shadow: 'shadow-lg shadow-warning/20',
   },
   purple: {
-    gradient: 'bg-gradient-to-br from-purple-600 via-purple-700 to-purple-800',
-    shadow: 'shadow-lg shadow-purple-700/20',
+    gradient: 'bg-gradient-to-br from-info via-info/90 to-info/80',
+    shadow: 'shadow-lg shadow-info/20',
   },
 };
 
@@ -57,7 +57,7 @@ export const StatCard = React.memo(({
   return (
     <Card
       className={cn(
-        'shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in border-gray-200/50 backdrop-blur-sm bg-white/90',
+        'shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1 animate-fade-in border-border/50 backdrop-blur-sm bg-card/90',
         className
       )}
     >
@@ -78,7 +78,7 @@ export const StatCard = React.memo(({
             )}>
               {icon}
             </div>
-            <CardTitle className="text-sm font-semibold text-slate-700">{title}</CardTitle>
+            <CardTitle className="text-sm font-semibold text-foreground/80">{title}</CardTitle>
           </>
         )}
       </CardHeader>
@@ -90,7 +90,7 @@ export const StatCard = React.memo(({
           </>
         ) : (
           <>
-            <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent">
+            <div className="text-3xl font-bold text-foreground">
               {value}
             </div>
             <p className={`text-xs ${COLORS.gray.text600} mt-1.5 leading-relaxed`}>{description}</p>
