@@ -89,10 +89,10 @@ export function TeamMembersCard() {
             <Users2 className="h-5 w-5 text-white" />
           </div>
           <div>
-            <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-50">
+            <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
               {t('profile:teamMembers.title')}
             </CardTitle>
-            <p className="text-sm text-gray-500 dark:text-slate-400">
+            <p className="text-sm text-muted-foreground">
               {t('profile:teamMembers.count', { count: members.length })}
             </p>
           </div>
@@ -126,7 +126,7 @@ export function TeamMembersCard() {
                   size="sm"
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-slate-50 truncate">
+                  <p className="text-sm font-medium text-foreground dark:text-muted-foreground truncate">
                     {userName || userEmail.split('@')[0]}
                   </p>
                 </div>
@@ -136,13 +136,13 @@ export function TeamMembersCard() {
           })}
 
           {hasMore && (
-            <p className="text-sm text-gray-500 dark:text-slate-400 text-center pt-2">
+            <p className="text-sm text-muted-foreground text-center pt-2">
               {t('profile:teamMembers.andMore', { count: members.length - 5 })}
             </p>
           )}
 
           {members.length === 0 && (
-            <p className="text-sm text-gray-500 dark:text-slate-400 text-center py-4">
+            <p className="text-sm text-muted-foreground text-center py-4">
               {t('profile:teamMembers.empty')}
             </p>
           )}
@@ -150,7 +150,7 @@ export function TeamMembersCard() {
 
         {/* Add member button for owners */}
         {isOwner && (
-          <div className="mt-4 pt-4 border-t border-gray-200 dark:border-slate-800">
+          <div className="mt-4 pt-4 border-t border-border dark:border-border">
             <Button
               variant="outline"
               size="sm"

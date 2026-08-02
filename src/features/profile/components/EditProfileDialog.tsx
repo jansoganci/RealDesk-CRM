@@ -116,17 +116,17 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[550px] bg-gradient-to-br from-blue-50 to-slate-50 dark:from-slate-900 dark:to-slate-950 border-blue-200/50 dark:border-slate-700 shadow-luxury">
+      <DialogContent className="sm:max-w-[550px] bg-gradient-to-br from-primary to-background dark:from-foreground dark:to-foreground border-primary/30/50 dark:border-border shadow-luxury">
         <DialogHeader className="pb-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
+            <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground rounded-xl shadow-lg shadow-primary/30">
               <User className="h-5 w-5 text-white" />
             </div>
             <div>
-              <DialogTitle className="text-lg font-bold text-slate-900 dark:text-slate-50">
+              <DialogTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
                 {t('editProfile.title')}
               </DialogTitle>
-              <DialogDescription className="text-sm text-slate-600 dark:text-slate-400 font-medium">
+              <DialogDescription className="text-sm text-muted-foreground dark:text-muted-foreground/70 font-medium">
                 {t('editProfile.description')}
               </DialogDescription>
             </div>
@@ -134,17 +134,17 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
         </DialogHeader>
 
         <Tabs defaultValue={defaultTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border border-blue-200/50 dark:border-slate-600 shadow-md p-1">
+          <TabsList className="grid w-full grid-cols-2 bg-card/80 dark:bg-muted backdrop-blur-sm border border-primary/30/50 dark:border-border shadow-md p-1">
             <TabsTrigger
               value="email"
-              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
             >
               <Mail className="h-4 w-4" />
               {t('editProfile.tabs.basicInfo')}
             </TabsTrigger>
             <TabsTrigger
               value="password"
-              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-blue-600 data-[state=active]:to-blue-700 data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
+              className="gap-2 data-[state=active]:bg-gradient-to-r data-[state=active]:from-primary data-[state=active]:to-primary data-[state=active]:text-white data-[state=active]:shadow-md transition-all duration-300"
             >
               <Lock className="h-4 w-4" />
               {t('editProfile.tabs.security')}
@@ -152,7 +152,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
           </TabsList>
 
           {/* Email Tab */}
-          <TabsContent value="email" className="space-y-4 mt-6 p-6 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-xl border border-blue-200/30 dark:border-slate-700 shadow-sm">
+          <TabsContent value="email" className="space-y-4 mt-6 p-6 bg-card/50 dark:bg-muted backdrop-blur-sm rounded-xl border border-primary/30/30 dark:border-border shadow-sm">
             <Form {...emailForm}>
               <form onSubmit={emailForm.handleSubmit(handleEmailChange)} className="space-y-4">
                 <FormField
@@ -180,14 +180,14 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                     disabled={emailLoading}
-                    className="flex-1 border-blue-200 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-all duration-300"
+                    className="flex-1 border-primary/30 hover:bg-primary/10 dark:border-border dark:hover:bg-muted transition-all duration-300"
                   >
                     {t('editProfile.buttons.cancel')}
                   </Button>
                   <Button
                     type="submit"
                     disabled={emailLoading}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md transition-all duration-300 hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-white shadow-md transition-all duration-300 hover:shadow-lg"
                   >
                     {emailLoading ? (
                       <>
@@ -204,7 +204,7 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
           </TabsContent>
 
           {/* Password Tab */}
-          <TabsContent value="password" className="space-y-4 mt-6 p-6 bg-white/50 dark:bg-slate-900/50 backdrop-blur-sm rounded-xl border border-blue-200/30 dark:border-slate-700 shadow-sm">
+          <TabsContent value="password" className="space-y-4 mt-6 p-6 bg-card/50 dark:bg-muted backdrop-blur-sm rounded-xl border border-primary/30/30 dark:border-border shadow-sm">
             <Form {...passwordForm}>
               <form onSubmit={passwordForm.handleSubmit(handlePasswordChange)} className="space-y-4">
                 <FormField
@@ -270,14 +270,14 @@ export const EditProfileDialog = ({ open, onOpenChange, defaultTab = 'email' }: 
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                     disabled={passwordLoading}
-                    className="flex-1 border-blue-200 hover:bg-blue-50 dark:border-slate-600 dark:hover:bg-slate-800 transition-all duration-300"
+                    className="flex-1 border-primary/30 hover:bg-primary/10 dark:border-border dark:hover:bg-muted transition-all duration-300"
                   >
                     {t('editProfile.buttons.cancel')}
                   </Button>
                   <Button
                     type="submit"
                     disabled={passwordLoading}
-                    className="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white shadow-md transition-all duration-300 hover:shadow-lg"
+                    className="flex-1 bg-gradient-to-r from-primary to-primary hover:from-primary hover:to-primary text-white shadow-md transition-all duration-300 hover:shadow-lg"
                   >
                     {passwordLoading ? (
                       <>

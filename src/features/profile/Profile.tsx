@@ -96,7 +96,7 @@ export const Profile = () => {
           <UserInfoHeader />
 
           <Tabs defaultValue="general" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-slate-100/90 dark:bg-slate-900/90 border border-slate-200/80 dark:border-slate-700 rounded-lg">
+            <TabsList className="grid w-full grid-cols-2 h-auto p-1 bg-muted/90 dark:bg-muted border border-border/80 dark:border-border rounded-lg">
               <TabsTrigger value="general">{t('profile:tabs.general')}</TabsTrigger>
               <TabsTrigger value="commission">{t('profile:tabs.commission')}</TabsTrigger>
             </TabsList>

@@ -47,7 +47,7 @@ export function ProfileInfoCard({
   // Loading skeleton
   if (isLoading) {
     return (
-      <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
+      <Card className="border-border dark:border-border dark:bg-muted">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
           <div className="flex items-center gap-3">
             <Skeleton className="h-10 w-10 rounded-lg" />
@@ -60,7 +60,7 @@ export function ProfileInfoCard({
             {[...Array(6)].map((_, i) => (
               <div
                 key={i}
-                className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 pb-3 border-b border-slate-200/80 dark:border-slate-700/80 last:border-0 last:pb-0"
+                className="grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-2 pb-3 border-b border-border/80 dark:border-border last:border-0 last:pb-0"
               >
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-4 w-40" />
@@ -107,13 +107,13 @@ export function ProfileInfoCard({
   ];
 
   return (
-    <Card className="border-slate-200 dark:border-slate-700 dark:bg-slate-950/40">
+    <Card className="border-border dark:border-border dark:bg-muted">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 dark:from-blue-950 dark:via-slate-900 dark:to-slate-950 rounded-xl shadow-lg shadow-blue-900/20 dark:shadow-black/40">
-            <User className="h-5 w-5 text-white dark:text-slate-100" />
+          <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground dark:from-primary dark:via-foreground dark:to-foreground rounded-xl shadow-lg shadow-primary/30 dark:shadow-black/40">
+            <User className="h-5 w-5 text-white dark:text-muted-foreground" />
           </div>
-          <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
             {t('profileInfo.title')}
           </CardTitle>
         </div>
@@ -121,7 +121,7 @@ export function ProfileInfoCard({
           variant="outline"
           size="sm"
           onClick={onEditClick}
-          className="gap-2 dark:border-slate-600 dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200"
+          className="gap-2 dark:border-border dark:bg-muted dark:hover:bg-muted dark:text-muted-foreground"
         >
           <Pencil className="h-4 w-4" />
           <span className="hidden sm:inline">{t('profileInfo.editButton')}</span>
@@ -134,18 +134,18 @@ export function ProfileInfoCard({
               key={field.label}
               className={`grid grid-cols-1 sm:grid-cols-[180px_1fr] gap-1 sm:gap-4 py-3 ${
                 index !== fields.length - 1
-                  ? 'border-b border-slate-200/80 dark:border-slate-700/80'
+                  ? 'border-b border-border/80 dark:border-border'
                   : ''
               }`}
             >
-              <span className="text-sm text-muted-foreground dark:text-slate-400">
+              <span className="text-sm text-muted-foreground dark:text-muted-foreground/70">
                 {field.label}
               </span>
               <span
                 className={`text-sm font-medium ${
                   field.isEmpty
-                    ? 'text-muted-foreground italic dark:text-slate-500'
-                    : 'text-slate-900 dark:text-slate-100'
+                    ? 'text-muted-foreground italic dark:text-muted-foreground'
+                    : 'text-foreground dark:text-muted-foreground'
                 }`}
               >
                 {field.value}

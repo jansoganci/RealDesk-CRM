@@ -82,10 +82,10 @@ export function OrganizationSettingsCard({
     <Card>
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div className="flex items-center gap-3">
-          <div className="p-2.5 bg-gradient-to-br from-blue-800 via-blue-900 to-slate-900 rounded-xl shadow-lg shadow-blue-900/20">
+          <div className="p-2.5 bg-gradient-to-br from-primary via-primary to-foreground rounded-xl shadow-lg shadow-primary/30">
             <Building2 className="h-5 w-5 text-white" />
           </div>
-          <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-50">
+          <CardTitle className="text-lg font-bold text-foreground dark:text-muted-foreground">
             {t('organizationSettings.title')}
           </CardTitle>
         </div>
@@ -130,7 +130,7 @@ export function OrganizationSettingsCard({
               {t('organizationSettings.fields.orgId')}
             </span>
             <div className="flex items-center gap-2">
-              <code className="text-xs bg-gray-100 dark:bg-slate-800 px-2 py-1 rounded font-mono text-gray-600 dark:text-slate-300 truncate max-w-[200px]">
+              <code className="text-xs bg-muted dark:bg-muted px-2 py-1 rounded font-mono text-muted-foreground truncate max-w-[200px]">
                 {currentOrg.id}
               </code>
               <TooltipProvider>
