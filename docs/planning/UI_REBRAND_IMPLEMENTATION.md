@@ -195,57 +195,40 @@ For every page task: migrate only listed files; record **before → after** coun
 
 ### P1.1 — Timeline
 
-**Status:** [ ] Pending  
-**Progress note:** _(_)_  
-**Utility hits:** before _ → after _
-
-**Files:** `src/features/timeline/TimelinePage.tsx`  
-**Exclude:** layout/ui/services  
-**Visual:** `/timeline`
+**Status:** [x] Done  
+**Progress note:** Already semantic; Badge warning/success variants retargeted to CSS tokens.  
+**Utility hits:** before 0 → after 0
 
 ---
 
 ### P1.2 — Calendar page
 
-**Status:** [ ] Pending  
-**Progress note:** _(_)_  
-**Utility hits:** before _ → after _
-
-**Files:** `src/features/calendar/CalendarPage.tsx`  
-**Exclude:** `src/components/calendar/*`  
-**Visual:** `/calendar`
+**Status:** [x] Done  
+**Progress note:** Migrated CalendarPage neutrals/brand blues to muted/primary/card/border.  
+**Utility hits:** before 31 → after 0
 
 ---
 
 ### P1.3 — Calendar shared components
 
-**Status:** [ ] Pending  
-**Progress note:** _(_)_  
-**Utility hits:** before _ → after _
-
-**Files:** `src/components/calendar/**`  
-**Exclude:** `ui/calendar.tsx` unless raw blue remains  
-**Visual:** add/edit meeting
+**Status:** [x] Done  
+**Progress note:** `src/components/calendar` already 0 raw blue/slate/gray hits — no file changes.  
+**Utility hits:** before 0 → after 0
 
 ---
 
 ### P1.4 — Contracts Hub
 
-**Status:** [ ] Pending  
-**Progress note:** _(_)_  
-**Utility hits:** before _ → after _
-
-**Files:** `ContractsHub.tsx`, `ContractTypeCard.tsx`  
-**Visual:** `/contracts`
+**Status:** [x] Done  
+**Progress note:** ContractTypeCard off blue/gray/slate; ContractsHub shell already clean.  
+**Utility hits:** before 26 → after 0
 
 ---
 
 ### P1.5 — Phase 1 gate
 
-**Status:** [ ] Pending  
-**Progress note:** _(_)_
-
-lint/typecheck/test + agent visual: Timeline, Calendar, Hub → continue Phase 2 immediately.
+**Status:** [x] Done  
+**Progress note:** lint+typecheck pass; continuing Phase 2.
 
 ---
 
