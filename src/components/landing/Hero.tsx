@@ -74,7 +74,7 @@ const DashboardMock = () => (
       <div className="dash-reminder-icon">🔔</div>
       <div className="dash-reminder-body">
         <div className="dash-reminder-title">Lease Expiring — Park Avenue</div>
-        <div className="dash-reminder-sub">Tenant: John Smith · RealDesk</div>
+        <div className="dash-reminder-sub">Tenant: John Smith · Closewell</div>
       </div>
       <div className="dash-reminder-time">3 days</div>
     </div>
@@ -174,7 +174,7 @@ export const Hero = () => {
               </div>
               <div className="browser-address">
                 <div className="browser-address-lock" />
-                <span className="browser-address-text">realdesk.app/dashboard</span>
+                <span className="browser-address-text">closewell.app/dashboard</span>
               </div>
             </div>
 

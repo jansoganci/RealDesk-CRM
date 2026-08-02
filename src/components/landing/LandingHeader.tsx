@@ -32,10 +32,7 @@ export const LandingHeader = () => {
           className="flex items-center gap-2 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
-            <span className="text-white font-bold text-sm">R</span>
-          </div>
-          <span className="text-lg font-bold tracking-tight text-gray-900">realdesk</span>
+          <img src="/brand/closewell-logo-light.png" alt="Closewell" className="h-10 w-auto" />
         </div>
 
         {/* Desktop Navigation */}

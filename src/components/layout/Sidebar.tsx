@@ -127,9 +127,9 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )} 
       >
-        <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-blue-600 shadow-lg shrink-0">
+        <div className="flex items-center justify-between px-5 h-[72px] border-b border-gray-200/50 bg-[#0D1B2A] shadow-lg shrink-0">
           <div className="flex flex-col">
-            <span className="font-bold text-white text-lg tracking-tight">RealDesk US</span>
+            <img src="/brand/closewell-logo-dark.png" alt="Closewell" className="h-8 w-auto" />
             {currentOrg && (
               <span className="text-white/70 text-xs truncate max-w-[180px]">
                 {currentOrg.name}
