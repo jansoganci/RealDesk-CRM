@@ -32,3 +32,6 @@ jobs:
 
       - name: Test
         run: npm run test
+
+      - name: Check hardcoded colors
+        run: npm run check:colors
