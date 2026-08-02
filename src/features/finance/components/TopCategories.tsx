@@ -36,7 +36,7 @@ export const TopCategories = ({
     return (
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {[1, 2].map(i => (
-          <Card key={i} className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+          <Card key={i} className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
             <CardHeader>
               <Skeleton className="h-6 w-48" />
             </CardHeader>
@@ -91,23 +91,23 @@ export const TopCategories = ({
     };
 
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader>
           <div className="flex items-center gap-3">
             <div
               className={`p-2.5 rounded-lg shadow-md ${
                 icon === TrendingUp
-                  ? 'bg-emerald-600'
+                  ? 'bg-success'
                   : 'bg-red-600'
               }`}
             >
               <Icon className="h-5 w-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
                 {title}
               </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-slate-300 mt-0.5">{description}</p>
+              <p className="text-sm text-muted-foreground mt-0.5">{description}</p>
             </div>
           </div>
         </CardHeader>
@@ -130,15 +130,15 @@ export const TopCategories = ({
                         className="w-3 h-3 rounded-full flex-shrink-0"
                         style={{ backgroundColor: COLORS[index % COLORS.length] }}
                       />
-                      <span className="text-sm font-medium text-slate-900 dark:text-slate-100 truncate">
+                      <span className="text-sm font-medium text-foreground dark:text-foreground truncate">
                         {cat.category}
                       </span>
                     </div>
                     <div className="text-right ml-2">
-                      <p className="text-sm font-bold text-slate-900 dark:text-slate-100">
+                      <p className="text-sm font-bold text-foreground dark:text-foreground">
                         {formatCurrency(cat.amount)}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-slate-400">
+                      <p className="text-xs text-muted-foreground">
                         {cat.percentage.toFixed(1)}%
                       </p>
                     </div>
@@ -148,8 +148,8 @@ export const TopCategories = ({
             </div>
           ) : (
             <div className="text-center py-12">
-              <Icon className="h-12 w-12 text-gray-300 dark:text-slate-600 mx-auto mb-3" />
-              <p className="text-gray-500 dark:text-slate-400 text-sm">
+              <Icon className="h-12 w-12 text-muted-foreground dark:text-muted-foreground mx-auto mb-3" />
+              <p className="text-muted-foreground text-sm">
                 {t('finance:analytics.noCategories')}
               </p>
             </div>

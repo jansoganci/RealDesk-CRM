@@ -47,7 +47,7 @@ export const YearOverYearIndicator = ({
       }`}>
         {isPositive ? '+' : ''}{changeAbs.toFixed(1)}%
       </span>
-      <span className="text-xs text-gray-500 dark:text-slate-400">
+      <span className="text-xs text-muted-foreground">
         {t('finance:performance.vsLastYear')}
       </span>
     </div>

@@ -20,9 +20,9 @@ export const MonthlyGCIChart = ({ data }: MonthlyGCIChartProps) => {
   }));
 
   return (
-    <Card className="border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/90">
+    <Card className="border border-border dark:border-border bg-card dark:bg-muted">
       <CardHeader>
-        <CardTitle className="text-slate-900 dark:text-slate-100">{t('commissionDashboard.monthlyChart.title')}</CardTitle>
+        <CardTitle className="text-foreground dark:text-foreground">{t('commissionDashboard.monthlyChart.title')}</CardTitle>
       </CardHeader>
       <CardContent className="h-80">
         <ResponsiveContainer width="100%" height="100%">

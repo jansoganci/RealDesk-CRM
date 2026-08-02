@@ -29,7 +29,7 @@ export const ConversionFunnelComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -45,10 +45,10 @@ export const ConversionFunnelComponent = ({
 
   if (!data || data.inquiries === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.conversionFunnel')}
             </CardTitle>
             <div className="p-2.5 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 shadow-md">
@@ -57,7 +57,7 @@ export const ConversionFunnelComponent = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
             {t('finance:commissionTrends.noData')}
           </div>
         </CardContent>
@@ -87,9 +87,9 @@ export const ConversionFunnelComponent = ({
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
-          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.payload?.name}</p>
-          <p className="text-sm text-gray-600 dark:text-slate-300">
+        <div className="bg-card p-3 border border-border rounded-lg shadow-lg dark:bg-muted dark:border-border">
+          <p className="font-semibold text-foreground">{data.payload?.name}</p>
+          <p className="text-sm text-muted-foreground">
             {t('finance:analytics.count')}: {data.payload?.value}
           </p>
         </div>
@@ -99,10 +99,10 @@ export const ConversionFunnelComponent = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.conversionFunnel')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600 shadow-md">
@@ -114,11 +114,11 @@ export const ConversionFunnelComponent = ({
         <div className="space-y-4">
           {/* Conversion Rates */}
           <div className="grid grid-cols-3 gap-3">
-            <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-              <p className="text-xs text-blue-700 font-medium mb-1">
+            <div className="bg-primary rounded-lg p-3 border border-primary/30">
+              <p className="text-xs text-primary font-medium mb-1">
                 {t('finance:analytics.leadToAppointment')}
               </p>
-              <p className="text-xl font-bold text-blue-900">
+              <p className="text-xl font-bold text-primary">
                 {data.rates.leadToAppointment.toFixed(1)}%
               </p>
             </div>

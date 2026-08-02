@@ -72,11 +72,11 @@ export const RecurringExpensesFiltersBar = ({
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 p-3 md:p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm space-y-3">
+    <div className="bg-card dark:bg-muted p-3 md:p-4 rounded-lg border border-border dark:border-border shadow-sm space-y-3">
       {/* Search Bar */}
       {onSearchChange && (
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-slate-500" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground/70 dark:text-muted-foreground" />
           <Input
             type="text"
             placeholder={t('finance:recurring.filters.search', { defaultValue: 'Search by name...' })}
@@ -92,7 +92,7 @@ export const RecurringExpensesFiltersBar = ({
       <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 md:items-center">
         {/* Filter Icon */}
         <div className="hidden md:flex items-center">
-          <Filter className="h-4 w-4 text-gray-500 dark:text-slate-400" />
+          <Filter className="h-4 w-4 text-muted-foreground" />
         </div>
 
         {/* Active/Inactive Filter */}

@@ -294,7 +294,7 @@ export const CommissionHistoryTable = () => {
   };
 
   return (
-    <Card className="border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/90">
+    <Card className="border border-border dark:border-border bg-card dark:bg-muted">
       <CardHeader className="space-y-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
           <CardTitle>{t('finance:commissionHistory.title')}</CardTitle>
@@ -302,7 +302,7 @@ export const CommissionHistoryTable = () => {
             variant="outline"
             onClick={handleExport}
             disabled={exporting}
-            className="dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-slate-600"
+            className="dark:bg-muted dark:hover:bg-muted dark:text-muted-foreground dark:border-border"
           >
             {exporting ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Download className="h-4 w-4 mr-2" />}
             {t('finance:commissionHistory.export')}
@@ -352,7 +352,7 @@ export const CommissionHistoryTable = () => {
         ) : sortedRows.length === 0 ? (
           <div className="text-sm text-muted-foreground">{t('finance:commissionHistory.empty')}</div>
         ) : (
-          <div className="rounded-md border border-gray-200 dark:border-slate-700 overflow-hidden">
+          <div className="rounded-md border border-border dark:border-border overflow-hidden">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -386,7 +386,7 @@ export const CommissionHistoryTable = () => {
                     <TableCell>{row.property_address}</TableCell>
                     <TableCell>{row.type}</TableCell>
                     <TableCell>${(row.gross_commission ?? 0).toLocaleString()}</TableCell>
-                    <TableCell className="font-medium text-emerald-600 dark:text-emerald-400">${(row.net_commission ?? row.amount ?? 0).toLocaleString()}</TableCell>
+                    <TableCell className="font-medium text-success dark:text-emerald-400">${(row.net_commission ?? row.amount ?? 0).toLocaleString()}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

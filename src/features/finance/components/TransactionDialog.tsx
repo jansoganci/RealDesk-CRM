@@ -221,7 +221,7 @@ export const TransactionDialog = ({
                       </FormControl>
                       <SelectContent>
                         {filteredCategories.length === 0 ? (
-                          <div className="px-2 py-1.5 text-sm text-gray-500 dark:text-slate-400">
+                          <div className="px-2 py-1.5 text-sm text-muted-foreground">
                             {t('finance:fields.noCategoriesAvailable')}
                           </div>
                         ) : (

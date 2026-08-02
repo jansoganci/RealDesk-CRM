@@ -53,7 +53,7 @@ export const FinanceHeader = ({
               variant="outline"
               onClick={() => onExport('csv')}
               disabled={loading}
-              className="gap-1.5 md:gap-2 whitespace-nowrap rounded-r-none px-2 md:px-4 h-8 md:h-10 text-xs md:text-sm bg-white dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-slate-600"
+              className="gap-1.5 md:gap-2 whitespace-nowrap rounded-r-none px-2 md:px-4 h-8 md:h-10 text-xs md:text-sm bg-card dark:bg-muted dark:hover:bg-muted dark:text-muted-foreground dark:border-border"
             >
               <Download className="h-3.5 w-3.5 md:h-4 md:w-4" />
               <span className="sm:hidden">{t('finance:export.exportShort')}</span>
@@ -63,7 +63,7 @@ export const FinanceHeader = ({
               variant="outline"
               onClick={() => setExportMenuOpen(!exportMenuOpen)}
               disabled={loading}
-              className="px-1.5 md:px-2 rounded-l-none border-l-0 h-8 md:h-10 bg-white dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-200 dark:border-slate-600"
+              className="px-1.5 md:px-2 rounded-l-none border-l-0 h-8 md:h-10 bg-card dark:bg-muted dark:hover:bg-muted dark:text-muted-foreground dark:border-border"
             >
               <ChevronDown className="h-3.5 w-3.5 md:h-4 md:w-4" />
             </Button>
@@ -75,14 +75,14 @@ export const FinanceHeader = ({
                 className="fixed inset-0 z-10"
                 onClick={() => setExportMenuOpen(false)}
               />
-              <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-gray-200 dark:border-slate-700 z-20">
+              <div className="absolute right-0 mt-2 w-48 bg-card dark:bg-muted rounded-lg shadow-lg border border-border dark:border-border z-20">
                 <div className="py-1">
                   <button
                     onClick={() => {
                       onExport('csv');
                       setExportMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted dark:hover:bg-muted flex items-center gap-2"
                     disabled={loading}
                   >
                     <FileText className="h-4 w-4 text-green-600" />
@@ -93,7 +93,7 @@ export const FinanceHeader = ({
                       onExport('pdf');
                       setExportMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted dark:hover:bg-muted flex items-center gap-2"
                     disabled={loading}
                   >
                     <FileDown className="h-4 w-4 text-red-600" />
@@ -104,10 +104,10 @@ export const FinanceHeader = ({
                       onExport('excel');
                       setExportMenuOpen(false);
                     }}
-                    className="w-full px-4 py-2 text-left text-sm text-gray-900 dark:text-slate-100 hover:bg-gray-100 dark:hover:bg-slate-800 flex items-center gap-2"
+                    className="w-full px-4 py-2 text-left text-sm text-foreground hover:bg-muted dark:hover:bg-muted flex items-center gap-2"
                     disabled={loading}
                   >
-                    <FileSpreadsheet className="h-4 w-4 text-blue-600" />
+                    <FileSpreadsheet className="h-4 w-4 text-primary" />
                     {t('finance:export.exportExcel')}
                   </button>
                 </div>

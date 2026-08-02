@@ -89,12 +89,12 @@ export const FinanceFiltersBar = ({
     filters.start_date?.slice(0, 7) || currentMonth;
 
   return (
-    <div className="bg-white dark:bg-slate-900 p-3 md:p-4 rounded-lg border border-gray-200 dark:border-slate-700 shadow-sm">
+    <div className="bg-card dark:bg-muted p-3 md:p-4 rounded-lg border border-border dark:border-border shadow-sm">
       {/* Mobile: 2x2 grid, Desktop: flex row */}
       <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 md:items-center">
         {/* Month Filter */}
         <div className="flex items-center gap-2 col-span-2 md:col-span-1">
-          <Filter className="h-4 w-4 text-gray-500 dark:text-slate-400 hidden md:block" />
+          <Filter className="h-4 w-4 text-muted-foreground hidden md:block" />
           <Select
             value={selectedMonth}
             onValueChange={handleMonthChange}

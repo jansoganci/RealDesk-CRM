@@ -37,7 +37,7 @@ export const CommissionTrends = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -56,19 +56,19 @@ export const CommissionTrends = ({
 
   if (chartData.length === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:commissionTrends.title')}
             </CardTitle>
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
+            <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
               <TrendingUp className="h-4 w-4 text-white" />
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
             {t('finance:commissionTrends.noData')}
           </div>
         </CardContent>
@@ -77,13 +77,13 @@ export const CommissionTrends = ({
   }
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:commissionTrends.title')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
+          <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
             <TrendingUp className="h-4 w-4 text-white" />
           </div>
         </div>
@@ -121,7 +121,7 @@ export const CommissionTrends = ({
               <Legend
                 wrapperStyle={{ paddingTop: '20px' }}
                 formatter={(value) => (
-                  <span className="text-sm text-gray-600 dark:text-slate-300">
+                  <span className="text-sm text-muted-foreground">
                     {value === 'rental'
                       ? t('finance:commissionTrends.rental')
                       : t('finance:commissionTrends.sale')}

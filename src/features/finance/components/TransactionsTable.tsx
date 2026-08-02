@@ -206,7 +206,7 @@ export const TransactionsTable = ({
   if (transactions.length === 0) {
     return (
       <div className="text-center py-12">
-        <p className="text-gray-500 dark:text-slate-400">{t('finance:table.noTransactions')}</p>
+        <p className="text-muted-foreground">{t('finance:table.noTransactions')}</p>
       </div>
     );
   }
@@ -248,12 +248,12 @@ export const TransactionsTable = ({
 
   return (
     <div className="space-y-4">
-      <div className="rounded-lg border border-gray-200 dark:border-slate-700 bg-white dark:bg-slate-900 overflow-hidden">
+      <div className="rounded-lg border border-border dark:border-border bg-card dark:bg-muted overflow-hidden">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gray-50 dark:bg-slate-800/80">
+            <TableRow className="bg-muted dark:bg-muted">
               <TableHead
-                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                className="cursor-pointer hover:bg-muted dark:hover:bg-muted transition-colors"
                 onClick={() => handleSort('date')}
               >
                 <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ export const TransactionsTable = ({
               <TableHead>{t('finance:table.category')}</TableHead>
               <TableHead>{t('finance:table.description')}</TableHead>
               <TableHead
-                className="cursor-pointer hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+                className="cursor-pointer hover:bg-muted dark:hover:bg-muted transition-colors"
                 onClick={() => handleSort('amount')}
               >
                 <div className="flex items-center gap-2">
@@ -282,7 +282,7 @@ export const TransactionsTable = ({
             {sortedTransactions.map(transaction => (
               <TableRow
                 key={transaction.id}
-                className="hover:bg-gray-50 dark:hover:bg-slate-800/40 transition-colors"
+                className="hover:bg-muted dark:hover:bg-muted transition-colors"
               >
                 <TableCell className="font-medium">
                   {formatDate(transaction.transaction_date)}
@@ -307,7 +307,7 @@ export const TransactionsTable = ({
                   </div>
                 </TableCell>
                 <TableCell>
-                  <span className="inline-block px-2 py-1 text-xs font-medium bg-gray-100 text-gray-700 dark:bg-slate-800 dark:text-slate-200 rounded">
+                  <span className="inline-block px-2 py-1 text-xs font-medium bg-muted text-foreground/80 dark:bg-muted dark:text-muted-foreground rounded">
                     {transaction.category}
                   </span>
                 </TableCell>
@@ -332,7 +332,7 @@ export const TransactionsTable = ({
                       <TooltipProvider>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <span className="text-xs text-gray-500 dark:text-slate-400 italic flex items-center gap-1 cursor-help">
+                            <span className="text-xs text-muted-foreground italic flex items-center gap-1 cursor-help">
                               ≈ {conversionCache[transaction.id].converted}
                               <Info className="h-3 w-3" />
                             </span>
@@ -365,7 +365,7 @@ export const TransactionsTable = ({
                         <MoreHorizontal className="h-4 w-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="dark:bg-slate-900 dark:border-slate-700 dark:text-slate-200">
+                    <DropdownMenuContent align="end" className="dark:bg-muted dark:border-border dark:text-muted-foreground">
                       <DropdownMenuItem 
                         onClick={() => !isMember && onEdit(transaction)}
                         disabled={isMember}
@@ -378,11 +378,11 @@ export const TransactionsTable = ({
                       <DropdownMenuItem
                         onClick={() => !isMember && onDelete(transaction.id)}
                         disabled={isMember}
-                        className={`text-red-600 ${isMember ? "opacity-50 cursor-not-allowed text-gray-400 dark:text-slate-500" : ""}`}
+                        className={`text-red-600 ${isMember ? "opacity-50 cursor-not-allowed text-muted-foreground/70 dark:text-muted-foreground" : ""}`}
                       >
                         <Trash2 className="mr-2 h-4 w-4" />
                         {t('common:actions.delete')}
-                        {isMember && <span className="ml-auto text-[10px] italic text-gray-400 dark:text-slate-500">({t('common:readOnlyMode')})</span>}
+                        {isMember && <span className="ml-auto text-[10px] italic text-muted-foreground/70 dark:text-muted-foreground">({t('common:readOnlyMode')})</span>}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -396,7 +396,7 @@ export const TransactionsTable = ({
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && onPageChange && (
         <div className="flex items-center justify-between px-2">
-          <p className="text-sm text-gray-600 dark:text-slate-300">
+          <p className="text-sm text-muted-foreground">
             {t('finance:pagination.showing', {
               from: (pagination.page - 1) * pagination.pageSize + 1,
               to: Math.min(pagination.page * pagination.pageSize, pagination.total),
@@ -415,7 +415,7 @@ export const TransactionsTable = ({
 
             {getPageNumbers().map((pageNum, idx) =>
               pageNum === 'ellipsis' ? (
-                <span key={`ellipsis-${idx}`} className="px-2 text-gray-400 dark:text-slate-500">...</span>
+                <span key={`ellipsis-${idx}`} className="px-2 text-muted-foreground/70 dark:text-muted-foreground">...</span>
               ) : (
                 <Button
                   key={pageNum}

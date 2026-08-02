@@ -44,12 +44,12 @@ export const FinanceTransactions = ({
       />
 
       {/* Transactions Table */}
-      <div className="bg-white dark:bg-slate-900 rounded-lg shadow-lg border border-gray-100 dark:border-slate-800 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-200 dark:border-slate-700">
-          <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+      <div className="bg-card dark:bg-muted rounded-lg shadow-lg border border-border dark:border-border overflow-hidden">
+        <div className="px-6 py-4 border-b border-border dark:border-border">
+          <h2 className="text-xl font-bold text-foreground dark:text-foreground">
             {t('finance:sections.transactions')}
           </h2>
-          <p className="text-sm text-gray-600 dark:text-slate-300 mt-1">
+          <p className="text-sm text-muted-foreground mt-1">
             {t('finance:sections.transactionsDescription')}
           </p>
         </div>

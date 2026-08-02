@@ -54,22 +54,22 @@ export const FinancialCharts = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 dark:border-slate-800">
+      <Card className="shadow-lg border-border dark:border-border">
         <CardHeader>
-          <div className="h-6 w-48 bg-gray-200 dark:bg-slate-700 rounded animate-pulse" />
+          <div className="h-6 w-48 bg-muted dark:bg-muted rounded animate-pulse" />
         </CardHeader>
         <CardContent>
-          <div className="h-80 bg-gray-100 dark:bg-slate-800 rounded animate-pulse" />
+          <div className="h-80 bg-muted dark:bg-muted rounded animate-pulse" />
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between mb-4">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:charts.expenseBreakdown')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
@@ -97,11 +97,11 @@ export const FinancialCharts = ({
         {activeData.length > 0 ? (
           <div className="space-y-4">
             {/* Total amount header */}
-            <div className="flex justify-between items-center pb-3 border-b border-gray-100 dark:border-slate-700">
-              <span className="text-sm font-medium text-gray-500 dark:text-slate-400">
+            <div className="flex justify-between items-center pb-3 border-b border-border dark:border-border">
+              <span className="text-sm font-medium text-muted-foreground">
                 {t('finance:charts.total')}
               </span>
-              <span className="text-lg font-bold text-slate-900 dark:text-slate-100">
+              <span className="text-lg font-bold text-foreground dark:text-foreground">
                 {formatCurrencyLocal(activeTotal)}
               </span>
             </div>
@@ -120,13 +120,13 @@ export const FinancialCharts = ({
                           className="w-3 h-3 rounded-full flex-shrink-0"
                           style={{ backgroundColor: color }}
                         />
-                        <span className="text-sm font-medium text-slate-700 dark:text-slate-200 truncate max-w-[120px]">
+                        <span className="text-sm font-medium text-foreground/80 dark:text-muted-foreground truncate max-w-[120px]">
                           {item.name}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
                         <div className="flex items-center gap-1">
-                          <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                          <span className="text-sm font-semibold text-foreground dark:text-foreground">
                             {formatCurrencyLocal(item.value)}
                           </span>
                           {!item.isComplete && (
@@ -135,13 +135,13 @@ export const FinancialCharts = ({
                             </div>
                           )}
                         </div>
-                        <span className="text-xs text-gray-500 dark:text-slate-400 w-12 text-right">
+                        <span className="text-xs text-muted-foreground w-12 text-right">
                           {percentage.toFixed(0)}%
                         </span>
                       </div>
                     </div>
                     {/* Progress bar */}
-                    <div className="w-full h-2 bg-gray-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                    <div className="w-full h-2 bg-muted dark:bg-muted rounded-full overflow-hidden">
                       <div
                         className="h-full rounded-full transition-all duration-500 ease-out"
                         style={{
@@ -156,7 +156,7 @@ export const FinancialCharts = ({
             </div>
           </div>
         ) : (
-          <div className="h-80 flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-80 flex items-center justify-center text-muted-foreground">
             {breakdownTab === 'income'
               ? t('finance:charts.noIncomeData', { defaultValue: 'Bu dönem için gelir verisi bulunmamaktadır' })
               : t('finance:charts.noExpenseData')}

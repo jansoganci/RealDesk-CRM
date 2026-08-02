@@ -35,7 +35,7 @@ export const CommissionByPropertyTypeComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -51,19 +51,19 @@ export const CommissionByPropertyTypeComponent = ({
 
   if (!data || data.total.value === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.commissionByPropertyType')}
             </CardTitle>
-            <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
+            <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
               <Building2 className="h-4 w-4 text-white" />
             </div>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
             {t('finance:commissionTrends.noData')}
           </div>
         </CardContent>
@@ -97,12 +97,12 @@ export const CommissionByPropertyTypeComponent = ({
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
-          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.name}</p>
-          <p className="text-sm text-gray-600 dark:text-slate-300">
+        <div className="bg-card p-3 border border-border rounded-lg shadow-lg dark:bg-muted dark:border-border">
+          <p className="font-semibold text-foreground">{data.name}</p>
+          <p className="text-sm text-muted-foreground">
             {formatMetric(data.value ?? 0)}
           </p>
-          <p className="text-xs text-gray-500 dark:text-slate-400">
+          <p className="text-xs text-muted-foreground">
             {data.payload?.percentage?.toFixed(1)}%
           </p>
         </div>
@@ -139,13 +139,13 @@ export const CommissionByPropertyTypeComponent = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.commissionByPropertyType')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-md">
+          <div className="p-2.5 rounded-lg bg-gradient-to-br from-primary to-primary shadow-md">
             <Building2 className="h-4 w-4 text-white" />
           </div>
         </div>
@@ -154,14 +154,14 @@ export const CommissionByPropertyTypeComponent = ({
         <div className="space-y-4">
           {/* Summary Stats */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-blue-50 rounded-lg p-3 border border-blue-200">
-              <p className="text-xs text-blue-700 font-medium mb-1">
+            <div className="bg-primary rounded-lg p-3 border border-primary/30">
+              <p className="text-xs text-primary font-medium mb-1">
                 {t('finance:analytics.rentalCommissions')}
               </p>
-              <p className="text-xl font-bold text-blue-900">
+              <p className="text-xl font-bold text-primary">
                 {formatMetric(data.rental.value)}
               </p>
-              <p className="text-xs text-blue-600 mt-1">
+              <p className="text-xs text-primary mt-1">
                 {rentalPercentage.toFixed(1)}%
               </p>
             </div>

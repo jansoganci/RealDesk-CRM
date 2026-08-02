@@ -36,7 +36,7 @@ export const MarketingROIComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -52,10 +52,10 @@ export const MarketingROIComponent = ({
 
   if (!data || data.totalMarketingSpend.value === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.marketingROI')}
             </CardTitle>
             <div className="p-2.5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 shadow-md">
@@ -64,7 +64,7 @@ export const MarketingROIComponent = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px] flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-[300px] flex items-center justify-center text-muted-foreground">
             {t('finance:analytics.noMarketingData')}
           </div>
         </CardContent>
@@ -85,9 +85,9 @@ export const MarketingROIComponent = ({
     if (active && payload && payload.length) {
       const data = payload[0];
       return (
-        <div className="bg-white p-3 border border-gray-200 rounded-lg shadow-lg dark:bg-slate-900 dark:border-slate-700">
-          <p className="font-semibold text-gray-900 dark:text-slate-100">{data.name}</p>
-          <p className="text-sm text-gray-600 dark:text-slate-300">
+        <div className="bg-card p-3 border border-border rounded-lg shadow-lg dark:bg-muted dark:border-border">
+          <p className="font-semibold text-foreground">{data.name}</p>
+          <p className="text-sm text-muted-foreground">
             {t('finance:analytics.marketingSpend')}: {formatMetric(data.value ?? 0)}
           </p>
           <p className={`text-xs font-medium ${(data.payload?.roi ?? 0) >= 0 ? 'text-green-600' : 'text-red-600'}`}>
@@ -100,10 +100,10 @@ export const MarketingROIComponent = ({
   };
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.marketingROI')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 shadow-md">
@@ -132,13 +132,13 @@ export const MarketingROIComponent = ({
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-xs text-gray-600 dark:text-slate-300 mb-1">
+                <p className="text-xs text-muted-foreground mb-1">
                   {t('finance:analytics.marketingSpend')}
                 </p>
-                <p className="text-lg font-semibold text-gray-900 dark:text-slate-100">
+                <p className="text-lg font-semibold text-foreground">
                   {formatMetric(data.totalMarketingSpend.value)}
                 </p>
-                <p className="text-xs text-gray-600 dark:text-slate-300 mt-1">
+                <p className="text-xs text-muted-foreground mt-1">
                   {t('finance:analytics.commissionRevenue')}: {formatMetric(data.commissionRevenue.value)}
                 </p>
               </div>
@@ -148,7 +148,7 @@ export const MarketingROIComponent = ({
           {/* Breakdown by Category */}
           {chartData.length > 0 && (
             <div className="h-[250px]">
-              <p className="text-xs font-medium text-gray-600 dark:text-slate-300 mb-2">
+              <p className="text-xs font-medium text-muted-foreground mb-2">
                 {t('finance:analytics.byCategory')}
               </p>
               <ResponsiveContainer width="100%" height="100%">

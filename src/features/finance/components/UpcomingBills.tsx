@@ -90,7 +90,7 @@ export const UpcomingBills = ({
       };
     }
     return {
-      className: 'bg-blue-100 text-blue-700 border-blue-200',
+      className: 'bg-primary text-primary border-primary/30',
       icon: Calendar,
       label: t('finance:automation.upcoming'),
     };
@@ -98,7 +98,7 @@ export const UpcomingBills = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader>
           <Skeleton className="h-6 w-48" />
         </CardHeader>
@@ -115,17 +115,17 @@ export const UpcomingBills = ({
 
   if (bills.length === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg shadow-md bg-emerald-600">
+            <div className="p-2.5 rounded-lg shadow-md bg-success">
               <CheckCircle2 className="h-5 w-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
                 {t('finance:automation.upcomingBills')}
               </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-slate-300 mt-0.5">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 {t('finance:automation.upcomingBillsDesc')}
               </p>
             </div>
@@ -134,10 +134,10 @@ export const UpcomingBills = ({
         <CardContent>
           <div className="text-center py-12">
             <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-slate-300 font-medium">
+            <p className="text-muted-foreground font-medium">
               {t('finance:automation.noBills')}
             </p>
-            <p className="text-sm text-gray-500 dark:text-slate-400 mt-2">
+            <p className="text-sm text-muted-foreground mt-2">
               {t('finance:automation.noBillsDesc', { days: daysAhead })}
             </p>
           </div>
@@ -156,23 +156,23 @@ export const UpcomingBills = ({
   });
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-lg shadow-md bg-blue-600">
+            <div className="p-2.5 rounded-lg shadow-md bg-primary">
               <Calendar className="h-5 w-5 text-white" />
             </div>
             <div>
-              <CardTitle className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              <CardTitle className="text-xl font-bold text-foreground dark:text-foreground">
                 {t('finance:automation.upcomingBills')}
               </CardTitle>
-              <p className="text-sm text-gray-600 dark:text-slate-300 mt-0.5">
+              <p className="text-sm text-muted-foreground mt-0.5">
                 {t('finance:automation.upcomingBillsDesc')}
               </p>
             </div>
           </div>
-          <Badge className="bg-blue-100 text-blue-700 border-blue-200 text-lg px-3 py-1">
+          <Badge className="bg-primary text-primary border-primary/30 text-lg px-3 py-1">
             {bills.length} {t('finance:automation.bills')}
           </Badge>
         </div>
@@ -191,13 +191,13 @@ export const UpcomingBills = ({
                     ? 'bg-red-50 border-red-200'
                     : bill.days_until_due <= 3
                     ? 'bg-amber-50 border-amber-200'
-                    : 'bg-gray-50 border-gray-200 dark:bg-slate-800/60 dark:border-slate-700'
+                    : 'bg-muted border-border dark:bg-muted dark:border-border'
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-2">
-                      <h4 className="font-bold text-slate-900 dark:text-slate-100">
+                      <h4 className="font-bold text-foreground dark:text-foreground">
                         {bill.recurring_expense.name}
                       </h4>
                       <Badge className={badge.className}>
@@ -205,7 +205,7 @@ export const UpcomingBills = ({
                         {badge.label}
                       </Badge>
                     </div>
-                    <div className="flex items-center gap-4 text-sm text-gray-600 dark:text-slate-300">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
                       <span>
                         <span className="font-medium">{t('finance:table.category')}:</span>{' '}
                         {bill.recurring_expense.category}
@@ -221,14 +221,14 @@ export const UpcomingBills = ({
                     </div>
                   </div>
                   <div className="text-right ml-4">
-                    <p className="text-2xl font-bold text-slate-900 dark:text-slate-100 mb-2">
+                    <p className="text-2xl font-bold text-foreground dark:text-foreground mb-2">
                       {formatCurrency(bill.recurring_expense.amount)}
                     </p>
                     <Button
                       size="sm"
                       onClick={() => handleMarkAsPaid(bill.recurring_expense.id)}
                       disabled={markingPaid === bill.recurring_expense.id}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                      className="bg-success hover:bg-emerald-700 text-white"
                     >
                       {markingPaid === bill.recurring_expense.id ? (
                         <span>{t('common:actions.processing')}</span>

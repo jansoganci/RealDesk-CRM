@@ -17,7 +17,7 @@ export const AverageDaysToCloseComponent = ({
 
   if (loading) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
             <Skeleton className="h-5 w-40" />
@@ -33,10 +33,10 @@ export const AverageDaysToCloseComponent = ({
 
   if (!data || data.totalDeals === 0) {
     return (
-      <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+      <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+            <CardTitle className="text-sm font-medium text-muted-foreground">
               {t('finance:analytics.averageDaysToClose')}
             </CardTitle>
             <div className="p-2.5 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
@@ -45,7 +45,7 @@ export const AverageDaysToCloseComponent = ({
           </div>
         </CardHeader>
         <CardContent>
-          <div className="h-32 flex items-center justify-center text-gray-500 dark:text-slate-400">
+          <div className="h-32 flex items-center justify-center text-muted-foreground">
             {t('finance:commissionTrends.noData')}
           </div>
         </CardContent>
@@ -54,10 +54,10 @@ export const AverageDaysToCloseComponent = ({
   }
 
   return (
-    <Card className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90 hover:shadow-xl transition-all duration-300">
+    <Card className="shadow-lg border-border bg-card/80 backdrop-blur-sm dark:border-border dark:bg-muted hover:shadow-xl transition-all duration-300">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium text-gray-600 dark:text-slate-300">
+          <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:analytics.averageDaysToClose')}
           </CardTitle>
           <div className="p-2.5 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 shadow-md">
@@ -83,17 +83,17 @@ export const AverageDaysToCloseComponent = ({
                 {t('finance:analytics.days')}
               </p>
             </div>
-            <div className="bg-slate-50 rounded-lg p-3 border border-slate-200 dark:bg-slate-800/60 dark:border-slate-700">
+            <div className="bg-muted rounded-lg p-3 border border-border dark:bg-muted dark:border-border">
               <div className="flex items-center gap-2 mb-1">
-                <TrendingUp className="h-4 w-4 text-slate-600 dark:text-slate-300" />
-                <span className="text-xs font-medium text-slate-700 dark:text-slate-200">
+                <TrendingUp className="h-4 w-4 text-muted-foreground dark:text-muted-foreground" />
+                <span className="text-xs font-medium text-foreground/80 dark:text-muted-foreground">
                   {t('finance:analytics.medianDaysToClose')}
                 </span>
               </div>
-              <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+              <p className="text-2xl font-bold text-foreground dark:text-foreground">
                 {data.medianDays}
               </p>
-              <p className="text-xs text-slate-600 mt-1 dark:text-slate-400">
+              <p className="text-xs text-muted-foreground mt-1 dark:text-muted-foreground/70">
                 {t('finance:analytics.days')}
               </p>
             </div>
@@ -101,11 +101,11 @@ export const AverageDaysToCloseComponent = ({
 
           {/* Breakdown by Type */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="bg-blue-50 rounded-lg p-2 border border-blue-200">
-              <p className="text-xs text-blue-700 font-medium mb-1">
+            <div className="bg-primary rounded-lg p-2 border border-primary/30">
+              <p className="text-xs text-primary font-medium mb-1">
                 {t('finance:analytics.rentalsAverage')}
               </p>
-              <p className="text-lg font-semibold text-blue-900">
+              <p className="text-lg font-semibold text-primary">
                 {data.rentalsAverage > 0 ? data.rentalsAverage : 'N/A'}
               </p>
             </div>
@@ -120,9 +120,9 @@ export const AverageDaysToCloseComponent = ({
           </div>
 
           {/* Total Deals */}
-          <div className="text-center pt-2 border-t border-gray-200 dark:border-slate-700">
-            <p className="text-xs text-gray-500 dark:text-slate-400">
-              {t('finance:analytics.totalDeals')}: <span className="font-semibold text-gray-700 dark:text-slate-200">{data.totalDeals}</span>
+          <div className="text-center pt-2 border-t border-border dark:border-border">
+            <p className="text-xs text-muted-foreground">
+              {t('finance:analytics.totalDeals')}: <span className="font-semibold text-foreground">{data.totalDeals}</span>
             </p>
           </div>
         </div>
