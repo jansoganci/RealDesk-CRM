@@ -35,7 +35,7 @@ export function ReminderBadge({ reminder, className }: ReminderBadgeProps) {
       );
     case 'soon':
       return (
-        <Badge className={`${COLORS.warning.dark} ${className || ''}`}>
+        <Badge className={`${COLORS.warning.bg} text-warning-foreground ${className || ''}`}>
           {t('badges.soon', { days })}
         </Badge>
       );

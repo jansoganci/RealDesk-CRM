@@ -112,8 +112,8 @@ Also retarget `.gradient-primary` / `.gradient-secondary` off blue/emerald.
 
 ## F2 — Load Inter (Google Fonts)
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
+**Status:** [x] Done  
+**Progress note:** Added Inter 400–700 to Google Fonts link beside Instrument Serif in `index.html`. lint+typecheck pass.
 
 **Files:** `index.html` (+ keep Instrument Serif for landing only)
 
@@ -125,8 +125,8 @@ Also retarget `.gradient-primary` / `.gradient-secondary` off blue/emerald.
 
 ## F3 — Thin `colors.ts` wrapper (no parallel palette)
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
+**Status:** [x] Done  
+**Progress note:** Rewrote `colors.ts` as semantic-token wrappers; fixed 2 call sites that used `.dark` as legacy class fragments (PhotoUpload, ReminderBadge). lint+typecheck pass.
 
 **Files:** `src/config/colors.ts` only
 

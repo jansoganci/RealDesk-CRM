@@ -211,7 +211,7 @@ export const PhotoUpload = ({
                   type="button"
                   onClick={() => handleRemoveFile(index)}
                   disabled={uploading}
-                  className={`absolute top-1 right-1 p-1 ${COLORS.danger.bg} ${COLORS.text.white} rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:${COLORS.danger.dark} disabled:opacity-50`}
+                  className={`absolute top-1 right-1 p-1 ${COLORS.danger.bg} ${COLORS.text.white} rounded-full opacity-0 group-hover:opacity-100 transition-opacity ${COLORS.danger.hover} disabled:opacity-50`}
                 >
                   <X className="h-3 w-3" />
                 </button>
