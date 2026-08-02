@@ -1,12 +1,12 @@
 # Closewell UI Rebrand Plan
 
-**Status:** Decisions recorded — granular implementation plan ready for flag resolution + `APPROVE`  
+**Status:** Planned scope complete (foundation + Phases 1–3 executed on `main`)  
 **Created:** 2026-08-02  
 **Updated:** 2026-08-02  
 **Source:** Full UI/design-system inventory audit (2026-08-02, read-only)  
 **Goal:** Align the in-app UI with Closewell branding using the existing Tailwind + shadcn/ui foundation — without replacing that foundation.
 
-**Constraint:** Implement only after explicit `APPROVE`, following [Decisions Made](#decisions-made) and the rollout order. Work on **`main`** only (no feature branch).
+**Constraint:** Work on **`main`** only (no feature branch). Deferred page-level raw-utility migrations remain tracked separately.
 
 **Execution plan:** [UI_REBRAND_IMPLEMENTATION.md](./UI_REBRAND_IMPLEMENTATION.md) (Part 1 foundation → Part 2 page tasks → Part 3 flags).
 
@@ -124,3 +124,5 @@ Do not implement until explicit `APPROVE`. Rows below are the source of truth.
 | 2026-08-02 | Part 3 flags | Resolved | P3-1 dark = navy + gold + contrast; P3-2 success=forest / info=teal; P3-3…P3-8 accept defaults. Awaiting APPROVE to start F1. |
 | 2026-08-02 | Dark primary + branch | Locked | Dark `--primary` = Warm Gold (light stays navy). Execute on `main` — no feature branch. |
 | 2026-08-02 | Implementation plan fixes 1–4 | Applied | Scope inheritance clarified; success/info/warning CSS-first; no human phase gates; per-task status + utility hit counts. Execution started on `main`. |
+| 2026-08-02 | Foundation F1–F9 | Complete | CSS vars + Inter + colors.ts + Button + StatCard + shell + shadows + dead shadcn removal; lint/typecheck/test/build green. |
+| 2026-08-02 | Phases 1–3 page migration | Complete | Timeline/Calendar/Hub → Dashboard/Leads/Profile → Contracts/Finance/Deals. Planned scope complete; deferred surfaces inherit foundation but retain unmigrated raw utilities — tracked separately. |

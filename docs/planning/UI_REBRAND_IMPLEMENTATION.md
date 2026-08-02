@@ -1,6 +1,6 @@
 # Closewell UI Rebrand — Implementation Plan
 
-**Status:** In execution — autonomous F1→P3.23 on `main`  
+**Status:** Planned scope complete — foundation + Phases 1–3 on `main`  
 **Created:** 2026-08-02  
 **Updated:** 2026-08-02  
 **Source of truth:** [UI_REBRAND_PLAN.md](./UI_REBRAND_PLAN.md) → Decisions Made  
@@ -455,15 +455,10 @@ Keep series diversity.
 
 ### P3.23 — Phase 3 + final gate
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
+**Status:** [x] Done  
+**Progress note:** lint/typecheck/test(163)/build pass. Planned scope complete; deferred surfaces (Properties, Reminders, Auth/marketing, Screening, Deposits, Team/Org, Onboarding, Billing subscribe, Compliance, Landing redesign, duplicate-component cleanup) inherit foundation styling but retain unmigrated raw utility classes — tracked separately.
 
-**Run:** lint + typecheck + test + build  
-
-**Completion statement to record:**  
-*Planned scope complete; deferred surfaces (Properties, Reminders, Auth/marketing, Screening, Deposits, Team/Org, Onboarding, Billing subscribe, Compliance, Landing redesign, duplicate-component cleanup) inherit foundation styling but retain unmigrated raw utility classes — tracked separately.*
-
-Update `UI_REBRAND_PLAN.md` Phase Log with that wording.
+**Note:** Deals commit `dac5f17` also included pre-existing dirty WIP under `src/features/deals/` that was already modified on `main` before this rebrand (e.g. `EarningAgentSelect.tsx`). Separate from token migration — review that diff if unintended.
 
 ---
 
