@@ -26,7 +26,7 @@ export default function CookieNotice() {
       {/* Skip to content link for keyboard navigation */}
       <a
         href="#root"
-        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-blue-600 focus:text-white focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[60] focus:px-4 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       >
         {t("banner.skipToContent")}
       </a>
@@ -40,7 +40,7 @@ export default function CookieNotice() {
           <CardContent className="p-5">
             <div className="flex flex-col space-y-3">
               <div className="flex items-center space-x-2">
-                <Cookie className="h-5 w-5 text-blue-600" />
+                <Cookie className="h-5 w-5 text-primary" />
                 <h2 id="cookie-banner-title" className="font-semibold text-base sm:text-lg">
                   {t("banner.title")}
                 </h2>
@@ -53,7 +53,7 @@ export default function CookieNotice() {
                   href={cookiePolicyLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                  className="underline text-primary hover:text-primary/80 transition-colors"
                 >
                   {t("banner.cookiePolicy")}
                 </a>
@@ -62,14 +62,14 @@ export default function CookieNotice() {
                   href={privacyPolicyLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                  className="underline text-primary hover:text-primary/80 transition-colors"
                 >
                   {t("banner.privacyPolicy")}
                 </a>
                 <span className="text-muted-foreground">•</span>
                 <a
                   href="/privacy"
-                  className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                  className="underline text-primary hover:text-primary/80 transition-colors"
                 >
                   {t("compliance:page.title")}
                 </a>
@@ -78,7 +78,7 @@ export default function CookieNotice() {
                   href={cookieDisclosureLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                  className="underline text-primary hover:text-primary/80 transition-colors"
                 >
                   {t("banner.privacyPolicyLink")}
                 </a>
@@ -87,7 +87,7 @@ export default function CookieNotice() {
                 <button
                   onClick={openPreferences}
                   aria-label={t("banner.managePreferences")}
-                  className="text-sm underline text-blue-600 hover:text-blue-700 transition-colors text-left sm:text-center"
+                  className="text-sm underline text-primary hover:text-primary/80 transition-colors text-left sm:text-center"
                 >
                   {t("banner.managePreferences")}
                 </button>

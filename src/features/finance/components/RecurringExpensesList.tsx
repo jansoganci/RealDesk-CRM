@@ -129,13 +129,13 @@ export const RecurringExpensesList = ({
       );
     } else if (daysUntilDue <= 3) {
       return (
-        <Badge variant="default" className="bg-amber-100 text-amber-700 border-amber-200">
+        <Badge variant="default" className="bg-warning/15 text-warning border-warning/40">
           {t('finance:automation.dueSoon', { days: daysUntilDue, defaultValue: `Due in ${daysUntilDue} days` })}
         </Badge>
       );
     } else {
       return (
-        <Badge variant="default" className="bg-green-100 text-green-700 border-green-200">
+        <Badge variant="default" className="bg-success/15 text-success border-success/40">
           {t('finance:recurring.status.active', { defaultValue: 'Active' })}
         </Badge>
       );
@@ -150,9 +150,9 @@ export const RecurringExpensesList = ({
     };
 
     const colors: Record<string, string> = {
-      monthly: 'bg-primary text-primary border-primary/30',
-      quarterly: 'bg-purple-100 text-purple-700 border-purple-200',
-      yearly: 'bg-orange-100 text-orange-700 border-orange-200',
+      monthly: 'bg-primary/15 text-primary border-primary/30',
+      quarterly: 'bg-info/15 text-info border-info/40',
+      yearly: 'bg-secondary/15 text-secondary-foreground border-secondary/40',
     };
 
     return (

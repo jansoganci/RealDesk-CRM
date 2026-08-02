@@ -78,7 +78,7 @@ export const PerformanceSummaryComponent = ({
           <CardTitle className="text-sm font-medium text-muted-foreground">
             {t('finance:performance.title')}
           </CardTitle>
-          <div className="p-2.5 rounded-lg bg-gradient-to-br from-amber-500 to-amber-600 shadow-md">
+          <div className="p-2.5 rounded-lg bg-secondary shadow-md">
             <Award className="h-4 w-4 text-white" />
           </div>
         </div>

@@ -25,7 +25,7 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 md:p-3 bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700 rounded-xl shadow-gold">
+            <div className="p-2.5 md:p-3 bg-secondary rounded-xl shadow-gold">
               <Bell className={`h-4 w-4 md:h-5 md:w-5 ${COLORS.text.white}`} />
             </div>
             <div className="space-y-1">
@@ -78,7 +78,7 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
                   urgency === 'urgent'
                     ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                     : urgency === 'soon'
-                      ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
+                      ? 'bg-secondary text-secondary-foreground shadow-lg text-xs md:text-sm self-start sm:self-auto'
                       : 'bg-gradient-to-r from-foreground to-foreground/70 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                 }
               >

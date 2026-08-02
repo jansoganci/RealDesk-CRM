@@ -49,14 +49,14 @@ export const TableActionButtons = memo(({
   // M3 Standard: Square buttons with minimal hover
   // Mobile/Tablet: 44px for touch targets, Desktop: 40px for mouse
 
-  // View button - Gray border
-  const viewButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-gray-300 bg-transparent text-gray-700 hover:bg-gray-100 hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  // View button - muted border
+  const viewButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-border bg-transparent text-foreground hover:bg-muted hover:border-muted-foreground/40 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
-  // Edit button - Light blue border
-  const editButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-blue-300 bg-transparent text-gray-700 hover:bg-blue-50 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  // Edit button - primary border
+  const editButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-primary/30 bg-transparent text-foreground hover:bg-primary/10 hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
-  // Delete button - Red border
-  const deleteButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-red-300 bg-transparent text-gray-700 hover:bg-red-50 hover:border-red-400 hover:text-red-700 focus:outline-none focus:ring-2 focus:ring-red-300 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+  // Delete button - destructive border
+  const deleteButtonClasses = "h-11 w-11 md:h-10 md:w-10 flex items-center justify-center rounded-md border border-destructive/40 bg-transparent text-foreground hover:bg-destructive/10 hover:border-destructive hover:text-destructive focus:outline-none focus:ring-2 focus:ring-destructive/30 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
 
   return (
     <TooltipProvider>

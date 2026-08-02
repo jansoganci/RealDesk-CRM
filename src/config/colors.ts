@@ -157,18 +157,44 @@ export const COLORS = {
     text900: 'text-foreground',
   },
 
+  /**
+   * Semantic status badge tokens — one meaning per color:
+   * empty/vacant → info (teal), distinct from pending
+   * occupied/available/active/assigned → success (forest)
+   * underOffer/pending → warning (amber)
+   * sold/inactive/archived/unassigned → muted
+   * error/expired use COLORS.danger separately
+   */
   status: {
     empty: {
+      bg: 'bg-info',
+      text: 'text-info-foreground',
+      border: 'border-info/40',
+      gradient: 'bg-gradient-to-r from-info to-info/80',
+    },
+    occupied: {
+      bg: 'bg-success',
+      text: 'text-success-foreground',
+      border: 'border-success/40',
+      gradient: 'bg-gradient-to-r from-success to-success/80',
+    },
+    available: {
+      bg: 'bg-success',
+      text: 'text-success-foreground',
+      border: 'border-success/40',
+      gradient: 'bg-gradient-to-r from-success to-success/80',
+    },
+    underOffer: {
       bg: 'bg-warning',
       text: 'text-warning-foreground',
       border: 'border-warning/40',
       gradient: 'bg-gradient-to-r from-warning to-warning/80',
     },
-    occupied: {
-      bg: 'bg-info',
-      text: 'text-info-foreground',
-      border: 'border-info/40',
-      gradient: 'bg-gradient-to-r from-info to-info/80',
+    sold: {
+      bg: 'bg-muted-foreground',
+      text: 'text-primary-foreground',
+      border: 'border-border',
+      gradient: 'bg-gradient-to-r from-muted-foreground to-muted-foreground/80',
     },
     active: {
       bg: 'bg-success',
@@ -239,7 +265,9 @@ export const getPrimaryButtonClasses = () =>
 export const getSuccessButtonClasses = () =>
   `${COLORS.success.bg} text-success-foreground ${COLORS.success.hover}`;
 
-export const getStatusBadgeClasses = (status: 'empty' | 'occupied' | 'active' | 'inactive' | 'archived' | 'assigned' | 'unassigned') =>
+export type StatusBadgeKey = keyof typeof COLORS.status;
+
+export const getStatusBadgeClasses = (status: StatusBadgeKey) =>
   `${COLORS.status[status].bg} ${COLORS.status[status].text}`;
 
 export const getCardClasses = () =>

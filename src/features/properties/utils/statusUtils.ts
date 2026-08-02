@@ -9,9 +9,9 @@ export const getStatusBadgeConfig = (status: string, t: (key: string) => string)
   const statusConfig: Record<string, StatusBadgeConfig> = {
     Empty: { label: t('status.rental.empty'), className: getStatusBadgeClasses('empty') },
     Occupied: { label: t('status.rental.occupied'), className: getStatusBadgeClasses('occupied') },
-    Available: { label: t('status.sale.available'), className: 'bg-emerald-600 text-white shadow-md' },
-    'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-orange-500 text-white shadow-md' },
-    Sold: { label: t('status.sale.sold'), className: 'bg-purple-600 text-white shadow-md' },
+    Available: { label: t('status.sale.available'), className: getStatusBadgeClasses('available') },
+    'Under Offer': { label: t('status.sale.underOffer'), className: getStatusBadgeClasses('underOffer') },
+    Sold: { label: t('status.sale.sold'), className: getStatusBadgeClasses('sold') },
     Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
   };
 
@@ -40,7 +40,6 @@ export const getStatusFilterOptions = (
       { value: 'Inactive', label: t('status.inactive') },
     ];
   } else {
-    // All properties - show all statuses
     return [
       allOption,
       { value: 'Empty', label: t('status.rental.empty') },
@@ -52,4 +51,3 @@ export const getStatusFilterOptions = (
     ];
   }
 };
-

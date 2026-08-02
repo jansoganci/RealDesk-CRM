@@ -29,11 +29,11 @@ import { cn } from '@/lib/utils';
 import { useScreeningData } from './hooks/useScreeningData';
 
 const STATUS_CLASSES: Record<ScreeningStatus, string> = {
-  pending:     'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  in_review:   'bg-yellow-100 text-yellow-800',
-  approved:    'bg-emerald-100 text-emerald-800',
-  rejected:    'bg-red-100 text-red-700',
-  flagged:     'bg-orange-100 text-orange-800',
+  pending:     'bg-muted text-muted-foreground',
+  in_review:   'bg-warning/15 text-warning',
+  approved:    'bg-success/15 text-success',
+  rejected:    'bg-destructive/15 text-destructive',
+  flagged:     'bg-warning/15 text-warning',
 };
 
 function checklistProgress(s: ApplicantScreening): number {
@@ -167,7 +167,7 @@ export const ScreeningPage = () => {
               className={cn(
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                 statusFilter === s
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
               )}
             >

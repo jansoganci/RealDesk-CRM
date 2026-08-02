@@ -80,8 +80,8 @@ export const MarkAsSoldDialog = ({
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
-            <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
-              <TrendingUp className="h-5 w-5 text-white" />
+            <div className="p-2 bg-secondary rounded-lg shadow-md">
+              <TrendingUp className="h-5 w-5 text-secondary-foreground" />
             </div>
             {t('properties:markAsSold.title')}
           </DialogTitle>
@@ -128,21 +128,21 @@ export const MarkAsSoldDialog = ({
 
             {/* Commission Preview */}
             {salePrice && !isNaN(parseFloat(salePrice)) && parseFloat(salePrice) > 0 && (
-              <div className="bg-gradient-to-r from-amber-50 to-yellow-50 dark:from-slate-800/70 dark:to-slate-800/70 border border-amber-200/50 dark:border-slate-800 rounded-xl p-4">
+              <div className="bg-secondary/15 border border-secondary/40 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
                       {t('properties:markAsSold.yourCommission')}
                     </p>
-                    <p className="text-2xl font-bold text-amber-700 dark:text-amber-400">
+                    <p className="text-2xl font-bold text-secondary-foreground">
                       {formatCurrency(calculateCommission(), 'USD')}
                     </p>
                     <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
                       {t('properties:markAsSold.commissionRate')}
                     </p>
                   </div>
-                  <div className="p-3 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
-                    <TrendingUp className="h-6 w-6 text-white" />
+                  <div className="p-3 bg-secondary rounded-lg shadow-md">
+                    <TrendingUp className="h-6 w-6 text-secondary-foreground" />
                   </div>
                 </div>
               </div>
@@ -161,7 +161,7 @@ export const MarkAsSoldDialog = ({
             <Button
               type="submit"
               disabled={loading}
-              className="bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800 text-white shadow-md"
+              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md"
             >
               {loading ? t('common:saving') : t('properties:markAsSold.confirmButton')}
             </Button>

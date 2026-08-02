@@ -26,7 +26,7 @@ export const QuickAddButton = ({
         onClick={() => setDialogOpen(true)}
         variant={variant}
         size={size}
-        className={`bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white shadow-md h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm ${className}`}
+        className={`bg-secondary text-secondary-foreground hover:bg-secondary/90 shadow-md h-8 md:h-10 px-2 md:px-4 text-xs md:text-sm ${className}`}
       >
         <Zap className="mr-1.5 md:mr-2 h-3.5 w-3.5 md:h-4 md:w-4" />
         <span className="hidden sm:inline">{t('button')}</span>

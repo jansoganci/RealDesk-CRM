@@ -35,9 +35,9 @@ export function PropertyTableRow({
     const statusConfig = {
       Empty: { label: t('status.rental.empty'), className: getStatusBadgeClasses('empty') },
       Occupied: { label: t('status.rental.occupied'), className: getStatusBadgeClasses('occupied') },
-      Available: { label: t('status.sale.available'), className: 'bg-emerald-600 text-white shadow-md' },
-      'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-orange-500 text-white shadow-md' },
-      Sold: { label: t('status.sale.sold'), className: 'bg-purple-600 text-white shadow-md' },
+      Available: { label: t('status.sale.available'), className: getStatusBadgeClasses('available') },
+      'Under Offer': { label: t('status.sale.underOffer'), className: getStatusBadgeClasses('underOffer') },
+      Sold: { label: t('status.sale.sold'), className: getStatusBadgeClasses('sold') },
       Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
 
@@ -71,7 +71,7 @@ export function PropertyTableRow({
                 href={property.listing_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-blue-50 dark:hover:bg-slate-800 transition-colors text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 cursor-pointer flex-shrink-0"
+                className="inline-flex items-center justify-center p-1.5 min-w-[28px] min-h-[28px] rounded-md hover:bg-primary/10 dark:hover:bg-slate-800 transition-colors text-primary hover:text-primary/80 dark:text-primary dark:hover:text-primary/80 cursor-pointer flex-shrink-0"
                 title={t('properties:table.viewListing')}
                 onClick={(e) => e.stopPropagation()}
                 aria-label={t('properties:table.viewListing')}
@@ -204,7 +204,7 @@ export function PropertyTableRow({
               variant="secondary"
               size="sm"
               onClick={() => onAddTenant(property.id)}
-              className="text-xs bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm"
+              className="text-xs bg-success hover:bg-success/90 text-success-foreground shadow-sm"
             >
               + Tenant
             </Button>

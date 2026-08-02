@@ -42,7 +42,7 @@ export const PropertyTypeSelector = ({
           flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium transition-all
           ${
             value === 'sale'
-              ? 'bg-gradient-to-r from-amber-500 to-yellow-500 text-white shadow-md'
+              ? 'bg-secondary text-secondary-foreground shadow-md'
               : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800/70'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}

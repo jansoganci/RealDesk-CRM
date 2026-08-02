@@ -25,7 +25,6 @@ export function AnimatedTabs({
 }: AnimatedTabsProps) {
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
 
-  // Sync internal state with external defaultTab prop
   useEffect(() => {
     if (defaultTab) {
       setActiveTab(defaultTab);
@@ -52,8 +51,8 @@ export function AnimatedTabs({
             "text-foreground outline-ring",
             "focus-visible:outline-2 focus-visible:outline-offset-2",
             activeTab === tab.id
-              ? "border-blue-300"
-              : "border-gray-300 hover:text-foreground/60 hover:border-gray-400"
+              ? "border-primary/40"
+              : "border-border hover:text-foreground/60 hover:border-muted-foreground/40"
           )}
           style={{
             WebkitTapHighlightColor: "transparent",
@@ -62,14 +61,14 @@ export function AnimatedTabs({
           {activeTab === tab.id && (
             <motion.span
               layoutId={layoutId}
-              className="absolute inset-0 z-10 bg-blue-600"
+              className="absolute inset-0 z-10 bg-primary"
               style={{ borderRadius: "0.375rem" }}
               transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
             />
           )}
           <span className={cn(
             "relative z-20 flex items-center gap-2",
-            activeTab === tab.id ? "text-white" : ""
+            activeTab === tab.id ? "text-primary-foreground" : ""
           )}>
             {tab.icon && <span className="flex-shrink-0">{tab.icon}</span>}
             {tab.label}
@@ -79,4 +78,3 @@ export function AnimatedTabs({
     </div>
   );
 }
-

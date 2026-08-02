@@ -43,8 +43,8 @@ export const QuickAddDialog = ({ open, onOpenChange, onSuccess }: QuickAddDialog
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] p-0 flex flex-col overflow-hidden">
         <DialogHeader className="px-6 pt-6 pb-4 flex-shrink-0">
           <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-50">
-            <div className="p-2 bg-gradient-to-br from-amber-500 to-amber-600 rounded-lg shadow-md">
-              <Zap className="h-5 w-5 text-white" />
+            <div className="p-2 bg-secondary rounded-lg shadow-md">
+              <Zap className="h-5 w-5 text-secondary-foreground" />
             </div>
             {t('title')}
           </DialogTitle>
@@ -88,7 +88,7 @@ export const QuickAddDialog = ({ open, onOpenChange, onSuccess }: QuickAddDialog
             type="submit"
             onClick={handleSubmit}
             disabled={loading || loadingOwners}
-            className="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700"
+            className="bg-secondary text-secondary-foreground hover:bg-secondary/90"
           >
             {loading ? (
               <>

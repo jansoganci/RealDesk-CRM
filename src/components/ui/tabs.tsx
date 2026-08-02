@@ -37,7 +37,7 @@ const TabsTrigger = React.forwardRef<
       className={cn(
         'absolute inset-0 rounded-md opacity-0 blur-sm transition-opacity duration-300 pointer-events-none',
         'group-data-[state=active]:opacity-20',
-        'bg-gradient-to-r from-transparent via-blue-600 to-transparent'
+        'bg-gradient-to-r from-transparent via-primary to-transparent'
       )}
       aria-hidden="true"
     />
@@ -47,7 +47,7 @@ const TabsTrigger = React.forwardRef<
       className={cn(
         'absolute -inset-0.5 rounded-lg opacity-0 blur-md transition-opacity duration-300 pointer-events-none -z-10',
         'group-data-[state=active]:opacity-10',
-        'bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700'
+        'bg-gradient-to-r from-primary/80 via-primary to-primary/80'
       )}
       aria-hidden="true"
     />

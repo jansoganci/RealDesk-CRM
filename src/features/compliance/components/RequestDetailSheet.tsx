@@ -18,12 +18,12 @@ import { ccpaService, type DataSubjectRequest } from '@/lib/serviceProxy';
 import { cn } from '@/lib/utils';
 
 const STATUS_CLASSES: Record<string, string> = {
-  pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  in_review: 'bg-yellow-100 text-yellow-800',
-  verification_sent: 'bg-blue-100 text-blue-700',
-  processing: 'bg-amber-100 text-amber-800',
-  completed: 'bg-emerald-100 text-emerald-800',
-  denied: 'bg-red-100 text-red-700',
+  pending: 'bg-muted text-muted-foreground',
+  in_review: 'bg-warning/15 text-warning',
+  verification_sent: 'bg-info/15 text-info',
+  processing: 'bg-warning/15 text-warning',
+  completed: 'bg-success/15 text-success',
+  denied: 'bg-destructive/15 text-destructive',
 };
 
 interface RequestDetailSheetProps {
@@ -160,7 +160,7 @@ export function RequestDetailSheet({ request, open, onOpenChange, onRefresh }: R
                     <Button
                       size="sm"
                       disabled={processing}
-                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                      className="bg-success hover:bg-success/90 text-success-foreground"
                       onClick={() => handle(() => ccpaService.completeKnowRequest(request.id, notes || null))}
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />
@@ -186,7 +186,7 @@ export function RequestDetailSheet({ request, open, onOpenChange, onRefresh }: R
                     <Button
                       size="sm"
                       disabled={processing}
-                      className="bg-orange-600 hover:bg-orange-700 text-white"
+                      className="bg-warning hover:bg-warning/90 text-warning-foreground"
                       onClick={() => handle(() => ccpaService.completeOptOutRequest(request.id, notes || null))}
                     >
                       <ShieldOff className="h-4 w-4 mr-2" />
@@ -198,7 +198,7 @@ export function RequestDetailSheet({ request, open, onOpenChange, onRefresh }: R
                     <Button
                       size="sm"
                       disabled={processing}
-                      className="bg-blue-600 hover:bg-blue-700 text-white"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground"
                       onClick={() => handle(() => ccpaService.completeKnowRequest(request.id, notes || null))}
                     >
                       <CheckCircle className="h-4 w-4 mr-2" />

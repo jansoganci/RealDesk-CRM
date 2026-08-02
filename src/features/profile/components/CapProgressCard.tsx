@@ -19,7 +19,7 @@ export const CapProgressCard = ({ progress }: CapProgressCardProps) => {
   const progressTone = useMemo(() => {
     if (progress.is_capped) return 'bg-primary dark:bg-primary/100';
     if (progress.pct_to_cap >= 80) return 'bg-success dark:bg-success/150';
-    return 'bg-amber-500 dark:bg-amber-400';
+    return 'bg-warning dark:bg-warning';
   }, [progress.is_capped, progress.pct_to_cap]);
 
   return (

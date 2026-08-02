@@ -12,7 +12,7 @@ export function CompletionBanner({ onDismiss, onResume }: CompletionBannerProps)
 
   return (
     <div
-      className="fixed top-[64px] left-0 right-0 z-40 w-full bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 shadow-lg lg:left-64"
+      className="fixed top-[64px] left-0 right-0 z-40 w-full bg-secondary shadow-lg lg:left-64"
       role="banner"
       aria-label={t('completionBanner.title')}
     >
@@ -38,7 +38,7 @@ export function CompletionBanner({ onDismiss, onResume }: CompletionBannerProps)
             <Button
               size="sm"
               onClick={onResume}
-              className="h-7 sm:h-8 rounded-full bg-white px-3 sm:px-4 text-xs sm:text-sm font-semibold text-amber-700 shadow-md hover:bg-white/90 hover:text-amber-800 transition-all"
+              className="h-7 sm:h-8 rounded-full bg-white px-3 sm:px-4 text-xs sm:text-sm font-semibold text-secondary-foreground shadow-md hover:bg-white/90 transition-all"
             >
               {t('completionBanner.completeSetup')}
             </Button>

@@ -147,7 +147,7 @@ export const PhotoManagement = ({
                     type="button"
                     onClick={handleUpload}
                     disabled={uploading}
-                    className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
+                    className="bg-primary text-primary-foreground hover:bg-primary/90"
                   >
                     {uploading
                       ? t('management.uploading', { progress: uploadProgress })

@@ -147,7 +147,7 @@ export const DepositTrackerPage = () => {
               className={cn(
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-all',
                 statusFilter === s
-                  ? 'bg-blue-600 text-white shadow-sm'
+                  ? 'bg-primary text-primary-foreground shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
               )}
             >

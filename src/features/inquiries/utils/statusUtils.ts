@@ -2,18 +2,21 @@ import { COLORS } from '@/config/colors';
 
 /**
  * Badge styles for lead / inquiry pipeline status (`property_inquiries.status`).
+ * Mapping: new/matched → primary · contacted → warning · qualified → info ·
+ * active → success · under_contract → warning · closed_won/converted → success ·
+ * closed_lost → destructive · closed → muted
  */
 export function getLeadStatusBadgeClasses(status: string): string {
   const statusColors: Record<string, string> = {
-    new: `${COLORS.primary.bg} ${COLORS.text.white}`,
-    contacted: `${COLORS.warning.bg} ${COLORS.text.white}`,
-    qualified: 'bg-purple-600 text-white',
-    active: `${COLORS.success.bg} ${COLORS.text.white}`,
-    matched: `${COLORS.primary.bg} ${COLORS.text.white}`,
-    under_contract: 'bg-orange-600 text-white',
-    closed_won: 'bg-emerald-600 text-white',
-    closed_lost: 'bg-red-600 text-white',
-    converted: 'bg-teal-700 text-white',
+    new: `${COLORS.primary.bg} text-primary-foreground`,
+    contacted: `${COLORS.warning.bg} text-warning-foreground`,
+    qualified: `${COLORS.info.bg} text-info-foreground`,
+    active: `${COLORS.success.bg} text-success-foreground`,
+    matched: `${COLORS.primary.bg} text-primary-foreground`,
+    under_contract: `${COLORS.warning.bg} text-warning-foreground`,
+    closed_won: `${COLORS.success.bg} text-success-foreground`,
+    closed_lost: `${COLORS.danger.bg} text-destructive-foreground`,
+    converted: `${COLORS.success.bg} text-success-foreground`,
     closed: `${COLORS.status.inactive.bg} ${COLORS.text.white}`,
   };
   return statusColors[status] || `${COLORS.status.inactive.bg} ${COLORS.text.white}`;

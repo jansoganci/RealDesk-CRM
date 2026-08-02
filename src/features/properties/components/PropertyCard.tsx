@@ -47,9 +47,9 @@ export function PropertyCard({
       Empty: { label: t('status.rental.empty'), className: getStatusBadgeClasses('empty') },
       Occupied: { label: t('status.rental.occupied'), className: getStatusBadgeClasses('occupied') },
       // Sale statuses
-      Available: { label: t('status.sale.available'), className: 'bg-emerald-600 text-white shadow-md' },
-      'Under Offer': { label: t('status.sale.underOffer'), className: 'bg-orange-500 text-white shadow-md' },
-      Sold: { label: t('status.sale.sold'), className: 'bg-purple-600 text-white shadow-md' },
+      Available: { label: t('status.sale.available'), className: getStatusBadgeClasses('available') },
+      'Under Offer': { label: t('status.sale.underOffer'), className: getStatusBadgeClasses('underOffer') },
+      Sold: { label: t('status.sale.sold'), className: getStatusBadgeClasses('sold') },
       // Shared status
       Inactive: { label: t('status.inactive'), className: getStatusBadgeClasses('inactive') },
     };
@@ -72,8 +72,8 @@ export function PropertyCard({
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2.5 mb-1.5">
-            <div className="p-1.5 bg-blue-600 rounded-lg shadow-lg">
-              <Building2 className="h-4 w-4 text-white" />
+            <div className="p-1.5 bg-primary rounded-lg shadow-lg">
+              <Building2 className="h-4 w-4 text-primary-foreground" />
             </div>
             <span className="font-bold text-base text-slate-900 dark:text-slate-100 truncate">
               {property.address}
@@ -83,7 +83,7 @@ export function PropertyCard({
                 href={property.listing_url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-blue-50 transition-all text-blue-600 hover:text-blue-700 cursor-pointer hover:shadow-md"
+                className="inline-flex items-center justify-center p-1.5 rounded-lg hover:bg-primary/10 transition-all text-primary hover:text-primary/80 cursor-pointer hover:shadow-md"
                 title={t('properties:table.viewListing')}
                 onClick={(e) => e.stopPropagation()}
               >
@@ -132,7 +132,7 @@ export function PropertyCard({
           </div>
         ) : property.activeTenant ? (
           <div className="flex items-center gap-2.5 text-sm">
-            <User className="h-4 w-4 text-emerald-600 flex-shrink-0" />
+            <User className="h-4 w-4 text-success flex-shrink-0" />
             <span className="text-slate-700 dark:text-slate-200 font-medium">
               <span className="text-slate-500 dark:text-slate-400 mr-1.5">Tenant:</span>
               {property.activeTenant.name}
@@ -148,12 +148,12 @@ export function PropertyCard({
         {property.status !== 'Inactive' && (() => {
           if (isRental && property.activeContract?.rent_amount) {
             return (
-              <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200/50 shadow-sm">
+              <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-blue-600" />
+                  <DollarSign className="h-4 w-4 text-primary" />
                   <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">Monthly Rent:</span>
                 </div>
-                <span className="font-bold text-blue-700">
+                <span className="font-bold text-primary">
                   {formatCurrency(
                     convertCurrency(
                       property.activeContract.rent_amount,
@@ -215,7 +215,7 @@ export function PropertyCard({
 
         {property.photos && property.photos.length > 0 && (
           <div className="flex items-center gap-2 text-sm">
-            <Images className="h-4 w-4 text-blue-600 flex-shrink-0" />
+            <Images className="h-4 w-4 text-primary flex-shrink-0" />
             <span className="text-slate-600 dark:text-slate-300 font-medium">
               {t('photos', { count: property.photos.length })} photo{property.photos.length > 1 ? 's' : ''}
             </span>
@@ -254,7 +254,7 @@ export function PropertyCard({
             variant="secondary"
             size="default"
             onClick={() => onAddTenant(property.id)}
-            className="w-full justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold transition-all shadow-md hover:shadow-lg"
+            className="w-full justify-center bg-success hover:bg-success/90 text-success-foreground font-semibold transition-all shadow-md hover:shadow-lg"
           >
             + {t('addTenantButton')}
           </Button>

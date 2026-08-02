@@ -105,7 +105,7 @@ export class CookieErrorBoundary extends Component<
                       href={cookiePolicyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                      className="underline text-primary hover:text-primary/80 transition-colors"
                     >
                       {i18n.t('cookie:banner.cookiePolicy')}
                     </a>
@@ -114,7 +114,7 @@ export class CookieErrorBoundary extends Component<
                       href={privacyPolicyLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="underline text-blue-600 hover:text-blue-700 transition-colors"
+                      className="underline text-primary hover:text-primary/80 transition-colors"
                     >
                       {i18n.t('cookie:banner.privacyPolicy')}
                     </a>

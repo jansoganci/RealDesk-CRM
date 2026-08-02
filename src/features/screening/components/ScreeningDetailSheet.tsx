@@ -24,11 +24,11 @@ import type { ApplicantScreening, ScreeningStatus } from '@/lib/serviceProxy';
 import { cn } from '@/lib/utils';
 
 const STATUS_CLASSES: Record<ScreeningStatus, string> = {
-  pending:     'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  in_review:   'bg-yellow-100 text-yellow-800',
-  approved:    'bg-emerald-100 text-emerald-800',
-  rejected:    'bg-red-100 text-red-700',
-  flagged:     'bg-orange-100 text-orange-800',
+  pending:     'bg-muted text-muted-foreground',
+  in_review:   'bg-warning/15 text-warning',
+  approved:    'bg-success/15 text-success',
+  rejected:    'bg-destructive/15 text-destructive',
+  flagged:     'bg-warning/15 text-warning',
 };
 
 interface ScreeningDetailSheetProps {

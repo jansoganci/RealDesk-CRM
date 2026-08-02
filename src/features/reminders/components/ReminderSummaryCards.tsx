@@ -70,7 +70,7 @@ export function ReminderSummaryCards({
       label: t('summary.pendingActions'),
       description: t('summary.pendingActionsDescription'),
       icon: <CheckCircle2 className="h-5 w-5 text-white" />,
-      iconColor: 'bg-gradient-to-br from-amber-500 via-amber-600 to-amber-700',
+      iconColor: 'bg-secondary',
       trend: metrics.trends?.pendingActions,
     },
   ];

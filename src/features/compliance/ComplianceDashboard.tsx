@@ -20,12 +20,12 @@ import { type DataSubjectRequest, type RequestStatus } from '@/lib/serviceProxy'
 import { cn } from '@/lib/utils';
 
 const STATUS_CLASSES: Record<RequestStatus, string> = {
-  pending: 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200',
-  in_review: 'bg-yellow-100 text-yellow-800',
-  verification_sent: 'bg-blue-100 text-blue-700',
-  processing: 'bg-amber-100 text-amber-800',
-  completed: 'bg-emerald-100 text-emerald-800',
-  denied: 'bg-red-100 text-red-700',
+  pending: 'bg-muted text-muted-foreground',
+  in_review: 'bg-warning/15 text-warning',
+  verification_sent: 'bg-info/15 text-info',
+  processing: 'bg-warning/15 text-warning',
+  completed: 'bg-success/15 text-success',
+  denied: 'bg-destructive/15 text-destructive',
 };
 
 const ALL_STATUSES: Array<RequestStatus | 'all'> = [
@@ -101,7 +101,7 @@ export function ComplianceDashboard() {
                   className={cn(
                     'px-3 py-1.5 rounded-lg text-xs font-semibold transition-all',
                     statusFilter === s
-                      ? 'bg-blue-600 text-white shadow-sm'
+                      ? 'bg-primary text-primary-foreground shadow-sm'
                       : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
                   )}
                 >

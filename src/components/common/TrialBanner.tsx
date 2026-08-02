@@ -29,7 +29,7 @@ const getBannerConfig = (daysRemaining: number | null): BannerConfig => {
       icon: <Sparkles className="h-4 w-4" />,
       titleKey: 'stickyBanner.title.default',
       messageKey: 'stickyBanner.message.default',
-      gradient: 'from-blue-600 via-blue-500 to-indigo-500',
+      gradient: 'from-primary via-primary/90 to-primary/80',
       isDismissible: true,
     };
   }
@@ -41,7 +41,7 @@ const getBannerConfig = (daysRemaining: number | null): BannerConfig => {
       icon: <Clock className="h-4 w-4" />,
       titleKey: 'stickyBanner.title.warning',
       messageKey: 'stickyBanner.message.warning',
-      gradient: 'from-amber-500 via-orange-500 to-amber-600',
+      gradient: 'from-warning via-warning to-warning/80',
       isDismissible: true,
     };
   }
@@ -53,7 +53,7 @@ const getBannerConfig = (daysRemaining: number | null): BannerConfig => {
       icon: <AlertTriangle className="h-4 w-4" />,
       titleKey: 'stickyBanner.title.urgent',
       messageKey: 'stickyBanner.message.urgent',
-      gradient: 'from-orange-500 via-red-500 to-orange-600',
+      gradient: 'from-destructive via-destructive to-destructive/80',
       isDismissible: true,
     };
   }
@@ -64,7 +64,7 @@ const getBannerConfig = (daysRemaining: number | null): BannerConfig => {
     icon: <AlertCircle className="h-4 w-4 animate-pulse" />,
     titleKey: 'stickyBanner.title.critical',
     messageKey: 'stickyBanner.message.critical',
-    gradient: 'from-red-600 via-rose-500 to-red-600',
+    gradient: 'from-destructive via-destructive to-destructive/90',
     isDismissible: false,
   };
 };
@@ -189,7 +189,7 @@ export const TrialBanner = () => {
             <Button
               size="sm"
               onClick={handleViewPlans}
-              className="h-7 sm:h-8 rounded-full bg-white px-3 sm:px-4 text-xs sm:text-sm font-semibold text-blue-600 shadow-md hover:bg-white/90 hover:text-blue-700 transition-all"
+              className="h-7 sm:h-8 rounded-full bg-white px-3 sm:px-4 text-xs sm:text-sm font-semibold text-primary shadow-md hover:bg-white/90 hover:text-primary/80 transition-all"
             >
               {t('stickyBanner.cta')}
             </Button>

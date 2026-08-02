@@ -84,12 +84,12 @@ export function SaleContractsList() {
       | 'cancelled'
       | 'incomplete';
     const variants: Record<string, { label: string; className: string }> = {
-      draft: { label: t('dealStatus.draft'), className: 'bg-muted text-foreground/80' },
-      active: { label: t('dealStatus.active'), className: 'bg-primary text-primary' },
-      under_contract: { label: t('dealStatus.under_contract'), className: 'bg-indigo-100 text-indigo-800' },
-      closed: { label: t('dealStatus.closed'), className: 'bg-green-100 text-green-800' },
-      cancelled: { label: t('dealStatus.cancelled'), className: 'bg-red-100 text-red-700' },
-      incomplete: { label: t('dealStatus.incomplete'), className: 'bg-amber-100 text-amber-800' },
+      draft: { label: t('dealStatus.draft'), className: 'bg-muted text-muted-foreground' },
+      active: { label: t('dealStatus.active'), className: 'bg-success text-success-foreground' },
+      under_contract: { label: t('dealStatus.under_contract'), className: 'bg-warning text-warning-foreground' },
+      closed: { label: t('dealStatus.closed'), className: 'bg-muted-foreground text-primary-foreground' },
+      cancelled: { label: t('dealStatus.cancelled'), className: 'bg-destructive text-destructive-foreground' },
+      incomplete: { label: t('dealStatus.incomplete'), className: 'bg-warning/15 text-warning' },
     };
     const v = variants[key] ?? variants.active;
     return <Badge className={v.className}>{v.label}</Badge>;
@@ -97,11 +97,11 @@ export function SaleContractsList() {
 
   const getStatusBadge = useCallback((status: string) => {
     const variants: Record<string, { label: string; className: string }> = {
-      draft: { label: t('status.draft'), className: 'bg-yellow-100 text-yellow-700' },
-      final: { label: t('status.final'), className: 'bg-green-100 text-green-700' },
-      signed: { label: t('status.signed'), className: 'bg-primary text-primary' },
+      draft: { label: t('status.draft'), className: 'bg-warning/15 text-warning' },
+      final: { label: t('status.final'), className: 'bg-success/15 text-success' },
+      signed: { label: t('status.signed'), className: 'bg-success text-success-foreground' },
       archived: { label: t('status.archived'), className: 'bg-muted text-muted-foreground' },
-      cancelled: { label: t('status.cancelled'), className: 'bg-red-100 text-red-700' },
+      cancelled: { label: t('status.cancelled'), className: 'bg-destructive/15 text-destructive' },
     };
     const v = variants[status] || variants.draft;
     return <Badge className={v.className}>{v.label}</Badge>;
