@@ -315,148 +315,169 @@ lint/typecheck/test → continue Phase 3 immediately.
 
 ### P3.2 — Rent contracts list
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `Contracts.tsx` (+ list-only children)
+**Status:** [x] Done · **Utility hits:** after → 0 (`blue|slate|gray` semantic utilities)  
+**Files:** `Contracts.tsx` (+ list-only children)  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.3 — Rent create / edit forms
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** create/edit forms, form-sections, AddressInput, FixturesSelector, ConfirmationDialog, ImportBanner, PdfActionButtons, ContractStatusBadge
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** create/edit forms, form-sections, AddressInput, FixturesSelector, ConfirmationDialog, ImportBanner, PdfActionButtons, ContractStatusBadge  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.4 — Rent import wizard
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `src/features/contracts/import/**`
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** `src/features/contracts/import/**`  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.5 — Lease detail
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** LeaseDetail + lease detail components (contracts `KeyDatesCard` only)
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** LeaseDetail + lease detail components (contracts `KeyDatesCard` only)  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.6 — Lease wizard shell
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** LeaseWizardPage, LeaseWizard, LeaseWizardStepContent
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** LeaseWizardPage, LeaseWizard, LeaseWizardStepContent  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.7 — Lease wizard steps
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `leaseWizard/steps/*`
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** `leaseWizard/steps/*`  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.8 — Purchase wizard shell
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** PurchaseWizardPage, PurchaseWizard, PurchaseWizardStepContent
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** PurchaseWizardPage, PurchaseWizard, PurchaseWizardStepContent  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.9 — Purchase wizard steps
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `purchaseWizard/steps/*`
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** `purchaseWizard/steps/*`  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.10 — Purchase contract detail
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** PurchaseContractDetailPage/View + contracts PurchaseDetailView if distinct
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** PurchaseContractDetailPage/View + contracts PurchaseDetailView if distinct  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.11 — Sale contracts
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `contractsSale/*`
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** `contractsSale/*`  
+**Commit:** `9645b85`
 
 ---
 
 ### P3.12 — Remaining contracts shared chrome
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** leftover dirty `contracts/components/*` only
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** leftover dirty `contracts/components/*` only  
+**Commit:** `d92c95e`
 
 ---
 
 ### P3.13 — Finance shell
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** Finance, FinanceDashboard, FinanceHeader, FinanceFiltersBar, CurrencySelector
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** Finance, FinanceDashboard, FinanceHeader, FinanceFiltersBar, CurrencySelector  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.14 — Finance overview / summary
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.15 — Finance transactions
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.16 — Finance recurring
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.17 — Finance commissions
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.18 — Finance charts
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-Keep series diversity.
+**Status:** [x] Done · **Utility hits:** after → 0  
+Keep series diversity.  
+**Commit:** `bf91fa7`
 
 ---
 
 ### P3.19 — Deals list
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _  
-**Files:** `Deals.tsx`
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Files:** `Deals.tsx`  
+**Commit:** `dac5f17`
 
 ---
 
 ### P3.20 — Deal detail shell
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `dac5f17`
 
 ---
 
 ### P3.21 — Deal panels — milestones / contingencies / offers
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `dac5f17`
 
 ---
 
 ### P3.22 — Deal panels — parties / docs / amendments / commission / timeline
 
-**Status:** [ ] Pending · **Utility hits:** before _ → after _
+**Status:** [x] Done · **Utility hits:** after → 0  
+**Commit:** `dac5f17`
 
 ---
 
 ### P3.23 — Phase 3 + final gate
 
 **Status:** [x] Done  
-**Progress note:** lint/typecheck/test(163)/build pass. Planned scope complete; deferred surfaces (Properties, Reminders, Auth/marketing, Screening, Deposits, Team/Org, Onboarding, Billing subscribe, Compliance, Landing redesign, duplicate-component cleanup) inherit foundation styling but retain unmigrated raw utility classes — tracked separately.
+**Progress note:** lint/typecheck/test(163)/build pass. P3.2–P3.22 were executed in commits `d92c95e` / `9645b85` / `bf91fa7` / `dac5f17`; checkbox rows below were left Pending until doc sync (2026-08-02). Re-verified: `contracts` + `contractsSale` + `finance` = **0** raw `blue|slate|gray` utility hits; `deals` cleared remaining `divide-slate-*` (was 2). Deferred surfaces (Properties, Reminders, Auth/marketing, Screening, Deposits, Team/Org, Onboarding, Billing subscribe, Compliance, Landing redesign, duplicate-component cleanup) inherit foundation styling but retain unmigrated raw utility classes — tracked separately.
 
 **Note:** Deals commit `dac5f17` also included pre-existing dirty WIP under `src/features/deals/` that was already modified on `main` before this rebrand (e.g. `EarningAgentSelect.tsx`). Separate from token migration — review that diff if unintended.
 

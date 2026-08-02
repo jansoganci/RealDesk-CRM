@@ -361,7 +361,7 @@ function DealDetailBody({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <dl className="divide-y divide-slate-100 dark:divide-slate-800">
+              <dl className="divide-y divide-border">
                 {deal.financing_type && (
                   <DetailRow label={t('fields.financingType')}>
                     {t(`financing.${deal.financing_type}`, {
