@@ -1,6 +1,6 @@
 # Closewell UI Rebrand — Implementation Plan
 
-**Status:** Planned scope complete — foundation + Phases 1–3 on `main`  
+**Status:** Planned scope complete — foundation + Phases 1–3 + Round 2 audit fixes on `main`
 **Created:** 2026-08-02  
 **Updated:** 2026-08-02  
 **Source of truth:** [UI_REBRAND_PLAN.md](./UI_REBRAND_PLAN.md) → Decisions Made  
@@ -10,7 +10,9 @@
 
 **Page-level content migration** (raw `blue-*` / `slate-*` / `gray-*` → semantic tokens) is **deferred** for:
 
-Properties, Reminders, Auth/marketing pages, Screening, Deposits, Team/Org, Onboarding, Billing subscribe, Compliance, Landing visual redesign, and duplicate-component cleanup (KeyDatesCard / MemberCard / StatusBadge consolidation).
+Properties, Reminders, Screening, Deposits, Team/Org internals, Onboarding, Billing subscribe, Compliance, Landing visual redesign, and duplicate-component cleanup (KeyDatesCard / MemberCard / StatusBadge consolidation).
+
+Round 2 explicitly brought **Auth/Accept Invite, Inquiries, Owners, Tenants, and Quick Add** into completed page-level scope after the independent audit found they were missed or ambiguously deferred.
 
 These surfaces are **not** “untouched.” F1 (CSS vars), F2 (Inter), F3 (`colors.ts` wrappers), F4 (shared `Button`), and F6 (Sidebar/Navbar/MainLayout/PageContainer) are **global**. Every page that uses shared primitives/layout **automatically inherits** new brand colors, font, and shell from Day 1. They will **look brand-correct** from the foundation pass; they simply will not yet have had their **internal** raw Tailwind utility classes migrated to semantic tokens. That raw-utility cleanup is tracked separately for a follow-up plan.
 
@@ -69,7 +71,7 @@ These surfaces are **not** “untouched.” F1 (CSS vars), F2 (Inter), F3 (`colo
 | Info | `bg-info`, `text-info` |
 | Warning | `bg-warning`, `text-warning` |
 | Danger | `destructive` / red — unchanged |
-| Chart categorical hex | leave unless leftover brand-blue theme |
+| Chart categorical color | resolve `--chart-*` / semantic CSS variables through `useChartColors`; do not duplicate hex/RGB palettes in TypeScript |
 
 ---
 
@@ -126,7 +128,7 @@ Also retarget `.gradient-primary` / `.gradient-secondary` off blue/emerald.
 ## F3 — Thin `colors.ts` wrapper (no parallel palette)
 
 **Status:** [x] Done  
-**Progress note:** Rewrote `colors.ts` as semantic-token wrappers; fixed 2 call sites that used `.dark` as legacy class fragments (PhotoUpload, ReminderBadge). lint+typecheck pass.
+**Progress note:** Rewrote `colors.ts` as semantic-token wrappers; Round 2 removed the remaining hex fields and the misleading `COLORS.text.white` helper, then converted every call site to its actual background foreground token. Regression tests enforce the no-hex boundary and property-status mapping. lint+typecheck/test/build pass.
 
 **Files:** `src/config/colors.ts` only
 
@@ -488,3 +490,50 @@ Keep series diversity.
 See table at top. No further product input required.
 
 **Autonomous execution authorized** — no inter-phase human gates (Fix 3).
+
+---
+
+# Part 4 — Round 2 audit-driven fixes
+
+## R2.1 — Dashboard + Profile + Leads audit cleanup
+
+**Status:** [x] Done
+**Scope:** 27 files; removed remaining raw palette utilities and malformed opacity/border classes while preserving semantic error/warning/info/success meanings.
+**Commit:** `8fe8c92`
+
+## R2.2 — Auth and Accept Invite
+
+**Status:** [x] Done
+**Scope:** Login, Register, callbacks, email confirmation/change, forgot/reset password, and Accept Invite. Raw palette/white hits in scope: after → 0.
+**Commit:** `0d2b211`
+
+## R2.3 — Contrast, foreground helpers, and status mapping
+
+**Status:** [x] Done
+**Scope:** Corrected translucent success/warning badge foregrounds; adjusted destructive light/dark tokens; removed `COLORS.text.white` and all `colors.ts` hex fields; fixed all remaining helper call sites. Locked property meanings as empty→warning, occupied→info, available→success.
+**Regression coverage:** `src/config/__tests__/colors.test.ts` checks the mapping and prevents a parallel hex authority.
+**Commit:** `26d3f1b`
+
+## R2.4 — Finance theme-aware charts
+
+**Status:** [x] Done
+**Scope:** Added `useChartColors` to resolve active CSS variables for Chart.js/Recharts; removed fixed hex/RGB palettes and remaining raw Finance utilities; corrected solid-primary/pale-card foreground mismatches. Raw palette and hardcoded chart-color hits in Finance: after → 0.
+**Commit:** `ff9d27c`
+
+## R2.5 — Inquiries, Owners, Tenants, and Quick Add
+
+**Status:** [x] Done
+**Scope:** Finished missed Inquiries and Owners call sites; migrated tenant steppers/cards/actions and Quick Add shells/sections. Raw palette/white hits in the completed directories: after → 0.
+**Commits:** `26d3f1b`, `49c1733`
+
+## R2.6 — Documentation reconciliation
+
+**Status:** [x] Done
+**Scope:** Updated the plan from its pre-rebrand inventory snapshot to the implemented architecture; documented the true deferred boundary, status mapping, audit findings, fixes, and verification evidence.
+
+## R2.7 — Verification and visual smoke
+
+**Status:** [x] Done
+**Automated gate:** lint, typecheck, tests (167), build, and translation audit pass after every Round 2 batch. The only build warning is the accepted large-chunk warning.
+**Visual evidence:** Dashboard and Finance Analytics were inspected in light/dark; Finance SVG series resolved active CSS-token HSL values and remained visible on navy cards. Register, Forgot Password, Reset Password, and Accept Invite states were inspected; no horizontal overflow or app console errors appeared. Rendered status-badge contrast samples measured 5.00:1–7.53:1 (success/info/warning), above the 4.5:1 AA target.
+**Unrelated observation:** Invalid Accept Invite currently exposes untranslated fallback keys (`backToHome`, `needHelp`, `contactSupport`). Styling is correct; localization is separate follow-up scope.

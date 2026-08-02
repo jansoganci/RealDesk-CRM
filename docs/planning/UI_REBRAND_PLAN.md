@@ -1,6 +1,6 @@
 # Closewell UI Rebrand Plan
 
-**Status:** Planned scope complete (foundation + Phases 1–3 executed on `main`)  
+**Status:** Planned scope complete; Round 2 audit fixes complete on `main`
 **Created:** 2026-08-02  
 **Updated:** 2026-08-02  
 **Source:** Full UI/design-system inventory audit (2026-08-02, read-only)  
@@ -26,32 +26,31 @@
 
 **Do not replace** this stack (no daisyUI swap, no alternate component library). Rebrand work should extend tokens and usage patterns on top of it.
 
-### Three parallel color systems
+### Color system after implementation
 
-1. **shadcn CSS variables** (`src/index.css` + `tailwind.config.js`)  
-   Still documented and valued as “Modern Blue & Emerald”: `--primary` ≈ blue-600 `#2563EB`, `--secondary` ≈ emerald-600, `--accent` ≈ orange-500. Semantic Tailwind names (`bg-primary`, etc.) exist but are lightly used (~33 hits for `*-primary` vs hundreds of raw palette utilities).
+1. **CSS variables are authoritative** (`src/index.css` + `tailwind.config.js`)
+   Closewell navy/gold and the success/info/warning/destructive roles are defined once as light/dark CSS variables and exposed through semantic Tailwind utilities.
 
-2. **`src/config/colors.ts` helper layer**  
-   String-class tokens (`bg-blue-600`, status/dashboard helpers). Imported in ~96 files. Used alongside (not instead of) raw utilities. `getStatusBadgeClasses` is the main helper in active use; primary/card class helpers are thin.
+2. **`src/config/colors.ts` is a thin wrapper**
+   It composes semantic class names only. It contains no independent hex values, and a regression test enforces that boundary.
 
-3. **Raw Tailwind utilities in components**  
-   Rough order-of-magnitude off-token usage: `slate-*` ~1757, `gray-*` ~757, `blue-*` ~644, `emerald-*` ~184 — **~3000+** palette utility hits. App UI is mostly painted with these, not with a single semantic token API.
+3. **Raw Tailwind utilities are contained, not globally eliminated**
+   All Round 1 areas plus the Round 2 audit areas (Auth, Dashboard, Profile, Leads/Inquiries, Finance, Owners, Tenants, Quick Add) have been migrated. Raw palette utilities remain in explicitly deferred surfaces such as Properties, Reminders, Screening, Deposits, Team/Org internals, Onboarding, Billing, Compliance, and landing visual CSS. Those are follow-up scope; they do not change the semantic-token source of truth.
 
-### Closewell navy / gold today
+### Closewell navy / gold
 
 | Where | What |
 |---|---|
 | Brand assets | Logos / icons under `public/brand/`, `public/icons/`; PWA `theme_color` `#0D1B2A` |
-| Landing | Ad-hoc CSS (`Hero.css`, `landing-shared.css`): navy ≈ `#0c1829`, gold ≈ `#c8a96e`, cream `#f0ece4` |
-| App chrome | Sidebar header `bg-[#0D1B2A]` + Closewell logo only |
-
-**Not present:** reusable Closewell navy/gold entries in `tailwind.config.js`, CSS vars, or `colors.ts`. Landing navy/gold hex values are also **not identical** to `#0D1B2A`.
+| Landing | Landing-specific CSS remains visually independent; Hero variables are prefixed `--hero-*` so they cannot collide with app tokens |
+| App | `--primary` is Deep Navy in light mode and Warm Gold in dark mode; `--secondary` / `--accent` are Warm Gold |
+| Semantic accents | Forest success, teal info, warm-amber warning, and contrast-correct destructive tokens |
 
 ### Typography today
 
 | Concern | Finding |
 |---|---|
-| Body | `index.css` declares `Inter, system-ui, …` but **Inter is never loaded** from Google Fonts (or elsewhere) → effective body face is the system stack |
+| Body | Inter 400–700 is loaded and used for in-app UI |
 | Marketing | Instrument Serif loaded in `index.html`; used via `.ld-serif` / Hero CSS on landing only |
 | Tailwind | No `fontFamily` theme extension |
 
@@ -71,7 +70,7 @@
 
 ### Design docs gap
 
-`docs/design/claude.md` still describes the older blue/emerald RealDesk world (and outdated product facts). It does **not** document the three color systems, Closewell assets without tokens, or current routes. Treat inventory + this plan as the working UI baseline until that doc is refreshed after decisions.
+This plan and [UI_REBRAND_IMPLEMENTATION.md](./UI_REBRAND_IMPLEMENTATION.md) record the implemented token architecture and rollout boundary. `docs/design/claude.md` is broader historical guidance and should not override the token source of truth in `src/index.css`.
 
 ---
 
@@ -98,7 +97,7 @@ Found during the 2026-08-02 audit. Items marked **rebrand pass** are in scope wh
 
 ## Decisions Made
 
-Do not implement until explicit `APPROVE`. Rows below are the source of truth.
+Historical decision record. Implementation was approved and completed on `main`; rows below remain the source of truth for the chosen design direction.
 
 | Date | Decision ID | Choice | Notes |
 |---|---|---|---|
@@ -126,3 +125,7 @@ Do not implement until explicit `APPROVE`. Rows below are the source of truth.
 | 2026-08-02 | Implementation plan fixes 1–4 | Applied | Scope inheritance clarified; success/info/warning CSS-first; no human phase gates; per-task status + utility hit counts. Execution started on `main`. |
 | 2026-08-02 | Foundation F1–F9 | Complete | CSS vars + Inter + colors.ts + Button + StatCard + shell + shadows + dead shadcn removal; lint/typecheck/test/build green. |
 | 2026-08-02 | Phases 1–3 page migration | Complete | Timeline/Calendar/Hub → Dashboard/Leads/Profile → Contracts/Finance/Deals. Planned scope complete; deferred surfaces inherit foundation but retain unmigrated raw utilities — tracked separately. |
+| 2026-08-02 | Round 2 independent audit | Findings confirmed | Found contrast failures in translucent badges, a mode-dependent `COLORS.text.white` bug, fixed Finance chart colors, status-map documentation drift, and missed Profile/Inquiries plus ambiguous Owners/Tenants/Quick Add surfaces. |
+| 2026-08-02 | Round 2 foundation fixes | Complete | Corrected badge/alert foregrounds and destructive tokens; removed `COLORS.text.white`; removed all hex values from `colors.ts`; locked empty→warning, occupied→info, available→success with tests. Commits `8fe8c92`, `26d3f1b`. |
+| 2026-08-02 | Round 2 page fixes | Complete | Auth/Accept Invite, Finance charts, Inquiries, Owners, Tenants, and Quick Add migrated to semantic tokens. Finance canvas/SVG colors now resolve live CSS variables for light/dark mode. Commits `0d2b211`, `ff9d27c`, `49c1733`. |
+| 2026-08-02 | Round 2 verification | Complete | Per-batch lint, typecheck, tests, build, and translation audit passed; final browser light/dark smoke pass tracked in the implementation plan. |
