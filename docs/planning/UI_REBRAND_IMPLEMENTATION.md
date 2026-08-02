@@ -145,93 +145,43 @@ Also retarget `.gradient-primary` / `.gradient-secondary` off blue/emerald.
 
 ## F4 — Shared `Button` variants
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Files:** `src/components/ui/button.tsx`
-
-| Variant | Target |
-|---|---|
-| `default` | `bg-primary text-primary-foreground` |
-| `secondary` | `bg-secondary text-secondary-foreground` |
-| `ghost` | gold-tint hover |
-| `link` | `text-primary` |
-| `outline` | border/background tokens |
-| `destructive` | unchanged |
-
-**Done when:** No hardcoded `blue-600` / `emerald-600` / `orange-500` in variants.
-
-**Verify:** lint/typecheck.
+**Status:** [x] Done  
+**Progress note:** Button variants use primary/secondary/accent/destructive tokens; removed blue/emerald/orange hardcodes. lint+typecheck pass.
 
 ---
 
 ## F5 — Fix `StatCard` navy/gold mapping
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Files:** `src/components/dashboard/StatCard.tsx`
-
-**Done when:** `navy`/`gold` props map to Closewell navy/gold (via tokenized `COLORS.dashboard` or semantic classes).
-
-**Verify:** lint/typecheck.
+**Status:** [x] Done  
+**Progress note:** navy/gold/emerald/blue map via COLORS.dashboard tokens; amber→warning, purple→info; card chrome semantic. lint+typecheck pass.
 
 ---
 
 ## F6 — App shell
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Files:** `Sidebar.tsx`, `Navbar.tsx`, `MainLayout.tsx`, `PageContainer.tsx`, `PageHeader.tsx` (under `src/components/layout/`)
-
-**Done when:** Active nav uses primary (not `blue-600`); shell neutrals semantic; header `bg-primary` preferred over raw hex.
-
-**Verify:** lint/typecheck. Visual note: dashboard shell.
-
-**Risk:** Unrelated local WIP may exist in `Sidebar.tsx` — only change rebrand classes; preserve other WIP behavior.
+**Status:** [x] Done  
+**Progress note:** Sidebar/Navbar/MainLayout/PageHeader migrated to semantic tokens; logo strip stays `#0D1B2A` for logo contrast (dark primary is gold). Active nav = primary. lint+typecheck pass.
 
 ---
 
 ## F7 — Tailwind shadows / safelist cleanup
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Files:** `tailwind.config.js` (shadows + safelist; success/info/warning already added in F1)
-
-**Done when:** No blue-600 RGB in luxury/emerald shadow defs.
-
-**Verify:** lint/typecheck.
+**Status:** [x] Done  
+**Progress note:** Luxury shadows use navy RGBA; emerald shadows use forest; safelist updated off blue/emerald. lint+typecheck pass.
 
 ---
 
 ## F8 — Remove dead shadcn modules
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Pre-check zero usage, then delete if still zero:**
-
-`slider`, `scroll-area`, `resizable`, `pagination`, `collapsible`, `carousel`, `breadcrumb`, `aspect-ratio` (under `src/components/ui/`)
-
-**Verify:** `npm run lint && npm run typecheck && npm run test && npm run build`
+**Status:** [x] Done  
+**Progress note:** Re-verified zero feature imports; deleted slider, scroll-area, resizable, pagination, collapsible, carousel, breadcrumb, aspect-ratio.
 
 ---
 
 ## F9 — Foundation verification gate
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
-
-**Run:** `npm run lint && npm run typecheck && npm run test && npm run build`
-
-**Visual smoke (agent-recorded, no human gate):**
-
-- Planned-scope: `/login`, `/dashboard`, `/contracts`, dark toggle once  
-- **Deferred surfaces inherit foundation** — quick render check: `/properties`, `/reminders`, `/screening`, `/deposits`, `/team`, `/onboarding`, `/compliance`, `/profile` (auth shell already via login)
-
-**Done when:** Commands pass; smoke notes recorded. Proceed immediately to Phase 1 (no approval stop).
+**Status:** [x] Done  
+**Progress note:** lint/typecheck/test (163)/build all pass. Foundation live globally — deferred pages inherit tokens. Proceeding Phase 1 autonomously.
 
 ---
 
