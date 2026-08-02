@@ -60,7 +60,7 @@ export function ContingencySummaryCard({
     t(`contingencies.status.${s}`, { defaultValue: s });
 
   return (
-    <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+    <Card className="border-border/80 dark:border-border shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
         <CardTitle className="text-lg">{t('purchaseDetail.contingencySummary.title')}</CardTitle>
         {onOpenFullTab && (
@@ -71,14 +71,14 @@ export function ContingencySummaryCard({
       </CardHeader>
       <CardContent>
         {loading ? (
-          <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.loading')}</p>
+          <p className={`text-sm ${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.loading')}</p>
         ) : rows.length === 0 ? (
-          <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.contingencySummary.empty')}</p>
+          <p className={`text-sm ${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.contingencySummary.empty')}</p>
         ) : (
           <ul className="space-y-2">
             {rows.slice(0, 6).map((r) => (
               <li key={r.id} className="flex flex-wrap items-center justify-between gap-2 text-sm">
-                <span className={`${COLORS.gray.text900} dark:text-slate-100`}>
+                <span className={`${COLORS.gray.text900} dark:text-foreground`}>
                   {r.label_override?.trim() ||
                     t(`contingencies.types.${r.contingency_type}`, {
                       defaultValue: r.contingency_type.replace(/_/g, ' '),
@@ -86,12 +86,12 @@ export function ContingencySummaryCard({
                 </span>
                 <span className="flex flex-wrap items-center gap-2">
                   <Badge variant="outline">{statusLabel(r.status)}</Badge>
-                  <span className={`${COLORS.muted.text} dark:text-slate-400`}>{formatDeadline(r.deadline_date)}</span>
+                  <span className={`${COLORS.muted.text} dark:text-muted-foreground/70`}>{formatDeadline(r.deadline_date)}</span>
                 </span>
               </li>
             ))}
             {rows.length > 6 && (
-              <li className={`text-xs ${COLORS.muted.text} dark:text-slate-400`}>
+              <li className={`text-xs ${COLORS.muted.text} dark:text-muted-foreground/70`}>
                 {t('purchaseDetail.contingencySummary.more', { count: rows.length - 6 })}
               </li>
             )}

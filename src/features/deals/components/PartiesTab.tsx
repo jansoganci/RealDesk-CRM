@@ -315,7 +315,7 @@ export function PartiesTab({ deal, readOnly = false }: PartiesTabProps) {
       {loading ? (
         <Card>
           <CardContent className="py-6">
-            <p className={`text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
+            <p className={`text-sm ${COLORS.gray.text600} dark:text-muted-foreground`}>
               {t('detail.loading')}
             </p>
           </CardContent>
@@ -323,7 +323,7 @@ export function PartiesTab({ deal, readOnly = false }: PartiesTabProps) {
       ) : parties.length === 0 ? (
         <Card>
           <CardContent className="py-6">
-            <p className={`text-sm ${COLORS.gray.text600} dark:text-slate-300`}>
+            <p className={`text-sm ${COLORS.gray.text600} dark:text-muted-foreground`}>
               {t('detail.noParties')}
             </p>
           </CardContent>
@@ -335,8 +335,8 @@ export function PartiesTab({ deal, readOnly = false }: PartiesTabProps) {
               <CardContent className="py-4 space-y-2">
                 <div className="flex items-start justify-between gap-2">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{party.name}</p>
-                    <p className={`text-xs ${COLORS.gray.text600} dark:text-slate-300`}>{party.company ?? '—'}</p>
+                    <p className="text-sm font-semibold text-foreground dark:text-foreground">{party.name}</p>
+                    <p className={`text-xs ${COLORS.gray.text600} dark:text-muted-foreground`}>{party.company ?? '—'}</p>
                   </div>
                   <Badge variant="outline">
                     {t(`timeline.responsibleParty.${party.role}`, { defaultValue: party.role })}

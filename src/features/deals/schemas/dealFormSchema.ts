@@ -65,6 +65,8 @@ const dealFormObjectSchema = z.object({
   deal_type: dealTypeSchema.default('sale'),
   client_role: clientRoleSchema,
   deal_stage: dealStageSchema.optional(),
+  /** Earning agent of record (org member user id). */
+  user_id: z.string().uuid().optional().nullable(),
   lead_id: z.string().uuid().optional().nullable(),
   property_id: z.string().uuid().optional().nullable(),
   property_snapshot: propertySnapshotSchema,
@@ -108,7 +110,7 @@ const dealFormRefinements = <T extends z.ZodTypeAny>(schema: T) =>
 
 /**
  * Deal Creation Sheet + standalone new deal (Sprint 3 §3.2).
- * `org_id` / `user_id` come from auth context, not this form.
+ * `org_id` comes from auth context; optional `user_id` is the earning agent.
  */
 export const dealFormSchema = dealFormRefinements(dealFormObjectSchema);
 

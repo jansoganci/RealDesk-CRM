@@ -25,6 +25,7 @@ export function buildDefaultsFromLead(lead: LeadDealDefaultsSource): DealFormDat
     deal_name: `${lead.name} — ${dealType === 'sale' ? 'Purchase' : 'Lease'}`,
     deal_type: dealType,
     client_role: 'buyer',
+    user_id: null,
     property_id: null,
     property_snapshot: null,
     financing_type: null,

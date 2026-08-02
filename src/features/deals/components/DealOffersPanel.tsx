@@ -299,7 +299,7 @@ export function DealOffersPanel({
 
   return (
     <>
-      <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+      <Card className="border-border/80 dark:border-border shadow-sm">
         <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between space-y-0">
           <CardTitle className="text-lg">{t('detail.section.offerRounds')}</CardTitle>
           {allowNegotiation && !readOnly && (
@@ -327,7 +327,7 @@ export function DealOffersPanel({
         <CardContent className="space-y-6">
           {rounds.length > 0 && <OfferHistoryTimeline rounds={rounds} />}
           {rounds.length === 0 ? (
-            <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>
+            <p className={`text-sm ${COLORS.muted.text} dark:text-muted-foreground/70`}>
               {t('detail.offersEmpty')}
             </p>
           ) : (
@@ -369,7 +369,7 @@ export function DealOffersPanel({
               {rounds.map((r) => (
                 <li
                   key={r.id}
-                  className="rounded-lg border border-gray-100 dark:border-slate-800 p-3 text-sm space-y-2"
+                  className="rounded-lg border border-border dark:border-border p-3 text-sm space-y-2"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -377,7 +377,7 @@ export function DealOffersPanel({
                         {t('detail.round')} {r.round_number} ·{' '}
                         {formatCurrency(r.offer_price)}
                       </div>
-                      <div className={`${COLORS.muted.text} dark:text-slate-400`}>
+                      <div className={`${COLORS.muted.text} dark:text-muted-foreground/70`}>
                         {roundStatusLabel(r.status)}
                         {r.submitted_at
                           ? ` · ${formatOptionalDate(r.submitted_at)}`

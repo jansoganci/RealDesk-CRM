@@ -113,13 +113,13 @@ export function DealMilestonesPanel({
   };
 
   return (
-    <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+    <Card className="border-border/80 dark:border-border shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg">{t('detail.section.milestones')}</CardTitle>
       </CardHeader>
       <CardContent>
         {milestones.length === 0 ? (
-          <p className={`text-sm ${COLORS.muted.text} dark:text-slate-400`}>
+          <p className={`text-sm ${COLORS.muted.text} dark:text-muted-foreground/70`}>
             {t('detail.milestonesEmpty')}
           </p>
         ) : (
@@ -156,12 +156,12 @@ export function DealMilestonesPanel({
               {milestones.map((m) => (
                 <li
                   key={m.id}
-                  className="rounded-lg border border-gray-100 dark:border-slate-800 p-3 text-sm"
+                  className="rounded-lg border border-border dark:border-border p-3 text-sm"
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="font-medium">{m.title}</div>
-                      <div className={`${COLORS.muted.text} dark:text-slate-400 mt-1`}>
+                      <div className={`${COLORS.muted.text} dark:text-muted-foreground/70 mt-1`}>
                         {formatDue(m.due_date)} · {statusLabel(m.status)}
                       </div>
                     </div>

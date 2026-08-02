@@ -15,6 +15,7 @@ export function buildDealPayload(data: DealFormData): CreateDealInput {
     deal_name: data.deal_name,
     deal_type: data.deal_type,
     client_role: data.client_role,
+    user_id: data.user_id ?? null,
     property_id: data.property_id ?? null,
     property_snapshot: data.property_snapshot ?? null,
     financing_type: data.financing_type ?? null,

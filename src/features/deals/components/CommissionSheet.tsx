@@ -6,10 +6,11 @@ import { format } from 'date-fns';
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
 
-import { commissionsService, userPreferencesService, type DealWithRelations } from '@/lib/serviceProxy';
+import { commissionsService, orgMemberCommissionSettingsService, type DealWithRelations } from '@/lib/serviceProxy';
 import { calculateCommission } from '@/services/commissionCalculator';
 import { formatCurrency } from '@/lib/currency';
 import type { BrokerSettings } from '@/types';
+import type { BrokerSettingsSource } from '@/lib/serviceProxy';
 import {
   Sheet,
   SheetContent,
@@ -99,6 +100,7 @@ export const CommissionSheet = ({
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [brokerSettings, setBrokerSettings] = useState<BrokerSettings>(defaultBrokerSettings);
+  const [settingsSource, setSettingsSource] = useState<BrokerSettingsSource>('defaults');
 
   const form = useForm<CommissionSheetFormValues>({
     resolver: zodResolver(commissionSheetSchema),
@@ -123,8 +125,12 @@ export const CommissionSheet = ({
     const load = async () => {
       setLoading(true);
       try {
-        const settings = await userPreferencesService.getBrokerSettings();
+        const resolved = await orgMemberCommissionSettingsService.resolveBrokerSettingsForMember(
+          deal.user_id
+        );
+        const { source, ...settings } = resolved;
         setBrokerSettings(settings);
+        setSettingsSource(source);
         form.reset({
           sale_price: deal.accepted_offer_price ?? deal.intended_offer_price ?? null,
           commission_type: 'percentage',
@@ -199,6 +205,7 @@ export const CommissionSheet = ({
         net_commission: calculation.netCommission,
         closing_date: data.closing_date,
         notes: null,
+        // RPC attributes to deals.user_id; value here satisfies CommissionInsert typing.
         user_id: deal.user_id,
       });
       toast.success(
@@ -222,6 +229,14 @@ export const CommissionSheet = ({
           <SheetTitle>{t('commissionSheet.title')}</SheetTitle>
           <SheetDescription>{t('commissionSheet.description')}</SheetDescription>
         </SheetHeader>
+
+        {!loading && (
+          <p className="mt-3 text-xs text-muted-foreground">
+            {t('commissionSheet.settingsSource', {
+              source: t(`commissionSheet.settingsSourceLabels.${settingsSource}`),
+            })}
+          </p>
+        )}
 
         {loading ? (
           <div className="py-8 text-sm text-muted-foreground">{t('commissionSheet.loading')}</div>

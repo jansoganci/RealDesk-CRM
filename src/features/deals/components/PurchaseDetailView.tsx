@@ -232,23 +232,23 @@ export function PurchaseDetailView({
       </TabsList>
 
       <TabsContent value="pOverview" className="mt-6 space-y-4">
-        <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+        <Card className="border-border/80 dark:border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t('purchaseDetail.overview.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3 text-sm">
             <div className="flex flex-wrap justify-between gap-2">
-              <span className={`${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.overview.price')}</span>
+              <span className={`${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.overview.price')}</span>
               <span className="font-medium text-foreground">
                 {formatCurrency(purchaseContract.purchase_price ?? 0)}
               </span>
             </div>
             <div className="flex flex-wrap justify-between gap-2">
-              <span className={`${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.overview.financing')}</span>
+              <span className={`${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.overview.financing')}</span>
               <Badge variant="secondary">{financingLabel(t, pd)}</Badge>
             </div>
             <div className="flex flex-wrap justify-between gap-2">
-              <span className={`${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.overview.property')}</span>
+              <span className={`${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.overview.property')}</span>
               <span className="text-right">
                 {pd.property_street}, {pd.property_city}, {pd.property_state} {pd.property_zip}
               </span>
@@ -331,14 +331,14 @@ export function PurchaseDetailView({
           </Alert>
         )}
 
-        <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+        <Card className="border-border/80 dark:border-border shadow-sm">
           <CardHeader>
             <CardTitle className="text-lg">{t('purchaseDetail.addenda.title')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-2">
               <p className="text-sm font-medium text-foreground">{t('purchaseDetail.addenda.fha')}</p>
-              <p className={`text-xs ${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.addenda.fhaHelp')}</p>
+              <p className={`text-xs ${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.addenda.fhaHelp')}</p>
               <div className="flex flex-wrap items-center gap-2">
                 <Input
                   type="file"
@@ -358,7 +358,7 @@ export function PurchaseDetailView({
             </div>
             <div className="space-y-2">
               <p className="text-sm font-medium text-foreground">{t('purchaseDetail.addenda.va')}</p>
-              <p className={`text-xs ${COLORS.muted.text} dark:text-slate-400`}>{t('purchaseDetail.addenda.vaHelp')}</p>
+              <p className={`text-xs ${COLORS.muted.text} dark:text-muted-foreground/70`}>{t('purchaseDetail.addenda.vaHelp')}</p>
               <div className="flex flex-wrap items-center gap-2">
                 <Input
                   type="file"

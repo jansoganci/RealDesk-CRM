@@ -36,7 +36,7 @@ export function KeyDatesCard({ data }: KeyDatesCardProps) {
   ];
 
   return (
-    <Card className="border-gray-200/80 dark:border-slate-700 shadow-sm">
+    <Card className="border-border/80 dark:border-border shadow-sm">
       <CardHeader>
         <CardTitle className="text-lg">{t('purchaseDetail.keyDates.title')}</CardTitle>
       </CardHeader>
@@ -45,10 +45,10 @@ export function KeyDatesCard({ data }: KeyDatesCardProps) {
           {rows.map(({ key, label }) => (
             <div
               key={key}
-              className="flex flex-col gap-0.5 border-b border-gray-100 dark:border-slate-800 py-2 last:border-0 sm:flex-row sm:justify-between"
+              className="flex flex-col gap-0.5 border-b border-border dark:border-border py-2 last:border-0 sm:flex-row sm:justify-between"
             >
-              <dt className={`text-sm font-medium ${COLORS.muted.text} dark:text-slate-400`}>{label}</dt>
-              <dd className={`text-sm ${COLORS.gray.text900} dark:text-slate-100`}>{formatDate(data[key])}</dd>
+              <dt className={`text-sm font-medium ${COLORS.muted.text} dark:text-muted-foreground/70`}>{label}</dt>
+              <dd className={`text-sm ${COLORS.gray.text900} dark:text-foreground`}>{formatDate(data[key])}</dd>
             </div>
           ))}
         </dl>

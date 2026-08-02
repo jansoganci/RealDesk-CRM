@@ -105,7 +105,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
     return (
       <Card>
         <CardContent className="py-6">
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t('documents.loading')}</p>
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground">{t('documents.loading')}</p>
         </CardContent>
       </Card>
     );
@@ -115,7 +115,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
     return (
       <Card>
         <CardContent className="py-6">
-          <p className="text-sm text-slate-600 dark:text-slate-300">{t('documents.empty')}</p>
+          <p className="text-sm text-muted-foreground dark:text-muted-foreground">{t('documents.empty')}</p>
         </CardContent>
       </Card>
     );
@@ -144,7 +144,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="space-y-1">
                   <CardTitle className="text-base">{milestone.title}</CardTitle>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-muted-foreground dark:text-muted-foreground">
                     {t('timeline.dueDate', { date: formatDate(milestone.due_date) })}
                   </p>
                 </div>
@@ -172,7 +172,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
               {isUploading && (
                 <div className="space-y-1">
                   <Progress value={uploadProgress} />
-                  <p className="text-xs text-slate-600 dark:text-slate-300">{uploadProgress}%</p>
+                  <p className="text-xs text-muted-foreground dark:text-muted-foreground">{uploadProgress}%</p>
                 </div>
               )}
 
@@ -189,7 +189,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
               </div>
 
               {milestone.document_uploaded_at && (
-                <p className="text-xs text-slate-500 dark:text-slate-400">
+                <p className="text-xs text-muted-foreground dark:text-muted-foreground/70">
                   {t('documents.uploadedAt', { date: formatDate(milestone.document_uploaded_at) })}
                 </p>
               )}
@@ -198,7 +198,7 @@ export function DocumentsTab({ dealId, readOnly = false }: DocumentsTabProps) {
         );
       })}
 
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="text-xs text-muted-foreground dark:text-muted-foreground/70">
         {t('documents.sectionsCount', { count: rows.length })}
       </p>
     </div>

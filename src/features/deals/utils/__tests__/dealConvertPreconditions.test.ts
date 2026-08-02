@@ -48,6 +48,7 @@ describe('buildDealPayload', () => {
       deal_name: 'Emma Wilson — 825 Montana Avenue',
       deal_type: 'sale',
       client_role: 'buyer',
+      user_id: null,
       property_id: '10000000-0000-4000-8000-000000000011',
       property_snapshot: null,
       financing_type: 'conventional',

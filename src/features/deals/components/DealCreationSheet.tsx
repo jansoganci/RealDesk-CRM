@@ -47,6 +47,8 @@ import {
   validateConvertPreconditions,
 } from '@/features/deals/utils/dealConvertPreconditions';
 import type { InquiryMatchWithProperty } from '@/types';
+import { EarningAgentSelect } from '@/features/deals/components/EarningAgentSelect';
+import { useAuth } from '@/contexts/AuthContext';
 
 const FINANCING_TYPES = [
   'cash',
@@ -67,11 +69,12 @@ const PREAPPROVAL_STATUSES = [
 
 const SELECT_NONE = '__none__';
 
-function emptyDealDefaults(): DealFormData {
+function emptyDealDefaults(currentUserId?: string | null): DealFormData {
   return {
     deal_name: '',
     deal_type: 'sale',
     client_role: 'buyer',
+    user_id: currentUserId ?? null,
     property_id: null,
     property_snapshot: null,
     financing_type: null,
@@ -105,6 +108,7 @@ export function DealCreationSheet({
 }: DealCreationSheetProps) {
   const { t } = useTranslation('deals');
   const { toast } = useToast();
+  const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
   const {
     matches,
@@ -121,10 +125,12 @@ export function DealCreationSheet({
     [lead, matches]
   );
 
-  const defaults = useMemo(
-    () => (lead ? buildDefaultsFromLead(lead) : emptyDealDefaults()),
-    [lead]
-  );
+  const defaults = useMemo(() => {
+    if (lead) {
+      return { ...buildDefaultsFromLead(lead), user_id: user?.id ?? null };
+    }
+    return emptyDealDefaults(user?.id);
+  }, [lead, user?.id]);
 
   const form = useForm<DealFormData>({
     resolver: zodResolver(dealFormSchema),
@@ -133,9 +139,13 @@ export function DealCreationSheet({
 
   useEffect(() => {
     if (open) {
-      form.reset(lead ? buildDefaultsFromLead(lead) : emptyDealDefaults());
+      if (lead) {
+        form.reset({ ...buildDefaultsFromLead(lead), user_id: user?.id ?? null });
+      } else {
+        form.reset(emptyDealDefaults(user?.id));
+      }
     }
-  }, [open, lead, form]);
+  }, [open, lead, form, user?.id]);
 
   const applyMatch = useCallback(
     (match: InquiryMatchWithProperty) => {
@@ -224,6 +234,25 @@ export function DealCreationSheet({
                   <FormControl>
                     <Input {...field} autoComplete="off" disabled={disabled} />
                   </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="user_id"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t('fields.earningAgent')}</FormLabel>
+                  <FormControl>
+                    <EarningAgentSelect
+                      value={field.value}
+                      onChange={field.onChange}
+                      disabled={disabled}
+                    />
+                  </FormControl>
+                  <FormDescription>{t('fields.earningAgentHelp')}</FormDescription>
                   <FormMessage />
                 </FormItem>
               )}

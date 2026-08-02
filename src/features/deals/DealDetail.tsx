@@ -4,6 +4,7 @@ import { Link, generatePath, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { format, parseISO } from 'date-fns';
 import { AlertCircle, CalendarDays, Loader2, MapPin, Phone, UserRound } from 'lucide-react';
+import { toast } from 'sonner';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { PageContainer } from '@/components/layout/PageContainer';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -16,6 +17,7 @@ import { COLORS } from '@/config/colors';
 import { ROUTES } from '@/config/constants';
 import { cn } from '@/lib/utils';
 import { formatCurrency } from '@/lib/currency';
+import { dealsService } from '@/lib/serviceProxy';
 import { useDealDetail } from '@/features/deals/hooks/useDealDetail';
 import { DealOffersPanel } from '@/features/deals/components/DealOffersPanel';
 import { TimelineTab } from '@/features/deals/components/TimelineTab';
@@ -25,6 +27,7 @@ import { DocumentsTab } from '@/features/deals/components/DocumentsTab';
 import { PartiesTab } from '@/features/deals/components/PartiesTab';
 import { AmendmentsTab } from '@/features/deals/components/AmendmentsTab';
 import { PurchaseDetailView } from '@/features/deals/components/PurchaseDetailView';
+import { EarningAgentSelect } from '@/features/deals/components/EarningAgentSelect';
 import { getLatestPurchaseContractIdFromDeal } from '@/features/deals/utils/purchaseDealHelpers';
 import type { DealStage } from '@/types';
 import type { DealWithRelations } from '@/lib/serviceProxy';
@@ -72,7 +75,7 @@ function MoneyStat({
   value: string;
 }) {
   return (
-    <div className="rounded-lg bg-slate-50 px-3 py-3 dark:bg-slate-900/50">
+    <div className="rounded-lg bg-muted px-3 py-3 dark:bg-muted">
       <p className={`text-xs font-medium ${COLORS.muted.text}`}>{label}</p>
       <p className={`mt-1 text-lg font-semibold tabular-nums ${COLORS.gray.text900}`}>
         {value}
@@ -95,6 +98,7 @@ function DealDetailBody({
   onTabChange: (value: string) => void;
 }) {
   const { t } = useTranslation('deals');
+  const [savingAgent, setSavingAgent] = useState(false);
 
   const lead = unwrapRelation(deal.property_inquiries);
   const property = unwrapRelation(deal.properties);
@@ -103,6 +107,23 @@ function DealDetailBody({
 
   const purchaseContractId = useMemo(() => getLatestPurchaseContractIdFromDeal(deal), [deal]);
   const showPurchaseTab = deal.deal_type === 'sale' && purchaseContractId != null;
+
+  const isTerminal =
+    deal.deal_stage === 'closed_won' || deal.deal_stage === 'fell_through';
+
+  const handleEarningAgentChange = async (userId: string) => {
+    if (readOnly || isTerminal || userId === deal.user_id) return;
+    setSavingAgent(true);
+    try {
+      await dealsService.updateDeal(deal.id, { user_id: userId });
+      toast.success(t('detail.earningAgentUpdated'));
+      await onRefresh();
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : t('detail.earningAgentUpdateError'));
+    } finally {
+      setSavingAgent(false);
+    }
+  };
 
   const hasMoney =
     deal.list_price != null ||
@@ -147,7 +168,7 @@ function DealDetailBody({
 
           <TabsContent value="overview" className="mt-6 space-y-5">
             {deal.notes && (
-              <Card className="border-slate-200/80 shadow-sm">
+              <Card className="border-border/80 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold">
                     {t('detail.section.notes')}
@@ -167,7 +188,7 @@ function DealDetailBody({
             )}
 
             {negotiations.length > 0 && (
-              <Card className="border-slate-200/80 shadow-sm">
+              <Card className="border-border/80 shadow-sm">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-base font-semibold">
                     {t('detail.section.negotiations')}
@@ -237,7 +258,7 @@ function DealDetailBody({
       </div>
 
       <aside className="space-y-5 lg:sticky lg:top-20 lg:self-start">
-        <Card className="border-slate-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="text-base font-semibold">
               {t('detail.section.summary')}
@@ -259,7 +280,18 @@ function DealDetailBody({
               {t(`clientRole.${deal.client_role as 'buyer' | 'seller' | 'dual'}`)}
             </p>
 
-            <div className="space-y-2 border-t border-slate-100 pt-3 dark:border-slate-800">
+            <div className="space-y-2 border-t border-border pt-3 dark:border-border">
+              <label className={`text-xs font-medium uppercase tracking-wide ${COLORS.muted.text}`}>
+                {t('fields.earningAgent')}
+              </label>
+              <EarningAgentSelect
+                value={deal.user_id}
+                onChange={(userId) => void handleEarningAgentChange(userId)}
+                disabled={readOnly || isTerminal || savingAgent}
+              />
+            </div>
+
+            <div className="space-y-2 border-t border-border pt-3 dark:border-border">
               <div className="flex items-center justify-between gap-2 text-sm">
                 <span className={`flex items-center gap-1.5 ${COLORS.muted.text}`}>
                   <CalendarDays className="h-3.5 w-3.5 shrink-0" />
@@ -292,7 +324,7 @@ function DealDetailBody({
         </Card>
 
         {hasMoney && (
-          <Card className="border-slate-200/80 shadow-sm">
+          <Card className="border-border/80 shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">
                 {t('detail.section.money')}
@@ -322,7 +354,7 @@ function DealDetailBody({
         )}
 
         {hasFinancing && (
-          <Card className="border-slate-200/80 shadow-sm">
+          <Card className="border-border/80 shadow-sm">
             <CardHeader className="pb-3">
               <CardTitle className="text-base font-semibold">
                 {t('detail.section.financing')}
@@ -349,7 +381,7 @@ function DealDetailBody({
           </Card>
         )}
 
-        <Card className="border-slate-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <UserRound className={`h-4 w-4 ${COLORS.muted.text}`} />
@@ -371,7 +403,7 @@ function DealDetailBody({
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200/80 shadow-sm">
+        <Card className="border-border/80 shadow-sm">
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center gap-2 text-base font-semibold">
               <MapPin className={`h-4 w-4 ${COLORS.muted.text}`} />
