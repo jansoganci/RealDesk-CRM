@@ -77,8 +77,8 @@ These surfaces are **not** “untouched.” F1 (CSS vars), F2 (Inter), F3 (`colo
 
 ## F1 — CSS variables + semantic Tailwind colors
 
-**Status:** [ ] Pending  
-**Progress note:** _(filled on completion)_
+**Status:** [x] Done  
+**Progress note:** Set Closewell light/dark CSS vars (navy/gold/warm neutral + `--success`/`--info`/`--warning` + foregrounds); exposed `success`/`info`/`warning` in `tailwind.config.js`; retargeted `.gradient-primary/secondary`. lint+typecheck pass.
 
 **Files:** `src/index.css`, `tailwind.config.js` (`theme.extend.colors` for success/info/warning only; shadows stay F7)
 

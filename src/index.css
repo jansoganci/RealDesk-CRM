@@ -67,71 +67,88 @@ h3 {
 
 @layer base {
   :root {
-    /* Modern Blue & Emerald Theme */
-    --background: 210 40% 98%;
-    --foreground: 222 47% 11%;
+    /* Closewell light — navy / gold / warm neutral */
+    --background: 48 24% 96%; /* #F7F6F2 */
+    --foreground: 211 53% 11%; /* #0D1B2A */
     --card: 0 0% 100%;
-    --card-foreground: 222 47% 11%;
+    --card-foreground: 211 53% 11%;
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 11%;
+    --popover-foreground: 211 53% 11%;
 
-    /* Modern Blue Primary */
-    --primary: 221.2 83.2% 53.3%;  /* blue-600 #2563EB */
+    --primary: 211 53% 11%; /* Deep Navy #0D1B2A */
     --primary-foreground: 0 0% 100%;
 
-    /* Emerald Green Secondary */
-    --secondary: 160 84.1% 39.4%;  /* emerald-600 #059669 */
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 37 47% 60%; /* Warm Gold #C9A46A */
+    --secondary-foreground: 211 53% 11%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 43 20% 92%;
+    --muted-foreground: 215 16% 35%;
 
-    /* Orange Accent */
-    --accent: 20.5 90.2% 48.2%;  /* orange-500 #F97316 */
-    --accent-foreground: 0 0% 100%;
+    --accent: 37 47% 60%; /* Warm Gold #C9A46A */
+    --accent-foreground: 211 53% 11%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
 
-    /* Blue ring focus */
-    --ring: 221.2 83.2% 53.3%;  /* blue-600 */
+    --success: 163 55% 24%; /* Forest #1B5E4B */
+    --success-foreground: 0 0% 100%;
+    --info: 173 58% 39%; /* Teal #2A9D8F */
+    --info-foreground: 0 0% 100%;
+    --warning: 35 65% 47%; /* Warm amber #C4842A */
+    --warning-foreground: 211 53% 11%;
 
-    /* Modern chart colors */
-    --chart-1: 221.2 83.2% 53.3%;  /* blue-600 */
-    --chart-2: 160 84.1% 39.4%;  /* emerald-600 */
-    --chart-3: 20.5 90.2% 48.2%;  /* orange-500 */
-    --chart-4: 217 91% 60%;
-    --chart-5: 142 71% 45%;
+    --border: 40 15% 88%;
+    --input: 40 15% 88%;
+    --ring: 211 53% 11%;
+
+    --chart-1: 211 53% 11%;
+    --chart-2: 37 47% 60%;
+    --chart-3: 163 55% 24%;
+    --chart-4: 173 58% 39%;
+    --chart-5: 35 65% 47%;
 
     --radius: 0.75rem;
   }
   .dark {
-    --background: 222 47% 11%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 11%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 11%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 221 83% 53%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 71% 73%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Navy surfaces; primary CTAs = gold */
+    --background: 211 53% 11%; /* #0D1B2A */
+    --foreground: 48 24% 96%;
+    --card: 217 32% 15%;
+    --card-foreground: 48 24% 96%;
+    --popover: 217 32% 15%;
+    --popover-foreground: 48 24% 96%;
+
+    --primary: 37 47% 60%; /* Warm Gold on dark */
+    --primary-foreground: 211 53% 11%;
+
+    --secondary: 37 47% 60%;
+    --secondary-foreground: 211 53% 11%;
+
+    --muted: 217 28% 18%;
+    --muted-foreground: 40 15% 70%;
+
+    --accent: 37 47% 60%;
+    --accent-foreground: 211 53% 11%;
+
+    --destructive: 0 63% 45%;
+    --destructive-foreground: 0 0% 98%;
+
+    --success: 159 44% 42%; /* #3D9B7A — legible on navy */
+    --success-foreground: 211 53% 11%;
+    --info: 172 42% 51%; /* #4DB6A8 */
+    --info-foreground: 211 53% 11%;
+    --warning: 37 62% 56%; /* lighter warm amber */
+    --warning-foreground: 211 53% 11%;
+
+    --border: 217 28% 22%;
+    --input: 217 28% 22%;
+    --ring: 37 47% 60%;
+
+    --chart-1: 37 47% 60%;
+    --chart-2: 159 44% 42%;
+    --chart-3: 172 42% 51%;
+    --chart-4: 37 62% 56%;
+    --chart-5: 48 24% 96%;
   }
 }
 
@@ -151,13 +168,13 @@ h3 {
     text-wrap: balance;
   }
 
-  /* Minimal gradient utilities (for special cases only) */
+  /* Brand gradients — Closewell navy / gold */
   .gradient-primary {
-    @apply bg-gradient-to-r from-blue-500 to-blue-700;
+    @apply bg-gradient-to-r from-primary to-primary/80;
   }
 
   .gradient-secondary {
-    @apply bg-gradient-to-r from-emerald-500 to-emerald-700;
+    @apply bg-gradient-to-r from-secondary to-secondary/80;
   }
 
   .shadow-luxury {
