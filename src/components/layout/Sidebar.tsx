@@ -127,11 +127,11 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )} 
       >
-        <div className="flex items-center justify-between px-5 h-[72px] border-b border-white/10 bg-[#0D1B2A] shadow-lg shrink-0">
+        <div className="flex items-center justify-between px-5 h-[72px] border-b border-primary-foreground/10 bg-primary shadow-lg shrink-0">
           <div className="flex flex-col">
             <img src="/brand/closewell-logo-dark.png" alt="Closewell" className="h-8 w-auto" />
             {currentOrg && (
-              <span className="text-white/70 text-xs truncate max-w-[180px]">
+              <span className="text-primary-foreground/70 text-xs truncate max-w-[180px]">
                 {currentOrg.name}
               </span>
             )}
@@ -140,7 +140,7 @@ export const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="lg:hidden h-auto w-auto p-1.5 text-white hover:bg-white/20 rounded-lg transition-all"
+            className="lg:hidden h-auto w-auto p-1.5 text-primary-foreground hover:bg-primary-foreground/20 rounded-lg transition-all"
           >
             <X className="h-5 w-5" />
           </Button>
