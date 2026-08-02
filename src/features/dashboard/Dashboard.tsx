@@ -148,7 +148,7 @@ export const Dashboard = () => {
               </div>
             )}
 
-            <section className="space-y-2 border-t border-slate-200 pt-4">
+            <section className="space-y-2 border-t border-border pt-4">
               <p className={`text-sm font-semibold ${COLORS.gray.text900}`}>
                 {t('dailyBrief.moneySnapshot.title')}
               </p>

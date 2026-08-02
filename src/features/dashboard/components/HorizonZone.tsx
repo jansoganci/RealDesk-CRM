@@ -27,9 +27,9 @@ export function HorizonZone({ items }: HorizonZoneProps) {
           <div key={item.milestoneId} className="rounded-lg border border-amber-200 bg-white p-3">
             <div className="flex flex-wrap items-start justify-between gap-2">
               <div>
-                <p className="text-sm font-semibold text-slate-900">{item.dealName}</p>
-                <p className="text-sm text-slate-700">{item.milestoneTitle}</p>
-                <p className="text-xs text-slate-500">
+                <p className="text-sm font-semibold text-foreground">{item.dealName}</p>
+                <p className="text-sm text-foreground/80">{item.milestoneTitle}</p>
+                <p className="text-xs text-muted-foreground">
                   {item.dueDate} · {item.responsibleParty ?? t('dailyBrief.common.unassigned')}
                 </p>
               </div>

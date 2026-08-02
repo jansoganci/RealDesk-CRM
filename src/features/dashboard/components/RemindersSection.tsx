@@ -53,14 +53,14 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
           return (
             <div
               key={reminder.id}
-              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 md:p-4 bg-white dark:bg-slate-900 rounded-xl border border-amber-200/50 dark:border-amber-800/50 hover:shadow-lg hover:border-amber-300 dark:hover:border-amber-700 transition-all duration-200"
+              className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-0 p-3 md:p-4 bg-card rounded-xl border border-amber-200/50 dark:border-amber-800/50 hover:shadow-lg hover:border-amber-300 dark:hover:border-amber-700 transition-all duration-200"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1.5 md:mb-2">
                   <Home className="h-3.5 w-3.5 md:h-4 md:w-4 text-amber-600 flex-shrink-0" />
-                  <p className="font-semibold text-slate-900 dark:text-slate-100 text-sm md:text-base line-clamp-1">{reminder.property?.address}</p>
+                  <p className="font-semibold text-foreground text-sm md:text-base line-clamp-1">{reminder.property?.address}</p>
                 </div>
-                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs md:text-sm text-slate-600 dark:text-slate-300">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-4 text-xs md:text-sm text-muted-foreground">
                   <span className="flex items-center gap-1">
                     <Calendar className="h-3 w-3 flex-shrink-0" />
                     <span className="truncate">{t('reminders.contractEnds')}: {format(new Date(reminder.end_date), 'MMM dd, yyyy')}</span>
@@ -79,7 +79,7 @@ export function RemindersSection({ reminders }: RemindersSectionProps) {
                     ? 'bg-gradient-to-r from-red-500 to-red-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                     : urgency === 'soon'
                       ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
-                      : 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
+                      : 'bg-gradient-to-r from-foreground to-foreground/70 text-white shadow-lg text-xs md:text-sm self-start sm:self-auto'
                 }
               >
                 {reminder.days_until_end} days

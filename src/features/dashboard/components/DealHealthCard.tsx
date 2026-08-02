@@ -15,10 +15,10 @@ export function DealHealthCard({ card }: DealHealthCardProps) {
 
   return (
     <Link to={generatePath(ROUTES.DEAL_DETAIL, { id: card.dealId })}>
-      <Card className="h-full border-slate-200 hover:border-blue-300 hover:shadow-md transition-all">
+      <Card className="h-full border-border hover:border-primary/40 hover:shadow-md transition-all">
         <CardContent className="py-4 space-y-2">
           <div className="flex items-start justify-between gap-2">
-            <p className="min-w-0 flex-1 text-sm font-semibold text-slate-900 line-clamp-2">
+            <p className="min-w-0 flex-1 text-sm font-semibold text-foreground line-clamp-2">
               {card.dealName}
             </p>
             <Badge variant="outline" className="shrink-0 whitespace-nowrap">

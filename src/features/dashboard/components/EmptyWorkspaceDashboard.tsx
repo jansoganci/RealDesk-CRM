@@ -35,23 +35,23 @@ export function EmptyWorkspaceDashboard({
 
   return (
     <section aria-labelledby="empty-workspace-title" className="space-y-6">
-      <header className="rounded-2xl border border-slate-200 bg-white px-5 py-6 shadow-sm dark:border-slate-800 dark:bg-slate-950 sm:px-7 sm:py-8">
+      <header className="rounded-2xl border border-border bg-white px-5 py-6 shadow-sm dark:border-border dark:bg-muted sm:px-7 sm:py-8">
         <p className={cn('text-sm font-semibold', COLORS.primary.text)}>
           {t('emptyWorkspace.eyebrow')}
         </p>
         <h1
           id="empty-workspace-title"
-          className="mt-2 text-2xl font-bold tracking-tight text-slate-950 sm:text-3xl dark:text-white"
+          className="mt-2 text-2xl font-bold tracking-tight text-muted-foreground sm:text-3xl dark:text-white"
         >
           {t('emptyWorkspace.title')}
         </h1>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-600 sm:text-base dark:text-slate-300">
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base dark:text-muted-foreground">
           {t('emptyWorkspace.description')}
         </p>
       </header>
 
       <div className="grid gap-4 md:grid-cols-3">
-        <Card className="border-blue-700 bg-gradient-to-br from-blue-600 to-blue-800 text-white shadow-lg shadow-blue-700/15">
+        <Card className="border-primary/30 bg-gradient-to-br from-primary to-primary text-white shadow-lg shadow-primary/20">
           <CardHeader className="pb-4">
             <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
               <UsersRound className="h-5 w-5" aria-hidden="true" />
@@ -59,7 +59,7 @@ export function EmptyWorkspaceDashboard({
             <CardTitle className="text-lg text-white">
               {t('emptyWorkspace.actions.lead.title')}
             </CardTitle>
-            <CardDescription className="leading-6 text-blue-100">
+            <CardDescription className="leading-6 text-primary-foreground/90">
               {t('emptyWorkspace.actions.lead.description')}
             </CardDescription>
           </CardHeader>
@@ -67,7 +67,7 @@ export function EmptyWorkspaceDashboard({
             <Button
               type="button"
               onClick={onAddLead}
-              className="min-h-11 w-full bg-white text-blue-700 shadow-sm hover:bg-blue-50"
+              className="min-h-11 w-full bg-white text-primary shadow-sm hover:bg-primary/10"
             >
               {t('emptyWorkspace.actions.lead.cta')}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -75,15 +75,15 @@ export function EmptyWorkspaceDashboard({
           </CardContent>
         </Card>
 
-        <Card className="border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
+        <Card className="border-border bg-white shadow-sm transition-shadow hover:shadow-md dark:border-border dark:bg-muted">
           <CardHeader className="pb-4">
-            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-200">
+            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-muted text-foreground/80 dark:bg-muted dark:text-muted-foreground">
               <Building2 className="h-5 w-5" aria-hidden="true" />
             </div>
-            <CardTitle className="text-lg text-slate-950 dark:text-white">
+            <CardTitle className="text-lg text-muted-foreground dark:text-white">
               {t('emptyWorkspace.actions.property.title')}
             </CardTitle>
-            <CardDescription className="leading-6 text-slate-600 dark:text-slate-300">
+            <CardDescription className="leading-6 text-muted-foreground">
               {t('emptyWorkspace.actions.property.description')}
             </CardDescription>
           </CardHeader>
@@ -92,7 +92,7 @@ export function EmptyWorkspaceDashboard({
               type="button"
               variant="outline"
               onClick={onAddProperty}
-              className="min-h-11 w-full border-slate-300 dark:border-slate-700"
+              className="min-h-11 w-full border-border dark:border-border"
             >
               {t('emptyWorkspace.actions.property.cta')}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -100,15 +100,15 @@ export function EmptyWorkspaceDashboard({
           </CardContent>
         </Card>
 
-        <Card className="border-dashed border-slate-300 bg-slate-50/70 shadow-none dark:border-slate-700 dark:bg-slate-900/60">
+        <Card className="border-dashed border-border bg-muted/70 shadow-none dark:border-border dark:bg-muted">
           <CardHeader className="pb-4">
-            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm dark:bg-slate-800 dark:text-slate-200">
+            <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-white text-foreground/80 shadow-sm dark:bg-muted dark:text-muted-foreground">
               <FileUp className="h-5 w-5" aria-hidden="true" />
             </div>
-            <CardTitle className="text-lg text-slate-950 dark:text-white">
+            <CardTitle className="text-lg text-muted-foreground dark:text-white">
               {t('emptyWorkspace.actions.contract.title')}
             </CardTitle>
-            <CardDescription className="leading-6 text-slate-600 dark:text-slate-300">
+            <CardDescription className="leading-6 text-muted-foreground">
               {t('emptyWorkspace.actions.contract.description')}
             </CardDescription>
           </CardHeader>
@@ -117,7 +117,7 @@ export function EmptyWorkspaceDashboard({
               type="button"
               variant="outline"
               onClick={onImportContract}
-              className="min-h-11 w-full border-slate-300 bg-transparent dark:border-slate-700"
+              className="min-h-11 w-full border-border bg-transparent dark:border-border"
             >
               {t('emptyWorkspace.actions.contract.cta')}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
@@ -126,17 +126,17 @@ export function EmptyWorkspaceDashboard({
         </Card>
       </div>
 
-      <Card className="border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
+      <Card className="border-border bg-white shadow-sm dark:border-border dark:bg-muted">
         <CardHeader className="pb-3">
           <div className="flex items-center gap-3">
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/10 text-primary dark:bg-primary dark:text-primary">
               <ListChecks className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <CardTitle className="text-base text-slate-950 dark:text-white">
+              <CardTitle className="text-base text-muted-foreground dark:text-white">
                 {t('emptyWorkspace.checklist.title')}
               </CardTitle>
-              <CardDescription className="mt-1 text-slate-600 dark:text-slate-300">
+              <CardDescription className="mt-1 text-muted-foreground">
                 {t('emptyWorkspace.checklist.description')}
               </CardDescription>
             </div>
@@ -147,9 +147,9 @@ export function EmptyWorkspaceDashboard({
             {checklistItems.map((item) => (
               <li
                 key={item}
-                className="flex min-h-11 items-center gap-3 rounded-lg border border-slate-100 bg-slate-50 px-3 py-2 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-200"
+                className="flex min-h-11 items-center gap-3 rounded-lg border border-border bg-muted px-3 py-2 text-sm text-foreground/80 dark:border-border dark:bg-muted dark:text-muted-foreground"
               >
-                <Circle className="h-4 w-4 flex-none text-slate-400" aria-hidden="true" />
+                <Circle className="h-4 w-4 flex-none text-muted-foreground/70" aria-hidden="true" />
                 {t(`emptyWorkspace.checklist.items.${item}`)}
               </li>
             ))}

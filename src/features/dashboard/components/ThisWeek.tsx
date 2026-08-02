@@ -41,15 +41,15 @@ export function ThisWeek({ items }: ThisWeekProps) {
       {open && (
         <CardContent className="space-y-3">
           {weekItems.length === 0 ? (
-            <p className="text-sm text-slate-600 dark:text-slate-300">{t('dailyBrief.thisWeek.empty')}</p>
+            <p className="text-sm text-muted-foreground">{t('dailyBrief.thisWeek.empty')}</p>
           ) : (
             weekItems.map((item) => (
-              <div key={item.milestoneId} className="rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-3">
+              <div key={item.milestoneId} className="rounded-lg border border-border bg-card p-3">
                 <div className="flex flex-wrap items-start justify-between gap-2">
                   <div>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-slate-100">{item.dealName}</p>
-                    <p className="text-sm text-slate-700 dark:text-slate-200">{item.milestoneTitle}</p>
-                    <p className="text-xs text-slate-500 dark:text-slate-400">{item.dueDate}</p>
+                    <p className="text-sm font-semibold text-foreground">{item.dealName}</p>
+                    <p className="text-sm text-foreground/80">{item.milestoneTitle}</p>
+                    <p className="text-xs text-muted-foreground">{item.dueDate}</p>
                   </div>
                   <Badge variant="secondary">
                     {t('dailyBrief.thisWeek.days', { count: item.daysUntilDue })}

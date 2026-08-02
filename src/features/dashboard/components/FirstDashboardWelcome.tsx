@@ -39,18 +39,18 @@ export function FirstDashboardWelcome({
 
   return (
     <section aria-labelledby="first-dashboard-welcome-title">
-      <Card className="relative overflow-hidden border-slate-200/80 bg-gradient-to-br from-white via-blue-50/70 to-slate-100 shadow-lg dark:border-slate-800 dark:from-slate-950 dark:via-blue-950/40 dark:to-slate-900">
+      <Card className="relative overflow-hidden border-border/80 bg-gradient-to-br from-white via-primary/70 to-foreground/70 shadow-lg dark:border-border dark:from-background dark:via-primary/40 dark:to-card">
         <div
           aria-hidden="true"
-          className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-blue-300/25 blur-3xl dark:bg-blue-700/20"
+          className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-primary blur-3xl dark:bg-primary/20"
         />
         <div
           aria-hidden="true"
-          className="absolute -bottom-28 -left-20 h-56 w-56 rounded-full bg-slate-300/30 blur-3xl dark:bg-slate-700/20"
+          className="absolute -bottom-28 -left-20 h-56 w-56 rounded-full bg-muted blur-3xl dark:bg-muted"
         />
 
         <CardHeader className="relative px-5 pb-4 pt-8 sm:px-8 sm:pt-10 lg:px-12 lg:pt-12">
-          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-600/25 sm:h-14 sm:w-14">
+          <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-primary text-white shadow-lg shadow-primary/20 sm:h-14 sm:w-14">
             <Sparkles className="h-6 w-6 sm:h-7 sm:w-7" aria-hidden="true" />
           </div>
           <p className={cn('text-sm font-semibold uppercase tracking-[0.16em]', COLORS.primary.text)}>
@@ -58,11 +58,11 @@ export function FirstDashboardWelcome({
           </p>
           <h1
             id="first-dashboard-welcome-title"
-            className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-slate-950 sm:text-4xl lg:text-5xl dark:text-white"
+            className="max-w-3xl text-3xl font-bold leading-tight tracking-tight text-muted-foreground sm:text-4xl lg:text-5xl dark:text-white"
           >
             {t('firstVisit.title')}
           </h1>
-          <CardDescription className="max-w-2xl pt-2 text-base leading-7 text-slate-600 sm:text-lg dark:text-slate-300">
+          <CardDescription className="max-w-2xl pt-2 text-base leading-7 text-muted-foreground sm:text-lg dark:text-muted-foreground">
             {t('firstVisit.description')}
           </CardDescription>
         </CardHeader>
@@ -72,20 +72,20 @@ export function FirstDashboardWelcome({
             {steps.map(({ key, icon: Icon }, index) => (
               <li
                 key={key}
-                className="rounded-xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm dark:border-slate-700/80 dark:bg-slate-900/75 sm:p-5"
+                className="rounded-xl border border-white/80 bg-white/80 p-4 shadow-sm backdrop-blur-sm dark:border-border dark:bg-muted sm:p-5"
               >
                 <div className="mb-5 flex items-center justify-between">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-100 text-blue-700 dark:bg-blue-900/60 dark:text-blue-200">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15 text-primary dark:bg-primary/60 dark:text-primary-foreground/80">
                     <Icon className="h-5 w-5" aria-hidden="true" />
                   </span>
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70">
                     {t('firstVisit.stepLabel', { number: index + 1 })}
                   </span>
                 </div>
-                <h3 className="font-semibold text-slate-950 dark:text-white">
+                <h3 className="font-semibold text-muted-foreground dark:text-white">
                   {t(`firstVisit.steps.${key}.title`)}
                 </h3>
-                <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">
+                <p className="mt-2 text-sm leading-6 text-muted-foreground">
                   {t(`firstVisit.steps.${key}.description`)}
                 </p>
               </li>
@@ -108,7 +108,7 @@ export function FirstDashboardWelcome({
               size="lg"
               variant="outline"
               onClick={onAddProperty}
-              className="min-h-11 w-full border-slate-300 bg-white/80 sm:w-auto dark:border-slate-700 dark:bg-slate-900/70"
+              className="min-h-11 w-full border-border bg-white/80 sm:w-auto dark:border-border dark:bg-muted"
             >
               <Building2 className="h-4 w-4" aria-hidden="true" />
               {t('firstVisit.actions.addProperty')}
@@ -120,19 +120,19 @@ export function FirstDashboardWelcome({
               type="button"
               variant="link"
               onClick={onImportContract}
-              className="min-h-11 px-0 text-blue-700 dark:text-blue-300"
+              className="min-h-11 px-0 text-primary dark:text-primary"
             >
               <FileUp className="h-4 w-4" aria-hidden="true" />
               {t('firstVisit.actions.importContract')}
             </Button>
-            <span className="hidden text-slate-300 sm:inline dark:text-slate-700" aria-hidden="true">
+            <span className="hidden text-muted-foreground sm:inline dark:text-foreground/80" aria-hidden="true">
               ·
             </span>
             <Button
               type="button"
               variant="ghost"
               onClick={onContinueLater}
-              className="min-h-11 px-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-white"
+              className="min-h-11 px-2 text-muted-foreground hover:bg-muted hover:text-foreground dark:text-muted-foreground/70 dark:hover:bg-muted dark:hover:text-white"
             >
               {t('firstVisit.actions.continueLater')}
             </Button>

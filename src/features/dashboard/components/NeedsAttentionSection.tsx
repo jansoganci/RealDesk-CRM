@@ -23,7 +23,7 @@ export function NeedsAttentionSection({ items }: NeedsAttentionSectionProps) {
         <CardTitle className="flex flex-wrap items-center gap-2 text-base">
           <ListTodo className="h-4 w-4 shrink-0" />
           <span>{t('dailyBrief.needsAttention.title')}</span>
-          <span className="text-sm font-normal text-slate-500">
+          <span className="text-sm font-normal text-muted-foreground">
             {t('dailyBrief.needsAttention.subtitle')}
           </span>
           {items.length > 0 && (
@@ -33,26 +33,26 @@ export function NeedsAttentionSection({ items }: NeedsAttentionSectionProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {groups.length === 0 ? (
-          <p className="text-sm text-slate-600">{t('dailyBrief.needsAttention.empty')}</p>
+          <p className="text-sm text-muted-foreground">{t('dailyBrief.needsAttention.empty')}</p>
         ) : (
           groups.map((group) => (
             <div
               key={group.dealId}
-              className="space-y-2 rounded-lg border border-slate-200 bg-slate-50/80 p-3"
+              className="space-y-2 rounded-lg border border-border bg-muted/80 p-3"
             >
-              <p className="text-sm font-semibold text-slate-900">{group.dealName}</p>
+              <p className="text-sm font-semibold text-foreground">{group.dealName}</p>
               <ul className="space-y-2">
                 {group.items.map((item) => (
                   <li
                     key={item.milestoneId}
-                    className="rounded-md border border-slate-200 bg-white p-3"
+                    className="rounded-md border border-border bg-white p-3"
                   >
                     <div className="flex flex-wrap items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="text-sm font-medium text-slate-800">
+                        <p className="text-sm font-medium text-foreground">
                           {item.milestoneTitle}
                         </p>
-                        <p className="text-xs text-slate-500">
+                        <p className="text-xs text-muted-foreground">
                           {item.dueDate} ·{' '}
                           {item.responsibleParty ?? t('dailyBrief.common.unassigned')}
                         </p>
