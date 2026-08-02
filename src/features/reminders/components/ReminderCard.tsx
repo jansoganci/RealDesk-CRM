@@ -69,7 +69,7 @@ export function ReminderCard({
     
     if (isCompleted) {
       return (
-        <span className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-400')}>
+        <span className={cn('text-sm', COLORS.gray.text600)}>
           {t('card.completedStatus')}
         </span>
       );
@@ -77,7 +77,7 @@ export function ReminderCard({
     
     if (days < 0) {
       return (
-        <span className={cn('text-lg font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-lg font-bold', COLORS.danger.text)}>
           {t('card.overdue', { days: Math.abs(days) })}
         </span>
       );
@@ -85,7 +85,7 @@ export function ReminderCard({
     
     if (isCritical) {
       return (
-        <span className={cn('text-lg font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-lg font-bold', COLORS.danger.text)}>
           {t('card.daysRemaining', { days })}
         </span>
       );
@@ -93,7 +93,7 @@ export function ReminderCard({
     
     if (isUnderWatch) {
       return (
-        <span className={cn('text-sm', COLORS.success.text, 'dark:text-emerald-400')}>
+        <span className={cn('text-sm', COLORS.success.text)}>
           {t('card.daysUntilAlert', { days: days - 30 })}
         </span>
       );
@@ -109,15 +109,15 @@ export function ReminderCard({
   // Determine card styling based on tab/status
   const getCardClassName = () => {
     const baseCard =
-      'shadow-lg border border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-xl transition-shadow dark:border-slate-800 dark:bg-slate-900/80 dark:backdrop-blur-sm';
+      'border border-border bg-card/80 shadow-lg backdrop-blur-sm transition-shadow hover:shadow-xl';
     if (activeTab === 'critical' || isCritical) {
-      return cn(baseCard, 'border-l-4 border-l-red-500 dark:border-l-red-500');
+      return cn(baseCard, 'border-l-4 border-l-destructive/40');
     }
     if (activeTab === 'underWatch' || isUnderWatch) {
-      return cn(baseCard, 'border-l-4 border-l-green-500 dark:border-l-emerald-600');
+      return cn(baseCard, 'border-l-4 border-l-success/40');
     }
     if (activeTab === 'completed' || isCompleted) {
-      return cn(baseCard, 'border-l-4 border-l-gray-400 dark:border-l-slate-500 opacity-90');
+      return cn(baseCard, 'border-l-4 border-l-muted-foreground opacity-90');
     }
     return baseCard;
   };
@@ -129,10 +129,10 @@ export function ReminderCard({
           <div className="space-y-1 flex-1">
             <CardTitle className="text-lg flex items-center gap-2 text-foreground">
               <AlarmStatusIcon reminder={reminder} className="flex-shrink-0" />
-              <Home className={cn('h-5 w-5', COLORS.primary.text, 'dark:text-blue-400')} />
+              <Home className={cn('h-5 w-5', COLORS.primary.text)} />
               {property?.address || t('card.unknownProperty')}
             </CardTitle>
-            <CardDescription className="flex items-center gap-2 text-sm text-gray-600 dark:text-slate-400">
+            <CardDescription className="flex items-center gap-2 text-sm text-muted-foreground">
               <User className="h-4 w-4" />
               {t('card.tenant', {
                 name: tenant?.name ?? t('card.unknownTenant'),
@@ -156,7 +156,7 @@ export function ReminderCard({
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
           <div>
-            <p className={cn(COLORS.muted.textLight, 'dark:text-slate-400', 'flex items-center gap-1')}>
+            <p className={cn(COLORS.muted.textLight, 'flex items-center gap-1')}>
               <Calendar className="h-4 w-4" />
               {t('card.contractEndDate')}
             </p>
@@ -165,7 +165,7 @@ export function ReminderCard({
             </p>
           </div>
           <div>
-            <p className={cn(COLORS.muted.textLight, 'dark:text-slate-400', 'flex items-center gap-1')}>
+            <p className={cn(COLORS.muted.textLight, 'flex items-center gap-1')}>
               <Bell className="h-4 w-4" />
               {t('card.reminderDate')}
             </p>
@@ -176,7 +176,7 @@ export function ReminderCard({
             </p>
           </div>
           <div>
-            <p className={cn(COLORS.muted.textLight, 'dark:text-slate-400', 'flex items-center gap-1')}>
+            <p className={cn(COLORS.muted.textLight, 'flex items-center gap-1')}>
               <DollarSign className="h-4 w-4" />
               {t('card.currentRent')}
             </p>
@@ -184,11 +184,11 @@ export function ReminderCard({
           </div>
           {expectedRentFormatted && (
             <div>
-              <p className={cn(COLORS.muted.textLight, 'dark:text-slate-400', 'flex items-center gap-1')}>
+              <p className={cn(COLORS.muted.textLight, 'flex items-center gap-1')}>
                 <DollarSign className="h-4 w-4" />
                 {t('card.expectedRent')}
               </p>
-              <p className={cn('font-medium', COLORS.success.text, 'dark:text-emerald-400')}>
+              <p className={cn('font-medium', COLORS.success.text)}>
                 {expectedRentFormatted}
               </p>
             </div>
@@ -196,19 +196,19 @@ export function ReminderCard({
         </div>
 
         {owner && (
-          <div className="border-t border-gray-100 dark:border-slate-800 pt-4">
+          <div className="border-t border-border pt-4">
             <p className="text-sm font-semibold mb-2 text-foreground">{t('card.ownerContact')}</p>
             <div className="space-y-1 text-sm">
               <p className="flex items-center gap-2">
-                <User className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
+                <User className={cn('h-4 w-4', COLORS.muted.textLight)} />
                 <span className="text-foreground">{owner.name}</span>
               </p>
               {owner.email && (
                 <p className="flex items-center gap-2">
-                  <Mail className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
+                  <Mail className={cn('h-4 w-4', COLORS.muted.textLight)} />
                   <a
                     href={`mailto:${owner.email}`}
-                    className={cn(COLORS.primary.text, 'hover:underline dark:text-blue-400')}
+                    className={cn(COLORS.primary.text, 'hover:underline')}
                   >
                     {owner.email}
                   </a>
@@ -216,10 +216,10 @@ export function ReminderCard({
               )}
               {owner.phone && (
                 <p className="flex items-center gap-2">
-                  <Phone className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
+                  <Phone className={cn('h-4 w-4', COLORS.muted.textLight)} />
                   <a
                     href={`tel:${owner.phone}`}
-                    className={cn(COLORS.primary.text, 'hover:underline dark:text-blue-400')}
+                    className={cn(COLORS.primary.text, 'hover:underline')}
                   >
                     {owner.phone}
                   </a>
@@ -230,12 +230,12 @@ export function ReminderCard({
         )}
 
         {reminder.reminder_notes && (
-          <div className="border-t border-gray-100 dark:border-slate-800 pt-4">
+          <div className="border-t border-border pt-4">
             <p className="text-sm font-semibold mb-1 flex items-center gap-1 text-foreground">
               <FileText className="h-4 w-4" />
               {t('card.notes')}
             </p>
-            <p className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-400')}>
+            <p className={cn('text-sm', COLORS.gray.text600)}>
               {reminder.reminder_notes}
             </p>
           </div>
@@ -253,7 +253,7 @@ export function ReminderCard({
                 }}
                 disabled={actionLoading === reminder.id}
                 variant="secondary"
-                className="flex-1 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500"
+                className="flex-1 bg-success text-success-foreground hover:bg-success/90"
               >
                 <Check className="h-4 w-4 mr-2" />
                 {actionLoading === reminder.id ? t('loading', { ns: 'common' }) : t('actions.markContacted')}
@@ -261,7 +261,7 @@ export function ReminderCard({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 flex-shrink-0 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                className="h-10 w-10 flex-shrink-0 border-border bg-card text-foreground/80 hover:bg-muted"
                 onClick={() => {
                   // TODO: Add note functionality
                 }}
@@ -277,7 +277,7 @@ export function ReminderCard({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 flex-shrink-0 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                className="h-10 w-10 flex-shrink-0 border-border bg-card text-foreground/80 hover:bg-muted"
                 onClick={() => {
                   // TODO: View details functionality
                 }}
@@ -288,7 +288,7 @@ export function ReminderCard({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 flex-shrink-0 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                className="h-10 w-10 flex-shrink-0 border-border bg-card text-foreground/80 hover:bg-muted"
                 onClick={() => {
                   // TODO: Add note functionality
                 }}
@@ -303,7 +303,7 @@ export function ReminderCard({
             <Button
               variant="outline"
               size="icon"
-              className="h-10 w-10 flex-shrink-0 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              className="h-10 w-10 flex-shrink-0 border-border bg-card text-foreground/80 hover:bg-muted"
               onClick={() => {
                 // TODO: View contract functionality
               }}
@@ -323,7 +323,7 @@ export function ReminderCard({
               }}
               disabled={actionLoading === reminder.id}
               variant="secondary"
-              className="flex-1 dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500"
+              className="flex-1 bg-success text-success-foreground hover:bg-success/90"
             >
               <Check className="h-4 w-4 mr-2" />
               {actionLoading === reminder.id ? t('loading', { ns: 'common' }) : t('actions.markContacted')}

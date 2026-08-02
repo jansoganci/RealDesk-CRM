@@ -92,6 +92,6 @@ export const DEFAULT_FROM_EMAIL = 'onboarding@resend.dev';
 
 /**
  * Production sender email (when domain is verified)
- * Domain: closewell.app (must be verified in Resend before production use)
+ * Domain: mail.closewell.app (verified subdomain in Resend)
  */
-export const PRODUCTION_FROM_EMAIL = 'support@closewell.app';
+export const PRODUCTION_FROM_EMAIL = 'support@mail.closewell.app';

@@ -104,7 +104,7 @@ export function Step8NoticesDisclosures() {
         </div>
 
         {showLeadPaint && (
-          <p className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm font-medium text-red-950 dark:border-red-900 dark:bg-red-950/40 dark:text-red-100">
+          <p className="rounded-md border border-destructive/30 bg-destructive/15 px-3 py-2 text-sm font-medium text-destructive">
             {t('leaseWizard.step8.leadBannerFederal')}
           </p>
         )}
@@ -114,7 +114,7 @@ export function Step8NoticesDisclosures() {
         )}
 
         {!showLeadPaint && (
-          <p className="rounded-md border border-emerald-200 bg-success/15 px-3 py-2 text-sm text-emerald-950 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-100">
+          <p className="rounded-md border border-success/30 bg-success/15 px-3 py-2 text-sm text-success">
             {t('leaseWizard.step8.leadPost1978Note')}
           </p>
         )}

@@ -99,6 +99,12 @@ export { meetingsService } from '../services/meetings.service';
 export { commissionsService } from '../services/commissions.service';
 export { calculateCommission } from '../services/commissionCalculator';
 export { userPreferencesService } from '../services/userPreferences.service';
+export { orgMemberCommissionSettingsService } from '../services/orgMemberCommissionSettings.service';
+export type {
+  BrokerSettingsSource,
+  ResolvedBrokerSettings,
+  OrgMemberCommissionSettingsInput,
+} from '../services/orgMemberCommissionSettings.service';
 export * as financialTransactionsService from '../services/finance';
 
 

@@ -245,7 +245,7 @@ export function MilestoneCard({
             onChange={(e) => void handleFileChange(e)}
           />
           {hasDocument && (
-            <div className="flex items-center justify-between rounded-md border border-emerald-200 bg-success/15 px-3 py-2 text-sm text-success dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300">
+            <div className="flex items-center justify-between rounded-md border border-success/30 bg-success/15 px-3 py-2 text-sm text-success">
               <span>{t('documents.uploaded')}</span>
               {onOpenDocument && (
                 <Button

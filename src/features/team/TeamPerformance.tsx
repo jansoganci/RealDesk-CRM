@@ -185,7 +185,7 @@ export function TeamPerformance() {
           {/* Header */}
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">{t('pageTitle')}</h1>
+              <h1 className="text-2xl font-bold text-foreground">{t('pageTitle')}</h1>
               <p className={`text-sm ${COLORS.muted.textLight}`}>{data.period.label}</p>
             </div>
             <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
@@ -216,17 +216,17 @@ export function TeamPerformance() {
           </div>
 
           {/* Org-wide Company Dollar callout — the headline number for the owner */}
-          <Card className="border-slate-800 bg-slate-900">
+          <Card className="border-primary bg-primary">
             <CardContent className="p-5">
               <div className="flex items-center justify-between gap-4">
                 <div>
-                  <p className="text-sm text-slate-300">{t('orgTotal.companyDollarLabel')}</p>
-                  <p className="mt-1 text-3xl font-bold text-white tabular-nums">
+                  <p className="text-sm text-primary-foreground/80">{t('orgTotal.companyDollarLabel')}</p>
+                  <p className="mt-1 text-3xl font-bold tabular-nums text-primary-foreground">
                     {formatCurrency(data.summary.totalCompanyDollar, userCurrency)}
                   </p>
                 </div>
-                <div className="flex-shrink-0 rounded-lg bg-slate-800 p-3">
-                  <DollarSign className="h-6 w-6 text-emerald-400" />
+                <div className="flex-shrink-0 rounded-lg bg-primary-foreground/10 p-3">
+                  <DollarSign className="h-6 w-6 text-secondary" />
                 </div>
               </div>
             </CardContent>
@@ -274,57 +274,57 @@ export function TeamPerformance() {
               <div className="hidden md:block">
                 <table className="w-full">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left text-sm font-medium text-gray-500 pb-3">
+                    <tr className="border-b border-border">
+                      <th className="pb-3 text-left text-sm font-medium text-muted-foreground">
                         {t('table.member')}
                       </th>
-                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                      <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
                         {t('table.commission')}
                       </th>
-                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                      <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
                         {t('table.net')}
                       </th>
-                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                      <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
                         {t('table.companyDollar')}
                       </th>
-                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                      <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
                         {t('table.deals')}
                       </th>
-                      <th className="text-right text-sm font-medium text-gray-500 pb-3">
+                      <th className="pb-3 text-right text-sm font-medium text-muted-foreground">
                         {t('table.contracts')}
                       </th>
                     </tr>
                   </thead>
                   <tbody>
                     {data.members.map((member: TeamMemberPerformance) => (
-                      <tr key={member.id} className="border-b border-gray-100 last:border-0">
+                      <tr key={member.id} className="border-b border-border/60 last:border-0">
                         <td className="py-3">
                           <div className="flex items-center gap-3">
                             <Avatar className="h-9 w-9">
                               {member.avatarUrl && (
                                 <AvatarImage src={member.avatarUrl} alt={member.name} />
                               )}
-                              <AvatarFallback className="bg-blue-100 text-blue-700 text-sm">
+                              <AvatarFallback className="bg-primary/10 text-sm text-primary">
                                 {getInitials(member.name)}
                               </AvatarFallback>
                             </Avatar>
                             <div>
-                              <p className="font-medium text-gray-900">{member.name}</p>
-                              <p className="text-sm text-gray-500">{member.email}</p>
+                              <p className="font-medium text-foreground">{member.name}</p>
+                              <p className="text-sm text-muted-foreground">{member.email}</p>
                             </div>
                           </div>
                         </td>
-                        <td className="text-right py-3 font-medium text-gray-900">
+                        <td className="py-3 text-right font-medium text-foreground">
                           {formatCurrency(member.grossCommission, userCurrency)}
                         </td>
-                        <td className="text-right py-3 font-medium text-emerald-700">
+                        <td className="py-3 text-right font-medium text-success">
                           {formatCurrency(member.netCommission, userCurrency)}
                         </td>
-                        <td className="text-right py-3 text-gray-600">
+                        <td className="py-3 text-right text-foreground/80">
                           {formatCurrency(member.companyDollar, userCurrency)}
                         </td>
-                        <td className="text-right py-3 text-gray-600">{member.deals}</td>
-                        <td className="text-right py-3 text-gray-600">{member.activeContracts}</td>
+                        <td className="py-3 text-right text-foreground/80">{member.deals}</td>
+                        <td className="py-3 text-right text-foreground/80">{member.activeContracts}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -336,35 +336,35 @@ export function TeamPerformance() {
                 {data.members.map((member: TeamMemberPerformance) => (
                   <div
                     key={member.id}
-                    className="py-2 border-b border-gray-100 last:border-0 space-y-2"
+                    className="space-y-2 border-b border-border/60 py-2 last:border-0"
                   >
                     <div className="flex items-center gap-3">
                       <Avatar className="h-9 w-9">
                         {member.avatarUrl && (
                           <AvatarImage src={member.avatarUrl} alt={member.name} />
                         )}
-                        <AvatarFallback className="bg-blue-100 text-blue-700 text-sm">
+                        <AvatarFallback className="bg-primary/10 text-sm text-primary">
                           {getInitials(member.name)}
                         </AvatarFallback>
                       </Avatar>
-                      <p className="font-medium text-gray-900">{member.name}</p>
+                      <p className="font-medium text-foreground">{member.name}</p>
                     </div>
                     <div className="grid grid-cols-3 gap-2 pl-12 text-sm">
                       <div>
-                        <p className="text-xs text-gray-500">{t('table.commission')}</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-xs text-muted-foreground">{t('table.commission')}</p>
+                        <p className="font-medium text-foreground">
                           {formatCurrency(member.grossCommission, userCurrency)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">{t('table.net')}</p>
-                        <p className="font-medium text-emerald-700">
+                        <p className="text-xs text-muted-foreground">{t('table.net')}</p>
+                        <p className="font-medium text-success">
                           {formatCurrency(member.netCommission, userCurrency)}
                         </p>
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">{t('table.companyDollar')}</p>
-                        <p className="font-medium text-gray-900">
+                        <p className="text-xs text-muted-foreground">{t('table.companyDollar')}</p>
+                        <p className="font-medium text-foreground">
                           {formatCurrency(member.companyDollar, userCurrency)}
                         </p>
                       </div>

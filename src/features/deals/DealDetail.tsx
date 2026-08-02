@@ -514,7 +514,7 @@ export function DealDetail() {
             deal.deal_stage === 'verbal_accepted' &&
             linkedPurchaseContractId == null &&
             !isMember && (
-              <Alert className="mb-4 border-amber-200 bg-amber-50 dark:border-amber-900 dark:bg-amber-950/40">
+              <Alert variant="warning" className="mb-4">
                 <AlertTitle>{t('detail.verbalAcceptedPurchasePrompt.title')}</AlertTitle>
                 <AlertDescription className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                   <span>{t('detail.verbalAcceptedPurchasePrompt.description')}</span>

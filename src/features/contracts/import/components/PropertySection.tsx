@@ -41,17 +41,17 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
         {/* Street Address */}
         <div>
           <Label htmlFor="street_address">
-            Street Address <span className="text-red-500">*</span>
+            Street Address <span className="text-destructive">*</span>
           </Label>
           <Input
             id="street_address"
             value={formData.street_address}
             onChange={(e) => onFieldUpdate('street_address', e.target.value)}
             placeholder="123 Main Street"
-            className={cn(fieldErrors.street_address && "border-red-500")}
+            className={cn(fieldErrors.street_address && "border-destructive")}
           />
           {fieldErrors.street_address && (
-            <p className="text-sm text-red-600 mt-1">{fieldErrors.street_address}</p>
+            <p className="text-sm text-destructive mt-1">{fieldErrors.street_address}</p>
           )}
         </div>
 
@@ -70,29 +70,29 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <Label htmlFor="city">
-              City <span className="text-red-500">*</span>
+              City <span className="text-destructive">*</span>
             </Label>
             <Input
               id="city"
               value={formData.city}
               onChange={(e) => onFieldUpdate('city', e.target.value)}
               placeholder="Austin"
-              className={cn(fieldErrors.city && "border-red-500")}
+              className={cn(fieldErrors.city && "border-destructive")}
             />
             {fieldErrors.city && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.city}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.city}</p>
             )}
           </div>
 
           <div>
             <Label htmlFor="state">
-              State <span className="text-red-500">*</span>
+              State <span className="text-destructive">*</span>
             </Label>
             <Select
               value={formData.state}
               onValueChange={(value) => onFieldUpdate('state', value)}
             >
-              <SelectTrigger className={cn(fieldErrors.state && "border-red-500")}>
+              <SelectTrigger className={cn(fieldErrors.state && "border-destructive")}>
                 <SelectValue placeholder="Select state" />
               </SelectTrigger>
               <SelectContent>
@@ -104,13 +104,13 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
               </SelectContent>
             </Select>
             {fieldErrors.state && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.state}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.state}</p>
             )}
           </div>
 
           <div>
             <Label htmlFor="zip_code">
-              ZIP Code <span className="text-red-500">*</span>
+              ZIP Code <span className="text-destructive">*</span>
             </Label>
             <Input
               id="zip_code"
@@ -118,10 +118,10 @@ export function PropertySection({ formData, fieldErrors, parsedData, onFieldUpda
               onChange={(e) => onFieldUpdate('zip_code', e.target.value)}
               placeholder="78701"
               maxLength={10}
-              className={cn(fieldErrors.zip_code && "border-red-500")}
+              className={cn(fieldErrors.zip_code && "border-destructive")}
             />
             {fieldErrors.zip_code && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.zip_code}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.zip_code}</p>
             )}
           </div>
         </div>

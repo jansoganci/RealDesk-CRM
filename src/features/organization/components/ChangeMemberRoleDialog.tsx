@@ -74,7 +74,7 @@ export function ChangeMemberRoleDialog({
   const content = (
     <div className="space-y-4">
       {/* Member info */}
-      <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg">
+      <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
         <MemberAvatar
           name={userName}
           email={userEmail}
@@ -82,27 +82,27 @@ export function ChangeMemberRoleDialog({
           size="md"
         />
         <div>
-          <p className="font-medium text-gray-900 dark:text-slate-50">{userName}</p>
-          <p className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</p>
+          <p className="font-medium text-foreground">{userName}</p>
+          <p className="text-sm text-muted-foreground">{userEmail}</p>
         </div>
       </div>
 
       {/* Role change visualization */}
       <div className="flex items-center justify-center gap-4 py-4">
         <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-slate-400 mb-1">{t('team:changeRoleDialog.currentRole')}</p>
+          <p className="mb-1 text-xs text-muted-foreground">{t('team:changeRoleDialog.currentRole')}</p>
           <RoleBadge role={currentRole} />
         </div>
-        <div className="text-2xl text-gray-400 dark:text-slate-500">→</div>
+        <div className="text-2xl text-muted-foreground">→</div>
         <div className="text-center">
-          <p className="text-xs text-gray-500 dark:text-slate-400 mb-1">{t('team:changeRoleDialog.newRole')}</p>
+          <p className="mb-1 text-xs text-muted-foreground">{t('team:changeRoleDialog.newRole')}</p>
           <RoleBadge role={newRole} />
         </div>
       </div>
 
       {/* Warning for demotion */}
       {!isPromoting && (
-        <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-sm text-amber-800">
+        <div className="rounded-lg border border-warning/30 bg-warning/15 p-3 text-sm text-warning">
           {t('team:changeRoleDialog.demoteWarning')}
         </div>
       )}

@@ -208,7 +208,7 @@ const PropertiesListTab = ({ pageTop, pageTitle }: PropertiesListTabProps) => {
     description: searchQuery || statusFilter !== 'all'
       ? t('emptyState.noPropertiesFoundDescription')
       : t('emptyState.noPropertiesYetDescription'),
-    icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text} dark:text-slate-400`} />,
+    icon: <Building2 className={`h-16 w-16 ${COLORS.muted.text} dark:text-muted-foreground`} />,
     actionLabel: t('emptyState.addActionLabel'),
     showAction: !searchQuery && statusFilter === 'all',
   }), [searchQuery, statusFilter, t]);

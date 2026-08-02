@@ -277,7 +277,7 @@ export function DealOffersPanel({
                 <DropdownMenuItem
                   onClick={() => void handleReject(r.id)}
                   disabled={busy}
-                  className="text-red-600"
+                  className="text-destructive"
                 >
                   {t('offers.reject')}
                 </DropdownMenuItem>

@@ -27,17 +27,17 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="owner_name">
-            {t('create.fields.owner_name')} <span className="text-red-500">*</span>
+            {t('create.fields.owner_name')} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="owner_name"
             value={formData.owner_name}
             onChange={(e) => onFieldUpdate('owner_name', e.target.value)}
             placeholder={formData.owner_name ? '' : t('import.placeholders.notFound')}
-            className={cn(fieldErrors.owner_name && 'border-red-500')}
+            className={cn(fieldErrors.owner_name && 'border-destructive')}
           />
           {fieldErrors.owner_name && (
-            <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+            <p className="text-sm text-destructive mt-1 flex items-center gap-1">
               <AlertTriangle className="h-3 w-3" />
               {fieldErrors.owner_name}
             </p>
@@ -47,17 +47,17 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="owner_tax_id">
-              Tax ID (EIN/SSN) <span className="text-red-500">*</span>
+              Tax ID (EIN/SSN) <span className="text-destructive">*</span>
             </Label>
             <Input
               id="owner_tax_id"
               value={formData.owner_tax_id}
               onChange={(e) => onFieldUpdate('owner_tax_id', e.target.value)}
               placeholder="XX-XXXXXXX or XXX-XX-XXXX"
-              className={cn(fieldErrors.owner_tax_id && 'border-red-500')}
+              className={cn(fieldErrors.owner_tax_id && 'border-destructive')}
             />
             {fieldErrors.owner_tax_id && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_tax_id}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.owner_tax_id}</p>
             )}
           </div>
 
@@ -88,7 +88,7 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="owner_routing_number">
-              {t('create.fields.owner_routing_number')} <span className="text-red-500">*</span>
+              {t('create.fields.owner_routing_number')} <span className="text-destructive">*</span>
             </Label>
             <Input
               id="owner_routing_number"
@@ -96,15 +96,15 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
               onChange={(e) => onFieldUpdate('owner_routing_number', e.target.value)}
               placeholder={t('create.placeholders.owner_routing_number')}
               inputMode="numeric"
-              className={cn(fieldErrors.owner_routing_number && 'border-red-500')}
+              className={cn(fieldErrors.owner_routing_number && 'border-destructive')}
             />
             {fieldErrors.owner_routing_number && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_routing_number}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.owner_routing_number}</p>
             )}
           </div>
           <div>
             <Label htmlFor="owner_account_number">
-              {t('create.fields.owner_account_number')} <span className="text-red-500">*</span>
+              {t('create.fields.owner_account_number')} <span className="text-destructive">*</span>
             </Label>
             <Input
               id="owner_account_number"
@@ -112,10 +112,10 @@ export function OwnerSection({ formData, fieldErrors, onFieldUpdate }: OwnerSect
               onChange={(e) => onFieldUpdate('owner_account_number', e.target.value)}
               placeholder={t('create.placeholders.owner_account_number')}
               inputMode="numeric"
-              className={cn(fieldErrors.owner_account_number && 'border-red-500')}
+              className={cn(fieldErrors.owner_account_number && 'border-destructive')}
             />
             {fieldErrors.owner_account_number && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.owner_account_number}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.owner_account_number}</p>
             )}
           </div>
         </div>

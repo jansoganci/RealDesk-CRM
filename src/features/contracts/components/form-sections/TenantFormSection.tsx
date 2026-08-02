@@ -39,7 +39,7 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
             {...form.register('tenant_name')}
           />
           {form.formState.errors.tenant_name && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.tenant_name.message}
             </p>
           )}
@@ -56,7 +56,7 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
             {...form.register('tenant_tax_id')}
           />
           {form.formState.errors.tenant_tax_id && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.tenant_tax_id.message}
             </p>
           )}
@@ -74,7 +74,7 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
               {...form.register('tenant_phone')}
             />
             {form.formState.errors.tenant_phone && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.tenant_phone.message}
               </p>
             )}
@@ -91,7 +91,7 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
             {...form.register('tenant_email')}
           />
             {form.formState.errors.tenant_email && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.tenant_email.message}
               </p>
             )}
@@ -110,7 +110,7 @@ export function TenantFormSection({ form }: TenantFormSectionProps) {
             {...form.register('tenant_address')}
           />
           {form.formState.errors.tenant_address && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.tenant_address.message}
             </p>
           )}

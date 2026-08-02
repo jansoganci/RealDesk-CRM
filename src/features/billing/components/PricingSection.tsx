@@ -243,7 +243,7 @@ export default function PricingSection({ title, subtitle, showHeader = true }: P
                 <CardContent className="flex-1 flex flex-col px-4 sm:px-6 pb-4 sm:pb-6">
                   {/* Trial Badge */}
                   <div className="flex justify-center mb-4">
-                    <span className="inline-flex items-center rounded-full border border-secondary/40 bg-secondary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-secondary-foreground text-center leading-tight">
+                    <span className="inline-flex items-center rounded-full border border-secondary/40 bg-secondary/15 px-2.5 py-0.5 text-[11px] sm:text-xs font-medium text-secondary-foreground dark:text-secondary text-center leading-tight">
                       {t('trialBadge')}
                     </span>
                   </div>

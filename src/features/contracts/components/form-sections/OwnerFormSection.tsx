@@ -38,7 +38,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
             {...form.register('owner_name')}
           />
           {form.formState.errors.owner_name && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.owner_name.message}
             </p>
           )}
@@ -55,7 +55,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
             {...form.register('owner_tax_id')}
           />
           {form.formState.errors.owner_tax_id && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.owner_tax_id.message}
             </p>
           )}
@@ -76,7 +76,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
               {...form.register('owner_routing_number')}
             />
             {form.formState.errors.owner_routing_number && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.owner_routing_number.message}
               </p>
             )}
@@ -94,7 +94,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
               {...form.register('owner_account_number')}
             />
             {form.formState.errors.owner_account_number && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.owner_account_number.message}
               </p>
             )}
@@ -113,7 +113,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
               {...form.register('owner_phone')}
             />
             {form.formState.errors.owner_phone && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.owner_phone.message}
               </p>
             )}
@@ -130,7 +130,7 @@ export function OwnerFormSection({ form }: OwnerFormSectionProps) {
             {...form.register('owner_email')}
           />
             {form.formState.errors.owner_email && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.owner_email.message}
               </p>
             )}

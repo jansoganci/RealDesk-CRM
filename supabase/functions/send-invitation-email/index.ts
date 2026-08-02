@@ -155,7 +155,7 @@ Deno.serve(async (req) => {
     // 8. Determine sender email
     // Use verified production domain with display name format (required by Resend API)
     // Format: "Display Name <email@domain.com>"
-    // Domain closewell.app must be verified in Resend before production use
+    // Domain mail.closewell.app is verified in Resend
     const fromEmail = `Closewell <${PRODUCTION_FROM_EMAIL}>`;
 
     // 9. Send email via Resend
@@ -172,7 +172,7 @@ Deno.serve(async (req) => {
       to: invitation.email,
       subject: `${orgName} organizasyonuna davet edildiniz / You're invited to join ${orgName}`,
       html: emailHtml,
-      replyTo: 'support@closewell.app',
+      replyTo: 'support@mail.closewell.app',
     });
 
     console.log('✅ [EdgeFunction] Email sent successfully:', {

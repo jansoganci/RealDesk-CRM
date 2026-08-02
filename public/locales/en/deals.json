@@ -54,6 +54,10 @@
   "fields": {
     "dealName": "Deal name",
     "dealType": "Deal type",
+    "earningAgent": "Earning agent",
+    "earningAgentHelp": "Commission and team KPIs attribute to this agent.",
+    "earningAgentPlaceholder": "Select team member",
+    "earningAgentLoading": "Loading team…",
     "property": "Matched property",
     "clientRole": "Your role",
     "financingType": "Financing",
@@ -96,6 +100,8 @@
     "errorNotFound": "This deal may have been removed or you may not have access.",
     "backToList": "Back to deals",
     "subtitle": "Overview, offers, and timeline",
+    "earningAgentUpdated": "Earning agent updated",
+    "earningAgentUpdateError": "Failed to update earning agent",
     "verbalAcceptedPurchasePrompt": {
       "title": "Offer accepted — draft the purchase agreement",
       "description": "Create a purchase agreement to capture terms and link this deal to a contract.",
@@ -443,6 +449,12 @@
     "loading": "Loading commission settings...",
     "recording": "Recording...",
     "submit": "Record Commission",
+    "settingsSource": "Using {{source}} for the earning agent.",
+    "settingsSourceLabels": {
+      "override": "org commission override",
+      "profile": "agent profile settings",
+      "defaults": "default broker settings"
+    },
     "fields": {
       "salePrice": "Final Sale Price",
       "side": "Your Side",

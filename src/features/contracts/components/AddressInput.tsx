@@ -133,7 +133,7 @@ export function AddressInput({ form }: AddressInputProps) {
           {...form.register('street_address')}
         />
         {form.formState.errors.street_address && (
-          <p className="text-sm text-red-600 mt-1">
+          <p className="text-sm text-destructive mt-1">
             {form.formState.errors.street_address.message}
           </p>
         )}
@@ -150,7 +150,7 @@ export function AddressInput({ form }: AddressInputProps) {
           {...form.register('unit')}
         />
         {form.formState.errors.unit && (
-          <p className="text-sm text-red-600 mt-1">
+          <p className="text-sm text-destructive mt-1">
             {form.formState.errors.unit.message}
           </p>
         )}
@@ -169,7 +169,7 @@ export function AddressInput({ form }: AddressInputProps) {
             {...form.register('city')}
           />
           {form.formState.errors.city && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.city.message}
             </p>
           )}
@@ -196,7 +196,7 @@ export function AddressInput({ form }: AddressInputProps) {
             </SelectContent>
           </Select>
           {form.formState.errors.state && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.state.message}
             </p>
           )}
@@ -214,7 +214,7 @@ export function AddressInput({ form }: AddressInputProps) {
             {...form.register('zip_code')}
           />
           {form.formState.errors.zip_code && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.zip_code.message}
             </p>
           )}
@@ -246,7 +246,7 @@ export function AddressInput({ form }: AddressInputProps) {
           </SelectContent>
         </Select>
         {form.formState.errors.property_type && (
-          <p className="text-sm text-red-600 mt-1">
+          <p className="text-sm text-destructive mt-1">
             {form.formState.errors.property_type.message}
           </p>
         )}
@@ -263,7 +263,7 @@ export function AddressInput({ form }: AddressInputProps) {
           {...form.register('use_purpose')}
         />
         {form.formState.errors.use_purpose && (
-          <p className="text-sm text-red-600 mt-1">
+          <p className="text-sm text-destructive mt-1">
             {form.formState.errors.use_purpose.message}
           </p>
         )}

@@ -110,20 +110,20 @@ export const ExtractingStep = ({ progress, status }: ExtractingStepProps) => {
           <div
             className={cn(
               "w-16 h-16 rounded-full flex items-center justify-center mb-3 transition-colors",
-              progress >= 100 ? "bg-green-100" : "bg-muted"
+              progress >= 100 ? "bg-success/15" : "bg-muted"
             )}
           >
             <CheckCircle
               className={cn(
                 "h-8 w-8 transition-colors",
-                progress >= 100 ? "text-green-600" : "text-muted-foreground/70"
+                progress >= 100 ? "text-success" : "text-muted-foreground/70"
               )}
             />
           </div>
           <span
             className={cn(
               "text-sm font-medium transition-colors",
-              progress >= 100 ? "text-green-600" : "text-muted-foreground"
+              progress >= 100 ? "text-success" : "text-muted-foreground"
             )}
           >
             {t('import.progressSteps.ready')}

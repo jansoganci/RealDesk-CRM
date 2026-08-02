@@ -15,7 +15,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip';
-import { MoreHorizontal, Shield, UserMinus, UserCog, Trash2, Link2, MailPlus } from 'lucide-react';
+import { MoreHorizontal, Shield, UserMinus, UserCog, Trash2, Link2, MailPlus, Percent } from 'lucide-react';
 import { MemberAvatar } from './MemberAvatar';
 import { RoleBadge } from './RoleBadge';
 import { StatusBadge } from './StatusBadge';
@@ -28,6 +28,7 @@ interface TeamMemberRowProps {
   isOwner: boolean;
   onChangeRole?: (teamMember: TeamMember) => void;
   onRemove?: (teamMember: TeamMember) => void;
+  onCommissionSettings?: (teamMember: TeamMember) => void;
   onRevoke?: (teamMember: TeamMember) => void;
   onCopyLink?: (teamMember: TeamMember) => void;
   onResend?: (teamMember: TeamMember) => void;
@@ -39,6 +40,7 @@ export const TeamMemberRow = memo(({
   isOwner,
   onChangeRole,
   onRemove,
+  onCommissionSettings,
   onRevoke,
   onCopyLink,
   onResend,
@@ -54,12 +56,14 @@ export const TeamMemberRow = memo(({
 
   const isInvitation = teamMember.type === 'invitation';
   const canModifyMember = isOwner && !isCurrentUser && !isInvitation;
+  const canEditCommission = isOwner && !isInvitation && Boolean(onCommissionSettings);
   const canModifyInvitation = isOwner && isInvitation;
+  const showMemberMenu = canModifyMember || canEditCommission;
 
   return (
     <TableRow className={cn(
-      isCurrentUser && 'bg-blue-50/50',
-      isInvitation && 'bg-amber-50/20'
+      isCurrentUser && 'bg-primary/5',
+      isInvitation && 'bg-warning/10'
     )}>
       {/* Member Info */}
       <TableCell>
@@ -71,16 +75,16 @@ export const TeamMemberRow = memo(({
             size="md"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900 dark:text-slate-50">
+            <span className="font-medium text-foreground">
               {displayName}
               {isCurrentUser && (
-                <span className="ml-2 text-xs text-blue-600 dark:text-blue-400 font-normal">
+                <span className="ml-2 text-xs font-normal text-primary">
                   {t('you')}
                 </span>
               )}
             </span>
             {teamMember.name && (
-              <span className="text-sm text-gray-500 dark:text-slate-400">{teamMember.email}</span>
+              <span className="text-sm text-muted-foreground">{teamMember.email}</span>
             )}
           </div>
         </div>
@@ -88,7 +92,7 @@ export const TeamMemberRow = memo(({
 
       {/* Email (hidden on smaller screens, shown in member info) */}
       <TableCell className="hidden lg:table-cell">
-        <span className="text-gray-600 dark:text-slate-300">{teamMember.email}</span>
+        <span className="text-foreground/80">{teamMember.email}</span>
       </TableCell>
 
       {/* Status */}
@@ -103,12 +107,12 @@ export const TeamMemberRow = memo(({
 
       {/* Joined/Invited Date */}
       <TableCell className="hidden md:table-cell">
-        <span className="text-gray-600 dark:text-slate-300">{joinedDate}</span>
+        <span className="text-foreground/80">{joinedDate}</span>
       </TableCell>
 
       {/* Actions */}
       <TableCell className="text-right">
-        {canModifyMember && onChangeRole && onRemove ? (
+        {showMemberMenu ? (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
@@ -121,27 +125,38 @@ export const TeamMemberRow = memo(({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => onChangeRole(teamMember)}>
-                {teamMember.role === 'owner' ? (
-                  <>
-                    <UserCog className="mr-2 h-4 w-4" />
-                    {t('actions.demoteToMember')}
-                  </>
-                ) : (
-                  <>
-                    <Shield className="mr-2 h-4 w-4" />
-                    {t('actions.promoteToOwner')}
-                  </>
-                )}
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem
-                onClick={() => onRemove(teamMember)}
-                className="text-red-600 focus:text-red-600"
-              >
-                <UserMinus className="mr-2 h-4 w-4" />
-                {t('actions.removeMember')}
-              </DropdownMenuItem>
+              {canEditCommission && onCommissionSettings && (
+                <DropdownMenuItem onClick={() => onCommissionSettings(teamMember)}>
+                  <Percent className="mr-2 h-4 w-4" />
+                  {t('actions.commissionSettings')}
+                </DropdownMenuItem>
+              )}
+              {canModifyMember && onChangeRole && onRemove && (
+                <>
+                  {canEditCommission && <DropdownMenuSeparator />}
+                  <DropdownMenuItem onClick={() => onChangeRole(teamMember)}>
+                    {teamMember.role === 'owner' ? (
+                      <>
+                        <UserCog className="mr-2 h-4 w-4" />
+                        {t('actions.demoteToMember')}
+                      </>
+                    ) : (
+                      <>
+                        <Shield className="mr-2 h-4 w-4" />
+                        {t('actions.promoteToOwner')}
+                      </>
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    onClick={() => onRemove(teamMember)}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <UserMinus className="mr-2 h-4 w-4" />
+                    {t('actions.removeMember')}
+                  </DropdownMenuItem>
+                </>
+              )}
             </DropdownMenuContent>
           </DropdownMenu>
         ) : canModifyInvitation && onRevoke && onCopyLink && onResend ? (
@@ -168,14 +183,14 @@ export const TeamMemberRow = memo(({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => onRevoke(teamMember)}
-                className="text-red-600 focus:text-red-600"
+                className="text-destructive focus:text-destructive"
               >
                 <Trash2 className="mr-2 h-4 w-4" />
                 {t('actions.revokeInvite')}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-        ) : isCurrentUser ? (
+        ) : isCurrentUser && !isOwner ? (
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>

@@ -28,17 +28,17 @@ export function TenantSection({ formData, fieldErrors, onFieldUpdate }: TenantSe
       <CardContent className="space-y-4">
         <div>
           <Label htmlFor="tenant_name">
-            {t('create.fields.tenant_name')} <span className="text-red-500">*</span>
+            {t('create.fields.tenant_name')} <span className="text-destructive">*</span>
           </Label>
           <Input
             id="tenant_name"
             value={formData.tenant_name}
             onChange={(e) => onFieldUpdate('tenant_name', e.target.value)}
             placeholder={formData.tenant_name ? "" : t('import.placeholders.notFound')}
-            className={cn(fieldErrors.tenant_name && "border-red-500")}
+            className={cn(fieldErrors.tenant_name && "border-destructive")}
           />
           {fieldErrors.tenant_name && (
-            <p className="text-sm text-red-600 mt-1 flex items-center gap-1">
+            <p className="text-sm text-destructive mt-1 flex items-center gap-1">
               <AlertTriangle className="h-3 w-3" />
               {fieldErrors.tenant_name}
             </p>
@@ -48,17 +48,17 @@ export function TenantSection({ formData, fieldErrors, onFieldUpdate }: TenantSe
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="tenant_tax_id">
-              Tax ID (SSN/EIN) <span className="text-red-500">*</span>
+              Tax ID (SSN/EIN) <span className="text-destructive">*</span>
             </Label>
             <Input
               id="tenant_tax_id"
               value={formData.tenant_tax_id}
               onChange={(e) => onFieldUpdate('tenant_tax_id', e.target.value)}
               placeholder="XXX-XX-XXXX or XX-XXXXXXX"
-              className={cn(fieldErrors.tenant_tax_id && "border-red-500")}
+              className={cn(fieldErrors.tenant_tax_id && "border-destructive")}
             />
             {fieldErrors.tenant_tax_id && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.tenant_tax_id}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.tenant_tax_id}</p>
             )}
           </div>
 

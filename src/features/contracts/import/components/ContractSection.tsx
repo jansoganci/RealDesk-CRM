@@ -28,33 +28,33 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="start_date">
-              {t('create.fields.start_date')} <span className="text-red-500">*</span>
+              {t('create.fields.start_date')} <span className="text-destructive">*</span>
             </Label>
             <Input
               id="start_date"
               type="date"
               value={formData.start_date}
               onChange={(e) => onFieldUpdate('start_date', e.target.value)}
-              className={cn(fieldErrors.start_date && "border-red-500")}
+              className={cn(fieldErrors.start_date && "border-destructive")}
             />
             {fieldErrors.start_date && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.start_date}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.start_date}</p>
             )}
           </div>
 
           <div>
             <Label htmlFor="end_date">
-              {t('create.fields.end_date')} <span className="text-red-500">*</span>
+              {t('create.fields.end_date')} <span className="text-destructive">*</span>
             </Label>
             <Input
               id="end_date"
               type="date"
               value={formData.end_date}
               onChange={(e) => onFieldUpdate('end_date', e.target.value)}
-              className={cn(fieldErrors.end_date && "border-red-500")}
+              className={cn(fieldErrors.end_date && "border-destructive")}
             />
             {fieldErrors.end_date && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.end_date}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.end_date}</p>
             )}
           </div>
         </div>
@@ -62,7 +62,7 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <Label htmlFor="rent_amount">
-              {t('create.fields.rent_amount')} <span className="text-red-500">*</span>
+              {t('create.fields.rent_amount')} <span className="text-destructive">*</span>
             </Label>
             <Input
               id="rent_amount"
@@ -70,10 +70,10 @@ export function ContractSection({ formData, fieldErrors, onFieldUpdate }: Contra
               value={formData.rent_amount}
               onChange={(e) => onFieldUpdate('rent_amount', parseFloat(e.target.value))}
               placeholder="15000"
-              className={cn(fieldErrors.rent_amount && "border-red-500")}
+              className={cn(fieldErrors.rent_amount && "border-destructive")}
             />
             {fieldErrors.rent_amount && (
-              <p className="text-sm text-red-600 mt-1">{fieldErrors.rent_amount}</p>
+              <p className="text-sm text-destructive mt-1">{fieldErrors.rent_amount}</p>
             )}
           </div>
 

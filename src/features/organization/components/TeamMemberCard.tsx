@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { MoreVertical, Shield, UserMinus, UserCog, Calendar, Trash2, Link2, MailPlus } from 'lucide-react';
+import { MoreVertical, Shield, UserMinus, UserCog, Calendar, Trash2, Link2, MailPlus, Percent } from 'lucide-react';
 import { MemberAvatar } from './MemberAvatar';
 import { RoleBadge } from './RoleBadge';
 import { StatusBadge } from './StatusBadge';
@@ -22,6 +22,7 @@ interface TeamMemberCardProps {
   isOwner: boolean;
   onChangeRole?: (teamMember: TeamMember) => void;
   onRemove?: (teamMember: TeamMember) => void;
+  onCommissionSettings?: (teamMember: TeamMember) => void;
   onRevoke?: (teamMember: TeamMember) => void;
   onCopyLink?: (teamMember: TeamMember) => void;
   onResend?: (teamMember: TeamMember) => void;
@@ -33,6 +34,7 @@ export const TeamMemberCard = memo(({
   isOwner,
   onChangeRole,
   onRemove,
+  onCommissionSettings,
   onRevoke,
   onCopyLink,
   onResend,
@@ -48,13 +50,15 @@ export const TeamMemberCard = memo(({
 
   const isInvitation = teamMember.type === 'invitation';
   const canModifyMember = isOwner && !isCurrentUser && !isInvitation;
+  const canEditCommission = isOwner && !isInvitation && Boolean(onCommissionSettings);
   const canModifyInvitation = isOwner && isInvitation;
+  const showMenu = canModifyMember || canEditCommission || canModifyInvitation;
 
   return (
     <Card className={cn(
       'relative',
-      isCurrentUser && 'ring-2 ring-blue-200 bg-blue-50/30',
-      isInvitation && 'bg-amber-50/20'
+      isCurrentUser && 'bg-primary/5 ring-2 ring-primary/30',
+      isInvitation && 'bg-warning/10'
     )}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
@@ -69,24 +73,24 @@ export const TeamMemberCard = memo(({
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-slate-50 truncate">
+              <span className="truncate font-semibold text-foreground">
                 {displayName}
               </span>
               {isCurrentUser && (
-                <span className="text-xs text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-950 px-1.5 py-0.5 rounded">
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
                   {t('you')}
                 </span>
               )}
             </div>
 
-            <p className="text-sm text-gray-500 dark:text-slate-400 truncate mb-2">
+            <p className="mb-2 truncate text-sm text-muted-foreground">
               {teamMember.email}
             </p>
 
             <div className="flex items-center gap-2 flex-wrap">
               <StatusBadge status={teamMember.status} size="sm" />
               <RoleBadge role={teamMember.role} size="sm" />
-              <span className="flex items-center text-xs text-gray-400 dark:text-slate-500">
+              <span className="flex items-center text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3 mr-1" />
                 {joinedDate}
               </span>
@@ -94,7 +98,7 @@ export const TeamMemberCard = memo(({
           </div>
 
           {/* Actions */}
-          {(canModifyMember || canModifyInvitation) && (
+          {showMenu && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -107,8 +111,15 @@ export const TeamMemberCard = memo(({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
+                {canEditCommission && onCommissionSettings && (
+                  <DropdownMenuItem onClick={() => onCommissionSettings(teamMember)}>
+                    <Percent className="mr-2 h-4 w-4" />
+                    {t('actions.commissionSettings')}
+                  </DropdownMenuItem>
+                )}
                 {canModifyMember && onChangeRole && onRemove && (
                   <>
+                    {canEditCommission && <DropdownMenuSeparator />}
                     <DropdownMenuItem onClick={() => onChangeRole(teamMember)}>
                       {teamMember.role === 'owner' ? (
                         <>
@@ -125,7 +136,7 @@ export const TeamMemberCard = memo(({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => onRemove(teamMember)}
-                      className="text-red-600 focus:text-red-600"
+                      className="text-destructive focus:text-destructive"
                     >
                       <UserMinus className="mr-2 h-4 w-4" />
                       {t('actions.removeMember')}
@@ -145,7 +156,7 @@ export const TeamMemberCard = memo(({
                     <DropdownMenuSeparator />
                     <DropdownMenuItem
                       onClick={() => onRevoke(teamMember)}
-                      className="text-red-600 focus:text-red-600"
+                      className="text-destructive focus:text-destructive"
                     >
                       <Trash2 className="mr-2 h-4 w-4" />
                       {t('actions.revokeInvite')}

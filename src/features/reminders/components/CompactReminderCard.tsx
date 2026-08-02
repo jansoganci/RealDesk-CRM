@@ -51,27 +51,27 @@ export function CompactReminderCard({
   const getDaysDisplay = () => {
     if (isCompleted) {
       return (
-        <span className={cn('text-sm md:text-xs font-medium', COLORS.gray.text600, 'dark:text-slate-400')}>
+        <span className={cn('text-sm md:text-xs font-medium', COLORS.gray.text600)}>
           {t('card.completedStatus')}
         </span>
       );
     }
     if (days < 0) {
       return (
-        <span className={cn('text-base md:text-sm font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-base md:text-sm font-bold', COLORS.danger.text)}>
           {t('card.overdue', { days: Math.abs(days) })}
         </span>
       );
     }
     if (isCritical) {
       return (
-        <span className={cn('text-base md:text-sm font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-base md:text-sm font-bold', COLORS.danger.text)}>
           {t('card.daysRemaining', { days })}
         </span>
       );
     }
     return (
-      <span className={cn('text-sm md:text-xs font-medium', COLORS.success.text, 'dark:text-emerald-400')}>
+      <span className={cn('text-sm md:text-xs font-medium', COLORS.success.text)}>
         {t('card.daysRemaining', { days })}
       </span>
     );
@@ -79,8 +79,8 @@ export function CompactReminderCard({
 
   // Card styling
   const cardClassName = isCritical
-    ? 'shadow-md border border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow border-l-4 border-l-red-500 dark:border-slate-800 dark:border-l-red-500 dark:bg-slate-900/80 dark:backdrop-blur-sm'
-    : 'shadow-md border border-gray-100 bg-white/80 backdrop-blur-sm hover:shadow-lg transition-shadow border-l-4 border-l-green-500 dark:border-slate-800 dark:border-l-emerald-600 dark:bg-slate-900/80 dark:backdrop-blur-sm';
+    ? 'border border-l-4 border-border border-l-destructive/40 bg-card/80 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg'
+    : 'border border-l-4 border-border border-l-success/40 bg-card/80 shadow-md backdrop-blur-sm transition-shadow hover:shadow-lg';
 
   return (
     <Card className={cn(cardClassName, 'overflow-hidden')}>
@@ -90,7 +90,7 @@ export function CompactReminderCard({
           <div className="flex items-center gap-2 flex-shrink-0">
             <AlarmStatusIcon reminder={reminder} className="flex-shrink-0" size={16} />
             <div className="flex items-center gap-1.5 flex-1 min-w-0">
-              <Home className={cn('h-4 w-4 md:h-3.5 md:w-3.5 flex-shrink-0', COLORS.primary.text, 'dark:text-blue-400')} />
+              <Home className={cn('h-4 w-4 md:h-3.5 md:w-3.5 flex-shrink-0', COLORS.primary.text)} />
               <span className="text-sm md:text-xs font-medium truncate text-foreground">
                 {property?.address || t('card.unknownProperty')}
               </span>
@@ -99,8 +99,8 @@ export function CompactReminderCard({
 
           {/* Row 2: Tenant name */}
           <div className="flex items-center gap-1.5 flex-shrink-0">
-            <User className={cn('h-4 w-4 md:h-3.5 md:w-3.5', COLORS.muted.textLight, 'dark:text-slate-400')} />
-            <span className="text-xs text-gray-600 dark:text-slate-400 truncate">
+            <User className={cn('h-4 w-4 md:h-3.5 md:w-3.5', COLORS.muted.textLight)} />
+            <span className="truncate text-xs text-muted-foreground">
               {t('card.tenant', { name: tenant?.name ?? t('card.unknownTenant') })}
             </span>
           </div>
@@ -117,8 +117,8 @@ export function CompactReminderCard({
           {/* Row 4: End date | Days left */}
           <div className="flex items-center justify-between text-xs md:text-xs flex-shrink-0">
             <div className="flex items-center gap-1">
-              <Calendar className={cn('h-4 w-4 md:h-3.5 md:w-3.5', COLORS.muted.textLight, 'dark:text-slate-400')} />
-              <span className="text-gray-600 dark:text-slate-400 text-xs">
+              <Calendar className={cn('h-4 w-4 md:h-3.5 md:w-3.5', COLORS.muted.textLight)} />
+              <span className="text-xs text-muted-foreground">
                 {reminder.end_date ? format(new Date(reminder.end_date), 'dd MMM yyyy') : t('card.noDate')}
               </span>
             </div>
@@ -132,7 +132,7 @@ export function CompactReminderCard({
         </div>
 
         {/* Row 6: Action buttons (always at bottom, inside card) */}
-        <div className="flex gap-2 pt-2 mt-auto flex-shrink-0 border-t border-gray-100 dark:border-slate-800">
+        <div className="mt-auto flex flex-shrink-0 gap-2 border-t border-border pt-2">
           {!isCompleted && (
             <>
               <Button
@@ -140,7 +140,7 @@ export function CompactReminderCard({
                 disabled={actionLoading === reminder.id}
                 variant="secondary"
                 size="sm"
-                className="flex-1 h-10 md:h-8 text-sm md:text-xs dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-500"
+                className="h-10 flex-1 bg-success text-sm text-success-foreground hover:bg-success/90 md:h-8 md:text-xs"
               >
                 <Check className="h-4 w-4 md:h-3.5 md:w-3.5 mr-1.5" />
                 {actionLoading === reminder.id 
@@ -150,7 +150,7 @@ export function CompactReminderCard({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-10 w-10 md:h-8 md:w-8 flex-shrink-0 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                className="h-10 w-10 flex-shrink-0 border-border bg-card text-foreground/80 hover:bg-muted md:h-8 md:w-8"
                 onClick={() => {
                   // TODO: Add note functionality
                 }}
@@ -164,7 +164,7 @@ export function CompactReminderCard({
             <Button
               variant="outline"
               size="sm"
-              className="flex-1 h-10 md:h-8 text-sm md:text-xs bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              className="h-10 flex-1 border-border bg-card text-sm text-foreground/80 hover:bg-muted md:h-8 md:text-xs"
               onClick={() => {
                 // TODO: View contract functionality
               }}

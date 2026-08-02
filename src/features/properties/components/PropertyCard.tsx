@@ -75,7 +75,7 @@ export function PropertyCard({
             <div className="p-1.5 bg-primary rounded-lg shadow-lg">
               <Building2 className="h-4 w-4 text-primary-foreground" />
             </div>
-            <span className="font-bold text-base text-slate-900 dark:text-slate-100 truncate">
+            <span className="font-bold text-base text-foreground truncate">
               {property.address}
             </span>
             {property.listing_url && (
@@ -92,7 +92,7 @@ export function PropertyCard({
             )}
           </div>
           {property.notes && (
-            <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 line-clamp-2 leading-relaxed">
+            <p className="text-xs text-foreground/80 mt-1 line-clamp-2 leading-relaxed">
               {property.notes}
             </p>
           )}
@@ -103,11 +103,11 @@ export function PropertyCard({
       </div>
 
       {/* Property Details Grid */}
-      <div className="space-y-3 bg-gray-50 dark:bg-slate-800/70 rounded-xl p-4 border border-gray-200/50 dark:border-slate-700">
+      <div className="space-y-3 bg-muted/50 rounded-xl p-4 border border-border">
         {(property.city || property.state || property.zip_code || property.district) && (
           <div className="flex items-center gap-2.5 text-sm">
-            <MapPin className="h-4 w-4 text-slate-600 dark:text-slate-300 flex-shrink-0" />
-            <span className="text-slate-700 dark:text-slate-200 font-medium">
+            <MapPin className="h-4 w-4 text-foreground/80 flex-shrink-0" />
+            <span className="text-foreground/80 font-medium">
               {[property.city, property.state, property.zip_code, property.district]
                 .filter(Boolean)
                 .join(', ')}
@@ -117,9 +117,9 @@ export function PropertyCard({
 
         {property.owner && (
           <div className="flex items-center gap-2.5 text-sm">
-            <User className="h-4 w-4 text-slate-600 dark:text-slate-300 flex-shrink-0" />
-            <span className="text-slate-700 dark:text-slate-200 font-medium">
-              <span className="text-slate-500 dark:text-slate-400 mr-1.5">Owner:</span>
+            <User className="h-4 w-4 text-foreground/80 flex-shrink-0" />
+            <span className="text-foreground/80 font-medium">
+              <span className="text-muted-foreground mr-1.5">Owner:</span>
               {property.owner.name}
             </span>
           </div>
@@ -127,21 +127,21 @@ export function PropertyCard({
 
         {property.status === 'Inactive' ? (
           <div className="flex items-center gap-2.5 text-sm">
-            <User className="h-4 w-4 text-slate-400 dark:text-slate-500 flex-shrink-0" />
-            <span className="text-slate-500 dark:text-slate-400">{t('properties:table.inactive')}</span>
+            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <span className="text-muted-foreground">{t('properties:table.inactive')}</span>
           </div>
         ) : property.activeTenant ? (
           <div className="flex items-center gap-2.5 text-sm">
             <User className="h-4 w-4 text-success flex-shrink-0" />
-            <span className="text-slate-700 dark:text-slate-200 font-medium">
-              <span className="text-slate-500 dark:text-slate-400 mr-1.5">Tenant:</span>
+            <span className="text-foreground/80 font-medium">
+              <span className="text-muted-foreground mr-1.5">Tenant:</span>
               {property.activeTenant.name}
             </span>
           </div>
         ) : (
           <div className="flex items-center gap-2.5 text-sm">
-            <User className="h-4 w-4 text-amber-600 flex-shrink-0" />
-            <span className="text-amber-700 font-medium">{t('properties:table.noTenant')}</span>
+            <User className="h-4 w-4 flex-shrink-0 text-warning" />
+            <span className="font-medium text-warning-foreground dark:text-warning">{t('properties:table.noTenant')}</span>
           </div>
         )}
 
@@ -151,7 +151,7 @@ export function PropertyCard({
               <div className="flex items-center justify-between p-3 bg-primary/10 rounded-lg border border-primary/20 shadow-sm">
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-primary" />
-                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">Monthly Rent:</span>
+                  <span className="text-sm text-foreground/80 font-medium">Monthly Rent:</span>
                 </div>
                 <span className="font-bold text-primary">
                   {formatCurrency(
@@ -167,12 +167,12 @@ export function PropertyCard({
             );
           } else if (isSale && property.sale_price) {
             return (
-              <div className="flex items-center justify-between p-3 bg-amber-50 rounded-lg border border-amber-200/50 shadow-sm">
+              <div className="flex items-center justify-between rounded-lg border border-warning/30 bg-warning/15 p-3 shadow-sm">
                 <div className="flex items-center gap-2">
-                  <DollarSign className="h-4 w-4 text-amber-600" />
-                  <span className="text-sm text-slate-600 dark:text-slate-300 font-medium">Sale Price:</span>
+                  <DollarSign className="h-4 w-4 text-warning" />
+                  <span className="text-sm text-foreground/80 font-medium">Sale Price:</span>
                 </div>
-                <span className="font-bold text-amber-700">
+                <span className="font-bold text-warning-foreground dark:text-warning">
                   {formatCurrency(
                     convertCurrency(
                       property.sale_price,
@@ -190,9 +190,9 @@ export function PropertyCard({
 
         {property.status !== 'Inactive' && property.activeContract?.end_date && (
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-slate-600 dark:text-slate-300 flex-shrink-0" />
-            <span className="text-slate-600 dark:text-slate-300 font-medium">
-              Contract ends: <span className="text-slate-900 dark:text-slate-100">{format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}</span>
+            <Calendar className="h-4 w-4 text-foreground/80 flex-shrink-0" />
+            <span className="text-foreground/80 font-medium">
+              Contract ends: <span className="text-foreground">{format(new Date(property.activeContract.end_date), 'dd MMM yyyy')}</span>
             </span>
             {(() => {
               const today = getToday();
@@ -201,7 +201,7 @@ export function PropertyCard({
               if (daysLeft <= 30 && daysLeft >= 0) {
                 return (
                   <div className="ml-auto">
-                    <Badge className="bg-red-600 text-white shadow-md text-xs">
+                    <Badge className="bg-destructive text-xs text-destructive-foreground shadow-md">
                       <AlertCircle className="h-3 w-3 mr-1" />
                       {daysLeft} days left
                     </Badge>
@@ -216,7 +216,7 @@ export function PropertyCard({
         {property.photos && property.photos.length > 0 && (
           <div className="flex items-center gap-2 text-sm">
             <Images className="h-4 w-4 text-primary flex-shrink-0" />
-            <span className="text-slate-600 dark:text-slate-300 font-medium">
+            <span className="text-foreground/80 font-medium">
               {t('photos', { count: property.photos.length })} photo{property.photos.length > 1 ? 's' : ''}
             </span>
           </div>
@@ -270,4 +270,3 @@ export function PropertyCard({
     </div>
   );
 }
-

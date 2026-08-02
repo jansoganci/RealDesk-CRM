@@ -220,7 +220,7 @@ export function FixturesSelector({ value, onChange, error, isPainted, onPaintedC
           }}
           onKeyDown={handleCustomInputKeyDown}
           placeholder={t('create.placeholders.fixturesCustomInput')}
-          className={cn(error && 'border-red-500')}
+          className={cn(error && 'border-destructive')}
           maxLength={50}
         />
         <div className="flex items-center justify-between mt-1">
@@ -229,7 +229,7 @@ export function FixturesSelector({ value, onChange, error, isPainted, onPaintedC
           </p>
           <p className={cn(
             "text-xs",
-            customInput.length > 45 ? "text-orange-600" : "text-muted-foreground"
+            customInput.length > 45 ? "text-warning-foreground dark:text-warning" : "text-muted-foreground"
           )}>
             {customInput.length}/50
           </p>
@@ -245,7 +245,7 @@ export function FixturesSelector({ value, onChange, error, isPainted, onPaintedC
             </Label>
             <span className={cn(
               "text-xs",
-              selectedItems.length >= 18 ? "text-orange-600 font-medium" : "text-muted-foreground"
+              selectedItems.length >= 18 ? "text-warning-foreground dark:text-warning font-medium" : "text-muted-foreground"
             )}>
               {selectedItems.length}/20
             </span>
@@ -278,7 +278,7 @@ export function FixturesSelector({ value, onChange, error, isPainted, onPaintedC
 
       {/* Error Message */}
       {error && (
-        <p className="text-sm text-red-600 mt-1">{error}</p>
+        <p className="text-sm text-destructive mt-1">{error}</p>
       )}
 
       {/* Boyalı/Boyasız Seçimi (Zorunlu) */}
@@ -305,7 +305,7 @@ export function FixturesSelector({ value, onChange, error, isPainted, onPaintedC
           </div>
         </RadioGroup>
         {paintedError && (
-          <p className="text-sm text-red-600">{paintedError}</p>
+          <p className="text-sm text-destructive">{paintedError}</p>
         )}
       </div>
     </div>

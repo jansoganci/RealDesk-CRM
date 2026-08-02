@@ -59,27 +59,27 @@ export function ReminderTableRow({
   const getDaysDisplay = () => {
     if (isCompleted) {
       return (
-        <span className={cn('text-sm font-medium', COLORS.gray.text600, 'dark:text-slate-400')}>
+        <span className={cn('text-sm font-medium', COLORS.gray.text600)}>
           {t('card.completedStatus')}
         </span>
       );
     }
     if (days < 0) {
       return (
-        <span className={cn('text-base font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-base font-bold', COLORS.danger.text)}>
           {Math.abs(days)}
         </span>
       );
     }
     if (isCritical) {
       return (
-        <span className={cn('text-base font-bold', COLORS.danger.text, 'dark:text-red-400')}>
+        <span className={cn('text-base font-bold', COLORS.danger.text)}>
           {days}
         </span>
       );
     }
     return (
-      <span className={cn('text-sm font-medium', COLORS.success.text, 'dark:text-emerald-400')}>
+      <span className={cn('text-sm font-medium', COLORS.success.text)}>
         {days}
       </span>
     );
@@ -89,7 +89,7 @@ export function ReminderTableRow({
     <>
       <TableRow
         className={cn(
-          'h-[60px] hover:bg-gray-50 dark:hover:bg-slate-800/50 transition-colors cursor-pointer',
+          'h-[60px] cursor-pointer transition-colors hover:bg-muted/50',
           isCompleted && 'opacity-75'
         )}
         onClick={() => setIsExpanded(!isExpanded)}
@@ -154,7 +154,7 @@ export function ReminderTableRow({
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-9 w-9 md:h-8 md:w-8 border-emerald-300 bg-white text-gray-800 hover:bg-emerald-50 hover:border-emerald-400 dark:border-emerald-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-emerald-950/40 dark:hover:border-emerald-500"
+                  className="h-9 w-9 border-success/40 bg-success/15 text-success hover:border-success/60 hover:bg-success/25 md:h-8 md:w-8"
                   onClick={() => onMarkAsContacted(reminder)}
                   disabled={actionLoading === reminder.id}
                   title={t('actions.markContacted')}
@@ -167,7 +167,7 @@ export function ReminderTableRow({
                 <Button
                   variant="outline"
                   size="icon"
-                  className="h-9 w-9 md:h-8 md:w-8 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                  className="h-9 w-9 border-border bg-card text-foreground/80 hover:bg-muted md:h-8 md:w-8"
                   onClick={(e) => {
                     e.stopPropagation();
                     // TODO: Add note functionality
@@ -182,7 +182,7 @@ export function ReminderTableRow({
               <Button
                 variant="outline"
                 size="icon"
-                className="h-9 w-9 md:h-8 md:w-8 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+                className="h-9 w-9 border-border bg-card text-foreground/80 hover:bg-muted md:h-8 md:w-8"
                 onClick={(e) => {
                   e.stopPropagation();
                   // TODO: View contract functionality
@@ -195,7 +195,7 @@ export function ReminderTableRow({
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9 md:h-8 md:w-8 bg-white text-gray-700 dark:bg-slate-800 dark:border-slate-600 dark:text-slate-200 dark:hover:bg-slate-700"
+              className="h-9 w-9 border-border bg-card text-foreground/80 hover:bg-muted md:h-8 md:w-8"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsExpanded(!isExpanded);
@@ -214,24 +214,24 @@ export function ReminderTableRow({
 
       {/* Expanded Row - Owner Contact Details */}
       {isExpanded && owner && (
-        <TableRow className="bg-gray-50 dark:bg-slate-900/70">
+        <TableRow className="bg-muted/50">
           <TableCell colSpan={8} className="py-3">
             <div className="flex items-start gap-6 text-sm">
               <div>
-                <p className={cn('font-semibold mb-2', COLORS.gray.text900, 'dark:text-slate-100')}>
+                <p className={cn('mb-2 font-semibold', COLORS.gray.text900)}>
                   {t('card.ownerContact')}
                 </p>
                 <div className="space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <User className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
-                    <span className={cn(COLORS.gray.text700, 'dark:text-slate-300')}>{owner.name}</span>
+                    <User className={cn('h-4 w-4', COLORS.muted.textLight)} />
+                    <span className={COLORS.gray.text700}>{owner.name}</span>
                   </div>
                   {owner.email && (
                     <div className="flex items-center gap-2">
-                      <Mail className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
+                      <Mail className={cn('h-4 w-4', COLORS.muted.textLight)} />
                       <a 
                         href={`mailto:${owner.email}`} 
-                        className={cn(COLORS.primary.text, 'hover:underline dark:text-blue-400')}
+                        className={cn(COLORS.primary.text, 'hover:underline')}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {owner.email}
@@ -240,10 +240,10 @@ export function ReminderTableRow({
                   )}
                   {owner.phone && (
                     <div className="flex items-center gap-2">
-                      <Phone className={cn('h-4 w-4', COLORS.muted.textLight, 'dark:text-slate-400')} />
+                      <Phone className={cn('h-4 w-4', COLORS.muted.textLight)} />
                       <a 
                         href={`tel:${owner.phone}`} 
-                        className={cn(COLORS.primary.text, 'hover:underline dark:text-blue-400')}
+                        className={cn(COLORS.primary.text, 'hover:underline')}
                         onClick={(e) => e.stopPropagation()}
                       >
                         {owner.phone}
@@ -254,10 +254,10 @@ export function ReminderTableRow({
               </div>
               {reminder.reminder_notes && (
                 <div className="flex-1">
-                  <p className={cn('font-semibold mb-2', COLORS.gray.text900, 'dark:text-slate-100')}>
+                  <p className={cn('mb-2 font-semibold', COLORS.gray.text900)}>
                     {t('card.notes')}
                   </p>
-                  <p className={cn('text-sm', COLORS.gray.text600, 'dark:text-slate-400')}>
+                  <p className={cn('text-sm', COLORS.gray.text600)}>
                     {reminder.reminder_notes}
                   </p>
                 </div>

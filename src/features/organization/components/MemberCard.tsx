@@ -45,7 +45,7 @@ export const MemberCard = memo(({
   return (
     <Card className={cn(
       'relative',
-      isCurrentUser && 'ring-2 ring-blue-200 bg-blue-50/30'
+      isCurrentUser && 'bg-primary/5 ring-2 ring-primary/30'
     )}>
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
@@ -60,23 +60,23 @@ export const MemberCard = memo(({
           {/* Info */}
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-1">
-              <span className="font-semibold text-gray-900 dark:text-slate-50 truncate">
+              <span className="truncate font-semibold text-foreground">
                 {userName || userEmail.split('@')[0]}
               </span>
               {isCurrentUser && (
-                <span className="text-xs text-blue-600 dark:text-blue-300 bg-blue-100 dark:bg-blue-950 px-1.5 py-0.5 rounded">
+                <span className="rounded bg-primary/10 px-1.5 py-0.5 text-xs text-primary">
                   {t('you')}
                 </span>
               )}
             </div>
 
-            <p className="text-sm text-gray-500 dark:text-slate-400 truncate mb-2">
+            <p className="mb-2 truncate text-sm text-muted-foreground">
               {userEmail}
             </p>
 
             <div className="flex items-center gap-3">
               <RoleBadge role={member.role} size="sm" />
-              <span className="flex items-center text-xs text-gray-400 dark:text-slate-500">
+              <span className="flex items-center text-xs text-muted-foreground">
                 <Calendar className="h-3 w-3 mr-1" />
                 {joinedDate}
               </span>
@@ -113,7 +113,7 @@ export const MemberCard = memo(({
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => onRemove(member)}
-                  className="text-red-600 focus:text-red-600"
+                  className="text-destructive focus:text-destructive"
                 >
                   <UserMinus className="mr-2 h-4 w-4" />
                   {t('actions.removeMember')}

@@ -21,10 +21,10 @@ export function ReviewAlerts({ parsedData }: ReviewAlertsProps) {
     <>
       {/* Success Banner */}
       {extractedCount > 0 && (
-        <Alert className="mb-6 border-green-200 bg-green-50">
-          <CheckCircle className="h-4 w-4 text-green-600" />
-          <AlertTitle className="text-green-900">{t('import.alerts.extractedSuccess')}</AlertTitle>
-          <AlertDescription className="text-green-800">
+        <Alert className="mb-6 border-success/30 bg-success/15">
+          <CheckCircle className="h-4 w-4 text-success" />
+          <AlertTitle className="text-success">{t('import.alerts.extractedSuccess')}</AlertTitle>
+          <AlertDescription className="text-success">
             {t('import.alerts.extractedDescription', { count: extractedCount })}
           </AlertDescription>
         </Alert>
@@ -32,10 +32,10 @@ export function ReviewAlerts({ parsedData }: ReviewAlertsProps) {
 
       {/* Warning if few fields extracted */}
       {extractedCount < 3 && (
-        <Alert className="mb-6 border-yellow-200 bg-yellow-50">
-          <AlertTriangle className="h-4 w-4 text-yellow-600" />
-          <AlertTitle className="text-yellow-900">{t('import.alerts.fewFieldsExtracted')}</AlertTitle>
-          <AlertDescription className="text-yellow-800">
+        <Alert className="mb-6 border-warning/30 bg-warning/15">
+          <AlertTriangle className="h-4 w-4 text-warning" />
+          <AlertTitle className="text-warning-foreground dark:text-warning">{t('import.alerts.fewFieldsExtracted')}</AlertTitle>
+          <AlertDescription className="text-warning-foreground dark:text-warning">
             {t('import.alerts.fewFieldsDescription')}
           </AlertDescription>
         </Alert>
@@ -43,4 +43,3 @@ export function ReviewAlerts({ parsedData }: ReviewAlertsProps) {
     </>
   );
 }
-

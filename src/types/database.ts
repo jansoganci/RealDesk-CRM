@@ -2288,6 +2288,83 @@ export type Database = {
           },
         ]
       }
+      org_member_commission_settings: {
+        Row: {
+          id: string
+          org_id: string
+          user_id: string
+          broker_model: string
+          broker_split_pct: number
+          annual_cap_amount: number | null
+          cap_anniversary_date: string | null
+          franchise_fee_enabled: boolean
+          franchise_fee_pct: number | null
+          franchise_fee_cap: number | null
+          default_transaction_fee: number
+          eo_fee_type: string
+          eo_fee_amount: number
+          default_tc_fee: number
+          default_rental_commission_type: string
+          default_rental_commission_rate: number | null
+          default_rental_flat_fee: number | null
+          updated_by: string | null
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          org_id: string
+          user_id: string
+          broker_model?: string
+          broker_split_pct?: number
+          annual_cap_amount?: number | null
+          cap_anniversary_date?: string | null
+          franchise_fee_enabled?: boolean
+          franchise_fee_pct?: number | null
+          franchise_fee_cap?: number | null
+          default_transaction_fee?: number
+          eo_fee_type?: string
+          eo_fee_amount?: number
+          default_tc_fee?: number
+          default_rental_commission_type?: string
+          default_rental_commission_rate?: number | null
+          default_rental_flat_fee?: number | null
+          updated_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          org_id?: string
+          user_id?: string
+          broker_model?: string
+          broker_split_pct?: number
+          annual_cap_amount?: number | null
+          cap_anniversary_date?: string | null
+          franchise_fee_enabled?: boolean
+          franchise_fee_pct?: number | null
+          franchise_fee_cap?: number | null
+          default_transaction_fee?: number
+          eo_fee_type?: string
+          eo_fee_amount?: number
+          default_tc_fee?: number
+          default_rental_commission_type?: string
+          default_rental_commission_rate?: number | null
+          default_rental_flat_fee?: number | null
+          updated_by?: string | null
+          created_at?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_member_commission_settings_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           brokerage_name: string | null
@@ -3503,6 +3580,10 @@ export type Database = {
     }
     Functions: {
       accept_org_invitation: { Args: { p_token: string }; Returns: Json }
+      resolve_member_broker_settings: {
+        Args: { p_org_id: string; p_member_user_id: string }
+        Returns: Json
+      }
       calculate_next_due_date: {
         Args: { current_due_date: string; day_of_month?: number; freq: string }
         Returns: string

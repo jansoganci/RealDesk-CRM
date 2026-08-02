@@ -215,7 +215,7 @@ export function AmendmentsTab({ deal, readOnly = false }: AmendmentsTabProps) {
           {loading ? (
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">{t('detail.loading')}</p>
           ) : error ? (
-            <p className="text-sm text-red-700">{error}</p>
+            <p className="text-sm text-destructive">{error}</p>
           ) : amendments.length === 0 ? (
             <p className="text-sm text-muted-foreground dark:text-muted-foreground">
               {t('detail.amendments.empty')}

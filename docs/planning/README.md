@@ -23,7 +23,6 @@ Optional: if the plan spawned runbooks still in use, copy the operational sectio
 | File | Status |
 |------|--------|
 | `COMMERCIAL_READINESS_PLAN.md` | Active — eight commercial-readiness gaps; execution not started |
-| `TEAM_COMMISSION_KPI_PLAN.md` | Active — team performance / commission KPIs |
 
 ## Related archive locations
 

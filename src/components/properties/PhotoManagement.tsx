@@ -131,7 +131,7 @@ export const PhotoManagement = ({
 
             {selectedFiles.length > 0 && (
               <div className="flex items-center justify-between pt-4 border-t">
-                <p className="text-sm text-gray-600">
+                <p className="text-sm text-foreground/80">
                   {t('management.readyToUpload', { count: selectedFiles.length })}
                 </p>
                 <div className="flex gap-2">

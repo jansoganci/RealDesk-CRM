@@ -16,7 +16,7 @@ export const PropertyTypeSelector = ({
   const { t } = useTranslation('properties');
   
   return (
-    <div className="grid grid-cols-2 gap-3 p-1 bg-gray-100 dark:bg-slate-800 rounded-lg">
+    <div className="grid grid-cols-2 gap-3 p-1 bg-muted rounded-lg">
       <button
         type="button"
         onClick={() => onChange('rental')}
@@ -25,8 +25,8 @@ export const PropertyTypeSelector = ({
           flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium transition-all
           ${
             value === 'rental'
-              ? `${COLORS.primary.bg} text-white shadow-md`
-              : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800/70'
+              ? `${COLORS.primary.bg} text-primary-foreground shadow-md`
+              : 'bg-card text-foreground/80 hover:bg-muted/70'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
@@ -43,7 +43,7 @@ export const PropertyTypeSelector = ({
           ${
             value === 'sale'
               ? 'bg-secondary text-secondary-foreground shadow-md'
-              : 'bg-white dark:bg-slate-900 text-gray-700 dark:text-slate-200 hover:bg-gray-50 dark:hover:bg-slate-800/70'
+              : 'bg-card text-foreground/80 hover:bg-muted/70'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}

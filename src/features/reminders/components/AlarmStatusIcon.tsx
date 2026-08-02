@@ -57,24 +57,24 @@ export function AlarmStatusIcon({
     switch (status) {
       case 'armed':
         return (
-          <Shield 
-            className={cn(iconClassName, 'text-green-600 dark:text-emerald-400')} 
+          <Shield
+            className={cn(iconClassName, 'text-success')}
             size={size}
             aria-label={t('alarm.armed')}
           />
         );
       case 'critical':
         return (
-          <Bell 
-            className={cn(iconClassName, 'text-red-600 dark:text-red-400 animate-pulse')} 
+          <Bell
+            className={cn(iconClassName, 'animate-pulse text-destructive')}
             size={size}
             aria-label={t('alarm.critical')}
           />
         );
       case 'completed':
         return (
-          <CheckCircle2 
-            className={cn(iconClassName, 'text-gray-500 dark:text-slate-400')} 
+          <CheckCircle2
+            className={cn(iconClassName, 'text-muted-foreground')}
             size={size}
             aria-label={t('alarm.completed')}
           />

@@ -440,15 +440,14 @@ class CommissionsService {
   }
 
   async recordCommission(commission: CommissionInsert): Promise<string> {
-    const userId = await getAuthenticatedUserId();
     let closingDate = commission.closing_date;
     if (typeof closingDate === 'string' && closingDate.includes('T')) {
       closingDate = closingDate.slice(0, 10);
     }
+    // Attribution (commissions.user_id) is set by the RPC from deals.user_id.
     const { data, error } = await supabase.rpc('rpc_record_commission_and_close_deal', {
       p_commission: {
         ...commission,
-        user_id: userId,
         closing_date: closingDate,
       } as Json,
     });

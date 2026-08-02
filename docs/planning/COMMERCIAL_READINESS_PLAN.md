@@ -1,6 +1,6 @@
 # RealDesk Commercial Readiness Plan
 
-**Status:** Active — Items 1–2, 4 (V1), 7–8 complete; Item 3 deferred; Item 5 is next  
+**Status:** Active — Items 1–2, 4 (V1), 6–8 complete; Item 3 deferred; Item 5 is next  
 
 
 **Created:** 2026-08-01  
@@ -47,7 +47,7 @@ Current verification baseline:
 | 3 | Billing enforcement | P0 | Medium | Deferred | Demo/feedback period (see §3) |
 | 4 | Legally usable lease/purchase documents | P0 | Large | V1 Complete — attorney review deferred | External legal/template input |
 | 5 | E-signature integration | P1 | Large | Not started | Item 4 |
-| 6 | Customer-facing email/SMS workflows | P1 | Large | Not started | Provider and consent decisions |
+| 6 | Customer-facing email/SMS workflows | P1 | Large | Complete | Provider and consent decisions |
 | 7 | Complete CCPA deletion flow | P2 | Medium | Complete | Item 1; reuse Item 2 security patterns |
 | 8 | Global lint cleanup and CI gate | P2 | Large | Complete | None |
 
@@ -204,32 +204,43 @@ Billing and encryption have no code dependency and may run in parallel when capa
 - Duplicate/out-of-order webhooks do not corrupt state.
 - Declined, expired, failed, and cancelled envelopes have explicit recovery paths.
 
-## 6. Customer-facing email and SMS workflows
+## 6. Customer-facing email workflows — COMPLETE (2026-08-02)
 
-**Priority / effort:** P1 / Large
-**Current issue:** Custom outbound email is limited to organization invitations; deadlines and follow-ups remain in-app.
+**Priority / effort:** P1 / Large  
+**Status:** Complete (2026-08-02).  
+**Original issue:** Custom outbound email was limited / broken for organization invitations; deadlines and follow-ups remain in-app.
 
-Scope decision (2026-08-02): SMS is out of scope for now — email only, using Resend (already integrated for org-invitation email). Item title/scope narrowed to 'Customer-facing email workflows' for the current implementation pass. SMS may be revisited as a separate future item.
+### Completed work (2026-08-02)
 
-### Work
+- Scope decision: SMS out of scope for now — email only, via Resend (already integrated for org-invitation email). Item narrowed to 'Customer-facing email workflows.'
+- closewell.app domain connected via Cloudflare (nameservers migrated from Namecheap), verified subdomain mail.closewell.app added to Resend for sending.
+- Sender address: `Closewell <support@mail.closewell.app>`, Reply-To matching.
+- Fixed `generate_invitation_token` RPC: migration `0044`'s search_path pin had broken `gen_random_bytes` resolution (pgcrypto lives in `extensions` schema) — fixed via migration `0053_fix_generate_invitation_token_pgcrypto.sql`, verified end-to-end.
+- Fixed missing `RESEND_API_KEY` secret in Supabase Edge Functions.
+- Fixed team-invite UI routing: invite dialog existed but wasn't mounted on any route — wired back in (`/team/members`).
+- Full invitation flow verified end-to-end: invite sent, email delivered from correct branded domain, no errors.
 
-- Implement transactional email and SMS delivery behind provider-neutral service interfaces.
-- Cover lead follow-up, agent/client milestone notices, deadline escalation, and contract/signature delivery.
-- Persist delivery attempts, provider IDs, status, retry count, final failure, and originating entity.
-- Implement consent, opt-out/unsubscribe, quiet hours, channel preference, and required compliance text.
-- Use idempotency and scheduled retries to prevent duplicate messages.
+### Deferred follow-ups (not blocking Item 6 closure)
+
+- SMS notifications (explicitly out of V1 scope, may be revisited as a separate future item).
+- Broader workflow coverage (milestone notices, deadline escalation beyond org invitations) not yet built — only the invitation email path is live today; other notification types from the original Item 6 scope (lead follow-up, contract delivery notices) remain future work if needed.
 
 ### Blocks / unlocks
 
-- **Blocks:** Reliable communication outside the application.
-- **Unlocks:** Follow-up automation, deadline escalation, contract delivery, and the future agentic layer.
+- **Blocks:** Reliable communication outside the application (invitation path unblocked).
+- **Unlocks:** Org invitation email delivery; follow-up automation / deadline escalation / broader contract notices remain future work.
 
 ### Acceptance criteria
 
-- Approved workflow events generate the correct message once through permitted channels.
-- Consent and opt-out rules are enforced before delivery.
-- Delivery/failure state is visible and auditable.
-- Retries are bounded and idempotent; permanent failures surface to the responsible user.
+- [x] Organization invitation email sends through Resend from verified `mail.closewell.app`.
+- [x] Invitation token RPC and team-invite UI path work end-to-end.
+- [ ] Lead follow-up, milestone notices, deadline escalation, and contract/signature delivery workflows — **deferred** (see Deferred follow-ups).
+- [ ] Consent/opt-out, quiet hours, and multi-channel (SMS) rules — **deferred** (SMS out of V1 scope).
+
+### Related completed (not a separate roadmap row) — 2026-08-02
+
+- Full rebrand from RealDesk to Closewell: new logo/favicon, all user-facing text/PDF/email branding updated, domains closewell.app and closewell.estate acquired and connected (closewell.estate pending Cloudflare verification), old domain references removed.
+- Bundle size optimization: main JS chunk reduced from 3,603 KB to 1,042 KB (~71% reduction) via route-based code splitting (`React.lazy`) and deferred PDF library loading — `serviceProxy.ts` architectural pattern preserved throughout. Verified in production: Finance, wizards, PDF generation, and Kanban drag-drop all confirmed working post-optimization.
 
 ## 7. Complete CCPA deletion flow
 
@@ -333,4 +344,7 @@ RealDesk is commercially deployable only when Items 1–6 are complete, staging 
 | 2026-08-02 | Item 3 — Billing enforcement | Deferred | Item 3 deferred until end of demo/feedback period; keep access open for demo accounts; next focus Item 4 (legal documents). |
 | 2026-08-02 | Item 7 — CCPA deletion flow | Complete | Migration `0051` on prod; engine + tests shipped; smoke-test delete `0d6b1f91-e0fe-4c7e-b3b2-48277f99b82f` → completed (all tables done; no matching CRM rows for test email). |
 | 2026-08-02 | Item 8 — Global lint cleanup | Complete | Lint 0/0 on `feature/global-lint-cleanup` (waves 0–7). Re-verified: lint/typecheck/test (114/114)/build pass. CI workflow added (`.github/workflows/ci.yml`: lint+typecheck+test on push/PR to main; `--max-warnings 0`). Item 8 closed. |
-| 2026-08-02 | Item 4 — Legally usable lease/purchase documents | V1 Complete — attorney review deferred | Original draft templates for CA/TX/FL/NY/AZ; state-requirements research docs; jurisdiction gating; migration `0052` artifact metadata; not-attorney-reviewed disclaimer on every PDF; formatting regression tests (43). Attorney review consciously deferred before paying-customer reliance or additional states. |
+| 2026-08-02 | Item 4 — Legally usable lease/purchase documents | V1 Complete — attorney review deferred | Original draft templates for CA/TX/FL/NY/AZ; state-requirements research docs; jurisdiction gating; migration `0052_contract_document_artifacts.sql` applied (artifact metadata); not-attorney-reviewed disclaimer on every PDF; formatting regression tests (43). Attorney review consciously deferred before paying-customer reliance or additional states. |
+| 2026-08-02 | Item 6 — Customer-facing email workflows | Complete | Email-only scope (SMS deferred). Resend sender `Closewell <support@mail.closewell.app>` on verified `mail.closewell.app`. Migration `0053_fix_generate_invitation_token_pgcrypto.sql` applied; `RESEND_API_KEY` set; `/team/members` invite UI remounted; invitation e2e verified. |
+| 2026-08-02 | Invitation-flow fixes (Item 6) | Complete | `generate_invitation_token` broken by `0044` search_path pin → fixed in `0053`; team invite dialog re-routed; Edge Function `send-invitation-email` redeployed with `mail.closewell.app` From/Reply-To. |
+| 2026-08-02 | Closewell rebrand + bundle-size work (alongside Item 6) | Complete | Full RealDesk→Closewell rebrand (logo, copy, PDF/email, closewell.app). Main JS chunk 3,603 KB → 1,042 KB via `React.lazy` + deferred PDF loads; production smoke OK (Finance, wizards, PDF, Kanban). |

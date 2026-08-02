@@ -34,5 +34,6 @@ Plans moved out of `docs/planning/` when work finished or the doc was superseded
 | `stripe-integration-plan.md` | 2026-07-20 | Stripe integration plan — closed |
 | `TURNSTILE_INTEGRATION_ANALYSIS.md` | 2026-07-20 | Turnstile integration analysis — closed |
 | `todos.md` | 2026-07-20 | Scratch task list (Stripe/pricing notes) — historical only |
+| `TEAM_COMMISSION_KPI_PLAN.md` | 2026-08-02 | Team KPI Phase 1 + Phase 2 (per-member overrides + deal attribution) — implemented |
 
-**Still active:** `docs/planning/TEAM_COMMISSION_KPI_PLAN.md`
+**Still active:** `docs/planning/COMMERCIAL_READINESS_PLAN.md`

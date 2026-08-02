@@ -28,7 +28,7 @@ export function ClosingCountdown({ closingDate, dealName }: ClosingCountdownProp
   }
 
   const daysRemaining = daysUntilClosing(closingDate);
-  let className = `${COLORS.success.bgLight} border-emerald-200 ${COLORS.success.textDark} dark:bg-emerald-950/40 dark:border-emerald-800 dark:text-emerald-300`;
+  let className = `${COLORS.success.bgLight} ${COLORS.success.border} ${COLORS.success.text}`;
   let message = t('closingCountdown.inDays', {
     count: daysRemaining,
     date: formattedDate,
@@ -36,17 +36,17 @@ export function ClosingCountdown({ closingDate, dealName }: ClosingCountdownProp
   });
 
   if (daysRemaining <= 7 && daysRemaining > 0) {
-    className = `${COLORS.warning.bgLight} border-amber-200 ${COLORS.warning.textDark} dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300`;
+    className = `${COLORS.warning.bgLight} ${COLORS.warning.border} ${COLORS.warning.text}`;
     message = t('closingCountdown.inDaysWarning', {
       count: daysRemaining,
       date: formattedDate,
       dealName,
     });
   } else if (daysRemaining === 0) {
-    className = `${COLORS.danger.bgLight} border-red-200 ${COLORS.danger.textDark} dark:bg-red-950/40 dark:border-red-800 dark:text-red-300`;
+    className = `${COLORS.danger.bgLight} ${COLORS.danger.border} ${COLORS.danger.text}`;
     message = t('closingCountdown.today', { date: formattedDate, dealName });
   } else if (daysRemaining < 0) {
-    className = `${COLORS.danger.bgLight} border-red-200 ${COLORS.danger.textDark} dark:bg-red-950/40 dark:border-red-800 dark:text-red-300`;
+    className = `${COLORS.danger.bgLight} ${COLORS.danger.border} ${COLORS.danger.text}`;
     message = t('closingCountdown.passed', {
       count: Math.abs(daysRemaining),
       dealName,

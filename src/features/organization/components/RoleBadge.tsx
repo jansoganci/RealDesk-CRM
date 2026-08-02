@@ -35,8 +35,8 @@ export const RoleBadge = memo(({
         sizeClasses,
         'font-medium border',
         isOwner
-          ? 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/50 dark:text-blue-300 dark:border-blue-800'
-          : 'bg-gray-50 text-gray-600 border-gray-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600',
+          ? 'border-primary/40 bg-primary/10 text-primary'
+          : 'border-border bg-muted/50 text-muted-foreground',
         className
       )}
     >

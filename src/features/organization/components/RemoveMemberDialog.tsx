@@ -61,7 +61,7 @@ export function RemoveMemberDialog({
     <AlertDialog open={isOpen} onOpenChange={onClose}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle className="flex items-center gap-2 text-red-600">
+          <AlertDialogTitle className="flex items-center gap-2 text-destructive">
             <UserMinus className="h-5 w-5" />
             {t('team:removeDialog.title')}
           </AlertDialogTitle>
@@ -70,7 +70,7 @@ export function RemoveMemberDialog({
               <p>{t('team:removeDialog.description', { name: userName })}</p>
 
               {/* Member info */}
-              <div className="flex items-center gap-3 p-3 bg-gray-50 dark:bg-slate-800/50 rounded-lg">
+              <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
                 <MemberAvatar
                   name={userName}
                   email={userEmail}
@@ -78,16 +78,16 @@ export function RemoveMemberDialog({
                   size="md"
                 />
                 <div className="flex-1">
-                  <p className="font-medium text-gray-900 dark:text-slate-50">{userName}</p>
-                  <p className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</p>
+                  <p className="font-medium text-foreground">{userName}</p>
+                  <p className="text-sm text-muted-foreground">{userEmail}</p>
                 </div>
                 <RoleBadge role={member.role} size="sm" />
               </div>
 
               {/* Warning */}
-              <div className="flex items-start gap-2 p-3 bg-red-50 border border-red-200 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-700">
+              <div className="flex items-start gap-2 rounded-lg border border-destructive/40 bg-destructive/15 p-3">
+                <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-destructive" />
+                <p className="text-sm text-destructive">
                   {t('team:removeDialog.warning')}
                 </p>
               </div>

@@ -79,13 +79,13 @@ export const MarkAsSoldDialog = ({
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-slate-900 dark:text-slate-100">
+          <DialogTitle className="flex items-center gap-2 text-foreground">
             <div className="p-2 bg-secondary rounded-lg shadow-md">
               <TrendingUp className="h-5 w-5 text-secondary-foreground" />
             </div>
             {t('properties:markAsSold.title')}
           </DialogTitle>
-          <DialogDescription className="text-slate-600 dark:text-slate-300">
+          <DialogDescription className="text-foreground/80">
             {t('properties:markAsSold.description', { address: property?.address || '' })}
           </DialogDescription>
         </DialogHeader>
@@ -93,16 +93,16 @@ export const MarkAsSoldDialog = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-5 py-4">
             {/* Property Info */}
-            <div className="bg-gradient-to-br from-slate-50 to-gray-50 dark:from-slate-800/70 dark:to-slate-800/70 rounded-xl p-4 border border-gray-200/50 dark:border-slate-800">
+            <div className="bg-gradient-to-br from-muted/50 to-muted/50 rounded-xl p-4 border border-border">
               <div className="flex items-center gap-2 mb-1">
-                <DollarSign className="h-4 w-4 text-slate-600 dark:text-slate-300" />
-                <span className="text-sm font-semibold text-slate-900 dark:text-slate-100">
+                <DollarSign className="h-4 w-4 text-foreground/80" />
+                <span className="text-sm font-semibold text-foreground">
                   {t('properties:markAsSold.propertyInfo')}
                 </span>
               </div>
-              <p className="text-sm text-slate-700 dark:text-slate-200 font-medium">{property?.address}</p>
+              <p className="text-sm text-foreground/80 font-medium">{property?.address}</p>
               {(property?.city || property?.state || property?.zip_code) && (
-                <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                <p className="text-xs text-foreground/80 mt-1">
                   {[property.city, property.state, property.zip_code].filter(Boolean).join(', ')}
                 </p>
               )}
@@ -110,7 +110,7 @@ export const MarkAsSoldDialog = ({
 
             {/* Sale Price Input */}
             <div className="space-y-2">
-              <Label htmlFor="salePrice" className="text-slate-900 dark:text-slate-100 font-semibold">
+              <Label htmlFor="salePrice" className="text-foreground font-semibold">
                 {t('properties:markAsSold.salePrice')} *
               </Label>
               <Input
@@ -119,10 +119,10 @@ export const MarkAsSoldDialog = ({
                 step="0.01"
                 placeholder="4000000"
                 {...register('salePrice')}
-                className={errors.salePrice ? 'border-red-500' : ''}
+                className={errors.salePrice ? 'border-destructive' : ''}
               />
               {errors.salePrice && (
-                <p className="text-sm text-red-500">{errors.salePrice.message}</p>
+                <p className="text-sm text-destructive">{errors.salePrice.message}</p>
               )}
             </div>
 
@@ -131,13 +131,13 @@ export const MarkAsSoldDialog = ({
               <div className="bg-secondary/15 border border-secondary/40 rounded-xl p-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 font-medium">
+                    <p className="text-xs text-foreground/80 font-medium">
                       {t('properties:markAsSold.yourCommission')}
                     </p>
                     <p className="text-2xl font-bold text-secondary-foreground">
                       {formatCurrency(calculateCommission(), 'USD')}
                     </p>
-                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1">
+                    <p className="text-xs text-foreground/80 mt-1">
                       {t('properties:markAsSold.commissionRate')}
                     </p>
                   </div>

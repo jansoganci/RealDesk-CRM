@@ -107,11 +107,11 @@ export const Reminders = () => {
       <MainLayout title={t('pageTitle')}>
         <PageContainer>
           <div className="flex flex-col items-center justify-center h-96 space-y-4">
-            <AlertCircle className={cn('h-16 w-16', COLORS.danger.text, 'dark:text-red-400')} />
+            <AlertCircle className={cn('h-16 w-16', COLORS.danger.text)} />
             <div className="text-center">
               <h3 className="text-lg font-semibold mb-2 text-foreground">{t('errors.title')}</h3>
               <p
-                className={cn('text-sm mb-4', COLORS.muted.textLight, 'dark:text-slate-400')}
+                className={cn('mb-4 text-sm', COLORS.muted.textLight)}
               >
                 {t(errorKey)}
               </p>
@@ -133,7 +133,7 @@ export const Reminders = () => {
           <EmptyState
             title={t('empty.globalTitle')}
             description={t('empty.globalDescription')}
-            icon={<Bell className={cn('h-16 w-16', COLORS.muted.text, 'dark:text-slate-400')} />}
+            icon={<Bell className={cn('h-16 w-16', COLORS.muted.text)} />}
             showAction={false}
           />
         ) : (
@@ -176,7 +176,7 @@ export const Reminders = () => {
               className={cn(
                 COLORS.success.bg,
                 COLORS.success.hover,
-                'dark:bg-emerald-700 dark:hover:bg-emerald-600'
+                'text-success-foreground'
               )}
             >
               {t('dialogs.confirm')}

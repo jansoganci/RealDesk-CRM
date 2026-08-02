@@ -108,7 +108,7 @@ export function DealOutcomeActions({
             type="button"
             size="sm"
             variant="ghost"
-            className={`gap-1.5 ${COLORS.danger.text} hover:bg-red-50 dark:hover:bg-red-950/40`}
+            className={`gap-1.5 ${COLORS.danger.text} hover:bg-destructive/15`}
             disabled={busy}
             onClick={() => setFellOpen(true)}
           >

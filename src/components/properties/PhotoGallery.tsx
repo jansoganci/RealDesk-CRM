@@ -124,7 +124,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
 
   if (loading) {
     return (
-      <Card className="p-8 shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="p-8 shadow-lg border-border bg-card/80 backdrop-blur-sm">
         <div className={`text-center ${COLORS.muted.textLight}`}>{t('gallery.loading')}</div>
       </Card>
     );
@@ -132,14 +132,14 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
 
   if (photos.length === 0) {
     return (
-      <Card className="p-8 shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm">
+      <Card className="p-8 shadow-lg border-border bg-card/80 backdrop-blur-sm">
         <div className="flex flex-col items-center justify-center text-center space-y-3">
-          <div className="p-3 bg-gray-100 rounded-full">
-            <ImageIcon className="h-6 w-6 text-gray-500" />
+          <div className="p-3 bg-muted rounded-full">
+            <ImageIcon className="h-6 w-6 text-muted-foreground" />
           </div>
           <div>
-            <p className="font-medium text-gray-900">{t('gallery.emptyState.title')}</p>
-            <p className="text-sm text-gray-500 mt-1">{t('gallery.emptyState.description')}</p>
+            <p className="font-medium text-foreground">{t('gallery.emptyState.title')}</p>
+            <p className="text-sm text-muted-foreground mt-1">{t('gallery.emptyState.description')}</p>
           </div>
         </div>
       </Card>
@@ -194,7 +194,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                     <Button
                       size="icon"
                       variant="secondary"
-                      className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8 cursor-grab active:cursor-grabbing"
+                      className="bg-card/90 hover:bg-card min-h-[44px] min-w-[44px] md:h-8 md:w-8 cursor-grab active:cursor-grabbing"
                       aria-label={t('gallery.tooltips.dragToReorder')}
                     >
                       <GripVertical className="h-4 w-4" />
@@ -209,7 +209,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       variant="secondary"
                       onClick={() => handleMoveUp(photo, index)}
                       disabled={index === 0 || reordering}
-                      className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8"
+                      className="bg-card/90 hover:bg-card min-h-[44px] min-w-[44px] md:h-8 md:w-8"
                       aria-label={t('gallery.tooltips.moveUp')}
                     >
                       <MoveUp className="h-4 w-4" />
@@ -224,7 +224,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
                       variant="secondary"
                       onClick={() => handleMoveDown(photo, index)}
                       disabled={index === photos.length - 1 || reordering}
-                      className="bg-white/90 hover:bg-white min-h-[44px] min-w-[44px] md:h-8 md:w-8"
+                      className="bg-card/90 hover:bg-card min-h-[44px] min-w-[44px] md:h-8 md:w-8"
                       aria-label={t('gallery.tooltips.moveDown')}
                     >
                       <MoveDown className="h-4 w-4" />
@@ -271,7 +271,7 @@ export const PhotoGallery = ({ photos, onPhotosChange, loading = false }: PhotoG
             <AlertDialogAction
               onClick={handleDeleteConfirm}
               disabled={deleting}
-              className="bg-red-600 hover:bg-red-700"
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               {deleting ? t('common.deleting') : t('gallery.deleteDialog.delete')}
             </AlertDialogAction>

@@ -28,6 +28,7 @@ export type UpdateDealInput = Partial<
     | 'property_snapshot'
     | 'property_id'
     | 'lead_id'
+    | 'user_id'
   >
 >;
 type OfferNegotiationRow = Database['public']['Tables']['offer_negotiations']['Row'];
@@ -37,6 +38,8 @@ export interface CreateDealInput {
   deal_name: string;
   deal_type: 'sale' | 'rental';
   client_role: 'buyer' | 'seller' | 'dual';
+  /** Earning agent (org member). Defaults to the authenticated owner when omitted. */
+  user_id?: string | null;
   lead_id?: string | null;
   property_id?: string | null;
   property_snapshot?: DealInsert['property_snapshot'];
@@ -77,6 +80,24 @@ export interface DealStats {
 const TERMINAL_STAGES: DealStage[] = ['closed_won', 'fell_through'];
 
 class DealsService {
+  /**
+   * Ensures `userId` is an active member of the given org (earning agent of record).
+   */
+  private async assertActiveOrgMember(orgId: string, userId: string): Promise<void> {
+    const { data, error } = await supabase
+      .from('org_members')
+      .select('id')
+      .eq('org_id', orgId)
+      .eq('user_id', userId)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) {
+      throw new Error('Earning agent must be an active organization member.');
+    }
+  }
+
   /**
    * Ensures a property row in the active org was updated (avoids silent RLS / cross-org failures).
    */
@@ -127,10 +148,12 @@ class DealsService {
     try {
       const userId = await getAuthenticatedUserId();
       const orgId = await getActiveOrgId();
+      const earningUserId = input.user_id?.trim() ? input.user_id : userId;
+      await this.assertActiveOrgMember(orgId, earningUserId);
 
       const dealValues: DealInsert = {
         org_id: orgId,
-        user_id: userId,
+        user_id: earningUserId,
         deal_name: input.deal_name,
         deal_type: input.deal_type,
         client_role: input.client_role,
@@ -152,7 +175,7 @@ class DealsService {
 
       const negotiation = (await insertRow('offer_negotiations', {
         org_id: orgId,
-        user_id: userId,
+        user_id: earningUserId,
         deal_id: deal.id,
         status: 'active',
       })) as OfferNegotiationRow;
@@ -183,6 +206,7 @@ class DealsService {
           deal_name: input.deal_name,
           deal_type: input.deal_type,
           client_role: input.client_role,
+          user_id: input.user_id ?? null,
           financing_type: input.financing_type ?? null,
           preapproval_status: input.preapproval_status ?? null,
           buyer_agent_agreement_id: input.buyer_agent_agreement_id ?? null,
@@ -294,6 +318,11 @@ class DealsService {
   async updateDeal(id: string, patch: UpdateDealInput): Promise<DealRow> {
     try {
       await this.assertDealInOrg(id);
+      const orgId = await getActiveOrgId();
+
+      if (patch.user_id) {
+        await this.assertActiveOrgMember(orgId, patch.user_id);
+      }
 
       const update: DealUpdate = {
         updated_at: new Date().toISOString(),

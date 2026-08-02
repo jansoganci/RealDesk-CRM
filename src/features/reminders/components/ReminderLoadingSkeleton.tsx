@@ -20,7 +20,7 @@ export function ReminderLoadingSkeleton() {
             {[...Array(4)].map((_, i) => (
               <div
                 key={i}
-                className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"
+                className="h-10 animate-pulse rounded bg-muted"
               />
             ))}
           </div>
@@ -32,22 +32,22 @@ export function ReminderLoadingSkeleton() {
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="space-y-2 flex-1">
-                      <div className="h-6 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-3/4" />
-                      <div className="h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-1/2" />
+                      <div className="h-6 w-3/4 animate-pulse rounded bg-muted" />
+                      <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
                     </div>
-                    <div className="h-6 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-20" />
+                    <div className="h-6 w-20 animate-pulse rounded bg-muted" />
                   </div>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     {[...Array(4)].map((_, j) => (
                       <div key={j} className="space-y-1">
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-3/4" />
-                        <div className="h-4 bg-gray-200 dark:bg-gray-700 animate-pulse rounded w-1/2" />
+                        <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+                        <div className="h-4 w-1/2 animate-pulse rounded bg-muted" />
                       </div>
                     ))}
                   </div>
-                  <div className="h-10 bg-gray-200 dark:bg-gray-700 animate-pulse rounded" />
+                  <div className="h-10 animate-pulse rounded bg-muted" />
                 </CardContent>
               </Card>
             ))}
@@ -57,4 +57,3 @@ export function ReminderLoadingSkeleton() {
     </MainLayout>
   );
 }
-

@@ -17,24 +17,18 @@ This was previously untracked at the team level: the `/team` page existed but it
 - `src/features/team/types/team.types.ts`, `TeamPerformance.tsx`, `public/locales/en/team.json` — new Net/Company Dollar summary cards, a prominent org-wide Company Dollar callout, and matching table columns.
 - `src/features/dashboard/hooks/useTeamPerformanceSummary.ts`, `src/features/dashboard/components/TeamPerformanceSummaryCard.tsx`, `Dashboard.tsx` — a compact "this month" summary card, visible only when `useOrg().isOwner` is true, linking to `/team`.
 
-## Known limitation — deferred, not fixed in this pass
+## Phase 2 (implemented)
 
-**The commission split used to compute `broker_dollar`/`net_commission`/`franchise_fee_amount` on a closed deal is calculated using the *closer's own* broker settings, not the settings of the agent who actually owns the deal.**
+- `supabase/migrations/0054_org_member_commission_settings.sql` — `org_member_commission_settings` table (owner write RLS), `resolve_member_broker_settings` RPC, rewritten `rpc_record_commission_and_close_deal` (owner may close any org deal; `commissions.user_id` = `deals.user_id`), and lead-convert RPC accepts optional earning `user_id`.
+- Owner UI on Team Members: per-member commission override (save/clear). Fallback: member Profile `user_preferences`, then defaults.
+- Deal create/detail: earning agent picker (`deals.user_id`).
+- `CommissionSheet` resolves settings for `deal.user_id` via override → profile → defaults.
+- History: **forward-only** — no recompute of past commission rows.
 
-Specifically: `src/features/deals/components/CommissionSheet.tsx:125` calls `userPreferencesService.getBrokerSettings()` with no arguments. That resolves (`commissions.service.ts:58`, `getAuthenticatedUserId()`) to the **currently logged-in user's own** `user_preferences.broker_split_pct` / `annual_cap_amount`, not `deal.user_id`'s. Only organization owners can open "Record closing" at all (`DealOutcomeActions` is gated `readOnly={isMember}` in `DealDetail.tsx`), and owners routinely close deals that belong to other agents on their team. So today, every cross-agent closing stores split/cap numbers computed from the *owner's* settings, not the actual selling/listing agent's.
+### Remaining follow-ups (out of Phase 2)
 
-**Impact:** `netCommission` ("hakediş") and `companyDollar` figures in this new KPI view are only fully accurate when:
-- every team member shares the same `broker_split_pct`/cap settings, or
-- each agent closes their own deals (owner never records closings on a teammate's behalf).
-
-If those don't hold, the per-member Net and Company Dollar numbers can be wrong for deals an owner closed on behalf of someone else. `gross_commission` and deal counts are unaffected (they don't depend on split settings). A short caveat about this is shown in the `/team` UI (`team.json`'s `caveats.splitAccuracy` key).
-
-### Phase 2 (not implemented — scope for a future pass)
-
-1. Add per-member commission-settings storage that an owner can configure for teammates independently of that teammate's own self-service `user_preferences` row — either new columns on `org_members` (mirroring the Sprint 5 columns: `broker_split_pct`, `annual_cap_amount`, `cap_anniversary_date`, franchise fields) or a new `org_member_commission_settings` table keyed by `(org_id, user_id)` with owner-only write RLS.
-2. Change `CommissionSheet.tsx` to resolve `deal.user_id`'s settings (via the new table/columns, falling back to that member's own `user_preferences` row if no org-level override exists) instead of the currently authenticated user's settings.
-3. Decide whether to backfill/recompute historical `commissions` rows once correct per-member settings exist, or only apply the fix going forward — this is a financial-correctness decision that should involve the org owner, not just a silent recompute.
-4. This is auth/authorization-adjacent and touches money calculations directly — treat as its own reviewed migration + change, not bundled into unrelated work.
+- CommissionSheet still passes `capContext` YTD as zeros (cap progress at close may understate).
+- Optional historical recompute of `commissions` if an org wants corrected past Net/Company Dollar.
 
 ## Other risks noted for future reference
 

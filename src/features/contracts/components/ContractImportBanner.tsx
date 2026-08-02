@@ -16,7 +16,7 @@ export function ContractImportBanner({ onImportClick, disabled }: ContractImport
   const { t } = useTranslation(['contracts', 'common']);
 
   return (
-    <div className="rounded-lg border-2 border-primary/30 bg-gradient-to-r from-primary to-amber-50 p-4 dark:border-primary/30 dark:from-primary/40 dark:to-amber-950/40">
+    <div className="rounded-lg border-2 border-primary/30 bg-gradient-to-r from-primary to-warning/25 p-4 dark:from-primary/40 dark:to-warning/25">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h3 className="mb-1 flex items-center gap-2 text-lg font-semibold text-foreground">
@@ -40,4 +40,3 @@ export function ContractImportBanner({ onImportClick, disabled }: ContractImport
     </div>
   );
 }
-

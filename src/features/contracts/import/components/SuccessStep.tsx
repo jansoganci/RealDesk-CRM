@@ -39,11 +39,11 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
     <div className="flex flex-col items-center justify-center min-h-[60vh] p-6">
       {/* Big Success Icon */}
       <div className="relative mb-8">
-        <CheckCircle className="h-32 w-32 text-green-600 animate-bounce" style={{
+        <CheckCircle className="h-32 w-32 text-success animate-bounce" style={{
           animationDuration: '1s',
           animationIterationCount: '2'
         }} />
-        <div className="absolute inset-0 h-32 w-32 text-green-200 animate-ping" style={{
+        <div className="absolute inset-0 h-32 w-32 text-success animate-ping" style={{
           animationDuration: '1s',
           animationIterationCount: '1'
         }}>
@@ -60,18 +60,18 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
       </p>
 
       {/* Summary Card */}
-      <Card className="w-full max-w-2xl mb-8 border-2 border-green-100 bg-green-50/30">
+      <Card className="w-full max-w-2xl mb-8 border-2 border-success/30 bg-success/15">
         <CardContent className="pt-6">
           <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-            <FileCheck className="h-5 w-5 text-green-600" />
+            <FileCheck className="h-5 w-5 text-success" />
             {t('import.success.createdRecords')}
           </h3>
 
           <div className="space-y-3">
             {/* Owner */}
-            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-success/30">
               <div className="flex-shrink-0">
-                <User className="h-5 w-5 text-green-600 mt-0.5" />
+                <User className="h-5 w-5 text-success mt-0.5" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-foreground">
@@ -79,7 +79,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_owner ? "text-green-600" : "text-primary"
+                  createdData.created_owner ? "text-success" : "text-primary"
                 )}>
                   {createdData.created_owner ? t('create.toasts.ownerCreated') : t('create.toasts.ownerUsed')}
                 </p>
@@ -87,9 +87,9 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Tenant */}
-            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-success/30">
               <div className="flex-shrink-0">
-                <User className="h-5 w-5 text-green-600 mt-0.5" />
+                <User className="h-5 w-5 text-success mt-0.5" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-foreground">
@@ -97,7 +97,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_tenant ? "text-green-600" : "text-primary"
+                  createdData.created_tenant ? "text-success" : "text-primary"
                 )}>
                   {createdData.created_tenant ? t('create.toasts.tenantCreated') : t('create.toasts.tenantUsed')}
                 </p>
@@ -105,9 +105,9 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Property */}
-            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-success/30">
               <div className="flex-shrink-0">
-                <Building className="h-5 w-5 text-green-600 mt-0.5" />
+                <Building className="h-5 w-5 text-success mt-0.5" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-foreground">
@@ -115,7 +115,7 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
                 </p>
                 <p className={cn(
                   "text-sm",
-                  createdData.created_property ? "text-green-600" : "text-primary"
+                  createdData.created_property ? "text-success" : "text-primary"
                 )}>
                   {createdData.created_property ? t('create.toasts.propertyCreated') : t('create.toasts.propertyUsed')}
                 </p>
@@ -123,15 +123,15 @@ export const SuccessStep = ({ createdData, onImportAnother }: SuccessStepProps) 
             </div>
 
             {/* Document Saved */}
-            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-green-200">
+            <div className="flex items-start gap-3 p-3 bg-card rounded-lg border border-success/30">
               <div className="flex-shrink-0">
-                <FileCheck className="h-5 w-5 text-green-600 mt-0.5" />
+                <FileCheck className="h-5 w-5 text-success mt-0.5" />
               </div>
               <div className="flex-1">
                 <p className="font-medium text-foreground">
                   {t('import.success.documentFile')}
                 </p>
-                <p className="text-sm text-green-600">
+                <p className="text-sm text-success">
                   {t('import.success.documentSaved')}
                 </p>
               </div>

@@ -52,7 +52,7 @@ export function OwnerSelectField({
         </SelectTrigger>
         <SelectContent>
           {owners.length === 0 && !loading && (
-            <div className="p-2 text-sm text-gray-500">
+            <div className="p-2 text-sm text-muted-foreground">
               {t('dialog.form.noOwners')}
             </div>
           )}

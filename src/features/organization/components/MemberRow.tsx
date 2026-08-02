@@ -50,7 +50,7 @@ export const MemberRow = memo(({
   const canModify = isOwner && !isCurrentUser;
 
   return (
-    <TableRow className={cn(isCurrentUser && 'bg-blue-50/50')}>
+    <TableRow className={cn(isCurrentUser && 'bg-primary/5')}>
       {/* Member Info */}
       <TableCell>
         <div className="flex items-center gap-3">
@@ -61,16 +61,16 @@ export const MemberRow = memo(({
             size="md"
           />
           <div className="flex flex-col">
-            <span className="font-medium text-gray-900 dark:text-slate-50">
+            <span className="font-medium text-foreground">
               {userName || userEmail.split('@')[0]}
               {isCurrentUser && (
-                <span className="ml-2 text-xs text-blue-600 dark:text-blue-400 font-normal">
+                <span className="ml-2 text-xs font-normal text-primary">
                   {t('you')}
                 </span>
               )}
             </span>
             {userName && (
-              <span className="text-sm text-gray-500 dark:text-slate-400">{userEmail}</span>
+              <span className="text-sm text-muted-foreground">{userEmail}</span>
             )}
           </div>
         </div>
@@ -78,7 +78,7 @@ export const MemberRow = memo(({
 
       {/* Email (hidden on smaller screens, shown in member info) */}
       <TableCell className="hidden lg:table-cell">
-        <span className="text-gray-600 dark:text-slate-300">{userEmail}</span>
+        <span className="text-foreground/80">{userEmail}</span>
       </TableCell>
 
       {/* Role */}
@@ -88,7 +88,7 @@ export const MemberRow = memo(({
 
       {/* Joined Date */}
       <TableCell className="hidden md:table-cell">
-        <span className="text-gray-600 dark:text-slate-300">{joinedDate}</span>
+        <span className="text-foreground/80">{joinedDate}</span>
       </TableCell>
 
       {/* Actions */}
@@ -122,7 +122,7 @@ export const MemberRow = memo(({
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 onClick={() => onRemove(member)}
-                className="text-red-600 focus:text-red-600"
+                className="text-destructive focus:text-destructive"
               >
                 <UserMinus className="mr-2 h-4 w-4" />
                 {t('actions.removeMember')}

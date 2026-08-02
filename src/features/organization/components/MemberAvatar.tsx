@@ -35,14 +35,14 @@ function getInitials(name?: string | null, email?: string): string {
  */
 function getAvatarColor(str: string): string {
   const colors = [
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-purple-500',
-    'bg-orange-500',
-    'bg-pink-500',
-    'bg-teal-500',
-    'bg-indigo-500',
-    'bg-cyan-500',
+    'bg-primary text-primary-foreground',
+    'bg-success text-success-foreground',
+    'bg-secondary text-secondary-foreground',
+    'bg-info text-info-foreground',
+    'bg-warning text-warning-foreground',
+    'bg-accent text-accent-foreground',
+    'bg-destructive text-destructive-foreground',
+    'bg-muted text-muted-foreground',
   ];
 
   let hash = 0;
@@ -80,7 +80,7 @@ export const MemberAvatar = memo(({
       <AvatarFallback
         className={cn(
           bgColor,
-          'text-white font-semibold'
+          'font-semibold'
         )}
       >
         {initials}

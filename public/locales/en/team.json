@@ -8,6 +8,7 @@
   "you": "(You)",
   "cannotModifySelf": "You cannot modify your own account",
   "manageMembers": "Manage Members",
+  "viewPerformance": "View Performance",
   "inviteToTrack": "Invite Members",
   "periods": {
     "thisMonth": "This Month",
@@ -40,7 +41,7 @@
     "companyDollarLabel": "Total Company Dollar (Org)"
   },
   "caveats": {
-    "splitAccuracy": "Net and Company Dollar figures assume matching commission split/cap settings across the team."
+    "splitAccuracy": "Net and Company Dollar use each agent's org override when set, otherwise their profile commission settings."
   },
   "status": {
     "active": "Active",
@@ -130,9 +131,54 @@
     "promoteToOwner": "Promote to Owner",
     "demoteToMember": "Change to Member",
     "removeMember": "Remove from Team",
+    "commissionSettings": "Commission settings",
     "copyInviteLink": "Copy Invitation Link",
     "resendInvite": "Resend Invitation",
     "revokeInvite": "Revoke Invitation"
+  },
+  "commissionSettings": {
+    "title": "Commission settings — {{name}}",
+    "descriptionOverride": "Org override is active for this member. Closings use these settings.",
+    "descriptionFallback": "No org override yet. Saving creates one; until then closings use this member's profile settings.",
+    "loading": "Loading settings…",
+    "save": "Save override",
+    "saving": "Saving…",
+    "clear": "Clear override",
+    "clearing": "Clearing…",
+    "fields": {
+      "brokerModel": "Broker model",
+      "brokerSplitPct": "Broker split (%)",
+      "annualCapAmount": "Annual cap amount",
+      "capAnniversaryDate": "Cap anniversary date",
+      "franchiseEnabled": "Franchise fee enabled",
+      "franchiseFeePct": "Franchise fee (%)",
+      "franchiseFeeCap": "Franchise fee cap",
+      "transactionFee": "Default transaction fee",
+      "eoFeeType": "E&O fee type",
+      "eoFeeAmount": "E&O fee amount",
+      "tcFee": "Default TC fee"
+    },
+    "options": {
+      "brokerModel": {
+        "splitWithCap": "Split with annual cap",
+        "traditionalSplit": "Traditional split",
+        "flatFee100": "100% / flat fee"
+      },
+      "eoFeeType": {
+        "perDeal": "Per deal",
+        "monthly": "Monthly",
+        "annualExcluded": "Annual (excluded from deal)"
+      }
+    },
+    "success": {
+      "saved": "Member commission override saved",
+      "cleared": "Override cleared — profile settings will be used"
+    },
+    "errors": {
+      "load": "Failed to load commission settings",
+      "save": "Failed to save commission override",
+      "clear": "Failed to clear commission override"
+    }
   },
   "invitationRevoked": "Invitation revoked successfully",
   "inviteLinkCopied": "Invitation link copied to clipboard",

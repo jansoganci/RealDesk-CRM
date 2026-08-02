@@ -74,7 +74,7 @@ export const ReviewStep = ({
         {/* RIGHT SIDE: Form (2/3 width on desktop) */}
         <div className="lg:col-span-2 space-y-6">
           <div className="flex items-center gap-2 mb-6">
-            <CheckCircle className="h-6 w-6 text-green-600" />
+            <CheckCircle className="h-6 w-6 text-success" />
             <h3 className="text-xl font-semibold">{t('import.sections.extractedData')}</h3>
             <span className="text-sm text-muted-foreground">
               {t('import.fieldsFilled', { extracted: extractedCount, total: totalFields })}
@@ -114,7 +114,7 @@ export const ReviewStep = ({
           <div className="flex flex-col gap-4 pt-4">
             <Button
               size="lg"
-              className="w-full h-14 text-lg bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800"
+              className="h-14 w-full bg-gradient-to-r from-success to-success/80 text-lg text-success-foreground hover:from-success/90 hover:to-success"
               onClick={handleSubmit}
               disabled={isSubmitting}
             >
@@ -142,4 +142,3 @@ export const ReviewStep = ({
     </div>
   );
 };
-

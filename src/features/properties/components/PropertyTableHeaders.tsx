@@ -18,35 +18,35 @@ export function PropertyTableHeaders() {
       {/* Location - Hidden on tablet, visible on laptop+ */}
       <TableHead className="hidden lg:table-cell">
         <div className="flex items-center gap-2">
-          <MapPin className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+          <MapPin className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
           <span>{t('properties:table.location')}</span>
         </div>
       </TableHead>
       {/* Owner - Always visible */}
       <TableHead>
         <div className="flex items-center gap-2">
-          <User className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+          <User className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
           <span>{t('properties:table.owner')}</span>
         </div>
       </TableHead>
       {/* Tenant - Hidden on tablet/laptop, visible on desktop */}
       <TableHead className="hidden xl:table-cell">
         <div className="flex items-center gap-2">
-          <User className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+          <User className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
           <span>{t('properties:table.tenant')}</span>
         </div>
       </TableHead>
       {/* Price - Always visible */}
       <TableHead>
         <div className="flex items-center gap-2">
-          <DollarSign className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+          <DollarSign className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
           <span>{t('properties:table.price')}</span>
         </div>
       </TableHead>
       {/* Contract End - Hidden on tablet, visible on laptop+ */}
       <TableHead className="hidden lg:table-cell whitespace-nowrap">
         <div className="flex items-center gap-2">
-          <Calendar className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-slate-400`} />
+          <Calendar className={`h-4 w-4 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
           <span>{t('properties:table.contractEndDate')}</span>
         </div>
       </TableHead>

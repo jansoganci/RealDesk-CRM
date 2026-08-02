@@ -271,7 +271,7 @@ export function getInvitationEmailTemplate(data: InvitationEmailData): string {
         This email was sent automatically. Please do not reply.
       </p>
       <p>
-        Sorularınız için: <a href="mailto:support@closewell.app">support@closewell.app</a>
+        Sorularınız için: <a href="mailto:support@mail.closewell.app">support@mail.closewell.app</a>
       </p>
     </div>
   </div>

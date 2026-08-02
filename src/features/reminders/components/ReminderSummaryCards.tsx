@@ -53,23 +53,23 @@ export function ReminderSummaryCards({
       value: metrics.totalActive,
       label: t('summary.totalActive'),
       description: t('summary.totalActiveDescription'),
-      icon: <Shield className="h-5 w-5 text-white" />,
-      iconColor: 'bg-gradient-to-br from-blue-500 via-blue-600 to-blue-700',
+      icon: <Shield className="h-5 w-5 text-primary-foreground" />,
+      iconColor: 'bg-gradient-to-br from-primary to-primary/80',
       trend: metrics.trends?.totalActive,
     },
     {
       value: metrics.critical,
       label: t('summary.critical'),
       description: t('summary.criticalDescription'),
-      icon: <AlertCircle className="h-5 w-5 text-white" />,
-      iconColor: 'bg-gradient-to-br from-red-500 via-red-600 to-red-700',
+      icon: <AlertCircle className="h-5 w-5 text-destructive-foreground" />,
+      iconColor: 'bg-gradient-to-br from-destructive to-destructive/80',
       trend: metrics.trends?.critical,
     },
     {
       value: metrics.pendingActions,
       label: t('summary.pendingActions'),
       description: t('summary.pendingActionsDescription'),
-      icon: <CheckCircle2 className="h-5 w-5 text-white" />,
+      icon: <CheckCircle2 className="h-5 w-5 text-secondary-foreground" />,
       iconColor: 'bg-secondary',
       trend: metrics.trends?.pendingActions,
     },
@@ -81,7 +81,7 @@ export function ReminderSummaryCards({
         {[1, 2, 3].map((i) => (
           <Card
             key={i}
-            className="shadow-lg border-gray-100 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80"
+            className="border-border bg-card/80 shadow-lg backdrop-blur-sm"
           >
             <CardHeader className="flex flex-row items-center gap-3 space-y-0 pb-2">
               <Skeleton className="h-10 w-10 rounded-xl" />
@@ -125,8 +125,7 @@ export function ReminderSummaryCards({
           key={index}
           className={cn(
             'shadow-luxury hover:shadow-luxury-lg transition-all duration-300 hover:-translate-y-1',
-            'border-gray-200/50 backdrop-blur-sm bg-white/90',
-            'dark:border-gray-700/50 dark:bg-gray-900/90',
+            'border-border bg-card/90 backdrop-blur-sm',
             onCardClick && 'cursor-pointer',
             className
           )}
@@ -140,19 +139,18 @@ export function ReminderSummaryCards({
             )}>
               {metric.icon}
             </div>
-            <CardTitle className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            <CardTitle className="text-sm font-semibold text-foreground/80">
               {metric.label}
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold bg-gradient-to-br from-slate-900 to-slate-700 bg-clip-text text-transparent dark:from-slate-100 dark:to-slate-300">
+            <div className="bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text text-3xl font-bold text-transparent">
               {metric.value}
             </div>
             <p
               className={cn(
                 'text-xs mt-1.5 leading-relaxed',
                 COLORS.gray.text600,
-                'dark:text-gray-400'
               )}
             >
               {metric.description}
@@ -160,15 +158,15 @@ export function ReminderSummaryCards({
             {metric.trend && (
               <div className="flex items-center gap-1 mt-2 text-xs">
                 {metric.trend.isPositive ? (
-                  <TrendingUp className="h-3 w-3 text-green-600 dark:text-green-400" />
+                  <TrendingUp className="h-3 w-3 text-success" />
                 ) : (
-                  <TrendingDown className="h-3 w-3 text-red-600 dark:text-red-400" />
+                  <TrendingDown className="h-3 w-3 text-destructive" />
                 )}
                 <span
                   className={
                     metric.trend.isPositive
-                      ? 'text-green-600 dark:text-green-400'
-                      : 'text-red-600 dark:text-red-400'
+                      ? 'text-success'
+                      : 'text-destructive'
                   }
                 >
                   {metric.trend.value > 0 ? '+' : ''}{metric.trend.value}

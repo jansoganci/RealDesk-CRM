@@ -75,7 +75,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               </PopoverContent>
             </Popover>
             {form.formState.errors.start_date && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.start_date.message}
               </p>
             )}
@@ -110,7 +110,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               </PopoverContent>
             </Popover>
             {form.formState.errors.end_date && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.end_date.message}
               </p>
             )}
@@ -189,7 +189,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               {...form.register('rent_amount', { valueAsNumber: true })}
             />
             {form.formState.errors.rent_amount && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.rent_amount.message}
               </p>
             )}
@@ -206,7 +206,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               {...form.register('deposit', { valueAsNumber: true })}
             />
             {form.formState.errors.deposit && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.deposit.message}
               </p>
             )}
@@ -226,7 +226,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               </SelectContent>
             </Select>
             {form.formState.errors.currency && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.currency.message}
               </p>
             )}
@@ -248,7 +248,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
             {t('create.helpers.commission_amount')}
           </p>
           {form.formState.errors.commission_amount && (
-            <p className="text-sm text-red-600 mt-1">
+            <p className="text-sm text-destructive mt-1">
               {form.formState.errors.commission_amount.message}
             </p>
           )}
@@ -272,7 +272,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               {...form.register('payment_day_of_month', { valueAsNumber: true })}
             />
             {form.formState.errors.payment_day_of_month && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.payment_day_of_month.message}
               </p>
             )}
@@ -288,7 +288,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
               {...form.register('payment_method')}
             />
             {form.formState.errors.payment_method && (
-              <p className="text-sm text-red-600 mt-1">
+              <p className="text-sm text-destructive mt-1">
                 {form.formState.errors.payment_method.message}
               </p>
             )}
@@ -316,7 +316,7 @@ export function ContractDetailsSection({ form }: ContractDetailsSectionProps) {
           </p>
 
           {form.formState.errors.handover_photos_url && (
-            <p className="text-sm text-red-600">
+            <p className="text-sm text-destructive">
               {form.formState.errors.handover_photos_url.message}
             </p>
           )}

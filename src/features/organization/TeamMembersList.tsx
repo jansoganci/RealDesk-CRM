@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Users2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { BarChart3, Users2 } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -26,6 +27,7 @@ import { TableSkeleton } from '@/components/common/skeletons';
 
 import { useAuth } from '@/contexts/AuthContext';
 import { useOrg } from '@/contexts/OrgContext';
+import { ROUTES } from '@/config/constants';
 import { organizationService } from '@/services/organization.service';
 import type { OrgMemberWithUser, OrgInvitation, TeamMember } from '@/types/org';
 
@@ -34,10 +36,12 @@ import { TeamMemberCard } from './components/TeamMemberCard';
 import { AddMemberDialog } from './components/AddMemberDialog';
 import { ChangeMemberRoleDialog } from './components/ChangeMemberRoleDialog';
 import { RemoveMemberDialog } from './components/RemoveMemberDialog';
+import { MemberCommissionSettingsDialog } from './components/MemberCommissionSettingsDialog';
 
 import { Search, Plus, Info } from 'lucide-react';
 export function TeamMembersList() {
   const { t } = useTranslation(['team', 'common']);
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { currentOrg, isOwner } = useOrg();
 
@@ -50,6 +54,7 @@ export function TeamMembersList() {
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showRoleDialog, setShowRoleDialog] = useState(false);
   const [showRemoveDialog, setShowRemoveDialog] = useState(false);
+  const [showCommissionDialog, setShowCommissionDialog] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   // Fetch members and invitations
@@ -140,6 +145,11 @@ export function TeamMembersList() {
     setShowRemoveDialog(true);
   };
 
+  const handleCommissionSettings = (teamMember: TeamMember) => {
+    setSelectedMember(teamMember);
+    setShowCommissionDialog(true);
+  };
+
   // Handlers for invitations
   const handleRevoke = async (teamMember: TeamMember) => {
     if (!teamMember.invitation) return;
@@ -215,7 +225,7 @@ export function TeamMembersList() {
         <div className="flex flex-col sm:flex-row gap-4 justify-between">
           <div className="flex flex-col sm:flex-row gap-4 flex-1">
             <div className="relative flex-1 max-w-sm">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400 dark:text-slate-500" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />
               <Input
                 placeholder={t('team:searchPlaceholder')}
                 value={searchQuery}
@@ -225,6 +235,14 @@ export function TeamMembersList() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => navigate(ROUTES.TEAM)}
+            >
+              <BarChart3 className="mr-1.5 h-4 w-4" />
+              {t('team:viewPerformance')}
+            </Button>
             {!isOwner ? (
               <TooltipProvider>
                 <Tooltip>
@@ -259,11 +277,11 @@ export function TeamMembersList() {
               {[1, 2, 3].map((i) => (
                 <Card key={i} className="p-4 animate-pulse">
                   <div className="flex items-start gap-3">
-                    <div className="h-12 w-12 rounded-full bg-gray-200 dark:bg-gray-700" />
+                    <div className="h-12 w-12 rounded-full bg-muted" />
                     <div className="flex-1 space-y-2">
-                      <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
-                      <div className="h-3 w-48 bg-gray-200 dark:bg-gray-700 rounded" />
-                      <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded" />
+                      <div className="h-4 w-32 rounded bg-muted" />
+                      <div className="h-3 w-48 rounded bg-muted" />
+                      <div className="h-5 w-16 rounded bg-muted" />
                     </div>
                   </div>
                 </Card>
@@ -274,7 +292,7 @@ export function TeamMembersList() {
           <EmptyState
             title={searchQuery ? t('common:noSearchResults') : t('team:emptyState.title')}
             description={searchQuery ? t('common:tryDifferentSearch') : t('team:emptyState.description')}
-            icon={<Users2 className="h-12 w-12 text-gray-400 dark:text-gray-500" />}
+            icon={<Users2 className="h-12 w-12 text-muted-foreground" />}
             actionLabel={isOwner ? t('team:addMember') : undefined}
             onAction={isOwner ? () => setShowAddDialog(true) : undefined}
             showAction={isOwner && !searchQuery}
@@ -283,7 +301,7 @@ export function TeamMembersList() {
           <>
             {/* Desktop Table */}
             <div className="hidden md:block">
-              <Card className="shadow-luxury hover:shadow-luxury-lg transition-shadow duration-300 border-gray-200/50 backdrop-blur-sm bg-white/95 dark:border-gray-700/50 dark:bg-gray-900/95 overflow-hidden animate-fade-in">
+              <Card className="animate-fade-in overflow-hidden border-border bg-card/95 shadow-luxury backdrop-blur-sm transition-shadow duration-300 hover:shadow-luxury-lg">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -304,6 +322,7 @@ export function TeamMembersList() {
                         isOwner={isOwner}
                         onChangeRole={handleChangeRole}
                         onRemove={handleRemove}
+                        onCommissionSettings={handleCommissionSettings}
                         onRevoke={handleRevoke}
                         onCopyLink={handleCopyLink}
                         onResend={handleResend}
@@ -324,6 +343,7 @@ export function TeamMembersList() {
                   isOwner={isOwner}
                   onChangeRole={handleChangeRole}
                   onRemove={handleRemove}
+                  onCommissionSettings={handleCommissionSettings}
                   onRevoke={handleRevoke}
                   onCopyLink={handleCopyLink}
                   onResend={handleResend}
@@ -364,6 +384,15 @@ export function TeamMembersList() {
           />
         </>
       )}
+
+      <MemberCommissionSettingsDialog
+        open={showCommissionDialog}
+        onOpenChange={(open) => {
+          setShowCommissionDialog(open);
+          if (!open) setSelectedMember(null);
+        }}
+        teamMember={selectedMember}
+      />
     </MainLayout>
   );
 }

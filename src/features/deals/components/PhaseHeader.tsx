@@ -20,18 +20,18 @@ function getHealthBadge(health: PhaseHealth): { label: string; className: string
   if (health === 'overdue') {
     return {
       label: 'Overdue',
-      className: `${COLORS.danger.bgLight} ${COLORS.danger.textDark} border-red-200`,
+      className: `${COLORS.danger.bgLight} ${COLORS.danger.textDark} border-destructive/30`,
     };
   }
   if (health === 'action_needed') {
     return {
       label: 'Action Needed',
-      className: `${COLORS.warning.bgLight} ${COLORS.warning.textDark} border-amber-200`,
+      className: `${COLORS.warning.bgLight} ${COLORS.warning.textDark} border-warning/30`,
     };
   }
   return {
     label: 'Clear',
-    className: `${COLORS.success.bgLight} ${COLORS.success.textDark} border-emerald-200`,
+    className: `${COLORS.success.bgLight} ${COLORS.success.textDark} border-success/30`,
   };
 }
 

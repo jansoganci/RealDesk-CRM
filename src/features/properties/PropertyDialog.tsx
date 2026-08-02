@@ -156,7 +156,7 @@ export const PropertyDialog = ({
             onMarkAsSold={onMarkAsSold}
           />
 
-          <DialogFooter className="pt-4 border-t border-gray-200 dark:border-slate-800">
+          <DialogFooter className="pt-4 border-t border-border">
             <Button
               type="button"
               variant="outline"

@@ -205,7 +205,7 @@ export function PropertyFormFields({
               variant="outline"
               onClick={() => onMarkAsSold(property as PropertyWithOwner)}
               disabled={loading}
-              className="w-full bg-amber-50 dark:bg-slate-800/70 border-amber-300 dark:border-slate-700 hover:bg-amber-100 dark:hover:bg-slate-800 hover:border-amber-400 dark:hover:border-amber-600 text-amber-700 dark:text-amber-300 hover:text-amber-800 dark:hover:text-amber-200 font-semibold"
+              className="w-full border-warning/40 bg-warning/15 font-semibold text-warning-foreground hover:border-warning/60 hover:bg-warning/25 dark:text-warning"
             >
               <TrendingUp className="h-4 w-4 mr-2" />
               {t('markAsSold.button')}
