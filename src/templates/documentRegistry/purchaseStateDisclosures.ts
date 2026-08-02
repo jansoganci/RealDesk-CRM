@@ -1,7 +1,7 @@
 import type { SupportedDocumentState } from '@/config/supportedDocumentStates';
 
 /**
- * Original RealDesk draft disclosure language per state (purchase).
+ * Original Closewell draft disclosure language per state (purchase).
  * Not copied from C.A.R., TREC, Florida Realtors, NY board, or AAR forms.
  */
 

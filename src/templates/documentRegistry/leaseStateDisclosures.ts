@@ -1,7 +1,7 @@
 import type { SupportedDocumentState } from '@/config/supportedDocumentStates';
 
 /**
- * Original RealDesk draft disclosure language per state (lease).
+ * Original Closewell draft disclosure language per state (lease).
  * Public statute-required notice text is included only where the statute itself mandates language (e.g. FL radon).
  * Not copied from association lease forms.
  */

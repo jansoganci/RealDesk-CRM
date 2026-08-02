@@ -11,7 +11,7 @@ export function buildLeaseTemplate(state: SupportedDocumentState): DocumentTempl
     docType: 'lease',
     jurisdiction: state,
     version: LEASE_TEMPLATE_VERSION,
-    title: `RealDesk Residential Lease Agreement (Draft) — ${state}`,
+    title: `Closewell Residential Lease Agreement (Draft) — ${state}`,
     counselApprovalRef: 'pending-attorney-review',
     sections: [
       {

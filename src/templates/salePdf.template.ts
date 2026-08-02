@@ -41,7 +41,7 @@ export const generateSalePdfTemplate: TemplateGenerator<SaleContractFormData> = 
   return {
     metadata: {
       title: `Satış Sözleşmesi - ${contractNumber}`,
-      author: 'EmlakCRM',
+      author: 'Closewell',
       subject: 'Gayrimenkul Satış Sözleşmesi',
     },
     sections: [

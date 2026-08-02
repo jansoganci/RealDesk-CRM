@@ -11,7 +11,7 @@ export function buildPurchaseTemplate(state: SupportedDocumentState): DocumentTe
     docType: 'purchase',
     jurisdiction: state,
     version: PURCHASE_TEMPLATE_VERSION,
-    title: `RealDesk Residential Purchase Agreement (Draft) — ${state}`,
+    title: `Closewell Residential Purchase Agreement (Draft) — ${state}`,
     counselApprovalRef: 'pending-attorney-review',
     sections: [
       {

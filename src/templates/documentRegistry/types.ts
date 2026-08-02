@@ -11,7 +11,7 @@ export type TemplateSection = {
   heading?: string;
   /**
    * Body text. May include {{field_path}} placeholders for mapped sections.
-   * Must be original RealDesk draft language (or public statute notice text where required).
+   * Must be original Closewell draft language (or public statute notice text where required).
    */
   body?: string;
   /** Signature block label for kind=signature */

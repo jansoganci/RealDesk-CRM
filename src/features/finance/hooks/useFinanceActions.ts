@@ -84,7 +84,7 @@ export const useFinanceActions = ({
           ? `${filters.start_date} to ${filters.end_date || 'now'}`
           : undefined;
 
-        const companyName = 'RealDesk';
+        const companyName = 'Closewell';
 
         switch (format) {
           case 'csv': {

@@ -1,5 +1,5 @@
 /**
- * Template-driven jsPDF renderer for RealDesk V1 draft lease/purchase documents.
+ * Template-driven jsPDF renderer for Closewell V1 draft lease/purchase documents.
  */
 
 import { jsPDF } from 'jspdf';
