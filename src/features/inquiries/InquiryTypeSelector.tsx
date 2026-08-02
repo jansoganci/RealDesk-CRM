@@ -13,7 +13,7 @@ export const InquiryTypeSelector = ({
   disabled = false,
 }: InquiryTypeSelectorProps) => {
   return (
-    <div className="grid grid-cols-2 gap-3 p-1 bg-gray-100 rounded-lg">
+    <div className="grid grid-cols-2 gap-3 rounded-lg bg-muted p-1">
       <button
         type="button"
         onClick={() => onChange('rental')}
@@ -22,8 +22,8 @@ export const InquiryTypeSelector = ({
           flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium transition-all
           ${
             value === 'rental'
-              ? `${COLORS.primary.bg} text-white shadow-md`
-              : 'bg-white text-gray-700 hover:bg-gray-50'
+              ? `${COLORS.primary.bg} text-primary-foreground shadow-md`
+              : 'bg-card text-foreground/80 hover:bg-muted/70'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}
@@ -39,8 +39,8 @@ export const InquiryTypeSelector = ({
           flex items-center justify-center gap-2 py-3 px-4 rounded-md font-medium transition-all
           ${
             value === 'sale'
-              ? `${COLORS.accent.bg} text-white shadow-md`
-              : 'bg-white text-gray-700 hover:bg-gray-50'
+              ? `${COLORS.accent.bg} text-accent-foreground shadow-md`
+              : 'bg-card text-foreground/80 hover:bg-muted/70'
           }
           ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
         `}

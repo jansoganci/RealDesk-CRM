@@ -23,8 +23,8 @@ export function ContractStatusInfo({ primaryContract }: ContractStatusInfoProps)
         : '';
 
     return (
-      <div className="bg-blue-50 dark:bg-slate-800/70 border border-blue-200 dark:border-slate-800 rounded-lg p-3">
-        <p className="text-sm text-blue-700 dark:text-blue-300">
+      <div className="rounded-lg border border-info/30 bg-info/15 p-3">
+        <p className="text-sm text-info-foreground dark:text-info">
           <strong>{t('edit.contractStatusLabel')}</strong>{' '}
           {t('edit.contractStatusText', { status: primaryContract.status })}
           {dateRange ? ` ${dateRange}` : ''}
@@ -34,8 +34,8 @@ export function ContractStatusInfo({ primaryContract }: ContractStatusInfoProps)
   }
 
   return (
-    <div className="bg-yellow-50 dark:bg-slate-800/70 border border-yellow-200 dark:border-slate-800 rounded-lg p-3">
-      <p className="text-sm text-yellow-700 dark:text-yellow-300">
+    <div className="rounded-lg border border-warning/30 bg-warning/15 p-3">
+      <p className="text-sm text-warning-foreground dark:text-warning">
         <strong>{t('edit.noContractLabel')}</strong> {t('edit.noContractDescription')}
       </p>
     </div>

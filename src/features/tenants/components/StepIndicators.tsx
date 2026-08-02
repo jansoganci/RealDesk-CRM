@@ -23,25 +23,25 @@ export function StepIndicators({ steps, currentStep }: StepIndicatorsProps) {
           <div key={step.id} className="flex flex-col items-center flex-1">
             <div className={`
               flex items-center justify-center w-10 h-10 rounded-full border-2 mb-2
-              ${isActive ? `border-blue-500 bg-blue-50 dark:bg-slate-800 dark:border-blue-400` : ''}
-              ${isCompleted ? `border-green-500 bg-green-50 dark:bg-slate-800 dark:border-emerald-500` : ''}
-              ${!isActive && !isCompleted ? 'border-gray-200 dark:border-slate-800 bg-gray-50 dark:bg-slate-800/70' : ''}
+              ${isActive ? 'border-primary bg-primary/10' : ''}
+              ${isCompleted ? 'border-success bg-success/15' : ''}
+              ${!isActive && !isCompleted ? 'border-border bg-muted/50' : ''}
             `}>
               {isCompleted ? (
-                <Check className="h-5 w-5 text-green-600 dark:text-emerald-400" />
+                <Check className="h-5 w-5 text-success" />
               ) : (
                 <StepIcon className={`h-5 w-5 ${
-                  isActive ? 'text-blue-600 dark:text-blue-400' : 'text-gray-400 dark:text-slate-500'
+                  isActive ? 'text-primary' : 'text-muted-foreground'
                 }`} />
               )}
             </div>
             <div className="text-center">
               <div className={`text-sm font-medium ${
-                isActive ? 'text-blue-600 dark:text-blue-400' : isCompleted ? 'text-green-600 dark:text-emerald-400' : 'text-gray-400 dark:text-slate-500'
+                isActive ? 'text-primary' : isCompleted ? 'text-success' : 'text-muted-foreground'
               }`}>
                 {step.title}
               </div>
-              <div className="text-xs text-gray-500 dark:text-slate-400 mt-1">
+              <div className="mt-1 text-xs text-muted-foreground">
                 {step.description}
               </div>
             </div>
@@ -51,4 +51,3 @@ export function StepIndicators({ steps, currentStep }: StepIndicatorsProps) {
     </div>
   );
 }
-

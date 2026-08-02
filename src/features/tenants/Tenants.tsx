@@ -94,7 +94,7 @@ export const Tenants = ({ pageTop, pageTitle }: TenantsProps) => {
     description: searchQuery || assignmentFilter !== 'all'
       ? t('emptyState.noTenantsFoundDescription')
       : t('emptyState.noTenantsYetDescription'),
-    icon: <Users className={`h-16 w-16 ${COLORS.muted.text} dark:text-slate-400`} />,
+    icon: <Users className={`h-16 w-16 ${COLORS.muted.text} dark:text-muted-foreground`} />,
     actionLabel: t('emptyState.addActionLabel'),
     showAction: !searchQuery && assignmentFilter === 'all',
   }), [searchQuery, assignmentFilter, t]);

@@ -29,7 +29,7 @@ export function TenantTableRow({
         <div>
           <div className="font-medium">{tenant.name}</div>
           {tenant.notes && (
-            <div className={`text-xs ${COLORS.muted.textLight} dark:text-slate-400 mt-1 line-clamp-1`}>
+            <div className={`text-xs ${COLORS.muted.textLight} dark:text-muted-foreground mt-1 line-clamp-1`}>
               {tenant.notes}
             </div>
           )}
@@ -39,18 +39,18 @@ export function TenantTableRow({
         <div className="space-y-1">
           {tenant.phone && (
             <div className="flex items-center gap-2 text-sm">
-              <Phone className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-slate-400`} />
-              <span className={`${COLORS.gray.text600} dark:text-slate-300`}>{tenant.phone}</span>
+              <Phone className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-muted-foreground`} />
+              <span className={`${COLORS.gray.text600} dark:text-foreground/80`}>{tenant.phone}</span>
             </div>
           )}
           {tenant.email && (
             <div className="flex items-center gap-2 text-sm min-w-0">
-              <Mail className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-slate-400 flex-shrink-0`} />
-              <span className={`${COLORS.gray.text600} dark:text-slate-300 truncate max-w-[150px] md:max-w-[250px]`}>{tenant.email}</span>
+              <Mail className={`h-3 w-3 ${COLORS.muted.textLight} dark:text-muted-foreground flex-shrink-0`} />
+              <span className={`${COLORS.gray.text600} dark:text-foreground/80 truncate max-w-[150px] md:max-w-[250px]`}>{tenant.email}</span>
             </div>
           )}
           {!tenant.phone && !tenant.email && (
-            <span className={`${COLORS.muted.textLight} dark:text-slate-400 text-sm`}>-</span>
+            <span className={`${COLORS.muted.textLight} dark:text-muted-foreground text-sm`}>-</span>
           )}
         </div>
       </TableCell>
@@ -58,10 +58,10 @@ export function TenantTableRow({
         {tenant.property ? (
           <div className="flex items-center gap-2 text-sm min-w-0">
             <Building2 className={`h-3 w-3 ${COLORS.primary.text} flex-shrink-0`} />
-            <span className={`${COLORS.gray.text700} dark:text-slate-200 truncate max-w-[150px] md:max-w-[250px]`}>{tenant.property.address}</span>
+            <span className={`${COLORS.gray.text700} dark:text-foreground truncate max-w-[150px] md:max-w-[250px]`}>{tenant.property.address}</span>
           </div>
         ) : (
-          <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight} dark:text-slate-400`}>
+          <div className={`flex items-center gap-2 text-sm ${COLORS.muted.textLight} dark:text-muted-foreground`}>
             <UserX className="h-3 w-3" />
             <span>{t('noProperty')}</span>
           </div>

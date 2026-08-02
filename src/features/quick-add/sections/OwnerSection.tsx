@@ -32,8 +32,8 @@ export const OwnerSection = ({ form, owners, loading = false }: OwnerSectionProp
   const ownerMode = form.watch('ownerMode');
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
-      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
+    <div className="space-y-4 p-4 border rounded-lg bg-muted/50 border-border">
+      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <User className="h-4 w-4" />
         {t('sections.owner')}
       </div>

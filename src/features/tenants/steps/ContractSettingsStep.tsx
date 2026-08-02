@@ -60,15 +60,15 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
   return (
     <div className="space-y-6">
       <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-100">{t('enhanced.steps.settings.sectionTitle')}</h3>
-        <p className="text-sm text-gray-600 dark:text-slate-300">
+        <h3 className="text-lg font-semibold text-foreground">{t('enhanced.steps.settings.sectionTitle')}</h3>
+        <p className="text-sm text-foreground/80">
           {t('enhanced.steps.settings.sectionDescription')}
         </p>
       </div>
 
       <div className="space-y-4">
         {/* Rent Increase Reminder Settings */}
-        <div className="space-y-4 p-4 border border-gray-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900">
+        <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
           <div className="flex items-center space-x-2">
             <Checkbox
               id="rent_increase_reminder_enabled"
@@ -154,10 +154,10 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
         </div>
 
         {/* Contract PDF Upload */}
-        <div className="space-y-4 p-4 border border-gray-200 dark:border-slate-800 rounded-lg bg-white dark:bg-slate-900">
+        <div className="space-y-4 p-4 border border-border rounded-lg bg-card">
           <div className="space-y-2">
             <Label>{t('enhanced.steps.settings.pdfUpload.title')}</Label>
-            <p className="text-sm text-gray-600 dark:text-slate-300">
+            <p className="text-sm text-foreground/80">
               {t('enhanced.steps.settings.pdfUpload.description')}
             </p>
           </div>
@@ -184,12 +184,12 @@ export const ContractSettingsStep: React.FC<ContractSettingsStepProps> = ({
               </Button>
             </div>
           ) : (
-            <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-slate-800/70 rounded-lg">
+            <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
               <div className="flex items-center space-x-2">
-                <FileText className="h-5 w-5 text-red-600" />
+                <FileText className="h-5 w-5 text-destructive" />
                 <div>
                   <p className="text-sm font-medium">{pdfFile.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-slate-400">
+                  <p className="text-xs text-muted-foreground">
                     {t('enhanced.steps.settings.pdfUpload.fileSize', {
                       size: (pdfFile.size / 1024 / 1024).toFixed(2)
                     })}

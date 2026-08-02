@@ -34,8 +34,8 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
   const statuses = propertyType === 'sale' ? saleStatuses : rentalStatuses;
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
-      <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
+    <div className="space-y-4 p-4 border rounded-lg bg-muted/50 border-border">
+      <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
         <Building2 className="h-4 w-4" />
         {t('sections.property')}
       </div>
@@ -230,7 +230,7 @@ export const PropertySection = ({ form, loading = false }: PropertySectionProps)
         )}
         <FormItem className="flex flex-col justify-end">
           <FormLabel>{t('fields.currency')}</FormLabel>
-          <span className="text-sm font-medium py-2 text-slate-800 dark:text-slate-200">{t('currencies.USD')}</span>
+          <span className="text-sm font-medium py-2 text-foreground">{t('currencies.USD')}</span>
         </FormItem>
       </div>
 

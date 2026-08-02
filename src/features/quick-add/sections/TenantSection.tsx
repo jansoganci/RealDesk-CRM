@@ -33,9 +33,9 @@ export const TenantSection = ({ form, loading = false }: TenantSectionProps) => 
   }
 
   return (
-    <div className="space-y-4 p-4 border rounded-lg bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
+    <div className="space-y-4 p-4 border rounded-lg bg-muted/50 border-border">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-50">
+        <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
           <Users className="h-4 w-4" />
           {t('sections.tenant')}
         </div>
